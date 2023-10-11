@@ -43,21 +43,37 @@ namespace MPF.Test.Core.Converters
         /// Generate a test set of DriveType values
         /// </summary>
         /// <returns>MemberData-compatible list of DriveType values</returns>
+#if NET48
         public static List<object[]> GenerateDriveTypeMappingTestData()
+#else
+        public static List<object?[]> GenerateDriveTypeMappingTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (DriveType driveType in Enum.GetValues(typeof(DriveType)))
             {
                 if (_mappableDriveTypes.Contains(driveType))
+#if NET48
                     testData.Add(new object[] { driveType, false });
+#else
+                    testData.Add(new object?[] { driveType, false });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { driveType, true });
+#else
+                    testData.Add(new object?[] { driveType, true });
+#endif
             }
 
             return testData;
         }
 
-        #endregion
+#endregion
 
         #region Convert to Long Name
 
@@ -79,18 +95,30 @@ namespace MPF.Test.Core.Converters
         /// Generate a test set of InternalProgram values
         /// </summary>
         /// <returns>MemberData-compatible list of InternalProgram values</returns>
+#if NET48
         public static List<object[]> GenerateInternalProgramTestData()
+#else
+        public static List<object?[]> GenerateInternalProgramTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null } };
+#endif
             foreach (InternalProgram? internalProgram in Enum.GetValues(typeof(InternalProgram)))
             {
+#if NET48
                 testData.Add(new object[] { internalProgram });
+#else
+                testData.Add(new object?[] { internalProgram });
+#endif
             }
 
             return testData;
         }
 
-        #endregion
+#endregion
 
         // TODO: Add from-string tests
     }

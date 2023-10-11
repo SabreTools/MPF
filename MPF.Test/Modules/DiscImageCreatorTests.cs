@@ -160,9 +160,13 @@ namespace MPF.Test.Modules
         [InlineData(MediaType.FloppyDisk, ".img")]
         [InlineData(MediaType.Cassette, ".wav")]
         [InlineData(MediaType.NONE, null)]
+#if NET48
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
+#else
+        public void MediaTypeToExtensionTest(MediaType? mediaType, string? expected)
+#endif
         {
-            string actual = Converters.Extension(mediaType);
+            var actual = Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 
@@ -214,7 +218,7 @@ namespace MPF.Test.Modules
             Assert.Equal(expected, actual);
         }
 
-        #endregion
+#endregion
 
         [Fact]
         public void DiscImageCreatorAudioParametersTest()
@@ -226,7 +230,7 @@ namespace MPF.Test.Modules
             Assert.NotNull(parametersObject);
 
             // Validate that the same set of parameters are generated on the output
-            string newParameters = parametersObject.GenerateParameters();
+            var newParameters = parametersObject.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
         }
@@ -241,7 +245,7 @@ namespace MPF.Test.Modules
             Assert.NotNull(parametersObject);
 
             // Validate that the same set of parameters are generated on the output
-            string newParameters = parametersObject.GenerateParameters();
+            var newParameters = parametersObject.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
         }

@@ -42,10 +42,14 @@ namespace MPF.Test.Library
             long layerbreak,
             long layerbreak2,
             long layerbreak3,
+#if NET48
             string expected)
+#else
+            string? expected)
+#endif
         {
             // TODO: Add tests around BDU
-            string actual = InfoTool.GetFixedMediaType(mediaType, null, size, layerbreak, layerbreak2, layerbreak3);
+            var actual = InfoTool.GetFixedMediaType(mediaType, null, size, layerbreak, layerbreak2, layerbreak3);
             Assert.Equal(expected, actual);
         }
 
@@ -58,7 +62,11 @@ namespace MPF.Test.Library
         [InlineData("superhero\\blah.rev.bin", "superhero\\blah.rev.bin")]
         [InlineData("super&hero\\blah.bin", "super&hero\\blah.bin")]
         [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
+#if NET48
         public void NormalizeOutputPathsTest(string outputPath, string expectedPath)
+#else
+        public void NormalizeOutputPathsTest(string? outputPath, string? expectedPath)
+#endif
         {
             if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);

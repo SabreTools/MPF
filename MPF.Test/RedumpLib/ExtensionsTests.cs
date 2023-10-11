@@ -95,15 +95,31 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of DiscType values
         /// </summary>
         /// <returns>MemberData-compatible list of DiscType values</returns>
+#if NET48
         public static List<object[]> GenerateDiscTypeMappingTestData()
+#else
+        public static List<object?[]> GenerateDiscTypeMappingTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (DiscType? discType in Enum.GetValues(typeof(DiscType)))
             {
                 if (_mappableDiscTypes.Contains(discType))
+#if NET48
                     testData.Add(new object[] { discType, false });
+#else
+                    testData.Add(new object?[] { discType, false });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { discType, true });
+#else
+                    testData.Add(new object?[] { discType, true });
+#endif
             }
 
             return testData;
@@ -113,12 +129,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of RedumpSystem values
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateRedumpSystemMappingTestData()
+#else
+        public static List<object?[]> GenerateRedumpSystemMappingTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null } };
+#endif
             foreach (RedumpSystem? redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
+#if NET48
                 testData.Add(new object[] { redumpSystem });
+#else
+                testData.Add(new object?[] { redumpSystem });
+#endif
             }
 
             return testData;
@@ -128,16 +156,32 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of mappable media types
         /// </summary>
         /// <returns>MemberData-compatible list of MediaTypes</returns>
+#if NET48
         public static List<object[]> GenerateMediaTypeMappingTestData()
+#else
+        public static List<object?[]> GenerateMediaTypeMappingTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
 
             foreach (MediaType? mediaType in Enum.GetValues(typeof(MediaType)))
             {
                 if (_mappableMediaTypes.Contains(mediaType))
+#if NET48
                     testData.Add(new object[] { mediaType, false });
+#else
+                    testData.Add(new object?[] { mediaType, false });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { mediaType, true });
+#else
+                    testData.Add(new object?[] { mediaType, true });
+#endif
             }
 
             return testData;
@@ -156,7 +200,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateDiscCategoryTestData))]
         public void DiscCategoryLongNameTest(DiscCategory? discCategory, bool expectNull)
         {
-            string actual = discCategory.LongName();
+            var actual = discCategory.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -168,12 +212,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of DiscCategory values
         /// </summary>
         /// <returns>MemberData-compatible list of DiscCategory values</returns>
+#if NET48
         public static List<object[]> GenerateDiscCategoryTestData()
+#else
+        public static List<object?[]> GenerateDiscCategoryTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (DiscCategory? discCategory in Enum.GetValues(typeof(DiscCategory)))
             {
+#if NET48
                 testData.Add(new object[] { discCategory, false });
+#else
+                testData.Add(new object?[] { discCategory, false });
+#endif
             }
 
             return testData;
@@ -192,7 +248,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateDiscTypeTestData))]
         public void DiscTypeLongNameTest(DiscType? discType, bool expectNull)
         {
-            string actual = discType.LongName();
+            var actual = discType.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -204,15 +260,31 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of DiscType values
         /// </summary>
         /// <returns>MemberData-compatible list of DiscType values</returns>
+#if NET48
         public static List<object[]> GenerateDiscTypeTestData()
+#else
+        public static List<object?[]> GenerateDiscTypeTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (DiscType? discType in Enum.GetValues(typeof(DiscType)))
             {
                 if (discType == DiscType.NONE)
+#if NET48
                     testData.Add(new object[] { discType, true });
+#else
+                    testData.Add(new object?[] { discType, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { discType, false });
+#else
+                    testData.Add(new object?[] { discType, false });
+#endif
             }
 
             return testData;
@@ -231,7 +303,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateLanguageTestData))]
         public void LanguageLongNameTest(Language? language, bool expectNull)
         {
-            string actual = language.LongName();
+            var actual = language.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -248,7 +320,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateLanguageTestData))]
         public void LanguageShortNameTest(Language? language, bool expectNull)
         {
-            string actual = language.ShortName();
+            var actual = language.ShortName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -268,7 +340,7 @@ namespace MPF.Test.RedumpLib
             int totalCount = 0;
             foreach (Language? language in fullLanguages)
             {
-                string code = language.TwoLetterCode();
+                var code = language.TwoLetterCode();
                 if (string.IsNullOrWhiteSpace(code))
                     continue;
 
@@ -295,7 +367,7 @@ namespace MPF.Test.RedumpLib
             int totalCount = 0;
             foreach (Language? language in fullLanguages)
             {
-                string code = language.ThreeLetterCode();
+                var code = language.ThreeLetterCode();
                 if (string.IsNullOrWhiteSpace(code))
                     continue;
 
@@ -322,7 +394,7 @@ namespace MPF.Test.RedumpLib
             int totalCount = 0;
             foreach (Language? language in fullLanguages)
             {
-                string code = language.ThreeLetterCodeAlt();
+                var code = language.ThreeLetterCodeAlt();
                 if (string.IsNullOrWhiteSpace(code))
                     continue;
 
@@ -341,12 +413,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of Language values
         /// </summary>
         /// <returns>MemberData-compatible list of Language values</returns>
+#if NET48
         public static List<object[]> GenerateLanguageTestData()
+#else
+        public static List<object?[]> GenerateLanguageTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (Language? language in Enum.GetValues(typeof(Language)))
             {
+#if NET48
                 testData.Add(new object[] { language, false });
+#else
+                testData.Add(new object?[] { language, false });
+#endif
             }
 
             return testData;
@@ -365,7 +449,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateLanguageSelectionTestData))]
         public void LanguageSelectionLongNameTest(LanguageSelection? languageSelection, bool expectNull)
         {
-            string actual = languageSelection.LongName();
+            var actual = languageSelection.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -377,12 +461,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of LanguageSelection values
         /// </summary>
         /// <returns>MemberData-compatible list of LanguageSelection values</returns>
+#if NET48
         public static List<object[]> GenerateLanguageSelectionTestData()
+#else
+        public static List<object?[]> GenerateLanguageSelectionTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (LanguageSelection? languageSelection in Enum.GetValues(typeof(LanguageSelection)))
             {
+#if NET48
                 testData.Add(new object[] { languageSelection, false });
+#else
+                testData.Add(new object?[] { languageSelection, false });
+#endif
             }
 
             return testData;
@@ -401,7 +497,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateMediaTypeTestData))]
         public void MediaTypeLongNameTest(MediaType? mediaType, bool expectNull)
         {
-            string actual = mediaType.LongName();
+            var actual = mediaType.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -418,7 +514,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateMediaTypeTestData))]
         public void MediaTypeShortNameTest(MediaType? mediaType, bool expectNull)
         {
-            string actual = mediaType.ShortName();
+            var actual = mediaType.ShortName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -430,12 +526,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of MediaType values
         /// </summary>
         /// <returns>MemberData-compatible list of MediaType values</returns>
+#if NET48
         public static List<object[]> GenerateMediaTypeTestData()
+#else
+        public static List<object?[]> GenerateMediaTypeTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (MediaType? mediaType in Enum.GetValues(typeof(MediaType)))
             {
+#if NET48
                 testData.Add(new object[] { mediaType, false });
+#else
+                testData.Add(new object?[] { mediaType, false });
+#endif
             }
 
             return testData;
@@ -454,7 +562,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateRegionTestData))]
         public void RegionLongNameTest(Region? region, bool expectNull)
         {
-            string actual = region.LongName();
+            var actual = region.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -471,7 +579,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateRegionTestData))]
         public void RegionShortNameTest(Region? region, bool expectNull)
         {
-            string actual = region.ShortName();
+            var actual = region.ShortName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -491,7 +599,7 @@ namespace MPF.Test.RedumpLib
             int totalCount = 0;
             foreach (Region? region in fullRegions)
             {
-                string code = region.ShortName();
+                var code = region.ShortName();
                 if (string.IsNullOrWhiteSpace(code))
                     continue;
 
@@ -510,12 +618,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of Region values
         /// </summary>
         /// <returns>MemberData-compatible list of Region values</returns>
+#if NET48
         public static List<object[]> GenerateRegionTestData()
+#else
+        public static List<object?[]> GenerateRegionTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (Region? region in Enum.GetValues(typeof(Region)))
             {
+#if NET48
                 testData.Add(new object[] { region, false });
+#else
+                testData.Add(new object?[] { region, false });
+#endif
             }
 
             return testData;
@@ -534,7 +654,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateSiteCodeTestData))]
         public void SiteCodeLongNameTest(SiteCode? siteCode, bool expectNull)
         {
-            string actual = siteCode.LongName();
+            var actual = siteCode.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -551,7 +671,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateSiteCodeTestData))]
         public void SiteCodeShortNameTest(SiteCode? siteCode, bool expectNull)
         {
-            string actual = siteCode.ShortName();
+            var actual = siteCode.ShortName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -563,12 +683,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of SiteCode values
         /// </summary>
         /// <returns>MemberData-compatible list of SiteCode values</returns>
+#if NET48
         public static List<object[]> GenerateSiteCodeTestData()
+#else
+        public static List<object?[]> GenerateSiteCodeTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
             {
+#if NET48
                 testData.Add(new object[] { siteCode, false });
+#else
+                testData.Add(new object?[] { siteCode, false });
+#endif
             }
 
             return testData;
@@ -587,7 +719,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateRedumpSystemTestData))]
         public void RedumpSystemLongNameTest(RedumpSystem? redumpSystem, bool expectNull)
         {
-            string actual = redumpSystem.LongName();
+            var actual = redumpSystem.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -622,16 +754,28 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of RedumpSystem values
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateRedumpSystemTestData()
+#else
+        public static List<object?[]> GenerateRedumpSystemTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (RedumpSystem? redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 // We want to skip all markers for this
                 if (redumpSystem.IsMarker())
                     continue;
 
+#if NET48
                 testData.Add(new object[] { redumpSystem, false });
+#else
+                testData.Add(new object?[] { redumpSystem, false });
+#endif
             }
 
             return testData;
@@ -650,7 +794,7 @@ namespace MPF.Test.RedumpLib
         [MemberData(nameof(GenerateSystemCategoryTestData))]
         public void SystemCategoryLongNameTest(SystemCategory? systemCategory, bool expectNull)
         {
-            string actual = systemCategory.LongName();
+            var actual = systemCategory.LongName();
 
             if (expectNull)
                 Assert.Null(actual);
@@ -662,15 +806,31 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of SystemCategory values
         /// </summary>
         /// <returns>MemberData-compatible list of SystemCategory values</returns>
+#if NET48
         public static List<object[]> GenerateSystemCategoryTestData()
+#else
+        public static List<object?[]> GenerateSystemCategoryTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, true } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, true } };
+#endif
             foreach (SystemCategory? systemCategory in Enum.GetValues(typeof(SystemCategory)))
             {
                 if (systemCategory == SystemCategory.NONE)
+#if NET48
                     testData.Add(new object[] { systemCategory, true });
+#else
+                    testData.Add(new object?[] { systemCategory, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { systemCategory, false });
+#else
+                    testData.Add(new object?[] { systemCategory, false });
+#endif
             }
 
             return testData;
@@ -701,12 +861,24 @@ namespace MPF.Test.RedumpLib
         /// Generate a test set of YesNo values
         /// </summary>
         /// <returns>MemberData-compatible list of YesNo values</returns>
+#if NET48
         public static List<object[]> GenerateYesNoTestData()
+#else
+        public static List<object?[]> GenerateYesNoTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (YesNo? yesNo in Enum.GetValues(typeof(YesNo)))
             {
+#if NET48
                 testData.Add(new object[] { yesNo, false });
+#else
+                testData.Add(new object?[] { yesNo, false });
+#endif
             }
 
             return testData;

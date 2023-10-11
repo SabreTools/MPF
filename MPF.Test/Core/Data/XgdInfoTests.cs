@@ -25,6 +25,7 @@ namespace MPF.Test.Core.Data
             XgdInfo xgdInfo = new XgdInfo(validString);
 
             Assert.True(xgdInfo.Initialized);
+            Assert.NotNull(xgdInfo.XMID);
             Assert.Equal(publisher, xgdInfo.XMID.PublisherIdentifier);
             Assert.Equal(gameId, xgdInfo.XMID.GameID);
             Assert.Equal(version, xgdInfo.XMID.VersionNumber);
@@ -58,6 +59,7 @@ namespace MPF.Test.Core.Data
             XgdInfo xgdInfo = new XgdInfo(validString);
 
             Assert.True(xgdInfo.Initialized);
+            Assert.NotNull(xgdInfo.XeMID);
             Assert.Equal(publisher, xgdInfo.XeMID.PublisherIdentifier);
             Assert.Equal('2', xgdInfo.XeMID.PlatformIdentifier);
             Assert.Equal(gameId, xgdInfo.XeMID.GameID);

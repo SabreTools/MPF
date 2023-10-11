@@ -143,15 +143,31 @@ namespace MPF.Test.Core.Utilities
         /// Generate a test set of MediaType values that support drive speeds
         /// </summary>
         /// <returns>MemberData-compatible list of MediaType values</returns>
+#if NET48
         public static List<object[]> GenerateSupportDriveSpeedsTestData()
+#else
+        public static List<object?[]> GenerateSupportDriveSpeedsTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (MediaType mediaType in Enum.GetValues(typeof(MediaType)))
             {
                 if (_supportDriveSpeeds.Contains(mediaType))
+#if NET48
                     testData.Add(new object[] { mediaType, true });
+#else
+                    testData.Add(new object?[] { mediaType, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { mediaType, false });
+#else
+                    testData.Add(new object?[] { mediaType, false });
+#endif
             }
 
             return testData;
@@ -161,15 +177,31 @@ namespace MPF.Test.Core.Utilities
         /// Generate a test set of RedumpSystem values that are considered Audio
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateAudioSystemsTestData()
+#else
+        public static List<object?[]> GenerateAudioSystemsTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_audioSystems.Contains(redumpSystem))
+#if NET48
                     testData.Add(new object[] { redumpSystem, true });
+#else
+                    testData.Add(new object?[] { redumpSystem, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { redumpSystem, false });
+#else
+                    testData.Add(new object?[] { redumpSystem, false });
+#endif
             }
 
             return testData;
@@ -179,15 +211,31 @@ namespace MPF.Test.Core.Utilities
         /// Generate a test set of RedumpSystem values that are considered markers
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateMarkerSystemsTestData()
+#else
+        public static List<object?[]> GenerateMarkerSystemsTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_markerSystems.Contains(redumpSystem))
+#if NET48
                     testData.Add(new object[] { redumpSystem, true });
+#else
+                    testData.Add(new object?[] { redumpSystem, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { redumpSystem, false });
+#else
+                    testData.Add(new object?[] { redumpSystem, false });
+#endif
             }
 
             return testData;
@@ -197,15 +245,31 @@ namespace MPF.Test.Core.Utilities
         /// Generate a test set of RedumpSystem values that are considered markers
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateReversedRingcodeSystemsTestData()
+#else
+        public static List<object?[]> GenerateReversedRingcodeSystemsTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_reverseRingcodeSystems.Contains(redumpSystem))
+#if NET48
                     testData.Add(new object[] { redumpSystem, true });
+#else
+                    testData.Add(new object?[] { redumpSystem, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { redumpSystem, false });
+#else
+                    testData.Add(new object?[] { redumpSystem, false });
+#endif
             }
 
             return testData;
@@ -215,15 +279,31 @@ namespace MPF.Test.Core.Utilities
         /// Generate a test set of RedumpSystem values that are considered XGD
         /// </summary>
         /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+#if NET48
         public static List<object[]> GenerateXGDSystemsTestData()
+#else
+        public static List<object?[]> GenerateXGDSystemsTestData()
+#endif
         {
+#if NET48
             var testData = new List<object[]>() { new object[] { null, false } };
+#else
+            var testData = new List<object?[]>() { new object?[] { null, false } };
+#endif
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_xgdSystems.Contains(redumpSystem))
+#if NET48
                     testData.Add(new object[] { redumpSystem, true });
+#else
+                    testData.Add(new object?[] { redumpSystem, true });
+#endif
                 else
+#if NET48
                     testData.Add(new object[] { redumpSystem, false });
+#else
+                    testData.Add(new object?[] { redumpSystem, false });
+#endif
             }
 
             return testData;
