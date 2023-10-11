@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix options loading for Check
+
 ### 2.7.1 (2023-10-11)
 
 - Add pull-all flag for Check

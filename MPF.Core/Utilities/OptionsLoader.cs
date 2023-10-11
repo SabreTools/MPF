@@ -185,7 +185,7 @@ namespace MPF.Core.Utilities
                 }
 
                 // Include seed info file
-                if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
+                else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
                 {
                     string seedInfo = args[startIndex].Split('=')[1];
                     info = InfoTool.CreateFromFile(seedInfo);
