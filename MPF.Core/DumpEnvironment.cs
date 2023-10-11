@@ -371,16 +371,19 @@ namespace MPF.Core
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
+        /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
 #if NET48
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null,
-            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo = null)
+            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo = null,
+            SubmissionInfo seedInfo = null)
 #else
             IProgress<Result>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
-            Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null)
+            Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
+            SubmissionInfo? seedInfo = null)
 #endif
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
@@ -409,6 +412,14 @@ namespace MPF.Core
                 resultProgress,
                 protectionProgress);
             resultProgress?.Report(Result.Success("Extracting information complete!"));
+
+            // Inject seed submission info data, if necessary
+            if (seedInfo != null)
+            {
+                resultProgress?.Report(Result.Success("Injecting user-supplied information..."));
+                InjectSubmissionInformation(submissionInfo, seedInfo);
+                resultProgress?.Report(Result.Success("Information injection complete!"));
+            }
 
             // Eject the disc automatically if configured to
             if (Options.EjectAfterDump == true)
@@ -557,6 +568,82 @@ namespace MPF.Core
             });
 
             return output;
+        }
+
+        /// <summary>
+        /// Inject information from a seed SubmissionInfo into the existing one
+        /// </summary>
+        /// <param name="info">Existing submission information</param>
+        /// <param name="seed">User-supplied submission information</param>
+#if NET48
+        private void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
+#else
+        private void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
+#endif
+        {
+            // If we have any invalid info
+            if (info == null || seed == null)
+                return;
+
+            // Otherwise, inject information as necessary
+            if (seed.CommonDiscInfo != null)
+            {
+                if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+
+                // Info that only overwrites if supplied
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Title)) info.CommonDiscInfo.Title = seed.CommonDiscInfo.Title;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.ForeignTitleNonLatin)) info.CommonDiscInfo.ForeignTitleNonLatin = seed.CommonDiscInfo.ForeignTitleNonLatin;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.DiscNumberLetter)) info.CommonDiscInfo.DiscNumberLetter = seed.CommonDiscInfo.DiscNumberLetter;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.DiscTitle)) info.CommonDiscInfo.DiscTitle = seed.CommonDiscInfo.DiscTitle;
+                if (seed.CommonDiscInfo.Category != null) info.CommonDiscInfo.Category = seed.CommonDiscInfo.Category;
+                if (seed.CommonDiscInfo.Region != null) info.CommonDiscInfo.Region = seed.CommonDiscInfo.Region;
+                if (seed.CommonDiscInfo.Languages != null) info.CommonDiscInfo.Languages = seed.CommonDiscInfo.Languages;
+                if (seed.CommonDiscInfo.LanguageSelection != null) info.CommonDiscInfo.LanguageSelection = seed.CommonDiscInfo.LanguageSelection;
+                if (seed.CommonDiscInfo.Serial != null) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Barcode)) info.CommonDiscInfo.Barcode = seed.CommonDiscInfo.Barcode;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Comments)) info.CommonDiscInfo.Comments = seed.CommonDiscInfo.Comments;
+                if (seed.CommonDiscInfo.CommentsSpecialFields != null) info.CommonDiscInfo.CommentsSpecialFields = seed.CommonDiscInfo.CommentsSpecialFields;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Contents)) info.CommonDiscInfo.Contents = seed.CommonDiscInfo.Contents;
+                if (seed.CommonDiscInfo.ContentsSpecialFields != null) info.CommonDiscInfo.ContentsSpecialFields = seed.CommonDiscInfo.ContentsSpecialFields;
+
+                // Info that always overwrites
+                info.CommonDiscInfo.Layer0MasteringRing = seed.CommonDiscInfo.Layer0MasteringRing;
+                info.CommonDiscInfo.Layer0MasteringSID = seed.CommonDiscInfo.Layer0MasteringSID;
+                info.CommonDiscInfo.Layer0ToolstampMasteringCode = seed.CommonDiscInfo.Layer0ToolstampMasteringCode;
+                info.CommonDiscInfo.Layer0MouldSID = seed.CommonDiscInfo.Layer0MouldSID;
+                info.CommonDiscInfo.Layer0AdditionalMould = seed.CommonDiscInfo.Layer0AdditionalMould;
+
+                info.CommonDiscInfo.Layer1MasteringRing = seed.CommonDiscInfo.Layer1MasteringRing;
+                info.CommonDiscInfo.Layer1MasteringSID = seed.CommonDiscInfo.Layer1MasteringSID;
+                info.CommonDiscInfo.Layer1ToolstampMasteringCode = seed.CommonDiscInfo.Layer1ToolstampMasteringCode;
+                info.CommonDiscInfo.Layer1MouldSID = seed.CommonDiscInfo.Layer1MouldSID;
+                info.CommonDiscInfo.Layer1AdditionalMould = seed.CommonDiscInfo.Layer1AdditionalMould;
+
+                info.CommonDiscInfo.Layer2MasteringRing = seed.CommonDiscInfo.Layer2MasteringRing;
+                info.CommonDiscInfo.Layer2MasteringSID = seed.CommonDiscInfo.Layer2MasteringSID;
+                info.CommonDiscInfo.Layer2ToolstampMasteringCode = seed.CommonDiscInfo.Layer2ToolstampMasteringCode;
+
+                info.CommonDiscInfo.Layer3MasteringRing = seed.CommonDiscInfo.Layer3MasteringRing;
+                info.CommonDiscInfo.Layer3MasteringSID = seed.CommonDiscInfo.Layer3MasteringSID;
+                info.CommonDiscInfo.Layer3ToolstampMasteringCode = seed.CommonDiscInfo.Layer3ToolstampMasteringCode;
+            }
+
+            if (seed.VersionAndEditions != null)
+            {
+                if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+                
+                // Info that only overwrites if supplied
+                if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.Version)) info.VersionAndEditions.Version = seed.VersionAndEditions.Version;
+                if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.OtherEditions)) info.VersionAndEditions.OtherEditions = seed.VersionAndEditions.OtherEditions;
+            }
+
+            if (seed.CopyProtection != null)
+            {
+                if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+                
+                // Info that only overwrites if supplied
+                if (!string.IsNullOrWhiteSpace(seed.CopyProtection.Protection)) info.CopyProtection.Protection = seed.CopyProtection.Protection;
+            }
         }
 
         /// <summary>

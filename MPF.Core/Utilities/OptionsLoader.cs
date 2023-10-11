@@ -90,9 +90,9 @@ namespace MPF.Core.Utilities
         /// Load the current set of options from application arguments
         /// </summary>
 #if NET48
-        public static (Options, string, int) LoadFromArguments(string[] args, int startIndex = 0)
+        public static (Options, SubmissionInfo, string, int) LoadFromArguments(string[] args, int startIndex = 0)
 #else
-        public static (Options, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
+        public static (Options, SubmissionInfo?, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
 #endif
         {
             // Create the output values with defaults
@@ -105,9 +105,12 @@ namespace MPF.Core.Utilities
                 CompressLogFiles = false,
             };
 
+            // Create the submission info to return, if necessary
 #if NET48
+            SubmissionInfo info = null;
             string parsedPath = null;
 #else
+            SubmissionInfo? info = null;
             string? parsedPath = null;
 #endif
 
@@ -116,11 +119,11 @@ namespace MPF.Core.Utilities
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
-                return (options, null, 0);
+                return (options, null, null, 0);
 
             // If we have an invalid start index, just return
             if (startIndex < 0 || startIndex >= args.Length)
-                return (options, null, startIndex);
+                return (options, null, null, startIndex);
 
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
@@ -181,6 +184,19 @@ namespace MPF.Core.Utilities
                     protectFile = true;
                 }
 
+                // Include seed info file
+                if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
+                {
+                    string seedInfo = args[startIndex].Split('=')[1];
+                    info = InfoTool.CreateFromFile(seedInfo);
+                }
+                else if (args[startIndex] == "-l" || args[startIndex] == "--load-seed")
+                {
+                    string seedInfo = args[startIndex + 1];
+                    info = InfoTool.CreateFromFile(seedInfo);
+                    startIndex++;
+                }
+
                 // Output submission JSON
                 else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
                 {
@@ -204,7 +220,7 @@ namespace MPF.Core.Utilities
             options.ScanForProtection = scan && !string.IsNullOrWhiteSpace(parsedPath);
             options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrWhiteSpace(parsedPath);
 
-            return (options, parsedPath, startIndex);
+            return (options, info, parsedPath, startIndex);
         }
 
         /// <summary>
@@ -220,6 +236,7 @@ namespace MPF.Core.Utilities
             supportedArguments.Add("-p, --path <drivepath>         Physical drive path for additional checks");
             supportedArguments.Add("-s, --scan                     Enable copy protection scan (requires --path)");
             supportedArguments.Add("-f, --protect-file             Output protection to separate file (requires --scan)");
+            supportedArguments.Add("-l, --load-seed <path>         Load a seed submission JSON for user information");
             supportedArguments.Add("-j, --json                     Enable submission JSON output");
             supportedArguments.Add("-z, --zip                      Enable log file compression");
 

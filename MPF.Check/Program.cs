@@ -29,7 +29,11 @@ namespace MPF.Check
             }
 
             // Loop through and process options
-            (Core.Data.Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+#if NET48
+            (Core.Data.Options options, SubmissionInfo seedInfo, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+#else
+            (Core.Data.Options options, SubmissionInfo? seedInfo, string? path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+#endif
             if (options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");

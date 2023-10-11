@@ -24,6 +24,39 @@ namespace MPF.Core
         #region Information Extraction
 
         /// <summary>
+        /// Create a SubmissionInfo from a JSON file path
+        /// </summary>
+        /// <param name="path">Path to the SubmissionInfo JSON</param>
+        /// <returns>Filled SubmissionInfo on success, null on error</returns>
+#if NET48
+        public static SubmissionInfo CreateFromFile(string path)
+#else
+        public static SubmissionInfo? CreateFromFile(string? path)
+#endif
+        {
+            // If the path is invalid
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
+
+            // If the file doesn't exist
+            if (!File.Exists(path))
+                return null;
+
+            // Try to open and deserialize the file
+            try
+            {
+                byte[] data = File.ReadAllBytes(path);
+                string dataString = Encoding.UTF8.GetString(data);
+                return JsonConvert.DeserializeObject<SubmissionInfo>(dataString);
+            }
+            catch
+            {
+                // We don't care what the exception was
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Extract all of the possible information from a given input combination
         /// </summary>
         /// <param name="outputPath">Output path to write to</param>
