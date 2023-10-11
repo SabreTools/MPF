@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add pull-all flag for Check
+
 ### 2.7.0 (2023-10-11)
 
 - Attempt to replace NRT

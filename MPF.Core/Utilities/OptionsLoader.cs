@@ -125,8 +125,21 @@ namespace MPF.Core.Utilities
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
             {
+                // Use specific program
+                if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
+                {
+                    string internalProgram = args[startIndex].Split('=')[1];
+                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
+                }
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
+                {
+                    string internalProgram = args[startIndex + 1];
+                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
+                    startIndex++;
+                }
+
                 // Redump login
-                if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
+                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
                 {
                     string[] credentials = args[startIndex].Split('=')[1].Split(';');
                     options.RedumpUsername = credentials[0];
@@ -139,17 +152,10 @@ namespace MPF.Core.Utilities
                     startIndex += 2;
                 }
 
-                // Use specific program
-                else if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
+                // Pull all information (requires Redump login)
+                else if (args[startIndex].Equals("-a") || args[startIndex].Equals("--pull-all"))
                 {
-                    string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
-                }
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
-                {
-                    string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
-                    startIndex++;
+                    options.PullAllInformation = true;
                 }
 
                 // Use a device path for physical checks
@@ -210,6 +216,7 @@ namespace MPF.Core.Utilities
 
             supportedArguments.Add("-u, --use <program>            Dumping program output type [REQUIRED]");
             supportedArguments.Add("-c, --credentials <user> <pw>  Redump username and password");
+            supportedArguments.Add("-a, --pull-all                 Pull all information from Redump (requires --credentials)");
             supportedArguments.Add("-p, --path <drivepath>         Physical drive path for additional checks");
             supportedArguments.Add("-s, --scan                     Enable copy protection scan (requires --path)");
             supportedArguments.Add("-f, --protect-file             Output protection to separate file (requires --scan)");
