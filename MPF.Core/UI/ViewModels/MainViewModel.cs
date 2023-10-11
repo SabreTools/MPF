@@ -544,6 +544,7 @@ namespace MPF.Core.UI.ViewModels
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
+            OutputPathBrowseButtonEnabled = true;
             DriveLetterComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             StartStopButtonEnabled = true;
