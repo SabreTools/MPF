@@ -37,7 +37,7 @@ namespace WPFCustomMessageBox
         const int SWP_NOMOVE = 0x0002;
         const int SWP_NOZORDER = 0x0004;
         const int SWP_FRAMECHANGED = 0x0020;
-        const uint WM_SETICON = 0x0080;
+        //const uint WM_SETICON = 0x0080;
 
 
         internal static ImageSource ToImageSource(this Icon icon)

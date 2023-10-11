@@ -589,8 +589,7 @@ namespace MPF.Core.UI.ViewModels
             DisableEventHandlers();
 
             // If the property change event is initialized
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
             // Reenable event handlers, if necessary
             if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
@@ -1116,8 +1115,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void Log(string text)
         {
-            if (_logger != null)
-                _logger(LogLevel.USER, text);
+            _logger?.Invoke(LogLevel.USER, text);
         }
 
         /// <summary>
@@ -1132,8 +1130,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void ErrorLog(string text)
         {
-            if (_logger != null)
-                _logger(LogLevel.ERROR, text);
+            _logger?.Invoke(LogLevel.ERROR, text);
         }
 
         /// <summary>
@@ -1148,8 +1145,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void SecretLog(string text)
         {
-            if (_logger != null)
-                _logger(LogLevel.SECRET, text);
+            _logger?.Invoke(LogLevel.SECRET, text);
         }
 
         /// <summary>
@@ -1433,7 +1429,7 @@ namespace MPF.Core.UI.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default(char));
+                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default);
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
@@ -1470,8 +1466,12 @@ namespace MPF.Core.UI.ViewModels
 #endif
         {
             // Determine current environment, just in case
+#if NET48
             if (_environment == null)
                 _environment = DetermineEnvironment();
+#else
+            _environment ??= DetermineEnvironment();
+#endif
 
             // If we don't have a valid drive
             if (this.CurrentDrive == null || this.CurrentDrive.Letter == default(char))
@@ -1789,7 +1789,7 @@ namespace MPF.Core.UI.ViewModels
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Progress Reporting
 
@@ -1804,7 +1804,11 @@ namespace MPF.Core.UI.ViewModels
         {
             try
             {
+#if NET48
                 value = value ?? string.Empty;
+#else
+                value ??= string.Empty;
+#endif
                 LogLn(value);
             }
             catch { }

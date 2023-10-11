@@ -228,17 +228,18 @@ namespace MPF.Core.Utilities
         /// </summary>
         public static List<string> PrintSupportedArguments()
         {
-            var supportedArguments = new List<string>();
-
-            supportedArguments.Add("-u, --use <program>            Dumping program output type [REQUIRED]");
-            supportedArguments.Add("-c, --credentials <user> <pw>  Redump username and password");
-            supportedArguments.Add("-a, --pull-all                 Pull all information from Redump (requires --credentials)");
-            supportedArguments.Add("-p, --path <drivepath>         Physical drive path for additional checks");
-            supportedArguments.Add("-s, --scan                     Enable copy protection scan (requires --path)");
-            supportedArguments.Add("-f, --protect-file             Output protection to separate file (requires --scan)");
-            supportedArguments.Add("-l, --load-seed <path>         Load a seed submission JSON for user information");
-            supportedArguments.Add("-j, --json                     Enable submission JSON output");
-            supportedArguments.Add("-z, --zip                      Enable log file compression");
+            var supportedArguments = new List<string>
+            {
+                "-u, --use <program>            Dumping program output type [REQUIRED]",
+                "-c, --credentials <user> <pw>  Redump username and password",
+                "-a, --pull-all                 Pull all information from Redump (requires --credentials)",
+                "-p, --path <drivepath>         Physical drive path for additional checks",
+                "-s, --scan                     Enable copy protection scan (requires --path)",
+                "-f, --protect-file             Output protection to separate file (requires --scan)",
+                "-l, --load-seed <path>         Load a seed submission JSON for user information",
+                "-j, --json                     Enable submission JSON output",
+                "-z, --zip                      Enable log file compression"
+            };
 
             return supportedArguments;
         }
