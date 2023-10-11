@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Add pull-all flag for Check
+- Fix errant version detection issue
 
 ### 2.7.0 (2023-10-11)
 

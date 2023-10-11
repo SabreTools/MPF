@@ -143,7 +143,7 @@ namespace MPF.Core.Utilities
                 if (assemblyVersion == null)
                     return (false, "Assembly version could not be determined", null);
 
-                string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
+                string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
 
                 // Get the latest tag from GitHub
                 var (tag, url) = GetRemoteVersionAndUrl();
