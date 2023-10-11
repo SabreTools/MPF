@@ -19,6 +19,7 @@
 - Fix Check always showing Help text
 - Version-gate some more newer syntax
 - Enable path browse button by default
+- Remove unnecessary namespacing
 
 ### 2.7.0 (2023-10-11)
 
