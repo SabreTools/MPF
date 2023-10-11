@@ -350,6 +350,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Enable generic drive type by default with Redumper
+        /// </summary>
+        public bool RedumperUseGenericDriveType
+        {
+            get { return GetBooleanSetting(Settings, "RedumperUseGenericDriveType", false); }
+            set { Settings["RedumperUseGenericDriveType"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default number of rereads
         /// </summary>
         public int RedumperRereadCount

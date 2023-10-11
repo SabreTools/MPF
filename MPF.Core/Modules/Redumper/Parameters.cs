@@ -1031,6 +1031,11 @@ namespace MPF.Core.Modules.Redumper
                 this[FlagStrings.DriveReadMethod] = true;
                 DriveReadMethodValue = "BE_CDDA";
             }
+            if (options.RedumperUseGenericDriveType)
+            {
+                this[FlagStrings.DriveType] = true;
+                DriveTypeValue = "Generic";
+            }
 
             // Set the output paths
             if (!string.IsNullOrWhiteSpace(filename))

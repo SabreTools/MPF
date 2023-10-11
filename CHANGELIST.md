@@ -4,6 +4,7 @@
 - Fix errant version detection issue
 - Allow user-supplied information in Check
 - Add BE read flag for Redumper
+- Add generic drive flag for Redumper
 
 ### 2.7.0 (2023-10-11)
 

@@ -63,7 +63,7 @@
                     </Button>
                 </Grid>
             </Grid>
-            
+
             <TabControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
@@ -84,7 +84,7 @@
                         />
                     </UniformGrid>
                 </TabItem>
-                
+
                 <TabItem Header="Paths" Style="{DynamicResource CustomTabItemStyle}">
                     <Grid Margin="5,5,5,5">
                         <Grid.ColumnDefinitions>
@@ -232,7 +232,7 @@
                                      />
                             </UniformGrid>
                         </GroupBox>
-                        
+
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Default Speeds" Grid.ColumnSpan="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -247,7 +247,7 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                
+
                                 <Label Grid.Row="0" Grid.Column="0" Content="CD" />
                                 <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForCDAsCollection}}"
@@ -357,7 +357,8 @@
                             IsChecked="{Binding Options.DICMultiSectorRead}"
                             ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                             />
-                        <Label/> <!-- Empty label for padding -->
+                        <Label/>
+                        <!-- Empty label for padding -->
 
                         <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
@@ -391,12 +392,16 @@
                             ToolTip="Enable verbose output in logs" Margin="0,4"
                             />
 
-                        <CheckBox VerticalAlignment="Center" Content="Enable BE drive reading"
+                        <CheckBox VerticalAlignment="Center" Content="Enable BE Drive Reading"
                             IsChecked="{Binding Options.RedumperUseBEReading}"
                             ToolTip="Enable setting drive read method to BE_CDDA by default" Margin="0,4"
                             />
-                        <Label/> <!-- Empty label for padding -->
-                        
+
+                        <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
+                            IsChecked="{Binding Options.RedumperUseGenericDriveType}"
+                            ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
+                            />
+
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                             Text="{Binding Options.RedumperRereadCount}"
@@ -447,12 +452,14 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
-                    <Label/> <!-- Empty label for padding -->
+                    <Label/>
+                    <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Label/> <!-- Empty label for padding -->
+                    <Label/>
+                    <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
