@@ -15,12 +15,16 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Read-only access to the current disc information view model
         /// </summary>
-        public DiscInformationViewModel DiscInformationViewModel => DataContext as DiscInformationViewModel;
+        public DiscInformationViewModel DiscInformationViewModel => DataContext as DiscInformationViewModel ?? new DiscInformationViewModel(new Options(), new SubmissionInfo());
 
         /// <summary>
         /// Constructor
         /// </summary>
+#if NET48
         public DiscInformationWindow(Options options, SubmissionInfo submissionInfo)
+#else
+        public DiscInformationWindow(Options options, SubmissionInfo? submissionInfo)
+#endif
         {
             InitializeComponent();
             DataContext = new DiscInformationViewModel(options, submissionInfo);
@@ -47,7 +51,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Manipulate fields based on the current disc
         /// </summary>
+#if NET48
         private void ManipulateFields(Options options, SubmissionInfo submissionInfo)
+#else
+        private void ManipulateFields(Options options, SubmissionInfo? submissionInfo)
+#endif
         {
             // Enable tabs in all fields, if required
             if (options.EnableTabsInInputFields)
@@ -115,63 +123,71 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         /// TODO: Figure out how to bind the PartiallyMatchedIDs array to a text box
         /// TODO: Convert visibility to a binding
+#if NET48
         private void HideReadOnlyFields(SubmissionInfo submissionInfo)
+#else
+        private void HideReadOnlyFields(SubmissionInfo? submissionInfo)
+#endif
         {
-            if (submissionInfo?.FullyMatchedID == null)
+            // If there's no submission information
+            if (submissionInfo == null)
+                return;
+
+            if (submissionInfo.FullyMatchedID == null)
                 FullyMatchedID.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.PartiallyMatchedIDs == null)
+            if (submissionInfo.PartiallyMatchedIDs == null)
                 PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs);
-            if (submissionInfo?.CopyProtection?.AntiModchip == null)
+            if (submissionInfo.CopyProtection?.AntiModchip == null)
                 AntiModchip.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.TracksAndWriteOffsets?.OtherWriteOffsets == null)
+            if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
                 DiscOffset.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys?.Contains(SiteCode.DMIHash) != true)
                 DMIHash.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.EDC?.EDC == null)
+            if (submissionInfo.EDC?.EDC == null)
                 EDC.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.CommonDiscInfo?.ErrorsCount))
+            if (string.IsNullOrWhiteSpace(submissionInfo.CommonDiscInfo?.ErrorsCount))
                 ErrorsCount.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
+            if (string.IsNullOrWhiteSpace(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
                 EXEDateBuildDate.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Filename) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.Filename) != true)
                 Filename.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.Extras?.Header))
+            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.Header))
                 Header.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalName) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.InternalName) != true)
                 InternalName.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalSerialName) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.InternalSerialName) != true)
                 InternalSerialName.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Multisession) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.Multisession) != true)
                 Multisession.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CopyProtection?.LibCrypt == null)
+            if (submissionInfo.CopyProtection?.LibCrypt == null)
                 LibCrypt.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.CopyProtection?.LibCryptData))
+            if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.LibCryptData))
                 LibCryptData.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.PFIHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.PFIHash) != true)
                 PFIHash.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.Extras?.PIC))
+            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PIC))
                 PIC.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.Extras?.PVD))
+            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PVD))
                 PVD.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.RingNonZeroDataStart) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.RingNonZeroDataStart) != true)
                 RingNonZeroDataStart.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.CopyProtection?.SecuROMData))
+            if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.SecuROMData))
                 SecuROMData.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.SSHash) != true)
                 SSHash.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo?.Extras?.SecuritySectorRanges))
+            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.SecuritySectorRanges))
                 SecuritySectorRanges.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSVersion) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.SSVersion) != true)
                 SSVersion.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.UniversalHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.UniversalHash) != true)
                 UniversalHash.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.VolumeLabel) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.VolumeLabel) != true)
                 VolumeLabel.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.XeMID) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.XeMID) != true)
                 XeMID.Visibility = Visibility.Collapsed;
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.XMID) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.XMID) != true)
                 XMID.Visibility = Visibility.Collapsed;
         }
 
@@ -179,7 +195,11 @@ namespace MPF.UI.Core.Windows
         /// Update visible fields and sections based on the media type
         /// </summary>
         /// TODO: See if these can be done by binding
+#if NET48
         private void UpdateFromDiscType(SubmissionInfo submissionInfo)
+#else
+        private void UpdateFromDiscType(SubmissionInfo? submissionInfo)
+#endif
         {
             // Sony-printed discs have layers in the opposite order
             var system = submissionInfo?.CommonDiscInfo?.System;
@@ -326,7 +346,11 @@ namespace MPF.UI.Core.Windows
         /// Update visible fields and sections based on the system type
         /// </summary>
         /// TODO: See if these can be done by binding
+#if NET48
         private void UpdateFromSystemType(SubmissionInfo submissionInfo)
+#else
+        private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
+#endif
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
             switch (system)
@@ -337,7 +361,7 @@ namespace MPF.UI.Core.Windows
             }
         }
 
-        #endregion
+#endregion
 
         #region Event Handlers
 

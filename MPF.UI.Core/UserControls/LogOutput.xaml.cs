@@ -29,7 +29,11 @@ namespace MPF.UI.Core.UserControls
         /// <summary>
         /// Cached value of the last line written
         /// </summary>
+#if NET48
         private Run lastLine = null;
+#else
+        private Run? lastLine = null;
+#endif
 
         public LogOutput()
         {
@@ -164,6 +168,7 @@ namespace MPF.UI.Core.UserControls
         {
             Dispatcher.Invoke(() =>
             {
+                if (lastLine == null) lastLine = new Run();
                 lastLine.Text = logLine.Text;
                 lastLine.Foreground = logLine.GetForegroundColor();
             });

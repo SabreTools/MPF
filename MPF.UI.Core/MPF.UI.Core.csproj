@@ -10,6 +10,10 @@
     <VersionPrefix>2.7.0</VersionPrefix>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'!='net48'">
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
   <ItemGroup>
     <Resource Include="Images\ring-code-guide-1-layer.png" />
     <Resource Include="Images\ring-code-guide-2-layer.png" />

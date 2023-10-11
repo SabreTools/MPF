@@ -981,7 +981,11 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
+#if NET48
         public void UpdateOptions(bool savedSettings, Data.Options newOptions)
+#else
+        public void UpdateOptions(bool savedSettings, Data.Options? newOptions)
+#endif
         {
             if (savedSettings)
             {
@@ -990,7 +994,7 @@ namespace MPF.Core.UI.ViewModels
             }
         }
 
-        #endregion
+#endregion
 
         #region UI Functionality
 

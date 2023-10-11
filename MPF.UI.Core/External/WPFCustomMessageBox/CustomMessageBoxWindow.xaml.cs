@@ -12,7 +12,11 @@ namespace WPFCustomMessageBox
     {
         private bool _removeTitleBarIcon = true;
 
+#if NET48
         public string Caption
+#else
+        public string? Caption
+#endif
         {
             get
             {
@@ -24,7 +28,11 @@ namespace WPFCustomMessageBox
             }
         }
 
+#if NET48
         public string Message
+#else
+        public string? Message
+#endif
         {
             get
             {
@@ -36,7 +44,11 @@ namespace WPFCustomMessageBox
             }
         }
 
+#if NET48
         public string OkButtonText
+#else
+        public string? OkButtonText
+#endif
         {
             get
             {
@@ -48,7 +60,11 @@ namespace WPFCustomMessageBox
             }
         }
 
+#if NET48
         public string CancelButtonText
+#else
+        public string? CancelButtonText
+#endif
         {
             get
             {
@@ -60,7 +76,11 @@ namespace WPFCustomMessageBox
             }
         }
 
+#if NET48
         public string YesButtonText
+#else
+        public string? YesButtonText
+#endif
         {
             get
             {
@@ -72,7 +92,11 @@ namespace WPFCustomMessageBox
             }
         }
 
+#if NET48
         public string NoButtonText
+#else
+        public string? NoButtonText
+#endif
         {
             get
             {
@@ -86,7 +110,11 @@ namespace WPFCustomMessageBox
 
         public MessageBoxResult Result { get; set; }
 
+#if NET48
         internal CustomMessageBoxWindow(Window owner, string message, string caption = null, MessageBoxButton? button = null, MessageBoxImage? image = null, bool removeTitleBarIcon = true)
+#else
+        internal CustomMessageBoxWindow(Window? owner, string? message, string? caption = null, MessageBoxButton? button = null, MessageBoxImage? image = null, bool removeTitleBarIcon = true)
+#endif
         {
             InitializeComponent();
 

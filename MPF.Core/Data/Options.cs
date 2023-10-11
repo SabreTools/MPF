@@ -628,12 +628,16 @@ namespace MPF.Core.Data
         /// Constructor taking an existing Options object
         /// </summary>
         /// <param name="source"></param>
+#if NET48
         public Options(Options source)
+#else
+        public Options(Options? source)
+#endif
         {
 #if NET48
-            Settings = new Dictionary<string, string>(source.Settings);
+            Settings = new Dictionary<string, string>(source?.Settings ?? new Dictionary<string, string>());
 #else
-            Settings = new Dictionary<string, string?>(source.Settings);
+            Settings = new Dictionary<string, string?>(source?.Settings ?? new Dictionary<string, string?>());
 #endif
         }
 

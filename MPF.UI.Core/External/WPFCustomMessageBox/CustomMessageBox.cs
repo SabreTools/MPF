@@ -173,7 +173,11 @@ namespace WPFCustomMessageBox
         /// </param>
         /// <param name="timeoutResult">If the message box closes automatically due to the <paramref name="timeout"/> being exceeded, this result is returned.</param>
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
+#if NET48
         public static MessageBoxResult Show(Window owner, string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#else
+        public static MessageBoxResult Show(Window owner, string? messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#endif
         {
             switch (button)
             {
@@ -515,7 +519,11 @@ namespace WPFCustomMessageBox
         /// <param name="timeout">The message box will close automatically after given milliseconds</param>
         /// <param name="timeoutResult">If the message box closes automatically due to <paramref name="timeout"/> being exceeded, this result is returned.</param>
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
+#if NET48
         private static MessageBoxResult ShowOKMessage(Window owner, string messageBoxText, string caption, string okButtonText, string cancelButtonText, MessageBoxImage? icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#else
+        private static MessageBoxResult ShowOKMessage(Window? owner, string? messageBoxText, string caption, string? okButtonText, string? cancelButtonText, MessageBoxImage? icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#endif
         {
             MessageBoxButton buttonLayout = string.IsNullOrEmpty(cancelButtonText) ? MessageBoxButton.OK : MessageBoxButton.OKCancel;
 
@@ -545,7 +553,11 @@ namespace WPFCustomMessageBox
         /// <param name="timeout">The message box will close automatically after given milliseconds</param>
         /// <param name="timeoutResult">If the message box closes automatically due to <paramref name="timeout"/> being exceeded, this result is returned.</param>
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
+#if NET48
         private static MessageBoxResult ShowYesNoMessage(Window owner, string messageBoxText, string caption, string yesButtonText, string noButtonText, string cancelButtonText, MessageBoxImage? icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#else
+        private static MessageBoxResult ShowYesNoMessage(Window? owner, string? messageBoxText, string caption, string? yesButtonText, string? noButtonText, string? cancelButtonText, MessageBoxImage? icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
+#endif
         {
             MessageBoxButton buttonLayout = string.IsNullOrEmpty(cancelButtonText) ? MessageBoxButton.YesNo : MessageBoxButton.YesNoCancel;
 

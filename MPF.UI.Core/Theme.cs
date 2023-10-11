@@ -6,39 +6,63 @@ namespace MPF.UI.Core
     /// <summary>
     /// Represents all required mapping values for the UI
     /// </summary>
-    public class Theme
+    public abstract class Theme
     {
         #region Application-Wide
 
         /// <summary>
         /// SolidColorBrush used to paint the active window's border.
         /// </summary>
-        public SolidColorBrush ActiveBorderBrush { get; set; }
+#if NET48
+        public SolidColorBrush ActiveBorderBrush { get; protected set; }
+#else
+        public SolidColorBrush? ActiveBorderBrush { get; protected set; }
+#endif
 
         /// <summary>
         /// SolidColorBrush that paints the face of a three-dimensional display element.
         /// </summary>
-        public SolidColorBrush ControlBrush { get; set; }
+#if NET48
+        public SolidColorBrush ControlBrush { get; protected set; }
+#else
+        public SolidColorBrush? ControlBrush { get; protected set; }
+#endif
 
         /// <summary>
         /// SolidColorBrush that paints text in a three-dimensional display element.
         /// </summary>
-        public SolidColorBrush ControlTextBrush { get; set; }
+#if NET48
+        public SolidColorBrush ControlTextBrush { get; protected set; }
+#else
+        public SolidColorBrush? ControlTextBrush { get; protected set; }
+#endif
 
         /// <summary>
         /// SolidColorBrush that paints disabled text.
         /// </summary>
-        public SolidColorBrush GrayTextBrush { get; set; }
+#if NET48
+        public SolidColorBrush GrayTextBrush { get; protected set; }
+#else
+        public SolidColorBrush? GrayTextBrush { get; protected set; }
+#endif
 
         /// <summary>
         /// SolidColorBrush that paints the background of a window's client area.
         /// </summary>
-        public SolidColorBrush WindowBrush { get; set; }
+#if NET48
+        public SolidColorBrush WindowBrush { get; protected set; }
+#else
+        public SolidColorBrush? WindowBrush { get; protected set; }
+#endif
 
         /// <summary>
         /// SolidColorBrush that paints the text in the client area of a window.
         /// </summary>
-        public SolidColorBrush WindowTextBrush { get; set; }
+#if NET48
+        public SolidColorBrush WindowTextBrush { get; protected set; }
+#else
+        public SolidColorBrush? WindowTextBrush { get; protected set; }
+#endif
 
         #endregion
 
@@ -47,22 +71,38 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the Button.Disabled.Background resource
         /// </summary>
-        public Brush Button_Disabled_Background { get; set; }
+#if NET48
+        public Brush Button_Disabled_Background { get; protected set; }
+#else
+        public Brush? Button_Disabled_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the Button.MouseOver.Background resource
         /// </summary>
-        public Brush Button_MouseOver_Background { get; set; }
+#if NET48
+        public Brush Button_MouseOver_Background { get; protected set; }
+#else
+        public Brush? Button_MouseOver_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the Button.Pressed.Background resource
         /// </summary>
-        public Brush Button_Pressed_Background { get; set; }
+#if NET48
+        public Brush Button_Pressed_Background { get; protected set; }
+#else
+        public Brush? Button_Pressed_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the Button.Static.Background resource
         /// </summary>
-        public Brush Button_Static_Background { get; set; }
+#if NET48
+        public Brush Button_Static_Background { get; protected set; }
+#else
+        public Brush? Button_Static_Background { get; protected set; }
+#endif
 
         #endregion
 
@@ -71,62 +111,110 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the ComboBox.Disabled.Background resource
         /// </summary>
-        public Brush ComboBox_Disabled_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Disabled_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Disabled_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Disabled.Editable.Background resource
         /// </summary>
-        public Brush ComboBox_Disabled_Editable_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Disabled_Editable_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Disabled_Editable_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Disabled.Editable.Button.Background resource
         /// </summary>
-        public Brush ComboBox_Disabled_Editable_Button_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Disabled_Editable_Button_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Disabled_Editable_Button_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.MouseOver.Background resource
         /// </summary>
-        public Brush ComboBox_MouseOver_Background { get; set; }
+#if NET48
+        public Brush ComboBox_MouseOver_Background { get; protected set; }
+#else
+        public Brush? ComboBox_MouseOver_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.MouseOver.Editable.Background resource
         /// </summary>
-        public Brush ComboBox_MouseOver_Editable_Background { get; set; }
+#if NET48
+        public Brush ComboBox_MouseOver_Editable_Background { get; protected set; }
+#else
+        public Brush? ComboBox_MouseOver_Editable_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.MouseOver.Editable.Button.Background resource
         /// </summary>
-        public Brush ComboBox_MouseOver_Editable_Button_Background { get; set; }
+#if NET48
+        public Brush ComboBox_MouseOver_Editable_Button_Background { get; protected set; }
+#else
+        public Brush? ComboBox_MouseOver_Editable_Button_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Pressed.Background resource
         /// </summary>
-        public Brush ComboBox_Pressed_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Pressed_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Pressed_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Pressed.Editable.Background resource
         /// </summary>
-        public Brush ComboBox_Pressed_Editable_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Pressed_Editable_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Pressed_Editable_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Pressed.Editable.Button.Background resource
         /// </summary>
-        public Brush ComboBox_Pressed_Editable_Button_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Pressed_Editable_Button_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Pressed_Editable_Button_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Static.Background resource
         /// </summary>
-        public Brush ComboBox_Static_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Static_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Static_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Static.Editable.Background resource
         /// </summary>
-        public Brush ComboBox_Static_Editable_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Static_Editable_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Static_Editable_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the ComboBox.Static.Editable.Button.Background resource
         /// </summary>
-        public Brush ComboBox_Static_Editable_Button_Background { get; set; }
+#if NET48
+        public Brush ComboBox_Static_Editable_Button_Background { get; protected set; }
+#else
+        public Brush? ComboBox_Static_Editable_Button_Background { get; protected set; }
+#endif
 
         #endregion
 
@@ -135,7 +223,11 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the CustomMessageBox.Static.Background resource
         /// </summary>
-        public Brush CustomMessageBox_Static_Background { get; set; }
+#if NET48
+        public Brush CustomMessageBox_Static_Background { get; protected set; }
+#else
+        public Brush? CustomMessageBox_Static_Background { get; protected set; }
+#endif
 
         #endregion
 
@@ -144,12 +236,20 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the MenuItem.SubMenu.Background resource
         /// </summary>
-        public Brush MenuItem_SubMenu_Background { get; set; }
+#if NET48
+        public Brush MenuItem_SubMenu_Background { get; protected set; }
+#else
+        public Brush? MenuItem_SubMenu_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the MenuItem.SubMenu.Border resource
         /// </summary>
-        public Brush MenuItem_SubMenu_Border { get; set; }
+#if NET48
+        public Brush MenuItem_SubMenu_Border { get; protected set; }
+#else
+        public Brush? MenuItem_SubMenu_Border { get; protected set; }
+#endif
 
         #endregion
 
@@ -158,7 +258,11 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the ProgressBar.Background resource
         /// </summary>
-        public Brush ProgressBar_Background { get; set; }
+#if NET48
+        public Brush ProgressBar_Background { get; protected set; }
+#else
+        public Brush? ProgressBar_Background { get; protected set; }
+#endif
 
         #endregion
 
@@ -167,7 +271,11 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the ScrollViewer.ScrollBar.Background resource
         /// </summary>
-        public Brush ScrollViewer_ScrollBar_Background { get; set; }
+#if NET48
+        public Brush ScrollViewer_ScrollBar_Background { get; protected set; }
+#else
+        public Brush? ScrollViewer_ScrollBar_Background { get; protected set; }
+#endif
 
         #endregion
 
@@ -176,17 +284,29 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the TabItem.Selected.Background resource
         /// </summary>
-        public Brush TabItem_Selected_Background { get; set; }
+#if NET48
+        public Brush TabItem_Selected_Background { get; protected set; }
+#else
+        public Brush? TabItem_Selected_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the TabItem.Static.Background resource
         /// </summary>
-        public Brush TabItem_Static_Background { get; set; }
+#if NET48
+        public Brush TabItem_Static_Background { get; protected set; }
+#else
+        public Brush? TabItem_Static_Background { get; protected set; }
+#endif
 
         /// <summary>
         /// Brush for the TabItem.Static.Border resource
         /// </summary>
-        public Brush TabItem_Static_Border { get; set; }
+#if NET48
+        public Brush TabItem_Static_Border { get; protected set; }
+#else
+        public Brush? TabItem_Static_Border { get; protected set; }
+#endif
 
         #endregion
 
@@ -195,7 +315,11 @@ namespace MPF.UI.Core
         /// <summary>
         /// Brush for the TextBox.Static.Background resource
         /// </summary>
-        public Brush TextBox_Static_Background { get; set; }
+#if NET48
+        public Brush TextBox_Static_Background { get; protected set; }
+#else
+        public Brush? TextBox_Static_Background { get; protected set; }
+#endif
 
         #endregion
 

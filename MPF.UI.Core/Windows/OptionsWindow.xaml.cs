@@ -17,7 +17,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Read-only access to the current options view model
         /// </summary>
-        public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel;
+        public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel(new Options());
 
         /// <summary>
         /// Constructor
@@ -46,7 +46,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Browse and set a path based on the invoking button
         /// </summary>
+#if NET48
         private void BrowseForPath(Window parent, System.Windows.Controls.Button button)
+#else
+        private void BrowseForPath(Window parent, System.Windows.Controls.Button? button)
+#endif
         {
             // If the button is null, we can't do anything
             if (button == null)
@@ -58,8 +62,8 @@ namespace MPF.UI.Core.Windows
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
 
-            string currentPath = TextBoxForPathSetting(parent, pathSettingName)?.Text;
-            string initialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var currentPath = TextBoxForPathSetting(parent, pathSettingName)?.Text;
+            var initialDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (!shouldBrowseForPath && !string.IsNullOrEmpty(currentPath))
                 initialDirectory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
 
@@ -88,7 +92,9 @@ namespace MPF.UI.Core.Windows
                     if (exists)
                     {
                         OptionsViewModel.Options[pathSettingName] = path;
-                        TextBoxForPathSetting(parent, pathSettingName).Text = path;
+                        var textBox = TextBoxForPathSetting(parent, pathSettingName);
+                        if (textBox != null)
+                            textBox.Text = path;
                     }
                     else
                     {
@@ -108,7 +114,11 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
+#if NET48
         private System.Windows.Controls.TextBox TextBoxForPathSetting(Window parent, string name) =>
+#else
+        private System.Windows.Controls.TextBox? TextBoxForPathSetting(Window parent, string name) =>
+#endif
             parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
         /// <summary>
@@ -119,7 +129,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Create an open file dialog box
         /// </summary>
+#if NET48
         private static OpenFileDialog CreateOpenFileDialog(string initialDirectory)
+#else
+        private static OpenFileDialog CreateOpenFileDialog(string? initialDirectory)
+#endif
         {
             return new OpenFileDialog()
             {
@@ -142,7 +156,7 @@ namespace MPF.UI.Core.Windows
 #if NET48
             (bool? success, string message) = OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
 #else
-            (bool? success, string message) = await OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+            (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
 #endif
 
             if (success == true)

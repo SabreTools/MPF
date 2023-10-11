@@ -15,7 +15,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Read-only access to the current main view model
         /// </summary>
-        public MainViewModel MainViewModel => DataContext as MainViewModel;
+        public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
         /// <summary>
         /// Constructor
@@ -95,8 +95,10 @@ namespace MPF.UI.Core.Windows
         {
             // Get the current path, if possible
             string currentPath = MainViewModel.OutputPath;
-            if (string.IsNullOrWhiteSpace(currentPath))
+            if (string.IsNullOrWhiteSpace(currentPath) && !string.IsNullOrWhiteSpace(MainViewModel.Options.DefaultOutputPath))
                 currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, "track.bin");
+            else if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = "track.bin";
             if (string.IsNullOrWhiteSpace(currentPath))
                 currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "track.bin");
 
@@ -104,7 +106,7 @@ namespace MPF.UI.Core.Windows
             currentPath = Path.GetFullPath(currentPath);
 
             // Get the directory
-            string directory = Path.GetDirectoryName(currentPath);
+            var directory = Path.GetDirectoryName(currentPath);
 
             // Get the filename
             string filename = Path.GetFileName(currentPath);
@@ -128,7 +130,7 @@ namespace MPF.UI.Core.Windows
         /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
         public void CheckForUpdates(bool showIfSame)
         {
-            (bool different, string message, string url) = MainViewModel.CheckForUpdates();
+            (bool different, string message, var url) = MainViewModel.CheckForUpdates();
 
             // If we have a new version, put it in the clipboard
             if (different)
@@ -204,7 +206,11 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
+#if NET48
         public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+#else
+        public (bool?, SubmissionInfo?) ShowDiscInformationWindow(SubmissionInfo? submissionInfo)
+#endif
         {
             if (MainViewModel.Options.ShowDiscEjectReminder)
                 CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -221,9 +227,17 @@ namespace MPF.UI.Core.Windows
 
             // Copy back the submission info changes, if necessary
             if (result == true)
+#if NET48
                 submissionInfo = discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+#else
+                submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+#endif
 
+#if NET48
             return (result, submissionInfo);
+#else
+            return (result, submissionInfo!);
+#endif
         }
 
         /// <summary>
@@ -268,10 +282,14 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
+#if NET48
         public void OnOptionsUpdated(object sender, EventArgs e)
+#else
+        public void OnOptionsUpdated(object? sender, EventArgs e)
+#endif
         {
             bool savedSettings = (sender as OptionsWindow)?.OptionsViewModel?.SavedSettings ?? false;
-            var options = (sender as OptionsWindow).OptionsViewModel.Options;
+            var options = (sender as OptionsWindow)?.OptionsViewModel?.Options;
             MainViewModel.UpdateOptions(savedSettings, options);
         }
 
@@ -319,11 +337,11 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public async void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
         {
-            (string output, string error) = await MainViewModel.ScanAndShowProtection();
+            var (output, error) = await MainViewModel.ScanAndShowProtection();
 
             if (!MainViewModel.LogPanelExpanded)
             {
-                if (string.IsNullOrEmpty(error))
+                if (!string.IsNullOrEmpty(output) && string.IsNullOrEmpty(error))
                     CustomMessageBox.Show(this, output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     CustomMessageBox.Show(this, "An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);

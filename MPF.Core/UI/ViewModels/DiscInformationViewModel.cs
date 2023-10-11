@@ -191,10 +191,14 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
+#if NET48
         public DiscInformationViewModel(Options options, SubmissionInfo submissionInfo)
+#else
+        public DiscInformationViewModel(Options options, SubmissionInfo? submissionInfo)
+#endif
         {
             Options = options;
-            SubmissionInfo = submissionInfo.Clone() as SubmissionInfo ?? new SubmissionInfo();
+            SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();
         }
 
         #region Helpers
