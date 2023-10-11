@@ -16,6 +16,7 @@
 - Handle some suggested changes
 - Var-ify many instances
 - Version-gate some newer syntax
+- Fix Check always showing Help text
 
 ### 2.7.0 (2023-10-11)
 

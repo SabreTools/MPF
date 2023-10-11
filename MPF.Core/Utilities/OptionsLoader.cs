@@ -18,7 +18,7 @@ namespace MPF.Core.Utilities
         /// Process any standalone arguments for the program
         /// </summary>
         /// <returns>True if one of the arguments was processed, false otherwise</returns>
-        public static bool ProcessStandaloneArguments(string[] args)
+        public static bool? ProcessStandaloneArguments(string[] args)
         {
             // Help options
             if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")

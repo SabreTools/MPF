@@ -14,9 +14,11 @@ namespace MPF.Check
         public static void Main(string[] args)
         {
             // Try processing the standalone arguments
-            if (!OptionsLoader.ProcessStandaloneArguments(args))
+            bool? standaloneProcessed = OptionsLoader.ProcessStandaloneArguments(args);
+            if (standaloneProcessed != false)
             {
-                DisplayHelp();
+                if (standaloneProcessed == null)
+                    DisplayHelp();
                 return;
             }
 
