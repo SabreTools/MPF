@@ -585,14 +585,15 @@ namespace MPF.Core.UI.ViewModels
         private void TriggerPropertyChanged(string propertyName)
         {
             // Disable event handlers temporarily
-            CanExecuteSelectionChanged = false;
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
 
             // If the property change event is initialized
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 
-            // Reenable event handlers
-            CanExecuteSelectionChanged = true;
+            // Reenable event handlers, if necessary
+            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
         }
 
         #endregion
@@ -606,7 +607,8 @@ namespace MPF.Core.UI.ViewModels
         private void PopulateDrives()
         {
             // Disable other UI updates
-            CanExecuteSelectionChanged = false;
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
 
             VerboseLogLn("Scanning for drives..");
 
@@ -662,8 +664,8 @@ namespace MPF.Core.UI.ViewModels
                 this.CopyProtectScanButtonEnabled = false;
             }
 
-            // Reenable UI updates
-            CanExecuteSelectionChanged = true;
+            // Reenable event handlers, if necessary
+            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
         }
 
         /// <summary>
@@ -672,7 +674,8 @@ namespace MPF.Core.UI.ViewModels
         private void PopulateMediaType()
         {
             // Disable other UI updates
-            CanExecuteSelectionChanged = false;
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
 
             if (this.CurrentSystem != null)
             {
@@ -692,8 +695,8 @@ namespace MPF.Core.UI.ViewModels
                 this.CurrentMediaType = null;
             }
 
-            // Reenable UI updates
-            CanExecuteSelectionChanged = true;
+            // Reenable event handlers, if necessary
+            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
         }
 
         /// <summary>
@@ -702,7 +705,8 @@ namespace MPF.Core.UI.ViewModels
         private void PopulateInternalPrograms()
         {
             // Disable other UI updates
-            CanExecuteSelectionChanged = false;
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
 
             // Get the current internal program
             InternalProgram internalProgram = this.Options.InternalProgram;
@@ -715,8 +719,8 @@ namespace MPF.Core.UI.ViewModels
             int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
             this.CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
 
-            // Reenable UI updates
-            CanExecuteSelectionChanged = true;
+            // Reenable event handlers, if necessary
+            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
         }
 
         #endregion
@@ -998,14 +1002,15 @@ namespace MPF.Core.UI.ViewModels
         public void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
-            this.StartStopButtonEnabled = false;
+            StartStopButtonEnabled = false;
 
             // Safely uncheck the parameters box, just in case
-            if (this.ParametersCheckBoxEnabled == true)
+            if (ParametersCheckBoxEnabled == true)
             {
-                this.CanExecuteSelectionChanged = false;
-                this.ParametersCheckBoxEnabled = false;
-                this.CanExecuteSelectionChanged = true;
+                bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+                DisableEventHandlers();
+                ParametersCheckBoxEnabled = false;
+                if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
             }
 
             // Remove event handlers to ensure ordering
@@ -1015,7 +1020,7 @@ namespace MPF.Core.UI.ViewModels
             // Populate the list of drives and determine the system
             if (rescanDrives)
             {
-                this.Status = "Creating drive list, please wait!";
+                Status = "Creating drive list, please wait!";
                 PopulateDrives();
             }
             else
@@ -1041,7 +1046,7 @@ namespace MPF.Core.UI.ViewModels
             EnableEventHandlers();
 
             // Enable the dumping button, if necessary
-            this.StartStopButtonEnabled = ShouldEnableDumpingButton();
+            StartStopButtonEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
@@ -1056,9 +1061,10 @@ namespace MPF.Core.UI.ViewModels
             // Safely uncheck the parameters box, just in case
             if (this.ParametersCheckBoxEnabled == true)
             {
-                this.CanExecuteSelectionChanged = false;
+                bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+                this.DisableEventHandlers();
                 this.ParametersCheckBoxEnabled = false;
-                this.CanExecuteSelectionChanged = true;
+                if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
             }
 
             // Remove event handlers to ensure ordering
