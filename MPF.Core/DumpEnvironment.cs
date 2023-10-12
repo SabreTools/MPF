@@ -65,7 +65,7 @@ namespace MPF.Core
         public BaseParameters? Parameters { get; private set; }
 #endif
 
-#endregion
+        #endregion
 
         #region Event Handlers
 
@@ -292,7 +292,7 @@ namespace MPF.Core
             return null;
         }
 
-#endregion
+        #endregion
 
         #region Dumping
 
@@ -357,11 +357,6 @@ namespace MPF.Core
 
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
-
-            // Execute additional tools
-            progress?.Report(Result.Success("Running any additional tools... see log for output!"));
-            result = await Task.Run(() => ExecuteAdditionalTools());
-            progress?.Report(result);
 
             // Remove event handler if needed
             if (!Options.ToolsInSeparateWindow)
@@ -536,17 +531,11 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Run any additional tools given a DumpEnvironment
-        /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        private Result ExecuteAdditionalTools() => Result.Success("No external tools needed!");
-
-        /// <summary>
         /// Run internal program async with an input set of parameters
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteInternalProgram(BaseParameters parameters)
+        private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -584,20 +573,21 @@ namespace MPF.Core
         /// <param name="info">Existing submission information</param>
         /// <param name="seed">User-supplied submission information</param>
 #if NET48
-        private void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
+        private static void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
 #else
-        private void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
+        private static void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
 #endif
         {
             // If we have any invalid info
-            if (info == null || seed == null)
+            if (seed == null)
                 return;
 
-            // Otherwise, inject information as necessary
-            if (seed.CommonDiscInfo != null)
-            {
-                if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
 
+            // Otherwise, inject information as necessary
+            if (info.CommonDiscInfo != null && seed.CommonDiscInfo != null)
+            {
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Title)) info.CommonDiscInfo.Title = seed.CommonDiscInfo.Title;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.ForeignTitleNonLatin)) info.CommonDiscInfo.ForeignTitleNonLatin = seed.CommonDiscInfo.ForeignTitleNonLatin;
@@ -607,7 +597,7 @@ namespace MPF.Core
                 if (seed.CommonDiscInfo.Region != null) info.CommonDiscInfo.Region = seed.CommonDiscInfo.Region;
                 if (seed.CommonDiscInfo.Languages != null) info.CommonDiscInfo.Languages = seed.CommonDiscInfo.Languages;
                 if (seed.CommonDiscInfo.LanguageSelection != null) info.CommonDiscInfo.LanguageSelection = seed.CommonDiscInfo.LanguageSelection;
-                if (seed.CommonDiscInfo.Serial != null) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Serial)) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Barcode)) info.CommonDiscInfo.Barcode = seed.CommonDiscInfo.Barcode;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Comments)) info.CommonDiscInfo.Comments = seed.CommonDiscInfo.Comments;
                 if (seed.CommonDiscInfo.CommentsSpecialFields != null) info.CommonDiscInfo.CommentsSpecialFields = seed.CommonDiscInfo.CommentsSpecialFields;
@@ -636,19 +626,15 @@ namespace MPF.Core
                 info.CommonDiscInfo.Layer3ToolstampMasteringCode = seed.CommonDiscInfo.Layer3ToolstampMasteringCode;
             }
 
-            if (seed.VersionAndEditions != null)
+            if (info.VersionAndEditions != null && seed.VersionAndEditions != null)
             {
-                if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.Version)) info.VersionAndEditions.Version = seed.VersionAndEditions.Version;
                 if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.OtherEditions)) info.VersionAndEditions.OtherEditions = seed.VersionAndEditions.OtherEditions;
             }
 
-            if (seed.CopyProtection != null)
+            if (info.CopyProtection != null && seed.CopyProtection != null)
             {
-                if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
-                
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.CopyProtection.Protection)) info.CopyProtection.Protection = seed.CopyProtection.Protection;
             }
@@ -732,6 +718,6 @@ namespace MPF.Core
             return await ExecuteInternalProgram(parameters);
         }
 
-#endregion
+        #endregion
     }
 }

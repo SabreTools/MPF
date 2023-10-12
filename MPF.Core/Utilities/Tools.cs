@@ -197,7 +197,7 @@ namespace MPF.Core.Utilities
 #endif
         {
 #if NET48
-            using (System.Net.WebClient wc = new System.Net.WebClient())
+            using (var wc = new System.Net.WebClient())
             {
                 wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
 
@@ -211,7 +211,7 @@ namespace MPF.Core.Utilities
                 return (latestTag, releaseUrl);
             }
 #else
-            using (System.Net.Http.HttpClient hc = new System.Net.Http.HttpClient())
+            using (var hc = new System.Net.Http.HttpClient())
             {
                 // TODO: Figure out a better way than having this hardcoded...
                 string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";

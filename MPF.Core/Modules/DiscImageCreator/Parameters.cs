@@ -251,7 +251,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             - volDesc       - Volume descriptor information
             */
 
-            List<string> missingFiles = new List<string>();
+            var missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
@@ -416,10 +416,16 @@ namespace MPF.Core.Modules.DiscImageCreator
         {
             var outputDirectory = Path.GetDirectoryName(basePath);
 
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
+
             // Get the dumping program and version
             var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);
-            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
+#if NET48
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
+#else
+            info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
+#endif
             info.DumpingInfo.DumpingDate = GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
@@ -438,28 +444,31 @@ namespace MPF.Core.Modules.DiscImageCreator
             var datafile = GetDatafile($"{basePath}.dat");
 
             // Fill in the hash data
-            if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
+#if NET48
             info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
+#else
+            info.TracksAndWriteOffsets!.ClrMameProData = GenerateDatfile(datafile);
+#endif
 
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
-                    info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
-
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+                    info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
 #else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+                    info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
 #endif
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
                     if (this.System.IsAudio())
                     {
+#if NET48
                         info.CommonDiscInfo.ErrorsCount = "0";
+#else
+                        info.CommonDiscInfo!.ErrorsCount = "0";
+#endif
                     }
                     else
                     {
@@ -469,7 +478,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                         else if (File.Exists($"{basePath}.img_EccEdc.txt"))
                             errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
 
+#if NET48
                         info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+#else
+                        info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+#endif
                     }
 
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
@@ -483,13 +496,21 @@ namespace MPF.Core.Modules.DiscImageCreator
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
                     if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+#else
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
+#endif
 
                     // Attempt to get the universal hash, if it's an audio disc
                     if (this.System.IsAudio())
                     {
                         string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+#else
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
+#endif
                     }
 
                     break;
@@ -497,11 +518,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
+
                     // Get the individual hash data, as per internal
-                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
                     if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
+#if NET48
                         info.SizeAndChecksums.Size = size;
+#else
+                        info.SizeAndChecksums!.Size = size;
+#endif
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
@@ -511,12 +536,20 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (this.Type == MediaType.DVD)
                     {
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
+#if NET48
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+#else
+                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+#endif
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
                         var di = GetDiscInformation($"{basePath}_PIC.bin");
+#if NET48
                         info.SizeAndChecksums.PICIdentifier = GetPICIdentifier(di);
+#else
+                        info.SizeAndChecksums!.PICIdentifier = GetPICIdentifier(di);
+#endif
                         if (GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
@@ -531,9 +564,12 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
                     // Read the PVD
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
                     if (!options.EnableRedumpCompatibility || System != RedumpSystem.MicrosoftXbox)
+#if NET48
                         info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
@@ -548,7 +584,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                                 break;
                         }
 
+#if NET48
                         info.Extras.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
+#else
+                        info.Extras!.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
+#endif
                     }
 
                     break;
@@ -564,48 +604,47 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.SonyElectronicBook:
                     if (File.Exists($"{basePath}_subIntention.txt"))
                     {
-                        FileInfo fi = new FileInfo($"{basePath}_subIntention.txt");
+                        var fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
-                        {
-                            if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                             info.CopyProtection.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
-                        }
+#else
+                            info.CopyProtection!.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
+#endif
                     }
 
                     break;
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                     info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
+#else
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
-#if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
 
                     string xgd1XMID;
                     if (string.IsNullOrWhiteSpace(outputDirectory))
@@ -613,21 +652,22 @@ namespace MPF.Core.Modules.DiscImageCreator
                     else
                         xgd1XMID = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
-                    XgdInfo xgd1Info = new XgdInfo(xgd1XMID);
+                    var xgd1Info = new XgdInfo(xgd1XMID);
                     if (xgd1Info?.Initialized == true)
                     {
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.RawXMID ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xgd1Info.RawXMID ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
-                        {
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                             info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? string.Empty;
-                        }
+#else
+                            info.VersionAndEditions!.Version = xgd1Info.GetVersion() ?? string.Empty;
+#endif
+
                         info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd1Info.XMID?.RegionIdentifier);
                     }
 
@@ -637,58 +677,71 @@ namespace MPF.Core.Modules.DiscImageCreator
                         var suppl = GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash))
                         {
-
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         }
 
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd1SS, out var xgd1SSVer))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
-                            if (info.Extras == null) info.Extras = new ExtrasSection();
                             info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                            info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
+#endif
                         }
                     }
                     else
                     {
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var xgd1SS, out var xgd1SSVer))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
-                            if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                             info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
+#else
+                            info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
+#endif
                         }
                     }
 
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
-#if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
-
                     string xgd23XeMID;
                     if (string.IsNullOrWhiteSpace(outputDirectory))
                         xgd23XeMID = GetXGD23XeMID($"{basePath}_DMI.bin");
                     else
                         xgd23XeMID = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
-                    XgdInfo xgd23Info = new XgdInfo(xgd23XeMID);
+                    var xgd23Info = new XgdInfo(xgd23XeMID);
                     if (xgd23Info?.Initialized == true)
                     {
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.RawXMID ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xgd23Info.RawXMID ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
-                        {
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                             info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? string.Empty;
-                        }
+#else
+                            info.VersionAndEditions!.Version = xgd23Info.GetVersion() ?? string.Empty;
+#endif
+
                         info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd23Info.XeMID?.RegionIdentifier);
                     }
 
@@ -698,28 +751,43 @@ namespace MPF.Core.Modules.DiscImageCreator
                         var suppl = GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         }
 
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd23SS, out var xgd23SSVer))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
-                            if (info.Extras == null) info.Extras = new ExtrasSection();
                             info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                            info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
+#endif
                         }
                     }
                     else
                     {
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var xgd23SS, out var xgd23SSVer))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
-                            if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                             info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
+#else
+                            info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
+#endif
                         }
                     }
 
@@ -728,8 +796,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     if (this.Type == MediaType.CDROM)
                     {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -738,15 +809,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
                             // Ensure internal serial is pulled from local data
-                            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                             info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
+#endif
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
@@ -754,8 +823,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                    info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                     // Take only the last 16 lines for Sega CD
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -764,13 +836,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (GetSegaCDBuildInfo(info.Extras.Header, out var scdSerial, out var fixedDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? string.Empty;
                     }
 
@@ -779,8 +849,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.SegaChihiro:
                     if (this.Type == MediaType.CDROM)
                     {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -789,15 +862,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
                             // Ensure internal serial is pulled from local data
-                            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                             info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
+#endif
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
@@ -807,8 +878,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.SegaDreamcast:
                     if (this.Type == MediaType.CDROM)
                     {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -817,15 +891,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
                             // Ensure internal serial is pulled from local data
-                            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                             info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
+#endif
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
@@ -835,8 +907,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi:
                     if (this.Type == MediaType.CDROM)
                     {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -845,15 +920,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
                             // Ensure internal serial is pulled from local data
-                            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                             info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
+#endif
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
@@ -863,8 +936,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi2:
                     if (this.Type == MediaType.CDROM)
                     {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                        info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -873,15 +949,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
                             // Ensure internal serial is pulled from local data
-                            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                             info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
+#endif
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
@@ -889,8 +963,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SegaSaturn:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#else
+                    info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
+#endif
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -899,15 +976,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = saturnVersion ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                        info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
+#endif
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                     }
 
@@ -917,13 +992,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
@@ -934,72 +1007,74 @@ namespace MPF.Core.Modules.DiscImageCreator
                     else if (File.Exists($"{basePath}.img_EccEdc.txt"))
                         psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
 
-                    if (info.EDC == null) info.EDC = new EDCSection();
+#if NET48
                     info.EDC.EDC = psEdcStatus.ToYesNo();
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
+#else
+                    info.EDC!.EDC = psEdcStatus.ToYesNo();
+                    info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
             }
 
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+#if NET48
                 if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
+#else
+                info.Artifacts ??= new Dictionary<string, string>();
+#endif
 
                 //if (File.Exists($"{basePath}.c2"))
                 //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.c2")) ?? string.Empty;
@@ -1061,10 +1136,14 @@ namespace MPF.Core.Modules.DiscImageCreator
         public override string? GenerateParameters()
 #endif
         {
-            List<string> parameters = new List<string>();
+            var parameters = new List<string>();
 
+#if NET48
             if (BaseCommand == null)
                 BaseCommand = CommandStrings.NONE;
+#else
+            BaseCommand ??= CommandStrings.NONE;
+#endif
 
             if (!string.IsNullOrWhiteSpace(BaseCommand))
                 parameters.Add(BaseCommand);
@@ -1195,7 +1274,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // BE Opcode
             if (IsFlagSupported(FlagStrings.BEOpcode))
             {
-                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode]== false)
+                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] == false)
                 {
                     parameters.Add(FlagStrings.BEOpcode);
                     if (BEOpcodeValue != null
@@ -1785,7 +1864,7 @@ namespace MPF.Core.Modules.DiscImageCreator
         {
             (var cmdPath, _) = GetCommandFilePathAndVersion(basePath);
 
-            List<string> logFiles = new List<string>();
+            var logFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
@@ -2743,7 +2822,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
             // Generate the matching regex based on the base path
             string basePathFileName = Path.GetFileName(basePath);
-            Regex cmdFilenameRegex = new Regex(Regex.Escape(basePathFileName) + @"_(\d{8})T\d{6}\.txt");
+            var cmdFilenameRegex = new Regex(Regex.Escape(basePathFileName) + @"_(\d{8})T\d{6}\.txt");
 
             // Find the first match for the command file
             var parentDirectory = Path.GetDirectoryName(basePath);
@@ -2845,7 +2924,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(drive))
                 return false;
 
-            using (StreamReader sr = File.OpenText(drive))
+            using (var sr = File.OpenText(drive))
             {
                 try
                 {
@@ -2862,25 +2941,41 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (line.StartsWith("DiscType:"))
                         {
                             // DiscType: <discType>
+#if NET48
                             string identifier = line.Substring("DiscType: ".Length);
+#else
+                            string identifier = line["DiscType: ".Length..];
+#endif
                             discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("DiscTypeIdentifier:"))
                         {
                             // DiscTypeIdentifier: <discType>
+#if NET48
                             string identifier = line.Substring("DiscTypeIdentifier: ".Length);
+#else
+                            string identifier = line["DiscTypeIdentifier: ".Length..];
+#endif
                             discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("DiscTypeSpecific:"))
                         {
                             // DiscTypeSpecific: <discType>
+#if NET48
                             string identifier = line.Substring("DiscTypeSpecific: ".Length);
+#else
+                            string identifier = line["DiscTypeSpecific: ".Length..];
+#endif
                             discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("BookType:"))
                         {
                             // BookType: <discType>
+#if NET48
                             string identifier = line.Substring("BookType: ".Length);
+#else
+                            string identifier = line["BookType: ".Length..];
+#endif
                             discTypeOrBookTypeSet.Add(identifier);
                         }
 
@@ -2926,24 +3021,31 @@ namespace MPF.Core.Modules.DiscImageCreator
 #endif
 
             // Get everything from _disc.txt first
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
                     // Fast forward to the copyright information
-                    while (sr.ReadLine()?.Trim()?.StartsWith("========== CopyrightInformation ==========")== false) ;
+                    while (sr.ReadLine()?.Trim()?.StartsWith("========== CopyrightInformation ==========") == false) ;
 
                     // Now read until we hit the manufacturing information
                     var line = sr.ReadLine()?.Trim();
-                    while (line?.StartsWith("========== ManufacturingInformation ==========")== false)
+                    while (line?.StartsWith("========== ManufacturingInformation ==========") == false)
                     {
                         if (line == null)
                             break;
 
+#if NET48
                         if (line.StartsWith("CopyrightProtectionType"))
                             copyrightProtectionSystemType = line.Substring("CopyrightProtectionType: ".Length);
                         else if (line.StartsWith("RegionManagementInformation"))
                             region = line.Substring("RegionManagementInformation: ".Length);
+#else
+                        if (line.StartsWith("CopyrightProtectionType"))
+                            copyrightProtectionSystemType = line["CopyrightProtectionType: ".Length..];
+                        else if (line.StartsWith("RegionManagementInformation"))
+                            region = line["RegionManagementInformation: ".Length..];
+#endif
 
                         line = sr.ReadLine()?.Trim();
                     }
@@ -2954,7 +3056,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Get everything from _CSSKey.txt next, if it exists
             if (File.Exists(cssKey))
             {
-                using (StreamReader sr = File.OpenText(cssKey))
+                using (var sr = File.OpenText(cssKey))
                 {
                     try
                     {
@@ -2967,13 +3069,21 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                             if (line.StartsWith("DecryptedDiscKey"))
                             {
+#if NET48
                                 decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+#else
+                                decryptedDiscKey = line["DecryptedDiscKey[020]: ".Length..];
+#endif
                             }
                             else if (line.StartsWith("LBA:"))
                             {
                                 // Set the key string if necessary
+#if NET48
                                 if (vobKeys == null)
                                     vobKeys = string.Empty;
+#else
+                                vobKeys ??= string.Empty;
+#endif
 
                                 // No keys
                                 if (line.Contains("No TitleKey"))
@@ -2981,7 +3091,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                                     var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$");
                                     string matchedFilename = match.Groups[1].Value;
                                     if (matchedFilename.EndsWith(";1"))
+#if NET48
                                         matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+#else
+                                        matchedFilename = matchedFilename[..^2];
+#endif
 
                                     vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
                                 }
@@ -2990,7 +3104,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                                     var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$");
                                     string matchedFilename = match.Groups[1].Value;
                                     if (matchedFilename.EndsWith(";1"))
+#if NET48
                                         matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+#else
+                                        matchedFilename = matchedFilename[..^2];
+#endif
 
                                     vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
                                 }
@@ -3034,7 +3152,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             long? totalErrors = null;
 
             // First line of defense is the EdcEcc error file
-            using (StreamReader sr = File.OpenText(edcecc))
+            using (var sr = File.OpenText(edcecc))
             {
                 try
                 {
@@ -3052,18 +3170,34 @@ namespace MPF.Core.Modules.DiscImageCreator
                         }
                         else if (line.StartsWith("Total errors"))
                         {
+#if NET48
                             if (totalErrors == null)
                                 totalErrors = 0;
+#else
+                            totalErrors ??= 0;
+#endif
 
+#if NET48
                             if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
+#else
+                            if (Int64.TryParse(line["Total errors: ".Length..].Trim(), out long te))
+#endif
                                 totalErrors += te;
                         }
                         else if (line.StartsWith("Total warnings"))
                         {
+#if NET48
                             if (totalErrors == null)
                                 totalErrors = 0;
+#else
+                            totalErrors ??= 0;
+#endif
 
+#if NET48
                             if (Int64.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
+#else
+                            if (Int64.TryParse(line["Total warnings: ".Length..].Trim(), out long tw))
+#endif
                                 totalErrors += tw;
                         }
                     }
@@ -3100,11 +3234,19 @@ namespace MPF.Core.Modules.DiscImageCreator
             try
             {
                 string[] header = segaHeader.Split('\n');
+#if NET48
                 string versionLine = header[4].Substring(58);
                 string dateLine = header[5].Substring(58);
                 serial = versionLine.Substring(0, 10).TrimEnd();
                 version = versionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
+#else
+                string versionLine = header[4][58..];
+                string dateLine = header[5][58..];
+                serial = versionLine[..10].TrimEnd();
+                version = versionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine[..8];
+#endif
                 return true;
             }
             catch
@@ -3132,7 +3274,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(drive))
                 return false;
 
-            using (StreamReader sr = File.OpenText(drive))
+            using (var sr = File.OpenText(drive))
             {
                 try
                 {
@@ -3146,17 +3288,29 @@ namespace MPF.Core.Modules.DiscImageCreator
                         if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
                         {
                             // VendorId: <manufacturer>
+#if NET48
                             manufacturer = line.Substring("VendorId: ".Length);
+#else
+                            manufacturer = line["VendorId: ".Length..];
+#endif
                         }
                         else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
                         {
                             // ProductId: <model>
+#if NET48
                             model = line.Substring("ProductId: ".Length);
+#else
+                            model = line["ProductId: ".Length..];
+#endif
                         }
                         else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
                         {
                             // ProductRevisionLevel: <firmware>
+#if NET48
                             firmware = line.Substring("ProductRevisionLevel: ".Length);
+#else
+                            firmware = line["ProductRevisionLevel: ".Length..];
+#endif
                         }
 
                         line = sr.ReadLine();
@@ -3188,7 +3342,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -3249,7 +3403,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -3259,12 +3413,12 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     if (!line.StartsWith("========== TOC"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== TOC")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== TOC") == false) ;
                     if (line == null)
                         return null;
 
                     // Create the required regex
-                    Regex trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$");
+                    var trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$");
 
                     // Read in the track length data
                     var trackLengthMapping = new Dictionary<string, string>();
@@ -3283,16 +3437,16 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     if (!line.StartsWith("========== FULL TOC"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== FULL TOC")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== FULL TOC") == false) ;
                     if (line == null)
                         return null;
 
                     // Create the required regex
-                    Regex trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$");
+                    var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$");
 
                     // Read in the track session data
                     var trackSessionMapping = new Dictionary<string, string>();
-                    while ((line = sr.ReadLine())?.StartsWith("========== OpCode")== false)
+                    while ((line = sr.ReadLine())?.StartsWith("========== OpCode") == false)
                     {
                         if (line == null)
                             return null;
@@ -3314,12 +3468,16 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     if (!line.StartsWith("Lead-out length"))
-                        while ((line = sr.ReadLine()?.Trim())?.StartsWith("Lead-out length")== false) ;
+                        while ((line = sr.ReadLine()?.Trim())?.StartsWith("Lead-out length") == false) ;
 
                     // TODO: Are there any examples of 3+ session discs?
 
                     // Read the first session lead-out
+#if NET48
                     var firstSessionLeadOutLengthString = line?.Substring("Lead-out length of 1st session: ".Length);
+#else
+                    var firstSessionLeadOutLengthString = line?["Lead-out length of 1st session: ".Length..];
+#endif
                     line = sr.ReadLine()?.Trim();
                     if (line == null)
                         return null;
@@ -3330,14 +3488,22 @@ namespace MPF.Core.Modules.DiscImageCreator
 #else
                     string? secondSessionLeadInLengthString = null;
 #endif
-                    while (line?.StartsWith("Lead-in length")== false)
+                    while (line?.StartsWith("Lead-in length") == false)
                     {
+#if NET48
                         secondSessionLeadInLengthString = line?.Substring("Lead-in length of 2nd session: ".Length);
+#else
+                        secondSessionLeadInLengthString = line?["Lead-in length of 2nd session: ".Length..];
+#endif
                         line = sr.ReadLine()?.Trim();
                     }
 
                     // Read the second session pregap
+#if NET48
                     var secondSessionPregapLengthString = line?.Substring("Pregap length of 1st track of 2nd session: ".Length);
+#else
+                    var secondSessionPregapLengthString = line?["Pregap length of 1st track of 2nd session: ".Length..];
+#endif
 
                     // Calculate the session gap total
                     if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
@@ -3404,7 +3570,11 @@ namespace MPF.Core.Modules.DiscImageCreator
                     return null;
 
                 if (trimLength > -1)
+#if NET48
                     hex = hex.Substring(0, trimLength);
+#else
+                    hex = hex[..trimLength];
+#endif
 
                 return Regex.Replace(hex, ".{32}", "$0\n");
             }
@@ -3426,7 +3596,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -3472,7 +3642,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // First line of defense is the EdcEcc error file
             int modeTwoNoEdc = 0;
             int modeTwoFormTwo = 0;
-            using (StreamReader sr = File.OpenText(edcecc))
+            using (var sr = File.OpenText(edcecc))
             {
                 try
                 {
@@ -3530,7 +3700,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (StreamReader sr = File.OpenText(mainInfo))
+            using (var sr = File.OpenText(mainInfo))
             {
                 try
                 {
@@ -3544,7 +3714,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         || line.StartsWith("========== FULL TOC (Binary)"))
                     {
                         // Seek to unscrambled data
-                        while ((line = sr.ReadLine())?.StartsWith("========== Check Volume Descriptor ==========")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== Check Volume Descriptor ==========") == false) ;
 
                         // Read the next line so the search goes properly
                         line = sr.ReadLine();
@@ -3555,25 +3725,25 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     // Make sure we're in the area
                     if (line.StartsWith("========== LBA") == true)
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
                     if (line == null)
                         return null;
 
                     // If we have a Sega disc, skip sector 0
                     if (line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
                     if (line == null)
                         return null;
 
                     // If we have a PlayStation disc, skip sector 4
                     if (line.StartsWith("========== LBA[000004, 0x00004]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
                     if (line == null)
                         return null;
 
                     // We assume the first non-LBA0/4 sector listed is the proper one
                     // Fast forward to the PVD
-                    while ((line = sr.ReadLine())?.StartsWith("0310")== false) ;
+                    while ((line = sr.ReadLine())?.StartsWith("0310") == false) ;
 
                     // Now that we're at the PVD, read each line in and concatenate
                     string pvd = "";
@@ -3611,12 +3781,21 @@ namespace MPF.Core.Modules.DiscImageCreator
             try
             {
                 string[] header = segaHeader.Split('\n');
+#if NET48
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
+#else
+                string serialVersionLine = header[2][58..];
+                string dateLine = header[3][58..];
+                serial = serialVersionLine[..10].Trim();
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine[..8];
+                date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
+#endif
                 return true;
             }
             catch
@@ -3648,16 +3827,27 @@ namespace MPF.Core.Modules.DiscImageCreator
             try
             {
                 string[] header = segaHeader.Split('\n');
+#if NET48
                 string serialVersionLine = header[8].Substring(58);
                 string dateLine = header[1].Substring(58);
                 serial = serialVersionLine.Substring(3, 8).TrimEnd('-', ' ');
                 date = dateLine.Substring(8).Trim();
+#else
+                string serialVersionLine = header[8][58..];
+                string dateLine = header[1][58..];
+                serial = serialVersionLine.Substring(3, 8).TrimEnd('-', ' ');
+                date = dateLine[8..].Trim();
+#endif
 
                 // Properly format the date string, if possible
                 string[] dateSplit = date.Split('.');
 
                 if (dateSplit.Length == 1)
+#if NET48
                     dateSplit = new string[] { date.Substring(0, 4), date.Substring(4) };
+#else
+                    dateSplit = new string[] { date[..4], date[4..] };
+#endif
 
                 string month = dateSplit[1];
                 switch (month)
@@ -3729,7 +3919,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (StreamReader sr = File.OpenText(mainInfo))
+            using (var sr = File.OpenText(mainInfo))
             {
                 try
                 {
@@ -3743,7 +3933,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         || line.StartsWith("========== FULL TOC (Binary)"))
                     {
                         // Seek to unscrambled data
-                        while ((line = sr.ReadLine())?.Contains("Check MCN and/or ISRC")== false) ;
+                        while ((line = sr.ReadLine())?.Contains("Check MCN and/or ISRC") == false) ;
                         if (line == null)
                             return null;
 
@@ -3756,18 +3946,18 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     // Make sure we're in the area
                     if (!line.StartsWith("========== LBA"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
                     if (line == null)
                         return null;
 
                     // Make sure we're in the right sector
                     if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")== false) ;
+                        while ((line = sr.ReadLine())?.StartsWith("========== LBA[000000, 0000000]: Main Channel ==========") == false) ;
                     if (line == null)
                         return null;
 
                     // Fast forward to the header
-                    while ((line = sr.ReadLine())?.Trim()?.StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")== false) ;
+                    while ((line = sr.ReadLine())?.Trim()?.StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F") == false) ;
                     if (line == null)
                         return null;
 
@@ -3801,12 +3991,12 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
                     // Fast forward to the universal hash information
-                    while (sr.ReadLine()?.Trim().StartsWith("========== Hash(Universal Whole image) ==========")== false) ;
+                    while (sr.ReadLine()?.Trim().StartsWith("========== Hash(Universal Whole image) ==========") == false) ;
 
                     // If we find the universal hash line, return the SHA-1 hash only
 #if NET48
@@ -3853,12 +4043,12 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
                     // Fast forward to the offsets
-                    while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset")== false) ;
+                    while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
                     sr.ReadLine(); // Combined Offset
                     sr.ReadLine(); // Drive Offset
                     sr.ReadLine(); // Separator line
@@ -3933,7 +4123,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -3955,7 +4145,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                             // Set the flag so we don't read duplicate data
                             foundSecuritySectors = true;
 
-                            Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)
@@ -4027,7 +4217,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -4049,7 +4239,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                             // Set the flag so we don't read duplicate data
                             foundSecuritySectors = true;
 
-                            Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)
@@ -4095,7 +4285,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(dmi))
                 return string.Empty;
 
-            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            using (var br = new BinaryReader(File.OpenRead(dmi)))
             {
                 try
                 {
@@ -4119,7 +4309,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(dmi))
                 return string.Empty;
 
-            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            using (var br = new BinaryReader(File.OpenRead(dmi)))
             {
                 try
                 {

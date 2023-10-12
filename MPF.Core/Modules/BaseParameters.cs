@@ -47,7 +47,11 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Set of flags to pass to the executable
         /// </summary>
+#if NET48
         protected Dictionary<string, bool?> flags = new Dictionary<string, bool?>();
+#else
+        protected Dictionary<string, bool?> flags = new();
+#endif
         protected internal IEnumerable<string> Keys => flags.Keys;
 
         /// <summary>
@@ -239,7 +243,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
+#if NET48
         public virtual List<string> GetLogFilePaths(string basePath) => new List<string>();
+#else
+        public virtual List<string> GetLogFilePaths(string basePath) => new();
+#endif
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
