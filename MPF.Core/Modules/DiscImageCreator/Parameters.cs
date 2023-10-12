@@ -1991,6 +1991,7 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
+#if NET48
             switch (BaseCommand)
             {
                 case CommandStrings.Audio:
@@ -2013,6 +2014,27 @@ namespace MPF.Core.Modules.DiscImageCreator
                 default:
                     return false;
             }
+#else
+            return BaseCommand switch
+            {
+                CommandStrings.Audio
+                    or CommandStrings.BluRay
+                    or CommandStrings.CompactDisc
+                    or CommandStrings.Data
+                    or CommandStrings.DigitalVideoDisc
+                    or CommandStrings.Disk
+                    or CommandStrings.Floppy
+                    or CommandStrings.GDROM
+                    or CommandStrings.SACD
+                    or CommandStrings.Swap
+                    or CommandStrings.Tape
+                    or CommandStrings.XBOX
+                    or CommandStrings.XBOXSwap
+                    or CommandStrings.XGD2Swap
+                    or CommandStrings.XGD3Swap => true,
+                _ => false,
+            };
+#endif
         }
 
         /// <inheritdoc/>
@@ -2061,6 +2083,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 this[FlagStrings.DisableBeep] = true;
 
             // Set the C2 reread count
+#if NET48
             switch (options.DICRereadCount)
             {
                 case -1:
@@ -2073,8 +2096,17 @@ namespace MPF.Core.Modules.DiscImageCreator
                     C2OpcodeValue[0] = options.DICRereadCount;
                     break;
             }
+#else
+            C2OpcodeValue[0] = options.DICRereadCount switch
+            {
+                -1 => null,
+                0 => 20,
+                _ => options.DICRereadCount,
+            };
+#endif
 
             // Set the DVD/HD-DVD/BD reread count
+#if NET48
             switch (options.DICDVDRereadCount)
             {
                 case -1:
@@ -2087,6 +2119,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                     DVDRereadValue = options.DICDVDRereadCount;
                     break;
             }
+#else
+            DVDRereadValue = options.DICDVDRereadCount switch
+            {
+                -1 => null,
+                0 => 10,
+                _ => options.DICDVDRereadCount,
+            };
+#endif
 
             // Now sort based on disc type
             switch (this.Type)
@@ -3850,6 +3890,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 #endif
 
                 string month = dateSplit[1];
+#if NET48
                 switch (month)
                 {
                     case "JAN":
@@ -3892,6 +3933,24 @@ namespace MPF.Core.Modules.DiscImageCreator
                         dateSplit[1] = "00";
                         break;
                 }
+#else
+                dateSplit[1] = month switch
+                {
+                    "JAN" => "01",
+                    "FEB" => "02",
+                    "MAR" => "03",
+                    "APR" => "04",
+                    "MAY" => "05",
+                    "JUN" => "06",
+                    "JUL" => "07",
+                    "AUG" => "08",
+                    "SEP" => "09",
+                    "OCT" => "10",
+                    "NOV" => "11",
+                    "DEC" => "12",
+                    _ => "00",
+                };
+#endif
 
                 date = string.Join("-", dateSplit);
 

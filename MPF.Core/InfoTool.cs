@@ -3266,6 +3266,7 @@ namespace MPF.Core
         /// <remarks>TODO: This should move to Extensions at some point</remarks>
         private static bool IsBoolean(SiteCode? siteCode)
         {
+#if NET48
             switch (siteCode)
             {
                 case SiteCode.PostgapType:
@@ -3274,6 +3275,14 @@ namespace MPF.Core
                 default:
                     return false;
             }
+#else
+            return siteCode switch
+            {
+                SiteCode.PostgapType => true,
+                SiteCode.VCD => true,
+                _ => false,
+            };
+#endif
         }
 
         /// <summary>
@@ -3284,6 +3293,7 @@ namespace MPF.Core
         /// <remarks>TODO: This should move to Extensions at some point</remarks>
         private static bool IsMultiLine(SiteCode? siteCode)
         {
+#if NET48
             switch (siteCode)
             {
                 case SiteCode.Extras:
@@ -3302,6 +3312,24 @@ namespace MPF.Core
                 default:
                     return false;
             }
+#else
+            return siteCode switch
+            {
+                SiteCode.Extras => true,
+                SiteCode.Filename => true,
+                SiteCode.Games => true,
+                SiteCode.GameFootage => true,
+                SiteCode.Multisession => true,
+                SiteCode.NetYarozeGames => true,
+                SiteCode.Patches => true,
+                SiteCode.PlayableDemos => true,
+                SiteCode.RollingDemos => true,
+                SiteCode.Savegames => true,
+                SiteCode.TechDemos => true,
+                SiteCode.Videos => true,
+                _ => false,
+            };
+#endif
         }
 
         /// <summary>

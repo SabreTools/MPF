@@ -1030,6 +1030,7 @@ namespace MPF.Core.Modules.Redumper
             switch (this.Type)
             {
                 case MediaType.CDROM:
+#if NET48
                     switch (this.System)
                     {
                         case RedumpSystem.SuperAudioCD:
@@ -1039,6 +1040,13 @@ namespace MPF.Core.Modules.Redumper
                             ModeValues = new List<string> { CommandStrings.CD };
                             break;
                     }
+#else
+                    ModeValues = this.System switch
+                    {
+                        RedumpSystem.SuperAudioCD => new List<string> { CommandStrings.SACD },
+                        _ => new List<string> { CommandStrings.CD },
+                    };
+#endif
                     break;
                 case MediaType.DVD:
                     ModeValues = new List<string> { CommandStrings.DVD };
@@ -1343,7 +1351,7 @@ namespace MPF.Core.Modules.Redumper
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Information Extraction Methods
 

@@ -84,6 +84,7 @@ namespace MPF.Core.Utilities
                 return Result.Failure("Please select a valid system");
 
             // If we're on an unsupported type, update the status accordingly
+#if NET48
             switch (type)
             {
                 // Fully supported types
@@ -116,6 +117,35 @@ namespace MPF.Core.Utilities
                 default:
                     return Result.Failure($"{type.LongName()} media are not supported for dumping");
             }
+#else
+            return type switch
+            {
+                // Fully supported types
+                MediaType.BluRay
+                    or MediaType.CDROM
+                    or MediaType.DVD
+                    or MediaType.FloppyDisk
+                    or MediaType.HardDisk
+                    or MediaType.CompactFlash
+                    or MediaType.SDCard
+                    or MediaType.FlashDrive
+                    or MediaType.HDDVD => Result.Success($"{type.LongName()} ready to dump"),
+
+                // Partially supported types
+                MediaType.GDROM
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => Result.Success($"{type.LongName()} partially supported for dumping"),
+
+                // Special case for other supported tools
+                MediaType.UMD => Result.Failure($"{type.LongName()} supported for submission info parsing"),
+
+                // Specifically unknown type
+                MediaType.NONE => Result.Failure($"Please select a valid media type"),
+
+                // Undumpable but recognized types
+                _ => Result.Failure($"{type.LongName()} media are not supported for dumping"),
+            };
+#endif
         }
 
         #endregion

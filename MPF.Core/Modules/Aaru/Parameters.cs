@@ -2446,6 +2446,7 @@ namespace MPF.Core.Modules.Aaru
                     case CommandStrings.ArchivePrefixShort:
                     case CommandStrings.ArchivePrefixLong:
                         family = CommandStrings.ArchivePrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.ArchiveInfo:
@@ -2455,11 +2456,19 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.ArchiveInfo => CommandStrings.ArchiveInfo,
+                            _ => null,
+                        };
+#endif
 
                         break;
                     case CommandStrings.DatabasePrefixShort:
                     case CommandStrings.DatabasePrefixLong:
                         family = CommandStrings.DatabasePrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.DatabaseStats:
@@ -2472,12 +2481,21 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.DatabaseStats => CommandStrings.DatabaseStats,
+                            CommandStrings.DatabaseUpdate => CommandStrings.DatabaseUpdate,
+                            _ => null,
+                        };
+#endif
 
                         break;
 
                     case CommandStrings.DevicePrefixShort:
                     case CommandStrings.DevicePrefixLong:
                         family = CommandStrings.DevicePrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.DeviceInfo:
@@ -2493,6 +2511,15 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.DeviceInfo => CommandStrings.DeviceInfo,
+                            CommandStrings.DeviceList => CommandStrings.DeviceList,
+                            CommandStrings.DeviceReport => CommandStrings.DeviceReport,
+                            _ => null,
+                        };
+#endif
 
                         break;
 
@@ -2500,6 +2527,7 @@ namespace MPF.Core.Modules.Aaru
                     case CommandStrings.FilesystemPrefixShortAlt:
                     case CommandStrings.FilesystemPrefixLong:
                         family = CommandStrings.FilesystemPrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.FilesystemExtract:
@@ -2519,12 +2547,24 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.FilesystemExtract => CommandStrings.FilesystemExtract,
+                            CommandStrings.FilesystemInfo => CommandStrings.FilesystemInfo,
+                            CommandStrings.FilesystemListShort => CommandStrings.FilesystemListLong,
+                            CommandStrings.FilesystemListLong => CommandStrings.FilesystemListLong,
+                            CommandStrings.FilesystemOptions => CommandStrings.FilesystemOptions,
+                            _ => null,
+                        };
+#endif
 
                         break;
 
                     case CommandStrings.ImagePrefixShort:
                     case CommandStrings.ImagePrefixLong:
                         family = CommandStrings.ImagePrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.ImageChecksumShort:
@@ -2563,12 +2603,31 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.ImageChecksumShort => CommandStrings.ImageChecksumLong,
+                            CommandStrings.ImageChecksumLong => CommandStrings.ImageChecksumLong,
+                            CommandStrings.ImageCompareShort => CommandStrings.ImageCompareLong,
+                            CommandStrings.ImageCompareLong => CommandStrings.ImageCompareLong,
+                            CommandStrings.ImageConvert => CommandStrings.ImageConvert,
+                            CommandStrings.ImageCreateSidecar => CommandStrings.ImageCreateSidecar,
+                            CommandStrings.ImageDecode => CommandStrings.ImageDecode,
+                            CommandStrings.ImageEntropy => CommandStrings.ImageEntropy,
+                            CommandStrings.ImageInfo => CommandStrings.ImageInfo,
+                            CommandStrings.ImageOptions => CommandStrings.ImageOptions,
+                            CommandStrings.ImagePrint => CommandStrings.ImagePrint,
+                            CommandStrings.ImageVerify => CommandStrings.ImageVerify,
+                            _ => null,
+                        };
+#endif
 
                         break;
 
                     case CommandStrings.MediaPrefixShort:
                     case CommandStrings.MediaPrefixLong:
                         family = CommandStrings.MediaPrefixLong;
+#if NET48
                         switch (splitCommand[1])
                         {
                             case CommandStrings.MediaDump:
@@ -2584,6 +2643,15 @@ namespace MPF.Core.Modules.Aaru
                                 command = null;
                                 break;
                         }
+#else
+                        command = splitCommand[1] switch
+                        {
+                            CommandStrings.MediaDump => CommandStrings.MediaDump,
+                            CommandStrings.MediaInfo => CommandStrings.MediaInfo,
+                            CommandStrings.MediaScan => CommandStrings.MediaScan,
+                            _ => null,
+                        };
+#endif
 
                         break;
 
@@ -2598,6 +2666,7 @@ namespace MPF.Core.Modules.Aaru
             else
             {
                 family = null;
+#if NET48
                 switch (splitCommand[0])
                 {
                     case CommandStrings.Configure:
@@ -2619,6 +2688,17 @@ namespace MPF.Core.Modules.Aaru
                         command = null;
                         break;
                 }
+#else
+                command = splitCommand[0] switch
+                {
+                    CommandStrings.Configure => CommandStrings.Configure,
+                    CommandStrings.Formats => CommandStrings.Formats,
+                    CommandStrings.ListEncodings => CommandStrings.ListEncodings,
+                    CommandStrings.ListNamespaces => CommandStrings.ListNamespaces,
+                    CommandStrings.Remote => CommandStrings.Remote,
+                    _ => null,
+                };
+#endif
             }
 
             // If the command itself is invalid, then return null

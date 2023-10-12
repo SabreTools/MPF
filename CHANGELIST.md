@@ -2,6 +2,7 @@
 
 - Fix options loading for Check
 - Cleanup and gated code
+- Gate some switch expressions
 
 ### 2.7.1 (2023-10-11)
 
