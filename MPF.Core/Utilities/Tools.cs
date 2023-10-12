@@ -173,32 +173,28 @@ namespace MPF.Core.Utilities
                         default:
                             return false;
                     }
+                case InternalProgram.Aaru:
                 case InternalProgram.DiscImageCreator:
                     switch (type)
                     {
-                        // Formats considered at least partially dumpable by DiscImageCreator
+                        // Formats considered at least partially supported
+                        case MediaType.BluRay:
                         case MediaType.CDROM:
                         case MediaType.DVD:
-                        case MediaType.GDROM:
-                        case MediaType.BluRay:
+                        case MediaType.FloppyDisk:
+                        case MediaType.HardDisk:
+                        case MediaType.CompactFlash:
+                        case MediaType.SDCard:
+                        case MediaType.FlashDrive:
                         case MediaType.HDDVD:
                         case MediaType.NintendoGameCubeGameDisc:
                         case MediaType.NintendoWiiOpticalDisc:
-                        case MediaType.Floptical:
-                        case MediaType.FloppyDisk:
-                        case MediaType.IomegaZip:
-                        case MediaType.IomegaJaz:
-                        case MediaType.DataCartridge:
-                        case MediaType.HardDisk:
                             return true;
 
                         // All other formats considered unsupported
                         default:
                             return false;
                     }
-                // Assume Aaru can dump anything
-                case InternalProgram.Aaru:
-                    return true;
                 // All other InternalPrograms are not used for dumping
                 default:
                     return false;
@@ -217,30 +213,27 @@ namespace MPF.Core.Utilities
                         // All other formats considered unsupported
                         _ => false,
                     };
+                case InternalProgram.Aaru:
                 case InternalProgram.DiscImageCreator:
                     return type switch
                     {
-                        // Formats considered at least partially supported by DiscImageCreator
-                        MediaType.CDROM
+                        // Formats considered at least partially supported by MPF
+                        MediaType.BluRay
+                            or MediaType.CDROM
                             or MediaType.DVD
                             or MediaType.GDROM
-                            or MediaType.BluRay
+                            or MediaType.FloppyDisk
+                            or MediaType.CompactFlash
+                            or MediaType.SDCard
+                            or MediaType.FlashDrive
+                            or MediaType.HardDisk
                             or MediaType.HDDVD
                             or MediaType.NintendoGameCubeGameDisc
-                            or MediaType.NintendoWiiOpticalDisc
-                            or MediaType.Floptical
-                            or MediaType.FloppyDisk
-                            or MediaType.IomegaZip
-                            or MediaType.IomegaJaz
-                            or MediaType.DataCartridge
-                            or MediaType.HardDisk => true,
+                            or MediaType.NintendoWiiOpticalDisc => true,
 
                         // All other formats considered unsupported
                         _ => false,
                     };
-                // Assume Aaru can dump anything
-                case InternalProgram.Aaru:
-                    return true;
                 // All other InternalPrograms are not supported for dumping
                 default:
                     return false;
