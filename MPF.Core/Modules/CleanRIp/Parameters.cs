@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
+
+#pragma warning disable IDE0051 // Remove unused private members
 
 namespace MPF.Core.Modules.CleanRip
 {

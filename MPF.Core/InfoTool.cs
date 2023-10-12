@@ -17,6 +17,8 @@ using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
 
+#pragma warning disable IDE0051 // Remove unused private members
+
 namespace MPF.Core
 {
     public static class InfoTool
@@ -1047,6 +1049,7 @@ namespace MPF.Core
                 bool reverseOrder = system.HasReversedRingcodes();
 
                 // Preamble for submission
+#pragma warning disable IDE0028
                 var output = new List<string>
                 {
                     "Users who wish to submit this information to Redump must ensure that all of the fields below are accurate for the exact media they have.",

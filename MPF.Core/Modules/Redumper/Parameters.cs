@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BinaryObjectScanner.Protection;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
+
+#pragma warning disable IDE0051 // Remove unused private members
 
 namespace MPF.Core.Modules.Redumper
 {
@@ -1351,7 +1352,7 @@ namespace MPF.Core.Modules.Redumper
             return true;
         }
 
-#endregion
+        #endregion
 
         #region Information Extraction Methods
 
