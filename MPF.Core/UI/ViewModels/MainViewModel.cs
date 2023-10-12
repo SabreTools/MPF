@@ -1584,6 +1584,35 @@ namespace MPF.Core.UI.ViewModels
         }
 
         /// <summary>
+        /// Returns False if a given InternalProgram does not support a given MediaType
+        /// </summary>
+        public bool ProgramSupportsMedia(InternalProgram program, MediaType? media)
+        {
+            switch (program)
+            {
+                case InternalProgram.Redumper:
+                    switch (media)
+                    {
+                        case MediaType.HDDVD:
+                            return false;
+                        case MediaType.BluRay:
+                            return false;
+                        default:
+                            return true;
+                    }
+                case InternalProgram.Aaru:
+                case InternalProgram.DiscImageCreator:
+                    switch (media)
+                    {
+                        default:
+                            return true;
+                    }
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
         /// Determine if the dumping button should be enabled
         /// </summary>
         private bool ShouldEnableDumpingButton()
@@ -1592,8 +1621,7 @@ namespace MPF.Core.UI.ViewModels
                 && Drives.Count > 0
                 && this.CurrentSystem != null
                 && this.CurrentMediaType != null
-                && (this.CurrentMediaType != MediaType.BluRay || this.CurrentProgram != InternalProgram.Redumper)
-                && (this.CurrentMediaType != MediaType.HDDVD || this.CurrentProgram != InternalProgram.Redumper);
+                && ProgramSupportsMedia(this.CurrentProgram, this.CurrentMediaType);
         }
 
         /// <summary>
