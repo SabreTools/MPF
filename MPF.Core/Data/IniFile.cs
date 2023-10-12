@@ -8,14 +8,22 @@ namespace MPF.Core.Data
 {
     public class IniFile : IDictionary<string, string>
     {
+#if NET48
         private Dictionary<string, string> _keyValuePairs = new Dictionary<string, string>();
+#else
+        private Dictionary<string, string> _keyValuePairs = new();
+#endif
 
         public string this[string key]
         {
             get
             {
+#if NET48
                 if (_keyValuePairs == null)
                     _keyValuePairs = new Dictionary<string, string>();
+#else
+                _keyValuePairs ??= new Dictionary<string, string>();
+#endif
 
                 key = key.ToLowerInvariant();
                 if (_keyValuePairs.ContainsKey(key))
@@ -25,8 +33,12 @@ namespace MPF.Core.Data
             }
             set
             {
+#if NET48
                 if (_keyValuePairs == null)
                     _keyValuePairs = new Dictionary<string, string>();
+#else
+                _keyValuePairs ??= new Dictionary<string, string>();
+#endif
 
                 key = key.ToLowerInvariant();
                 _keyValuePairs[key] = value;
@@ -99,7 +111,7 @@ namespace MPF.Core.Data
             // Keys are case-insensitive by default
             try
             {
-                using (StreamReader sr = new StreamReader(stream))
+                using (var sr = new StreamReader(stream))
                 {
                     string section = string.Empty;
                     while (!sr.EndOfStream)
@@ -125,7 +137,11 @@ namespace MPF.Core.Data
                         }
 
                         // Valid INI lines are in the format key=value
+#if NET48
                         else if (line.Contains("="))
+#else
+                        else if (line.Contains('='))
+#endif
                         {
                             // Split the line by '=' for key-value pairs
                             string[] data = line.Split('=');
@@ -185,7 +201,7 @@ namespace MPF.Core.Data
 
             try
             {
-                using (StreamWriter sw = new StreamWriter(stream))
+                using (var sw = new StreamWriter(stream))
                 {
                     // Order the dictionary by keys to link sections together
                     var orderedKeyValuePairs = _keyValuePairs.OrderBy(kvp => kvp.Key);

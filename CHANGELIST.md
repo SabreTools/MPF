@@ -1,6 +1,9 @@
 ### WIP (xxxx-xx-xx)
 
 - Fix options loading for Check
+- Cleanup and gated code
+- Gate some switch expressions
+- Suppress some unnecessary messages
 
 ### 2.7.1 (2023-10-11)
 

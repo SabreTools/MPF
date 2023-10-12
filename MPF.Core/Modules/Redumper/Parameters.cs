@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BinaryObjectScanner.Protection;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
+
+#pragma warning disable IDE0051 // Remove unused private members
 
 namespace MPF.Core.Modules.Redumper
 {
@@ -293,9 +294,15 @@ namespace MPF.Core.Modules.Redumper
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
 #endif
         {
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
+
             // Get the dumping program and version
-            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
+#if NET48
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+#else
+            info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+#endif
             info.DumpingInfo.DumpingDate = GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
@@ -309,67 +316,89 @@ namespace MPF.Core.Modules.Redumper
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
-                    if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
+#else
+                    info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
+                    info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
+#endif
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
 
                     // Attempt to get the write offset
                     string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+#else
+                    info.CommonDiscInfo!.RingWriteOffset = cdWriteOffset;
+#endif
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // Attempt to get the error count
                     long errorCount = GetErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
-#if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
-
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
                     if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+#else
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
+#endif
 
                     // Attempt to get the universal hash, if it's an audio disc
                     if (this.System.IsAudio())
                     {
                         string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+#else
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
+#endif
                     }
 
                     // Attempt to get the non-zero data start, if it's an audio disc
                     if (this.System.IsAudio())
                     {
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
+#if NET48
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+#else
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+#endif
                     }
 
                     break;
 
                 case MediaType.DVD:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
-                    if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
+#else
+                    info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
+                    info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
+#endif
 
                     // Get the individual hash data, as per internal
-                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
                     {
+#if NET48
                         info.SizeAndChecksums.Size = size;
+#else
+                        info.SizeAndChecksums!.Size = size;
+#endif
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
                     string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
+#if NET48
                     info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+#else
+                    info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+#endif
                     break;
             }
 
@@ -385,27 +414,31 @@ namespace MPF.Core.Modules.Redumper
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                     info.CopyProtection.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
+#else
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
@@ -421,15 +454,13 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
-                    info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+#else
+                    info.Extras!.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+#endif
                     info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     break;
@@ -451,8 +482,11 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SegaSaturn:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.Header = GetSaturnHeader($"{basePath}.log") ?? string.Empty;
+#else
+                    info.Extras!.Header = GetSaturnHeader($"{basePath}.log") ?? string.Empty;
+#endif
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -461,15 +495,13 @@ namespace MPF.Core.Modules.Redumper
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = saturnVersion ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                        info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
+#endif
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                     }
 
@@ -479,21 +511,22 @@ namespace MPF.Core.Modules.Redumper
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
-                    if (info.EDC == null) info.EDC = new EDCSection();
                     info.EDC.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
+#else
+                    info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
+                    info.EDC!.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
+#endif
                     info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
                     info.CopyProtection.LibCryptData = GetPlayStationLibCryptData($"{basePath}.log");
                     break;
@@ -502,62 +535,62 @@ namespace MPF.Core.Modules.Redumper
                     if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
+#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+#if NET48
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
 #if NET48
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+#else
+                    info.VersionAndEditions!.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+#endif
                     break;
             }
 
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+#if NET48
                 if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
+#else
+                info.Artifacts ??= new Dictionary<string, string>();
+#endif
+
                 if (File.Exists($"{basePath}.cdtext"))
                     info.Artifacts["cdtext"] = GetBase64(GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
                 if (File.Exists($"{basePath}.cue"))
@@ -998,6 +1031,7 @@ namespace MPF.Core.Modules.Redumper
             switch (this.Type)
             {
                 case MediaType.CDROM:
+#if NET48
                     switch (this.System)
                     {
                         case RedumpSystem.SuperAudioCD:
@@ -1007,6 +1041,13 @@ namespace MPF.Core.Modules.Redumper
                             ModeValues = new List<string> { CommandStrings.CD };
                             break;
                     }
+#else
+                    ModeValues = this.System switch
+                    {
+                        RedumpSystem.SuperAudioCD => new List<string> { CommandStrings.SACD },
+                        _ => new List<string> { CommandStrings.CD },
+                    };
+#endif
                     break;
                 case MediaType.DVD:
                     ModeValues = new List<string> { CommandStrings.DVD };
@@ -1330,7 +1371,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1376,7 +1417,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1428,7 +1469,7 @@ namespace MPF.Core.Modules.Redumper
 #else
             string? region = null, rceProtection = null, copyrightProtectionSystemType = null, vobKeys = null, decryptedDiscKey = null;
 #endif
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1529,7 +1570,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return -1;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1580,7 +1621,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1659,7 +1700,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1725,7 +1766,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1765,7 +1806,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1809,7 +1850,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1851,7 +1892,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1895,7 +1936,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -1941,7 +1982,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2033,7 +2074,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2093,7 +2134,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2185,7 +2226,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2232,7 +2273,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2283,7 +2324,7 @@ namespace MPF.Core.Modules.Redumper
             // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
             // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {
@@ -2327,7 +2368,7 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return false;
 
-            using (StreamReader sr = File.OpenText(log))
+            using (var sr = File.OpenText(log))
             {
                 try
                 {

@@ -84,6 +84,7 @@ namespace MPF.Core.Utilities
                 return Result.Failure("Please select a valid system");
 
             // If we're on an unsupported type, update the status accordingly
+#if NET48
             switch (type)
             {
                 // Fully supported types
@@ -116,6 +117,35 @@ namespace MPF.Core.Utilities
                 default:
                     return Result.Failure($"{type.LongName()} media are not supported for dumping");
             }
+#else
+            return type switch
+            {
+                // Fully supported types
+                MediaType.BluRay
+                    or MediaType.CDROM
+                    or MediaType.DVD
+                    or MediaType.FloppyDisk
+                    or MediaType.HardDisk
+                    or MediaType.CompactFlash
+                    or MediaType.SDCard
+                    or MediaType.FlashDrive
+                    or MediaType.HDDVD => Result.Success($"{type.LongName()} ready to dump"),
+
+                // Partially supported types
+                MediaType.GDROM
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => Result.Success($"{type.LongName()} partially supported for dumping"),
+
+                // Special case for other supported tools
+                MediaType.UMD => Result.Failure($"{type.LongName()} supported for submission info parsing"),
+
+                // Specifically unknown type
+                MediaType.NONE => Result.Failure($"Please select a valid media type"),
+
+                // Undumpable but recognized types
+                _ => Result.Failure($"{type.LongName()} media are not supported for dumping"),
+            };
+#endif
         }
 
         #endregion
@@ -197,7 +227,7 @@ namespace MPF.Core.Utilities
 #endif
         {
 #if NET48
-            using (System.Net.WebClient wc = new System.Net.WebClient())
+            using (var wc = new System.Net.WebClient())
             {
                 wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
 
@@ -211,7 +241,7 @@ namespace MPF.Core.Utilities
                 return (latestTag, releaseUrl);
             }
 #else
-            using (System.Net.Http.HttpClient hc = new System.Net.Http.HttpClient())
+            using (var hc = new System.Net.Http.HttpClient())
             {
                 // TODO: Figure out a better way than having this hardcoded...
                 string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";

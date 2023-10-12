@@ -65,7 +65,7 @@ namespace MPF.Core
         public BaseParameters? Parameters { get; private set; }
 #endif
 
-#endregion
+        #endregion
 
         #region Event Handlers
 
@@ -130,16 +130,16 @@ namespace MPF.Core
 #endif
         {
             // Set options object
-            this.Options = options;
+            Options = options;
 
             // Output paths
-            this.OutputPath = InfoTool.NormalizeOutputPaths(outputPath, true);
+            OutputPath = InfoTool.NormalizeOutputPaths(outputPath, true);
 
             // UI information
-            this.Drive = drive;
-            this.System = system ?? options.DefaultSystem;
-            this.Type = type ?? MediaType.NONE;
-            this.InternalProgram = internalProgram ?? options.InternalProgram;
+            Drive = drive;
+            System = system ?? options.DefaultSystem;
+            Type = type ?? MediaType.NONE;
+            InternalProgram = internalProgram ?? options.InternalProgram;
 
             // Dumping program
             SetParameters(parameters);
@@ -153,13 +153,13 @@ namespace MPF.Core
         public void AdjustPathsForDiscImageCreator()
         {
             // Only DiscImageCreator has issues with paths
-            if (this.Parameters?.InternalProgram != InternalProgram.DiscImageCreator)
+            if (Parameters?.InternalProgram != InternalProgram.DiscImageCreator)
                 return;
 
             try
             {
                 // Normalize the output path
-                string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
+                string outputPath = InfoTool.NormalizeOutputPaths(OutputPath, true);
 
                 // Replace all instances in the output directory
                 var outputDirectory = Path.GetDirectoryName(outputPath);
@@ -176,20 +176,20 @@ namespace MPF.Core
                 if (string.IsNullOrWhiteSpace(outputDirectory))
                 {
                     if (string.IsNullOrWhiteSpace(outputExtension))
-                        this.OutputPath = outputFilename;
+                        OutputPath = outputFilename;
                     else
-                        this.OutputPath = $"{outputFilename}.{outputExtension}";
+                        OutputPath = $"{outputFilename}.{outputExtension}";
                 }
                 else
                 {
                     if (string.IsNullOrWhiteSpace(outputExtension))
-                        this.OutputPath = Path.Combine(outputDirectory, outputFilename);
+                        OutputPath = Path.Combine(outputDirectory, outputFilename);
                     else
-                        this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+                        OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
                 }
 
                 // Assign the path to the filename as well for dumping
-                ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = this.OutputPath;
+                ((Modules.DiscImageCreator.Parameters)Parameters).Filename = OutputPath;
             }
             catch { }
         }
@@ -204,45 +204,63 @@ namespace MPF.Core
         public void SetParameters(string? parameters)
 #endif
         {
-            switch (this.InternalProgram)
+#if NET48
+            switch (InternalProgram)
             {
                 // Dumping support
                 case InternalProgram.Aaru:
-                    this.Parameters = new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
+                    Parameters = new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
+                    Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
 
                 case InternalProgram.Redumper:
-                    this.Parameters = new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
+                    Parameters = new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
                     break;
 
                 // Verification support only
                 case InternalProgram.CleanRip:
-                    this.Parameters = new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null };
+                    Parameters = new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 case InternalProgram.DCDumper:
-                    this.Parameters = null; // TODO: Create correct parameter type when supported
+                    Parameters = null; // TODO: Create correct parameter type when supported
                     break;
 
                 case InternalProgram.UmdImageCreator:
-                    this.Parameters = new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
+                    Parameters = new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 // This should never happen, but it needs a fallback
                 default:
-                    this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
+                    Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
             }
+#else
+            Parameters = InternalProgram switch
+            {
+                // Dumping support
+                InternalProgram.Aaru => new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath },
+                InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
+                InternalProgram.Redumper => new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath },
+
+                // Verification support only
+                InternalProgram.CleanRip => new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null },
+                InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
+                InternalProgram.UmdImageCreator => new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null },
+
+                // This should never happen, but it needs a fallback
+                _ => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
+            };
+#endif
 
             // Set system and type
-            if (this.Parameters != null)
+            if (Parameters != null)
             {
-                this.Parameters.System = this.System;
-                this.Parameters.Type = this.Type;
+                Parameters.System = System;
+                Parameters.Type = Type;
             }
         }
 
@@ -265,25 +283,37 @@ namespace MPF.Core
                     return null;
 
                 // Set the proper parameters
-                switch (this.InternalProgram)
+#if NET48
+                switch (InternalProgram)
                 {
                     case InternalProgram.Aaru:
-                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DiscImageCreator:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.Redumper:
-                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
                         break;
 
                     // This should never happen, but it needs a fallback
                     default:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
                         break;
                 }
+#else
+                Parameters = InternalProgram switch
+                {
+                    InternalProgram.Aaru => new Modules.Aaru.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+                    InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+                    InternalProgram.Redumper => new Modules.Redumper.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+
+                    // This should never happen, but it needs a fallback
+                    _ => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+                };
+#endif
 
                 // Generate and return the param string
                 return Parameters.GenerateParameters();
@@ -332,7 +362,7 @@ namespace MPF.Core
 #endif
         {
             // If we don't have parameters
-            if (this.Parameters == null)
+            if (Parameters == null)
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Check that we have the basics for dumping
@@ -349,19 +379,14 @@ namespace MPF.Core
             }
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {this.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
+            progress?.Report(Result.Success($"Executing {InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
 
-            var directoryName = Path.GetDirectoryName(this.OutputPath);
+            var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrWhiteSpace(directoryName))
                 Directory.CreateDirectory(directoryName);
 
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
-            progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
-
-            // Execute additional tools
-            progress?.Report(Result.Success("Running any additional tools... see log for output!"));
-            result = await Task.Run(() => ExecuteAdditionalTools());
-            progress?.Report(result);
+            progress?.Report(Result.Success($"{InternalProgram} has finished!"));
 
             // Remove event handler if needed
             if (!Options.ToolsInSeparateWindow)
@@ -397,11 +422,11 @@ namespace MPF.Core
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
-            var outputDirectory = Path.GetDirectoryName(this.OutputPath);
-            var outputFilename = Path.GetFileName(this.OutputPath);
+            var outputDirectory = Path.GetDirectoryName(OutputPath);
+            var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, this.Parameters, false);
+            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, Parameters, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
@@ -411,12 +436,12 @@ namespace MPF.Core
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
             var submissionInfo = await InfoTool.ExtractOutputInformation(
-                this.OutputPath,
-                this.Drive,
-                this.System,
-                this.Type,
-                this.Options,
-                this.Parameters,
+                OutputPath,
+                Drive,
+                System,
+                Type,
+                Options,
+                Parameters,
                 resultProgress,
                 protectionProgress);
             resultProgress?.Report(Result.Success("Extracting information complete!"));
@@ -437,7 +462,7 @@ namespace MPF.Core
             }
 
             // Reset the drive automatically if configured to
-            if (this.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
+            if (InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Letter}"));
                 await ResetDrive();
@@ -464,7 +489,7 @@ namespace MPF.Core
 
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
-            (var formattedValues, var formatResult) = InfoTool.FormatOutputData(submissionInfo, this.Options);
+            (var formattedValues, var formatResult) = InfoTool.FormatOutputData(submissionInfo, Options);
             if (formattedValues == null)
                 resultProgress?.Report(Result.Success(formatResult));
             else
@@ -504,7 +529,7 @@ namespace MPF.Core
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, outputFilename, this.Parameters);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, outputFilename, Parameters);
                 if (compressSuccess)
                     resultProgress?.Report(Result.Success(compressResult));
                 else
@@ -536,17 +561,11 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Run any additional tools given a DumpEnvironment
-        /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        private Result ExecuteAdditionalTools() => Result.Success("No external tools needed!");
-
-        /// <summary>
         /// Run internal program async with an input set of parameters
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteInternalProgram(BaseParameters parameters)
+        private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -584,20 +603,21 @@ namespace MPF.Core
         /// <param name="info">Existing submission information</param>
         /// <param name="seed">User-supplied submission information</param>
 #if NET48
-        private void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
+        private static void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
 #else
-        private void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
+        private static void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
 #endif
         {
             // If we have any invalid info
-            if (info == null || seed == null)
+            if (seed == null)
                 return;
 
-            // Otherwise, inject information as necessary
-            if (seed.CommonDiscInfo != null)
-            {
-                if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
 
+            // Otherwise, inject information as necessary
+            if (info.CommonDiscInfo != null && seed.CommonDiscInfo != null)
+            {
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Title)) info.CommonDiscInfo.Title = seed.CommonDiscInfo.Title;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.ForeignTitleNonLatin)) info.CommonDiscInfo.ForeignTitleNonLatin = seed.CommonDiscInfo.ForeignTitleNonLatin;
@@ -607,7 +627,7 @@ namespace MPF.Core
                 if (seed.CommonDiscInfo.Region != null) info.CommonDiscInfo.Region = seed.CommonDiscInfo.Region;
                 if (seed.CommonDiscInfo.Languages != null) info.CommonDiscInfo.Languages = seed.CommonDiscInfo.Languages;
                 if (seed.CommonDiscInfo.LanguageSelection != null) info.CommonDiscInfo.LanguageSelection = seed.CommonDiscInfo.LanguageSelection;
-                if (seed.CommonDiscInfo.Serial != null) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
+                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Serial)) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Barcode)) info.CommonDiscInfo.Barcode = seed.CommonDiscInfo.Barcode;
                 if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Comments)) info.CommonDiscInfo.Comments = seed.CommonDiscInfo.Comments;
                 if (seed.CommonDiscInfo.CommentsSpecialFields != null) info.CommonDiscInfo.CommentsSpecialFields = seed.CommonDiscInfo.CommentsSpecialFields;
@@ -636,19 +656,15 @@ namespace MPF.Core
                 info.CommonDiscInfo.Layer3ToolstampMasteringCode = seed.CommonDiscInfo.Layer3ToolstampMasteringCode;
             }
 
-            if (seed.VersionAndEditions != null)
+            if (info.VersionAndEditions != null && seed.VersionAndEditions != null)
             {
-                if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.Version)) info.VersionAndEditions.Version = seed.VersionAndEditions.Version;
                 if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.OtherEditions)) info.VersionAndEditions.OtherEditions = seed.VersionAndEditions.OtherEditions;
             }
 
-            if (seed.CopyProtection != null)
+            if (info.CopyProtection != null && seed.CopyProtection != null)
             {
-                if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
-                
                 // Info that only overwrites if supplied
                 if (!string.IsNullOrWhiteSpace(seed.CopyProtection.Protection)) info.CopyProtection.Protection = seed.CopyProtection.Protection;
             }
@@ -661,14 +677,14 @@ namespace MPF.Core
         private Result IsValidForDump()
         {
             // Validate that everything is good
-            if (this.Parameters == null || !ParametersValid())
+            if (Parameters == null || !ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            this.OutputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
+            OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, true);
 
             // Validate that the output path isn't on the dumping drive
-            if (Drive != null && this.OutputPath[0] == Drive.Letter)
+            if (Drive != null && OutputPath[0] == Drive.Letter)
                 return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -732,6 +748,6 @@ namespace MPF.Core
             return await ExecuteInternalProgram(parameters);
         }
 
-#endregion
+        #endregion
     }
 }

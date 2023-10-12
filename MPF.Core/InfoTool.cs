@@ -17,6 +17,8 @@ using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
 
+#pragma warning disable IDE0051 // Remove unused private members
+
 namespace MPF.Core
 {
     public static class InfoTool
@@ -55,6 +57,58 @@ namespace MPF.Core
                 return null;
             }
         }
+
+        /// <summary>
+        /// Ensure all required sections in a submission info exist
+        /// </summary>
+        /// <param name="info">SubmissionInfo object to verify</param>
+#if NET48
+        public static SubmissionInfo EnsureAllSections(SubmissionInfo info)
+        {
+            // If there's no info, create one
+            if (info == null) info = new SubmissionInfo();
+
+            // Ensure all sections
+            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+            if (info.EDC == null) info.EDC = new EDCSection();
+            if (info.Extras == null) info.Extras = new ExtrasSection();
+            if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+            if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
+            if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
+
+            // Ensure special dictionaries
+            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+            if (info.CommonDiscInfo.ContentsSpecialFields == null) info.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode?, string>();
+
+            return info;
+        }
+#else
+        public static SubmissionInfo EnsureAllSections(SubmissionInfo? info)
+        {
+            // If there's no info, create one
+            info ??= new SubmissionInfo();
+
+            // Ensure all sections
+            info.CommonDiscInfo ??= new CommonDiscInfoSection();
+            info.VersionAndEditions ??= new VersionAndEditionsSection();
+            info.EDC ??= new EDCSection();
+            info.ParentCloneRelationship ??= new ParentCloneRelationshipSection();
+            info.Extras ??= new ExtrasSection();
+            info.CopyProtection ??= new CopyProtectionSection();
+            info.DumpersAndStatus ??= new DumpersAndStatusSection();
+            info.TracksAndWriteOffsets ??= new TracksAndWriteOffsetsSection();
+            info.SizeAndChecksums ??= new SizeAndChecksumsSection();
+            info.DumpingInfo ??= new DumpingInfoSection();
+
+            // Ensure special dictionaries
+            info.CommonDiscInfo.CommentsSpecialFields ??= new Dictionary<SiteCode, string>();
+            info.CommonDiscInfo.ContentsSpecialFields ??= new Dictionary<SiteCode, string>();
+
+            return info;
+        }
+#endif
 
         /// <summary>
         /// Extract all of the possible information from a given input combination
@@ -135,34 +189,26 @@ namespace MPF.Core
                     Serial = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
                     Barcode = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
                     Contents = string.Empty,
-#if NET48
-                    ContentsSpecialFields = new Dictionary<SiteCode?, string>(),
-#else
-                    ContentsSpecialFields = new Dictionary<SiteCode, string>(),
-#endif
-                    Comments = string.Empty,
-#if NET48
-                    CommentsSpecialFields = new Dictionary<SiteCode?, string>(),
-#else
-                    CommentsSpecialFields = new Dictionary<SiteCode, string>(),
-#endif
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
                     Version = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
                     OtherEditions = options.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
                 },
-                TracksAndWriteOffsets = new TracksAndWriteOffsetsSection(),
             };
+
+            // Ensure that required sections exist
+            info = EnsureAllSections(info);
 
             // Get specific tool output handling
             parameters?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
 
             // Get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
 #if NET48
+            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
                 FillFromRedump(options, info, resultProgress);
 #else
+            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
                 _ = await FillFromRedump(options, info, resultProgress);
 #endif
 
@@ -172,14 +218,22 @@ namespace MPF.Core
 
             // Add the volume label to comments, if possible or necessary
             if (drive?.VolumeLabel != null && drive.GetRedumpSystemFromVolumeLabel() == null)
+#if NET48
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;
+#else
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = drive.VolumeLabel;
+#endif
 
             // Extract info based generically on MediaType
             switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
+#if NET48
                     info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                     info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -190,12 +244,19 @@ namespace MPF.Core
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
 
                     // If we have a single-layer disc
+#if NET48
                     if (info.SizeAndChecksums.Layerbreak == default)
+#else
+                    if (info.SizeAndChecksums!.Layerbreak == default)
+#endif
                     {
+#if NET48
                         info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                         info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -205,7 +266,11 @@ namespace MPF.Core
                     // If we have a dual-layer disc
                     else
                     {
+#if NET48
                         info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                         info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -220,23 +285,37 @@ namespace MPF.Core
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
+#if NET48
                     info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                     info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
+#else
+                    info.Extras!.BCA ??= (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
+#endif
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
 
                     // If we have a single-layer disc
+#if NET48
                     if (info.SizeAndChecksums.Layerbreak == default)
+#else
+                    if (info.SizeAndChecksums!.Layerbreak == default)
+#endif
                     {
+#if NET48
                         info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                         info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -246,7 +325,11 @@ namespace MPF.Core
                     // If we have a dual-layer disc
                     else
                     {
+#if NET48
                         info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                         info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -258,15 +341,22 @@ namespace MPF.Core
                         info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.Extras!.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
 
                     break;
 
                 case MediaType.UMD:
                     // Both single- and dual-layer discs have two "layers" for the ring
+#if NET48
                     info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                     info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -275,10 +365,15 @@ namespace MPF.Core
                     info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+#if NET48
                     info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+#else
+                    info.SizeAndChecksums!.CRC32 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.MD5 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.SHA1 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+#endif
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
@@ -287,7 +382,11 @@ namespace MPF.Core
             switch (system)
             {
                 case RedumpSystem.AcornArchimedes:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UnitedKingdom;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.UnitedKingdom;
+#endif
                     break;
 
                 case RedumpSystem.AppleMacintosh:
@@ -300,11 +399,11 @@ namespace MPF.Core
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     var (protectionString, fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
 
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
-                    info.CopyProtection.Protection = protectionString;
 #if NET48
+                    info.CopyProtection.Protection = protectionString;
                     info.CopyProtection.FullProtections = fullProtections ?? new Dictionary<string, List<string>>();
 #else
+                    info.CopyProtection!.Protection = protectionString;
                     info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? new Dictionary<string, List<string>?>();
 #endif
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
@@ -314,73 +413,139 @@ namespace MPF.Core
                 case RedumpSystem.AudioCD:
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.SuperAudioCD:
+#if NET48
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
+#else
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
+#endif
                     break;
 
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case RedumpSystem.BDVideo:
+#if NET48
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
+                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD32:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= Region.Europe;
+#endif
                     break;
 
                 case RedumpSystem.CommodoreAmigaCDTV:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= Region.Europe;
+#endif
                     break;
 
                 case RedumpSystem.DVDVideo:
+#if NET48
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
+#else
+                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
+#endif
                     break;
 
                 case RedumpSystem.FujitsuFMTownsseries:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case RedumpSystem.FujitsuFMTownsMarty:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.IncredibleTechnologiesEagle:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamieAmusement:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiFireBeat:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiSystem573:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.KonamiTwinkle:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.MattelHyperScan:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
@@ -389,7 +554,11 @@ namespace MPF.Core
                         string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
                         if (drive != null && Directory.Exists(xboxOneMsxcPath))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
+#endif
                                 Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
                         }
                     }
@@ -402,7 +571,11 @@ namespace MPF.Core
                         string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
                         if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
                         {
+#if NET48
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+#else
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
+#endif
                                 Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
                         }
                     }
@@ -410,59 +583,112 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.NavisoftNaviken21:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.NECPC88series:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.NECPC98series:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.NECPCFXPCFXGA:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.SegaChihiro:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SegaDreamcast:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SegaNaomi:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SegaNaomi2:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SegaTitanVideo:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SharpX68000:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.SNKNeoGeoCD:
+#if NET48
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation:
                     // Only check the disc if the dumping program couldn't detect
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                     if (drive != null && info.CopyProtection.AntiModchip == YesNo.NULL)
+#else
+                    if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
+#endif
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
                         info.CopyProtection.AntiModchip = await GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
@@ -480,27 +706,45 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
+#if NET48
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+#else
+                    info.CommonDiscInfo!.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#else
+                    info.Extras!.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+#endif
                     info.Extras.DiscID = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.TomyKissSite:
+#if NET48
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+#else
+                    info.CommonDiscInfo!.Region ??= Region.Japan;
+#endif
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#if NET48
                     info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#else
+                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+#endif
                     break;
             }
 
             // Set the category if it's not overriden
+#if NET48
             info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
+#else
+            info.CommonDiscInfo!.Category ??= DiscCategory.Games;
+#endif
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
@@ -642,8 +886,13 @@ namespace MPF.Core
         /// <returns>Status of the LibCrypt data, if possible</returns>
         private static void GetLibCryptDetected(SubmissionInfo info, string basePath)
         {
-            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
+#if NET48
             if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
+#else
+            info.CopyProtection ??= new CopyProtectionSection();
+#endif
+
+            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
             if (psLibCryptStatus == true)
             {
                 // Guard against false positives
@@ -800,6 +1049,7 @@ namespace MPF.Core
                 bool reverseOrder = system.HasReversedRingcodes();
 
                 // Preamble for submission
+#pragma warning disable IDE0028
                 var output = new List<string>
                 {
                     "Users who wish to submit this information to Redump must ensure that all of the fields below are accurate for the exact media they have.",
@@ -2161,11 +2411,7 @@ namespace MPF.Core
         private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
         {
             // Ensure that required sections exist
-            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
-            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-            if (info.CommonDiscInfo.ContentsSpecialFields == null) info.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode, string>();
-            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-            if (info.DumpersAndStatus == null) info.DumpersAndStatus = new DumpersAndStatusSection();
+            info = EnsureAllSections(info);
 
             var discData = await wc.DownloadSingleSiteID(id);
             if (string.IsNullOrEmpty(discData))
@@ -2185,7 +2431,7 @@ namespace MPF.Core
 #if NET48
                     info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
 #else
-                    info.CommonDiscInfo.Title = title[..firstParenLocation];
+                    info.CommonDiscInfo!.Title = title[..firstParenLocation];
 #endif
                     var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
                     foreach (Match subMatch in subMatches.Cast<Match>())
@@ -2208,16 +2454,28 @@ namespace MPF.Core
                 // Otherwise, leave the title as-is
                 else
                 {
+#if NET48
                     info.CommonDiscInfo.Title = title;
+#else
+                    info.CommonDiscInfo!.Title = title;
+#endif
                 }
             }
 
             // Foreign Title
             match = Constants.ForeignTitleRegex.Match(discData);
             if (match.Success)
+#if NET48
                 info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
+#else
+                info.CommonDiscInfo!.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
+#endif
             else
+#if NET48
                 info.CommonDiscInfo.ForeignTitleNonLatin = null;
+#else
+                info.CommonDiscInfo!.ForeignTitleNonLatin = null;
+#endif
 
             // Category
             match = Constants.CategoryRegex.Match(discData);
@@ -2265,7 +2523,11 @@ namespace MPF.Core
             }
 
             // Version
+#if NET48
             if (info.VersionAndEditions.Version == null)
+#else
+            if (info.VersionAndEditions!.Version == null)
+#endif
             {
                 match = Constants.VersionRegex.Match(discData);
                 if (match.Success)
@@ -2278,7 +2540,11 @@ namespace MPF.Core
             {
                 // Start with any currently listed dumpers
                 var tempDumpers = new List<string>();
+#if NET48
                 if (info.DumpersAndStatus.Dumpers != null && info.DumpersAndStatus.Dumpers.Length > 0)
+#else
+                if (info.DumpersAndStatus!.Dumpers != null && info.DumpersAndStatus.Dumpers.Length > 0)
+#endif
                 {
                     foreach (string dumper in info.DumpersAndStatus.Dumpers)
                         tempDumpers.Add(dumper);
@@ -2387,7 +2653,11 @@ namespace MPF.Core
                             }
 
                             // If we don't already have this site code, add it to the dictionary
+#if NET48
                             if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
+#else
+                            if (!info.CommonDiscInfo.CommentsSpecialFields!.ContainsKey(siteCode.Value))
+#endif
                                 info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(shortName, string.Empty).Trim()}";
 
                             // Otherwise, append the value to the existing key
@@ -2402,7 +2672,11 @@ namespace MPF.Core
                         {
                             if (addToLast && lastSiteCode != null)
                             {
+#if NET48
                                 if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value]))
+#else
+                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields![lastSiteCode.Value]))
+#endif
                                     info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += "\n";
 
                                 info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += commentLine;
@@ -2474,7 +2748,11 @@ namespace MPF.Core
                             lastSiteCode = siteCode;
 
                             // If we don't already have this site code, add it to the dictionary
+#if NET48
                             if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
+#else
+                            if (!info.CommonDiscInfo.ContentsSpecialFields!.ContainsKey(siteCode.Value))
+#endif
                                 info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(shortName, string.Empty).Trim()}";
 
                             // A subset of tags can be multiline
@@ -2490,7 +2768,11 @@ namespace MPF.Core
                         {
                             if (addToLast && lastSiteCode != null)
                             {
+#if NET48
                                 if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value]))
+#else
+                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields![lastSiteCode.Value]))
+#endif
                                     info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += "\n";
 
                                 info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += contentLine;
@@ -2547,7 +2829,11 @@ namespace MPF.Core
                 return false;
 
             // Set the current dumper based on username
+#if NET48
             if (info.DumpersAndStatus == null) info.DumpersAndStatus = new DumpersAndStatusSection();
+#else
+            info.DumpersAndStatus ??= new DumpersAndStatusSection();
+#endif
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
             info.PartiallyMatchedIDs = new List<int>();
 
@@ -2983,6 +3269,7 @@ namespace MPF.Core
         /// <remarks>TODO: This should move to Extensions at some point</remarks>
         private static bool IsBoolean(SiteCode? siteCode)
         {
+#if NET48
             switch (siteCode)
             {
                 case SiteCode.PostgapType:
@@ -2991,6 +3278,14 @@ namespace MPF.Core
                 default:
                     return false;
             }
+#else
+            return siteCode switch
+            {
+                SiteCode.PostgapType => true,
+                SiteCode.VCD => true,
+                _ => false,
+            };
+#endif
         }
 
         /// <summary>
@@ -3001,6 +3296,7 @@ namespace MPF.Core
         /// <remarks>TODO: This should move to Extensions at some point</remarks>
         private static bool IsMultiLine(SiteCode? siteCode)
         {
+#if NET48
             switch (siteCode)
             {
                 case SiteCode.Extras:
@@ -3019,6 +3315,24 @@ namespace MPF.Core
                 default:
                     return false;
             }
+#else
+            return siteCode switch
+            {
+                SiteCode.Extras => true,
+                SiteCode.Filename => true,
+                SiteCode.Games => true,
+                SiteCode.GameFootage => true,
+                SiteCode.Multisession => true,
+                SiteCode.NetYarozeGames => true,
+                SiteCode.Patches => true,
+                SiteCode.PlayableDemos => true,
+                SiteCode.RollingDemos => true,
+                SiteCode.Savegames => true,
+                SiteCode.TechDemos => true,
+                SiteCode.Videos => true,
+                _ => false,
+            };
+#endif
         }
 
         /// <summary>

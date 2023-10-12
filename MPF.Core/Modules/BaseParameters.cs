@@ -47,7 +47,11 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Set of flags to pass to the executable
         /// </summary>
+#if NET48
         protected Dictionary<string, bool?> flags = new Dictionary<string, bool?>();
+#else
+        protected Dictionary<string, bool?> flags = new();
+#endif
         protected internal IEnumerable<string> Keys => flags.Keys;
 
         /// <summary>
@@ -239,7 +243,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
+#if NET48
         public virtual List<string> GetLogFilePaths(string basePath) => new List<string>();
+#else
+        public virtual List<string> GetLogFilePaths(string basePath) => new();
+#endif
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
@@ -1943,6 +1951,7 @@ namespace MPF.Core.Modules
         /// <returns>Category, if possible</returns>
         protected static DiscCategory? GetUMDCategory(string category)
         {
+#if NET48
             switch (category)
             {
                 case "GAME": return DiscCategory.Games;
@@ -1950,6 +1959,15 @@ namespace MPF.Core.Modules
                 case "AUDIO": return DiscCategory.Audio;
                 default: return null;
             }
+#else
+            return category switch
+            {
+                "GAME" => DiscCategory.Games,
+                "VIDEO" => DiscCategory.Video,
+                "AUDIO" => DiscCategory.Audio,
+                _ => null,
+            };
+#endif
         }
 
         #endregion
@@ -1981,16 +1999,28 @@ namespace MPF.Core.Modules
                         {
                             case 'S':
                                 // Check first two digits of S_PS serial
+#if NET48
                                 switch (serial.Substring(5, 2))
                                 {
                                     case "46": return Region.SouthKorea;
-                                    case "56": return Region.SouthKorea;
                                     case "51": return Region.Asia;
+                                    case "56": return Region.SouthKorea;
                                     case "55": return Region.Asia;
                                     default: return Region.Japan;
                                 }
+#else
+                                return serial.Substring(5, 2) switch
+                                {
+                                    "46" => Region.SouthKorea,
+                                    "51" => Region.Asia,
+                                    "56" => Region.SouthKorea,
+                                    "55" => Region.Asia,
+                                    _ => Region.Japan,
+                                };
+#endif
                             case 'M':
                                 // Check first three digits of S_PM serial
+#if NET48
                                 switch (serial.Substring(5, 3))
                                 {
                                     case "645": return Region.SouthKorea;
@@ -1998,6 +2028,15 @@ namespace MPF.Core.Modules
                                     case "885": return Region.SouthKorea;
                                     default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
                                 }
+#else
+                                return serial.Substring(5, 3) switch
+                                {
+                                    "645" => Region.SouthKorea,
+                                    "675" => Region.SouthKorea,
+                                    "885" => Region.SouthKorea,
+                                    _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
+                                };
+#endif
                             default: return Region.Japan;
                         }
                 }

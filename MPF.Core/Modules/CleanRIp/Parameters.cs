@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
+
+#pragma warning disable IDE0051 // Remove unused private members
 
 namespace MPF.Core.Modules.CleanRip
 {
@@ -39,7 +40,7 @@ namespace MPF.Core.Modules.CleanRip
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
-            List<string> missingFiles = new List<string>();
+            var missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
@@ -70,9 +71,15 @@ namespace MPF.Core.Modules.CleanRip
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
 #endif
         {
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
+
             // TODO: Determine if there's a CleanRip version anywhere
-            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
+#if NET48
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+#else
+            info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+#endif
             info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
@@ -80,8 +87,11 @@ namespace MPF.Core.Modules.CleanRip
             // Get the individual hash data, as per internal
             if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
-                if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+#if NET48
                 info.SizeAndChecksums.Size = size;
+#else
+                info.SizeAndChecksums!.Size = size;
+#endif
                 info.SizeAndChecksums.CRC32 = crc32;
                 info.SizeAndChecksums.MD5 = md5;
                 info.SizeAndChecksums.SHA1 = sha1;
@@ -98,23 +108,23 @@ namespace MPF.Core.Modules.CleanRip
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (File.Exists(basePath + ".bca"))
-                    {
-                        if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                         info.Extras.BCA = GetBCA(basePath + ".bca");
-                    }
+#else
+                        info.Extras!.BCA = GetBCA(basePath + ".bca");
+#endif
 
                     if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName))
                     {
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
-                        info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
-                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-                        info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
 #if NET48
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
+                        info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
+                        info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = gcName ?? string.Empty;
+#else
+                        info.CommonDiscInfo!.Region = gcRegion ?? info.CommonDiscInfo.Region;
+                        info.VersionAndEditions!.Version = gcVersion ?? info.VersionAndEditions.Version;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = gcName ?? string.Empty;
+#endif
                     }
 
                     break;
@@ -123,7 +133,12 @@ namespace MPF.Core.Modules.CleanRip
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+#if NET48
                 if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
+#else
+                info.Artifacts ??= new Dictionary<string, string>();
+#endif
+
                 if (File.Exists(basePath + ".bca"))
                     info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
                 if (File.Exists(basePath + "-dumpinfo.txt"))
@@ -134,7 +149,7 @@ namespace MPF.Core.Modules.CleanRip
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
-            List<string> logFiles = new List<string>();
+            var logFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
@@ -171,7 +186,7 @@ namespace MPF.Core.Modules.CleanRip
             if (!File.Exists(dumpinfo))
                 return null;
 
-            using (StreamReader sr = File.OpenText(dumpinfo))
+            using (var sr = File.OpenText(dumpinfo))
             {
                 long size = new FileInfo(iso).Length;
                 string crc = string.Empty;
@@ -190,12 +205,21 @@ namespace MPF.Core.Modules.CleanRip
                         var line = sr.ReadLine()?.Trim();
                         if (string.IsNullOrWhiteSpace(line))
                             continue;
+#if NET48
                         else if (line.StartsWith("CRC32"))
                             crc = line.Substring(7).ToLowerInvariant();
                         else if (line.StartsWith("MD5"))
                             md5 = line.Substring(5);
                         else if (line.StartsWith("SHA-1"))
                             sha1 = line.Substring(7);
+#else
+                        else if (line.StartsWith("CRC32"))
+                            crc = line[7..].ToLowerInvariant();
+                        else if (line.StartsWith("MD5"))
+                            md5 = line[5..];
+                        else if (line.StartsWith("SHA-1"))
+                            sha1 = line[7..];
+#endif
                     }
 
                     return new Datafile
@@ -267,7 +291,7 @@ namespace MPF.Core.Modules.CleanRip
             if (!File.Exists(dumpinfo))
                 return null;
 
-            using (StreamReader sr = File.OpenText(dumpinfo))
+            using (var sr = File.OpenText(dumpinfo))
             {
                 long size = new FileInfo(iso).Length;
                 string crc = string.Empty;
@@ -286,12 +310,21 @@ namespace MPF.Core.Modules.CleanRip
                         var line = sr.ReadLine()?.Trim();
                         if (string.IsNullOrWhiteSpace(line))
                             continue;
+#if NET48
                         else if (line.StartsWith("CRC32"))
                             crc = line.Substring(7).ToLowerInvariant();
                         else if (line.StartsWith("MD5"))
                             md5 = line.Substring(5);
                         else if (line.StartsWith("SHA-1"))
                             sha1 = line.Substring(7);
+#else
+                        else if (line.StartsWith("CRC32"))
+                            crc = line[7..].ToLowerInvariant();
+                        else if (line.StartsWith("MD5"))
+                            md5 = line[5..];
+                        else if (line.StartsWith("SHA-1"))
+                            sha1 = line[7..];
+#endif
                     }
 
                     return $"<rom name=\"{Path.GetFileName(iso)}\" size=\"{size}\" crc=\"{crc}\" md5=\"{md5}\" sha1=\"{sha1}\" />";
@@ -324,7 +357,7 @@ namespace MPF.Core.Modules.CleanRip
             if (!File.Exists(dumpinfo))
                 return false;
 
-            using (StreamReader sr = File.OpenText(dumpinfo))
+            using (var sr = File.OpenText(dumpinfo))
             {
                 try
                 {
@@ -342,15 +375,27 @@ namespace MPF.Core.Modules.CleanRip
                         }
                         else if (line.StartsWith("Version"))
                         {
+#if NET48
                             version = line.Substring("Version: ".Length);
+#else
+                            version = line["Version: ".Length..];
+#endif
                         }
                         else if (line.StartsWith("Internal Name"))
                         {
+#if NET48
                             name = line.Substring("Internal Name: ".Length);
+#else
+                            name = line["Internal Name: ".Length..];
+#endif
                         }
                         else if (line.StartsWith("Filename"))
                         {
+#if NET48
                             string serial = line.Substring("Filename: ".Length);
+#else
+                            string serial = line["Filename: ".Length..];
+#endif
 
                             // char gameType = serial[0];
                             // string gameid = serial[1] + serial[2];

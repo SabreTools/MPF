@@ -38,7 +38,7 @@ namespace MPF.Core.Modules.UmdImageCreator
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
-            List<string> missingFiles = new List<string>();
+            var missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.UMD:
@@ -71,22 +71,34 @@ namespace MPF.Core.Modules.UmdImageCreator
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
 #endif
         {
+            // Ensure that required sections exist
+            info = InfoTool.EnsureAllSections(info);
+
             // TODO: Determine if there's a UMDImageCreator version anywhere
-            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
+#if NET48
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+#else
+            info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+#endif
             info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.UMD:
-                    if (info.Extras == null) info.Extras = new ExtrasSection();
+#if NET48
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
+#else
+                    info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
+#endif
 
                     if (GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
                     {
-                        if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+#if NET48
                         info.SizeAndChecksums.Size = filesize;
+#else
+                        info.SizeAndChecksums!.Size = filesize;
+#endif
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
@@ -94,13 +106,17 @@ namespace MPF.Core.Modules.UmdImageCreator
 
                     if (GetUMDAuxInfo(basePath + "_disc.txt", out var title, out DiscCategory? umdcat, out var umdversion, out var umdlayer, out long umdsize))
                     {
-                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
                         info.CommonDiscInfo.Title = title ?? string.Empty;
                         info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
-                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = umdversion ?? string.Empty;
-                        if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
                         info.SizeAndChecksums.Size = umdsize;
+#else
+                        info.CommonDiscInfo!.Title = title ?? string.Empty;
+                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
+                        info.VersionAndEditions!.Version = umdversion ?? string.Empty;
+                        info.SizeAndChecksums!.Size = umdsize;
+#endif
 
                         if (!string.IsNullOrWhiteSpace(umdlayer))
                             info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
@@ -112,7 +128,12 @@ namespace MPF.Core.Modules.UmdImageCreator
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+#if NET48
                 if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
+#else
+                info.Artifacts ??= new Dictionary<string, string>();
+#endif
+
                 if (File.Exists(basePath + "_disc.txt"))
                     info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt")) ?? string.Empty;
                 if (File.Exists(basePath + "_drive.txt"))
@@ -129,7 +150,7 @@ namespace MPF.Core.Modules.UmdImageCreator
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
-            List<string> logFiles = new List<string>();
+            var logFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.UMD:
@@ -169,7 +190,7 @@ namespace MPF.Core.Modules.UmdImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (StreamReader sr = File.OpenText(mainInfo))
+            using (var sr = File.OpenText(mainInfo))
             {
                 try
                 {
@@ -211,7 +232,7 @@ namespace MPF.Core.Modules.UmdImageCreator
             if (!File.Exists(disc))
                 return false;
 
-            using (StreamReader sr = File.OpenText(disc))
+            using (var sr = File.OpenText(disc))
             {
                 try
                 {
@@ -224,7 +245,11 @@ namespace MPF.Core.Modules.UmdImageCreator
                             break;
 
                         if (line.StartsWith("TITLE") && title == null)
+#if NET48
                             title = line.Substring("TITLE: ".Length);
+#else
+                            title = line["TITLE: ".Length..];
+#endif
                         else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                             umdversion = line.Split(' ')[1];
                         else if (line.StartsWith("pspUmdTypes"))
@@ -236,7 +261,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                     }
 
                     // If the L0 length is the size of the full disc, there's no layerbreak
-                    if (Int64.TryParse(umdlayer, out long umdlayerValue)  && umdlayerValue * 2048 == umdsize)
+                    if (Int64.TryParse(umdlayer, out long umdlayerValue) && umdlayerValue * 2048 == umdsize)
                         umdlayer = null;
 
                     return true;
