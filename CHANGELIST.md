@@ -4,6 +4,7 @@
 - Cleanup and gated code
 - Gate some switch expressions
 - Suppress some unnecessary messages
+- Disable dumping button when Redumper selected with unsupported media type (Deterous)
 
 ### 2.7.1 (2023-10-11)
 
