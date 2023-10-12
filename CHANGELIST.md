@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Fix options loading for Check
+- Cleanup and gated code
 
 ### 2.7.1 (2023-10-11)
 
