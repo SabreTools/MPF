@@ -1586,7 +1586,11 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Returns False if a given InternalProgram does not support a given MediaType
         /// </summary>
+#if NET48
         public bool ProgramSupportsMedia(InternalProgram program, MediaType? media)
+#else
+        public bool ProgramSupportsMedia(InternalProgram program, MediaType media)
+#endif
         {
             switch (program)
             {
