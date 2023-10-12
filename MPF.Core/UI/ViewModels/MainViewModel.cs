@@ -1591,7 +1591,8 @@ namespace MPF.Core.UI.ViewModels
             return Drives != null
                 && Drives.Count > 0
                 && this.CurrentSystem != null
-                && this.CurrentMediaType != null;
+                && this.CurrentMediaType != null
+                && (this.CurrentMediaType != MediaType.HDDVD || this.CurrentProgram != InternalProgram.Redumper);
         }
 
         /// <summary>
