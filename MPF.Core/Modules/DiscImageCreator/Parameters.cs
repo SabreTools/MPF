@@ -502,17 +502,6 @@ namespace MPF.Core.Modules.DiscImageCreator
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 #endif
 
-                    // Attempt to get the universal hash, if it's an audio disc
-                    if (this.System.IsAudio())
-                    {
-                        string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
-#else
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
-#endif
-                    }
-
                     break;
 
                 case MediaType.DVD:
@@ -4026,58 +4015,6 @@ namespace MPF.Core.Modules.DiscImageCreator
                         header += sr.ReadLine() + "\n"; // 0000-01F0
 
                     return header;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the universal hash from the input file, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Universal hash if possible, null on error</returns>
-#if NET48
-        private static string GetUniversalHash(string disc)
-#else
-        private static string? GetUniversalHash(string disc)
-#endif
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-                return null;
-
-            using (var sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Fast forward to the universal hash information
-                    while (sr.ReadLine()?.Trim().StartsWith("========== Hash(Universal Whole image) ==========") == false) ;
-
-                    // If we find the universal hash line, return the SHA-1 hash only
-#if NET48
-                    string line;
-#else
-                    string? line;
-#endif
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine()?.TrimStart();
-                        if (line == null)
-                            return null;
-
-                        if (line.StartsWith("<rom name"))
-                        {
-                            if (GetISOHashValues(line, out _, out _, out _, out var sha1))
-                                return sha1;
-                        }
-                    }
-
-                    // We couldn't detect it then
-                    return null;
                 }
                 catch
                 {
