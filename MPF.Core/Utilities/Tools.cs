@@ -147,6 +147,99 @@ namespace MPF.Core.Utilities
             };
 #endif
         }
+        
+        /// <summary>
+        /// Returns false if a given InternalProgram does not support a given MediaType
+        /// </summary>
+        public static bool ProgramSupportsMedia(InternalProgram program, MediaType? type)
+        {
+            // If the media type is not set, return false
+            if (type == null || type == MediaType.NONE)
+                return false;
+
+#if NET48
+            switch (program)
+            {
+                case InternalProgram.Redumper:
+                    switch (type)
+                    {
+                        // Formats considered at least partially dumpable by Redumper
+                        case MediaType.CDROM:
+                        case MediaType.DVD:
+                        case MediaType.GDROM:
+                            return true;
+
+                        // All other formats considered unsupported
+                        default:
+                            return false;
+                    }
+                case InternalProgram.Aaru:
+                case InternalProgram.DiscImageCreator:
+                    switch (type)
+                    {
+                        // Formats considered at least partially supported
+                        case MediaType.BluRay:
+                        case MediaType.CDROM:
+                        case MediaType.DVD:
+                        case MediaType.FloppyDisk:
+                        case MediaType.HardDisk:
+                        case MediaType.CompactFlash:
+                        case MediaType.SDCard:
+                        case MediaType.FlashDrive:
+                        case MediaType.HDDVD:
+                        case MediaType.NintendoGameCubeGameDisc:
+                        case MediaType.NintendoWiiOpticalDisc:
+                            return true;
+
+                        // All other formats considered unsupported
+                        default:
+                            return false;
+                    }
+                // All other InternalPrograms are not used for dumping
+                default:
+                    return false;
+            }
+#else
+            switch (program)
+            {
+                case InternalProgram.Redumper:
+                    return type switch
+                    {
+                        // Formats considered at least partially supported by Redumper
+                        MediaType.CDROM
+                            or MediaType.DVD
+                            or MediaType.GDROM => true,
+
+                        // All other formats considered unsupported
+                        _ => false,
+                    };
+                case InternalProgram.Aaru:
+                case InternalProgram.DiscImageCreator:
+                    return type switch
+                    {
+                        // Formats considered at least partially supported by MPF
+                        MediaType.BluRay
+                            or MediaType.CDROM
+                            or MediaType.DVD
+                            or MediaType.GDROM
+                            or MediaType.FloppyDisk
+                            or MediaType.CompactFlash
+                            or MediaType.SDCard
+                            or MediaType.FlashDrive
+                            or MediaType.HardDisk
+                            or MediaType.HDDVD
+                            or MediaType.NintendoGameCubeGameDisc
+                            or MediaType.NintendoWiiOpticalDisc => true,
+
+                        // All other formats considered unsupported
+                        _ => false,
+                    };
+                // All other InternalPrograms are not supported for dumping
+                default:
+                    return false;
+            }
+#endif
+        }
 
         #endregion
 
