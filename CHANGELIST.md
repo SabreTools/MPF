@@ -5,6 +5,7 @@
 - Gate some switch expressions
 - Suppress some unnecessary messages
 - Disable dumping button when Redumper selected with unsupported media type (Deterous)
+- Improve check for which program supports which media (Deterous)
 
 ### 2.7.1 (2023-10-11)
 
