@@ -550,6 +550,7 @@ namespace MPF.Core.UI.ViewModels
             StartStopButtonEnabled = true;
             StartStopButtonText = Interface.StartDumping;
             MediaScanButtonEnabled = true;
+            EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
             MediaTypes = new List<Element<MediaType>>();

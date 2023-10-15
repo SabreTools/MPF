@@ -8,6 +8,7 @@
 - Improve check for which program supports which media (Deterous)
 - Remove code for getting Universal Hash from DIC logs (Deterous)
 - Fix Redumper retry count not showing
+- Enable parameters checkbox by default
 
 ### 2.7.1 (2023-10-11)
 
