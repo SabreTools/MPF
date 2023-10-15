@@ -7,6 +7,7 @@
 - Disable dumping button when Redumper selected with unsupported media type (Deterous)
 - Improve check for which program supports which media (Deterous)
 - Remove code for getting Universal Hash from DIC logs (Deterous)
+- Fix Redumper retry count not showing
 
 ### 2.7.1 (2023-10-11)
 

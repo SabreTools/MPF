@@ -381,7 +381,7 @@
                 </TabItem>
 
                 <TabItem Header="Redumper" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="2">
+                    <UniformGrid Columns="2" Rows="3">
                         <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
                             IsChecked="{Binding Options.RedumperEnableDebug}"
                             ToolTip="Enable debug output in logs" Margin="0,4"
