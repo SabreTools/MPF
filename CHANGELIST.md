@@ -12,6 +12,7 @@
 - Update Redumper to build 230
 - Fix GetPVD in dic (fuzz6001)
 - Get SecuROM data from Redumper
+- Clean up issue templates
 
 ### 2.7.1 (2023-10-11)
 
