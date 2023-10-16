@@ -404,12 +404,16 @@ namespace MPF.Core.Modules.Redumper
 
             switch (this.System)
             {
-                // case RedumpSystem.AppleMacintosh:
+                case RedumpSystem.AppleMacintosh:
                 case RedumpSystem.EnhancedCD:
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
-                    // TODO: Support SecuROM data when generated
+#if NET48
+                    info.CopyProtection.SecuROMData = GetSecuROMData($"{basePath}.log") ?? string.Empty;
+#else
+                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log") ?? string.Empty;
+#endif
                     break;
 
                 case RedumpSystem.DVDAudio:
@@ -1352,7 +1356,7 @@ namespace MPF.Core.Modules.Redumper
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Information Extraction Methods
 
@@ -2117,6 +2121,56 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <summary>
+        /// Get the header from a Saturn, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+#if NET48
+        private static string GetSecuROMData(string log)
+#else
+        private static string? GetSecuROMData(string log)
+#endif
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (var sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the SecuROM line
+                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SecuROM [") == false) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    var lines = new List<string>();
+                    while (!sr.EndOfStream)
+                    {
+                        var line = sr.ReadLine()?.TrimStart();
+
+                        // Skip the "version" line
+                        if (line?.StartsWith("version:") == true)
+                            continue;
+
+                        // Only read until while there are MSF lines
+                        if (line?.StartsWith("MSF:") != true)
+                            break;
+
+                        lines.Add(line);
+                    }
+
+                    return string.Join("\n", lines).TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the header from a Sega CD / Mega CD, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
@@ -2408,6 +2462,6 @@ namespace MPF.Core.Modules.Redumper
             }
         }
 
-        #endregion
+#endregion
     }
 }
