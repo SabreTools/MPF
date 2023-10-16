@@ -9,6 +9,7 @@
 - Remove code for getting Universal Hash from DIC logs (Deterous)
 - Fix Redumper retry count not showing
 - Enable parameters checkbox by default
+- Update Redumper to build 230
 
 ### 2.7.1 (2023-10-11)
 
