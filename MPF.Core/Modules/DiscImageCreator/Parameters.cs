@@ -3753,7 +3753,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     // Make sure we're in the area
-                    if (line.StartsWith("========== LBA") == true)
+                    if (line.StartsWith("========== LBA") == false)
                         while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
                     if (line == null)
                         return null;
