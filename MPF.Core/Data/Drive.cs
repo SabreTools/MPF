@@ -95,6 +95,12 @@ namespace MPF.Core.Data
             }
         }
 
+        /// <summary>
+        /// Read-only access to the drive letter
+        /// </summary>
+        /// <remarks>Should only be used in UI applications</remarks>
+        public char? Letter => this.Name?[0] ?? '\0';
+
         #endregion
 
         /// <summary>
