@@ -684,7 +684,7 @@ namespace MPF.Core
             OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, true);
 
             // Validate that the output path isn't on the dumping drive
-            if (Drive?.Name != null && !OutputPath.StartsWith(Drive.Name))
+            if (Drive?.Name != null && OutputPath.StartsWith(Drive.Name))
                 return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists

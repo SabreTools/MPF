@@ -9,6 +9,7 @@
 - Add first-run Options title, fix saving bug
 - Fix multiple handler invocation
 - Create method for applying theme
+- Fix drive letter check
 
 ### 2.7.2 (2023-10-17)
 
