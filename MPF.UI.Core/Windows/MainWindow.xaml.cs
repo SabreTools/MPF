@@ -57,7 +57,10 @@ namespace MPF.UI.Core.Windows
             // Handle first-run, if necessary
             if (MainViewModel.Options.FirstRun)
             {
-                // TODO: Show a welcome screen or the options window
+                // Show the options window
+                ShowOptionsWindow();
+
+                // Ensure the first run flag is unset
                 var continuingOptions = new MPF.Core.Data.Options(MainViewModel.Options);
                 continuingOptions.FirstRun = false;
                 MainViewModel.Options = continuingOptions;
