@@ -933,6 +933,19 @@ namespace MPF.Core.Modules.Redumper
 #endif
 
         /// <inheritdoc/>
+        public override List<string> GetDeleteableFilePaths(string basePath)
+        {
+            var deleteableFiles = new List<string>();
+
+            if (File.Exists($"{basePath}.scram"))
+                deleteableFiles.Add($"{basePath}.scram");
+            if (File.Exists($"{basePath}.scrap"))
+                deleteableFiles.Add($"{basePath}.scrap");
+
+            return deleteableFiles;
+        }
+
+        /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
             var logFiles = new List<string>();
@@ -946,10 +959,6 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.fulltoc");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
-                    // if (File.Exists($"{basePath}.scram"))
-                    //     logFiles.Add($"{basePath}.scram");
-                    // if (File.Exists($"{basePath}.scrap"))
-                    //     logFiles.Add($"{basePath}.scrap");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     if (File.Exists($"{basePath}.subcode"))
