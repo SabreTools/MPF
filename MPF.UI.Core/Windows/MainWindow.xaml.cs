@@ -272,27 +272,12 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void ApplyTheme()
         {
+            Theme theme;
             if (MainViewModel.Options.EnableDarkMode)
-                EnableDarkMode();
+                theme = new DarkModeTheme();
             else
-                EnableLightMode();
-        }
+                theme = new LightModeTheme();
 
-        /// <summary>
-        /// Recolor all UI elements for light mode
-        /// </summary>
-        private static void EnableLightMode()
-        {
-            var theme = new LightModeTheme();
-            theme.Apply();
-        }
-
-        /// <summary>
-        /// Recolor all UI elements for dark mode
-        /// </summary>
-        private static void EnableDarkMode()
-        {
-            var theme = new DarkModeTheme();
             theme.Apply();
         }
 

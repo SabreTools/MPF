@@ -10,6 +10,7 @@
 - Fix multiple handler invocation
 - Create method for applying theme
 - Fix drive letter check
+- Simply theme application
 
 ### 2.7.2 (2023-10-17)
 
