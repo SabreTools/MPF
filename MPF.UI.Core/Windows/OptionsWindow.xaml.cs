@@ -41,6 +41,17 @@ namespace MPF.UI.Core.Windows
             RedumpLoginTestButton.Click += OnRedumpTestClick;
         }
 
+        /// <summary>
+        /// Handler for OptionsWindow OnContentRendered event
+        /// </summary>
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            // Set the window title
+            OptionsViewModel.Title = this.Title;
+        }
+
         #region UI Commands
 
         /// <summary>

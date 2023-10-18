@@ -6,7 +6,7 @@
                         xmlns:core="clr-namespace:MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
                         mc:Ignorable="d"
-                        Title="Options" Width="515.132" WindowStyle="None"
+                        Width="515.132" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         BorderBrush="DarkGray" BorderThickness="2">
 
@@ -32,7 +32,12 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Bold>Options</Bold></TextBlock>
+                        <TextBlock>
+                            <TextBlock.Inlines>
+                                <Run FontWeight="Bold" Text="{Binding Title, Mode=OneWay}"/>
+                            </TextBlock.Inlines>
+                        </TextBlock>
+                        <!-- <TextBlock TextAlignment="Center"><Bold>Options</Bold></TextBlock> -->
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"

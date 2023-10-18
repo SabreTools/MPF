@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using MPF.Core.Data;
@@ -7,9 +8,31 @@ using SabreTools.RedumpLib.Web;
 
 namespace MPF.Core.UI.ViewModels
 {
-    public class OptionsViewModel
+    public class OptionsViewModel : INotifyPropertyChanged
     {
         #region Fields
+
+        /// <summary>
+        /// Title for the window
+        /// </summary>
+#if NET48
+        public string Title
+#else
+        public string? Title
+#endif
+        {
+            get => _title;
+            set
+            {
+                _title = value;
+                TriggerPropertyChanged(nameof(Title));
+            }
+        }
+#if NET48
+        private string _title;
+#else
+        private string? _title;
+#endif
 
         /// <summary>
         /// Current set of options
@@ -21,7 +44,14 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public bool SavedSettings { get; set; }
 
-        #endregion
+        /// <inheritdoc/>
+#if NET48
+        public event PropertyChangedEventHandler PropertyChanged;
+#else
+        public event PropertyChangedEventHandler? PropertyChanged;
+#endif
+
+#endregion
 
         #region Lists
 
@@ -74,6 +104,19 @@ namespace MPF.Core.UI.ViewModels
 #else
             return await RedumpHttpClient.ValidateCredentials(username, password);
 #endif
+        }
+
+        #endregion
+
+        #region Property Updates
+
+        /// <summary>
+        /// Trigger a property changed event
+        /// </summary>
+        private void TriggerPropertyChanged(string propertyName)
+        {
+            // If the property change event is initialized
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

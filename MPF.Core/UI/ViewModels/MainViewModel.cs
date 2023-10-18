@@ -988,11 +988,17 @@ namespace MPF.Core.UI.ViewModels
         public void UpdateOptions(bool savedSettings, Data.Options? newOptions)
 #endif
         {
+            // Get which options to save
+            var optionsToSave = savedSettings ? newOptions : Options;
+
+            // Ensure the first run flag is unset
+            var continuingOptions = new Data.Options(optionsToSave);
+            continuingOptions.FirstRun = false;
+            this.Options = continuingOptions;
+
+            // If settings were changed, reinitialize the UI
             if (savedSettings)
-            {
-                this.Options = new Data.Options(newOptions);
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
-            }
         }
 
         #endregion

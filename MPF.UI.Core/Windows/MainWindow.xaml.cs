@@ -58,12 +58,7 @@ namespace MPF.UI.Core.Windows
             if (MainViewModel.Options.FirstRun)
             {
                 // Show the options window
-                ShowOptionsWindow();
-
-                // Ensure the first run flag is unset
-                var continuingOptions = new MPF.Core.Data.Options(MainViewModel.Options);
-                continuingOptions.FirstRun = false;
-                MainViewModel.Options = continuingOptions;
+                ShowOptionsWindow("Welcome to MPF, Explore the Options");
             }
         }
 
@@ -255,7 +250,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Show the Options window
         /// </summary>
-        public void ShowOptionsWindow()
+#if NET48
+        public void ShowOptionsWindow(string title = null)
+#else
+        public void ShowOptionsWindow(string? title = null)
+#endif
         {
             var optionsWindow = new OptionsWindow(MainViewModel.Options)
             {
@@ -263,8 +262,10 @@ namespace MPF.UI.Core.Windows
                 Owner = this,
                 ShowActivated = true,
                 ShowInTaskbar = true,
+                Title = title ?? "Options",
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
+
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
@@ -287,7 +288,7 @@ namespace MPF.UI.Core.Windows
             theme.Apply();
         }
 
-        #endregion
+#endregion
 
         #region Event Handlers
 
@@ -300,9 +301,17 @@ namespace MPF.UI.Core.Windows
         public void OnOptionsUpdated(object? sender, EventArgs e)
 #endif
         {
-            bool savedSettings = (sender as OptionsWindow)?.OptionsViewModel?.SavedSettings ?? false;
-            var options = (sender as OptionsWindow)?.OptionsViewModel?.Options;
+            // Get the options window
+            var optionsWindow = (sender as OptionsWindow);
+            if (optionsWindow?.OptionsViewModel == null)
+                return;
+
+            bool savedSettings = optionsWindow.OptionsViewModel.SavedSettings;
+            var options = optionsWindow.OptionsViewModel.Options;
             MainViewModel.UpdateOptions(savedSettings, options);
+
+            // Force the UI to rerender
+            OnContentRendered(new EventArgs());
         }
 
         #region Menu Bar
