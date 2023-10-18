@@ -53,6 +53,15 @@ namespace MPF.UI.Core.Windows
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
                 CheckForUpdates(showIfSame: false);
+
+            // Handle first-run, if necessary
+            if (MainViewModel.Options.FirstRun)
+            {
+                // TODO: Show a welcome screen or the options window
+                var continuingOptions = new MPF.Core.Data.Options(MainViewModel.Options);
+                continuingOptions.FirstRun = false;
+                MainViewModel.Options = continuingOptions;
+            }
         }
 
         #region UI Functionality

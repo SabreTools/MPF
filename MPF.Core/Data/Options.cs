@@ -15,6 +15,15 @@ namespace MPF.Core.Data
         public Dictionary<string, string?> Settings { get; private set; }
 #endif
 
+        /// <summary>
+        /// Indicate if the program is being run with a clean configuration
+        /// </summary>
+        public bool FirstRun
+        {
+            get { return GetBooleanSetting(Settings, "FirstRun", true); }
+            set { Settings["FirstRun"] = value.ToString(); }
+        }
+
         #region Internal Program
 
         /// <summary>
