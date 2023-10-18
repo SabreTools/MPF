@@ -502,6 +502,15 @@ namespace MPF.Core.Data
             set { Settings["CompressLogFiles"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Delete unnecessary files to reduce space
+        /// </summary>
+        public bool DeleteUnnecessaryFiles
+        {
+            get { return GetBooleanSetting(Settings, "DeleteUnnecessaryFiles", false); }
+            set { Settings["DeleteUnnecessaryFiles"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Skip Options

@@ -1869,7 +1869,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         deleteableFiles.Add($"{basePath} (Track 1)(-LBA).img");
                     if (File.Exists($"{basePath} (Track 01)(-LBA).img"))
                         deleteableFiles.Add($"{basePath} (Track 01)(-LBA).img");
-                    if (File.Exists($"{basePath} (Track AA).img")
+                    if (File.Exists($"{basePath} (Track AA).img"))
                         deleteableFiles.Add($"{basePath} (Track AA).img");
 
                     if (File.Exists($"{basePath}.scm"))

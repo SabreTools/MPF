@@ -1318,6 +1318,57 @@ namespace MPF.Core
         }
 
         /// <summary>
+        /// Compress log files to save space
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="parameters">Parameters object to use to derive log file paths</param>
+        /// <returns>True if the process succeeded, false otherwise</returns>
+#if NET48
+        public static (bool, string) DeleteUnnecessaryFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
+#else
+        public static (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters)
+#endif
+        {
+            // If there are no parameters
+            if (parameters == null)
+                return (false, "No parameters provided!");
+
+            // Prepare the necessary paths
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+            string combinedBase;
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                combinedBase = outputFilename;
+            else
+                combinedBase = Path.Combine(outputDirectory, outputFilename);
+
+            // Get the list of deleteable files from the parameters object
+            var files = parameters.GetDeleteableFilePaths(combinedBase);
+
+            if (!files.Any())
+                return (true, "No files to delete!");
+
+            // Attempt to delete all of the files
+            try
+            {
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                return (true, "Deletion complete!");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Deletion could not complete: {ex}");
+            }
+        }
+
+        /// <summary>
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
         /// <param name="info">Information object that should contain normalized values</param>

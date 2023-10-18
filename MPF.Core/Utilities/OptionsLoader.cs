@@ -103,6 +103,7 @@ namespace MPF.Core.Utilities
                 InternalProgram = InternalProgram.NONE,
                 OutputSubmissionJSON = false,
                 CompressLogFiles = false,
+                DeleteUnnecessaryFiles = false,
             };
 
             // Create the submission info to return, if necessary
@@ -209,6 +210,12 @@ namespace MPF.Core.Utilities
                     options.CompressLogFiles = true;
                 }
 
+                // Delete unnecessary files files
+                else if (args[startIndex].Equals("-d") || args[startIndex].Equals("--delete"))
+                {
+                    options.DeleteUnnecessaryFiles = true;
+                }
+
                 // Default, we fall out
                 else
                 {
@@ -238,7 +245,8 @@ namespace MPF.Core.Utilities
                 "-f, --protect-file             Output protection to separate file (requires --scan)",
                 "-l, --load-seed <path>         Load a seed submission JSON for user information",
                 "-j, --json                     Enable submission JSON output",
-                "-z, --zip                      Enable log file compression"
+                "-z, --zip                      Enable log file compression",
+                "-d, --delete                   Enable unnecessary file deletion",
             };
 
             return supportedArguments;

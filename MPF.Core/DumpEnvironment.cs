@@ -536,6 +536,17 @@ namespace MPF.Core
                     resultProgress?.Report(Result.Failure(compressResult));
             }
 
+            // Delete unnecessary files, if required
+            if (Options.DeleteUnnecessaryFiles)
+            {
+                resultProgress?.Report(Result.Success("Deleting unnecessary files..."));
+                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Parameters);
+                if (deleteSuccess)
+                    resultProgress?.Report(Result.Success(deleteResult));
+                else
+                    resultProgress?.Report(Result.Failure(deleteResult));
+            }
+
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
         }

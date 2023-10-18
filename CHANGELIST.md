@@ -13,6 +13,7 @@
 - Simply theme application
 - Add framework for deleteable files
 - Add deleteable file lists for Redumper and DIC
+- Add optional file deletion
 
 ### 2.7.2 (2023-10-17)
 
