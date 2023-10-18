@@ -1356,7 +1356,7 @@ namespace MPF.Core.Modules.Redumper
             return true;
         }
 
-#endregion
+        #endregion
 
         #region Information Extraction Methods
 
@@ -2149,8 +2149,8 @@ namespace MPF.Core.Modules.Redumper
                     {
                         var line = sr.ReadLine()?.TrimStart();
 
-                        // Skip the "version" line
-                        if (line?.StartsWith("version:") == true)
+                        // Skip the "version"/"scheme" line
+                        if (line?.StartsWith("version:") == true || line?.StartsWith("scheme:") == true)
                             continue;
 
                         // Only read until while there are MSF lines
@@ -2462,6 +2462,6 @@ namespace MPF.Core.Modules.Redumper
             }
         }
 
-#endregion
+        #endregion
     }
 }

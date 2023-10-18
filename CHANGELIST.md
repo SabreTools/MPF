@@ -13,6 +13,7 @@
 - Fix GetPVD in dic (fuzz6001)
 - Get SecuROM data from Redumper
 - Clean up issue templates
+- Support Redumper 231 outputs
 
 ### 2.7.1 (2023-10-11)
 
