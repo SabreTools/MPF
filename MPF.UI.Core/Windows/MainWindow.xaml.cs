@@ -45,10 +45,7 @@ namespace MPF.UI.Core.Windows
             MainViewModel.Init(LogOutput.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
 
             // Set the UI color scheme according to the options
-            if (MainViewModel.Options.EnableDarkMode)
-                EnableDarkMode();
-            else
-                EnableLightMode();
+            ApplyTheme();
 
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
@@ -271,6 +268,17 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
+        /// Set the UI color scheme according to the options
+        /// </summary>
+        private void ApplyTheme()
+        {
+            if (MainViewModel.Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                EnableLightMode();
+        }
+
+        /// <summary>
         /// Recolor all UI elements for light mode
         /// </summary>
         private static void EnableLightMode()
@@ -288,7 +296,7 @@ namespace MPF.UI.Core.Windows
             theme.Apply();
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 
@@ -311,10 +319,7 @@ namespace MPF.UI.Core.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the UI color scheme according to the options
-            if (MainViewModel.Options.EnableDarkMode)
-                EnableDarkMode();
-            else
-                EnableLightMode();
+            ApplyTheme();
         }
 
         #region Menu Bar
