@@ -7,6 +7,7 @@
 - Show options window on first run
 - Fix drive letter issue in UI
 - Add first-run Options title, fix saving bug
+- Fix multiple handler invocation
 
 ### 2.7.2 (2023-10-17)
 

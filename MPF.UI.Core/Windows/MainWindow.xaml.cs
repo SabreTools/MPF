@@ -310,8 +310,11 @@ namespace MPF.UI.Core.Windows
             var options = optionsWindow.OptionsViewModel.Options;
             MainViewModel.UpdateOptions(savedSettings, options);
 
-            // Force the UI to rerender
-            OnContentRendered(new EventArgs());
+            // Set the UI color scheme according to the options
+            if (MainViewModel.Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                EnableLightMode();
         }
 
         #region Menu Bar
