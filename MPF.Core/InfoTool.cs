@@ -561,6 +561,30 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStationExecutableInfo(drivePath, out serial, out region, out date);
+        }
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <param name="serial">Internal disc serial, if possible</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
+        /// <returns></returns>
+#if NET48
+        internal static bool GetPlayStationExecutableInfo(string drivePath, out string serial, out Region? region, out string date)
+#else
+        internal static bool GetPlayStationExecutableInfo(string? drivePath, out string? serial, out Region? region, out string? date)
+#endif
+        {
+            serial = null; region = null; date = null;
+
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return false;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return false;
 
@@ -651,6 +675,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return (GetPlayStation2Version(drivePath));
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation2Version(string drivePath)
+#else
+        internal static string? GetPlayStation2Version(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -683,6 +726,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation3Serial(drivePath);
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3Serial(string drivePath)
+#else
+        internal static string? GetPlayStation3Serial(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -724,6 +786,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation3Version(drivePath);
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3Version(string drivePath)
+#else
+        internal static string? GetPlayStation3Version(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -765,6 +846,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation4Serial(drivePath);
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation4Serial(string drivePath)
+#else
+        internal static string? GetPlayStation4Serial(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -806,6 +906,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation4Version(drivePath);
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation4Version(string drivePath)
+#else
+        internal static string? GetPlayStation4Version(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -847,6 +966,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation5Serial(drivePath);
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation5Serial(string drivePath)
+#else
+        internal static string? GetPlayStation5Serial(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -888,6 +1026,25 @@ namespace MPF.Core
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
+            return GetPlayStation5Version(drivePath);
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation5Version(string drivePath)
+#else
+        internal static string? GetPlayStation5Version(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
             if (!Directory.Exists(drivePath))
                 return null;
 
@@ -921,7 +1078,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
+#if NET48
         internal static DiscCategory? GetUMDCategory(string category)
+#else
+        internal static DiscCategory? GetUMDCategory(string? category)
+#endif
         {
 #if NET48
             switch (category)
@@ -951,8 +1112,16 @@ namespace MPF.Core
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
         /// <returns>Region mapped from name, if possible</returns>
+#if NET48
         internal static Region? GetPlayStationRegion(string serial)
+#else
+        internal static Region? GetPlayStationRegion(string? serial)
+#endif
         {
+            // If we have a fully invalid serial
+            if (string.IsNullOrWhiteSpace(serial))
+                return null;
+
             // Standardized "S" serials
             if (serial.StartsWith("S"))
             {

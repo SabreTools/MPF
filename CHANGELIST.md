@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Split InfoTool into 2 classes
+- Add path variants for PlayStation info
 
 ### 2.7.2 (2023-10-17)
 
