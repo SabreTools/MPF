@@ -19,9 +19,9 @@ namespace MPF.Core.Modules.DiscImageCreator
 
         /// <inheritdoc/>
 #if NET48
-        public override string InputPath => DriveLetter;
+        public override string InputPath => DrivePath;
 #else
-        public override string? InputPath => DriveLetter;
+        public override string? InputPath => DrivePath;
 #endif
 
         /// <inheritdoc/>
@@ -54,9 +54,9 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// Drive letter or path to pass to DiscImageCreator
         /// </summary>
 #if NET48
-        public string DriveLetter { get; set; }
+        public string DrivePath { get; set; }
 #else
-        public string? DriveLetter { get; set; }
+        public string? DrivePath { get; set; }
 #endif
 
         /// <summary>
@@ -193,8 +193,12 @@ namespace MPF.Core.Modules.DiscImageCreator
 #endif
 
         /// <inheritdoc/>
-        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
-            : base(system, type, driveLetter, filename, driveSpeed, options)
+#if NET48
+        public Parameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
+            : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
 
@@ -613,7 +617,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -626,9 +630,9 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
@@ -977,7 +981,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -1005,7 +1009,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -1018,39 +1022,39 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
             }
@@ -1160,8 +1164,8 @@ namespace MPF.Core.Modules.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD2Swap
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
-                if (DriveLetter != null)
-                    parameters.Add(DriveLetter);
+                if (DrivePath != null)
+                    parameters.Add(DrivePath);
                 else
                     return null;
             }
@@ -2030,7 +2034,7 @@ namespace MPF.Core.Modules.DiscImageCreator
         {
             BaseCommand = CommandStrings.NONE;
 
-            DriveLetter = null;
+            DrivePath = null;
             DriveSpeed = null;
 
             Filename = null;
@@ -2053,11 +2057,15 @@ namespace MPF.Core.Modules.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
+#if NET48
+        protected override void SetDefaultParameters(string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
         {
             SetBaseCommand(this.System, this.Type);
 
-            DriveLetter = driveLetter.ToString();
+            DrivePath = drivePath;
             DriveSpeed = driveSpeed;
             Filename = filename;
 
@@ -2219,7 +2227,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2251,7 +2259,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2273,7 +2281,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2284,7 +2292,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2306,7 +2314,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2338,7 +2346,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2360,7 +2368,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2376,7 +2384,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2387,7 +2395,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2398,7 +2406,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2414,7 +2422,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2463,7 +2471,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2474,7 +2482,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2496,7 +2504,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2507,7 +2515,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     break;
 
@@ -2529,7 +2537,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2568,7 +2576,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -2592,7 +2600,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
-                        DriveLetter = parts[1];
+                        DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;

@@ -287,31 +287,31 @@ namespace MPF.Core
                 switch (InternalProgram)
                 {
                     case InternalProgram.Aaru:
-                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DiscImageCreator:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.Redumper:
-                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
                         break;
 
                     // This should never happen, but it needs a fallback
                     default:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
                         break;
                 }
 #else
                 Parameters = InternalProgram switch
                 {
-                    InternalProgram.Aaru => new Modules.Aaru.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
-                    InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
-                    InternalProgram.Redumper => new Modules.Redumper.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+                    InternalProgram.Aaru => new Modules.Aaru.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.Redumper => new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
 
                     // This should never happen, but it needs a fallback
-                    _ => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, OutputPath, driveSpeed, Options),
+                    _ => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
                 };
 #endif
 
@@ -457,14 +457,14 @@ namespace MPF.Core
             // Eject the disc automatically if configured to
             if (Options.EjectAfterDump == true)
             {
-                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Letter}"));
+                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Name}"));
                 await EjectDisc();
             }
 
             // Reset the drive automatically if configured to
             if (InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
-                resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Letter}"));
+                resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Name}"));
                 await ResetDrive();
             }
 
@@ -684,7 +684,7 @@ namespace MPF.Core
             OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, true);
 
             // Validate that the output path isn't on the dumping drive
-            if (Drive != null && OutputPath[0] == Drive.Letter)
+            if (Drive?.Name != null && !OutputPath.StartsWith(Drive.Name))
                 return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -693,7 +693,7 @@ namespace MPF.Core
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath);
-            if (Drive != null && fullExecutablePath[0] == Drive.Letter)
+            if (Drive?.Name != null && fullExecutablePath.StartsWith(Drive.Name))
                 return Result.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
@@ -741,7 +741,7 @@ namespace MPF.Core
             var parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
             {
                 BaseCommand = command,
-                DriveLetter = Drive.Letter.ToString(),
+                DrivePath = Drive.Name,
                 ExecutablePath = Options.DiscImageCreatorPath,
             };
 

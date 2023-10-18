@@ -161,15 +161,19 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="system">RedumpSystem value to use</param>
         /// <param name="type">MediaType value to use</param>
-        /// <param name="driveLetter">Drive letter to use</param>
+        /// <param name="drivePath">Drive path to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-        public BaseParameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+#if NET48
+        public BaseParameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        public BaseParameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
         {
             this.System = system;
             this.Type = type;
-            SetDefaultParameters(driveLetter, filename, driveSpeed, options);
+            SetDefaultParameters(drivePath, filename, driveSpeed, options);
         }
 
         #region Abstract Methods
@@ -284,11 +288,15 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="driveLetter">Drive letter to use</param>
+        /// <param name="drivePath">Drive path to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-        protected virtual void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options) { }
+#if NET48
+        protected virtual void SetDefaultParameters(string drivePath, string filename, int? driveSpeed, Options options) { }
+#else
+        protected virtual void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options) { }
+#endif
 
         /// <summary>
         /// Scan a possible parameter string and populate whatever possible

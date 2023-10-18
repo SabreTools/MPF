@@ -740,9 +740,9 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    if (drive != null)
+                    if (drive?.Name != null)
                     {
-                        string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                        string xboxOneMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxOneMsxcPath))
                         {
 #if NET48
@@ -757,9 +757,9 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    if (drive != null)
+                    if (drive?.Name != null)
                     {
-                        string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                        string xboxSeriesXMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
                         {
 #if NET48

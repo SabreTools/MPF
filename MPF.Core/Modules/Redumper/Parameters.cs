@@ -217,8 +217,12 @@ namespace MPF.Core.Modules.Redumper
 #endif
 
         /// <inheritdoc/>
-        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
-            : base(system, type, driveLetter, filename, driveSpeed, options)
+#if NET48
+        public Parameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
+            : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
 
@@ -426,7 +430,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -439,9 +443,9 @@ namespace MPF.Core.Modules.Redumper
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
@@ -512,7 +516,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -536,7 +540,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -549,39 +553,39 @@ namespace MPF.Core.Modules.Redumper
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
 #if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
 #endif
                     break;
             }
@@ -1025,7 +1029,11 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
+#if NET48
+        protected override void SetDefaultParameters(string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
         {
             // If we don't have a CD or DVD, we can't dump using redumper
             if (this.Type != MediaType.CDROM && this.Type != MediaType.DVD)
@@ -1065,7 +1073,7 @@ namespace MPF.Core.Modules.Redumper
             }
 
             this[FlagStrings.Drive] = true;
-            DriveValue = driveLetter.ToString();
+            DriveValue = drivePath;
 
             this[FlagStrings.Speed] = true;
             SpeedValue = driveSpeed;

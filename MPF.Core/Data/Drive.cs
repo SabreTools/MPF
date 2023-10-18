@@ -95,11 +95,6 @@ namespace MPF.Core.Data
             }
         }
 
-        /// <summary>
-        /// Windows drive letter
-        /// </summary>
-        public char Letter => this.Name == null || this.Name.Length == 0 ? '\0' : this.Name[0];
-
         #endregion
 
         /// <summary>
@@ -188,7 +183,7 @@ namespace MPF.Core.Data
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = drives.OrderBy(i => i == null ? '\0' : i.Letter).ToList();
+            drives = drives.OrderBy(i => i == null ? "\0" : i.Name).ToList();
             return drives;
         }
 
@@ -285,10 +280,8 @@ namespace MPF.Core.Data
         /// <returns></returns>
         public RedumpSystem? GetRedumpSystem(RedumpSystem? defaultValue)
         {
-            string drivePath = $"{this.Letter}:\\";
-
             // If we can't read the media in that drive, we can't do anything
-            if (!Directory.Exists(drivePath))
+            if (!Directory.Exists(this.Name))
                 return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
@@ -307,7 +300,7 @@ namespace MPF.Core.Data
             // Bandai Playdia Quick Interactive System
             try
             {
-                List<string> files = Directory.EnumerateFiles(drivePath, "*", SearchOption.TopDirectoryOnly).ToList();
+                List<string> files = Directory.EnumerateFiles(this.Name, "*", SearchOption.TopDirectoryOnly).ToList();
 
                 if (files.Any(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
                     && files.Any(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
@@ -318,7 +311,7 @@ namespace MPF.Core.Data
             catch { }
 
             // Mattel Fisher-Price iXL
-            if (File.Exists(Path.Combine(drivePath, "iXL", "iXLUpdater.exe")))
+            if (File.Exists(Path.Combine(this.Name, "iXL", "iXLUpdater.exe")))
             {
                 return RedumpSystem.MattelFisherPriceiXL;
             }
@@ -326,8 +319,8 @@ namespace MPF.Core.Data
             // Microsoft Xbox 360
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "$SystemUpdate"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "$SystemUpdate")).Any()
+                if (Directory.Exists(Path.Combine(this.Name, "$SystemUpdate"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "$SystemUpdate")).Any()
                     && this.TotalSize <= 500_000_000)
                 {
                     return RedumpSystem.MicrosoftXbox360;
@@ -338,8 +331,8 @@ namespace MPF.Core.Data
             // Microsoft Xbox One
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "MSXC"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "MSXC")).Any())
+                if (Directory.Exists(Path.Combine(this.Name, "MSXC"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "MSXC")).Any())
                 {
                     return RedumpSystem.MicrosoftXboxOne;
                 }
@@ -347,35 +340,23 @@ namespace MPF.Core.Data
             catch { }
 
             // Sega Dreamcast
-            if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
+            if (File.Exists(Path.Combine(this.Name, "IP.BIN")))
             {
                 return RedumpSystem.SegaDreamcast;
             }
 
             // Sega Mega-CD / Sega-CD
-            if (File.Exists(Path.Combine(drivePath, "_BOOT", "IP.BIN"))
-                || File.Exists(Path.Combine(drivePath, "_BOOT", "SP.BIN"))
-                || File.Exists(Path.Combine(drivePath, "_BOOT", "SP_AS.BIN"))
-                || File.Exists(Path.Combine(drivePath, "FILESYSTEM.BIN")))
+            if (File.Exists(Path.Combine(this.Name, "_BOOT", "IP.BIN"))
+                || File.Exists(Path.Combine(this.Name, "_BOOT", "SP.BIN"))
+                || File.Exists(Path.Combine(this.Name, "_BOOT", "SP_AS.BIN"))
+                || File.Exists(Path.Combine(this.Name, "FILESYSTEM.BIN")))
             {
                 return RedumpSystem.SegaMegaCDSegaCD;
             }
 
-            // Sega Saturn
-            try
-            {
-                var sector = ReadSector(0);
-                if (sector != null)
-                {
-                    if (sector.StartsWith(Interface.SaturnSectorZeroStart))
-                        return RedumpSystem.SegaSaturn;
-                }
-            }
-            catch { }
-
             // Sony PlayStation and Sony PlayStation 2
-            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            string psxExePath = Path.Combine(this.Name, "PSX.EXE");
+            string systemCnfPath = Path.Combine(this.Name, "SYSTEM.CNF");
             if (File.Exists(systemCnfPath))
             {
                 // Check for either BOOT or BOOT2
@@ -393,9 +374,9 @@ namespace MPF.Core.Data
             // Sony PlayStation 3
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "PS3_GAME"))
-                    || Directory.Exists(Path.Combine(drivePath, "PS3_UPDATE"))
-                    || File.Exists(Path.Combine(drivePath, "PS3_DISC.SFB")))
+                if (Directory.Exists(Path.Combine(this.Name, "PS3_GAME"))
+                    || Directory.Exists(Path.Combine(this.Name, "PS3_UPDATE"))
+                    || File.Exists(Path.Combine(this.Name, "PS3_DISC.SFB")))
                 {
                     return RedumpSystem.SonyPlayStation3;
                 }
@@ -414,13 +395,13 @@ namespace MPF.Core.Data
             //        Is used as an on-disc update for the base game app without needing to get update from the internet.
             //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
             //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
-            if (File.Exists(Path.Combine(drivePath, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+            if (File.Exists(Path.Combine(this.Name, "PS4", "UPDATE", "PS4UPDATE.PUP")))
             {
                 return RedumpSystem.SonyPlayStation4;
             }
 
             // V.Tech V.Flash / V.Smile Pro
-            if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
+            if (File.Exists(Path.Combine(this.Name, "0SYSTEM")))
             {
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
@@ -430,7 +411,7 @@ namespace MPF.Core.Data
             #region Computers
 
             // Sharp X68000
-            if (File.Exists(Path.Combine(drivePath, "COMMAND.X")))
+            if (File.Exists(Path.Combine(this.Name, "COMMAND.X")))
             {
                 return RedumpSystem.SharpX68000;
             }
@@ -440,7 +421,7 @@ namespace MPF.Core.Data
             #region Video Formats
 
             // BD-Video
-            if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
+            if (Directory.Exists(Path.Combine(this.Name, "BDMV")))
             {
                 // Technically BD-Audio has this as well, but it's hard to split that out right now
                 return RedumpSystem.BDVideo;
@@ -449,14 +430,14 @@ namespace MPF.Core.Data
             // DVD-Audio and DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Any())
+                if (Directory.Exists(Path.Combine(this.Name, "AUDIO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "AUDIO_TS")).Any())
                 {
                     return RedumpSystem.DVDAudio;
                 }
 
-                else if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
+                else if (Directory.Exists(Path.Combine(this.Name, "VIDEO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "VIDEO_TS")).Any())
                 {
                     return RedumpSystem.DVDVideo;
                 }
@@ -466,8 +447,8 @@ namespace MPF.Core.Data
             // HD-DVD-Video
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Any())
+                if (Directory.Exists(Path.Combine(this.Name, "HVDVD_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "HVDVD_TS")).Any())
                 {
                     return RedumpSystem.HDDVDVideo;
                 }
@@ -477,8 +458,8 @@ namespace MPF.Core.Data
             // VCD
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "VCD"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VCD")).Any())
+                if (Directory.Exists(Path.Combine(this.Name, "VCD"))
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "VCD")).Any())
                 {
                     return RedumpSystem.VideoCD;
                 }
@@ -540,56 +521,6 @@ namespace MPF.Core.Data
                 return RedumpSystem.SonyPlayStation5;
 
             return null;
-        }
-
-        /// <summary>
-        /// Read a sector with a specified size from the drive
-        /// </summary>
-        /// <param name="num">Sector number, non-negative</param>
-        /// <param name="size">Size of a sector in bytes</param>
-        /// <returns>Byte array representing the sector, null on error</returns>
-#if NET48
-        public byte[] ReadSector(long num, int size = 2048)
-#else
-        public byte[]? ReadSector(long num, int size = 2048)
-#endif
-        {
-            // Missing drive leter is not supported
-            if (string.IsNullOrEmpty(this.Name))
-                return null;
-
-            // We don't support negative sectors
-            if (num < 0)
-                return null;
-
-            // Wrap the following in case of device access errors
-#if NET48
-            Stream fs = null;
-#else
-            Stream? fs = null;
-#endif
-            try
-            {
-                // Open the drive as a device
-                fs = File.OpenRead($"\\\\?\\{this.Letter}:");
-
-                // Seek to the start of the sector, if possible
-                long start = num * size;
-                fs.Seek(start, SeekOrigin.Begin);
-
-                // Read and return the sector
-                byte[] buffer = new byte[size];
-                fs.Read(buffer, 0, size);
-                return buffer;
-            }
-            catch
-            {
-                return null;
-            }
-            finally
-            {
-                fs?.Dispose();
-            }
         }
 
         /// <summary>
@@ -655,7 +586,7 @@ namespace MPF.Core.Data
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
-                        drives.ForEach(d => { if (d?.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
+                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
                     }
                 }
             }

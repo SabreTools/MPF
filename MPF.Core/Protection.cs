@@ -95,8 +95,16 @@ namespace MPF.Core
         /// </summary>
         /// <param name="path">Path to scan for anti-modchip strings</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
+#if NET48
         public static async Task<bool> GetPlayStationAntiModchipDetected(string path)
+#else
+        public static async Task<bool> GetPlayStationAntiModchipDetected(string? path)
+#endif
         {
+            // If there is no valid path
+            if (string.IsNullOrEmpty(path))
+                return false;
+
             return await Task.Run(() =>
             {
                 try

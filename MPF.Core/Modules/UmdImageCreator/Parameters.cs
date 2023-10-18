@@ -28,8 +28,12 @@ namespace MPF.Core.Modules.UmdImageCreator
 #endif
 
         /// <inheritdoc/>
-        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
-            : base(system, type, driveLetter, filename, driveSpeed, options)
+#if NET48
+        public Parameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
+#else
+        public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+#endif
+            : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
 

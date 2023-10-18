@@ -2,6 +2,7 @@
 
 - Split InfoTool into 2 classes
 - Add path variants for PlayStation info
+- Convert Drive to use paths internally
 
 ### 2.7.2 (2023-10-17)
 

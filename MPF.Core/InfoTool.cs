@@ -19,8 +19,6 @@ using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
 
-#pragma warning disable IDE0051 // Remove unused private members
-
 namespace MPF.Core
 {
     public static class InfoTool
@@ -103,7 +101,7 @@ namespace MPF.Core
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
         internal static async Task<bool> GetAntiModchipDetected(Drive drive)
-            => await Protection.GetPlayStationAntiModchipDetected($"{drive.Letter}:\\");
+            => await Protection.GetPlayStationAntiModchipDetected(drive.Name);
 
         /// <summary>
         /// Get the current detected copy protection(s), if possible
@@ -118,9 +116,9 @@ namespace MPF.Core
         internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
 #endif
         {
-            if (options.ScanForProtection && drive != null)
+            if (options.ScanForProtection && drive?.Name != null)
             {
-                (var protection, _) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
+                (var protection, _) = await Protection.RunProtectionScanOnPath(drive.Name, options, progress);
                 return (Protection.FormatProtections(protection), protection);
             }
 
@@ -389,7 +387,7 @@ namespace MPF.Core
 #if NET48
         internal static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
 #else
-        internal static bool GetISOHashValues(string hashData, out long size, out string? crc32, out string? md5, out string? sha1)
+        internal static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)
 #endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;

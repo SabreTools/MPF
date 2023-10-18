@@ -618,19 +618,19 @@ namespace MPF.Core.UI.ViewModels
             this.UpdateVolumeLabelEnabled = true;
 
             // If we have a selected drive, keep track of it
-            char? lastSelectedDrive = this.CurrentDrive?.Letter;
+            char? lastSelectedDrive = this.CurrentDrive?.Name?[0] ?? null;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(this.Options.IgnoreFixedDrives);
 
             if (Drives.Count > 0)
             {
-                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
+                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Name))}");
 
                 // Check for the last selected drive, if possible
                 int index = -1;
                 if (lastSelectedDrive != null)
-                    index = Drives.FindIndex(d => d.MarkedActive && d.Letter == lastSelectedDrive);
+                    index = Drives.FindIndex(d => d.MarkedActive && (d.Name?[0] ?? '\0') == lastSelectedDrive);
 
                 // Check for active optical drives
                 if (index == -1)
@@ -965,13 +965,13 @@ namespace MPF.Core.UI.ViewModels
 
                 if (_environment != null && _environment.Options.EjectAfterDump)
                 {
-                    VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Letter}");
+                    VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Name}");
                     await _environment.EjectDisc();
                 }
 
                 if (_environment != null && this.Options.DICResetDriveAfterDump)
                 {
-                    VerboseLogLn($"Resetting drive {_environment.Drive?.Letter}");
+                    VerboseLogLn($"Resetting drive {_environment.Drive?.Name}");
                     await _environment.ResetDrive();
                 }
             }
@@ -1203,7 +1203,7 @@ namespace MPF.Core.UI.ViewModels
             // If the drive is marked active, try to read from it
             else if (this.CurrentDrive.MarkedActive)
             {
-                VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Letter} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
+                VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Name} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
                 (MediaType? detectedMediaType, var errorMessage) = this.CurrentDrive.GetMediaType(this.CurrentSystem);
 
                 // If we got an error message, post it to the log
@@ -1263,7 +1263,7 @@ namespace MPF.Core.UI.ViewModels
             }
             else if (!this.Options.SkipSystemDetection)
             {
-                VerboseLog($"Trying to detect system for drive {this.CurrentDrive.Letter}.. ");
+                VerboseLog($"Trying to detect system for drive {this.CurrentDrive.Name}.. ");
                 var currentSystem = this.CurrentDrive?.GetRedumpSystem(this.Options.DefaultSystem) ?? this.Options.DefaultSystem;
                 VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
@@ -1431,7 +1431,7 @@ namespace MPF.Core.UI.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default);
+                int driveIndex = Drives.Select(d => d.Name?[0] ?? '\0').ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default);
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
@@ -1476,10 +1476,10 @@ namespace MPF.Core.UI.ViewModels
 #endif
 
             // If we don't have a valid drive
-            if (this.CurrentDrive == null || this.CurrentDrive.Letter == default(char))
+            if (this.CurrentDrive?.Name == null)
                 return (null, "No valid drive found!");
 
-            VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Letter}");
+            VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Name}");
 
             var tempContent = this.Status;
             this.Status = "Scanning for copy protection... this might take a while!";
@@ -1490,7 +1490,7 @@ namespace MPF.Core.UI.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
-            var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Letter + ":\\", this.Options, progress);
+            var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
             var output = Protection.FormatProtections(protections);
 
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
@@ -1502,7 +1502,7 @@ namespace MPF.Core.UI.ViewModels
             //}
 
             if (string.IsNullOrEmpty(error))
-                LogLn($"Detected the following protections in {this.CurrentDrive.Letter}:\r\n\r\n{output}");
+                LogLn($"Detected the following protections in {this.CurrentDrive.Name}:\r\n\r\n{output}");
             else
                 ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
