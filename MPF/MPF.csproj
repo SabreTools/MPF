@@ -11,7 +11,7 @@
     <Description>Frontend for various dumping programs</Description>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <VersionPrefix>2.7.1</VersionPrefix>
+    <VersionPrefix>2.7.2</VersionPrefix>
     <InternalsVisibleTo>MPF.Test</InternalsVisibleTo>
   </PropertyGroup>
 
