@@ -14,6 +14,7 @@
 - Add framework for deleteable files
 - Add deleteable file lists for Redumper and DIC
 - Add optional file deletion
+- Rearrange OptionsWindow to be easier to navigate
 
 ### 2.7.2 (2023-10-17)
 

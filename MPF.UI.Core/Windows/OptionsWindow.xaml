@@ -37,7 +37,6 @@
                                 <Run FontWeight="Bold" Text="{Binding Title, Mode=OneWay}"/>
                             </TextBlock.Inlines>
                         </TextBlock>
-                        <!-- <TextBlock TextAlignment="Center"><Bold>Options</Bold></TextBlock> -->
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -73,21 +72,77 @@
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem Header="User Interface" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="3">
-                        <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
-                            IsChecked="{Binding Options.EnableDarkMode}"
-                            ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
-                        />
-                        <CheckBox VerticalAlignment="Center" Content="Check for Updates on Startup"
-                                  IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
-                                  ToolTip="Check for updates when the application starts" Margin="0,4"
-                        />
-                        <CheckBox VerticalAlignment="Center" Content="Fast Update Label"
-                                  IsChecked="{Binding Options.FastUpdateLabel}"
-                                  ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
-                        />
-                    </UniformGrid>
+                <TabItem Header="General" Style="{DynamicResource CustomTabItemStyle}">
+                    <StackPanel>
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="User Interface">
+                            <UniformGrid Columns="2" Rows="2">
+                                <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
+                                          IsChecked="{Binding Options.EnableDarkMode}"
+                                          ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Check for Updates on Startup"
+                                          IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
+                                          ToolTip="Check for updates when the application starts" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Fast Update Label"
+                                          IsChecked="{Binding Options.FastUpdateLabel}"
+                                          ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Detection">
+                            <UniformGrid Columns="2" Rows="3">
+                                <CheckBox x:Name="SkipMediaTypeDetectionCheckBox" VerticalAlignment="Center" Content="Skip Type Detect"
+                                          IsChecked="{Binding Options.SkipMediaTypeDetection}"
+                                          ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
+                                          IsChecked="{Binding Options.SkipSystemDetection}"
+                                          ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
+                                        IsChecked="{Binding Options.IgnoreFixedDrives}"
+                                        ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
+                                />
+                                <Label/>
+                                <!-- Empty label for padding -->
+
+                                <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Logging">
+                            <UniformGrid Columns="2" Rows="1">
+                                <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
+                                          IsChecked="{Binding Options.VerboseLogging}"
+                                          ToolTip="Display all logging statements" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
+                                          IsChecked="{Binding Options.OpenLogWindowAtStartup}"
+                                          ToolTip="Open the log panel when the program launches" Margin="0,4"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
+                    </StackPanel>
                 </TabItem>
 
                 <TabItem Header="Paths" Style="{DynamicResource CustomTabItemStyle}">
@@ -140,46 +195,11 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="10">
-                                <CheckBox x:Name="SkipMediaTypeDetectionCheckBox" VerticalAlignment="Center" Content="Skip Type Detect"
-                                     IsChecked="{Binding Options.SkipMediaTypeDetection}"
-                                     ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
-                                     />
-
-                                <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
-                                     IsChecked="{Binding Options.SkipSystemDetection}"
-                                     ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
-                                     />
-
-                                <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                          ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
-                                    <ComboBox.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ComboBoxItem}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ComboBox.ItemContainerStyle>
-                                </ComboBox>
-
-                                <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
-                                     IsChecked="{Binding Options.IgnoreFixedDrives}"
-                                     ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
-                                     />
-
+                            <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
                                      IsChecked="{Binding Options.ToolsInSeparateWindow}"
                                      ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                                      />
-
-                                <CheckBox VerticalAlignment="Center" Content="Protection Scan"
-                                    IsChecked="{Binding Options.ScanForProtection}"
-                                    ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
-                                    />
 
                                 <CheckBox VerticalAlignment="Center" Content="Output Protection File"
                                     IsChecked="{Binding Options.OutputSeparateProtectionFile}" IsEnabled="{Binding Options.ScanForProtection}"
@@ -243,6 +263,30 @@
                             </UniformGrid>
                         </GroupBox>
 
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Protection">
+                            <UniformGrid Columns="2" Rows="2">
+                                <CheckBox VerticalAlignment="Center" Content="Enable Protection Scan"
+                                          IsChecked="{Binding Options.ScanForProtection}"
+                                          ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Scan Archive Contents"
+                                          IsChecked="{Binding Options.ScanArchivesForProtection}"
+                                          ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Include Executable Packers"
+                                          IsChecked="{Binding Options.ScanPackersForProtection}"
+                                          ToolTip="Include executable packers in outputted protections" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
+                                          IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
+                                          ToolTip="Include debug information during protection scans" Margin="0,4"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
+
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Default Speeds" Grid.ColumnSpan="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -290,153 +334,121 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Protection Scanning" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="Programs" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <UniformGrid Columns="2" Rows="2">
-                            <CheckBox VerticalAlignment="Center" Content="Scan Archive Contents"
-                                     IsChecked="{Binding Options.ScanArchivesForProtection}"
-                                     ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
-                                     />
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Aaru">
+                            <UniformGrid Columns="2" Rows="3">
+                                <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
+                                          IsChecked="{Binding Options.AaruEnableDebug}"
+                                          ToolTip="Enable debug output in logs" Margin="0,4"
+                                />
 
-                            <CheckBox VerticalAlignment="Center" Content="Include Executable Packers"
-                                     IsChecked="{Binding Options.ScanPackersForProtection}"
-                                     ToolTip="Include executable packers in outputted protections" Margin="0,4"
-                                     />
+                                <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                                          IsChecked="{Binding Options.AaruEnableVerbose}"
+                                          ToolTip="Enable verbose output in logs" Margin="0,4"
+                                />
 
-                            <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
-                                     IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
-                                     ToolTip="Include debug information during protection scans" Margin="0,4"
-                                     />
-                        </UniformGrid>
+                                <CheckBox VerticalAlignment="Center" Content="Force Dumping"
+                                          IsChecked="{Binding Options.AaruForceDumping}"
+                                          ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
+                                          IsChecked="{Binding Options.AaruStripPersonalData}"
+                                          ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
+                                />
+
+                                <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                         Text="{Binding Options.AaruRereadCount}"
+                                         ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="DiscImageCreator">
+                            <UniformGrid Columns="2" Rows="6">
+                                <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
+                                          IsChecked="{Binding Options.DICQuietMode}"
+                                          ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
+                                          IsChecked="{Binding Options.DICParanoidMode}"
+                                          ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Use CMI Flag"
+                                          IsChecked="{Binding Options.DICUseCMIFlag}"
+                                          ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
+                                          IsChecked="{Binding Options.DICResetDriveAfterDump}"
+                                          ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
+                                          IsChecked="{Binding Options.DICMultiSectorRead}"
+                                          ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
+                                />
+                                <Label/>  <!-- Empty label for padding -->
+
+                                <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                          Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
+                                          ToolTip="Set the default value for the /mr flag"
+                                />
+
+                                <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                          Text="{Binding Options.DICRereadCount}"
+                                          ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
+                                />
+
+                                <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                          Text="{Binding Options.DICDVDRereadCount}"
+                                          ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
+
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
+                            <UniformGrid Columns="2" Rows="3">
+                                <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
+                                          IsChecked="{Binding Options.RedumperEnableDebug}"
+                                          ToolTip="Enable debug output in logs" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                                          IsChecked="{Binding Options.RedumperEnableVerbose}"
+                                          ToolTip="Enable verbose output in logs" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Enable BE Drive Reading"
+                                          IsChecked="{Binding Options.RedumperUseBEReading}"
+                                          ToolTip="Enable setting drive read method to BE_CDDA by default" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
+                                          IsChecked="{Binding Options.RedumperUseGenericDriveType}"
+                                          ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
+                                />
+
+                                <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                         Text="{Binding Options.RedumperRereadCount}"
+                                          ToolTip="Specifies how many rereads are attempted on read error"
+                                />
+                            </UniformGrid>
+                        </GroupBox>
                     </StackPanel>
-                </TabItem>
-
-                <TabItem Header="Aaru" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="3">
-                        <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
-                            IsChecked="{Binding Options.AaruEnableDebug}"
-                            ToolTip="Enable debug output in logs" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
-                            IsChecked="{Binding Options.AaruEnableVerbose}"
-                            ToolTip="Enable verbose output in logs" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Force Dumping"
-                            IsChecked="{Binding Options.AaruForceDumping}"
-                            ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
-                            IsChecked="{Binding Options.AaruStripPersonalData}"
-                            ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
-                            />
-
-                        <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
-                            Text="{Binding Options.AaruRereadCount}"
-                            ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
-                            />
-                    </UniformGrid>
-                </TabItem>
-
-                <TabItem Header="DiscImageCreator" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="6">
-                        <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
-                            IsChecked="{Binding Options.DICQuietMode}"
-                            ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
-                            IsChecked="{Binding Options.DICParanoidMode}"
-                            ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Use CMI Flag"
-                            IsChecked="{Binding Options.DICUseCMIFlag}"
-                            ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
-                            IsChecked="{Binding Options.DICResetDriveAfterDump}"
-                            ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
-                            IsChecked="{Binding Options.DICMultiSectorRead}"
-                            ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
-                            />
-                        <Label/>
-                        <!-- Empty label for padding -->
-
-                        <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
-                            Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
-                            ToolTip="Set the default value for the /mr flag"
-                            />
-
-                        <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
-                            Text="{Binding Options.DICRereadCount}"
-                            ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
-                            />
-
-                        <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
-                            Text="{Binding Options.DICDVDRereadCount}"
-                            ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
-                            />
-                    </UniformGrid>
-                </TabItem>
-
-                <TabItem Header="Redumper" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="3">
-                        <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
-                            IsChecked="{Binding Options.RedumperEnableDebug}"
-                            ToolTip="Enable debug output in logs" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
-                            IsChecked="{Binding Options.RedumperEnableVerbose}"
-                            ToolTip="Enable verbose output in logs" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Enable BE Drive Reading"
-                            IsChecked="{Binding Options.RedumperUseBEReading}"
-                            ToolTip="Enable setting drive read method to BE_CDDA by default" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
-                            IsChecked="{Binding Options.RedumperUseGenericDriveType}"
-                            ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
-                            />
-
-                        <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
-                            Text="{Binding Options.RedumperRereadCount}"
-                            ToolTip="Specifies how many rereads are attempted on read error"
-                            />
-                    </UniformGrid>
-                </TabItem>
-
-                <TabItem Header="Logging" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2">
-                        <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
-                            IsChecked="{Binding Options.VerboseLogging}"
-                            ToolTip="Display all logging statements" Margin="0,4"
-                            />
-
-                        <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
-                            IsChecked="{Binding Options.OpenLogWindowAtStartup}"
-                            ToolTip="Open the log panel when the program launches" Margin="0,4"
-                            />
-                    </UniformGrid>
                 </TabItem>
 
                 <TabItem Header="Login Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump Credentials">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump">
                             <UniformGrid Columns="5">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
