@@ -236,6 +236,17 @@ namespace MPF.Core.Modules
 #endif
 
         /// <summary>
+        /// Generate a list of all deleteable files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all deleteable file paths, empty otherwise</returns>
+#if NET48
+        public virtual List<string> GetDeleteableFilePaths(string basePath) => new List<string>();
+#else
+        public virtual List<string> GetDeleteableFilePaths(string basePath) => new();
+#endif
+
+        /// <summary>
         /// Generate a list of all log files generated
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>

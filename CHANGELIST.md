@@ -11,6 +11,7 @@
 - Create method for applying theme
 - Fix drive letter check
 - Simply theme application
+- Add framework for deleteable files
 
 ### 2.7.2 (2023-10-17)
 
