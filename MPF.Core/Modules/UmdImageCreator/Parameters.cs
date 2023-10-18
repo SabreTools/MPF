@@ -72,7 +72,7 @@ namespace MPF.Core.Modules.UmdImageCreator
 #endif
         {
             // Ensure that required sections exist
-            info = InfoTool.EnsureAllSections(info);
+            info = SubmissionInfoTool.EnsureAllSections(info);
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
 #if NET48
@@ -80,7 +80,7 @@ namespace MPF.Core.Modules.UmdImageCreator
 #else
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 #endif
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Extract info based generically on MediaType
             switch (this.Type)
@@ -92,7 +92,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                     info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
 #endif
 
-                    if (GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
+                    if (InfoTool.GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
                     {
 #if NET48
                         info.SizeAndChecksums.Size = filesize;
@@ -253,7 +253,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                         else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                             umdversion = line.Split(' ')[1];
                         else if (line.StartsWith("pspUmdTypes"))
-                            umdcat = GetUMDCategory(line.Split(' ')[1]);
+                            umdcat = InfoTool.GetUMDCategory(line.Split(' ')[1]);
                         else if (line.StartsWith("L0 length"))
                             umdlayer = line.Split(' ')[2];
                         else if (line.StartsWith("FileSize:"))

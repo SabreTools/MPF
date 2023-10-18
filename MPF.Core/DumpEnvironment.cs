@@ -435,7 +435,7 @@ namespace MPF.Core
 
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
-            var submissionInfo = await InfoTool.ExtractOutputInformation(
+            var submissionInfo = await SubmissionInfoTool.ExtractOutputInformation(
                 OutputPath,
                 Drive,
                 System,
@@ -613,7 +613,7 @@ namespace MPF.Core
                 return;
 
             // Ensure that required sections exist
-            info = InfoTool.EnsureAllSections(info);
+            info = SubmissionInfoTool.EnsureAllSections(info);
 
             // Otherwise, inject information as necessary
             if (info.CommonDiscInfo != null && seed.CommonDiscInfo != null)

@@ -188,12 +188,12 @@ namespace MPF.Core.Utilities
                 else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
                 {
                     string seedInfo = args[startIndex].Split('=')[1];
-                    info = InfoTool.CreateFromFile(seedInfo);
+                    info = SubmissionInfoTool.CreateFromFile(seedInfo);
                 }
                 else if (args[startIndex] == "-l" || args[startIndex] == "--load-seed")
                 {
                     string seedInfo = args[startIndex + 1];
-                    info = InfoTool.CreateFromFile(seedInfo);
+                    info = SubmissionInfoTool.CreateFromFile(seedInfo);
                     startIndex++;
                 }
 

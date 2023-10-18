@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using BurnOutSharp;
 using MPF.Core.Data;
-using MPF.Core.Utilities;
+using MPF.Core.Hashing;
 using MPF.Core.Modules;
+using MPF.Core.Utilities;
 using Newtonsoft.Json;
+using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
 
 #pragma warning disable IDE0051 // Remove unused private members
@@ -26,739 +28,6 @@ namespace MPF.Core
         #region Information Extraction
 
         /// <summary>
-        /// Create a SubmissionInfo from a JSON file path
-        /// </summary>
-        /// <param name="path">Path to the SubmissionInfo JSON</param>
-        /// <returns>Filled SubmissionInfo on success, null on error</returns>
-#if NET48
-        public static SubmissionInfo CreateFromFile(string path)
-#else
-        public static SubmissionInfo? CreateFromFile(string? path)
-#endif
-        {
-            // If the path is invalid
-            if (string.IsNullOrWhiteSpace(path))
-                return null;
-
-            // If the file doesn't exist
-            if (!File.Exists(path))
-                return null;
-
-            // Try to open and deserialize the file
-            try
-            {
-                byte[] data = File.ReadAllBytes(path);
-                string dataString = Encoding.UTF8.GetString(data);
-                return JsonConvert.DeserializeObject<SubmissionInfo>(dataString);
-            }
-            catch
-            {
-                // We don't care what the exception was
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Ensure all required sections in a submission info exist
-        /// </summary>
-        /// <param name="info">SubmissionInfo object to verify</param>
-#if NET48
-        public static SubmissionInfo EnsureAllSections(SubmissionInfo info)
-        {
-            // If there's no info, create one
-            if (info == null) info = new SubmissionInfo();
-
-            // Ensure all sections
-            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
-            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
-            if (info.EDC == null) info.EDC = new EDCSection();
-            if (info.Extras == null) info.Extras = new ExtrasSection();
-            if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
-            if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
-            if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
-            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
-
-            // Ensure special dictionaries
-            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-            if (info.CommonDiscInfo.ContentsSpecialFields == null) info.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode?, string>();
-
-            return info;
-        }
-#else
-        public static SubmissionInfo EnsureAllSections(SubmissionInfo? info)
-        {
-            // If there's no info, create one
-            info ??= new SubmissionInfo();
-
-            // Ensure all sections
-            info.CommonDiscInfo ??= new CommonDiscInfoSection();
-            info.VersionAndEditions ??= new VersionAndEditionsSection();
-            info.EDC ??= new EDCSection();
-            info.ParentCloneRelationship ??= new ParentCloneRelationshipSection();
-            info.Extras ??= new ExtrasSection();
-            info.CopyProtection ??= new CopyProtectionSection();
-            info.DumpersAndStatus ??= new DumpersAndStatusSection();
-            info.TracksAndWriteOffsets ??= new TracksAndWriteOffsetsSection();
-            info.SizeAndChecksums ??= new SizeAndChecksumsSection();
-            info.DumpingInfo ??= new DumpingInfoSection();
-
-            // Ensure special dictionaries
-            info.CommonDiscInfo.CommentsSpecialFields ??= new Dictionary<SiteCode, string>();
-            info.CommonDiscInfo.ContentsSpecialFields ??= new Dictionary<SiteCode, string>();
-
-            return info;
-        }
-#endif
-
-        /// <summary>
-        /// Extract all of the possible information from a given input combination
-        /// </summary>
-        /// <param name="outputPath">Output path to write to</param>
-        /// <param name="drive">Drive object representing the current drive</param>
-        /// <param name="system">Currently selected system</param>
-        /// <param name="mediaType">Currently selected media type</param>
-        /// <param name="options">Options object representing user-defined options</param>
-        /// <param name="parameters">Parameters object representing what to send to the internal program</param>
-        /// <param name="resultProgress">Optional result progress callback</param>
-        /// <param name="protectionProgress">Optional protection progress callback</param>
-        /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
-#if NET48
-        public static async Task<SubmissionInfo> ExtractOutputInformation(
-#else
-        public static async Task<SubmissionInfo?> ExtractOutputInformation(
-#endif
-            string outputPath,
-#if NET48
-            Drive drive,
-#else
-            Drive? drive,
-#endif
-            RedumpSystem? system,
-            MediaType? mediaType,
-            Data.Options options,
-#if NET48
-            BaseParameters parameters,
-            IProgress<Result> resultProgress = null,
-            IProgress<ProtectionProgress> protectionProgress = null)
-#else
-            BaseParameters? parameters,
-            IProgress<Result>? resultProgress = null,
-            IProgress<ProtectionProgress>? protectionProgress = null)
-#endif
-        {
-            // Ensure the current disc combination should exist
-            if (!system.MediaTypes().Contains(mediaType))
-                return null;
-
-            // Split the output path for easier use
-            var outputDirectory = Path.GetDirectoryName(outputPath);
-            string outputFilename = Path.GetFileName(outputPath);
-
-            // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = FoundAllFiles(outputDirectory, outputFilename, parameters, false);
-            if (!foundFiles)
-            {
-                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
-                resultProgress?.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
-                return null;
-            }
-
-            // Sanitize the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Create the SubmissionInfo object with all user-inputted values by default
-            string combinedBase;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
-                combinedBase = outputFilename;
-            else
-                combinedBase = Path.Combine(outputDirectory, outputFilename);
-
-            var info = new SubmissionInfo()
-            {
-                CommonDiscInfo = new CommonDiscInfoSection()
-                {
-                    System = system,
-                    Media = mediaType.ToDiscType(),
-                    Title = options.AddPlaceholders ? Template.RequiredValue : string.Empty,
-                    ForeignTitleNonLatin = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    DiscNumberLetter = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    DiscTitle = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    Category = null,
-                    Region = null,
-                    Languages = null,
-                    Serial = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
-                    Barcode = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    Contents = string.Empty,
-                },
-                VersionAndEditions = new VersionAndEditionsSection()
-                {
-                    Version = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
-                    OtherEditions = options.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
-                },
-            };
-
-            // Ensure that required sections exist
-            info = EnsureAllSections(info);
-
-            // Get specific tool output handling
-            parameters?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
-
-            // Get a list of matching IDs for each line in the DAT
-#if NET48
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
-                FillFromRedump(options, info, resultProgress);
-#else
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
-                _ = await FillFromRedump(options, info, resultProgress);
-#endif
-
-            // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums?.CRC32))
-                info.TracksAndWriteOffsets.ClrMameProData = null;
-
-            // Add the volume label to comments, if possible or necessary
-            if (drive?.VolumeLabel != null && drive.GetRedumpSystemFromVolumeLabel() == null)
-#if NET48
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;
-#else
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = drive.VolumeLabel;
-#endif
-
-            // Extract info based generically on MediaType
-            switch (mediaType)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-#if NET48
-                    info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-
-                    // If we have a single-layer disc
-#if NET48
-                    if (info.SizeAndChecksums.Layerbreak == default)
-#else
-                    if (info.SizeAndChecksums!.Layerbreak == default)
-#endif
-                    {
-#if NET48
-                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    }
-                    // If we have a dual-layer disc
-                    else
-                    {
-#if NET48
-                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    }
-
-                    break;
-
-                case MediaType.NintendoGameCubeGameDisc:
-#if NET48
-                    info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#if NET48
-                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
-#else
-                    info.Extras!.BCA ??= (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
-#endif
-                    break;
-
-                case MediaType.NintendoWiiOpticalDisc:
-
-                    // If we have a single-layer disc
-#if NET48
-                    if (info.SizeAndChecksums.Layerbreak == default)
-#else
-                    if (info.SizeAndChecksums!.Layerbreak == default)
-#endif
-                    {
-#if NET48
-                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    }
-                    // If we have a dual-layer disc
-                    else
-                    {
-#if NET48
-                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    }
-
-#if NET48
-                    info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.Extras!.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
-
-                    break;
-
-                case MediaType.UMD:
-                    // Both single- and dual-layer discs have two "layers" for the ring
-#if NET48
-                    info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-
-                    info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-
-#if NET48
-                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-#else
-                    info.SizeAndChecksums!.CRC32 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-#endif
-                    info.TracksAndWriteOffsets.ClrMameProData = null;
-                    break;
-            }
-
-            // Extract info based specifically on RedumpSystem
-            switch (system)
-            {
-                case RedumpSystem.AcornArchimedes:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UnitedKingdom;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.UnitedKingdom;
-#endif
-                    break;
-
-                case RedumpSystem.AppleMacintosh:
-                case RedumpSystem.EnhancedCD:
-                case RedumpSystem.IBMPCcompatible:
-                case RedumpSystem.PalmOS:
-                case RedumpSystem.PocketPC:
-                case RedumpSystem.RainbowDisc:
-                case RedumpSystem.SonyElectronicBook:
-                    resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    var (protectionString, fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
-
-#if NET48
-                    info.CopyProtection.Protection = protectionString;
-                    info.CopyProtection.FullProtections = fullProtections ?? new Dictionary<string, List<string>>();
-#else
-                    info.CopyProtection!.Protection = protectionString;
-                    info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? new Dictionary<string, List<string>?>();
-#endif
-                    resultProgress?.Report(Result.Success("Copy protection scan complete!"));
-
-                    break;
-
-                case RedumpSystem.AudioCD:
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.SuperAudioCD:
-#if NET48
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
-#else
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
-#endif
-                    break;
-
-                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-                    break;
-
-                case RedumpSystem.BDVideo:
-#if NET48
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
-                    info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
-                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.CommodoreAmigaCD:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.CommodoreAmigaCD32:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Europe;
-#endif
-                    break;
-
-                case RedumpSystem.CommodoreAmigaCDTV:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Europe;
-#endif
-                    break;
-
-                case RedumpSystem.DVDVideo:
-#if NET48
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
-#else
-                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
-#endif
-                    break;
-
-                case RedumpSystem.FujitsuFMTownsseries:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-                    break;
-
-                case RedumpSystem.FujitsuFMTownsMarty:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.IncredibleTechnologiesEagle:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.KonamieAmusement:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.KonamiFireBeat:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.KonamiSystemGV:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.KonamiSystem573:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.KonamiTwinkle:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.MattelHyperScan:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.MicrosoftXboxOne:
-                    if (drive != null)
-                    {
-                        string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
-                        if (drive != null && Directory.Exists(xboxOneMsxcPath))
-                        {
-#if NET48
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
-#else
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-#endif
-                                Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
-                        }
-                    }
-
-                    break;
-
-                case RedumpSystem.MicrosoftXboxSeriesXS:
-                    if (drive != null)
-                    {
-                        string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
-                        if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
-                        {
-#if NET48
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
-#else
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-#endif
-                                Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
-                        }
-                    }
-
-                    break;
-
-                case RedumpSystem.NamcoSegaNintendoTriforce:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.NavisoftNaviken21:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.NECPC88series:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.NECPC98series:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.NECPCFXPCFXGA:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.SegaChihiro:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SegaDreamcast:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SegaNaomi:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SegaNaomi2:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SegaTitanVideo:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SharpX68000:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.SNKNeoGeoCD:
-#if NET48
-                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    break;
-
-                case RedumpSystem.SonyPlayStation:
-                    // Only check the disc if the dumping program couldn't detect
-#if NET48
-                    if (drive != null && info.CopyProtection.AntiModchip == YesNo.NULL)
-#else
-                    if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
-#endif
-                    {
-                        resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
-                        info.CopyProtection.AntiModchip = await GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-                        resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
-                    }
-
-                    // Special case for DIC only
-                    if (parameters?.InternalProgram == InternalProgram.DiscImageCreator)
-                    {
-                        resultProgress?.Report(Result.Success("Checking for LibCrypt status... this might take a while!"));
-                        GetLibCryptDetected(info, combinedBase);
-                        resultProgress?.Report(Result.Success("LibCrypt status checking complete!"));
-                    }
-
-                    break;
-
-                case RedumpSystem.SonyPlayStation2:
-#if NET48
-                    info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
-#else
-                    info.CommonDiscInfo!.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
-#endif
-                    break;
-
-                case RedumpSystem.SonyPlayStation3:
-#if NET48
-                    info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#else
-                    info.Extras!.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-#endif
-                    info.Extras.DiscID = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    break;
-
-                case RedumpSystem.TomyKissSite:
-#if NET48
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-#else
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
-#endif
-                    break;
-
-                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-#if NET48
-                    info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#else
-                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-#endif
-                    break;
-            }
-
-            // Set the category if it's not overriden
-#if NET48
-            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
-#else
-            info.CommonDiscInfo!.Category ??= DiscCategory.Games;
-#endif
-
-            // Comments and contents have odd handling
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
-
-            // Normalize the disc type with all current information
-            NormalizeDiscType(info);
-
-            return info;
-        }
-
-        /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
@@ -767,9 +36,9 @@ namespace MPF.Core
         /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
 #if NET48
-        public static (bool, List<string>) FoundAllFiles(string outputDirectory, string outputFilename, BaseParameters parameters, bool preCheck)
+        internal static (bool, List<string>) FoundAllFiles(string outputDirectory, string outputFilename, BaseParameters parameters, bool preCheck)
 #else
-        public static (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters, bool preCheck)
+        internal static (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters, bool preCheck)
 #endif
         {
             // If there are no parameters set
@@ -791,11 +60,49 @@ namespace MPF.Core
         }
 
         /// <summary>
+        /// Generate the proper datfile from the input Datafile, if possible
+        /// </summary>
+        /// <param name="datafile">.dat file location</param>
+        /// <returns>Relevant pieces of the datfile, null on error</returns>
+#if NET48
+        internal static string GenerateDatfile(Datafile datafile)
+#else
+        internal static string? GenerateDatfile(Datafile? datafile)
+#endif
+        {
+            // If we don't have a valid datafile, we can't do anything
+            if (datafile?.Games == null || datafile.Games.Length == 0)
+                return null;
+
+            var roms = datafile.Games[0].Roms;
+            if (roms == null || roms.Length == 0)
+                return null;
+
+            // Otherwise, reconstruct the hash data with only the required info
+            try
+            {
+                string datString = string.Empty;
+                for (int i = 0; i < roms.Length; i++)
+                {
+                    var rom = roms[i];
+                    datString += $"<rom name=\"{rom.Name}\" size=\"{rom.Size}\" crc=\"{rom.Crc}\" md5=\"{rom.Md5}\" sha1=\"{rom.Sha1}\" />\n";
+                }
+
+                return datString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the existence of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-        private static async Task<bool> GetAntiModchipDetected(Drive drive)
+        internal static async Task<bool> GetAntiModchipDetected(Drive drive)
             => await Protection.GetPlayStationAntiModchipDetected($"{drive.Letter}:\\");
 
         /// <summary>
@@ -806,9 +113,9 @@ namespace MPF.Core
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
 #if NET48
-        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Data.Options options, IProgress<ProtectionProgress> progress = null)
+        internal static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Data.Options options, IProgress<ProtectionProgress> progress = null)
 #else
-        private static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
+        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
 #endif
         {
             if (options.ScanForProtection && drive != null)
@@ -821,15 +128,213 @@ namespace MPF.Core
         }
 
         /// <summary>
+        /// Get Datafile from a standard DAT
+        /// </summary>
+        /// <param name="dat">Path to the DAT file to parse</param>
+        /// <returns>Filled Datafile on success, null on error</returns>
+#if NET48
+        internal static Datafile GetDatafile(string dat)
+#else
+        internal static Datafile? GetDatafile(string? dat)
+#endif
+        {
+            // If there's no path, we can't read the file
+            if (string.IsNullOrWhiteSpace(dat))
+                return null;
+
+            // If the file doesn't exist, we can't read it
+            if (!File.Exists(dat))
+                return null;
+
+            try
+            {
+                // Open and read in the XML file
+                XmlReader xtr = XmlReader.Create(dat, new XmlReaderSettings
+                {
+                    CheckCharacters = false,
+                    DtdProcessing = DtdProcessing.Ignore,
+                    IgnoreComments = true,
+                    IgnoreWhitespace = true,
+                    ValidationFlags = XmlSchemaValidationFlags.None,
+                    ValidationType = ValidationType.None,
+                });
+
+                // If the reader is null for some reason, we can't do anything
+                if (xtr == null)
+                    return null;
+
+                var serializer = new XmlSerializer(typeof(Datafile));
+                return serializer.Deserialize(xtr) as Datafile;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets disc information from a PIC file
+        /// </summary>
+        /// <param name="pic">Path to a PIC.bin file</param>
+        /// <returns>Filled DiscInformation on success, null on error</returns>
+        /// <remarks>This omits the emergency brake information, if it exists</remarks>
+#if NET48
+        internal static DiscInformation GetDiscInformation(string pic)
+#else
+        internal static DiscInformation? GetDiscInformation(string pic)
+#endif
+        {
+            try
+            {
+                return new SabreTools.Serialization.Files.PIC().Deserialize(pic);
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get hashes from an input file path
+        /// </summary>
+        /// <param name="filename">Path to the input file</param>
+        /// <returns>True if hashing was successful, false otherwise</returns>
+#if NET48
+        internal static bool GetFileHashes(string filename, out long size, out string crc32, out string md5, out string sha1)
+#else
+        internal static bool GetFileHashes(string filename, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
+        {
+            // Set all initial values
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            // If the file doesn't exist, we can't do anything
+            if (!File.Exists(filename))
+                return false;
+
+            // Set the file size
+            size = new FileInfo(filename).Length;
+
+            // Open the input file
+            var input = File.OpenRead(filename);
+
+            try
+            {
+                // Get a list of hashers to run over the buffer
+                var hashers = new List<Hasher>
+                {
+                    new Hasher(Hash.CRC32),
+                    new Hasher(Hash.MD5),
+                    new Hasher(Hash.SHA1),
+                    new Hasher(Hash.SHA256),
+                    new Hasher(Hash.SHA384),
+                    new Hasher(Hash.SHA512),
+                };
+
+                // Initialize the hashing helpers
+                var loadBuffer = new ThreadLoadBuffer(input);
+                int buffersize = 3 * 1024 * 1024;
+                byte[] buffer0 = new byte[buffersize];
+                byte[] buffer1 = new byte[buffersize];
+
+                /*
+                Please note that some of the following code is adapted from
+                RomVault. This is a modified version of how RomVault does
+                threaded hashing. As such, some of the terminology and code
+                is the same, though variable names and comments may have
+                been tweaked to better fit this code base.
+                */
+
+                // Pre load the first buffer
+                long refsize = size;
+                int next = refsize > buffersize ? buffersize : (int)refsize;
+                input.Read(buffer0, 0, next);
+                int current = next;
+                refsize -= next;
+                bool bufferSelect = true;
+
+                while (current > 0)
+                {
+                    // Trigger the buffer load on the second buffer
+                    next = refsize > buffersize ? buffersize : (int)refsize;
+                    if (next > 0)
+                        loadBuffer.Trigger(bufferSelect ? buffer1 : buffer0, next);
+
+                    byte[] buffer = bufferSelect ? buffer0 : buffer1;
+
+                    // Run hashes in parallel
+                    Parallel.ForEach(hashers, h => h.Process(buffer, current));
+
+                    // Wait for the load buffer worker, if needed
+                    if (next > 0)
+                        loadBuffer.Wait();
+
+                    // Setup for the next hashing step
+                    current = next;
+                    refsize -= next;
+                    bufferSelect = !bufferSelect;
+                }
+
+                // Finalize all hashing helpers
+                loadBuffer.Finish();
+                Parallel.ForEach(hashers, h => h.Terminate());
+
+                // Get the results
+                crc32 = hashers.First(h => h.HashType == Hash.CRC32).GetHashString();
+                md5 = hashers.First(h => h.HashType == Hash.MD5).GetHashString();
+                sha1 = hashers.First(h => h.HashType == Hash.SHA1).GetHashString();
+                //sha256 = hashers.First(h => h.HashType == Hash.SHA256).GetHashString();
+                //sha384 = hashers.First(h => h.HashType == Hash.SHA384).GetHashString();
+                //sha512 = hashers.First(h => h.HashType == Hash.SHA512).GetHashString();
+
+                // Dispose of the hashers
+                loadBuffer.Dispose();
+                hashers.ForEach(h => h.Dispose());
+
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            finally
+            {
+                input.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Get the last modified date from a file path, if possible
+        /// </summary>
+        /// <param name="filename">Path to the input file</param>
+        /// <returns>Filled DateTime on success, null on failure</returns>
+#if NET48
+        internal static DateTime? GetFileModifiedDate(string filename, bool fallback = false)
+#else
+        internal static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
+#endif
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+                return fallback ? (DateTime?)DateTime.UtcNow : null;
+            else if (!File.Exists(filename))
+                return fallback ? (DateTime?)DateTime.UtcNow : null;
+
+            var fi = new FileInfo(filename);
+            return fi.LastWriteTimeUtc;
+        }
+
+        /// <summary>
         /// Get the full lines from the input file, if possible
         /// </summary>
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
 #if NET48
-        private static string GetFullFile(string filename, bool binary = false)
+        internal static string GetFullFile(string filename, bool binary = false)
 #else
-        private static string? GetFullFile(string filename, bool binary = false)
+        internal static string? GetFullFile(string filename, bool binary = false)
 #endif
         {
             // If the file doesn't exist, we can't get info from it
@@ -849,12 +354,42 @@ namespace MPF.Core
         /// <summary>
         /// Get the split values for ISO-based media
         /// </summary>
+        /// <param name="datafile">Datafile represenging the hash data</param>
+        /// <returns>True if extraction was successful, false otherwise</returns>
+#if NET48
+        internal static bool GetISOHashValues(Datafile datafile, out long size, out string crc32, out string md5, out string sha1)
+#else
+        internal static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
+        {
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            if (datafile?.Games == null || datafile.Games.Length == 0)
+                return false;
+
+            var roms = datafile.Games[0].Roms;
+            if (roms == null || roms.Length == 0)
+                return false;
+
+            var rom = roms[0];
+
+            _ = Int64.TryParse(rom.Size, out size);
+            crc32 = rom.Crc;
+            md5 = rom.Md5;
+            sha1 = rom.Sha1;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get the split values for ISO-based media
+        /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
 #if NET48
-        private static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+        internal static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
 #else
-        private static bool GetISOHashValues(string hashData, out long size, out string? crc32, out string? md5, out string? sha1)
+        internal static bool GetISOHashValues(string hashData, out long size, out string? crc32, out string? md5, out string? sha1)
 #endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
@@ -879,12 +414,72 @@ namespace MPF.Core
         }
 
         /// <summary>
+        /// Get the layerbreak info associated from the disc information
+        /// </summary>
+        /// <param name="di">Disc information containing unformatted data</param>
+        /// <returns>True if layerbreak info was set, false otherwise</returns>
+#if NET48
+        internal static bool GetLayerbreaks(DiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+#else
+        internal static bool GetLayerbreaks(DiscInformation? di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+#endif
+        {
+            // Set the default values
+            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
+
+            // If we don't have valid disc information, we can't do anything
+            if (di?.Units == null || di.Units.Length <= 1)
+                return false;
+
+#if NET48
+            int ReadFromArrayBigEndian(byte[] bytes, int offset)
+#else
+            static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
+#endif
+            {
+                if (bytes == null)
+                    return default;
+
+                var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
+                byte[] rev = span.ToArray();
+                Array.Reverse(rev);
+                return BitConverter.ToInt32(rev, 0);
+            }
+
+            // Layerbreak 1 (2+ layers)
+            if (di.Units.Length >= 2)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[0]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[0]?.Body?.FormatDependentContents, 0x10);
+                layerbreak1 = value - offset + 2;
+            }
+
+            // Layerbreak 2 (3+ layers)
+            if (di.Units.Length >= 3)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[1]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[1]?.Body?.FormatDependentContents, 0x10);
+                layerbreak2 = layerbreak1 + value - offset + 2;
+            }
+
+            // Layerbreak 3 (4 layers)
+            if (di.Units.Length >= 4)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[2]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[2]?.Body?.FormatDependentContents, 0x10);
+                layerbreak3 = layerbreak2 + value - offset + 2;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Get if LibCrypt data is detected in the subchannel file, if possible
         /// </summary>
         /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>Status of the LibCrypt data, if possible</returns>
-        private static void GetLibCryptDetected(SubmissionInfo info, string basePath)
+        internal static void GetLibCryptDetected(SubmissionInfo info, string basePath)
         {
 #if NET48
             if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
@@ -923,6 +518,535 @@ namespace MPF.Core
                 info.CopyProtection.LibCrypt = YesNo.NULL;
                 info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
             }
+        }
+
+        /// <summary>
+        /// Get the PIC identifier from the first disc information unit, if possible
+        /// </summary>
+        /// <param name="di">Disc information containing the data</param>
+        /// <returns>String representing the PIC identifier, null on error</returns>
+#if NET48
+        internal static string GetPICIdentifier(DiscInformation di)
+#else
+        internal static string? GetPICIdentifier(DiscInformation? di)
+#endif
+        {
+            // If we don't have valid disc information, we can't do anything
+            if (di?.Units == null || di.Units.Length <= 1)
+                return null;
+
+            // We assume the identifier is consistent across all units
+            return di.Units[0]?.Body?.DiscTypeIdentifier;
+        }
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <param name="serial">Internal disc serial, if possible</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
+        /// <returns></returns>
+#if NET48
+        internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out Region? region, out string date)
+#else
+        internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
+#endif
+        {
+            serial = null; region = null; date = null;
+
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return false;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return false;
+
+            // Get the two paths that we will need to check
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Try both of the common paths that contain information
+#if NET48
+            string exeName = null;
+#else
+            string? exeName = null;
+#endif
+
+            // Read the CNF file as an INI file
+            var systemCnf = new IniFile(systemCnfPath);
+            string bootValue = string.Empty;
+
+            // PlayStation uses "BOOT" as the key
+            if (systemCnf.ContainsKey("BOOT"))
+                bootValue = systemCnf["BOOT"];
+
+            // PlayStation 2 uses "BOOT2" as the key
+            if (systemCnf.ContainsKey("BOOT2"))
+                bootValue = systemCnf["BOOT2"];
+
+            // If we had any boot value, parse it and get the executable name
+            if (!string.IsNullOrEmpty(bootValue))
+            {
+                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
+                if (match.Groups.Count > 1)
+                {
+                    // EXE name may have a trailing `;` after
+                    // EXE name should always be in all caps
+                    exeName = match.Groups[1].Value
+                        .Split(';')[0]
+                        .ToUpperInvariant();
+
+                    // Serial is most of the EXE name normalized
+                    serial = exeName
+                        .Replace('_', '-')
+                        .Replace(".", string.Empty);
+
+                    // Some games may have the EXE in a subfolder
+                    serial = Path.GetFileName(serial);
+                }
+            }
+
+            // If the SYSTEM.CNF value can't be found, try PSX.EXE
+            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
+                exeName = "PSX.EXE";
+
+            // If neither can be found, we return false
+            if (string.IsNullOrWhiteSpace(exeName))
+                return false;
+
+            // Get the region, if possible
+            region = GetPlayStationRegion(exeName);
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drivePath, exeName);
+            if (!File.Exists(exePath))
+                return false;
+
+            // Fix the Y2K timestamp issue
+            var fi = new FileInfo(exePath);
+            var dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
+            date = dt.ToString("yyyy-MM-dd");
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation2Version(char? driveLetter)
+#else
+        internal static string? GetPlayStation2Version(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // Get the SYSTEM.CNF path to check
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Try to parse the SYSTEM.CNF file
+            var systemCnf = new IniFile(systemCnfPath);
+            if (systemCnf.ContainsKey("VER"))
+                return systemCnf["VER"];
+
+            // If "VER" can't be found, we can't do much
+            return null;
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3Serial(char? driveLetter)
+#else
+        internal static string? GetPlayStation3Serial(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
+            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading PARAM.SFO to find the serial at the end of the file
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x18, SeekOrigin.End);
+                    return new string(br.ReadChars(9));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3Version(char? driveLetter)
+#else
+        internal static string? GetPlayStation3Version(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
+            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading PARAM.SFO to find the version at the end of the file
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation4Serial(char? driveLetter)
+#else
+        internal static string? GetPlayStation4Serial(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.sfo, we don't have a PlayStation 4 disc
+            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading param.sfo to find the serial at the end of the file
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x14, SeekOrigin.End);
+                    return new string(br.ReadChars(9));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation4Version(char? driveLetter)
+#else
+        internal static string? GetPlayStation4Version(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.sfo, we don't have a PlayStation 4 disc
+            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading param.sfo to find the version at the end of the file
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the internal serial from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation5Serial(char? driveLetter)
+#else
+        internal static string? GetPlayStation5Serial(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.json, we don't have a PlayStation 5 disc
+            string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
+            if (!File.Exists(paramJsonPath))
+                return null;
+
+            // Let's try reading param.json to find the serial in the unencrypted JSON
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                {
+                    br.BaseStream.Seek(0x82E, SeekOrigin.Begin);
+                    return new string(br.ReadChars(9));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation5Version(char? driveLetter)
+#else
+        internal static string? GetPlayStation5Version(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.json, we don't have a PlayStation 5 disc
+            string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
+            if (!File.Exists(paramJsonPath))
+                return null;
+
+            // Let's try reading param.json to find the version in the unencrypted JSON
+            try
+            {
+                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                {
+                    br.BaseStream.Seek(0x89E, SeekOrigin.Begin);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Category Extraction
+
+        /// <summary>
+        /// Determine the category based on the UMDImageCreator string
+        /// </summary>
+        /// <param name="region">String representing the category</param>
+        /// <returns>Category, if possible</returns>
+        internal static DiscCategory? GetUMDCategory(string category)
+        {
+#if NET48
+            switch (category)
+            {
+                case "GAME": return DiscCategory.Games;
+                case "VIDEO": return DiscCategory.Video;
+                case "AUDIO": return DiscCategory.Audio;
+                default: return null;
+            }
+#else
+            return category switch
+            {
+                "GAME" => DiscCategory.Games,
+                "VIDEO" => DiscCategory.Video,
+                "AUDIO" => DiscCategory.Audio,
+                _ => null,
+            };
+#endif
+        }
+
+        #endregion
+
+        #region Region Extraction
+
+        /// <summary>
+        /// Determine the region based on the PlayStation serial code
+        /// </summary>
+        /// <param name="serial">PlayStation serial code</param>
+        /// <returns>Region mapped from name, if possible</returns>
+        internal static Region? GetPlayStationRegion(string serial)
+        {
+            // Standardized "S" serials
+            if (serial.StartsWith("S"))
+            {
+                // string publisher = serial[0] + serial[1];
+                // char secondRegion = serial[3];
+                switch (serial[2])
+                {
+                    case 'A': return Region.Asia;
+                    case 'C': return Region.China;
+                    case 'E': return Region.Europe;
+                    case 'K': return Region.SouthKorea;
+                    case 'U': return Region.UnitedStatesOfAmerica;
+                    case 'P':
+                        // Region of S_P_ serials may be Japan, Asia, or SouthKorea
+                        switch (serial[3])
+                        {
+                            case 'S':
+                                // Check first two digits of S_PS serial
+#if NET48
+                                switch (serial.Substring(5, 2))
+                                {
+                                    case "46": return Region.SouthKorea;
+                                    case "51": return Region.Asia;
+                                    case "56": return Region.SouthKorea;
+                                    case "55": return Region.Asia;
+                                    default: return Region.Japan;
+                                }
+#else
+                                return serial.Substring(5, 2) switch
+                                {
+                                    "46" => Region.SouthKorea,
+                                    "51" => Region.Asia,
+                                    "56" => Region.SouthKorea,
+                                    "55" => Region.Asia,
+                                    _ => Region.Japan,
+                                };
+#endif
+                            case 'M':
+                                // Check first three digits of S_PM serial
+#if NET48
+                                switch (serial.Substring(5, 3))
+                                {
+                                    case "645": return Region.SouthKorea;
+                                    case "675": return Region.SouthKorea;
+                                    case "885": return Region.SouthKorea;
+                                    default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
+                                }
+#else
+                                return serial.Substring(5, 3) switch
+                                {
+                                    "645" => Region.SouthKorea,
+                                    "675" => Region.SouthKorea,
+                                    "885" => Region.SouthKorea,
+                                    _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
+                                };
+#endif
+                            default: return Region.Japan;
+                        }
+                }
+            }
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PAPX"))
+                return Region.Japan;
+
+            // Region appears entirely random
+            else if (serial.StartsWith("PABX"))
+                return null;
+
+            // Region appears entirely random
+            else if (serial.StartsWith("PBPX"))
+                return null;
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PCBX"))
+                return Region.Japan;
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PCXC"))
+                return Region.Japan;
+
+            // Single disc known, Japan
+            else if (serial.StartsWith("PDBX"))
+                return Region.Japan;
+
+            // Single disc known, Europe
+            else if (serial.StartsWith("PEBX"))
+                return Region.Europe;
+
+            // Single disc known, USA
+            else if (serial.StartsWith("PUBX"))
+                return Region.UnitedStatesOfAmerica;
+
+            return null;
         }
 
         #endregion
@@ -2203,1040 +2327,6 @@ namespace MPF.Core
 
         #endregion
 
-        #region Web Calls
-
-        /// <summary>
-        /// Create a new SubmissionInfo object from a disc page
-        /// </summary>
-        /// <param name="discData">String containing the HTML disc data</param>
-        /// <returns>Filled SubmissionInfo object on success, null on error</returns>
-        /// <remarks>Not currently working</remarks>
-#if NET48
-        private static SubmissionInfo CreateFromID(string discData)
-#else
-        private static SubmissionInfo? CreateFromID(string discData)
-#endif
-        {
-            var info = new SubmissionInfo()
-            {
-                CommonDiscInfo = new CommonDiscInfoSection(),
-                VersionAndEditions = new VersionAndEditionsSection(),
-            };
-
-            // No disc data means we can't parse it
-            if (string.IsNullOrWhiteSpace(discData))
-                return null;
-
-            try
-            {
-                // Load the current disc page into an XML document
-                var redumpPage = new XmlDocument() { PreserveWhitespace = true };
-                redumpPage.LoadXml(discData);
-
-                // If the current page isn't valid, we can't parse it
-                if (!redumpPage.HasChildNodes)
-                    return null;
-
-                // Get the body node, if possible
-                var bodyNode = redumpPage["html"]?["body"];
-                if (bodyNode == null || !bodyNode.HasChildNodes)
-                    return null;
-
-                // Loop through and get the main node, if possible
-#if NET48
-                XmlNode mainNode = null;
-#else
-                XmlNode? mainNode = null;
-#endif
-                foreach (XmlNode tempNode in bodyNode.ChildNodes)
-                {
-                    // We only care about div elements
-                    if (!string.Equals(tempNode.Name, "div", StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    // We only care if it has attributes
-                    if (tempNode.Attributes == null)
-                        continue;
-
-                    // The main node has a class of "main"
-                    if (string.Equals(tempNode.Attributes["class"]?.Value, "main", StringComparison.OrdinalIgnoreCase))
-                    {
-                        mainNode = tempNode;
-                        break;
-                    }
-                }
-
-                // If the main node is invalid, we can't do anything
-                if (mainNode == null || !mainNode.HasChildNodes)
-                    return null;
-
-                // Try to find elements as we're going
-                foreach (XmlNode childNode in mainNode.ChildNodes)
-                {
-                    // The title is the only thing in h1 tags
-                    if (string.Equals(childNode.Name, "h1", StringComparison.OrdinalIgnoreCase))
-                        info.CommonDiscInfo.Title = childNode.InnerText;
-
-                    // Most things are div elements but can be hard to parse out
-                    else if (!string.Equals(childNode.Name, "div", StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    // Only 2 of the internal divs have classes attached and one is not used here
-                    if (childNode.Attributes != null && string.Equals(childNode.Attributes["class"]?.Value, "game",
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        // If we don't have children nodes, skip this one over
-                        if (!childNode.HasChildNodes)
-                            continue;
-
-                        // The game node contains multiple other elements
-                        foreach (XmlNode gameNode in childNode.ChildNodes)
-                        {
-                            // Table elements contain multiple other parts of information
-                            if (string.Equals(gameNode.Name, "table", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // All tables have some attribute we can use
-                                if (gameNode.Attributes == null)
-                                    continue;
-
-                                // The gameinfo node contains most of the major information
-                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gameinfo",
-                                        StringComparison.OrdinalIgnoreCase))
-                                {
-                                    // If we don't have children nodes, skip this one over
-                                    if (!gameNode.HasChildNodes)
-                                        continue;
-
-                                    // Loop through each of the rows
-                                    foreach (XmlNode gameInfoNode in gameNode.ChildNodes)
-                                    {
-                                        // If we run into anything not a row, ignore it
-                                        if (!string.Equals(gameInfoNode.Name, "tr", StringComparison.OrdinalIgnoreCase))
-                                            continue;
-
-                                        // If we don't have the required nodes, ignore it
-                                        if (gameInfoNode["th"] == null || gameInfoNode["td"] == null)
-                                            continue;
-
-                                        var gameInfoNodeHeader = gameInfoNode["th"];
-                                        var gameInfoNodeData = gameInfoNode["td"];
-
-                                        if (gameInfoNodeHeader == null || gameInfoNodeData == null)
-                                        {
-                                            // No-op for invalid data
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "System", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            info.CommonDiscInfo.System = Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText ?? string.Empty);
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Media", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            info.CommonDiscInfo.Media = Extensions.ToDiscType(gameInfoNodeData.InnerText);
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Category", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            info.CommonDiscInfo.Category = Extensions.ToDiscCategory(gameInfoNodeData.InnerText);
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Region", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            // TODO: COMPLETE
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Languages", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            // TODO: COMPLETE
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Edition", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            info.VersionAndEditions.OtherEditions = gameInfoNodeData.InnerText;
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Added", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            if (DateTime.TryParse(gameInfoNodeData.InnerText, out DateTime added))
-                                                info.Added = added;
-                                        }
-                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Last modified", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            if (DateTime.TryParse(gameInfoNodeData.InnerText, out DateTime lastModified))
-                                                info.LastModified = lastModified;
-                                        }
-                                    }
-                                }
-
-                                // The gamecomments node contains way more than it implies
-                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gamecomments", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    // TODO: COMPLETE
-                                }
-
-                                // TODO: COMPLETE
-                            }
-
-                            // The only other supported elements are divs
-                            else if (!string.Equals(gameNode.Name, "div", StringComparison.OrdinalIgnoreCase))
-                            {
-                                continue;
-                            }
-
-                            // Check the div for dumper info
-                            // TODO: COMPLETE
-                        }
-                    }
-
-                    // Figure out what the div contains, if possible
-                    // TODO: COMPLETE
-                }
-            }
-            catch
-            {
-                return null;
-            }
-
-            return info;
-        }
-
-        /// <summary>
-        /// Fill out an existing SubmissionInfo object based on a disc page
-        /// </summary>
-        /// <param name="wc">RedumpWebClient for making the connection</param>
-        /// <param name="info">Existing SubmissionInfo object to fill</param>
-        /// <param name="id">Redump disc ID to retrieve</param>
-        /// <param name="includeAllData">True to include all pullable information, false to do bare minimum</param>
-#if NET48
-        private static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id, bool includeAllData)
-        {
-            string discData = wc.DownloadSingleSiteID(id);
-            if (string.IsNullOrEmpty(discData))
-                return false;
-#else
-        private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
-        {
-            // Ensure that required sections exist
-            info = EnsureAllSections(info);
-
-            var discData = await wc.DownloadSingleSiteID(id);
-            if (string.IsNullOrEmpty(discData))
-                return false;
-#endif
-
-            // Title, Disc Number/Letter, Disc Title
-            var match = Constants.TitleRegex.Match(discData);
-            if (match.Success)
-            {
-                string title = WebUtility.HtmlDecode(match.Groups[1].Value);
-
-                // If we have parenthesis, title is everything before the first one
-                int firstParenLocation = title.IndexOf(" (");
-                if (firstParenLocation >= 0)
-                {
-#if NET48
-                    info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
-#else
-                    info.CommonDiscInfo!.Title = title[..firstParenLocation];
-#endif
-                    var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
-                    foreach (Match subMatch in subMatches.Cast<Match>())
-                    {
-                        var subMatchValue = subMatch.Groups[1].Value;
-
-                        // Disc number or letter
-                        if (subMatchValue.StartsWith("Disc"))
-                            info.CommonDiscInfo.DiscNumberLetter = subMatchValue.Remove(0, "Disc ".Length);
-
-                        // Issue number
-                        else if (subMatchValue.All(c => char.IsNumber(c)))
-                            info.CommonDiscInfo.Title += $" ({subMatchValue})";
-
-                        // Disc title
-                        else
-                            info.CommonDiscInfo.DiscTitle = subMatchValue;
-                    }
-                }
-                // Otherwise, leave the title as-is
-                else
-                {
-#if NET48
-                    info.CommonDiscInfo.Title = title;
-#else
-                    info.CommonDiscInfo!.Title = title;
-#endif
-                }
-            }
-
-            // Foreign Title
-            match = Constants.ForeignTitleRegex.Match(discData);
-            if (match.Success)
-#if NET48
-                info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
-#else
-                info.CommonDiscInfo!.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
-#endif
-            else
-#if NET48
-                info.CommonDiscInfo.ForeignTitleNonLatin = null;
-#else
-                info.CommonDiscInfo!.ForeignTitleNonLatin = null;
-#endif
-
-            // Category
-            match = Constants.CategoryRegex.Match(discData);
-            if (match.Success)
-                info.CommonDiscInfo.Category = Extensions.ToDiscCategory(match.Groups[1].Value);
-            else
-                info.CommonDiscInfo.Category = DiscCategory.Games;
-
-            // Region
-            if (info.CommonDiscInfo.Region == null)
-            {
-                match = Constants.RegionRegex.Match(discData);
-                if (match.Success)
-                    info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
-            }
-
-            // Languages
-            var matches = Constants.LanguagesRegex.Matches(discData);
-            if (matches.Count > 0)
-            {
-                var tempLanguages = new List<Language?>();
-                foreach (Match submatch in matches.Cast<Match>())
-                {
-                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
-                }
-
-                info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
-            }
-
-            // Serial
-            if (includeAllData)
-            {
-                // TODO: Re-enable if there's a way of verifying against a disc
-                //match = Constants.SerialRegex.Match(discData);
-                //if (match.Success)
-                //    info.CommonDiscInfo.Serial = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
-            }
-
-            // Error count
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
-            {
-                match = Constants.ErrorCountRegex.Match(discData);
-                if (match.Success)
-                    info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
-            }
-
-            // Version
-#if NET48
-            if (info.VersionAndEditions.Version == null)
-#else
-            if (info.VersionAndEditions!.Version == null)
-#endif
-            {
-                match = Constants.VersionRegex.Match(discData);
-                if (match.Success)
-                    info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
-            }
-
-            // Dumpers
-            matches = Constants.DumpersRegex.Matches(discData);
-            if (matches.Count > 0)
-            {
-                // Start with any currently listed dumpers
-                var tempDumpers = new List<string>();
-#if NET48
-                if (info.DumpersAndStatus.Dumpers != null && info.DumpersAndStatus.Dumpers.Length > 0)
-#else
-                if (info.DumpersAndStatus!.Dumpers != null && info.DumpersAndStatus.Dumpers.Length > 0)
-#endif
-                {
-                    foreach (string dumper in info.DumpersAndStatus.Dumpers)
-                        tempDumpers.Add(dumper);
-                }
-
-                foreach (Match submatch in matches.Cast<Match>())
-                {
-                    tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
-                }
-
-                info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
-            }
-
-            // TODO: Unify handling of fields that can include site codes (Comments/Contents)
-
-            // Comments
-            if (includeAllData)
-            {
-                match = Constants.CommentsRegex.Match(discData);
-                if (match.Success)
-                {
-                    // Process the old comments block
-                    string oldComments = info.CommonDiscInfo.Comments
-                        + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
-                        + WebUtility.HtmlDecode(match.Groups[1].Value)
-                            .Replace("\r\n", "\n")
-                            .Replace("<br />\n", "\n")
-                            .Replace("<br />", string.Empty)
-                            .Replace("</div>", string.Empty)
-                            .Replace("[+]", string.Empty)
-                            .ReplaceHtmlWithSiteCodes();
-                    oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty);
-
-                    // Create state variables
-                    bool addToLast = false;
-                    SiteCode? lastSiteCode = null;
-                    string newComments = string.Empty;
-
-                    // Process the comments block line-by-line
-                    string[] commentsSeparated = oldComments.Split('\n');
-                    for (int i = 0; i < commentsSeparated.Length; i++)
-                    {
-                        string commentLine = commentsSeparated[i].Trim();
-
-                        // If we have an empty line, we want to treat this as intentional
-                        if (string.IsNullOrWhiteSpace(commentLine))
-                        {
-                            addToLast = false;
-                            lastSiteCode = null;
-                            newComments += $"{commentLine}\n";
-                            continue;
-                        }
-
-                        // Otherwise, we need to find what tag is in use
-                        bool foundTag = false;
-                        foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
-                        {
-                            // If we have a null site code, just skip
-                            if (siteCode == null)
-                                continue;
-
-                            // If the line doesn't contain this tag, just skip
-                            var shortName = siteCode.ShortName();
-                            if (shortName == null || !commentLine.Contains(shortName))
-                                continue;
-
-                            // Mark as having found a tag
-                            foundTag = true;
-
-                            // Cache the current site code
-                            lastSiteCode = siteCode;
-
-                            // A subset of tags can be multiline
-                            addToLast = IsMultiLine(siteCode);
-
-                            // Skip certain site codes because of data issues
-                            switch (siteCode)
-                            {
-                                // Multiple
-                                case SiteCode.InternalSerialName:
-                                case SiteCode.Multisession:
-                                case SiteCode.VolumeLabel:
-                                    continue;
-
-                                // Audio CD
-                                case SiteCode.RingNonZeroDataStart:
-                                case SiteCode.UniversalHash:
-                                    continue;
-
-                                // Microsoft Xbox and Xbox 360
-                                case SiteCode.DMIHash:
-                                case SiteCode.PFIHash:
-                                case SiteCode.SSHash:
-                                case SiteCode.SSVersion:
-                                case SiteCode.XMID:
-                                case SiteCode.XeMID:
-                                    continue;
-
-                                // Microsoft Xbox One and Series X/S
-                                case SiteCode.Filename:
-                                    continue;
-
-                                // Nintendo Gamecube
-                                case SiteCode.InternalName:
-                                    continue;
-                            }
-
-                            // If we don't already have this site code, add it to the dictionary
-#if NET48
-                            if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
-#else
-                            if (!info.CommonDiscInfo.CommentsSpecialFields!.ContainsKey(siteCode.Value))
-#endif
-                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(shortName, string.Empty).Trim()}";
-
-                            // Otherwise, append the value to the existing key
-                            else
-                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(shortName, string.Empty).Trim()}";
-
-                            break;
-                        }
-
-                        // If we didn't find a known tag, just add the line, just in case
-                        if (!foundTag)
-                        {
-                            if (addToLast && lastSiteCode != null)
-                            {
-#if NET48
-                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value]))
-#else
-                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields![lastSiteCode.Value]))
-#endif
-                                    info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += "\n";
-
-                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += commentLine;
-                            }
-                            else
-                            {
-                                newComments += $"{commentLine}\n";
-                            }
-                        }
-                    }
-
-                    // Set the new comments field
-                    info.CommonDiscInfo.Comments = newComments;
-                }
-            }
-
-            // Contents
-            if (includeAllData)
-            {
-                match = Constants.ContentsRegex.Match(discData);
-                if (match.Success)
-                {
-                    // Process the old contents block
-                    string oldContents = info.CommonDiscInfo.Contents
-                        + (string.IsNullOrEmpty(info.CommonDiscInfo.Contents) ? string.Empty : "\n")
-                        + WebUtility.HtmlDecode(match.Groups[1].Value)
-                            .Replace("\r\n", "\n")
-                            .Replace("<br />\n", "\n")
-                            .Replace("<br />", string.Empty)
-                            .Replace("</div>", string.Empty)
-                            .Replace("[+]", string.Empty)
-                            .ReplaceHtmlWithSiteCodes();
-                    oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
-
-                    // Create state variables
-                    bool addToLast = false;
-                    SiteCode? lastSiteCode = null;
-                    string newContents = string.Empty;
-
-                    // Process the contents block line-by-line
-                    string[] contentsSeparated = oldContents.Split('\n');
-                    for (int i = 0; i < contentsSeparated.Length; i++)
-                    {
-                        string contentLine = contentsSeparated[i].Trim();
-
-                        // If we have an empty line, we want to treat this as intentional
-                        if (string.IsNullOrWhiteSpace(contentLine))
-                        {
-                            addToLast = false;
-                            lastSiteCode = null;
-                            newContents += $"{contentLine}\n";
-                            continue;
-                        }
-
-                        // Otherwise, we need to find what tag is in use
-                        bool foundTag = false;
-                        foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
-                        {
-                            // If we have a null site code, just skip
-                            if (siteCode == null)
-                                continue;
-
-                            // If the line doesn't contain this tag, just skip
-                            var shortName = siteCode.ShortName();
-                            if (shortName == null || !contentLine.Contains(shortName))
-                                continue;
-
-                            // Cache the current site code
-                            lastSiteCode = siteCode;
-
-                            // If we don't already have this site code, add it to the dictionary
-#if NET48
-                            if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
-#else
-                            if (!info.CommonDiscInfo.ContentsSpecialFields!.ContainsKey(siteCode.Value))
-#endif
-                                info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(shortName, string.Empty).Trim()}";
-
-                            // A subset of tags can be multiline
-                            addToLast = IsMultiLine(siteCode);
-
-                            // Mark as having found a tag
-                            foundTag = true;
-                            break;
-                        }
-
-                        // If we didn't find a known tag, just add the line, just in case
-                        if (!foundTag)
-                        {
-                            if (addToLast && lastSiteCode != null)
-                            {
-#if NET48
-                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value]))
-#else
-                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields![lastSiteCode.Value]))
-#endif
-                                    info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += "\n";
-
-                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += contentLine;
-                            }
-                            else
-                            {
-                                newContents += $"{contentLine}\n";
-                            }
-                        }
-                    }
-
-                    // Set the new contents field
-                    info.CommonDiscInfo.Contents = newContents;
-                }
-            }
-
-            // Added
-            match = Constants.AddedRegex.Match(discData);
-            if (match.Success)
-            {
-                if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
-                    info.Added = added;
-                else
-                    info.Added = null;
-            }
-
-            // Last Modified
-            match = Constants.LastModifiedRegex.Match(discData);
-            if (match.Success)
-            {
-                if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
-                    info.LastModified = lastModified;
-                else
-                    info.LastModified = null;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Fill in a SubmissionInfo object from Redump, if possible
-        /// </summary>
-        /// <param name="options">Options object representing user-defined options</param>
-        /// <param name="info">Existing SubmissionInfo object to fill</param>
-        /// <param name="resultProgress">Optional result progress callback</param>
-#if NET48
-        private static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
-#else
-        private async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#endif
-        {
-            // If no username is provided
-            if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
-                return false;
-
-            // Set the current dumper based on username
-#if NET48
-            if (info.DumpersAndStatus == null) info.DumpersAndStatus = new DumpersAndStatusSection();
-#else
-            info.DumpersAndStatus ??= new DumpersAndStatusSection();
-#endif
-            info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
-            info.PartiallyMatchedIDs = new List<int>();
-
-#if NET48
-            using (var wc = new RedumpWebClient())
-#else
-            using (var wc = new RedumpHttpClient())
-#endif
-            {
-                // Login to Redump
-#if NET48
-                bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
-#else
-                bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
-#endif
-                if (loggedIn == null)
-                {
-                    resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
-                    return false;
-                }
-                else if (loggedIn == false)
-                {
-                    // Don't log the as a failure or error
-                    return false;
-                }
-
-                // Setup the full-track checks
-                bool allFound = true;
-#if NET48
-                List<int> fullyMatchedIDs = null;
-#else
-                List<int>? fullyMatchedIDs = null;
-#endif
-
-                // Loop through all of the hashdata to find matching IDs
-                resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-                var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
-                int trackCount = splitData?.Length ?? 0;
-                foreach (string hashData in splitData ?? Array.Empty<string>())
-                {
-                    // Catch any errant blank lines
-                    if (string.IsNullOrWhiteSpace(hashData))
-                    {
-                        trackCount--;
-                        resultProgress?.Report(Result.Success("Blank line found, skipping!"));
-                        continue;
-                    }
-
-                    // If the line ends in a known extra track names, skip them for checking
-                    if (hashData.Contains("(Track 0).bin")
-                        || hashData.Contains("(Track 0.2).bin")
-                        || hashData.Contains("(Track 00).bin")
-                        || hashData.Contains("(Track 00.2).bin")
-                        || hashData.Contains("(Track A).bin")
-                        || hashData.Contains("(Track AA).bin"))
-                    {
-                        trackCount--;
-                        resultProgress?.Report(Result.Success("Extra track found, skipping!"));
-                        continue;
-                    }
-
-#if NET48
-                    (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
-#else
-                    (bool singleFound, var foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
-#endif
-
-                    // Ensure that all tracks are found
-                    allFound &= singleFound;
-
-                    // If we found a track, only keep track of distinct found tracks
-                    if (singleFound && foundIds != null)
-                    {
-                        if (fullyMatchedIDs == null)
-                            fullyMatchedIDs = foundIds;
-                        else
-                            fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
-                    }
-                    // If no tracks were found, remove all fully matched IDs found so far
-                    else
-                    {
-                        fullyMatchedIDs = new List<int>();
-                    }
-                }
-
-                // If we don't have any matches but we have a universal hash
-                if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
-                {
-#if NET48
-                    (bool singleFound, List<int> foundIds) = ValidateUniversalHash(wc, info, resultProgress);
-#else
-                    (bool singleFound, var foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
-#endif
-
-                    // Ensure that the hash is found
-                    allFound = singleFound;
-
-                    // If we found a track, only keep track of distinct found tracks
-                    if (singleFound && foundIds != null)
-                    {
-                        fullyMatchedIDs = foundIds;
-                    }
-                    // If no tracks were found, remove all fully matched IDs found so far
-                    else
-                    {
-                        fullyMatchedIDs = new List<int>();
-                    }
-                }
-
-                // Make sure we only have unique IDs
-                info.PartiallyMatchedIDs = info.PartiallyMatchedIDs
-                    .Distinct()
-                    .OrderBy(id => id)
-                    .ToList();
-
-                resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
-                    ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
-                    : "No matches found")));
-
-                // Exit early if one failed or there are no matched IDs
-                if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
-                    return false;
-
-                // Find the first matched ID where the track count matches, we can grab a bunch of info from it
-                int totalMatchedIDsCount = fullyMatchedIDs.Count;
-                for (int i = 0; i < totalMatchedIDsCount; i++)
-                {
-                    // Skip if the track count doesn't match
-#if NET48
-                    if (!ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
-                        continue;
-#else
-                    if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
-                        continue;
-#endif
-
-                    // Fill in the fields from the existing ID
-                    resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET48
-                    FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
-#else
-                    _ = await FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
-#endif
-                    resultProgress?.Report(Result.Success("Information filling complete!"));
-
-                    // Set the fully matched ID to the current
-                    info.FullyMatchedID = fullyMatchedIDs[i];
-                    break;
-                }
-
-                // Clear out fully matched IDs from the partial list
-                if (info.FullyMatchedID.HasValue)
-                {
-                    if (info.PartiallyMatchedIDs.Count == 1)
-                        info.PartiallyMatchedIDs = null;
-                    else
-                        info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Process a text block and replace with internal identifiers
-        /// </summary>
-        /// <param name="text">Text block to process</param>
-        /// <returns>Processed text block, if possible</returns>
-        private static string ReplaceHtmlWithSiteCodes(this string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return text;
-
-            foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
-            {
-                var longname = siteCode.LongName();
-                if (!string.IsNullOrEmpty(longname))
-                    text = text.Replace(longname, siteCode.ShortName());
-            }
-
-            // For some outdated tags, we need to use alternate names
-            text = text.Replace("<b>Demos</b>:", ((SiteCode?)SiteCode.PlayableDemos).ShortName());
-            text = text.Replace("DMI:", ((SiteCode?)SiteCode.DMIHash).ShortName());
-            text = text.Replace("<b>LucasArts ID</b>:", ((SiteCode?)SiteCode.LucasArtsID).ShortName());
-            text = text.Replace("PFI:", ((SiteCode?)SiteCode.PFIHash).ShortName());
-            text = text.Replace("SS:", ((SiteCode?)SiteCode.SSHash).ShortName());
-            text = text.Replace("SSv1:", ((SiteCode?)SiteCode.SSHash).ShortName());
-            text = text.Replace("<b>SSv1</b>:", ((SiteCode?)SiteCode.SSHash).ShortName());
-            text = text.Replace("SSv2:", ((SiteCode?)SiteCode.SSHash).ShortName());
-            text = text.Replace("<b>SSv2</b>:", ((SiteCode?)SiteCode.SSHash).ShortName());
-            text = text.Replace("SS version:", ((SiteCode?)SiteCode.SSVersion).ShortName());
-            text = text.Replace("Universal Hash (SHA-1):", ((SiteCode?)SiteCode.UniversalHash).ShortName());
-            text = text.Replace("XeMID:", ((SiteCode?)SiteCode.XeMID).ShortName());
-            text = text.Replace("XMID:", ((SiteCode?)SiteCode.XMID).ShortName());
-
-            return text;
-        }
-
-        /// <summary>
-        /// List the disc IDs associated with a given quicksearch query
-        /// </summary>
-        /// <param name="wc">RedumpWebClient for making the connection</param>
-        /// <param name="query">Query string to attempt to search for</param>
-        /// <param name="filterForwardSlashes">True to filter forward slashes, false otherwise</param>
-        /// <returns>All disc IDs for the given query, null on error</returns>
-#if NET48
-        private static List<int> ListSearchResults(RedumpWebClient wc, string query, bool filterForwardSlashes = true)
-#else
-        private async static Task<List<int>?> ListSearchResults(RedumpHttpClient wc, string? query, bool filterForwardSlashes = true)
-#endif
-        {
-            // If there is an invalid query
-            if (string.IsNullOrWhiteSpace(query))
-                return null;
-
-            var ids = new List<int>();
-
-            // Strip quotes
-            query = query.Trim('"', '\'');
-
-            // Special characters become dashes
-            query = query.Replace(' ', '-');
-            if (filterForwardSlashes)
-                query = query.Replace('/', '-');
-            query = query.Replace('\\', '/');
-
-            // Lowercase is defined per language
-            query = query.ToLowerInvariant();
-
-            // Keep getting quicksearch pages until there are none left
-            try
-            {
-                int pageNumber = 1;
-                while (true)
-                {
-#if NET48
-                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
-#else
-                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
-#endif
-                    ids.AddRange(pageIds);
-                    if (pageIds.Count <= 1)
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
-                return null;
-            }
-
-            return ids;
-        }
-
-        /// <summary>
-        /// Validate a single track against Redump, if possible
-        /// </summary>
-        /// <param name="wc">RedumpWebClient for making the connection</param>
-        /// <param name="info">Existing SubmissionInfo object to fill</param>
-        /// <param name="hashData">DAT-formatted hash data to parse out</param>
-        /// <param name="resultProgress">Optional result progress callback</param>
-        /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NET48
-        private static (bool, List<int>) ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
-#else
-        private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
-#endif
-        {
-            // If the line isn't parseable, we can't validate
-            if (!GetISOHashValues(hashData, out long _, out var _, out var _, out var sha1))
-            {
-                resultProgress?.Report(Result.Failure("Line could not be parsed for hash data"));
-                return (false, null);
-            }
-
-            // Get all matching IDs for the track
-#if NET48
-            List<int> newIds = ListSearchResults(wc, sha1);
-#else
-            var newIds = await ListSearchResults(wc, sha1);
-#endif
-
-            // If we got null back, there was an error
-            if (newIds == null)
-            {
-                resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
-                return (false, null);
-            }
-
-            // If no IDs match any track, just return
-            if (!newIds.Any())
-                return (false, null);
-
-            // Join the list of found IDs to the existing list, if possible
-            if (info.PartiallyMatchedIDs != null && info.PartiallyMatchedIDs.Any())
-                info.PartiallyMatchedIDs.AddRange(newIds);
-            else
-                info.PartiallyMatchedIDs = newIds;
-
-            return (true, newIds);
-        }
-
-        /// <summary>
-        /// Validate a universal hash against Redump, if possible
-        /// </summary>
-        /// <param name="wc">RedumpWebClient for making the connection</param>
-        /// <param name="info">Existing SubmissionInfo object to fill</param>
-        /// <param name="resultProgress">Optional result progress callback</param>
-        /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NET48
-        private static (bool, List<int>) ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
-#else
-        private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#endif
-        {
-            // If we don't have special fields
-            if (info.CommonDiscInfo?.CommentsSpecialFields == null)
-            {
-                resultProgress?.Report(Result.Failure("Universal hash was missing"));
-                return (false, null);
-            }
-
-            // If we don't have a universal hash
-            var universalHash = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
-            if (string.IsNullOrEmpty(universalHash))
-            {
-                resultProgress?.Report(Result.Failure("Universal hash was missing"));
-                return (false, null);
-            }
-
-            // Format the universal hash for finding within the comments
-#if NET48
-            universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
-#else
-            universalHash = $"{universalHash[..^1]}/comments/only";
-#endif
-
-            // Get all matching IDs for the hash
-#if NET48
-            List<int> newIds = ListSearchResults(wc, universalHash, filterForwardSlashes: false);
-#else
-            var newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
-#endif
-
-            // If we got null back, there was an error
-            if (newIds == null)
-            {
-                resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
-                return (false, null);
-            }
-
-            // If no IDs match any track, just return
-            if (!newIds.Any())
-                return (false, null);
-
-            // Join the list of found IDs to the existing list, if possible
-            if (info.PartiallyMatchedIDs != null && info.PartiallyMatchedIDs.Any())
-                info.PartiallyMatchedIDs.AddRange(newIds);
-            else
-                info.PartiallyMatchedIDs = newIds;
-
-            return (true, newIds);
-        }
-
-        /// <summary>
-        /// Validate that the current track count and remote track count match
-        /// </summary>
-        /// <param name="wc">RedumpWebClient for making the connection</param>
-        /// <param name="id">Redump disc ID to retrieve</param>
-        /// <param name="localCount">Local count of tracks for the current disc</param>
-        /// <returns>True if the track count matches, false otherwise</returns>
-#if NET48
-        private static bool ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
-#else
-        private async static Task<bool> ValidateTrackCount(RedumpHttpClient wc, int id, int localCount)
-#endif
-        {
-            // If we can't pull the remote data, we can't match
-#if NET48
-            string discData = wc.DownloadSingleSiteID(id);
-#else
-            string? discData = await wc.DownloadSingleSiteID(id);
-#endif
-            if (string.IsNullOrEmpty(discData))
-                return false;
-
-            // Discs with only 1 track don't have a track count listed
-            var match = Constants.TrackCountRegex.Match(discData);
-            if (!match.Success && localCount == 1)
-                return true;
-            else if (!match.Success)
-                return false;
-
-            // If the count isn't parseable, we're not taking chances
-            if (!Int32.TryParse(match.Groups[1].Value, out int remoteCount))
-                return false;
-
-            // Finally check to see if the counts match
-            return localCount == remoteCount;
-        }
-
-        #endregion
-
         #region Helpers
 
         /// <summary>
@@ -3246,7 +2336,7 @@ namespace MPF.Core
         /// <returns>String-formatted tag and value</returns>
         private static string FormatSiteTag(KeyValuePair<SiteCode?, string> kvp)
         {
-            bool isMultiLine = IsMultiLine(kvp.Key);
+            bool isMultiLine = SubmissionInfoTool.IsMultiLine(kvp.Key);
             string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
 
             // Special case for boolean fields
@@ -3283,53 +2373,6 @@ namespace MPF.Core
             {
                 SiteCode.PostgapType => true,
                 SiteCode.VCD => true,
-                _ => false,
-            };
-#endif
-        }
-
-        /// <summary>
-        /// Check if a site code is multi-line or not
-        /// </summary>
-        /// <param name="siteCode">SiteCode to check</param>
-        /// <returns>True if the code field is multiline by default, false otherwise</returns>
-        /// <remarks>TODO: This should move to Extensions at some point</remarks>
-        private static bool IsMultiLine(SiteCode? siteCode)
-        {
-#if NET48
-            switch (siteCode)
-            {
-                case SiteCode.Extras:
-                case SiteCode.Filename:
-                case SiteCode.Games:
-                case SiteCode.GameFootage:
-                case SiteCode.Multisession:
-                case SiteCode.NetYarozeGames:
-                case SiteCode.Patches:
-                case SiteCode.PlayableDemos:
-                case SiteCode.RollingDemos:
-                case SiteCode.Savegames:
-                case SiteCode.TechDemos:
-                case SiteCode.Videos:
-                    return true;
-                default:
-                    return false;
-            }
-#else
-            return siteCode switch
-            {
-                SiteCode.Extras => true,
-                SiteCode.Filename => true,
-                SiteCode.Games => true,
-                SiteCode.GameFootage => true,
-                SiteCode.Multisession => true,
-                SiteCode.NetYarozeGames => true,
-                SiteCode.Patches => true,
-                SiteCode.PlayableDemos => true,
-                SiteCode.RollingDemos => true,
-                SiteCode.Savegames => true,
-                SiteCode.TechDemos => true,
-                SiteCode.Videos => true,
                 _ => false,
             };
 #endif

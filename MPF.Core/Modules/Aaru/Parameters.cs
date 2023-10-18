@@ -334,7 +334,7 @@ namespace MPF.Core.Modules.Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
 
             // Ensure that required sections exist
-            info = InfoTool.EnsureAllSections(info);
+            info = SubmissionInfoTool.EnsureAllSections(info);
 
             // TODO: Determine if there's an Aaru version anywhere
 #if NET48
@@ -342,7 +342,7 @@ namespace MPF.Core.Modules.Aaru
 #else
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 #endif
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar(basePath + ".cicm.xml");
@@ -374,9 +374,9 @@ namespace MPF.Core.Modules.Aaru
 
             // Fill in the hash data
 #if NET48
-            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 #else
-            info.TracksAndWriteOffsets!.ClrMameProData = GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 #endif
 
             switch (this.Type)
@@ -409,7 +409,7 @@ namespace MPF.Core.Modules.Aaru
                 case MediaType.BluRay:
 
                     // Get the individual hash data, as per internal
-                    if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+                    if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
 #if NET48
                         info.SizeAndChecksums.Size = size;
@@ -480,7 +480,7 @@ namespace MPF.Core.Modules.Aaru
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -493,9 +493,9 @@ namespace MPF.Core.Modules.Aaru
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
@@ -563,7 +563,7 @@ namespace MPF.Core.Modules.Aaru
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -578,7 +578,7 @@ namespace MPF.Core.Modules.Aaru
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -591,39 +591,39 @@ namespace MPF.Core.Modules.Aaru
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
             }

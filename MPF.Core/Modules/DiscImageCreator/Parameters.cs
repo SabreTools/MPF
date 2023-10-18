@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Modules.DiscImageCreator
@@ -417,7 +416,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             var outputDirectory = Path.GetDirectoryName(basePath);
 
             // Ensure that required sections exist
-            info = InfoTool.EnsureAllSections(info);
+            info = SubmissionInfoTool.EnsureAllSections(info);
 
             // Get the dumping program and version
             var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);
@@ -426,7 +425,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 #else
             info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
 #endif
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
             if (GetHardwareInfo($"{basePath}_drive.txt", out var manufacturer, out var model, out var firmware))
@@ -441,13 +440,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
             // Get the Datafile information
-            var datafile = GetDatafile($"{basePath}.dat");
+            var datafile = InfoTool.GetDatafile($"{basePath}.dat");
 
             // Fill in the hash data
 #if NET48
-            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 #else
-            info.TracksAndWriteOffsets!.ClrMameProData = GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 #endif
 
             // Extract info based generically on MediaType
@@ -509,7 +508,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case MediaType.BluRay:
 
                     // Get the individual hash data, as per internal
-                    if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+                    if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
 #if NET48
                         info.SizeAndChecksums.Size = size;
@@ -533,13 +532,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
-                        var di = GetDiscInformation($"{basePath}_PIC.bin");
+                        var di = InfoTool.GetDiscInformation($"{basePath}_PIC.bin");
 #if NET48
-                        info.SizeAndChecksums.PICIdentifier = GetPICIdentifier(di);
+                        info.SizeAndChecksums.PICIdentifier = InfoTool.GetPICIdentifier(di);
 #else
-                        info.SizeAndChecksums!.PICIdentifier = GetPICIdentifier(di);
+                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
 #endif
-                        if (GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        if (InfoTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
@@ -614,7 +613,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -627,9 +626,9 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
@@ -663,7 +662,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     // If we have the new, external DAT
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        var suppl = GetDatafile($"{basePath}_suppl.dat");
+                        var suppl = InfoTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash))
                         {
 #if NET48
@@ -737,7 +736,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     // If we have the new, external DAT
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        var suppl = GetDatafile($"{basePath}_suppl.dat");
+                        var suppl = InfoTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash))
                         {
 #if NET48
@@ -978,7 +977,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -1006,7 +1005,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
+                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
 #if NET48
@@ -1019,39 +1018,39 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
 #if NET48
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
 #else
-                    info.VersionAndEditions!.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
+                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
 #endif
                     break;
             }
@@ -4169,7 +4168,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         // Special File Hashes
                         else if (line.StartsWith("<rom"))
                         {
-                            if (GetISOHashValues(line, out long _, out var crc32, out _, out _))
+                            if (InfoTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
                             {
                                 if (line.Contains("SS.bin"))
                                     sshash = crc32?.ToUpperInvariant();

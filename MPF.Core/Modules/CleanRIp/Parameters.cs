@@ -72,7 +72,7 @@ namespace MPF.Core.Modules.CleanRip
 #endif
         {
             // Ensure that required sections exist
-            info = InfoTool.EnsureAllSections(info);
+            info = SubmissionInfoTool.EnsureAllSections(info);
 
             // TODO: Determine if there's a CleanRip version anywhere
 #if NET48
@@ -80,12 +80,12 @@ namespace MPF.Core.Modules.CleanRip
 #else
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 #endif
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
 
             // Get the individual hash data, as per internal
-            if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+            if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
 #if NET48
                 info.SizeAndChecksums.Size = size;
