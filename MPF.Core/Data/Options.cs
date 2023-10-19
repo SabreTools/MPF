@@ -476,6 +476,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Add the dump filename as a suffix to the auto-generated files
+        /// </summary>
+        public bool AddFilenameSuffix
+        {
+            get { return GetBooleanSetting(Settings, "AddFilenameSuffix", false); }
+            set { Settings["AddFilenameSuffix"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Output the compressed JSON version of the submission info
         /// </summary>
         public bool OutputSubmissionJSON

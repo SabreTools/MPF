@@ -16,6 +16,7 @@
 - Add optional file deletion
 - Rearrange OptionsWindow to be easier to navigate
 - Fix up DumpEnvironment a bit
+- Add filename suffix setting (nw)
 
 ### 2.7.2 (2023-10-17)
 
