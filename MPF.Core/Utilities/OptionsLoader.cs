@@ -101,6 +101,7 @@ namespace MPF.Core.Utilities
                 RedumpUsername = null,
                 RedumpPassword = null,
                 InternalProgram = InternalProgram.NONE,
+                AddFilenameSuffix = false,
                 OutputSubmissionJSON = false,
                 CompressLogFiles = false,
                 DeleteUnnecessaryFiles = false,
@@ -198,6 +199,12 @@ namespace MPF.Core.Utilities
                     startIndex++;
                 }
 
+                // Add filename suffix
+                else if (args[startIndex].Equals("-x") || args[startIndex].Equals("--suffix"))
+                {
+                    options.AddFilenameSuffix = true;
+                }
+
                 // Output submission JSON
                 else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
                 {
@@ -244,6 +251,7 @@ namespace MPF.Core.Utilities
                 "-s, --scan                     Enable copy protection scan (requires --path)",
                 "-f, --protect-file             Output protection to separate file (requires --scan)",
                 "-l, --load-seed <path>         Load a seed submission JSON for user information",
+                "-x, --suffix                   Enable adding filename suffix",
                 "-j, --json                     Enable submission JSON output",
                 "-z, --zip                      Enable log file compression",
                 "-d, --delete                   Enable unnecessary file deletion",

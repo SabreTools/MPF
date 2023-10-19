@@ -18,6 +18,7 @@
 - Fix up DumpEnvironment a bit
 - Add filename suffix setting (nw)
 - Wire through filename suffix
+- Expose suffix setting
 
 ### 2.7.2 (2023-10-17)
 

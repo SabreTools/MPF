@@ -241,6 +241,11 @@
                                      ToolTip="Enable adding placeholder text in the output for required and optional fields" Margin="0,4"
                                      />
 
+                                <CheckBox VerticalAlignment="Center" Content="Add Filename Suffix"
+                                     IsChecked="{Binding Options.AddFilenameSuffix}"
+                                     ToolTip="Enable appending the output filename to the generated files" Margin="0,4"
+                                     />
+
                                 <CheckBox VerticalAlignment="Center" Content="Output Submission JSON"
                                      IsChecked="{Binding Options.OutputSubmissionJSON}"
                                      ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
