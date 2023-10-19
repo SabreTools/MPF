@@ -148,53 +148,6 @@ namespace MPF.Core
         #region Public Functionality
 
         /// <summary>
-        /// Adjust output paths if we're using DiscImageCreator
-        /// </summary>
-        public void AdjustPathsForDiscImageCreator()
-        {
-            // Only DiscImageCreator has issues with paths
-            if (Parameters?.InternalProgram != InternalProgram.DiscImageCreator)
-                return;
-
-            try
-            {
-                // Normalize the output path
-                string outputPath = InfoTool.NormalizeOutputPaths(OutputPath, true);
-
-                // Replace all instances in the output directory
-                var outputDirectory = Path.GetDirectoryName(outputPath);
-                outputDirectory = outputDirectory?.Replace(".", "_");
-
-                // Replace all instances in the output filename
-                string outputFilename = Path.GetFileNameWithoutExtension(outputPath);
-                outputFilename = outputFilename.Replace(".", "_");
-
-                // Get the extension for recreating the path
-                string outputExtension = Path.GetExtension(outputPath).TrimStart('.');
-
-                // Rebuild the output path
-                if (string.IsNullOrWhiteSpace(outputDirectory))
-                {
-                    if (string.IsNullOrWhiteSpace(outputExtension))
-                        OutputPath = outputFilename;
-                    else
-                        OutputPath = $"{outputFilename}.{outputExtension}";
-                }
-                else
-                {
-                    if (string.IsNullOrWhiteSpace(outputExtension))
-                        OutputPath = Path.Combine(outputDirectory, outputFilename);
-                    else
-                        OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
-                }
-
-                // Assign the path to the filename as well for dumping
-                ((Modules.DiscImageCreator.Parameters)Parameters).Filename = OutputPath;
-            }
-            catch { }
-        }
-
-        /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
@@ -322,7 +275,7 @@ namespace MPF.Core
             return null;
         }
 
-#endregion
+        #endregion
 
         #region Dumping
 
@@ -339,7 +292,7 @@ namespace MPF.Core
 #else
         public async Task<string?> EjectDisc() =>
 #endif
-        await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
+            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
@@ -450,7 +403,7 @@ namespace MPF.Core
             if (seedInfo != null)
             {
                 resultProgress?.Report(Result.Success("Injecting user-supplied information..."));
-                InjectSubmissionInformation(submissionInfo, seedInfo);
+                SubmissionInfoTool.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress?.Report(Result.Success("Information injection complete!"));
             }
 
@@ -606,79 +559,6 @@ namespace MPF.Core
             });
 
             return output;
-        }
-
-        /// <summary>
-        /// Inject information from a seed SubmissionInfo into the existing one
-        /// </summary>
-        /// <param name="info">Existing submission information</param>
-        /// <param name="seed">User-supplied submission information</param>
-#if NET48
-        private static void InjectSubmissionInformation(SubmissionInfo info, SubmissionInfo seed)
-#else
-        private static void InjectSubmissionInformation(SubmissionInfo? info, SubmissionInfo? seed)
-#endif
-        {
-            // If we have any invalid info
-            if (seed == null)
-                return;
-
-            // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
-
-            // Otherwise, inject information as necessary
-            if (info.CommonDiscInfo != null && seed.CommonDiscInfo != null)
-            {
-                // Info that only overwrites if supplied
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Title)) info.CommonDiscInfo.Title = seed.CommonDiscInfo.Title;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.ForeignTitleNonLatin)) info.CommonDiscInfo.ForeignTitleNonLatin = seed.CommonDiscInfo.ForeignTitleNonLatin;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.DiscNumberLetter)) info.CommonDiscInfo.DiscNumberLetter = seed.CommonDiscInfo.DiscNumberLetter;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.DiscTitle)) info.CommonDiscInfo.DiscTitle = seed.CommonDiscInfo.DiscTitle;
-                if (seed.CommonDiscInfo.Category != null) info.CommonDiscInfo.Category = seed.CommonDiscInfo.Category;
-                if (seed.CommonDiscInfo.Region != null) info.CommonDiscInfo.Region = seed.CommonDiscInfo.Region;
-                if (seed.CommonDiscInfo.Languages != null) info.CommonDiscInfo.Languages = seed.CommonDiscInfo.Languages;
-                if (seed.CommonDiscInfo.LanguageSelection != null) info.CommonDiscInfo.LanguageSelection = seed.CommonDiscInfo.LanguageSelection;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Serial)) info.CommonDiscInfo.Serial = seed.CommonDiscInfo.Serial;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Barcode)) info.CommonDiscInfo.Barcode = seed.CommonDiscInfo.Barcode;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Comments)) info.CommonDiscInfo.Comments = seed.CommonDiscInfo.Comments;
-                if (seed.CommonDiscInfo.CommentsSpecialFields != null) info.CommonDiscInfo.CommentsSpecialFields = seed.CommonDiscInfo.CommentsSpecialFields;
-                if (!string.IsNullOrWhiteSpace(seed.CommonDiscInfo.Contents)) info.CommonDiscInfo.Contents = seed.CommonDiscInfo.Contents;
-                if (seed.CommonDiscInfo.ContentsSpecialFields != null) info.CommonDiscInfo.ContentsSpecialFields = seed.CommonDiscInfo.ContentsSpecialFields;
-
-                // Info that always overwrites
-                info.CommonDiscInfo.Layer0MasteringRing = seed.CommonDiscInfo.Layer0MasteringRing;
-                info.CommonDiscInfo.Layer0MasteringSID = seed.CommonDiscInfo.Layer0MasteringSID;
-                info.CommonDiscInfo.Layer0ToolstampMasteringCode = seed.CommonDiscInfo.Layer0ToolstampMasteringCode;
-                info.CommonDiscInfo.Layer0MouldSID = seed.CommonDiscInfo.Layer0MouldSID;
-                info.CommonDiscInfo.Layer0AdditionalMould = seed.CommonDiscInfo.Layer0AdditionalMould;
-
-                info.CommonDiscInfo.Layer1MasteringRing = seed.CommonDiscInfo.Layer1MasteringRing;
-                info.CommonDiscInfo.Layer1MasteringSID = seed.CommonDiscInfo.Layer1MasteringSID;
-                info.CommonDiscInfo.Layer1ToolstampMasteringCode = seed.CommonDiscInfo.Layer1ToolstampMasteringCode;
-                info.CommonDiscInfo.Layer1MouldSID = seed.CommonDiscInfo.Layer1MouldSID;
-                info.CommonDiscInfo.Layer1AdditionalMould = seed.CommonDiscInfo.Layer1AdditionalMould;
-
-                info.CommonDiscInfo.Layer2MasteringRing = seed.CommonDiscInfo.Layer2MasteringRing;
-                info.CommonDiscInfo.Layer2MasteringSID = seed.CommonDiscInfo.Layer2MasteringSID;
-                info.CommonDiscInfo.Layer2ToolstampMasteringCode = seed.CommonDiscInfo.Layer2ToolstampMasteringCode;
-
-                info.CommonDiscInfo.Layer3MasteringRing = seed.CommonDiscInfo.Layer3MasteringRing;
-                info.CommonDiscInfo.Layer3MasteringSID = seed.CommonDiscInfo.Layer3MasteringSID;
-                info.CommonDiscInfo.Layer3ToolstampMasteringCode = seed.CommonDiscInfo.Layer3ToolstampMasteringCode;
-            }
-
-            if (info.VersionAndEditions != null && seed.VersionAndEditions != null)
-            {
-                // Info that only overwrites if supplied
-                if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.Version)) info.VersionAndEditions.Version = seed.VersionAndEditions.Version;
-                if (!string.IsNullOrWhiteSpace(seed.VersionAndEditions.OtherEditions)) info.VersionAndEditions.OtherEditions = seed.VersionAndEditions.OtherEditions;
-            }
-
-            if (info.CopyProtection != null && seed.CopyProtection != null)
-            {
-                // Info that only overwrites if supplied
-                if (!string.IsNullOrWhiteSpace(seed.CopyProtection.Protection)) info.CopyProtection.Protection = seed.CopyProtection.Protection;
-            }
         }
 
         /// <summary>

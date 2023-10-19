@@ -15,6 +15,7 @@
 - Add deleteable file lists for Redumper and DIC
 - Add optional file deletion
 - Rearrange OptionsWindow to be easier to navigate
+- Fix up DumpEnvironment a bit
 
 ### 2.7.2 (2023-10-17)
 
