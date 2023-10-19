@@ -1224,13 +1224,14 @@ namespace MPF.Core
         /// Compress log files to save space
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Output filename to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="parameters">Parameters object to use to derive log file paths</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
 #if NET48
-        public static (bool, string) CompressLogFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
+        public static (bool, string) CompressLogFiles(string outputDirectory, string filenameSuffix, string outputFilename, BaseParameters parameters)
 #else
-        public static (bool, string) CompressLogFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters)
+        public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseParameters? parameters)
 #endif
         {
             // If there are no parameters
@@ -1251,7 +1252,7 @@ namespace MPF.Core
             var files = parameters.GetLogFilePaths(combinedBase);
 
             // Add on generated log files if they exist
-            var mpfFiles = GetGeneratedFilePaths(outputDirectory);
+            var mpfFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
             files.AddRange(mpfFiles);
 
             if (!files.Any())
@@ -1750,12 +1751,13 @@ namespace MPF.Core
         /// Write the data to the output folder
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="lines">Preformatted list of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
 #if NET48
-        public static (bool, string) WriteOutputData(string outputDirectory, List<string> lines)
+        public static (bool, string) WriteOutputData(string outputDirectory, string filenameSuffix, List<string> lines)
 #else
-        public static (bool, string) WriteOutputData(string? outputDirectory, List<string>? lines)
+        public static (bool, string) WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines)
 #endif
         {
             // Check to see if the inputs are valid
@@ -1766,11 +1768,15 @@ namespace MPF.Core
             try
             {
                 // Get the file path
-                string path;
-                if (string.IsNullOrWhiteSpace(outputDirectory))
+                var path = string.Empty;
+                if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
                     path = "!submissionInfo.txt";
-                else
+                else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = $"!submissionInfo_{filenameSuffix}.txt";
+                else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
                     path = Path.Combine(outputDirectory, "!submissionInfo.txt");
+                else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
                 using (var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write)))
                 {
@@ -1792,13 +1798,14 @@ namespace MPF.Core
         /// Write the data to the output folder
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
         /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
         /// <returns>True on success, false on error</returns>
 #if NET48
-        public static bool WriteOutputData(string outputDirectory, SubmissionInfo info, bool includedArtifacts)
+        public static bool WriteOutputData(string outputDirectory, string filenameSuffix, SubmissionInfo info, bool includedArtifacts)
 #else
-        public static bool WriteOutputData(string? outputDirectory, SubmissionInfo? info, bool includedArtifacts)
+        public static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool includedArtifacts)
 #endif
         {
             // Check to see if the input is valid
@@ -1814,13 +1821,17 @@ namespace MPF.Core
                 // If we included artifacts, write to a GZip-compressed file
                 if (includedArtifacts)
                 {
-                    string file;
-                    if (string.IsNullOrWhiteSpace(outputDirectory))
-                        file = "!submissionInfo.json.gz";
-                    else
-                        file = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
+                    var path = string.Empty;
+                    if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = "!submissionInfo.json.gz";
+                    else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = $"!submissionInfo_{filenameSuffix}.json.gz";
+                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
+                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz");
 
-                    using (var fs = File.Create(file))
+                    using (var fs = File.Create(path))
                     using (var gs = new GZipStream(fs, CompressionMode.Compress))
                     {
                         gs.Write(jsonBytes, 0, jsonBytes.Length);
@@ -1830,13 +1841,17 @@ namespace MPF.Core
                 // Otherwise, write out to a normal JSON
                 else
                 {
-                    string file;
-                    if (string.IsNullOrWhiteSpace(outputDirectory))
-                        file = "!submissionInfo.json";
-                    else
-                        file = Path.Combine(outputDirectory, "!submissionInfo.json");
+                    var path = string.Empty;
+                    if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = "!submissionInfo.json";
+                    else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = $"!submissionInfo_{filenameSuffix}.json";
+                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = Path.Combine(outputDirectory, "!submissionInfo.json");
+                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
 
-                    using (var fs = File.Create(file))
+                    using (var fs = File.Create(path))
                     {
                         fs.Write(jsonBytes, 0, jsonBytes.Length);
                     }
@@ -1855,12 +1870,13 @@ namespace MPF.Core
         /// Write the protection data to the output folder
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
         /// <returns>True on success, false on error</returns>
 #if NET48
-        public static bool WriteProtectionData(string outputDirectory, SubmissionInfo info)
+        public static bool WriteProtectionData(string outputDirectory, string filenameSuffix, SubmissionInfo info)
 #else
-        public static bool WriteProtectionData(string? outputDirectory, SubmissionInfo? info)
+        public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
 #endif
         {
             // Check to see if the inputs are valid
@@ -1870,13 +1886,17 @@ namespace MPF.Core
             // Now write out to a generic file
             try
             {
-                string file;
-                if (string.IsNullOrWhiteSpace(outputDirectory))
-                    file = "!protectionInfo.txt";
-                else
-                    file = Path.Combine(outputDirectory, "!protectionInfo.txt");
+                var path = string.Empty;
+                if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = "!protectionInfo.txt";
+                else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = $"!protectionInfo{filenameSuffix}.txt";
+                else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = Path.Combine(outputDirectory, "!protectionInfo.txt");
+                else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
-                using (var sw = new StreamWriter(File.Open(file, FileMode.Create, FileAccess.Write)))
+                using (var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write)))
                 {
                     foreach (var kvp in info.CopyProtection.FullProtections)
                     {
@@ -1998,16 +2018,17 @@ namespace MPF.Core
         /// Generate a list of all MPF-specific log files generated
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
 #if NET48
-        private static List<string> GetGeneratedFilePaths(string outputDirectory)
+        private static List<string> GetGeneratedFilePaths(string outputDirectory, string filenameSuffix)
 #else
-        private static List<string> GetGeneratedFilePaths(string? outputDirectory)
+        private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
 #endif
         {
             var files = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
             {
                 if (File.Exists("!submissionInfo.txt"))
                     files.Add("!submissionInfo.txt");
@@ -2018,7 +2039,18 @@ namespace MPF.Core
                 if (File.Exists("!protectionInfo.txt"))
                     files.Add("!protectionInfo.txt");
             }
-            else
+            else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+            {
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.txt"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.txt");
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.json"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.json");
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.json.gz"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.json.gz");
+                if (File.Exists($"!protectionInfo_{filenameSuffix}.txt"))
+                    files.Add($"!protectionInfo_{filenameSuffix}.txt");
+            }
+            else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
             {
                 if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
                     files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
@@ -2028,6 +2060,17 @@ namespace MPF.Core
                     files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
                 if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
                     files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+            }
+            else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+            {
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt")))
+                    files.Add(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt"));
             }
 
             return files;

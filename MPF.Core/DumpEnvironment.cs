@@ -448,9 +448,12 @@ namespace MPF.Core
             else
                 resultProgress?.Report(Result.Failure(formatResult));
 
+            // Get the filename suffix for auto-generated files
+            var filenameSuffix = Options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
+
             // Write the text output
             resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
-            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(outputDirectory, formattedValues);
+            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
             if (txtSuccess)
                 resultProgress?.Report(Result.Success(txtResult));
             else
@@ -460,7 +463,7 @@ namespace MPF.Core
             if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
             {
                 resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, submissionInfo);
+                bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo);
                 if (scanSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
@@ -471,7 +474,7 @@ namespace MPF.Core
             if (Options.OutputSubmissionJSON)
             {
                 resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(Options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
-                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, submissionInfo, Options.IncludeArtifacts);
+                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, Options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
@@ -482,7 +485,7 @@ namespace MPF.Core
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, outputFilename, Parameters);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Parameters);
                 if (compressSuccess)
                     resultProgress?.Report(Result.Success(compressResult));
                 else

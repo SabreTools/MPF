@@ -17,6 +17,7 @@
 - Rearrange OptionsWindow to be easier to navigate
 - Fix up DumpEnvironment a bit
 - Add filename suffix setting (nw)
+- Wire through filename suffix
 
 ### 2.7.2 (2023-10-17)
 
