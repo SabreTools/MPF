@@ -19,6 +19,7 @@
 - Add filename suffix setting (nw)
 - Wire through filename suffix
 - Expose suffix setting
+- Set UDF CD threshold at 800MB (Deterous)
 
 ### 2.7.2 (2023-10-17)
 
