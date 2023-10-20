@@ -265,13 +265,9 @@ namespace MPF.Core.Data
             }
 
             // Handle optical media by size and filesystem
-            if (this.TotalSize >= 0 && this.TotalSize <= 800_000_000 && this.DriveFormat == "CDFS")
+            if (this.TotalSize >= 0 && this.TotalSize <= 800_000_000 && (this.DriveFormat == "CDFS" || this.DriveFormat == "UDF"))
                 return (MediaType.CDROM, null);
-            else if (this.TotalSize >= 0 && this.TotalSize <= 800_000_000 && this.DriveFormat == "UDF")
-                return (MediaType.CDROM, null);
-            else if (this.TotalSize > 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "CDFS")
-                return (MediaType.DVD, null);
-            else if (this.TotalSize > 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
+            else if (this.TotalSize > 800_000_000 && this.TotalSize <= 8_540_000_000 && (this.DriveFormat == "CDFS" || this.DriveFormat == "UDF"))
                 return (MediaType.DVD, null);
             else if (this.TotalSize > 8_540_000_000)
                 return (MediaType.BluRay, null);
