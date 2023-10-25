@@ -1216,6 +1216,26 @@ namespace MPF.Core
             return null;
         }
 
+        /// <summary>
+        /// Determine the region based on the XGD serial character
+        /// </summary>
+        /// <param name="region">Character denoting the region</param>
+        /// <returns>Region, if possible</returns>
+        internal static Region? GetXGDRegion(char? region)
+        {
+            switch (region)
+            {
+                case 'W': return Region.World;
+                case 'A': return Region.UnitedStatesOfAmerica;
+                case 'J': return Region.JapanAsia;
+                case 'E': return Region.Europe;
+                case 'K': return Region.USAJapan;
+                case 'L': return Region.USAEurope;
+                case 'H': return Region.JapanEurope;
+                default: return null;
+            }
+        }
+
         #endregion
 
         #region Information Output

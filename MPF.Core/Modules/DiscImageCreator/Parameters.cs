@@ -638,29 +638,29 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                 case RedumpSystem.MicrosoftXbox:
 
-                    string xgd1XMID;
+                    string xmidString;
                     if (string.IsNullOrWhiteSpace(outputDirectory))
-                        xgd1XMID = GetXGD1XMID($"{basePath}_DMI.bin");
+                        xmidString = GetXGD1XMID($"{basePath}_DMI.bin");
                     else
-                        xgd1XMID = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
+                        xmidString = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
-                    var xgd1Info = new XgdInfo(xgd1XMID);
-                    if (xgd1Info?.Initialized == true)
+                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                    if (xmid != null)
                     {
 #if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.RawXMID ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
 #else
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xgd1Info.RawXMID ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
 #endif
-                        info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
 #if NET48
-                            info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? string.Empty;
+                            info.VersionAndEditions.Version = xmid.Version ?? string.Empty;
 #else
-                            info.VersionAndEditions!.Version = xgd1Info.GetVersion() ?? string.Empty;
+                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 #endif
 
-                        info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd1Info.XMID?.RegionIdentifier);
+                        info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT
@@ -712,29 +712,29 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    string xgd23XeMID;
+                    string xemidString;
                     if (string.IsNullOrWhiteSpace(outputDirectory))
-                        xgd23XeMID = GetXGD23XeMID($"{basePath}_DMI.bin");
+                        xemidString = GetXGD23XeMID($"{basePath}_DMI.bin");
                     else
-                        xgd23XeMID = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
+                        xemidString = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
-                    var xgd23Info = new XgdInfo(xgd23XeMID);
-                    if (xgd23Info?.Initialized == true)
+                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                    if (xemid != null)
                     {
 #if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.RawXMID ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
 #else
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xgd23Info.RawXMID ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
 #endif
-                        info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
 #if NET48
-                            info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? string.Empty;
+                            info.VersionAndEditions.Version = xemid.Version ?? string.Empty;
 #else
-                            info.VersionAndEditions!.Version = xgd23Info.GetVersion() ?? string.Empty;
+                            info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 #endif
 
-                        info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd23Info.XeMID?.RegionIdentifier);
+                        info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT
