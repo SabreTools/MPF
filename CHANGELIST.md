@@ -21,6 +21,7 @@
 - Expose suffix setting
 - Set UDF CD threshold at 800MB (Deterous)
 - Update package versions
+- Attempt to parse out PS5 params.json
 
 ### 2.7.2 (2023-10-17)
 

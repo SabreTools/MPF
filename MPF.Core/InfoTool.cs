@@ -15,6 +15,7 @@ using MPF.Core.Hashing;
 using MPF.Core.Modules;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -978,27 +979,14 @@ namespace MPF.Core
         internal static string? GetPlayStation5Serial(string? drivePath)
 #endif
         {
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            // Attempt to get the param.json file
+            var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
+            if (json == null)
                 return null;
 
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drivePath))
-                return null;
-
-            // If we can't find param.json, we don't have a PlayStation 5 disc
-            string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
-            if (!File.Exists(paramJsonPath))
-                return null;
-
-            // Let's try reading param.json to find the serial in the unencrypted JSON
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
-                {
-                    br.BaseStream.Seek(0x82E, SeekOrigin.Begin);
-                    return new string(br.ReadChars(9));
-                }
+                return json["disc"][0]["masterDataId"]?.Value<string>();
             }
             catch
             {
@@ -1038,6 +1026,33 @@ namespace MPF.Core
         internal static string? GetPlayStation5Version(string? drivePath)
 #endif
         {
+            // Attempt to get the param.json file
+            var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
+            if (json == null)
+                return null;
+
+            try
+            {
+                return json["masterVersion"]?.Value<string>();
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the params.json file from a drive path, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>JObject representing the JSON on success, null on error</returns>
+#if NET48
+        private static JObject GetPlayStation5ParamsJsonFromDrive(string drivePath)
+#else
+        private static JObject? GetPlayStation5ParamsJsonFromDrive(string? drivePath)
+#endif
+        {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
                 return null;
@@ -1048,16 +1063,32 @@ namespace MPF.Core
 
             // If we can't find param.json, we don't have a PlayStation 5 disc
             string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
-            if (!File.Exists(paramJsonPath))
+            return GetPlayStation5ParamsJsonFromFile(paramJsonPath);
+        }
+
+        /// <summary>
+        /// Get the params.json file from a filename, if possible
+        /// </summary>
+        /// <param name="filename">Filename to check</param>
+        /// <returns>JObject representing the JSON on success, null on error</returns>
+#if NET48
+        private static JObject GetPlayStation5ParamsJsonFromFile(string filename)
+#else
+        private static JObject? GetPlayStation5ParamsJsonFromFile(string? filename)
+#endif
+        {
+            // If the file doesn't exist
+            if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
                 return null;
 
             // Let's try reading param.json to find the version in the unencrypted JSON
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                using (var br = new BinaryReader(File.OpenRead(filename)))
                 {
-                    br.BaseStream.Seek(0x89E, SeekOrigin.Begin);
-                    return new string(br.ReadChars(5));
+                    br.BaseStream.Seek(0x800, SeekOrigin.Begin);
+                    byte[] jsonBytes = br.ReadBytes((int)(br.BaseStream.Length - 0x800));
+                    return JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonBytes)) as JObject;
                 }
             }
             catch
