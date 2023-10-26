@@ -27,6 +27,8 @@
 - Update to BurnOutSharp 2.9.0
 - Update to MMI 3.0.0-preview.4
 - Fix two small nullability issues
+- Use Array.Empty in hasher
+- Always use relative path internally (Deterous)
 
 ### 2.7.2 (2023-10-17)
 
