@@ -5,6 +5,7 @@
 - Avoid unncessary allocation in hashing
 - Make Hasher more consistent
 - Move all hashing to Hasher
+- Separate out static hashing
 
 ### 2.7.3 (2023-10-26)
 

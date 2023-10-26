@@ -140,7 +140,7 @@ namespace MPF.Core.Hashing
 
         #endregion
 
-        #region Hashing
+        #region Static Hashing
 
         /// <summary>
         /// Get hashes from an input file path
@@ -154,29 +154,87 @@ namespace MPF.Core.Hashing
 #endif
         {
             // Set all initial values
-            size = -1; crc32 = null; md5 = null; sha1 = null;
+            crc32 = null; md5 = null; sha1 = null;
 
+            // Get all file hashes
+            var fileHashes = GetFileHashes(filename, out size);
+            if (fileHashes == null)
+                return false;
+
+            // Assign the file hashes and return
+            crc32 = fileHashes[Hash.CRC32];
+            md5 = fileHashes[Hash.MD5];
+            sha1 = fileHashes[Hash.SHA1];
+            return true;
+        }
+
+        /// <summary>
+        /// Get hashes from an input file path
+        /// </summary>
+        /// <param name="filename">Path to the input file</param>
+        /// <returns>Dictionary containing hashes on success, null on error</returns>
+#if NET48
+        public static Dictionary<Hash, string> GetFileHashes(string filename, out long size)
+#else
+        public static Dictionary<Hash, string?>? GetFileHashes(string filename, out long size)
+#endif
+        {
             // If the file doesn't exist, we can't do anything
             if (!File.Exists(filename))
-                return false;
+            {
+                size = -1;
+                return null;
+            }
 
             // Set the file size
             size = new FileInfo(filename).Length;
 
+            // Create the output dictionary
+#if NET48
+            var hashDict = new Dictionary<Hash, string>();
+#else
+            var hashDict = new Dictionary<Hash, string?>();
+#endif
+
             // Open the input file
             var input = File.OpenRead(filename);
+
+            // Return the hashes from the stream
+            return GetStreamHashes(input);
+        }
+
+        /// <summary>
+        /// Get hashes from an input Stream
+        /// </summary>
+        /// <param name="input">Stream to hash</param>
+        /// <returns>Dictionary containing hashes on success, null on error</returns>
+#if NET48
+        public static Dictionary<Hash, string> GetStreamHashes(Stream input)
+#else
+        public static Dictionary<Hash, string?>? GetStreamHashes(Stream input)
+#endif
+        {
+            // Create the output dictionary
+#if NET48
+            var hashDict = new Dictionary<Hash, string>();
+#else
+            var hashDict = new Dictionary<Hash, string?>();
+#endif
 
             try
             {
                 // Get a list of hashers to run over the buffer
-                var hashers = new List<Hasher>
+                var hashers = new Dictionary<Hash, Hasher>
                 {
-                    new Hasher(Hash.CRC32),
-                    new Hasher(Hash.MD5),
-                    new Hasher(Hash.SHA1),
-                    new Hasher(Hash.SHA256),
-                    new Hasher(Hash.SHA384),
-                    new Hasher(Hash.SHA512),
+                    { Hash.CRC32, new Hasher(Hash.CRC32) },
+                    { Hash.CRC64, new Hasher(Hash.CRC64) },
+                    { Hash.MD5, new Hasher(Hash.MD5) },
+                    { Hash.SHA1, new Hasher(Hash.SHA1) },
+                    { Hash.SHA256, new Hasher(Hash.SHA256) },
+                    { Hash.SHA384, new Hasher(Hash.SHA384) },
+                    { Hash.SHA512, new Hasher(Hash.SHA512) },
+                    { Hash.XxHash32, new Hasher(Hash.XxHash32) },
+                    { Hash.XxHash64, new Hasher(Hash.XxHash64) },
                 };
 
                 // Initialize the hashing helpers
@@ -194,7 +252,7 @@ namespace MPF.Core.Hashing
                 */
 
                 // Pre load the first buffer
-                long refsize = size;
+                long refsize = input.Length;
                 int next = refsize > buffersize ? buffersize : (int)refsize;
                 input.Read(buffer0, 0, next);
                 int current = next;
@@ -211,7 +269,7 @@ namespace MPF.Core.Hashing
                     byte[] buffer = bufferSelect ? buffer0 : buffer1;
 
                     // Run hashes in parallel
-                    Parallel.ForEach(hashers, h => h.Process(buffer, current));
+                    Parallel.ForEach(hashers, h => h.Value.Process(buffer, current));
 
                     // Wait for the load buffer worker, if needed
                     if (next > 0)
@@ -225,34 +283,42 @@ namespace MPF.Core.Hashing
 
                 // Finalize all hashing helpers
                 loadBuffer.Finish();
-                Parallel.ForEach(hashers, h => h.Terminate());
+                Parallel.ForEach(hashers, h => h.Value.Terminate());
 
                 // Get the results
-                crc32 = hashers.First(h => h.HashType == Hash.CRC32).CurrentHashString;
-                //crc64 = hashers.First(h => h.HashType == Hash.CRC64).CurrentHashString;
-                md5 = hashers.First(h => h.HashType == Hash.MD5).CurrentHashString;
-                sha1 = hashers.First(h => h.HashType == Hash.SHA1).CurrentHashString;
-                //sha256 = hashers.First(h => h.HashType == Hash.SHA256).CurrentHashString;
-                //sha384 = hashers.First(h => h.HashType == Hash.SHA384).CurrentHashString;
-                //sha512 = hashers.First(h => h.HashType == Hash.SHA512).CurrentHashString;
-                //xxHash32 = hashers.First(h => h.HashType == Hash.XxHash32).CurrentHashString;
-                //xxHash64 = hashers.First(h => h.HashType == Hash.XxHash64).CurrentHashString;
+                hashDict[Hash.CRC32] = hashers[Hash.CRC32].CurrentHashString;
+                hashDict[Hash.CRC64] = hashers[Hash.CRC64].CurrentHashString;
+                hashDict[Hash.MD5] = hashers[Hash.MD5].CurrentHashString;
+                hashDict[Hash.SHA1] = hashers[Hash.SHA1].CurrentHashString;
+                hashDict[Hash.SHA256] = hashers[Hash.SHA256].CurrentHashString;
+                hashDict[Hash.SHA384] = hashers[Hash.SHA384].CurrentHashString;
+                hashDict[Hash.SHA512] = hashers[Hash.SHA512].CurrentHashString;
+                hashDict[Hash.XxHash32] = hashers[Hash.XxHash32].CurrentHashString;
+                hashDict[Hash.XxHash64] = hashers[Hash.XxHash64].CurrentHashString;
+                hashDict[Hash.CRC64] = hashers[Hash.CRC64].CurrentHashString;
 
                 // Dispose of the hashers
                 loadBuffer.Dispose();
-                hashers.ForEach(h => h.Dispose());
+                foreach (var hasher in hashers.Values)
+                {
+                    hasher.Dispose();
+                }
 
-                return true;
+                return hashDict;
             }
             catch (IOException)
             {
-                return false;
+                return null;
             }
             finally
             {
                 input.Dispose();
             }
         }
+
+        #endregion
+
+        #region Hashing
 
         /// <summary>
         /// Process a buffer of some length with the internal hash algorithm
