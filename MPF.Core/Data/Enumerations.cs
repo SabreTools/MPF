@@ -6,11 +6,14 @@
     public enum Hash
     {
         CRC32,
+        CRC64,
         MD5,
         SHA1,
         SHA256,
         SHA384,
         SHA512,
+        XxHash32,
+        XxHash64,
     }
 
     /// <summary>

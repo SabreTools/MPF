@@ -11,7 +11,14 @@ namespace MPF.Core.Hashing
     /// </summary>
     public class Hasher
     {
+        /// <summary>
+        /// Hash type associated with the current state
+        /// </summary>
+#if NET48
         public Hash HashType { get; private set; }
+#else
+        public Hash HashType { get; init; }
+#endif
 
 #if NET48
         private object _hasher;
@@ -35,25 +42,29 @@ namespace MPF.Core.Hashing
                 case Hash.CRC32:
                     _hasher = new Crc32();
                     break;
-
+                case Hash.CRC64:
+                    _hasher = new Crc64();
+                    break;
                 case Hash.MD5:
                     _hasher = MD5.Create();
                     break;
-
                 case Hash.SHA1:
                     _hasher = SHA1.Create();
                     break;
-
                 case Hash.SHA256:
                     _hasher = SHA256.Create();
                     break;
-
                 case Hash.SHA384:
                     _hasher = SHA384.Create();
                     break;
-
                 case Hash.SHA512:
                     _hasher = SHA512.Create();
+                    break;
+                case Hash.XxHash32:
+                    _hasher = new XxHash32();
+                    break;
+                case Hash.XxHash64:
+                    _hasher = new XxHash64();
                     break;
             }
         }
@@ -69,19 +80,14 @@ namespace MPF.Core.Hashing
         /// </summary>
         public void Process(byte[] buffer, int size)
         {
-            switch (HashType)
+            switch (_hasher)
             {
-                case Hash.CRC32:
-                    var bufferSpan = new ReadOnlySpan<byte>(buffer, 0, size);
-                    (_hasher as NonCryptographicHashAlgorithm)?.Append(bufferSpan);
+                case HashAlgorithm ha:
+                    ha.TransformBlock(buffer, 0, size, null, 0);
                     break;
-
-                case Hash.MD5:
-                case Hash.SHA1:
-                case Hash.SHA256:
-                case Hash.SHA384:
-                case Hash.SHA512:
-                    (_hasher as HashAlgorithm)?.TransformBlock(buffer, 0, size, null, 0);
+                case NonCryptographicHashAlgorithm ncha:
+                    var bufferSpan = new ReadOnlySpan<byte>(buffer, 0, size);
+                    ncha.Append(bufferSpan);
                     break;
             }
         }
@@ -92,18 +98,13 @@ namespace MPF.Core.Hashing
         public void Terminate()
         {
             byte[] emptyBuffer = Array.Empty<byte>();
-            switch (HashType)
+            switch (_hasher)
             {
-                case Hash.CRC32:
-                    // No finalization is needed
+                case HashAlgorithm ha:
+                    ha.TransformFinalBlock(emptyBuffer, 0, 0);
                     break;
-
-                case Hash.MD5:
-                case Hash.SHA1:
-                case Hash.SHA256:
-                case Hash.SHA384:
-                case Hash.SHA512:
-                    (_hasher as HashAlgorithm)?.TransformFinalBlock(emptyBuffer, 0, 0);
+                case NonCryptographicHashAlgorithm ncha:
+                    // No finalization is needed
                     break;
             }
         }
@@ -120,17 +121,12 @@ namespace MPF.Core.Hashing
             if (_hasher == null)
                 return null;
 
-            switch (HashType)
+            switch (_hasher)
             {
-                case Hash.CRC32:
-                    return (_hasher as NonCryptographicHashAlgorithm)?.GetCurrentHash()?.Reverse().ToArray();
-
-                case Hash.MD5:
-                case Hash.SHA1:
-                case Hash.SHA256:
-                case Hash.SHA384:
-                case Hash.SHA512:
-                    return (_hasher as HashAlgorithm)?.Hash;
+                case HashAlgorithm ha:
+                    return ha.Hash;
+                case NonCryptographicHashAlgorithm ncha:
+                    return ncha.GetCurrentHash().Reverse().ToArray();
             }
 
             return null;

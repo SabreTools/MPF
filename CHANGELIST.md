@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Move Hash enum and simplify
+- Add other non-cryptographic hashes
 
 ### 2.7.3 (2023-10-26)
 
