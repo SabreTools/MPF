@@ -89,7 +89,8 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    (_hasher as NonCryptographicHashAlgorithm)?.Append(buffer);
+                    var bufferSpan = new ReadOnlySpan<byte>(buffer, 0, size);
+                    (_hasher as NonCryptographicHashAlgorithm)?.Append(bufferSpan);
                     break;
 
                 case Hash.MD5:
@@ -111,7 +112,7 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    (_hasher as NonCryptographicHashAlgorithm)?.Append(emptyBuffer);
+                    // No finalization is needed
                     break;
 
                 case Hash.MD5:
@@ -139,7 +140,7 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    return (_hasher as NonCryptographicHashAlgorithm)?.GetCurrentHash();
+                    return (_hasher as NonCryptographicHashAlgorithm)?.GetCurrentHash()?.Reverse().ToArray();
 
                 case Hash.MD5:
                 case Hash.SHA1:
