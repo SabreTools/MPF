@@ -7,6 +7,7 @@
 - Move all hashing to Hasher
 - Separate out static hashing
 - Remove unncessary summary
+- Version-gate new switch statement
 
 ### 2.7.3 (2023-10-26)
 

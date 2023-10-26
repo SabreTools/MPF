@@ -96,6 +96,7 @@ namespace MPF.Core.Hashing
         /// </summary>
         private void GetHasher()
         {
+#if NET48
             switch (HashType)
             {
                 case Hash.CRC32:
@@ -126,6 +127,21 @@ namespace MPF.Core.Hashing
                     _hasher = new XxHash64();
                     break;
             }
+#else
+            _hasher = HashType switch
+            {
+                Hash.CRC32 => new Crc32(),
+                Hash.CRC64 => new Crc64(),
+                Hash.MD5 => MD5.Create(),
+                Hash.SHA1 => SHA1.Create(),
+                Hash.SHA256 => SHA256.Create(),
+                Hash.SHA384 => SHA384.Create(),
+                Hash.SHA512 => SHA512.Create(),
+                Hash.XxHash32 => new XxHash32(),
+                Hash.XxHash64 => new XxHash64(),
+                _ => null,
+            };
+#endif
         }
 
         /// <inheritdoc/>
@@ -135,7 +151,7 @@ namespace MPF.Core.Hashing
                 disposable.Dispose();
         }
 
-        #endregion
+#endregion
 
         #region Static Hashing
 
