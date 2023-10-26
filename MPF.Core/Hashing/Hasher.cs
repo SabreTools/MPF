@@ -9,9 +9,6 @@ using MPF.Core.Data;
 
 namespace MPF.Core.Hashing
 {
-    /// <summary>
-    /// Async hashing class wraper
-    /// </summary>
     public sealed class Hasher : IDisposable
     {
         #region Properties
