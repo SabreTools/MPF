@@ -986,7 +986,7 @@ namespace MPF.Core
 
             try
             {
-                return json["disc"][0]["masterDataId"]?.Value<string>();
+                return json["disc"]?[0]?["masterDataId"]?.Value<string>();
             }
             catch
             {
