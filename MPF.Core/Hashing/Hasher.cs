@@ -95,6 +95,7 @@ namespace MPF.Core.Hashing
         /// <summary>
         /// Finalize the internal hash algorigthm
         /// </summary>
+        /// <remarks>NonCryptographicHashAlgorithm implementations do not need finalization</remarks>
         public void Terminate()
         {
             byte[] emptyBuffer = Array.Empty<byte>();
@@ -102,9 +103,6 @@ namespace MPF.Core.Hashing
             {
                 case HashAlgorithm ha:
                     ha.TransformFinalBlock(emptyBuffer, 0, 0);
-                    break;
-                case NonCryptographicHashAlgorithm ncha:
-                    // No finalization is needed
                     break;
             }
         }

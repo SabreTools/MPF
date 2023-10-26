@@ -2,6 +2,7 @@
 
 - Move Hash enum and simplify
 - Add other non-cryptographic hashes
+- Avoid unncessary allocation in hashing
 
 ### 2.7.3 (2023-10-26)
 
