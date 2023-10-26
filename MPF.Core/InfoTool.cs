@@ -281,12 +281,15 @@ namespace MPF.Core
                 Parallel.ForEach(hashers, h => h.Terminate());
 
                 // Get the results
-                crc32 = hashers.First(h => h.HashType == Hash.CRC32).GetHashString();
-                md5 = hashers.First(h => h.HashType == Hash.MD5).GetHashString();
-                sha1 = hashers.First(h => h.HashType == Hash.SHA1).GetHashString();
-                //sha256 = hashers.First(h => h.HashType == Hash.SHA256).GetHashString();
-                //sha384 = hashers.First(h => h.HashType == Hash.SHA384).GetHashString();
-                //sha512 = hashers.First(h => h.HashType == Hash.SHA512).GetHashString();
+                crc32 = hashers.First(h => h.HashType == Hash.CRC32).CurrentHashString;
+                //crc64 = hashers.First(h => h.HashType == Hash.CRC64).CurrentHashString;
+                md5 = hashers.First(h => h.HashType == Hash.MD5).CurrentHashString;
+                sha1 = hashers.First(h => h.HashType == Hash.SHA1).CurrentHashString;
+                //sha256 = hashers.First(h => h.HashType == Hash.SHA256).CurrentHashString;
+                //sha384 = hashers.First(h => h.HashType == Hash.SHA384).CurrentHashString;
+                //sha512 = hashers.First(h => h.HashType == Hash.SHA512).CurrentHashString;
+                //xxHash32 = hashers.First(h => h.HashType == Hash.XxHash32).CurrentHashString;
+                //xxHash64 = hashers.First(h => h.HashType == Hash.XxHash64).CurrentHashString;
 
                 // Dispose of the hashers
                 loadBuffer.Dispose();

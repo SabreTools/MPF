@@ -9,8 +9,10 @@ namespace MPF.Core.Hashing
     /// <summary>
     /// Async hashing class wraper
     /// </summary>
-    public class Hasher
+    public class Hasher : IDisposable
     {
+        #region Properties
+
         /// <summary>
         /// Hash type associated with the current state
         /// </summary>
@@ -20,12 +22,69 @@ namespace MPF.Core.Hashing
         public Hash HashType { get; init; }
 #endif
 
+        /// <summary>
+        /// Current hash in bytes
+        /// </summary>
+#if NET48
+        public byte[] CurrentHashBytes
+#else
+        public byte[]? CurrentHashBytes
+#endif
+        {
+            get
+            {
+#if NET48
+                switch (_hasher)
+                {
+                    case HashAlgorithm ha:
+                        return ha.Hash;
+                    case NonCryptographicHashAlgorithm ncha:
+                        return ncha.GetCurrentHash().Reverse().ToArray();
+                    default:
+                        return null;
+                }
+#else
+                return (_hasher) switch
+                {
+                    HashAlgorithm ha => ha.Hash,
+                    NonCryptographicHashAlgorithm ncha => ncha.GetCurrentHash().Reverse().ToArray(),
+                    _ => null,
+                };
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Current hash as a string
+        /// </summary>
+#if NET48
+        public string CurrentHashString => ByteArrayToString(CurrentHashBytes);
+#else
+        public string? CurrentHashString => ByteArrayToString(CurrentHashBytes);
+#endif
+
+        #endregion
+
+        #region Private Fields
+
+        /// <summary>
+        /// Internal hasher being used for processing
+        /// </summary>
+        /// <remarks>May be either a HashAlgorithm or NonCryptographicHashAlgorithm</remarks>
 #if NET48
         private object _hasher;
 #else
         private object? _hasher;
 #endif
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="hashType">Hash type to instantiate</param>
         public Hasher(Hash hashType)
         {
             this.HashType = hashType;
@@ -69,11 +128,16 @@ namespace MPF.Core.Hashing
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             if (_hasher is IDisposable disposable)
                 disposable.Dispose();
         }
+
+        #endregion
+
+        #region Hashing
 
         /// <summary>
         /// Process a buffer of some length with the internal hash algorithm
@@ -107,44 +171,9 @@ namespace MPF.Core.Hashing
             }
         }
 
-        /// <summary>
-        /// Get internal hash as a byte array
-        /// </summary>
-#if NET48
-        public byte[] GetHash()
-#else
-        public byte[]? GetHash()
-#endif
-        {
-            if (_hasher == null)
-                return null;
+        #endregion
 
-            switch (_hasher)
-            {
-                case HashAlgorithm ha:
-                    return ha.Hash;
-                case NonCryptographicHashAlgorithm ncha:
-                    return ncha.GetCurrentHash().Reverse().ToArray();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Get internal hash as a string
-        /// </summary>
-#if NET48
-        public string GetHashString()
-#else
-        public string? GetHashString()
-#endif
-        {
-            var hash = GetHash();
-            if (hash == null)
-                return null;
-
-            return ByteArrayToString(hash);
-        }
+        #region Helpers
 
         /// <summary>
         /// Convert a byte array to a hex string
@@ -172,5 +201,7 @@ namespace MPF.Core.Hashing
                 return null;
             }
         }
+
+        #endregion
     }
 }
