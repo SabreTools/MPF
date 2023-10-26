@@ -151,7 +151,7 @@ namespace MPF.Core.Hashing
                 disposable.Dispose();
         }
 
-#endregion
+        #endregion
 
         #region Static Hashing
 
