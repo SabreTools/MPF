@@ -108,7 +108,7 @@ namespace MPF.Core.Hashing
         /// </summary>
         public void Terminate()
         {
-            byte[] emptyBuffer = new byte[0];
+            byte[] emptyBuffer = Array.Empty<byte>();
             switch (HashType)
             {
                 case Hash.CRC32:
