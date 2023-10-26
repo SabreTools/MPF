@@ -1451,7 +1451,7 @@ namespace MPF.Core.UI.ViewModels
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters?.OutputPath, true);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters?.OutputPath, false);
 
             if (MediaTypes != null)
             {
