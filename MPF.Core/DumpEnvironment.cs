@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.Modules;

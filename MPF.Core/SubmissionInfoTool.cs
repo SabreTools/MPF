@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Modules;
 using Newtonsoft.Json;

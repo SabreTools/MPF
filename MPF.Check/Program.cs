@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Utilities;

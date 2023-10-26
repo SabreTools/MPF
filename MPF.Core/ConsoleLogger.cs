@@ -1,5 +1,5 @@
 ﻿using System;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 
 namespace MPF.Core

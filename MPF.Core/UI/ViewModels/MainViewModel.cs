@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Hashing;
 using MPF.Core.Modules;

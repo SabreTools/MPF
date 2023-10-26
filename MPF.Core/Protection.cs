@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner.Protection;
-using BurnOutSharp;
+using BinaryObjectScanner;
 using psxt001z;
 
 namespace MPF.Core

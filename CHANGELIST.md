@@ -24,6 +24,7 @@
 - Attempt to parse out PS5 params.json
 - Fix CRC32 hashing
 - Update XUnit packages
+- Update to BurnOutSharp 2.9.0
 
 ### 2.7.2 (2023-10-17)
 
