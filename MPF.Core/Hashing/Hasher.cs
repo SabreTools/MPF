@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Hashing;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using MPF.Core.Data;
 
 namespace MPF.Core.Hashing
@@ -9,7 +12,7 @@ namespace MPF.Core.Hashing
     /// <summary>
     /// Async hashing class wraper
     /// </summary>
-    public class Hasher : IDisposable
+    public sealed class Hasher : IDisposable
     {
         #region Properties
 
@@ -138,6 +141,118 @@ namespace MPF.Core.Hashing
         #endregion
 
         #region Hashing
+
+        /// <summary>
+        /// Get hashes from an input file path
+        /// </summary>
+        /// <param name="filename">Path to the input file</param>
+        /// <returns>True if hashing was successful, false otherwise</returns>
+#if NET48
+        public static bool GetFileHashes(string filename, out long size, out string crc32, out string md5, out string sha1)
+#else
+        public static bool GetFileHashes(string filename, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
+        {
+            // Set all initial values
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            // If the file doesn't exist, we can't do anything
+            if (!File.Exists(filename))
+                return false;
+
+            // Set the file size
+            size = new FileInfo(filename).Length;
+
+            // Open the input file
+            var input = File.OpenRead(filename);
+
+            try
+            {
+                // Get a list of hashers to run over the buffer
+                var hashers = new List<Hasher>
+                {
+                    new Hasher(Hash.CRC32),
+                    new Hasher(Hash.MD5),
+                    new Hasher(Hash.SHA1),
+                    new Hasher(Hash.SHA256),
+                    new Hasher(Hash.SHA384),
+                    new Hasher(Hash.SHA512),
+                };
+
+                // Initialize the hashing helpers
+                var loadBuffer = new ThreadLoadBuffer(input);
+                int buffersize = 3 * 1024 * 1024;
+                byte[] buffer0 = new byte[buffersize];
+                byte[] buffer1 = new byte[buffersize];
+
+                /*
+                Please note that some of the following code is adapted from
+                RomVault. This is a modified version of how RomVault does
+                threaded hashing. As such, some of the terminology and code
+                is the same, though variable names and comments may have
+                been tweaked to better fit this code base.
+                */
+
+                // Pre load the first buffer
+                long refsize = size;
+                int next = refsize > buffersize ? buffersize : (int)refsize;
+                input.Read(buffer0, 0, next);
+                int current = next;
+                refsize -= next;
+                bool bufferSelect = true;
+
+                while (current > 0)
+                {
+                    // Trigger the buffer load on the second buffer
+                    next = refsize > buffersize ? buffersize : (int)refsize;
+                    if (next > 0)
+                        loadBuffer.Trigger(bufferSelect ? buffer1 : buffer0, next);
+
+                    byte[] buffer = bufferSelect ? buffer0 : buffer1;
+
+                    // Run hashes in parallel
+                    Parallel.ForEach(hashers, h => h.Process(buffer, current));
+
+                    // Wait for the load buffer worker, if needed
+                    if (next > 0)
+                        loadBuffer.Wait();
+
+                    // Setup for the next hashing step
+                    current = next;
+                    refsize -= next;
+                    bufferSelect = !bufferSelect;
+                }
+
+                // Finalize all hashing helpers
+                loadBuffer.Finish();
+                Parallel.ForEach(hashers, h => h.Terminate());
+
+                // Get the results
+                crc32 = hashers.First(h => h.HashType == Hash.CRC32).CurrentHashString;
+                //crc64 = hashers.First(h => h.HashType == Hash.CRC64).CurrentHashString;
+                md5 = hashers.First(h => h.HashType == Hash.MD5).CurrentHashString;
+                sha1 = hashers.First(h => h.HashType == Hash.SHA1).CurrentHashString;
+                //sha256 = hashers.First(h => h.HashType == Hash.SHA256).CurrentHashString;
+                //sha384 = hashers.First(h => h.HashType == Hash.SHA384).CurrentHashString;
+                //sha512 = hashers.First(h => h.HashType == Hash.SHA512).CurrentHashString;
+                //xxHash32 = hashers.First(h => h.HashType == Hash.XxHash32).CurrentHashString;
+                //xxHash64 = hashers.First(h => h.HashType == Hash.XxHash64).CurrentHashString;
+
+                // Dispose of the hashers
+                loadBuffer.Dispose();
+                hashers.ForEach(h => h.Dispose());
+
+                return true;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            finally
+            {
+                input.Dispose();
+            }
+        }
 
         /// <summary>
         /// Process a buffer of some length with the internal hash algorithm

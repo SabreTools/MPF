@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using MPF.Core.Hashing;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Modules.UmdImageCreator
@@ -96,7 +97,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                     info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
 #endif
 
-                    if (InfoTool.GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
+                    if (Hasher.GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
                     {
 #if NET48
                         info.SizeAndChecksums.Size = filesize;

@@ -4,6 +4,7 @@
 - Add other non-cryptographic hashes
 - Avoid unncessary allocation in hashing
 - Make Hasher more consistent
+- Move all hashing to Hasher
 
 ### 2.7.3 (2023-10-26)
 
