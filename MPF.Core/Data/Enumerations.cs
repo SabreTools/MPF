@@ -1,6 +1,19 @@
 ﻿namespace MPF.Core.Data
 {
     /// <summary>
+    /// Available hashing types
+    /// </summary>
+    public enum Hash
+    {
+        CRC32,
+        MD5,
+        SHA1,
+        SHA256,
+        SHA384,
+        SHA512,
+    }
+
+    /// <summary>
     /// Drive type for dumping
     /// </summary>
     public enum InternalDriveType

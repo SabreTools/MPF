@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Move Hash enum and simplify
+
 ### 2.7.3 (2023-10-26)
 
 - Split InfoTool into 2 classes
