@@ -23,6 +23,7 @@
 - Update package versions
 - Attempt to parse out PS5 params.json
 - Fix CRC32 hashing
+- Update XUnit packages
 
 ### 2.7.2 (2023-10-17)
 
