@@ -10,6 +10,7 @@
 - Version-gate new switch statement
 - Ignore empty protection results
 - Remove and Sort Usings
+- Update Redumper to build 244
 
 ### 2.7.3 (2023-10-26)
 
