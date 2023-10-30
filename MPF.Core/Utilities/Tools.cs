@@ -167,6 +167,7 @@ namespace MPF.Core.Utilities
                         case MediaType.CDROM:
                         case MediaType.DVD:
                         case MediaType.GDROM:
+                        case MediaType.BluRay:
                             return true;
 
                         // All other formats considered unsupported
@@ -208,7 +209,8 @@ namespace MPF.Core.Utilities
                         // Formats considered at least partially supported by Redumper
                         MediaType.CDROM
                             or MediaType.DVD
-                            or MediaType.GDROM => true,
+                            or MediaType.GDROM
+                            or MediaType.BluRay => true,
 
                         // All other formats considered unsupported
                         _ => false,

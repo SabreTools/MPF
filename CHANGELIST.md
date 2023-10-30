@@ -11,6 +11,7 @@
 - Ignore empty protection results
 - Remove and Sort Usings
 - Update Redumper to build 244
+- Enable Bluray dumping with Redumper
 
 ### 2.7.3 (2023-10-26)
 

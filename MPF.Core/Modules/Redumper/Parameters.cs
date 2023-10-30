@@ -267,6 +267,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
+                case MediaType.BluRay: // TODO: Confirm that this information outputs
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.log"))
@@ -376,6 +377,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
+                case MediaType.BluRay: // TODO: Confirm any differences between outputs
 #if NET48
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
@@ -397,6 +399,7 @@ namespace MPF.Core.Modules.Redumper
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
+                    // TODO: Support multiple layerbreaks when implemented
                     string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
 #if NET48
                     info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
@@ -968,6 +971,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
+                case MediaType.BluRay: // TODO: Confirm that this information outputs
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.manufacturer"))
@@ -1044,9 +1048,13 @@ namespace MPF.Core.Modules.Redumper
         protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
 #endif
         {
-            // If we don't have a CD or DVD, we can't dump using redumper
-            if (this.Type != MediaType.CDROM && this.Type != MediaType.DVD)
+            // If we don't have a CD, DVD, or BD, we can't dump using redumper
+            if (this.Type != MediaType.CDROM
+                && this.Type != MediaType.DVD
+                && this.Type != MediaType.BluRay)
+            {
                 return;
+            }
 
             BaseCommand = CommandStrings.NONE;
             switch (this.Type)
@@ -1632,6 +1640,7 @@ namespace MPF.Core.Modules.Redumper
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Layerbreak if possible, null on error</returns>
+        /// <remarks>TODO: Support multiple layerbreaks when added</remarks>
 #if NET48
         private static string GetLayerbreak(string log)
 #else
