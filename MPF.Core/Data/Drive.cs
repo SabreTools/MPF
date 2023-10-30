@@ -13,7 +13,6 @@ namespace MPF.Core.Data
     /// Represents information for a single drive
     /// </summary>
     /// <remarks>
-    /// TODO: This needs to be less Windows-centric. Devices do not always have a single letter that can be used.
     /// TODO: Can the Aaru models be used instead of the ones I've created here?
     /// </remarks>
     public class Drive
@@ -286,7 +285,6 @@ namespace MPF.Core.Data
                 return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
-            // TODO: Try to be smarter about this
             if (this.InternalDriveType != Data.InternalDriveType.Optical)
                 return RedumpSystem.IBMPCcompatible;
 

@@ -15,14 +15,6 @@ namespace MPF.Core.Modules.Redumper
     /// <summary>
     /// Represents a generic set of Redumper parameters
     /// </summary>
-    /// <remarks>
-    /// TODO: Redumper natively supports multiple, chained commands but MPF
-    /// doesn't have an easy way of dealing with that right now. Maybe have
-    /// BaseCommand be a space-deliminated list of the commands?
-    /// TODO: With chained commands, how do we tell what parameters are
-    /// actually supported? Do we go one by one and if it doesn't match
-    /// any, then it's incorrect?
-    /// </remarks>
     public class Parameters : BaseParameters
     {
         #region Generic Dumping Information
