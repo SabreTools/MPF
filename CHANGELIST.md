@@ -9,6 +9,7 @@
 - Remove unncessary summary
 - Version-gate new switch statement
 - Ignore empty protection results
+- Remove and Sort Usings
 
 ### 2.7.3 (2023-10-26)
 

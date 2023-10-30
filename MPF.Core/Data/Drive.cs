@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 using MPF.Core.Converters;
-using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data

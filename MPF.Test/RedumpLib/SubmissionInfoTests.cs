@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using psxt001z;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 

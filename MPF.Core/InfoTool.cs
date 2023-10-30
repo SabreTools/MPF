@@ -11,7 +11,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using BinaryObjectScanner;
 using MPF.Core.Data;
-using MPF.Core.Hashing;
 using MPF.Core.Modules;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;

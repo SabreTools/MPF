@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BinaryObjectScanner.Protection;
 using BinaryObjectScanner;
+using BinaryObjectScanner.Protection;
 using psxt001z;
 
 namespace MPF.Core

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.UI.ViewModels
