@@ -273,6 +273,8 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.state");
                     }
 
+                    break;
+
                 case MediaType.BluRay:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {

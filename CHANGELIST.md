@@ -18,6 +18,7 @@
 - Handle a couple of messages
 - Remove .manufacturer for Bluray
 - Fix typo that disables DIC during media check (Deterous)
+- Fix build
 
 ### 2.7.3 (2023-10-26)
 
