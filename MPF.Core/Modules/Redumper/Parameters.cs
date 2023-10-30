@@ -267,7 +267,7 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.manufacturer") && !File.Exists($"{basePath}.1.manufacturer") && !File.Exists($"{basePath}.2.manufacturer"))
                             missingFiles.Add($"{basePath}.manufacturer");
-                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
@@ -282,7 +282,7 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.log");
                         else if (GetDatfile($"{basePath}.log") == null)
                             missingFiles.Add($"{basePath}.dat");
-                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
