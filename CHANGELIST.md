@@ -16,6 +16,7 @@
 - Remove now-obsolete notes
 - Compile most regex statements
 - Handle a couple of messages
+- Remove .manufacturer for Bluray
 
 ### 2.7.3 (2023-10-26)
 

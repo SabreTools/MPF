@@ -259,7 +259,6 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
-                case MediaType.BluRay: // TODO: Confirm that this information outputs
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.log"))
@@ -268,6 +267,19 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.manufacturer") && !File.Exists($"{basePath}.1.manufacturer") && !File.Exists($"{basePath}.2.manufacturer"))
                             missingFiles.Add($"{basePath}.manufacturer");
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
+                            missingFiles.Add($"{basePath}.physical");
+                        if (!File.Exists($"{basePath}.state"))
+                            missingFiles.Add($"{basePath}.state");
+                    }
+
+                case MediaType.BluRay:
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
+                    {
+                        if (!File.Exists($"{basePath}.log"))
+                            missingFiles.Add($"{basePath}.log");
+                        else if (GetDatfile($"{basePath}.log") == null)
+                            missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
