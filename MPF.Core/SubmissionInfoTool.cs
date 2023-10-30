@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
+#pragma warning disable IDE0051 // Remove unused private members
+
 namespace MPF.Core
 {
     /// <summary>

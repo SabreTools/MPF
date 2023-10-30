@@ -1563,28 +1563,51 @@ namespace MPF.Core.UI.ViewModels
             VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
 
             // Set the selected speed
+#if NET48
             int speed;
-            switch (this.CurrentMediaType)
+            switch (CurrentMediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    speed = this.Options.PreferredDumpSpeedCD;
+                    speed = Options.PreferredDumpSpeedCD;
                     break;
                 case MediaType.DVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    speed = this.Options.PreferredDumpSpeedDVD;
+                    speed = Options.PreferredDumpSpeedDVD;
                     break;
                 case MediaType.HDDVD:
-                    speed = this.Options.PreferredDumpSpeedHDDVD;
+                    speed = Options.PreferredDumpSpeedHDDVD;
                     break;
                 case MediaType.BluRay:
-                    speed = this.Options.PreferredDumpSpeedBD;
+                    speed = Options.PreferredDumpSpeedBD;
                     break;
                 default:
-                    speed = this.Options.PreferredDumpSpeedCD;
+                    speed = Options.PreferredDumpSpeedCD;
                     break;
             }
+#else
+            int speed = (CurrentMediaType) switch
+            {
+                // CD dump speed
+                MediaType.CDROM => Options.PreferredDumpSpeedCD,
+                MediaType.GDROM => Options.PreferredDumpSpeedCD,
+
+                // DVD dump speed
+                MediaType.DVD => Options.PreferredDumpSpeedDVD,
+                MediaType.NintendoGameCubeGameDisc => Options.PreferredDumpSpeedDVD,
+                MediaType.NintendoWiiOpticalDisc => Options.PreferredDumpSpeedDVD,
+
+                // HD-DVD dump speed
+                MediaType.HDDVD => Options.PreferredDumpSpeedHDDVD,
+
+                // BD dump speed
+                MediaType.BluRay => Options.PreferredDumpSpeedBD,
+
+                // Default
+                _ => Options.PreferredDumpSpeedCD,
+            };
+#endif
 
             VerboseLogLn($"Setting drive speed to: {speed}");
             this.DriveSpeed = speed;

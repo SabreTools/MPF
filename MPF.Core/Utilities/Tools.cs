@@ -201,45 +201,45 @@ namespace MPF.Core.Utilities
                     return false;
             }
 #else
-            switch (program)
+            return (program) switch
             {
-                case InternalProgram.Redumper:
-                    return type switch
-                    {
-                        // Formats considered at least partially supported by Redumper
-                        MediaType.CDROM
-                            or MediaType.DVD
-                            or MediaType.GDROM
-                            or MediaType.BluRay => true,
+                // Aaru
+                InternalProgram.Aaru when type == MediaType.BluRay => true,
+                InternalProgram.Aaru when type == MediaType.CDROM => true,
+                InternalProgram.Aaru when type == MediaType.CompactFlash => true,
+                InternalProgram.Aaru when type == MediaType.DVD => true,
+                InternalProgram.Aaru when type == MediaType.GDROM => true,
+                InternalProgram.Aaru when type == MediaType.FlashDrive => true,
+                InternalProgram.Aaru when type == MediaType.FloppyDisk => true,
+                InternalProgram.Aaru when type == MediaType.HardDisk => true,
+                InternalProgram.Aaru when type == MediaType.HDDVD => true,
+                InternalProgram.Aaru when type == MediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Aaru when type == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Aaru when type == MediaType.SDCard => true,
 
-                        // All other formats considered unsupported
-                        _ => false,
-                    };
-                case InternalProgram.Aaru:
-                case InternalProgram.DiscImageCreator:
-                    return type switch
-                    {
-                        // Formats considered at least partially supported by MPF
-                        MediaType.BluRay
-                            or MediaType.CDROM
-                            or MediaType.DVD
-                            or MediaType.GDROM
-                            or MediaType.FloppyDisk
-                            or MediaType.CompactFlash
-                            or MediaType.SDCard
-                            or MediaType.FlashDrive
-                            or MediaType.HardDisk
-                            or MediaType.HDDVD
-                            or MediaType.NintendoGameCubeGameDisc
-                            or MediaType.NintendoWiiOpticalDisc => true,
+                // DiscImageCreator
+                InternalProgram.Aaru when type == MediaType.BluRay => true,
+                InternalProgram.Aaru when type == MediaType.CDROM => true,
+                InternalProgram.Aaru when type == MediaType.CompactFlash => true,
+                InternalProgram.Aaru when type == MediaType.DVD => true,
+                InternalProgram.Aaru when type == MediaType.GDROM => true,
+                InternalProgram.Aaru when type == MediaType.FlashDrive => true,
+                InternalProgram.Aaru when type == MediaType.FloppyDisk => true,
+                InternalProgram.Aaru when type == MediaType.HardDisk => true,
+                InternalProgram.Aaru when type == MediaType.HDDVD => true,
+                InternalProgram.Aaru when type == MediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Aaru when type == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Aaru when type == MediaType.SDCard => true,
 
-                        // All other formats considered unsupported
-                        _ => false,
-                    };
-                // All other InternalPrograms are not supported for dumping
-                default:
-                    return false;
-            }
+                // Redumper
+                InternalProgram.Redumper when type == MediaType.BluRay => true,
+                InternalProgram.Redumper when type == MediaType.CDROM => true,
+                InternalProgram.Redumper when type == MediaType.DVD => true,
+                InternalProgram.Redumper when type == MediaType.GDROM => true,
+
+                // Default
+                _ => false,
+            };
 #endif
         }
 
