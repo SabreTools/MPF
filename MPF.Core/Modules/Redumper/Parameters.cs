@@ -377,7 +377,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
-                case MediaType.BluRay: // TODO: Confirm any differences between outputs
+                case MediaType.BluRay:
 #if NET48
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
@@ -399,13 +399,37 @@ namespace MPF.Core.Modules.Redumper
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    // TODO: Support multiple layerbreaks when implemented
-                    string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
+                    // Deal with the layerbreaks
+                    if (this.Type == MediaType.DVD)
+                    {
+                        string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
 #if NET48
-                    info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
 #else
-                    info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
 #endif
+                    }
+                    else if (this.Type == MediaType.BluRay)
+                    {
+                        var di = InfoTool.GetDiscInformation($"{basePath}.physical");
+#if NET48
+                        info.SizeAndChecksums.PICIdentifier = InfoTool.GetPICIdentifier(di);
+#else
+                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
+#endif
+                        if (InfoTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        {
+                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
+
+                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+
+                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+                        }
+                    }
+
                     break;
             }
 

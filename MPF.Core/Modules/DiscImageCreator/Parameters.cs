@@ -1101,7 +1101,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 //if (File.Exists($"{basePath}_PFI.bin"))
                 //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
                 //if (File.Exists($"{basePath}_PIC.bin"))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
+                //    info.Artifacts["pic"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PIC.bin")) ?? string.Empty;
                 //if (File.Exists($"{basePath}_SS.bin"))
                 //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_SS.bin")) ?? string.Empty;
                 if (File.Exists($"{basePath}.sub"))

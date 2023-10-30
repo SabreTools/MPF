@@ -12,6 +12,7 @@
 - Remove and Sort Usings
 - Update Redumper to build 244
 - Enable Bluray dumping with Redumper
+- Add Bluray layerbreak support for Redumper
 
 ### 2.7.3 (2023-10-26)
 
