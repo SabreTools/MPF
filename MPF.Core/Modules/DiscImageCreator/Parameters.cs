@@ -2258,7 +2258,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
             parameters = parameters.Trim();
-            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
+            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .ToList();
@@ -3174,7 +3174,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                                 // No keys
                                 if (line.Contains("No TitleKey"))
                                 {
-                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$");
+                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$", RegexOptions.Compiled);
                                     string matchedFilename = match.Groups[1].Value;
                                     if (matchedFilename.EndsWith(";1"))
 #if NET48
@@ -3187,7 +3187,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                                 }
                                 else
                                 {
-                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$");
+                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$", RegexOptions.Compiled);
                                     string matchedFilename = match.Groups[1].Value;
                                     if (matchedFilename.EndsWith(";1"))
 #if NET48
@@ -3504,7 +3504,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     // Create the required regex
-                    var trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$");
+                    var trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$", RegexOptions.Compiled);
 
                     // Read in the track length data
                     var trackLengthMapping = new Dictionary<string, string>();
@@ -3528,7 +3528,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         return null;
 
                     // Create the required regex
-                    var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$");
+                    var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$", RegexOptions.Compiled);
 
                     // Read in the track session data
                     var trackSessionMapping = new Dictionary<string, string>();
@@ -3662,7 +3662,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     hex = hex[..trimLength];
 #endif
 
-                return Regex.Replace(hex, ".{32}", "$0\n");
+                return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }
             catch
             {
@@ -4198,7 +4198,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                             // Set the flag so we don't read duplicate data
                             foundSecuritySectors = true;
 
-                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)
@@ -4292,7 +4292,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                             // Set the flag so we don't read duplicate data
                             foundSecuritySectors = true;
 
-                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)

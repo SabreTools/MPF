@@ -1165,7 +1165,7 @@ namespace MPF.Core.Modules.Redumper
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
             parameters = parameters.Trim();
-            List<string> parts = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+")
+            List<string> parts = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .ToList();
@@ -1558,7 +1558,7 @@ namespace MPF.Core.Modules.Redumper
                             line = sr.ReadLine()?.Trim();
                             while (!string.IsNullOrWhiteSpace(line))
                             {
-                                var match = Regex.Match(line, @"^(.*?): (.*?)$");
+                                var match = Regex.Match(line, @"^(.*?): (.*?)$", RegexOptions.Compiled);
                                 if (match.Success)
                                 {
                                     string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
@@ -2429,9 +2429,9 @@ namespace MPF.Core.Modules.Redumper
 
                     // Generate regex
                     // Permissive
-                    var regex = new Regex(@"^redumper (v.+) \[.+\]");
+                    var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
                     // Strict
-                    //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]");
+                    //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
 
                     // Extract the version string
                     var match = regex.Match(sr.ReadLine()?.Trim() ?? string.Empty);
@@ -2473,7 +2473,7 @@ namespace MPF.Core.Modules.Redumper
 
                     // If we find the hardware info line, return each value
                     // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
-                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)");
+                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
 
 #if NET48
                     string line;

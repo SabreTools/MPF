@@ -162,7 +162,7 @@ namespace MPF.Core
                 foundProtections = foundProtections.Where(p => p != "ActiveMARK");
 
             // Cactus Data Shield
-            if (foundProtections.Any(p => Regex.IsMatch(p, @"Cactus Data Shield [0-9]{3} .+")) && foundProtections.Any(p => p == "Cactus Data Shield 200"))
+            if (foundProtections.Any(p => Regex.IsMatch(p, @"Cactus Data Shield [0-9]{3} .+", RegexOptions.Compiled)) && foundProtections.Any(p => p == "Cactus Data Shield 200"))
                 foundProtections = foundProtections.Where(p => p != "Cactus Data Shield 200");
 
             // CD-Check
@@ -192,7 +192,7 @@ namespace MPF.Core
             // JoWood X-Prot
             if (foundProtections.Any(p => p.StartsWith("JoWood X-Prot")))
             {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"JoWood X-Prot [0-9]\.[0-9]\.[0-9]\.[0-9]{2}")))
+                if (foundProtections.Any(p => Regex.IsMatch(p, @"JoWood X-Prot [0-9]\.[0-9]\.[0-9]\.[0-9]{2}", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.Where(p => p != "JoWood X-Prot")
                         .Where(p => p != "JoWood X-Prot v1.0-v1.3")
@@ -241,28 +241,28 @@ namespace MPF.Core
             // SafeDisc
             if (foundProtections.Any(p => p.StartsWith("SafeDisc")))
             {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
+                if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => !p.StartsWith("Macrovision Security Driver"))
                         .Where(p => p != "SafeDisc")
-                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}")))
-                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+", RegexOptions.Compiled)))
                         .Where(p => p != "SafeDisc 1/Lite")
                         .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}")))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => !p.StartsWith("Macrovision Security Driver"))
                         .Where(p => p != "SafeDisc")
-                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+", RegexOptions.Compiled)))
                         .Where(p => p != "SafeDisc 1/Lite")
                         .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
@@ -302,7 +302,7 @@ namespace MPF.Core
             // StarForce
             if (foundProtections.Any(p => p.StartsWith("StarForce")))
             {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"StarForce [0-9]+\..+")))
+                if (foundProtections.Any(p => Regex.IsMatch(p, @"StarForce [0-9]+\..+", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.Where(p => p != "StarForce")
                         .Where(p => p != "StarForce 3-5")

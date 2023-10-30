@@ -1134,7 +1134,7 @@ namespace MPF.Core
                             .Replace("</div>", string.Empty)
                             .Replace("[+]", string.Empty)
                             .ReplaceHtmlWithSiteCodes();
-                    oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty);
+                    oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty, RegexOptions.Compiled);
 
                     // Create state variables
                     bool addToLast = false;
@@ -1267,7 +1267,7 @@ namespace MPF.Core
                             .Replace("</div>", string.Empty)
                             .Replace("[+]", string.Empty)
                             .ReplaceHtmlWithSiteCodes();
-                    oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
+                    oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty, RegexOptions.Compiled);
 
                     // Create state variables
                     bool addToLast = false;

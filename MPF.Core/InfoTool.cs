@@ -286,7 +286,7 @@ namespace MPF.Core
             if (string.IsNullOrWhiteSpace(hashData))
                 return false;
 
-            var hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
+            var hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""", RegexOptions.Compiled);
             Match m = hashreg.Match(hashData);
             if (m.Success)
             {
@@ -503,7 +503,7 @@ namespace MPF.Core
             // If we had any boot value, parse it and get the executable name
             if (!string.IsNullOrEmpty(bootValue))
             {
-                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
+                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)", RegexOptions.Compiled);
                 if (match.Groups.Count > 1)
                 {
                     // EXE name may have a trailing `;` after
@@ -1889,7 +1889,7 @@ namespace MPF.Core
                 value = value.Replace("   ", "\t");
 
                 // Sanitize whitespace around tabs
-                value = Regex.Replace(value, @"\s*\t\s*", "\t");
+                value = Regex.Replace(value, @"\s*\t\s*", "\t", RegexOptions.Compiled);
             }
 
             // If the value contains a newline

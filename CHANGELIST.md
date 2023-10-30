@@ -14,6 +14,7 @@
 - Enable Bluray dumping with Redumper
 - Add Bluray layerbreak support for Redumper
 - Remove now-obsolete notes
+- Compile most regex statements
 
 ### 2.7.3 (2023-10-26)
 
