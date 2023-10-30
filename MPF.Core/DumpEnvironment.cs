@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Data;
-using MPF.Core.Utilities;
 using MPF.Core.Modules;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core
@@ -460,14 +461,17 @@ namespace MPF.Core
                 resultProgress?.Report(Result.Failure(txtResult));
 
             // Write the copy protection output
-            if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
+            if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Any())
             {
-                resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo);
-                if (scanSuccess)
-                    resultProgress?.Report(Result.Success("Writing complete!"));
-                else
-                    resultProgress?.Report(Result.Failure("Writing could not complete!"));
+                if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
+                {
+                    resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
+                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo);
+                    if (scanSuccess)
+                        resultProgress?.Report(Result.Success("Writing complete!"));
+                    else
+                        resultProgress?.Report(Result.Failure("Writing could not complete!"));
+                }
             }
 
             // Write the JSON output, if required
