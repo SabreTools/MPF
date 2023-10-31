@@ -164,10 +164,11 @@ namespace MPF.Core.Utilities
                     switch (type)
                     {
                         // Formats considered at least partially dumpable by Redumper
+                        case MediaType.BluRay:
                         case MediaType.CDROM:
                         case MediaType.DVD:
                         case MediaType.GDROM:
-                        case MediaType.BluRay:
+                        case MediaType.HDDVD:
                             return true;
 
                         // All other formats considered unsupported
@@ -236,6 +237,7 @@ namespace MPF.Core.Utilities
                 InternalProgram.Redumper when type == MediaType.CDROM => true,
                 InternalProgram.Redumper when type == MediaType.DVD => true,
                 InternalProgram.Redumper when type == MediaType.GDROM => true,
+                InternalProgram.Redumper when type == MediaType.HDDVD => true,
 
                 // Default
                 _ => false,

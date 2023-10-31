@@ -22,6 +22,7 @@
 - Remove duplicate check
 - Add PIC output for Redumper
 - Update Redumper to build 246
+- Enable HD-DVD for Redumper in UI
 
 ### 2.7.3 (2023-10-26)
 
