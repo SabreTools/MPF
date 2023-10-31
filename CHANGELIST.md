@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.7.4 (2023-10-31)
 
 - Move Hash enum and simplify
 - Add other non-cryptographic hashes
