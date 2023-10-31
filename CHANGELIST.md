@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Remove psxt001z Pkg Ref in MPF.Test (Deterous)
+
 ### 2.7.4 (2023-10-31)
 
 - Move Hash enum and simplify
