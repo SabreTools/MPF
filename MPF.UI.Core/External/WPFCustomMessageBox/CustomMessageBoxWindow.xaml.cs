@@ -123,7 +123,7 @@ namespace WPFCustomMessageBox
             ShowActivated = true;
             ShowInTaskbar = true;
 
-            if (owner != null)
+            if (owner != null && owner.IsLoaded)
             {
                 Owner = owner;
                 WindowStartupLocation = WindowStartupLocation.CenterOwner;

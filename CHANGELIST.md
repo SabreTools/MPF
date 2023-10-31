@@ -23,6 +23,7 @@
 - Add PIC output for Redumper
 - Update Redumper to build 246
 - Enable HD-DVD for Redumper in UI
+- Attempt to fix window owner issue
 
 ### 2.7.3 (2023-10-26)
 
