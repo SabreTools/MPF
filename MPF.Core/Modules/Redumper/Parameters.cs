@@ -275,6 +275,7 @@ namespace MPF.Core.Modules.Redumper
 
                     break;
 
+                case MediaType.HDDVD: // TODO: Verify that this is output
                 case MediaType.BluRay:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
@@ -1022,15 +1023,22 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
-                case MediaType.BluRay: // TODO: Confirm that this information outputs
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
-                    if (File.Exists($"{basePath}.manufacturer"))
-                        logFiles.Add($"{basePath}.manufacturer");
-                    if (File.Exists($"{basePath}.1.manufacturer"))
-                        logFiles.Add($"{basePath}.1.manufacturer");
-                    if (File.Exists($"{basePath}.2.manufacturer"))
-                        logFiles.Add($"{basePath}.2.manufacturer");
+                    if (File.Exists($"{basePath}.physical"))
+                        logFiles.Add($"{basePath}.physical");
+                    if (File.Exists($"{basePath}.1.physical"))
+                        logFiles.Add($"{basePath}.1.physical");
+                    if (File.Exists($"{basePath}.2.physical"))
+                        logFiles.Add($"{basePath}.2.physical");
+                    if (File.Exists($"{basePath}.state"))
+                        logFiles.Add($"{basePath}.state");
+                    break;
+
+                case MediaType.HDDVD: // TODO: Confirm that this information outputs
+                case MediaType.BluRay: 
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.physical"))
                         logFiles.Add($"{basePath}.physical");
                     if (File.Exists($"{basePath}.1.physical"))
@@ -1099,9 +1107,10 @@ namespace MPF.Core.Modules.Redumper
         protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
 #endif
         {
-            // If we don't have a CD, DVD, or BD, we can't dump using redumper
+            // If we don't have a CD, DVD, HD-DVD, or BD, we can't dump using redumper
             if (this.Type != MediaType.CDROM
                 && this.Type != MediaType.DVD
+                && this.Type != MediaType.HDDVD
                 && this.Type != MediaType.BluRay)
             {
                 return;
@@ -1130,6 +1139,9 @@ namespace MPF.Core.Modules.Redumper
 #endif
                     break;
                 case MediaType.DVD:
+                    ModeValues = new List<string> { CommandStrings.DVD };
+                    break;
+                case MediaType.HDDVD: // TODO: Keep in sync if another command string shows up
                     ModeValues = new List<string> { CommandStrings.DVD };
                     break;
                 case MediaType.BluRay:

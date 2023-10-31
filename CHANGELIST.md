@@ -21,6 +21,7 @@
 - Fix build
 - Remove duplicate check
 - Add PIC output for Redumper
+- Update Redumper to build 246
 
 ### 2.7.3 (2023-10-26)
 
