@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.CodeCoverage" Version="17.7.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="psxt001z" Version="0.21.0-beta1" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.abstractions" Version="2.0.3" />
