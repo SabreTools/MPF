@@ -3633,45 +3633,6 @@ namespace MPF.Core.Modules.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the hex contents of the PIC file
-        /// </summary>
-        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
-        /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
-        /// <returns>PIC data as a hex string if possible, null on error</returns>
-        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-#if NET48
-        private static string GetPIC(string picPath, int trimLength = -1)
-#else
-        private static string? GetPIC(string picPath, int trimLength = -1)
-#endif
-        {
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(picPath))
-                return null;
-
-            try
-            {
-                var hex = GetFullFile(picPath, true);
-                if (hex == null)
-                    return null;
-
-                if (trimLength > -1)
-#if NET48
-                    hex = hex.Substring(0, trimLength);
-#else
-                    hex = hex[..trimLength];
-#endif
-
-                return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
-            }
-            catch
-            {
-                // We don't care what the error was right now
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get the existence of an anti-modchip string from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>

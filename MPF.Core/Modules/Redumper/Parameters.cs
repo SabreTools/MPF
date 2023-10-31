@@ -383,6 +383,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.DVD:
+                case MediaType.HDDVD:
                 case MediaType.BluRay:
 #if NET48
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
@@ -434,6 +435,26 @@ namespace MPF.Core.Modules.Redumper
                             if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
                         }
+                    }
+
+                    // Bluray-specific options
+                    if (this.Type == MediaType.BluRay)
+                    {
+                        int trimLength = -1;
+                        switch (this.System)
+                        {
+                            case RedumpSystem.SonyPlayStation3:
+                            case RedumpSystem.SonyPlayStation4:
+                            case RedumpSystem.SonyPlayStation5:
+                                trimLength = 264;
+                                break;
+                        }
+
+#if NET48
+                        info.Extras.PIC = GetPIC($"{basePath}.physical", trimLength) ?? string.Empty;
+#else
+                        info.Extras!.PIC = GetPIC($"{basePath}.physical", trimLength) ?? string.Empty;
+#endif
                     }
 
                     break;

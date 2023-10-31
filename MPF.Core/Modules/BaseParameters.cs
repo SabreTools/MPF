@@ -1197,5 +1197,50 @@ namespace MPF.Core.Modules
         }
 
         #endregion
+
+        #region Methods to Move
+
+        /// <summary>
+        /// Get the hex contents of the PIC file
+        /// </summary>
+        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
+        /// <returns>PIC data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+#if NET48
+        protected static string GetPIC(string picPath, int trimLength = -1)
+#else
+        protected static string? GetPIC(string picPath, int trimLength = -1)
+#endif
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(picPath))
+                return null;
+
+            try
+            {
+                var hex = GetFullFile(picPath, true);
+                if (hex == null)
+                    return null;
+
+                if (trimLength > -1)
+#if NET48
+                    hex = hex.Substring(0, trimLength);
+#else
+                    hex = hex[..trimLength];
+#endif
+
+                return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
+            }
+            catch
+            {
+                // We don't care what the error was right now
+                return null;
+            }
+        }
+
+
+
+        #endregion
     }
 }
