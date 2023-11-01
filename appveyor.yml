@@ -56,8 +56,8 @@ after_build:
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
-- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_246/redumper-2023.10.31_build246-win64.zip
-- 7z e redumper-2023.10.31_build246-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.10.31_build246-win64\bin\*
+- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_247/redumper-2023.11.01_build247-win64.zip
+- 7z e redumper-2023.11.01_build247-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.11.01_build247-win64\bin\*
 
 # Create MPF Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x64\publish\

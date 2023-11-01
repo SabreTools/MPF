@@ -325,6 +325,10 @@ namespace MPF.Core.Modules.Redumper
                 info.DumpingInfo.Firmware = firmware;
             }
 
+            // Fill in the disc type data
+            if (GetDiscType($"{basePath}.log", out var discTypeOrBookType))
+                info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
+
             switch (this.Type)
             {
                 case MediaType.CDROM:
@@ -408,34 +412,17 @@ namespace MPF.Core.Modules.Redumper
                     }
 
                     // Deal with the layerbreaks
-                    if (this.Type == MediaType.DVD)
+                    if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
                     {
-                        string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
 #if NET48
-                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? Int64.Parse(layerbreak1) : default;
+                        info.SizeAndChecksums.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? Int64.Parse(layerbreak2) : default;
+                        info.SizeAndChecksums.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? Int64.Parse(layerbreak3) : default;
 #else
-                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? Int64.Parse(layerbreak1) : default;
+                        info.SizeAndChecksums!.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? Int64.Parse(layerbreak2) : default;
+                        info.SizeAndChecksums!.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? Int64.Parse(layerbreak3) : default;
 #endif
-                    }
-                    else if (this.Type == MediaType.BluRay)
-                    {
-                        var di = InfoTool.GetDiscInformation($"{basePath}.physical");
-#if NET48
-                        info.SizeAndChecksums.PICIdentifier = InfoTool.GetPICIdentifier(di);
-#else
-                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
-#endif
-                        if (InfoTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
-                        {
-                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
-
-                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
-
-                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
-                        }
                     }
 
                     // Bluray-specific options
@@ -1036,7 +1023,7 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
-                case MediaType.BluRay: 
+                case MediaType.BluRay:
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.physical"))
@@ -1541,6 +1528,59 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <summary>
+        /// Get reported disc type information, if possible
+        /// </summary>
+        /// <param name="drive">_disc.txt file location</param>
+        /// <returns>True if disc type info was set, false otherwise</returns>
+#if NET48
+        private static bool GetDiscType(string drive, out string discTypeOrBookType)
+#else
+        private static bool GetDiscType(string drive, out string? discTypeOrBookType)
+#endif
+        {
+            // Set the default values
+            discTypeOrBookType = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(drive))
+                return false;
+
+            using (var sr = File.OpenText(drive))
+            {
+                try
+                {
+                    var line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        // Trim the line for later use
+                        line = line.Trim();
+
+                        // The profile is listed in a single line
+                        if (line.StartsWith("current profile:"))
+                        {
+                            // current profile: <discType>
+#if NET48
+                            discTypeOrBookType = line.Substring("current profile: ".Length);
+#else
+                            discTypeOrBookType = line["current profile: ".Length..];
+#endif
+                        }
+
+                        line = sr.ReadLine();
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    discTypeOrBookType = null;
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the DVD protection information, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
@@ -1699,36 +1739,86 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <summary>
-        /// Get the layerbreak from the input file, if possible
+        /// Get hardware information from the input file, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
-        /// <returns>Layerbreak if possible, null on error</returns>
-        /// <remarks>TODO: Support multiple layerbreaks when added</remarks>
+        /// <returns>True if hardware info was set, false otherwise</returns>
 #if NET48
-        private static string GetLayerbreak(string log)
+        private static bool GetHardwareInfo(string log, out string manufacturer, out string model, out string firmware)
 #else
-        private static string? GetLayerbreak(string log)
+        private static bool GetHardwareInfo(string log, out string? manufacturer, out string? model, out string? firmware)
 #endif
         {
+            // Set the default values
+            manufacturer = null; model = null; firmware = null;
+
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
-                return null;
+                return false;
 
             using (var sr = File.OpenText(log))
             {
                 try
                 {
-                    // Fast forward to the disc structure lines
-                    while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("layer 0") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
+                    // Fast forward to the drive information line
+                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
 
-                    // Now that we're at the relevant lines, find the layerbreak
+                    // If we find the hardware info line, return each value
+                    // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
+                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
+
 #if NET48
-                    string layerbreak = null;
+                    string line;
 #else
-                    string? layerbreak = null;
+                    string? line;
 #endif
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        var match = regex.Match(line.Trim());
+                        if (match.Success)
+                        {
+                            manufacturer = match.Groups[1].Value;
+                            model = match.Groups[2].Value;
+                            firmware = match.Groups[3].Value;
+                            firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
+                            return true;
+                        }
+                    }
+
+                    // We couldn't detect it then
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the layerbreaks from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if any layerbreaks were found, false otherwise</returns>
+#if NET48
+        private static bool GetLayerbreaks(string log, out string layerbreak1, out string layerbreak2, out string layerbreak3)
+#else
+        private static bool GetLayerbreaks(string log, out string? layerbreak1, out string? layerbreak2, out string? layerbreak3)
+#endif
+        {
+            // Set the default values
+            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return false;
+
+            using (var sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Now that we're at the relevant lines, find the layerbreak
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine()?.Trim();
@@ -1740,18 +1830,7 @@ namespace MPF.Core.Modules.Redumper
                         // Single-layer discs have no layerbreak
                         if (line.Contains("layers count: 1"))
                         {
-                            return null;
-                        }
-
-                        // Dual-layer discs have a regular layerbreak (new)
-                        else if (line.StartsWith("layer break:"))
-                        {
-                            // layer break: <layerbreak>
-#if NET48
-                            layerbreak = line.Substring("layer break: ".Length).Trim();
-#else
-                            layerbreak = line["layer break: ".Length..].Trim();
-#endif
+                            return false;
                         }
 
                         // Dual-layer discs have a regular layerbreak (old)
@@ -1760,20 +1839,60 @@ namespace MPF.Core.Modules.Redumper
                             // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
                             string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
 #if NET48
-                            layerbreak = layerbreak ?? split[7].TrimEnd(',');
+                            layerbreak1 = layerbreak1 ?? split[7].TrimEnd(',');
 #else
-                            layerbreak ??= split[7].TrimEnd(',');
+                            layerbreak1 ??= split[7].TrimEnd(',');
+#endif
+                        }
+
+                        // Dual-layer discs have a regular layerbreak (new)
+                        else if (line.StartsWith("layer break:"))
+                        {
+                            // layer break: <layerbreak>
+#if NET48
+                            layerbreak1 = line.Substring("layer break: ".Length).Trim();
+#else
+                            layerbreak1 = line["layer break: ".Length..].Trim();
+#endif
+                        }
+
+                        // Multi-layer discs have the layer in the name
+                        else if (line.StartsWith("layer break (layer: 0):"))
+                        {
+                            // layer break (layer: 0): <layerbreak>
+#if NET48
+                            layerbreak1 = line.Substring("layer break (layer: 0): ".Length).Trim();
+#else
+                            layerbreak1 = line["layer break (layer: 0): ".Length..].Trim();
+#endif
+                        }
+                        else if (line.StartsWith("layer break (layer: 1):"))
+                        {
+                            // layer break (layer: 1): <layerbreak>
+#if NET48
+                            layerbreak2 = line.Substring("layer break (layer: 1): ".Length).Trim();
+#else
+                            layerbreak2 = line["layer break (layer: 1): ".Length..].Trim();
+#endif
+                        }
+                        else if (line.StartsWith("layer break (layer: 2):"))
+                        {
+                            // layer break (layer: 2): <layerbreak>
+#if NET48
+                            layerbreak3 = line.Substring("layer break (layer: 2): ".Length).Trim();
+#else
+                            layerbreak3 = line["layer break (layer: 2): ".Length..].Trim();
 #endif
                         }
                     }
 
                     // Return the layerbreak, if possible
-                    return layerbreak;
+                    return true;
                 }
                 catch
                 {
                     // We don't care what the exception is right now
-                    return null;
+                    return false;
                 }
             }
         }
@@ -2489,64 +2608,6 @@ namespace MPF.Core.Modules.Redumper
                 {
                     // We don't care what the exception is right now
                     return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get hardware information from the input file, if possible
-        /// </summary>
-        /// <param name="log">Log file location</param>
-        /// <returns>True if hardware info was set, false otherwise</returns>
-#if NET48
-        private static bool GetHardwareInfo(string log, out string manufacturer, out string model, out string firmware)
-#else
-        private static bool GetHardwareInfo(string log, out string? manufacturer, out string? model, out string? firmware)
-#endif
-        {
-            // Set the default values
-            manufacturer = null; model = null; firmware = null;
-
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
-                return false;
-
-            using (var sr = File.OpenText(log))
-            {
-                try
-                {
-                    // Fast forward to the drive information line
-                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
-
-                    // If we find the hardware info line, return each value
-                    // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
-                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
-
-#if NET48
-                    string line;
-#else
-                    string? line;
-#endif
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        var match = regex.Match(line.Trim());
-                        if (match.Success)
-                        {
-                            manufacturer = match.Groups[1].Value;
-                            model = match.Groups[2].Value;
-                            firmware = match.Groups[3].Value;
-                            firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
-                            return true;
-                        }
-                    }
-
-                    // We couldn't detect it then
-                    return false;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
                 }
             }
         }
