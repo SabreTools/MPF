@@ -227,6 +227,8 @@ namespace MPF.UI.Core.Windows
                 ShowInTaskbar = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
+
+            discInformationWindow.Closed += delegate { this.Activate(); };
             bool? result = discInformationWindow.ShowDialog();
 
             // Copy back the submission info changes, if necessary
@@ -263,6 +265,7 @@ namespace MPF.UI.Core.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
+            optionsWindow.Closed += delegate { this.Activate(); };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
