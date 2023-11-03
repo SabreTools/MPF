@@ -637,25 +637,45 @@ namespace MPF.Core
             if (!Directory.Exists(drivePath))
                 return null;
 
-            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
-            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
-            if (!File.Exists(paramSfoPath))
-                return null;
-
-            // Let's try reading PARAM.SFO to find the serial at the end of the file
-            try
+            // Attempt to use PS3_DISC.SFB
+            string sfbPath = Path.Combine(drivePath, "PS3_DISC.SFB");
+            if (File.Exists(sfbPath))
             {
-                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                try
                 {
-                    br.BaseStream.Seek(-0x18, SeekOrigin.End);
-                    return new string(br.ReadChars(9));
+                    using (var br = new BinaryReader(File.OpenRead(sfbPath)))
+                    {
+                        br.BaseStream.Seek(0x220, SeekOrigin.Begin);
+                        return new string(br.ReadChars(0x10));
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
                 }
             }
-            catch
+
+            // Attempt to use PARAM.SFO
+            string sfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (File.Exists(sfoPath))
             {
-                // We don't care what the error was
-                return null;
+                try
+                {
+                    using (var br = new BinaryReader(File.OpenRead(sfoPath)))
+                    {
+                        br.BaseStream.Seek(-0x18, SeekOrigin.End);
+                        return new string(br.ReadChars(9));
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
+                }
             }
+
+            return null;
         }
 
         /// <summary>
@@ -697,25 +717,45 @@ namespace MPF.Core
             if (!Directory.Exists(drivePath))
                 return null;
 
-            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
-            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
-            if (!File.Exists(paramSfoPath))
-                return null;
-
-            // Let's try reading PARAM.SFO to find the version at the end of the file
-            try
+            // Attempt to use PS3_DISC.SFB
+            string sfbPath = Path.Combine(drivePath, "PS3_DISC.SFB");
+            if (File.Exists(sfbPath))
             {
-                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                try
                 {
-                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
-                    return new string(br.ReadChars(5));
+                    using (var br = new BinaryReader(File.OpenRead(sfbPath)))
+                    {
+                        br.BaseStream.Seek(0x230, SeekOrigin.Begin);
+                        return new string(br.ReadChars(0x10));
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
                 }
             }
-            catch
+
+            // Attempt to use PARAM.SFO
+            string sfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (File.Exists(sfoPath))
             {
-                // We don't care what the error was
-                return null;
+                try
+                {
+                    using (var br = new BinaryReader(File.OpenRead(sfoPath)))
+                    {
+                        br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                        return new string(br.ReadChars(5));
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
+                }
             }
+
+            return null;
         }
 
         /// <summary>
