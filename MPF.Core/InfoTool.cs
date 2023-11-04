@@ -759,6 +759,71 @@ namespace MPF.Core
         }
 
         /// <summary>
+        /// Get the firmware version from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Firmware version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3FirmwareVersion(char? driveLetter)
+#else
+        internal static string? GetPlayStation3FirmwareVersion(char? driveLetter)
+#endif
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            return GetPlayStation3FirmwareVersion(drivePath);
+        }
+
+        /// <summary>
+        /// Get the firmware version from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Firmware version if possible, null on error</returns>
+#if NET48
+        internal static string GetPlayStation3FirmwareVersion(string drivePath)
+#else
+        internal static string? GetPlayStation3FirmwareVersion(string? drivePath)
+#endif
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrWhiteSpace(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
+            string pupPath = Path.Combine(drivePath, "PS3_UPDATE\\PS3UPDAT.PUP");
+            if (File.Exists(pupPath))
+            {
+                try
+                {
+                    using (var br = new BinaryReader(File.OpenRead(pupPath)))
+                    {
+                        br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
+                        byte[] buf = new byte[2];
+                        br.Read(buf, 0, 2);
+                        long location = BitConverter.ToInt32(buf, 0);
+                        br.BaseStream.Seek(location, SeekOrigin.Begin);
+                        return new string(br.ReadChars(4));
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Get the internal serial from a PlayStation 4 disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>

@@ -605,9 +605,11 @@ namespace MPF.Core.Modules.Aaru
 #if NET48
                     info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Patches] = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name) ?? string.Empty;
 #else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Patches] = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name) ?? string.Empty;
 #endif
                     break;
 
