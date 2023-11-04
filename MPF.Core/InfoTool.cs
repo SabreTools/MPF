@@ -726,7 +726,9 @@ namespace MPF.Core
                     using (var br = new BinaryReader(File.OpenRead(sfbPath)))
                     {
                         br.BaseStream.Seek(0x230, SeekOrigin.Begin);
-                        return new string(br.ReadChars(0x10));
+                        var discVersion = new string(br.ReadChars(0x10)).TrimEnd('\0');
+                        if (!string.IsNullOrWhiteSpace(discVersion))
+                            return discVersion;
                     }
                 }
                 catch

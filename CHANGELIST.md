@@ -4,6 +4,7 @@
 - Update Redumper to build 247
 - Focus main window after child window closes (Deterous)
 - Try to get PS3 data from SFB
+- Fix PS3 version finding
 
 ### 2.7.4 (2023-10-31)
 
