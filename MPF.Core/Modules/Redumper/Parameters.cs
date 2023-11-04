@@ -607,13 +607,13 @@ namespace MPF.Core.Modules.Redumper
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
                     string firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
                     if (firmwareVersion != null)
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
+                        info.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
 #else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
                     string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
                     if (firmwareVersion != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
+                        info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
 #endif
                     break;
 
