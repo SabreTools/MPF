@@ -809,6 +809,7 @@ namespace MPF.Core
                     br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
                     byte[] buf = new byte[2];
                     br.Read(buf, 0, 2);
+                    Array.Reverse(buf);
                     short location = BitConverter.ToInt16(buf, 0);
                     br.BaseStream.Seek(location, SeekOrigin.Begin);
                     return new string(br.ReadChars(4));
