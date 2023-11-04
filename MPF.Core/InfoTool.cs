@@ -811,8 +811,7 @@ namespace MPF.Core
                     br.Read(buf, 0, 2);
                     short location = BitConverter.ToInt16(buf, 0);
                     br.BaseStream.Seek(location, SeekOrigin.Begin);
-                    string version = new string(br.ReadChars(4));
-                    return "PS3 Firmware " + version;
+                    return new string(br.ReadChars(4));
                 }
             }
             catch
