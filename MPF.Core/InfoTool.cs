@@ -798,29 +798,28 @@ namespace MPF.Core
                 return null;
 
             // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
-            string pupPath = Path.Combine(drivePath, "PS3_UPDATE\\PS3UPDAT.PUP");
-            if (File.Exists(pupPath))
+            string pupPath = Path.Combine(drivePath, "PS3_UPDATE", "PS3UPDAT.PUP");
+            if (!File.Exists(pupPath))
+                return null;
+
+            try
             {
-                try
+                using (var br = new BinaryReader(File.OpenRead(pupPath)))
                 {
-                    using (var br = new BinaryReader(File.OpenRead(pupPath)))
-                    {
-                        br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
-                        byte[] buf = new byte[2];
-                        br.Read(buf, 0, 2);
-                        long location = BitConverter.ToInt32(buf, 0);
-                        br.BaseStream.Seek(location, SeekOrigin.Begin);
-                        return new string(br.ReadChars(4));
-                    }
-                }
-                catch
-                {
-                    // We don't care what the error was
-                    return null;
+                    br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
+                    byte[] buf = new byte[2];
+                    br.Read(buf, 0, 2);
+                    short location = BitConverter.ToInt16(buf, 0);
+                    br.BaseStream.Seek(location, SeekOrigin.Begin);
+                    string version = new string(br.ReadChars(4));
+                    return "PS3 Firmware " + version;
                 }
             }
-
-            return null;
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
         }
 
         /// <summary>
