@@ -1630,7 +1630,7 @@ namespace MPF.Core
                         || (info.CommonDiscInfo?.Media.ToMediaType() != MediaType.BluRay
                             && info.CommonDiscInfo?.System.IsXGD() == false))
                     {
-                        AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums?.Layerbreak == default && info.SizeAndChecksums?.Layerbreak != default(long) ? null : info.SizeAndChecksums?.Layerbreak.ToString()), 1);
+                        AddIfExists(output, Template.LayerbreakField, info.SizeAndChecksums?.Layerbreak, 1);
                     }
 
                     AddIfExists(output, Template.SizeField, info.SizeAndChecksums?.Size.ToString(), 1);
@@ -1980,7 +1980,7 @@ namespace MPF.Core
             if (value == null)
                 return;
 
-            string prefix = "";
+            string prefix = string.Empty;
             for (int i = 0; i < indent; i++)
                 prefix += "\t";
 
@@ -2039,6 +2039,26 @@ namespace MPF.Core
                 return;
 
             AddIfExists(output, key, string.Join(", ", value), indent);
+        }
+
+        /// <summary>
+        /// Add the properly formatted key and value, if possible
+        /// </summary>
+        /// <param name="output">Output list</param>
+        /// <param name="key">Name of the output key to write</param>
+        /// <param name="value">Name of the output value to write</param>
+        /// <param name="indent">Number of tabs to indent the line</param>
+        private static void AddIfExists(List<string> output, string key, long? value, int indent)
+        {
+            // If there's no valid value to write
+            if (value == null || value == default(long))
+                return;
+
+            string prefix = string.Empty;
+            for (int i = 0; i < indent; i++)
+                prefix += "\t";
+
+            output.Add(prefix + key + ": " + value);
         }
 
         /// <summary>

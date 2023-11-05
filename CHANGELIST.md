@@ -6,6 +6,7 @@
 - Try to get PS3 data from SFB
 - Fix PS3 version finding
 - Pull PS3 Firmware Version (Deterous)
+- Fix default layerbreak output
 
 ### 2.7.4 (2023-10-31)
 
