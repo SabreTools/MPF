@@ -33,6 +33,7 @@ namespace MPF.UI.Core.Windows
             // Add handlers
             AaruPathButton.Click += BrowseForPathClick;
             DiscImageCreatorPathButton.Click += BrowseForPathClick;
+            RedumperPathButton.Click += BrowseForPathClick;
             DefaultOutputPathButton.Click += BrowseForPathClick;
 
             AcceptButton.Click += OnAcceptClick;
