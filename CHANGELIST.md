@@ -7,6 +7,7 @@
 - Fix PS3 version finding
 - Pull PS3 Firmware Version (Deterous)
 - Fix default layerbreak output
+- Enable browsing for Redumper path (Deterous)
 
 ### 2.7.4 (2023-10-31)
 
