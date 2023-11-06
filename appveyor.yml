@@ -1,5 +1,5 @@
 # version format
-version: 2.7.4-{build}
+version: 2.7.5-{build}
 
 # pull request template
 pull_requests:

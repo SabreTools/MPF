@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.7.5 (2023-11-06)
 
 - Remove psxt001z Pkg Ref in MPF.Test (Deterous)
 - Update Redumper to build 247
