@@ -8,6 +8,7 @@
 - Pull PS3 Firmware Version (Deterous)
 - Fix default layerbreak output
 - Enable browsing for Redumper path (Deterous)
+- Update to MMI 3.0.0 (Deterous)
 
 ### 2.7.4 (2023-10-31)
 
