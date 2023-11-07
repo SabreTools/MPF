@@ -13,59 +13,55 @@ For those who would rather use the most recent stable build, download the latest
 
 For those who like to test the newest features, download the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
 
-## Media Preservation Frontend (MPF)
+## Media Preservation Frontend UI (MPF)
 
 MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
-
-### System Requirements
-
-- [Supported OS versions for .NET 6](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md)
-    - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if building without script
-- [Supported OS versions for .NET 7](https://github.com/dotnet/core/blob/main/release-notes/7.0/supported-os.md)
-    - Requires [.NET 7.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) if building without script
-- As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
-
-Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
 
 ### Support Limitations
 
 The main UI has some known limitations that are documented in code and in some prior support tickets:
 
 - Windows-only due to reliance on WPF and Winforms
-    - MAUI is not a viable alternative due to lack of out-of-box support for Linux
-    - Avalonia is being heavily considered as an alternative
+  - MAUI is not a viable alternative due to lack of out-of-box support for Linux
+  - Avalonia is being heavily considered as an alternative
 - For those who need .NET Framework 4.8, there is an official fork: [MPF Legacy](https://github.com/Deterous/MPF-Legacy)
-
-### Build Instructions
-
-To build for .NET 6.0 or .NET 7.0 (Windows only), ensure that the [.NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
-
-```
-dotnet build MPF\MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
-```
-
-You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline and Git for Windows to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
 MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
 
-### System Requirements
+## System Requirements
+
+Both MPF UI and MPF.Check have the same system requirements for running, with the exception that MPF UI is Windows-only.
 
 - [Supported OS versions for .NET 6](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md)
-    - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if building without script
+  - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if built without bundled runtime
 - [Supported OS versions for .NET 7](https://github.com/dotnet/core/blob/main/release-notes/7.0/supported-os.md)
-    - Requires [.NET 7.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) if building without script
+  - Requires [.NET 7.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) if built without bundled runtime
 
-### Build Instructions
+Ensure that your operating system and runtimes are as up-to-date as possible, since some features may rely on those updates.
 
-To build for .NET 6.0 and .NET 7.0 (all supported OSes), ensure that the [.NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+## Build Instructions
 
+To build for .NET 6.0 or .NET 7.0, ensure that the [.NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+
+**MPF UI (Windows only):**
+
+```bash
+dotnet build MPF/MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64
 ```
-dotnet build MPF.Check\MPF.Check.csproj --framework [net6.0|net7.0] --runtime [win-x64|linux-x64|osx-x64] --self-contained
+
+You may also run `publish-win.bat` to build and package all variants of MPF UI and MPF.Check at once. The script requires [7-zip commandline](https://www.7-zip.org/download.html) and [Git for Windows](https://git-scm.com/downloads) to be installed and in `PATH`. Please note that this will also build the OSX and Linux versions of MPF.Check.
+
+**MPF.Check (Windows, OSX, Linux):**
+
+```bash
+dotnet build MPF.Check/MPF.Check.csproj --framework [net6.0|net7.0] --runtime [win-x64|linux-x64|osx-x64]
 ```
 
-Choose one of `[win-x64|linux-x64|osx-x64]` depending on the machine you are targeting.
+Choose one of `win-x64`, `linux-x64`, or `osx-x64` depending on the machine you are targeting.
+
+You may also run `publish-nix.sh` to build and package all variants of MPF.Check at once. The script requires `zip` and `git` to be installed and in `PATH`. Please note that this will also build the OSX and Windows versions of MPF.Check.
 
 ## Information
 
