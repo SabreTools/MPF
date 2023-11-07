@@ -4,6 +4,7 @@
 - Remove .NET Framework 4.8 from projects
 - Remove .NET Framework 4.8 gated code
 - Address lingering modern .NET syntax
+- Update README for Legacy
 
 ### 2.7.5 (2023-11-06)
 

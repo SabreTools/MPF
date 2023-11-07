@@ -19,15 +19,10 @@ MPF is the main, UI-centric application of the MPF suite. This program allows us
 
 ### System Requirements
 
-- Windows 8.1 (x64) or newer
-    - Users who wish to use MPF on Windows 7 need to disable strong name validation due to `Microsoft.Management.Infrastructure` being unsigned. Add the following registry keys (accurate at time of writing):
-    ```
-        [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\StrongName\Verification\*,31bf3856ad364e35]
-        [HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\StrongName\Verification\*,31bf3856ad364e35]
-    ```
-    - Alternatively, look at this [StackOverflow question](https://stackoverflow.com/questions/403731/strong-name-validation-failed) for more information.
-
-- .NET Framework 4.8, .NET 6.0, or .NET 7.0 Runtimes
+- [Supported OS versions for .NET 6](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md)
+    - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if building without script
+- [Supported OS versions for .NET 7](https://github.com/dotnet/core/blob/main/release-notes/7.0/supported-os.md)
+    - Requires [.NET 7.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) if building without script
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
@@ -39,16 +34,17 @@ The main UI has some known limitations that are documented in code and in some p
 - Windows-only due to reliance on WPF and Winforms
     - MAUI is not a viable alternative due to lack of out-of-box support for Linux
     - Avalonia is being heavily considered as an alternative
+- For those who need .NET Framework 4.8, there is an official fork: [MPF Legacy](https://github.com/Deterous/MPF-Legacy)
 
 ### Build Instructions
 
-To build for .NET Framework 4.8, .NET 6.0, or .NET 7.0 (all Windows only), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+To build for .NET 6.0 or .NET 7.0 (Windows only), ensure that the [.NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
 
 ```
 dotnet build MPF\MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
 ```
 
-You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline, Git for Windows, and .NET Framework 4.8 SDK to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
+You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline, Git for Windows, and .NET 7 SDK to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
@@ -56,12 +52,14 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 ### System Requirements
 
-- Windows 8.1 (x64) or newer, GNU/Linux x64, or OSX x64
-- .NET Framework 4.8 (Windows or `mono` only), .NET 6.0, or .NET 7.0 Runtimes
+- [Supported OS versions for .NET 6](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md)
+    - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if building without script
+- [Supported OS versions for .NET 7](https://github.com/dotnet/core/blob/main/release-notes/7.0/supported-os.md)
+    - Requires [.NET 7.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) if building without script
 
 ### Build Instructions
 
-To build for .NET Framework 4.8 (Windows only), .NET 6.0, and .NET 7.0 (both all supported OSes), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+To build for .NET 6.0 and .NET 7.0 (all supported OSes), ensure that the [.NET 7.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 ```
 dotnet build MPF.Check\MPF.Check.csproj --framework [net6.0|net7.0] --runtime [win-x64|linux-x64|osx-x64] --self-contained
