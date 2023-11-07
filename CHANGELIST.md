@@ -8,6 +8,7 @@
 - Remove redundant information
 - Remove 4.8 note from build script
 - Even more README cleanup
+- Consolidate build script information
 
 ### 2.7.5 (2023-11-06)
 

@@ -51,7 +51,7 @@ To build for .NET 6.0 or .NET 7.0, ensure that the [.NET 7.0 SDK](https://dotnet
 dotnet build MPF/MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64
 ```
 
-You may also run `publish-win.bat` to build and package all variants of MPF UI and MPF.Check at once. The script requires [7-zip commandline](https://www.7-zip.org/download.html) and [Git for Windows](https://git-scm.com/downloads) to be installed and in `PATH`. Please note that this will also build the OSX and Linux versions of MPF.Check.
+You may also run `publish-win.bat` to build and package all variants of MPF UI and MPF.Check at once. . Please note that this will also build the OSX and Linux versions of MPF.Check.
 
 **MPF.Check (Windows, OSX, Linux):**
 
@@ -61,7 +61,14 @@ dotnet build MPF.Check/MPF.Check.csproj --framework [net6.0|net7.0] --runtime [w
 
 Choose one of `win-x64`, `linux-x64`, or `osx-x64` depending on the machine you are targeting.
 
-You may also run `publish-nix.sh` to build and package all variants of MPF.Check at once. The script requires `zip` and `git` to be installed and in `PATH`. Please note that this will also build the OSX and Windows versions of MPF.Check.
+### Build Scripts
+
+Windows users may run `publish-win.bat` and Linux users may run `publish-nix.sh` to perform a full release build.
+
+- `publish-win.bat` will build and package all variants of MPF UI and MPF.Check
+  - The script requires [7-zip commandline](https://www.7-zip.org/download.html) and [Git for Windows](https://git-scm.com/downloads) to be installed and in `PATH`
+- `publish-nix.sh` will _only_ build and package all variants of MPF.Check
+  - The script requires `zip` and `git` to be installed and in `PATH`
 
 ## Information
 
