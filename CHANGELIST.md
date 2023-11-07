@@ -5,6 +5,7 @@
 - Remove .NET Framework 4.8 gated code
 - Address lingering modern .NET syntax
 - Update README for Legacy
+- Remove redundant information
 
 ### 2.7.5 (2023-11-06)
 

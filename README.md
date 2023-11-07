@@ -44,7 +44,7 @@ To build for .NET 6.0 or .NET 7.0 (Windows only), ensure that the [.NET 7.0 SDK]
 dotnet build MPF\MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
 ```
 
-You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline, Git for Windows, and .NET 7 SDK to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
+You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline and Git for Windows to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
