@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Remove .NET Framework 4.8 from build
+
 ### 2.7.5 (2023-11-06)
 
 - Remove psxt001z Pkg Ref in MPF.Test (Deterous)

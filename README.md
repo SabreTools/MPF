@@ -45,7 +45,7 @@ The main UI has some known limitations that are documented in code and in some p
 To build for .NET Framework 4.8, .NET 6.0, or .NET 7.0 (all Windows only), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
 
 ```
-dotnet build MPF\MPF.csproj --framework [net48|net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
+dotnet build MPF\MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
 ```
 
 You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline, Git for Windows, and .NET Framework 4.8 SDK to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
@@ -64,7 +64,7 @@ MPF.Check is a commandline-only program that allows users to generate submission
 To build for .NET Framework 4.8 (Windows only), .NET 6.0, and .NET 7.0 (both all supported OSes), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 ```
-dotnet build MPF.Check\MPF.Check.csproj --framework [net48|net6.0|net7.0] --runtime [win-x64|linux-x64|osx-x64] --self-contained
+dotnet build MPF.Check\MPF.Check.csproj --framework [net6.0|net7.0] --runtime [win-x64|linux-x64|osx-x64] --self-contained
 ```
 
 Choose one of `[win-x64|linux-x64|osx-x64]` depending on the machine you are targeting.
