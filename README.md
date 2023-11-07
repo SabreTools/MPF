@@ -8,10 +8,9 @@ This is a community project, so if you have some time and knowledge to give, we'
 
 ## Releases
 
-For those who would rather use the most recent stable build, download the latest release here:
-[Releases Page](https://github.com/SabreTools/MPF/releases)
+For the most recent stable build, download the latest release here: [Releases Page](https://github.com/SabreTools/MPF/releases)
 
-For those who like to test the newest features, download the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
+For the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
 
 ## Media Preservation Frontend UI (MPF)
 

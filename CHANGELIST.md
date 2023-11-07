@@ -10,6 +10,7 @@
 - Even more README cleanup
 - Consolidate build script information
 - Remove lingering script reference
+- Make releases less verbose
 
 ### 2.7.5 (2023-11-06)
 
