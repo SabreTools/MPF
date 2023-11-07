@@ -9,6 +9,7 @@
 - Remove 4.8 note from build script
 - Even more README cleanup
 - Consolidate build script information
+- Remove lingering script reference
 
 ### 2.7.5 (2023-11-06)
 

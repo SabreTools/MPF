@@ -51,8 +51,6 @@ To build for .NET 6.0 or .NET 7.0, ensure that the [.NET 7.0 SDK](https://dotnet
 dotnet build MPF/MPF.csproj --framework [net6.0-windows|net7.0-windows] --runtime win-x64
 ```
 
-You may also run `publish-win.bat` to build and package all variants of MPF UI and MPF.Check at once. . Please note that this will also build the OSX and Linux versions of MPF.Check.
-
 **MPF.Check (Windows, OSX, Linux):**
 
 ```bash
