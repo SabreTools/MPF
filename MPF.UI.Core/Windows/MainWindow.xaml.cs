@@ -210,11 +210,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-#if NET48
-        public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
-#else
         public (bool?, SubmissionInfo?) ShowDiscInformationWindow(SubmissionInfo? submissionInfo)
-#endif
         {
             if (MainViewModel.Options.ShowDiscEjectReminder)
                 CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -233,27 +229,15 @@ namespace MPF.UI.Core.Windows
 
             // Copy back the submission info changes, if necessary
             if (result == true)
-#if NET48
-                submissionInfo = discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
-#else
                 submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
-#endif
 
-#if NET48
-            return (result, submissionInfo);
-#else
             return (result, submissionInfo!);
-#endif
         }
 
         /// <summary>
         /// Show the Options window
         /// </summary>
-#if NET48
-        public void ShowOptionsWindow(string title = null)
-#else
         public void ShowOptionsWindow(string? title = null)
-#endif
         {
             var optionsWindow = new OptionsWindow(MainViewModel.Options)
             {
@@ -291,11 +275,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
-#if NET48
-        public void OnOptionsUpdated(object sender, EventArgs e)
-#else
         public void OnOptionsUpdated(object? sender, EventArgs e)
-#endif
         {
             // Get the options window
             var optionsWindow = (sender as OptionsWindow);

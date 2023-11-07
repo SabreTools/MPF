@@ -27,18 +27,10 @@ namespace MPF.Core.Modules.Aaru
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-#if NET48
-        public override string InputPath => InputValue;
-#else
         public override string? InputPath => InputValue;
-#endif
 
         /// <inheritdoc/>
-#if NET48
-        public override string OutputPath => OutputValue;
-#else
         public override string? OutputPath => OutputValue;
-#endif
 
         /// <inheritdoc/>
         public override int? Speed
@@ -60,177 +52,69 @@ namespace MPF.Core.Modules.Aaru
 
         public int? BlockSizeValue { get; set; }
 
-#if NET48
-        public string CommentsValue { get; set; }
-#else
         public string? CommentsValue { get; set; }
-#endif
 
-#if NET48
-        public string CreatorValue { get; set; }
-#else
         public string? CreatorValue { get; set; }
-#endif
 
         public int? CountValue { get; set; }
 
-#if NET48
-        public string DriveManufacturerValue { get; set; }
-#else
         public string? DriveManufacturerValue { get; set; }
-#endif
 
-#if NET48
-        public string DriveModelValue { get; set; }
-#else
         public string? DriveModelValue { get; set; }
-#endif
 
-#if NET48
-        public string DriveRevisionValue { get; set; }
-#else
         public string? DriveRevisionValue { get; set; }
-#endif
 
-#if NET48
-        public string DriveSerialValue { get; set; }
-#else
         public string? DriveSerialValue { get; set; }
-#endif
 
-#if NET48
-        public string EncodingValue { get; set; }
-#else
         public string? EncodingValue { get; set; }
-#endif
 
-#if NET48
-        public string FormatConvertValue { get; set; }
-#else
         public string? FormatConvertValue { get; set; }
-#endif
 
-#if NET48
-        public string FormatDumpValue { get; set; }
-#else
         public string? FormatDumpValue { get; set; }
-#endif
 
-#if NET48
-        public string GeometryValue { get; set; }
-#else
         public string? GeometryValue { get; set; }
-#endif
 
-#if NET48
-        public string ImgBurnLogValue { get; set; }
-#else
         public string? ImgBurnLogValue { get; set; }
-#endif
 
-#if NET48
-        public string InputValue { get; set; }
-#else
         public string? InputValue { get; set; }
-#endif
 
-#if NET48
-        public string Input1Value { get; set; }
-#else
         public string? Input1Value { get; set; }
-#endif
 
-#if NET48
-        public string Input2Value { get; set; }
-#else
         public string? Input2Value { get; set; }
-#endif
 
         public long? LengthValue { get; set; }
 
         public int? MaxBlocksValue { get; set; }
 
-#if NET48
-        public string MediaBarcodeValue { get; set; }
-#else
         public string? MediaBarcodeValue { get; set; }
-#endif
 
         public int? MediaLastSequenceValue { get; set; }
 
-#if NET48
-        public string MediaManufacturerValue { get; set; }
-#else
         public string? MediaManufacturerValue { get; set; }
-#endif
 
-#if NET48
-        public string MediaModelValue { get; set; }
-#else
         public string? MediaModelValue { get; set; }
-#endif
 
-#if NET48
-        public string MediaPartNumberValue { get; set; }
-#else
         public string? MediaPartNumberValue { get; set; }
-#endif
 
         public int? MediaSequenceValue { get; set; }
 
-#if NET48
-        public string MediaSerialValue { get; set; }
-#else
         public string? MediaSerialValue { get; set; }
-#endif
 
-#if NET48
-        public string MediaTitleValue { get; set; }
-#else
         public string? MediaTitleValue { get; set; }
-#endif
 
-#if NET48
-        public string MHDDLogValue { get; set; }
-#else
         public string? MHDDLogValue { get; set; }
-#endif
 
-#if NET48
-        public string NamespaceValue { get; set; }
-#else
         public string? NamespaceValue { get; set; }
-#endif
 
-#if NET48
-        public string OptionsValue { get; set; }
-#else
         public string? OptionsValue { get; set; }
-#endif
 
-#if NET48
-        public string OutputValue { get; set; }
-#else
         public string? OutputValue { get; set; }
-#endif
 
-#if NET48
-        public string OutputPrefixValue { get; set; }
-#else
         public string? OutputPrefixValue { get; set; }
-#endif
 
-#if NET48
-        public string RemoteHostValue { get; set; }
-#else
         public string? RemoteHostValue { get; set; }
-#endif
 
-#if NET48
-        public string ResumeFileValue { get; set; }
-#else
         public string? ResumeFileValue { get; set; }
-#endif
 
         public short? RetryPassesValue { get; set; }
 
@@ -240,35 +124,19 @@ namespace MPF.Core.Modules.Aaru
 
         public long? StartValue { get; set; }
 
-#if NET48
-        public string SubchannelValue { get; set; }
-#else
         public string? SubchannelValue { get; set; }
-#endif
 
         public short? WidthValue { get; set; }
 
-#if NET48
-        public string XMLSidecarValue { get; set; }
-#else
         public string? XMLSidecarValue { get; set; }
-#endif
 
         #endregion
 
         /// <inheritdoc/>
-#if NET48
-        public Parameters(string parameters) : base(parameters) { }
-#else
         public Parameters(string? parameters) : base(parameters) { }
-#endif
 
         /// <inheritdoc/>
-#if NET48
-        public Parameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
-#else
         public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
-#endif
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -328,11 +196,7 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
-#if NET48
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
-#else
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
-#endif
         {
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -341,11 +205,7 @@ namespace MPF.Core.Modules.Aaru
             info = SubmissionInfoTool.EnsureAllSections(info);
 
             // TODO: Determine if there's an Aaru version anywhere
-#if NET48
-            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
-#else
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
-#endif
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible
@@ -377,11 +237,7 @@ namespace MPF.Core.Modules.Aaru
             var datafile = GenerateDatafile(sidecar, basePath);
 
             // Fill in the hash data
-#if NET48
-            info.TracksAndWriteOffsets.ClrMameProData = InfoTool.GenerateDatfile(datafile);
-#else
             info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
-#endif
 
             switch (this.Type)
             {
@@ -395,11 +251,7 @@ namespace MPF.Core.Modules.Aaru
                     if (File.Exists(basePath + ".resume.xml"))
                         errorCount = GetErrorCount(basePath + ".resume.xml");
 
-#if NET48
-                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-#else
                     info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-#endif
 
                     info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
 
@@ -415,11 +267,7 @@ namespace MPF.Core.Modules.Aaru
                     // Get the individual hash data, as per internal
                     if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
-#if NET48
-                        info.SizeAndChecksums.Size = size;
-#else
                         info.SizeAndChecksums!.CRC32 = crc32;
-#endif
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
@@ -430,19 +278,11 @@ namespace MPF.Core.Modules.Aaru
                     //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
 
                     // Deal with the layerbreak
-#if NET48
-                    string layerbreak = null;
-#else
                     string? layerbreak = null;
-#endif
                     if (this.Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
                     else if (this.Type == MediaType.BluRay)
-#if NET48
-                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
-#else
                         layerbreak = info.SizeAndChecksums!.Size > 25_025_314_816 ? "25025314816" : null;
-#endif
 
                     // If we have a single-layer disc
                     if (string.IsNullOrWhiteSpace(layerbreak))
@@ -452,11 +292,7 @@ namespace MPF.Core.Modules.Aaru
                     // If we have a dual-layer disc
                     else
                     {
-#if NET48
-                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
-#else
                         info.SizeAndChecksums!.Layerbreak = Int64.Parse(layerbreak);
-#endif
                     }
 
                     // TODO: Investigate XGD disc outputs
@@ -476,60 +312,35 @@ namespace MPF.Core.Modules.Aaru
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-#if NET48
-                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? string.Empty;
-#else
                     info.CopyProtection!.Protection = GetDVDProtection(sidecar) ?? string.Empty;
-#endif
                     break;
 
                 case RedumpSystem.KonamiPython2:
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
-#else
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
-#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-#if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-#else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-#endif
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-#else
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
-#if NET48
-                        info.Extras.SecuritySectorRanges = ss ?? string.Empty;
-#else
                         info.Extras!.SecuritySectorRanges = ss ?? string.Empty;
-#endif
                     }
 
                     if (GetXboxDMIInfo(sidecar, out var serial, out var version, out Region? region))
                     {
-#if NET48
-                        info.CommonDiscInfo.Serial = serial ?? string.Empty;
-                        info.VersionAndEditions.Version = version ?? string.Empty;
-#else
                         info.CommonDiscInfo!.Serial = serial ?? string.Empty;
                         info.VersionAndEditions!.Version = version ?? string.Empty;
-#endif
                         info.CommonDiscInfo.Region = region;
                     }
 
@@ -538,30 +349,17 @@ namespace MPF.Core.Modules.Aaru
                 case RedumpSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
                     {
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-#else
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
-#if NET48
-                        info.Extras.SecuritySectorRanges = ss360 ?? string.Empty;
-#else
                         info.Extras!.SecuritySectorRanges = ss360 ?? string.Empty;
-#endif
                     }
 
                     if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out Region? region360))
                     {
-#if NET48
-                        info.CommonDiscInfo.Serial = serial360 ?? string.Empty;
-                        info.VersionAndEditions.Version = version360 ?? string.Empty;
-#else
                         info.CommonDiscInfo!.Serial = serial360 ?? string.Empty;
                         info.VersionAndEditions!.Version = version360 ?? string.Empty;
-#endif
                         info.CommonDiscInfo.Region = region360;
                     }
                     break;
@@ -570,11 +368,7 @@ namespace MPF.Core.Modules.Aaru
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
-#else
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
-#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
@@ -585,67 +379,37 @@ namespace MPF.Core.Modules.Aaru
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-#if NET48
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
-#else
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
-#endif
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-#if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-#else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-#if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
-                    string firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
-                    if (firmwareVersion != null)
-                        info.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-#else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
                     string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
                     if (firmwareVersion != null)
                         info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-#if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
-#else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
-#endif
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-#if NET48
-                    info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
-#else
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
-#endif
                     break;
             }
 
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-#if NET48
-                if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
-#else
                 info.Artifacts ??= new Dictionary<string, string>();
-#endif
                 if (File.Exists(basePath + ".cicm.xml"))
                     info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
                 if (File.Exists(basePath + ".ibg"))
@@ -662,11 +426,7 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
-#if NET48
-        public override string GenerateParameters()
-#else
         public override string? GenerateParameters()
-#endif
         {
             var parameters = new List<string>();
 
@@ -694,12 +454,7 @@ namespace MPF.Core.Modules.Aaru
 
             #endregion
 
-#if NET48
-            if (BaseCommand == null)
-                BaseCommand = CommandStrings.NONE;
-#else
             BaseCommand ??= CommandStrings.NONE;
-#endif
 
             if (!string.IsNullOrWhiteSpace(BaseCommand))
                 parameters.Add(BaseCommand);
@@ -1788,11 +1543,7 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
-#if NET48
-        protected override void SetDefaultParameters(string drivePath, string filename, int? driveSpeed, Options options)
-#else
         protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
-#endif
         {
             BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
@@ -1869,11 +1620,7 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
-#if NET48
-        protected override bool ValidateAndSetParameters(string parameters)
-#else
         protected override bool ValidateAndSetParameters(string? parameters)
-#endif
         {
             BaseCommand = CommandStrings.NONE;
 
@@ -1938,11 +1685,7 @@ namespace MPF.Core.Modules.Aaru
                 short? shortValue = null;
                 int? intValue = null;
                 long? longValue = null;
-#if NET48
-                string stringValue = null;
-#else
                 string? stringValue = null;
-#endif
 
                 // Keep a count of keys to determine if we should break out to filename handling or not
                 int keyCount = Keys.Count();
@@ -2400,11 +2143,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="baseCommand">Command string to normalize</param>
         /// <returns>Normalized command</returns>
-#if NET48
-        private static string NormalizeCommand(List<string> parts, ref int start)
-#else
         private static string? NormalizeCommand(List<string> parts, ref int start)
-#endif
         {
             // Invalid start means invalid command
             if (start < 0 || start >= parts.Count)
@@ -2433,11 +2172,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="baseCommand">Command string to normalize</param>
         /// <returns>Normalized command</returns>
-#if NET48
-        private static string NormalizeCommand(string baseCommand)
-#else
         private static string? NormalizeCommand(string baseCommand)
-#endif
         {
             // If the base command is inavlid, just return nulls
             if (string.IsNullOrWhiteSpace(baseCommand))
@@ -2445,12 +2180,7 @@ namespace MPF.Core.Modules.Aaru
 
             // Split the command otherwise
             string[] splitCommand = baseCommand.Split(' ');
-#if NET48
-            string family, command;
-#else
             string? family, command;
-#endif
-
 
             // For commands with a family
             if (splitCommand.Length > 1)
@@ -2461,72 +2191,28 @@ namespace MPF.Core.Modules.Aaru
                     case CommandStrings.ArchivePrefixShort:
                     case CommandStrings.ArchivePrefixLong:
                         family = CommandStrings.ArchivePrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.ArchiveInfo:
-                                command = CommandStrings.ArchiveInfo;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.ArchiveInfo => CommandStrings.ArchiveInfo,
                             _ => null,
                         };
-#endif
 
                         break;
                     case CommandStrings.DatabasePrefixShort:
                     case CommandStrings.DatabasePrefixLong:
                         family = CommandStrings.DatabasePrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.DatabaseStats:
-                                command = CommandStrings.DatabaseStats;
-                                break;
-                            case CommandStrings.DatabaseUpdate:
-                                command = CommandStrings.DatabaseUpdate;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.DatabaseStats => CommandStrings.DatabaseStats,
                             CommandStrings.DatabaseUpdate => CommandStrings.DatabaseUpdate,
                             _ => null,
                         };
-#endif
 
                         break;
 
                     case CommandStrings.DevicePrefixShort:
                     case CommandStrings.DevicePrefixLong:
                         family = CommandStrings.DevicePrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.DeviceInfo:
-                                command = CommandStrings.DeviceInfo;
-                                break;
-                            case CommandStrings.DeviceList:
-                                command = CommandStrings.DeviceList;
-                                break;
-                            case CommandStrings.DeviceReport:
-                                command = CommandStrings.DeviceReport;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.DeviceInfo => CommandStrings.DeviceInfo,
@@ -2534,7 +2220,6 @@ namespace MPF.Core.Modules.Aaru
                             CommandStrings.DeviceReport => CommandStrings.DeviceReport,
                             _ => null,
                         };
-#endif
 
                         break;
 
@@ -2542,27 +2227,6 @@ namespace MPF.Core.Modules.Aaru
                     case CommandStrings.FilesystemPrefixShortAlt:
                     case CommandStrings.FilesystemPrefixLong:
                         family = CommandStrings.FilesystemPrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.FilesystemExtract:
-                                command = CommandStrings.FilesystemExtract;
-                                break;
-                            case CommandStrings.FilesystemInfo:
-                                command = CommandStrings.FilesystemInfo;
-                                break;
-                            case CommandStrings.FilesystemListShort:
-                            case CommandStrings.FilesystemListLong:
-                                command = CommandStrings.FilesystemListLong;
-                                break;
-                            case CommandStrings.FilesystemOptions:
-                                command = CommandStrings.FilesystemOptions;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.FilesystemExtract => CommandStrings.FilesystemExtract,
@@ -2572,53 +2236,12 @@ namespace MPF.Core.Modules.Aaru
                             CommandStrings.FilesystemOptions => CommandStrings.FilesystemOptions,
                             _ => null,
                         };
-#endif
 
                         break;
 
                     case CommandStrings.ImagePrefixShort:
                     case CommandStrings.ImagePrefixLong:
                         family = CommandStrings.ImagePrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.ImageChecksumShort:
-                            case CommandStrings.ImageChecksumLong:
-                                command = CommandStrings.ImageChecksumLong;
-                                break;
-                            case CommandStrings.ImageCompareShort:
-                            case CommandStrings.ImageCompareLong:
-                                command = CommandStrings.ImageChecksumLong;
-                                break;
-                            case CommandStrings.ImageConvert:
-                                command = CommandStrings.ImageConvert;
-                                break;
-                            case CommandStrings.ImageCreateSidecar:
-                                command = CommandStrings.ImageCreateSidecar;
-                                break;
-                            case CommandStrings.ImageDecode:
-                                command = CommandStrings.ImageDecode;
-                                break;
-                            case CommandStrings.ImageEntropy:
-                                command = CommandStrings.ImageEntropy;
-                                break;
-                            case CommandStrings.ImageInfo:
-                                command = CommandStrings.ImageInfo;
-                                break;
-                            case CommandStrings.ImageOptions:
-                                command = CommandStrings.ImageOptions;
-                                break;
-                            case CommandStrings.ImagePrint:
-                                command = CommandStrings.ImagePrint;
-                                break;
-                            case CommandStrings.ImageVerify:
-                                command = CommandStrings.ImageVerify;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.ImageChecksumShort => CommandStrings.ImageChecksumLong,
@@ -2635,30 +2258,12 @@ namespace MPF.Core.Modules.Aaru
                             CommandStrings.ImageVerify => CommandStrings.ImageVerify,
                             _ => null,
                         };
-#endif
 
                         break;
 
                     case CommandStrings.MediaPrefixShort:
                     case CommandStrings.MediaPrefixLong:
                         family = CommandStrings.MediaPrefixLong;
-#if NET48
-                        switch (splitCommand[1])
-                        {
-                            case CommandStrings.MediaDump:
-                                command = CommandStrings.MediaDump;
-                                break;
-                            case CommandStrings.MediaInfo:
-                                command = CommandStrings.MediaInfo;
-                                break;
-                            case CommandStrings.MediaScan:
-                                command = CommandStrings.MediaScan;
-                                break;
-                            default:
-                                command = null;
-                                break;
-                        }
-#else
                         command = splitCommand[1] switch
                         {
                             CommandStrings.MediaDump => CommandStrings.MediaDump,
@@ -2666,7 +2271,6 @@ namespace MPF.Core.Modules.Aaru
                             CommandStrings.MediaScan => CommandStrings.MediaScan,
                             _ => null,
                         };
-#endif
 
                         break;
 
@@ -2681,29 +2285,6 @@ namespace MPF.Core.Modules.Aaru
             else
             {
                 family = null;
-#if NET48
-                switch (splitCommand[0])
-                {
-                    case CommandStrings.Configure:
-                        command = CommandStrings.Configure;
-                        break;
-                    case CommandStrings.Formats:
-                        command = CommandStrings.Formats;
-                        break;
-                    case CommandStrings.ListEncodings:
-                        command = CommandStrings.ListEncodings;
-                        break;
-                    case CommandStrings.ListNamespaces:
-                        command = CommandStrings.ListNamespaces;
-                        break;
-                    case CommandStrings.Remote:
-                        command = CommandStrings.Remote;
-                        break;
-                    default:
-                        command = null;
-                        break;
-                }
-#else
                 command = splitCommand[0] switch
                 {
                     CommandStrings.Configure => CommandStrings.Configure,
@@ -2713,7 +2294,6 @@ namespace MPF.Core.Modules.Aaru
                     CommandStrings.Remote => CommandStrings.Remote,
                     _ => null,
                 };
-#endif
             }
 
             // If the command itself is invalid, then return null
@@ -2793,11 +2373,7 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the cuesheet, null on error</returns>
-#if NET48
-        private static string GenerateCuesheet(CICMMetadataType cicmSidecar, string basePath)
-#else
         private static string? GenerateCuesheet(CICMMetadataType? cicmSidecar, string basePath)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -2938,11 +2514,7 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the datfile, null on error</returns>
-#if NET48
-        private static string GenerateDatfile(CICMMetadataType cicmSidecar, string basePath)
-#else
         private static string? GenerateDatfile(CICMMetadataType? cicmSidecar, string basePath)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3050,11 +2622,7 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>Datafile containing the hash information, null on error</returns>
-#if NET48
-        private static Datafile GenerateDatafile(CICMMetadataType cicmSidecar, string basePath)
-#else
         private static Datafile? GenerateDatafile(CICMMetadataType? cicmSidecar, string basePath)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3191,11 +2759,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the PVD, null on error</returns>
-#if NET48
-        private static string GeneratePVD(CICMMetadataType cicmSidecar)
-#else
         private static string? GeneratePVD(CICMMetadataType? cicmSidecar)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3234,11 +2798,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="opticalDisc">OpticalDisc type from CICM Sidecar data</param>
         /// <returns>Byte array representing the PVD, null on error</returns>
-#if NET48
-        private static byte[] GeneratePVDData(OpticalDiscType opticalDisc)
-#else
         private static byte[]? GeneratePVDData(OpticalDiscType? opticalDisc)
-#endif
         {
             // Required variables
             DateTime creation = DateTime.MinValue;
@@ -3375,22 +2935,14 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="row">Row ID for outputting</param>
         /// <param name="bytes">Byte span representing the data to write</param>
         /// <returns>Formatted string representing the sector line</returns>
-#if NET48
-        private static string GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
-#else
         private static string? GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
-#endif
         {
             // If the data isn't correct, return null
             if (bytes == null || bytes.Length != 16)
                 return null;
 
             string pvdLine = $"{row} : ";
-#if NET48
-            pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
-#else
             pvdLine += BitConverter.ToString(bytes[..8].ToArray()).Replace("-", " ");
-#endif
             pvdLine += "  ";
             pvdLine += BitConverter.ToString(bytes.Slice(8, 8).ToArray().ToArray()).Replace("-", " ");
             pvdLine += "   ";
@@ -3405,11 +2957,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Object containing the data, null on error</returns>
-#if NET48
-        private static CICMMetadataType GenerateSidecar(string cicmSidecar)
-#else
         private static CICMMetadataType? GenerateSidecar(string cicmSidecar)
-#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(cicmSidecar))
@@ -3439,11 +2987,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True if disc type info was set, false otherwise</returns>
-#if NET48
-        private static bool GetDiscType(CICMMetadataType cicmSidecar, out string discType, out string discSubType)
-#else
         private static bool GetDiscType(CICMMetadataType? cicmSidecar, out string? discType, out string? discSubType)
-#endif
         {
             // Set the default values
             discType = null; discSubType = null;
@@ -3474,11 +3018,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-#if NET48
-        private static string GetDVDProtection(CICMMetadataType cicmSidecar)
-#else
         private static string? GetDVDProtection(CICMMetadataType? cicmSidecar)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3573,11 +3113,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True if hardware info was set, false otherwise</returns>
-#if NET48
-        private static bool GetHardwareInfo(CICMMetadataType cicmSidecar, out string manufacturer, out string model, out string firmware)
-#else
         private static bool GetHardwareInfo(CICMMetadataType? cicmSidecar, out string? manufacturer, out string? model, out string? firmware)
-#endif
         {
             // Set the default values
             manufacturer = null; model = null; firmware = null;
@@ -3621,11 +3157,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Layerbreak if possible, null on error</returns>
-#if NET48
-        private static string GetLayerbreak(CICMMetadataType cicmSidecar)
-#else
         private static string? GetLayerbreak(CICMMetadataType? cicmSidecar)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3636,11 +3168,7 @@ namespace MPF.Core.Modules.Aaru
                 return null;
 
             // Setup the layerbreak
-#if NET48
-            string layerbreak = null;
-#else
             string? layerbreak = null;
-#endif
 
             // Find and return the layerbreak, if possible
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
@@ -3660,11 +3188,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Sample write offset if possible, null on error</returns>
-#if NET48
-        private static string GetWriteOffset(CICMMetadataType cicmSidecar)
-#else
         private static string? GetWriteOffset(CICMMetadataType? cicmSidecar)
-#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3692,11 +3216,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-#if NET48
-        private static bool GetXgdAuxInfo(CICMMetadataType cicmSidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
-#else
         private static bool GetXgdAuxInfo(CICMMetadataType? cicmSidecar, out string? dmihash, out string? pfihash, out string? sshash, out string? ss, out string? ssver)
-#endif
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
@@ -3791,11 +3311,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-#if NET48
-        private static bool GetXboxDMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
-#else
         private static bool GetXboxDMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
-#endif
         {
             serial = null; version = null; region = Region.World;
 
@@ -3843,11 +3359,7 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-#if NET48
-        private static bool GetXbox360DMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
-#else
         private static bool GetXbox360DMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
-#endif
         {
             serial = null; version = null; region = Region.World;
 

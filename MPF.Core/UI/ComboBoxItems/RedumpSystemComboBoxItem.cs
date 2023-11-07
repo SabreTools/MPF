@@ -10,11 +10,7 @@ namespace MPF.Core.UI.ComboBoxItems
     /// </summary>
     public class RedumpSystemComboBoxItem : IEquatable<RedumpSystemComboBoxItem>, IElement
     {
-#if NET48
-        private readonly object Data;
-#else
         private readonly object? Data;
-#endif
 
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
@@ -85,11 +81,7 @@ namespace MPF.Core.UI.ComboBoxItems
         }
 
         /// <inheritdoc/>
-#if NET48
-        public bool Equals(RedumpSystemComboBoxItem other)
-#else
         public bool Equals(RedumpSystemComboBoxItem? other)
-#endif
         {
             if (other == null)
                 return false;

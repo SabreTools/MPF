@@ -84,40 +84,6 @@ namespace MPF.Core.Utilities
                 return Result.Failure("Please select a valid system");
 
             // If we're on an unsupported type, update the status accordingly
-#if NET48
-            switch (type)
-            {
-                // Fully supported types
-                case MediaType.BluRay:
-                case MediaType.CDROM:
-                case MediaType.DVD:
-                case MediaType.FloppyDisk:
-                case MediaType.HardDisk:
-                case MediaType.CompactFlash:
-                case MediaType.SDCard:
-                case MediaType.FlashDrive:
-                case MediaType.HDDVD:
-                    return Result.Success($"{type.LongName()} ready to dump");
-
-                // Partially supported types
-                case MediaType.GDROM:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return Result.Success($"{type.LongName()} partially supported for dumping");
-
-                // Special case for other supported tools
-                case MediaType.UMD:
-                    return Result.Failure($"{type.LongName()} supported for submission info parsing");
-
-                // Specifically unknown type
-                case MediaType.NONE:
-                    return Result.Failure($"Please select a valid media type");
-
-                // Undumpable but recognized types
-                default:
-                    return Result.Failure($"{type.LongName()} media are not supported for dumping");
-            }
-#else
             return type switch
             {
                 // Fully supported types
@@ -145,9 +111,8 @@ namespace MPF.Core.Utilities
                 // Undumpable but recognized types
                 _ => Result.Failure($"{type.LongName()} media are not supported for dumping"),
             };
-#endif
         }
-        
+
         /// <summary>
         /// Returns false if a given InternalProgram does not support a given MediaType
         /// </summary>
@@ -157,51 +122,6 @@ namespace MPF.Core.Utilities
             if (type == null || type == MediaType.NONE)
                 return false;
 
-#if NET48
-            switch (program)
-            {
-                case InternalProgram.Redumper:
-                    switch (type)
-                    {
-                        // Formats considered at least partially dumpable by Redumper
-                        case MediaType.BluRay:
-                        case MediaType.CDROM:
-                        case MediaType.DVD:
-                        case MediaType.GDROM:
-                        case MediaType.HDDVD:
-                            return true;
-
-                        // All other formats considered unsupported
-                        default:
-                            return false;
-                    }
-                case InternalProgram.Aaru:
-                case InternalProgram.DiscImageCreator:
-                    switch (type)
-                    {
-                        // Formats considered at least partially supported
-                        case MediaType.BluRay:
-                        case MediaType.CDROM:
-                        case MediaType.DVD:
-                        case MediaType.FloppyDisk:
-                        case MediaType.HardDisk:
-                        case MediaType.CompactFlash:
-                        case MediaType.SDCard:
-                        case MediaType.FlashDrive:
-                        case MediaType.HDDVD:
-                        case MediaType.NintendoGameCubeGameDisc:
-                        case MediaType.NintendoWiiOpticalDisc:
-                            return true;
-
-                        // All other formats considered unsupported
-                        default:
-                            return false;
-                    }
-                // All other InternalPrograms are not used for dumping
-                default:
-                    return false;
-            }
-#else
             return (program) switch
             {
                 // Aaru
@@ -242,7 +162,6 @@ namespace MPF.Core.Utilities
                 // Default
                 _ => false,
             };
-#endif
         }
 
         #endregion
@@ -257,11 +176,7 @@ namespace MPF.Core.Utilities
         /// String representing the message to display the the user.
         /// String representing the new release URL.
         /// </returns>
-#if NET48
-        public static (bool different, string message, string url) CheckForNewVersion()
-#else
         public static (bool different, string message, string? url) CheckForNewVersion()
-#endif
         {
             try
             {
@@ -293,11 +208,7 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Get the current informational version formatted as a string
         /// </summary>
-#if NET48
-        public static string GetCurrentVersion()
-#else
         public static string? GetCurrentVersion()
-#endif
         {
             try
             {
@@ -317,27 +228,8 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Get the latest version of MPF from GitHub and the release URL
         /// </summary>
-#if NET48
-        private static (string tag, string url) GetRemoteVersionAndUrl()
-#else
         private static (string? tag, string? url) GetRemoteVersionAndUrl()
-#endif
         {
-#if NET48
-            using (var wc = new System.Net.WebClient())
-            {
-                wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
-
-                // TODO: Figure out a better way than having this hardcoded...
-                string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
-                string latestReleaseJsonString = wc.DownloadString(url);
-                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
-                string latestTag = latestReleaseJson["tag_name"].ToString();
-                string releaseUrl = latestReleaseJson["html_url"].ToString();
-
-                return (latestTag, releaseUrl);
-            }
-#else
             using (var hc = new System.Net.Http.HttpClient())
             {
                 // TODO: Figure out a better way than having this hardcoded...
@@ -357,7 +249,6 @@ namespace MPF.Core.Utilities
 
                 return (latestTag, releaseUrl);
             }
-#endif
         }
 
         #endregion

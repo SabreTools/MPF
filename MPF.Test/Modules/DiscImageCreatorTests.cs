@@ -161,11 +161,7 @@ namespace MPF.Test.Modules
         [InlineData(MediaType.FloppyDisk, ".img")]
         [InlineData(MediaType.Cassette, ".wav")]
         [InlineData(MediaType.NONE, null)]
-#if NET48
-        public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
-#else
         public void MediaTypeToExtensionTest(MediaType? mediaType, string? expected)
-#endif
         {
             var actual = Converters.Extension(mediaType);
             Assert.Equal(expected, actual);

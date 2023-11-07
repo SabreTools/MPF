@@ -37,20 +37,12 @@ namespace MPF.Core.UI.ViewModels
         public bool CanExecuteSelectionChanged { get; private set; } = false;
 
         /// <inheritdoc/>
-#if NET48
-        public event PropertyChangedEventHandler PropertyChanged;
-#else
         public event PropertyChangedEventHandler? PropertyChanged;
-#endif
 
         /// <summary>
         /// Action to process logging statements
         /// </summary>
-#if NET48
-        private Action<LogLevel, string> _logger;
-#else
         private Action<LogLevel, string>? _logger;
-#endif
 
         /// <summary>
         /// Display a message to a user
@@ -62,11 +54,7 @@ namespace MPF.Core.UI.ViewModels
         /// T4 - true for inquiry, false otherwise
         /// TResult - true for positive, false for negative, null for neutral
         /// </remarks>
-#if NET48
-        private Func<string, string, int, bool, bool?> _displayUserMessage;
-#else
         private Func<string, string, int, bool, bool?>? _displayUserMessage;
-#endif
 
         /// <summary>
         /// Detected media type, distinct from the selected one
@@ -76,20 +64,12 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Current dumping environment
         /// </summary>
-#if NET48
-        private DumpEnvironment _environment;
-#else
         private DumpEnvironment? _environment;
-#endif
 
         /// <summary>
         /// Function to process user information
         /// </summary>
-#if NET48
-        private Func<SubmissionInfo, (bool?, SubmissionInfo)> _processUserInfo;
-#else
         private Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? _processUserInfo;
-#endif
 
         #endregion
 
@@ -210,11 +190,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Currently selected drive value
         /// </summary>
-#if NET48
-        public Drive CurrentDrive
-#else
         public Drive? CurrentDrive
-#endif
         {
             get => _currentDrive;
             set
@@ -223,11 +199,7 @@ namespace MPF.Core.UI.ViewModels
                 TriggerPropertyChanged(nameof(CurrentDrive));
             }
         }
-#if NET48
-        private Drive _currentDrive;
-#else
         private Drive? _currentDrive;
-#endif
 
         /// <summary>
         /// Indicates the status of the drive combo box
@@ -474,11 +446,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-#if NET48
-        public List<Element<MediaType>> MediaTypes
-#else
         public List<Element<MediaType>>? MediaTypes
-#endif
         {
             get => _mediaTypes;
             set
@@ -487,11 +455,7 @@ namespace MPF.Core.UI.ViewModels
                 TriggerPropertyChanged(nameof(MediaTypes));
             }
         }
-#if NET48
-        private List<Element<MediaType>> _mediaTypes;
-#else
         private List<Element<MediaType>>? _mediaTypes;
-#endif
 
         /// <summary>
         /// Current list of supported system profiles
@@ -564,11 +528,7 @@ namespace MPF.Core.UI.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-#if NET48
-            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo)
-#else
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
-#endif
         {
             // Set the callbacks
             _logger = loggerAction;
@@ -765,11 +725,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Check for available updates
         /// </summary>
-#if NET48
-        public (bool, string, string) CheckForUpdates()
-#else
         public (bool, string, string?) CheckForUpdates()
-#endif
         {
             (bool different, string message, var url) = Tools.CheckForNewVersion();
 
@@ -846,20 +802,12 @@ namespace MPF.Core.UI.ViewModels
                     EXEDateBuildDate = "19xx-xx-xx",
                     ErrorsCount = "0",
                     Comments = "Comment data line 1\r\nComment data line 2",
-#if NET48
-                    CommentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.ISBN] = "ISBN",
                     },
                     Contents = "Special contents 1\r\nSpecial contents 2",
-#if NET48
-                    ContentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     ContentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.PlayableDemos] = "Game Demo 1",
                     },
@@ -982,11 +930,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-#if NET48
-        public void UpdateOptions(bool savedSettings, Data.Options newOptions)
-#else
         public void UpdateOptions(bool savedSettings, Data.Options? newOptions)
-#endif
         {
             // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
@@ -1467,19 +1411,10 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-#if NET48
-        public async Task<(string, string)> ScanAndShowProtection()
-#else
         public async Task<(string?, string?)> ScanAndShowProtection()
-#endif
         {
             // Determine current environment, just in case
-#if NET48
-            if (_environment == null)
-                _environment = DetermineEnvironment();
-#else
             _environment ??= DetermineEnvironment();
-#endif
 
             // If we don't have a valid drive
             if (this.CurrentDrive?.Name == null)
@@ -1563,30 +1498,6 @@ namespace MPF.Core.UI.ViewModels
             VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
 
             // Set the selected speed
-#if NET48
-            int speed;
-            switch (CurrentMediaType)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                    speed = Options.PreferredDumpSpeedCD;
-                    break;
-                case MediaType.DVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    speed = Options.PreferredDumpSpeedDVD;
-                    break;
-                case MediaType.HDDVD:
-                    speed = Options.PreferredDumpSpeedHDDVD;
-                    break;
-                case MediaType.BluRay:
-                    speed = Options.PreferredDumpSpeedBD;
-                    break;
-                default:
-                    speed = Options.PreferredDumpSpeedCD;
-                    break;
-            }
-#else
             int speed = (CurrentMediaType) switch
             {
                 // CD dump speed
@@ -1607,7 +1518,6 @@ namespace MPF.Core.UI.ViewModels
                 // Default
                 _ => Options.PreferredDumpSpeedCD,
             };
-#endif
 
             VerboseLogLn($"Setting drive speed to: {speed}");
             this.DriveSpeed = speed;
@@ -1821,26 +1731,18 @@ namespace MPF.Core.UI.ViewModels
             return true;
         }
 
-#endregion
+        #endregion
 
         #region Progress Reporting
 
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
-#if NET48
-        private void ProgressUpdated(object sender, string value)
-#else
         private void ProgressUpdated(object? sender, string value)
-#endif
         {
             try
             {
-#if NET48
-                value = value ?? string.Empty;
-#else
                 value ??= string.Empty;
-#endif
                 LogLn(value);
             }
             catch { }
@@ -1849,20 +1751,12 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
-#if NET48
-        private void ProgressUpdated(object sender, Result value)
-#else
         private void ProgressUpdated(object? sender, Result value)
-#endif
         {
             var message = value?.Message;
 
             // Update the label with only the first line of output
-#if NET48
-            if (message != null && message.Contains("\n"))
-#else
             if (message != null && message.Contains('\n'))
-#endif
                 this.Status = value?.Message?.Split('\n')[0] + " (See log output)";
             else
                 this.Status = value?.Message ?? string.Empty;
@@ -1877,17 +1771,13 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Handler for ProtectionProgress ProgressChanged event
         /// </summary>
-#if NET48
-        private void ProgressUpdated(object sender, ProtectionProgress value)
-#else
         private void ProgressUpdated(object? sender, ProtectionProgress value)
-#endif
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             this.Status = message;
             VerboseLogLn(message);
         }
 
-#endregion
+        #endregion
     }
 }

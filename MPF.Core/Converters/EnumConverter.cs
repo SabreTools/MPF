@@ -38,11 +38,7 @@ namespace MPF.Core.Converters
         /// <summary>
         /// Long name method cache
         /// </summary>
-#if NET48
-        private static readonly ConcurrentDictionary<Type, MethodInfo> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
-#else
         private static readonly ConcurrentDictionary<Type, MethodInfo?> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo?>();
-#endif
 
         /// <summary>
         /// Get the string representation of a generic enumerable value
@@ -116,7 +112,7 @@ namespace MPF.Core.Converters
             }
         }
 
-#endregion
+        #endregion
 
         #region Convert From String
 
@@ -125,11 +121,7 @@ namespace MPF.Core.Converters
         /// </summary>
         /// <param name="internalProgram">String value to convert</param>
         /// <returns>InternalProgram represented by the string, if possible</returns>
-#if NET48
-        public static InternalProgram ToInternalProgram(string internalProgram)
-#else
         public static InternalProgram ToInternalProgram(string? internalProgram)
-#endif
         {
             switch (internalProgram?.ToLowerInvariant())
             {

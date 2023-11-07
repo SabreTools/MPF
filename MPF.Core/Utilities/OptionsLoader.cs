@@ -63,11 +63,7 @@ namespace MPF.Core.Utilities
         /// Process common arguments for all functionality
         /// </summary>
         /// <returns>True if all arguments pass, false otherwise</returns>
-#if NET48
-        public static (bool, MediaType, RedumpSystem?, string) ProcessCommonArguments(string[] args)
-#else
         public static (bool, MediaType, RedumpSystem?, string?) ProcessCommonArguments(string[] args)
-#endif
         {
             // All other use requires at least 3 arguments
             if (args.Length < 3)
@@ -89,11 +85,7 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-#if NET48
-        public static (Options, SubmissionInfo, string, int) LoadFromArguments(string[] args, int startIndex = 0)
-#else
         public static (Options, SubmissionInfo?, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
-#endif
         {
             // Create the output values with defaults
             var options = new Options()
@@ -108,13 +100,8 @@ namespace MPF.Core.Utilities
             };
 
             // Create the submission info to return, if necessary
-#if NET48
-            SubmissionInfo info = null;
-            string parsedPath = null;
-#else
             SubmissionInfo? info = null;
             string? parsedPath = null;
-#endif
 
             // These values require multiple parts to be active
             bool scan = false, protectFile = false;
@@ -277,11 +264,7 @@ namespace MPF.Core.Utilities
 
             var serializer = JsonSerializer.Create();
             var reader = new StreamReader(ConfigurationPath);
-#if NET48
-            var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
-#else
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
-#endif
             return new Options(settings);
         }
 

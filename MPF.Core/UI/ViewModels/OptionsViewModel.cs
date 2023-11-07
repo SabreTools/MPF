@@ -15,11 +15,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Title for the window
         /// </summary>
-#if NET48
-        public string Title
-#else
         public string? Title
-#endif
         {
             get => _title;
             set
@@ -28,11 +24,7 @@ namespace MPF.Core.UI.ViewModels
                 TriggerPropertyChanged(nameof(Title));
             }
         }
-#if NET48
-        private string _title;
-#else
         private string? _title;
-#endif
 
         /// <summary>
         /// Current set of options
@@ -45,13 +37,9 @@ namespace MPF.Core.UI.ViewModels
         public bool SavedSettings { get; set; }
 
         /// <inheritdoc/>
-#if NET48
-        public event PropertyChangedEventHandler PropertyChanged;
-#else
         public event PropertyChangedEventHandler? PropertyChanged;
-#endif
 
-#endregion
+        #endregion
 
         #region Lists
 
@@ -93,17 +81,9 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Test Redump login credentials
         /// </summary>
-#if NET48
-        public (bool?, string) TestRedumpLogin(string username, string password)
-#else
         public async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
-#endif
         {
-#if NET48
-            return RedumpWebClient.ValidateCredentials(username, password);
-#else
             return await RedumpHttpClient.ValidateCredentials(username, password);
-#endif
         }
 
         #endregion

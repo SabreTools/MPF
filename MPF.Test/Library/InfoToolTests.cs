@@ -42,11 +42,7 @@ namespace MPF.Test.Library
             long layerbreak,
             long layerbreak2,
             long layerbreak3,
-#if NET48
-            string expected)
-#else
             string? expected)
-#endif
         {
             // TODO: Add tests around BDU
             var actual = InfoTool.GetFixedMediaType(mediaType, null, size, layerbreak, layerbreak2, layerbreak3);
@@ -62,11 +58,7 @@ namespace MPF.Test.Library
         [InlineData("superhero\\blah.rev.bin", "superhero\\blah.rev.bin")]
         [InlineData("super&hero\\blah.bin", "super&hero\\blah.bin")]
         [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
-#if NET48
-        public void NormalizeOutputPathsTest(string outputPath, string expectedPath)
-#else
         public void NormalizeOutputPathsTest(string? outputPath, string? expectedPath)
-#endif
         {
             if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
@@ -84,21 +76,13 @@ namespace MPF.Test.Library
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
-#if NET48
-                    CommentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.VolumeLabel] = "VOLUME_LABEL",
                     },
 
                     Contents = "This is a contents line\n[T:GF] Game Footage",
-#if NET48
-                    ContentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     ContentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.Patches] = "1.04 patch",
                     },
@@ -148,21 +132,13 @@ namespace MPF.Test.Library
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     Comments = null,
-#if NET48
-                    CommentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.VolumeLabel] = "VOLUME_LABEL",
                     },
 
                     Contents = null,
-#if NET48
-                    ContentsSpecialFields = new Dictionary<SiteCode?, string>()
-#else
                     ContentsSpecialFields = new Dictionary<SiteCode, string>()
-#endif
                     {
                         [SiteCode.Patches] = "1.04 patch",
                     },

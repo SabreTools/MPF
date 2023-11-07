@@ -9,11 +9,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// All settings in the form of a dictionary
         /// </summary>
-#if NET48
-        public Dictionary<string, string> Settings { get; private set; }
-#else
         public Dictionary<string, string?> Settings { get; private set; }
-#endif
 
         /// <summary>
         /// Indicate if the program is being run with a clean configuration
@@ -29,11 +25,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Path to Aaru
         /// </summary>
-#if NET48
-        public string AaruPath
-#else
         public string? AaruPath
-#endif
         {
             get { return GetStringSetting(Settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
             set { Settings["AaruPath"] = value; }
@@ -42,11 +34,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Path to DiscImageCreator
         /// </summary>
-#if NET48
-        public string DiscImageCreatorPath
-#else
         public string? DiscImageCreatorPath
-#endif
         {
             get { return GetStringSetting(Settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
             set { Settings["DiscImageCreatorPath"] = value; }
@@ -55,11 +43,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Path to Redumper
         /// </summary>
-#if NET48
-        public string RedumperPath
-#else
         public string? RedumperPath
-#endif
         {
             get { return GetStringSetting(Settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
             set { Settings["RedumperPath"] = value; }
@@ -116,11 +100,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Default output path for dumps
         /// </summary>
-#if NET48
-        public string DefaultOutputPath
-#else
         public string? DefaultOutputPath
-#endif
         {
             get { return GetStringSetting(Settings, "DefaultOutputPath", "ISO"); }
             set { Settings["DefaultOutputPath"] = value; }
@@ -599,22 +579,14 @@ namespace MPF.Core.Data
 
         #region Redump Login Information
 
-#if NET48
-        public string RedumpUsername
-#else
         public string? RedumpUsername
-#endif
         {
             get { return GetStringSetting(Settings, "RedumpUsername", ""); }
             set { Settings["RedumpUsername"] = value; }
         }
 
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-#if NET48
-        public string RedumpPassword
-#else
         public string? RedumpPassword
-#endif
         {
             get
             {
@@ -634,44 +606,24 @@ namespace MPF.Core.Data
         /// Constructor taking a dictionary for settings
         /// </summary>
         /// <param name="settings"></param>
-#if NET48
-        public Options(Dictionary<string, string> settings = null)
-#else
         public Options(Dictionary<string, string?>? settings = null)
-#endif
         {
-#if NET48
-            this.Settings = settings ?? new Dictionary<string, string>();
-#else
             this.Settings = settings ?? new Dictionary<string, string?>();
-#endif
         }
 
         /// <summary>
         /// Constructor taking an existing Options object
         /// </summary>
         /// <param name="source"></param>
-#if NET48
-        public Options(Options source)
-#else
         public Options(Options? source)
-#endif
         {
-#if NET48
-            Settings = new Dictionary<string, string>(source?.Settings ?? new Dictionary<string, string>());
-#else
             Settings = new Dictionary<string, string?>(source?.Settings ?? new Dictionary<string, string?>());
-#endif
         }
 
         /// <summary>
         /// Accessor for the internal dictionary
         /// </summary>
-#if NET48
-        public string this[string key]
-#else
         public string? this[string key]
-#endif
         {
             get => this.Settings[key];
             set => this.Settings[key] = value;
@@ -686,11 +638,7 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-#if NET48
-        private static bool GetBooleanSetting(Dictionary<string, string> settings, string key, bool defaultValue)
-#else
         private static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
-#endif
         {
             if (settings.ContainsKey(key))
             {
@@ -712,11 +660,7 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-#if NET48
-        private static int GetInt32Setting(Dictionary<string, string> settings, string key, int defaultValue)
-#else
         private static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
-#endif
         {
             if (settings.ContainsKey(key))
             {
@@ -738,11 +682,7 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-#if NET48
-        private static string GetStringSetting(Dictionary<string, string> settings, string key, string defaultValue)
-#else
         private static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
-#endif
         {
             if (settings.ContainsKey(key))
                 return settings[key];

@@ -30,18 +30,10 @@ namespace MPF.UI.Core
             }
         }
 
-#if NET48
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-#else
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-#endif
         {
             // If it's an IElement but ends up null
-#if NET48
-            if (!(value is IElement element))
-#else
             if (value is not IElement element)
-#endif
                 return null;
 
             switch (element)

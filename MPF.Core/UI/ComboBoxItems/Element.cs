@@ -49,11 +49,7 @@ namespace MPF.Core.UI.ComboBoxItems
         }
 
         /// <inheritdoc/>
-#if NET48
-        public bool Equals(Element<T> other)
-#else
         public bool Equals(Element<T>? other)
-#endif
         {
             if (other == null)
                 return false;

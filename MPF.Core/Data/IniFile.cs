@@ -8,22 +8,13 @@ namespace MPF.Core.Data
 {
     public class IniFile : IDictionary<string, string>
     {
-#if NET48
-        private Dictionary<string, string> _keyValuePairs = new Dictionary<string, string>();
-#else
         private Dictionary<string, string> _keyValuePairs = new();
-#endif
 
         public string this[string key]
         {
             get
             {
-#if NET48
-                if (_keyValuePairs == null)
-                    _keyValuePairs = new Dictionary<string, string>();
-#else
                 _keyValuePairs ??= new Dictionary<string, string>();
-#endif
 
                 key = key.ToLowerInvariant();
                 if (_keyValuePairs.ContainsKey(key))
@@ -33,12 +24,7 @@ namespace MPF.Core.Data
             }
             set
             {
-#if NET48
-                if (_keyValuePairs == null)
-                    _keyValuePairs = new Dictionary<string, string>();
-#else
                 _keyValuePairs ??= new Dictionary<string, string>();
-#endif
 
                 key = key.ToLowerInvariant();
                 _keyValuePairs[key] = value;
@@ -137,11 +123,7 @@ namespace MPF.Core.Data
                         }
 
                         // Valid INI lines are in the format key=value
-#if NET48
-                        else if (line.Contains("="))
-#else
                         else if (line.Contains('='))
-#endif
                         {
                             // Split the line by '=' for key-value pairs
                             string[] data = line.Split('=');

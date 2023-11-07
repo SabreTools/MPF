@@ -38,11 +38,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// List of Redump-supported Regions
         /// </summary>
-#if NET48
-        private static readonly List<Region> RedumpRegions = new List<Region>
-#else
         private static readonly List<Region> RedumpRegions = new()
-#endif
         {
             Region.Argentina,
             Region.Asia,
@@ -133,11 +129,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// List of Redump-supported Languages
         /// </summary>
-#if NET48
-        private static readonly List<Language> RedumpLanguages = new List<Language>
-#else
         private static readonly List<Language> RedumpLanguages = new()
-#endif
         {
             Language.Afrikaans,
             Language.Albanian,
@@ -199,11 +191,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-#if NET48
-        public DiscInformationViewModel(Options options, SubmissionInfo submissionInfo)
-#else
         public DiscInformationViewModel(Options options, SubmissionInfo? submissionInfo)
-#endif
         {
             Options = options;
             SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();

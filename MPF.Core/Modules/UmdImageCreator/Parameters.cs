@@ -22,18 +22,10 @@ namespace MPF.Core.Modules.UmdImageCreator
         #endregion
 
         /// <inheritdoc/>
-#if NET48
-        public Parameters(string parameters) : base(parameters) { }
-#else
         public Parameters(string? parameters) : base(parameters) { }
-#endif
 
         /// <inheritdoc/>
-#if NET48
-        public Parameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
-#else
         public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
-#endif
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -70,40 +62,24 @@ namespace MPF.Core.Modules.UmdImageCreator
         }
 
         /// <inheritdoc/>
-#if NET48
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
-#else
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
-#endif
         {
             // Ensure that required sections exist
             info = SubmissionInfoTool.EnsureAllSections(info);
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
-#if NET48
-            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
-#else
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
-#endif
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.UMD:
-#if NET48
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
-#else
                     info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
-#endif
 
                     if (Hasher.GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
                     {
-#if NET48
-                        info.SizeAndChecksums.Size = filesize;
-#else
                         info.SizeAndChecksums!.Size = filesize;
-#endif
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
@@ -111,17 +87,10 @@ namespace MPF.Core.Modules.UmdImageCreator
 
                     if (GetUMDAuxInfo(basePath + "_disc.txt", out var title, out DiscCategory? umdcat, out var umdversion, out var umdlayer, out long umdsize))
                     {
-#if NET48
-                        info.CommonDiscInfo.Title = title ?? string.Empty;
-                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
-                        info.VersionAndEditions.Version = umdversion ?? string.Empty;
-                        info.SizeAndChecksums.Size = umdsize;
-#else
                         info.CommonDiscInfo!.Title = title ?? string.Empty;
                         info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
                         info.VersionAndEditions!.Version = umdversion ?? string.Empty;
                         info.SizeAndChecksums!.Size = umdsize;
-#endif
 
                         if (!string.IsNullOrWhiteSpace(umdlayer))
                             info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
@@ -133,11 +102,7 @@ namespace MPF.Core.Modules.UmdImageCreator
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-#if NET48
-                if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
-#else
                 info.Artifacts ??= new Dictionary<string, string>();
-#endif
 
                 if (File.Exists(basePath + "_disc.txt"))
                     info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt")) ?? string.Empty;
@@ -185,11 +150,7 @@ namespace MPF.Core.Modules.UmdImageCreator
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-#if NET48
-        private static string GetPVD(string mainInfo)
-#else
         private static string? GetPVD(string mainInfo)
-#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -225,11 +186,7 @@ namespace MPF.Core.Modules.UmdImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-#if NET48
-        private static bool GetUMDAuxInfo(string disc, out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize)
-#else
         private static bool GetUMDAuxInfo(string disc, out string? title, out DiscCategory? umdcat, out string? umdversion, out string? umdlayer, out long umdsize)
-#endif
         {
             title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
 
@@ -250,11 +207,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                             break;
 
                         if (line.StartsWith("TITLE") && title == null)
-#if NET48
-                            title = line.Substring("TITLE: ".Length);
-#else
                             title = line["TITLE: ".Length..];
-#endif
                         else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                             umdversion = line.Split(' ')[1];
                         else if (line.StartsWith("pspUmdTypes"))

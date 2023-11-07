@@ -27,20 +27,12 @@ namespace MPF.Core.Data
         /// <summary>
         /// Drive partition format
         /// </summary>
-#if NET48
-        public string DriveFormat { get; private set; } = null;
-#else
         public string? DriveFormat { get; private set; } = null;
-#endif
 
         /// <summary>
         /// Windows drive path
         /// </summary>
-#if NET48
-        public string Name { get; private set; } = null;
-#else
         public string? Name { get; private set; } = null;
-#endif
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
@@ -56,11 +48,7 @@ namespace MPF.Core.Data
         /// Media label as read by Windows
         /// </summary>
         /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
-#if NET48
-        public string VolumeLabel { get; private set; } = null;
-#else
         public string? VolumeLabel { get; private set; } = null;
-#endif
 
         #endregion
 
@@ -69,11 +57,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs
         /// </summary>
-#if NET48
-        public string FormattedVolumeLabel
-#else
         public string? FormattedVolumeLabel
-#endif
         {
             get
             {
@@ -111,11 +95,7 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="driveType">InternalDriveType value representing the drive type</param>
         /// <param name="devicePath">Path to the device according to the local machine</param>
-#if NET48
-        public static Drive Create(InternalDriveType? driveType, string devicePath)
-#else
         public static Drive? Create(InternalDriveType? driveType, string devicePath)
-#endif
         {
             // Create a new, empty drive object
             var drive = new Drive()
@@ -129,11 +109,7 @@ namespace MPF.Core.Data
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
-#if NET48
-                devicePath = devicePath.Substring("\\\\.\\".Length);
-#else
                 devicePath = devicePath["\\\\.\\".Length..];
-#endif
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);
@@ -150,11 +126,7 @@ namespace MPF.Core.Data
         /// Populate all fields from a DriveInfo object
         /// </summary>
         /// <param name="driveInfo">DriveInfo object to populate from</param>
-#if NET48
-        private void PopulateFromDriveInfo(DriveInfo driveInfo)
-#else
         private void PopulateFromDriveInfo(DriveInfo? driveInfo)
-#endif
         {
             // If we have an invalid DriveInfo, just return
             if (driveInfo == null || driveInfo == default)
@@ -196,11 +168,7 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
-#if NET48
-        public (MediaType?, string) GetMediaType(RedumpSystem? system)
-#else
         public (MediaType?, string?) GetMediaType(RedumpSystem? system)
-#endif
         {
             // Take care of the non-optical stuff first
             switch (this.InternalDriveType)

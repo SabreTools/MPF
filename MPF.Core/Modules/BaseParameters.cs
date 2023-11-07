@@ -18,11 +18,7 @@ namespace MPF.Core.Modules
         /// Geneeic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>
-#if NET48
-        public EventHandler<string> ReportStatus;
-#else
         public EventHandler<string>? ReportStatus;
-#endif
 
         #endregion
 
@@ -31,20 +27,12 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Base command to run
         /// </summary>
-#if NET48
-        public string BaseCommand { get; set; }
-#else
         public string? BaseCommand { get; set; }
-#endif
 
         /// <summary>
         /// Set of flags to pass to the executable
         /// </summary>
-#if NET48
-        protected Dictionary<string, bool?> flags = new Dictionary<string, bool?>();
-#else
         protected Dictionary<string, bool?> flags = new();
-#endif
         protected internal IEnumerable<string> Keys => flags.Keys;
 
         /// <summary>
@@ -68,11 +56,7 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Process to track external program
         /// </summary>
-#if NET48
-        private Process process;
-#else
         private Process? process;
-#endif
 
         #endregion
 
@@ -81,30 +65,18 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Command to flag support mappings
         /// </summary>
-#if NET48
-        public Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
-#else
         public Dictionary<string, List<string>>? CommandSupport => GetCommandSupport();
-#endif
 
         /// <summary>
         /// Input path for operations
         /// </summary>
-#if NET48
-        public virtual string InputPath => null;
-#else
         public virtual string? InputPath => null;
-#endif
 
         /// <summary>
         /// Output path for operations
         /// </summary>
         /// <returns>String representing the path, null on error</returns>
-#if NET48
-        public virtual string OutputPath => null;
-#else
         public virtual string? OutputPath => null;
-#endif
 
         /// <summary>
         /// Get the processing speed from the implementation
@@ -118,11 +90,7 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Path to the executable
         /// </summary>
-#if NET48
-        public string ExecutablePath { get; set; }
-#else
         public string? ExecutablePath { get; set; }
-#endif
 
         /// <summary>
         /// Program that this set of parameters represents
@@ -145,11 +113,7 @@ namespace MPF.Core.Modules
         /// Populate a Parameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
-#if NET48
-        public BaseParameters(string parameters)
-#else
         public BaseParameters(string? parameters)
-#endif
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
@@ -165,11 +129,7 @@ namespace MPF.Core.Modules
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-#if NET48
-        public BaseParameters(RedumpSystem? system, MediaType? type, string drivePath, string filename, int? driveSpeed, Options options)
-#else
         public BaseParameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
-#endif
         {
             this.System = system;
             this.Type = type;
@@ -194,11 +154,7 @@ namespace MPF.Core.Modules
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <param name="includeArtifacts">True to include output files as encoded artifacts, false otherwise</param>
-#if NET48
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive drive, bool includeArtifacts);
-#else
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive? drive, bool includeArtifacts);
-#endif
 
         #endregion
 
@@ -208,54 +164,34 @@ namespace MPF.Core.Modules
         /// Get all commands mapped to the supported flags
         /// </summary>
         /// <returns>Mappings from command to supported flags</returns>
-#if NET48
-        public virtual Dictionary<string, List<string>> GetCommandSupport() => null;
-#else
         public virtual Dictionary<string, List<string>>? GetCommandSupport() => null;
-#endif
 
         /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Parameter string for invocation, null on error</returns>
-#if NET48
-        public virtual string GenerateParameters() => null;
-#else
         public virtual string? GenerateParameters() => null;
-#endif
 
         /// <summary>
         /// Get the default extension for a given media type
         /// </summary>
         /// <param name="mediaType">MediaType value to check</param>
         /// <returns>String representing the media type, null on error</returns>
-#if NET48
-        public virtual string GetDefaultExtension(MediaType? mediaType) => null;
-#else
         public virtual string? GetDefaultExtension(MediaType? mediaType) => null;
-#endif
 
         /// <summary>
         /// Generate a list of all deleteable files generated
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
-#if NET48
-        public virtual List<string> GetDeleteableFilePaths(string basePath) => new List<string>();
-#else
         public virtual List<string> GetDeleteableFilePaths(string basePath) => new();
-#endif
 
         /// <summary>
         /// Generate a list of all log files generated
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
-#if NET48
-        public virtual List<string> GetLogFilePaths(string basePath) => new List<string>();
-#else
         public virtual List<string> GetLogFilePaths(string basePath) => new();
-#endif
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
@@ -303,22 +239,14 @@ namespace MPF.Core.Modules
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-#if NET48
-        protected virtual void SetDefaultParameters(string drivePath, string filename, int? driveSpeed, Options options) { }
-#else
         protected virtual void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options) { }
-#endif
 
         /// <summary>
         /// Scan a possible parameter string and populate whatever possible
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
-#if NET48
-        protected virtual bool ValidateAndSetParameters(string parameters) => !string.IsNullOrWhiteSpace(parameters);
-#else
         protected virtual bool ValidateAndSetParameters(string? parameters) => !string.IsNullOrWhiteSpace(parameters);
-#endif
 
         #endregion
 
@@ -392,11 +320,7 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="content">String content to encode</param>
         /// <returns>Base64-encoded contents, if possible</returns>
-#if NET48
-        protected static string GetBase64(string content)
-#else
         protected static string? GetBase64(string? content)
-#endif
         {
             if (string.IsNullOrEmpty(content))
                 return null;
@@ -411,11 +335,7 @@ namespace MPF.Core.Modules
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
-#if NET48
-        protected static string GetFullFile(string filename, bool binary = false)
-#else
         protected static string? GetFullFile(string filename, bool binary = false)
-#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -545,11 +465,7 @@ namespace MPF.Core.Modules
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-#if NET48
-        protected bool ProcessFlagParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i)
-#else
         protected bool ProcessFlagParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i)
-#endif
         {
             if (parts == null)
                 return false;
@@ -585,11 +501,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-#if NET48
-        protected bool ProcessBooleanParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected bool ProcessBooleanParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return false;
@@ -664,11 +576,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
-#if NET48
-        protected sbyte? ProcessInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected sbyte? ProcessInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -746,11 +654,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
-#if NET48
-        protected short? ProcessInt16Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected short? ProcessInt16Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -827,11 +731,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
-#if NET48
-        protected int? ProcessInt32Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected int? ProcessInt32Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -908,11 +808,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-#if NET48
-        protected long? ProcessInt64Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected long? ProcessInt64Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -977,12 +873,8 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
-#if NET48
-        protected string ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-#else
         protected string? ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-#endif
-        => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
+            => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a string parameter
@@ -993,11 +885,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
-#if NET48
-        protected string ProcessStringParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected string? ProcessStringParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -1072,11 +960,7 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
-#if NET48
-        protected byte? ProcessUInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#else
         protected byte? ProcessUInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
-#endif
         {
             if (parts == null)
                 return null;
@@ -1207,11 +1091,7 @@ namespace MPF.Core.Modules
         /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-#if NET48
-        protected static string GetPIC(string picPath, int trimLength = -1)
-#else
         protected static string? GetPIC(string picPath, int trimLength = -1)
-#endif
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
@@ -1224,11 +1104,7 @@ namespace MPF.Core.Modules
                     return null;
 
                 if (trimLength > -1)
-#if NET48
-                    hex = hex.Substring(0, trimLength);
-#else
                     hex = hex[..trimLength];
-#endif
 
                 return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }

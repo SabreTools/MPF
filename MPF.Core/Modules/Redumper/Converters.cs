@@ -11,24 +11,16 @@ namespace MPF.Core.Modules.Redumper
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-#if NET48
-        public static string Extension(MediaType? type)
-#else
         public static string? Extension(MediaType? type)
-#endif
         {
-            switch (type)
+            return type switch
             {
-                case MediaType.CDROM:
-                    return ".bin";
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    return ".iso";
-                case MediaType.NONE:
-                default:
-                    return null;
-            }
+                MediaType.CDROM => ".bin",
+                MediaType.DVD
+                    or MediaType.HDDVD
+                    or MediaType.BluRay => ".iso",
+                _ => null,
+            };
         }
 
         #endregion

@@ -31,11 +31,7 @@ namespace MPF.Core
         /// <summary>
         /// Drive object representing the current drive
         /// </summary>
-#if NET48
-        public Drive Drive { get; private set; }
-#else
         public Drive? Drive { get; private set; }
-#endif
 
         /// <summary>
         /// Currently selected system
@@ -60,11 +56,7 @@ namespace MPF.Core
         /// <summary>
         /// Parameters object representing what to send to the internal program
         /// </summary>
-#if NET48
-        public BaseParameters Parameters { get; private set; }
-#else
         public BaseParameters? Parameters { get; private set; }
-#endif
 
         #endregion
 
@@ -73,29 +65,17 @@ namespace MPF.Core
         /// <summary>
         /// Generic way of reporting a message
         /// </summary>
-#if NET48
-        public EventHandler<string> ReportStatus;
-#else
         public EventHandler<string>? ReportStatus;
-#endif
 
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-#if NET48
-        private ProcessingQueue<string> outputQueue;
-#else
         private ProcessingQueue<string>? outputQueue;
-#endif
 
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-#if NET48
-        private void OutputToLog(object proc, string args) => outputQueue?.Enqueue(args);
-#else
         private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
-#endif
 
         /// <summary>
         /// Process the outputs in the queue
@@ -116,19 +96,11 @@ namespace MPF.Core
         /// <param name="parameters"></param>
         public DumpEnvironment(Data.Options options,
             string outputPath,
-#if NET48
-            Drive drive,
-#else
             Drive? drive,
-#endif
             RedumpSystem? system,
             MediaType? type,
             InternalProgram? internalProgram,
-#if NET48
-            string parameters)
-#else
             string? parameters)
-#endif
         {
             // Set options object
             Options = options;
@@ -152,47 +124,8 @@ namespace MPF.Core
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
-#if NET48
-        public void SetParameters(string parameters)
-#else
         public void SetParameters(string? parameters)
-#endif
         {
-#if NET48
-            switch (InternalProgram)
-            {
-                // Dumping support
-                case InternalProgram.Aaru:
-                    Parameters = new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
-                    break;
-
-                case InternalProgram.DiscImageCreator:
-                    Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
-                    break;
-
-                case InternalProgram.Redumper:
-                    Parameters = new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
-                    break;
-
-                // Verification support only
-                case InternalProgram.CleanRip:
-                    Parameters = new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null };
-                    break;
-
-                case InternalProgram.DCDumper:
-                    Parameters = null; // TODO: Create correct parameter type when supported
-                    break;
-
-                case InternalProgram.UmdImageCreator:
-                    Parameters = new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
-                    break;
-
-                // This should never happen, but it needs a fallback
-                default:
-                    Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
-                    break;
-            }
-#else
             Parameters = InternalProgram switch
             {
                 // Dumping support
@@ -208,7 +141,6 @@ namespace MPF.Core
                 // This should never happen, but it needs a fallback
                 _ => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
             };
-#endif
 
             // Set system and type
             if (Parameters != null)
@@ -223,11 +155,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveSpeed">Nullable int representing the drive speed</param>
         /// <returns>String representing the params, null on error</returns>
-#if NET48
-        public string GetFullParameters(int? driveSpeed)
-#else
         public string? GetFullParameters(int? driveSpeed)
-#endif
         {
             // Populate with the correct params for inputs (if we're not on the default option)
             if (System != null && Type != MediaType.NONE)
@@ -237,27 +165,6 @@ namespace MPF.Core
                     return null;
 
                 // Set the proper parameters
-#if NET48
-                switch (InternalProgram)
-                {
-                    case InternalProgram.Aaru:
-                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
-                        break;
-
-                    case InternalProgram.DiscImageCreator:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
-                        break;
-
-                    case InternalProgram.Redumper:
-                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
-                        break;
-
-                    // This should never happen, but it needs a fallback
-                    default:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options);
-                        break;
-                }
-#else
                 Parameters = InternalProgram switch
                 {
                     InternalProgram.Aaru => new Modules.Aaru.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
@@ -267,7 +174,6 @@ namespace MPF.Core
                     // This should never happen, but it needs a fallback
                     _ => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
                 };
-#endif
 
                 // Generate and return the param string
                 return Parameters.GenerateParameters();
@@ -288,32 +194,20 @@ namespace MPF.Core
         /// <summary>
         /// Eject the disc using DiscImageCreator
         /// </summary>
-#if NET48
-        public async Task<string> EjectDisc() =>
-#else
         public async Task<string?> EjectDisc() =>
-#endif
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
         /// </summary>
-#if NET48
-        public async Task<string> ResetDrive() =>
-#else
         public async Task<string?> ResetDrive() =>
-#endif
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
-#if NET48
-        public async Task<Result> Run(IProgress<Result> progress = null)
-#else
         public async Task<Result> Run(IProgress<Result>? progress = null)
-#endif
         {
             // If we don't have parameters
             if (Parameters == null)
@@ -361,17 +255,10 @@ namespace MPF.Core
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
-#if NET48
-            IProgress<Result> resultProgress = null,
-            IProgress<ProtectionProgress> protectionProgress = null,
-            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo = null,
-            SubmissionInfo seedInfo = null)
-#else
             IProgress<Result>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
-#endif
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
@@ -620,11 +507,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="command">Command string to run</param>
         /// <returns>The output of the command on success, null on error</returns>
-#if NET48
-        private async Task<string> RunStandaloneDiscImageCreatorCommand(string command)
-#else
         private async Task<string?> RunStandaloneDiscImageCreatorCommand(string command)
-#endif
         {
             // Validate that DiscImageCreator is all set
             if (!RequiredProgramsExist())

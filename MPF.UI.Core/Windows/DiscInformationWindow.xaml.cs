@@ -20,11 +20,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-#if NET48
-        public DiscInformationWindow(Options options, SubmissionInfo submissionInfo)
-#else
         public DiscInformationWindow(Options options, SubmissionInfo? submissionInfo)
-#endif
         {
             InitializeComponent();
             DataContext = new DiscInformationViewModel(options, submissionInfo);
@@ -51,11 +47,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Manipulate fields based on the current disc
         /// </summary>
-#if NET48
-        private void ManipulateFields(Options options, SubmissionInfo submissionInfo)
-#else
         private void ManipulateFields(Options options, SubmissionInfo? submissionInfo)
-#endif
         {
             // Enable tabs in all fields, if required
             if (options.EnableTabsInInputFields)
@@ -123,11 +115,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         /// TODO: Figure out how to bind the PartiallyMatchedIDs array to a text box
         /// TODO: Convert visibility to a binding
-#if NET48
-        private void HideReadOnlyFields(SubmissionInfo submissionInfo)
-#else
         private void HideReadOnlyFields(SubmissionInfo? submissionInfo)
-#endif
         {
             // If there's no submission information
             if (submissionInfo == null)
@@ -195,11 +183,7 @@ namespace MPF.UI.Core.Windows
         /// Update visible fields and sections based on the media type
         /// </summary>
         /// TODO: See if these can be done by binding
-#if NET48
-        private void UpdateFromDiscType(SubmissionInfo submissionInfo)
-#else
         private void UpdateFromDiscType(SubmissionInfo? submissionInfo)
-#endif
         {
             // Sony-printed discs have layers in the opposite order
             var system = submissionInfo?.CommonDiscInfo?.System;
@@ -346,11 +330,7 @@ namespace MPF.UI.Core.Windows
         /// Update visible fields and sections based on the system type
         /// </summary>
         /// TODO: See if these can be done by binding
-#if NET48
-        private void UpdateFromSystemType(SubmissionInfo submissionInfo)
-#else
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
-#endif
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
             switch (system)

@@ -60,11 +60,7 @@ namespace WPFCustomMessageBox
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-#if NET48
-        internal static string TryAddKeyboardAccellerator(this string input)
-#else
         internal static string? TryAddKeyboardAccellerator(this string? input)
-#endif
         {
             if (input == null)
                 return input;

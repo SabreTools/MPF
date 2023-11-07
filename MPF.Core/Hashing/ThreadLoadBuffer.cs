@@ -11,11 +11,7 @@ namespace MPF.Core.Hashing
         private readonly AutoResetEvent _outEvent;
         private readonly Thread _tWorker;
 
-#if NET48
-        private byte[] _buffer;
-#else
         private byte[]? _buffer;
-#endif
         private int _size;
         private readonly Stream _ds;
         private bool _finished;

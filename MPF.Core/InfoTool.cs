@@ -33,11 +33,7 @@ namespace MPF.Core
         /// <param name="parameters">Parameters object representing what to send to the internal program</param>
         /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-#if NET48
-        internal static (bool, List<string>) FoundAllFiles(string outputDirectory, string outputFilename, BaseParameters parameters, bool preCheck)
-#else
         internal static (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters, bool preCheck)
-#endif
         {
             // If there are no parameters set
             if (parameters == null)
@@ -62,11 +58,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="datafile">.dat file location</param>
         /// <returns>Relevant pieces of the datfile, null on error</returns>
-#if NET48
-        internal static string GenerateDatfile(Datafile datafile)
-#else
         internal static string? GenerateDatfile(Datafile? datafile)
-#endif
         {
             // If we don't have a valid datafile, we can't do anything
             if (datafile?.Games == null || datafile.Games.Length == 0)
@@ -110,11 +102,7 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-#if NET48
-        internal static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Data.Options options, IProgress<ProtectionProgress> progress = null)
-#else
         internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
-#endif
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
@@ -130,11 +118,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="dat">Path to the DAT file to parse</param>
         /// <returns>Filled Datafile on success, null on error</returns>
-#if NET48
-        internal static Datafile GetDatafile(string dat)
-#else
         internal static Datafile? GetDatafile(string? dat)
-#endif
         {
             // If there's no path, we can't read the file
             if (string.IsNullOrWhiteSpace(dat))
@@ -177,11 +161,7 @@ namespace MPF.Core
         /// <param name="pic">Path to a PIC.bin file</param>
         /// <returns>Filled DiscInformation on success, null on error</returns>
         /// <remarks>This omits the emergency brake information, if it exists</remarks>
-#if NET48
-        internal static DiscInformation GetDiscInformation(string pic)
-#else
         internal static DiscInformation? GetDiscInformation(string pic)
-#endif
         {
             try
             {
@@ -199,11 +179,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="filename">Path to the input file</param>
         /// <returns>Filled DateTime on success, null on failure</returns>
-#if NET48
-        internal static DateTime? GetFileModifiedDate(string filename, bool fallback = false)
-#else
         internal static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
-#endif
         {
             if (string.IsNullOrWhiteSpace(filename))
                 return fallback ? (DateTime?)DateTime.UtcNow : null;
@@ -220,11 +196,7 @@ namespace MPF.Core
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
-#if NET48
-        internal static string GetFullFile(string filename, bool binary = false)
-#else
         internal static string? GetFullFile(string filename, bool binary = false)
-#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -245,11 +217,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="datafile">Datafile represenging the hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
-#if NET48
-        internal static bool GetISOHashValues(Datafile datafile, out long size, out string crc32, out string md5, out string sha1)
-#else
         internal static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
-#endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -275,11 +243,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
-#if NET48
-        internal static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
-#else
         internal static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)
-#endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -307,11 +271,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="di">Disc information containing unformatted data</param>
         /// <returns>True if layerbreak info was set, false otherwise</returns>
-#if NET48
-        internal static bool GetLayerbreaks(DiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
-#else
         internal static bool GetLayerbreaks(DiscInformation? di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
-#endif
         {
             // Set the default values
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
@@ -320,11 +280,7 @@ namespace MPF.Core
             if (di?.Units == null || di.Units.Length <= 1)
                 return false;
 
-#if NET48
-            int ReadFromArrayBigEndian(byte[] bytes, int offset)
-#else
             static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
-#endif
             {
                 if (bytes == null)
                     return default;
@@ -370,11 +326,7 @@ namespace MPF.Core
         /// <returns>Status of the LibCrypt data, if possible</returns>
         internal static void GetLibCryptDetected(SubmissionInfo info, string basePath)
         {
-#if NET48
-            if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
-#else
             info.CopyProtection ??= new CopyProtectionSection();
-#endif
 
             bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
             if (psLibCryptStatus == true)
@@ -414,11 +366,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="di">Disc information containing the data</param>
         /// <returns>String representing the PIC identifier, null on error</returns>
-#if NET48
-        internal static string GetPICIdentifier(DiscInformation di)
-#else
         internal static string? GetPICIdentifier(DiscInformation? di)
-#endif
         {
             // If we don't have valid disc information, we can't do anything
             if (di?.Units == null || di.Units.Length <= 1)
@@ -436,11 +384,7 @@ namespace MPF.Core
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-#if NET48
-        internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out Region? region, out string date)
-#else
         internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
-#endif
         {
             serial = null; region = null; date = null;
 
@@ -461,11 +405,7 @@ namespace MPF.Core
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-#if NET48
-        internal static bool GetPlayStationExecutableInfo(string drivePath, out string serial, out Region? region, out string date)
-#else
         internal static bool GetPlayStationExecutableInfo(string? drivePath, out string? serial, out Region? region, out string? date)
-#endif
         {
             serial = null; region = null; date = null;
 
@@ -482,11 +422,7 @@ namespace MPF.Core
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
 
             // Try both of the common paths that contain information
-#if NET48
-            string exeName = null;
-#else
             string? exeName = null;
-#endif
 
             // Read the CNF file as an INI file
             var systemCnf = new IniFile(systemCnfPath);
@@ -552,11 +488,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation2Version(char? driveLetter)
-#else
         internal static string? GetPlayStation2Version(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -572,11 +504,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation2Version(string drivePath)
-#else
         internal static string? GetPlayStation2Version(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -603,11 +531,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3Serial(char? driveLetter)
-#else
         internal static string? GetPlayStation3Serial(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -623,11 +547,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3Serial(string drivePath)
-#else
         internal static string? GetPlayStation3Serial(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -683,11 +603,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3Version(char? driveLetter)
-#else
         internal static string? GetPlayStation3Version(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -703,11 +619,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3Version(string drivePath)
-#else
         internal static string? GetPlayStation3Version(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -765,11 +677,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Firmware version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3FirmwareVersion(char? driveLetter)
-#else
         internal static string? GetPlayStation3FirmwareVersion(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -785,11 +693,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Firmware version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation3FirmwareVersion(string drivePath)
-#else
         internal static string? GetPlayStation3FirmwareVersion(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -829,11 +733,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation4Serial(char? driveLetter)
-#else
         internal static string? GetPlayStation4Serial(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -849,11 +749,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation4Serial(string drivePath)
-#else
         internal static string? GetPlayStation4Serial(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -889,11 +785,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation4Version(char? driveLetter)
-#else
         internal static string? GetPlayStation4Version(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -909,11 +801,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation4Version(string drivePath)
-#else
         internal static string? GetPlayStation4Version(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -949,11 +837,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation5Serial(char? driveLetter)
-#else
         internal static string? GetPlayStation5Serial(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -969,11 +853,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation5Serial(string drivePath)
-#else
         internal static string? GetPlayStation5Serial(string? drivePath)
-#endif
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
@@ -996,11 +876,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation5Version(char? driveLetter)
-#else
         internal static string? GetPlayStation5Version(char? driveLetter)
-#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1016,11 +892,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-#if NET48
-        internal static string GetPlayStation5Version(string drivePath)
-#else
         internal static string? GetPlayStation5Version(string? drivePath)
-#endif
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
@@ -1043,11 +915,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>JObject representing the JSON on success, null on error</returns>
-#if NET48
-        private static JObject GetPlayStation5ParamsJsonFromDrive(string drivePath)
-#else
         private static JObject? GetPlayStation5ParamsJsonFromDrive(string? drivePath)
-#endif
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrWhiteSpace(drivePath))
@@ -1067,11 +935,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="filename">Filename to check</param>
         /// <returns>JObject representing the JSON on success, null on error</returns>
-#if NET48
-        private static JObject GetPlayStation5ParamsJsonFromFile(string filename)
-#else
         private static JObject? GetPlayStation5ParamsJsonFromFile(string? filename)
-#endif
         {
             // If the file doesn't exist
             if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
@@ -1103,21 +967,8 @@ namespace MPF.Core
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
-#if NET48
-        internal static DiscCategory? GetUMDCategory(string category)
-#else
         internal static DiscCategory? GetUMDCategory(string? category)
-#endif
         {
-#if NET48
-            switch (category)
-            {
-                case "GAME": return DiscCategory.Games;
-                case "VIDEO": return DiscCategory.Video;
-                case "AUDIO": return DiscCategory.Audio;
-                default: return null;
-            }
-#else
             return category switch
             {
                 "GAME" => DiscCategory.Games,
@@ -1125,7 +976,6 @@ namespace MPF.Core
                 "AUDIO" => DiscCategory.Audio,
                 _ => null,
             };
-#endif
         }
 
         #endregion
@@ -1137,11 +987,7 @@ namespace MPF.Core
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
         /// <returns>Region mapped from name, if possible</returns>
-#if NET48
-        internal static Region? GetPlayStationRegion(string serial)
-#else
         internal static Region? GetPlayStationRegion(string? serial)
-#endif
         {
             // If we have a fully invalid serial
             if (string.IsNullOrWhiteSpace(serial))
@@ -1165,16 +1011,6 @@ namespace MPF.Core
                         {
                             case 'S':
                                 // Check first two digits of S_PS serial
-#if NET48
-                                switch (serial.Substring(5, 2))
-                                {
-                                    case "46": return Region.SouthKorea;
-                                    case "51": return Region.Asia;
-                                    case "56": return Region.SouthKorea;
-                                    case "55": return Region.Asia;
-                                    default: return Region.Japan;
-                                }
-#else
                                 return serial.Substring(5, 2) switch
                                 {
                                     "46" => Region.SouthKorea,
@@ -1183,18 +1019,8 @@ namespace MPF.Core
                                     "55" => Region.Asia,
                                     _ => Region.Japan,
                                 };
-#endif
                             case 'M':
                                 // Check first three digits of S_PM serial
-#if NET48
-                                switch (serial.Substring(5, 3))
-                                {
-                                    case "645": return Region.SouthKorea;
-                                    case "675": return Region.SouthKorea;
-                                    case "885": return Region.SouthKorea;
-                                    default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
-                                }
-#else
                                 return serial.Substring(5, 3) switch
                                 {
                                     "645" => Region.SouthKorea,
@@ -1202,7 +1028,6 @@ namespace MPF.Core
                                     "885" => Region.SouthKorea,
                                     _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
                                 };
-#endif
                             default: return Region.Japan;
                         }
                 }
@@ -1275,11 +1100,7 @@ namespace MPF.Core
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="parameters">Parameters object to use to derive log file paths</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-#if NET48
-        public static (bool, string) CompressLogFiles(string outputDirectory, string filenameSuffix, string outputFilename, BaseParameters parameters)
-#else
         public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseParameters? parameters)
-#endif
         {
             // If there are no parameters
             if (parameters == null)
@@ -1317,11 +1138,7 @@ namespace MPF.Core
             }
 
             // Add the log files to the archive and delete the uncompressed file after
-#if NET48
-            ZipArchive zf = null;
-#else
             ZipArchive? zf = null;
-#endif
             try
             {
                 zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
@@ -1333,13 +1150,8 @@ namespace MPF.Core
                     }
                     else
                     {
-#if NET48
-                        string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
-#else
                         string entryName = file[outputDirectory.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                         zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
-#endif
                     }
 
                     // If the file is MPF-specific, don't delete
@@ -1372,11 +1184,7 @@ namespace MPF.Core
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="parameters">Parameters object to use to derive log file paths</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-#if NET48
-        public static (bool, string) DeleteUnnecessaryFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
-#else
         public static (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters)
-#endif
         {
             // If there are no parameters
             if (parameters == null)
@@ -1422,11 +1230,7 @@ namespace MPF.Core
         /// <param name="info">Information object that should contain normalized values</param>
         /// <param name="options">Options object representing user-defined options</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-#if NET48
-        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Data.Options options)
-#else
         public static (List<string>?, string?) FormatOutputData(SubmissionInfo? info, Data.Options options)
-#endif
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -1649,11 +1453,7 @@ namespace MPF.Core
                 AddIfExists(output, Template.ReportedDiscType, info.DumpingInfo?.ReportedDiscType, 1);
 
                 // Make sure there aren't any instances of two blank lines in a row
-#if NET48
-                string last = null;
-#else
                 string? last = null;
-#endif
                 for (int i = 0; i < output.Count;)
                 {
                     if (output[i] == last && string.IsNullOrWhiteSpace(last))
@@ -1686,11 +1486,7 @@ namespace MPF.Core
         /// <param name="layerbreak3">Third layerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
         /// TODO: Figure out why we have this and NormalizeDiscType as well
-#if NET48
-        public static string GetFixedMediaType(MediaType? mediaType, string picIdentifier, long? size, long? layerbreak, long? layerbreak2, long? layerbreak3)
-#else
         public static string? GetFixedMediaType(MediaType? mediaType, string? picIdentifier, long? size, long? layerbreak, long? layerbreak2, long? layerbreak3)
-#endif
         {
             switch (mediaType)
             {
@@ -1733,11 +1529,7 @@ namespace MPF.Core
         /// Process any fields that have to be combined
         /// </summary>
         /// <param name="info">Information object to normalize</param>
-#if NET48
-        public static void ProcessSpecialFields(SubmissionInfo info)
-#else
         public static void ProcessSpecialFields(SubmissionInfo? info)
-#endif
         {
             // If there is no submission info
             if (info == null)
@@ -1801,11 +1593,7 @@ namespace MPF.Core
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="lines">Preformatted list of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
-#if NET48
-        public static (bool, string) WriteOutputData(string outputDirectory, string filenameSuffix, List<string> lines)
-#else
         public static (bool, string) WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines)
-#endif
         {
             // Check to see if the inputs are valid
             if (lines == null)
@@ -1849,11 +1637,7 @@ namespace MPF.Core
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
         /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
         /// <returns>True on success, false on error</returns>
-#if NET48
-        public static bool WriteOutputData(string outputDirectory, string filenameSuffix, SubmissionInfo info, bool includedArtifacts)
-#else
         public static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool includedArtifacts)
-#endif
         {
             // Check to see if the input is valid
             if (info == null)
@@ -1920,11 +1704,7 @@ namespace MPF.Core
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
         /// <returns>True on success, false on error</returns>
-#if NET48
-        public static bool WriteProtectionData(string outputDirectory, string filenameSuffix, SubmissionInfo info)
-#else
         public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
-#endif
         {
             // Check to see if the inputs are valid
             if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
@@ -1970,11 +1750,7 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
-#if NET48
-        private static void AddIfExists(List<string> output, string key, string value, int indent)
-#else
         private static void AddIfExists(List<string> output, string key, string? value, int indent)
-#endif
         {
             // If there's no valid value to write
             if (value == null)
@@ -2000,11 +1776,7 @@ namespace MPF.Core
 
             // If the value contains a newline
             value = value.Replace("\r\n", "\n");
-#if NET48
-            if (value.Contains("\n"))
-#else
             if (value.Contains('\n'))
-#endif
             {
                 output.Add(prefix + key + ":"); output.Add("");
                 string[] values = value.Split('\n');
@@ -2028,11 +1800,7 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
-#if NET48
-        private static void AddIfExists(List<string> output, string key, string[] value, int indent)
-#else
         private static void AddIfExists(List<string> output, string key, string?[]? value, int indent)
-#endif
         {
             // If there's no valid value to write
             if (value == null || value.Length == 0)
@@ -2068,11 +1836,7 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
-#if NET48
-        private static void AddIfExists(List<string> output, string key, List<int> value, int indent)
-#else
         private static void AddIfExists(List<string> output, string key, List<int>? value, int indent)
-#endif
         {
             // If there's no valid value to write
             if (value == null || value.Count == 0)
@@ -2087,11 +1851,7 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
-#if NET48
-        private static List<string> GetGeneratedFilePaths(string outputDirectory, string filenameSuffix)
-#else
         private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
-#endif
         {
             var files = new List<string>();
 
@@ -2611,11 +2371,7 @@ namespace MPF.Core
         /// Normalize a split set of paths
         /// </summary>
         /// <param name="path">Path value to normalize</param>
-#if NET48
-        public static string NormalizeOutputPaths(string path, bool getFullPath)
-#else
         public static string NormalizeOutputPaths(string? path, bool getFullPath)
-#endif
         {
             // The easy way
             try
@@ -2687,34 +2443,19 @@ namespace MPF.Core
         /// <remarks>TODO: This should move to Extensions at some point</remarks>
         private static bool IsBoolean(SiteCode? siteCode)
         {
-#if NET48
-            switch (siteCode)
-            {
-                case SiteCode.PostgapType:
-                case SiteCode.VCD:
-                    return true;
-                default:
-                    return false;
-            }
-#else
             return siteCode switch
             {
                 SiteCode.PostgapType => true,
                 SiteCode.VCD => true,
                 _ => false,
             };
-#endif
         }
 
         /// <summary>
         /// Order comment code tags according to Redump requirements
         /// </summary>
         /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
-#if NET48
-        private static List<KeyValuePair<SiteCode?, string>> OrderCommentTags(Dictionary<SiteCode?, string> tags)
-#else
         private static List<KeyValuePair<SiteCode?, string>> OrderCommentTags(Dictionary<SiteCode, string> tags)
-#endif
         {
             var sorted = new List<KeyValuePair<SiteCode?, string>>();
 
@@ -2837,11 +2578,7 @@ namespace MPF.Core
         /// Order content code tags according to Redump requirements
         /// </summary>
         /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
-#if NET48
-        private static List<KeyValuePair<SiteCode?, string>> OrderContentTags(Dictionary<SiteCode?, string> tags)
-#else
         private static List<KeyValuePair<SiteCode?, string>> OrderContentTags(Dictionary<SiteCode, string> tags)
-#endif
         {
             var sorted = new List<KeyValuePair<SiteCode?, string>>();
 

@@ -45,11 +45,7 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
-#if NET48
-            (bool? _, string message) = RedumpWebClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword);
-#else
             (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
             if (!string.IsNullOrWhiteSpace(message))
                 Console.WriteLine(message);
 
@@ -67,11 +63,7 @@ namespace MPF.Check
                 string filepath = Path.GetFullPath(args[i].Trim('"'));
 
                 // Now populate an environment
-#if NET48
-                Drive drive = null;
-#else
                 Drive? drive = null;
-#endif
                 if (!string.IsNullOrWhiteSpace(path))
                     drive = Drive.Create(null, path);
 
@@ -87,11 +79,7 @@ namespace MPF.Check
         /// Display help for MPF.Check
         /// </summary>
         /// <param name="error">Error string to prefix the help text with</param>
-#if NET48
-        private static void DisplayHelp(string error = null)
-#else
         private static void DisplayHelp(string? error = null)
-#endif
         {
             if (error != null)
                 Console.WriteLine(error);
