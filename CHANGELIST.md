@@ -6,6 +6,7 @@
 - Address lingering modern .NET syntax
 - Update README for Legacy
 - Remove redundant information
+- Remove 4.8 note from build script
 
 ### 2.7.5 (2023-11-06)
 
