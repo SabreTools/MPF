@@ -34,18 +34,18 @@ namespace MPF.Core.Utilities
                     }
 
                     // Convert the characters into a string
-                    string line = new string(buffer, 0, read);
+                    string line = new(buffer, 0, read);
 
                     // If we have no newline characters, store in the string builder
-                    if (!line.Contains("\r") && !line.Contains("\n"))
+                    if (!line.Contains('\r') && !line.Contains('\n'))
                         sb.Append(line);
 
                     // If we have a newline, append and log
-                    else if (line.Contains("\n") || line.Contains("\r\n"))
+                    else if (line.Contains('\n') || line.Contains("\r\n"))
                         ProcessNewLines(sb, line, baseClass, handler);
 
                     // If we have a carriage return only, append and log first and last instances
-                    else if (line.Contains("\r"))
+                    else if (line.Contains('\r'))
                         ProcessCarriageReturns(sb, line, baseClass, handler);
                 }
             }
@@ -70,7 +70,7 @@ namespace MPF.Core.Utilities
             for (int i = 0; i < split.Length; i++)
             {
                 // If the chunk contains a carriage return, handle it like a separate line
-                if (split[i].Contains("\r"))
+                if (split[i].Contains('\r'))
                 {
                     ProcessCarriageReturns(sb, split[i], baseClass, handler);
                     continue;
@@ -115,7 +115,7 @@ namespace MPF.Core.Utilities
 
             // Append the last
             sb.Clear();
-            sb.Append($"\r{split[split.Length - 1]}");
+            sb.Append($"\r{split[^1]}");
         }
     }
 }

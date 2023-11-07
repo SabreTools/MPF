@@ -24,25 +24,25 @@
         /// <summary>
         /// Create a default success result with no message
         /// </summary>
-        public static Result Success() => new Result(true, "");
+        public static Result Success() => new(true, "");
 
         /// <summary>
         /// Create a success result with a custom message
         /// </summary>
         /// <param name="message">String to add as a message</param>
-        public static Result Success(string? message) => new Result(true, message ?? string.Empty);
+        public static Result Success(string? message) => new(true, message ?? string.Empty);
 
         /// <summary>
         /// Create a default failure result with no message
         /// </summary>
         /// <returns></returns>
-        public static Result Failure() => new Result(false, "");
+        public static Result Failure() => new(false, "");
 
         /// <summary>
         /// Create a failure result with a custom message
         /// </summary>
         /// <param name="message">String to add as a message</param>
-        public static Result Failure(string? message) => new Result(false, message ?? string.Empty);
+        public static Result Failure(string? message) => new(false, message ?? string.Empty);
 
         /// <summary>
         /// Results can be compared to boolean values based on the success value

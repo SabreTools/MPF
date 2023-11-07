@@ -8,6 +8,8 @@ using BinaryObjectScanner;
 using BinaryObjectScanner.Protection;
 using psxt001z;
 
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+
 namespace MPF.Core
 {
     public static class Protection

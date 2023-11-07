@@ -13,33 +13,25 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <returns>RedumpSystem if possible, null on error</returns>
         public static RedumpSystem? ToRedumpSystem(string baseCommand)
         {
-            switch (baseCommand)
+            return baseCommand switch
             {
-                case CommandStrings.Audio:
-                    return RedumpSystem.AudioCD;
-                case CommandStrings.CompactDisc:
-                case CommandStrings.Data:
-                case CommandStrings.DigitalVideoDisc:
-                case CommandStrings.Disk:
-                case CommandStrings.Floppy:
-                case CommandStrings.Tape:
-                    return RedumpSystem.IBMPCcompatible;
-                case CommandStrings.GDROM:
-                case CommandStrings.Swap:
-                    return RedumpSystem.SegaDreamcast;
-                case CommandStrings.BluRay:
-                    return RedumpSystem.SonyPlayStation3;
-                case CommandStrings.SACD:
-                    return RedumpSystem.SuperAudioCD;
-                case CommandStrings.XBOX:
-                case CommandStrings.XBOXSwap:
-                    return RedumpSystem.MicrosoftXbox;
-                case CommandStrings.XGD2Swap:
-                case CommandStrings.XGD3Swap:
-                    return RedumpSystem.MicrosoftXbox360;
-                default:
-                    return null;
-            }
+                CommandStrings.Audio => (RedumpSystem?)RedumpSystem.AudioCD,
+                CommandStrings.CompactDisc
+                    or CommandStrings.Data
+                    or CommandStrings.DigitalVideoDisc
+                    or CommandStrings.Disk
+                    or CommandStrings.Floppy
+                    or CommandStrings.Tape => (RedumpSystem?)RedumpSystem.IBMPCcompatible,
+                CommandStrings.GDROM
+                    or CommandStrings.Swap => (RedumpSystem?)RedumpSystem.SegaDreamcast,
+                CommandStrings.BluRay => (RedumpSystem?)RedumpSystem.SonyPlayStation3,
+                CommandStrings.SACD => (RedumpSystem?)RedumpSystem.SuperAudioCD,
+                CommandStrings.XBOX
+                    or CommandStrings.XBOXSwap => (RedumpSystem?)RedumpSystem.MicrosoftXbox,
+                CommandStrings.XGD2Swap
+                    or CommandStrings.XGD3Swap => (RedumpSystem?)RedumpSystem.MicrosoftXbox360,
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -50,35 +42,27 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
         public static MediaType? ToMediaType(string? baseCommand)
         {
-            switch (baseCommand)
+            return baseCommand switch
             {
-                case CommandStrings.Audio:
-                case CommandStrings.CompactDisc:
-                case CommandStrings.Data:
-                case CommandStrings.SACD:
-                    return MediaType.CDROM;
-                case CommandStrings.GDROM:
-                case CommandStrings.Swap:
-                    return MediaType.GDROM;
-                case CommandStrings.DigitalVideoDisc:
-                case CommandStrings.XBOX:
-                case CommandStrings.XBOXSwap:
-                case CommandStrings.XGD2Swap:
-                case CommandStrings.XGD3Swap:
-                    return MediaType.DVD;
-                case CommandStrings.BluRay:
-                    return MediaType.BluRay;
+                CommandStrings.Audio
+                    or CommandStrings.CompactDisc
+                    or CommandStrings.Data
+                    or CommandStrings.SACD => (MediaType?)MediaType.CDROM,
+                CommandStrings.GDROM
+                    or CommandStrings.Swap => (MediaType?)MediaType.GDROM,
+                CommandStrings.DigitalVideoDisc
+                    or CommandStrings.XBOX
+                    or CommandStrings.XBOXSwap
+                    or CommandStrings.XGD2Swap
+                    or CommandStrings.XGD3Swap => (MediaType?)MediaType.DVD,
+                CommandStrings.BluRay => (MediaType?)MediaType.BluRay,
 
                 // Non-optical
-                case CommandStrings.Floppy:
-                    return MediaType.FloppyDisk;
-                case CommandStrings.Disk:
-                    return MediaType.HardDisk;
-                case CommandStrings.Tape:
-                    return MediaType.DataCartridge;
-                default:
-                    return null;
-            }
+                CommandStrings.Floppy => (MediaType?)MediaType.FloppyDisk,
+                CommandStrings.Disk => (MediaType?)MediaType.HardDisk,
+                CommandStrings.Tape => (MediaType?)MediaType.DataCartridge,
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -88,35 +72,27 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string? Extension(MediaType? type)
         {
-            switch (type)
+            return type switch
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                case MediaType.Cartridge:
-                case MediaType.HardDisk:
-                case MediaType.CompactFlash:
-                case MediaType.MMC:
-                case MediaType.SDCard:
-                case MediaType.FlashDrive:
-                    return ".bin";
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return ".iso";
-                case MediaType.LaserDisc:
-                case MediaType.NintendoGameCubeGameDisc:
-                    return ".raw";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return ".wud";
-                case MediaType.FloppyDisk:
-                    return ".img";
-                case MediaType.Cassette:
-                    return ".wav";
-                case MediaType.NONE:
-                default:
-                    return null;
-            }
+                MediaType.CDROM
+                    or MediaType.GDROM
+                    or MediaType.Cartridge
+                    or MediaType.HardDisk
+                    or MediaType.CompactFlash
+                    or MediaType.MMC
+                    or MediaType.SDCard
+                    or MediaType.FlashDrive => ".bin",
+                MediaType.DVD
+                    or MediaType.HDDVD
+                    or MediaType.BluRay
+                    or MediaType.NintendoWiiOpticalDisc => ".iso",
+                MediaType.LaserDisc
+                    or MediaType.NintendoGameCubeGameDisc => ".raw",
+                MediaType.NintendoWiiUOpticalDisc => ".wud",
+                MediaType.FloppyDisk => ".img",
+                MediaType.Cassette => ".wav",
+                _ => null,
+            };
         }
 
         #endregion

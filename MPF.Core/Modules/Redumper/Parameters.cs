@@ -1254,30 +1254,28 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the dat line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("CUE [") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string? cueString = string.Empty, line = sr.ReadLine()?.Trim();
-                    while (!string.IsNullOrWhiteSpace(line))
-                    {
-                        cueString += line + "\n";
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return cueString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the dat line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("CUE [") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                // Now that we're at the relevant entries, read each line in and concatenate
+                string? cueString = string.Empty, line = sr.ReadLine()?.Trim();
+                while (!string.IsNullOrWhiteSpace(line))
+                {
+                    cueString += line + "\n";
+                    line = sr.ReadLine()?.Trim();
                 }
+
+                return cueString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1292,34 +1290,32 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the dat line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("dat:") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    var datString = string.Empty;
-                    var line = sr.ReadLine()?.Trim();
-                    while (line?.StartsWith("<rom") == true)
-                    {
-                        datString += line + "\n";
-                        if (sr.EndOfStream)
-                            break;
-
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return datString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the dat line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("dat:") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                // Now that we're at the relevant entries, read each line in and concatenate
+                var datString = string.Empty;
+                var line = sr.ReadLine()?.Trim();
+                while (line?.StartsWith("<rom") == true)
+                {
+                    datString += line + "\n";
+                    if (sr.EndOfStream)
+                        break;
+
+                    line = sr.ReadLine()?.Trim();
                 }
+
+                return datString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1337,34 +1333,32 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(drive))
                 return false;
 
-            using (var sr = File.OpenText(drive))
+            try
             {
-                try
+                using var sr = File.OpenText(drive);
+                var line = sr.ReadLine();
+                while (line != null)
                 {
-                    var line = sr.ReadLine();
-                    while (line != null)
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The profile is listed in a single line
+                    if (line.StartsWith("current profile:"))
                     {
-                        // Trim the line for later use
-                        line = line.Trim();
-
-                        // The profile is listed in a single line
-                        if (line.StartsWith("current profile:"))
-                        {
-                            // current profile: <discType>
-                            discTypeOrBookType = line["current profile: ".Length..];
-                        }
-
-                        line = sr.ReadLine();
+                        // current profile: <discType>
+                        discTypeOrBookType = line["current profile: ".Length..];
                     }
 
-                    return true;
+                    line = sr.ReadLine();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    discTypeOrBookType = null;
-                    return false;
-                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                discTypeOrBookType = null;
+                return false;
             }
         }
 
@@ -1470,39 +1464,37 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return -1;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Fast forward to the errors lines
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("CD-ROM [") == false) ;
+                if (sr.EndOfStream)
+                    return 0;
+
+                // Now that we're at the relevant lines, find the error count
+                while (!sr.EndOfStream)
                 {
-                    // Fast forward to the errors lines
-                    while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("CD-ROM [") == false) ;
-                    if (sr.EndOfStream)
-                        return 0;
+                    // Skip forward to the "REDUMP.ORG" line
+                    var line = string.Empty;
+                    while (!sr.EndOfStream && (line = sr.ReadLine()?.Trim())?.StartsWith("REDUMP.ORG errors") == false) ;
+                    if (string.IsNullOrEmpty(line))
+                        break;
 
-                    // Now that we're at the relevant lines, find the error count
-                    while (!sr.EndOfStream)
-                    {
-                        // Skip forward to the "REDUMP.ORG" line
-                        var line = string.Empty;
-                        while (!sr.EndOfStream && (line = sr.ReadLine()?.Trim())?.StartsWith("REDUMP.ORG errors") == false) ;
-                        if (string.IsNullOrEmpty(line))
-                            break;
-
-                        // REDUMP.ORG errors: <error count>
-                        string[] parts = line.Split(' ');
-                        if (long.TryParse(parts[2], out long redump))
-                            return redump;
-                        else
-                            return -1;
-                    }
-
-                    return -1;
+                    // REDUMP.ORG errors: <error count>
+                    string[] parts = line.Split(' ');
+                    if (long.TryParse(parts[2], out long redump))
+                        return redump;
+                    else
+                        return -1;
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return -1;
-                }
+
+                return -1;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return -1;
             }
         }
 
@@ -1520,39 +1512,37 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return false;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Fast forward to the drive information line
+                using var sr = File.OpenText(log);
+                while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
+
+                // If we find the hardware info line, return each value
+                // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
+                var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
+
+                string? line;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    // Fast forward to the drive information line
-                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
-
-                    // If we find the hardware info line, return each value
-                    // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
-                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
-
-                    string? line;
-                    while ((line = sr.ReadLine()) != null)
+                    var match = regex.Match(line.Trim());
+                    if (match.Success)
                     {
-                        var match = regex.Match(line.Trim());
-                        if (match.Success)
-                        {
-                            manufacturer = match.Groups[1].Value;
-                            model = match.Groups[2].Value;
-                            firmware = match.Groups[3].Value;
-                            firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
-                            return true;
-                        }
+                        manufacturer = match.Groups[1].Value;
+                        model = match.Groups[2].Value;
+                        firmware = match.Groups[3].Value;
+                        firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
+                        return true;
                     }
+                }
 
-                    // We couldn't detect it then
-                    return false;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+                // We couldn't detect it then
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 
@@ -1570,66 +1560,64 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return false;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Find the layerbreak
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
                 {
-                    // Now that we're at the relevant lines, find the layerbreak
-                    while (!sr.EndOfStream)
+                    var line = sr.ReadLine()?.Trim();
+
+                    // If we have a null line, just break
+                    if (line == null)
+                        break;
+
+                    // Single-layer discs have no layerbreak
+                    if (line.Contains("layers count: 1"))
                     {
-                        var line = sr.ReadLine()?.Trim();
-
-                        // If we have a null line, just break
-                        if (line == null)
-                            break;
-
-                        // Single-layer discs have no layerbreak
-                        if (line.Contains("layers count: 1"))
-                        {
-                            return false;
-                        }
-
-                        // Dual-layer discs have a regular layerbreak (old)
-                        else if (line.StartsWith("data "))
-                        {
-                            // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            layerbreak1 ??= split[7].TrimEnd(',');
-                        }
-
-                        // Dual-layer discs have a regular layerbreak (new)
-                        else if (line.StartsWith("layer break:"))
-                        {
-                            // layer break: <layerbreak>
-                            layerbreak1 = line["layer break: ".Length..].Trim();
-                        }
-
-                        // Multi-layer discs have the layer in the name
-                        else if (line.StartsWith("layer break (layer: 0):"))
-                        {
-                            // layer break (layer: 0): <layerbreak>
-                            layerbreak1 = line["layer break (layer: 0): ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("layer break (layer: 1):"))
-                        {
-                            // layer break (layer: 1): <layerbreak>
-                            layerbreak2 = line["layer break (layer: 1): ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("layer break (layer: 2):"))
-                        {
-                            // layer break (layer: 2): <layerbreak>
-                            layerbreak3 = line["layer break (layer: 2): ".Length..].Trim();
-                        }
+                        return false;
                     }
 
-                    // Return the layerbreak, if possible
-                    return true;
+                    // Dual-layer discs have a regular layerbreak (old)
+                    else if (line.StartsWith("data "))
+                    {
+                        // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
+                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        layerbreak1 ??= split[7].TrimEnd(',');
+                    }
+
+                    // Dual-layer discs have a regular layerbreak (new)
+                    else if (line.StartsWith("layer break:"))
+                    {
+                        // layer break: <layerbreak>
+                        layerbreak1 = line["layer break: ".Length..].Trim();
+                    }
+
+                    // Multi-layer discs have the layer in the name
+                    else if (line.StartsWith("layer break (layer: 0):"))
+                    {
+                        // layer break (layer: 0): <layerbreak>
+                        layerbreak1 = line["layer break (layer: 0): ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("layer break (layer: 1):"))
+                    {
+                        // layer break (layer: 1): <layerbreak>
+                        layerbreak2 = line["layer break (layer: 1): ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("layer break (layer: 2):"))
+                    {
+                        // layer break (layer: 2): <layerbreak>
+                        layerbreak3 = line["layer break (layer: 2): ".Length..].Trim();
+                    }
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+
+                // Return the layerbreak, if possible
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 
@@ -1644,46 +1632,44 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the multisession lines
-                    while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("multisession:") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    // Now that we're at the relevant lines, find the session info
-                    string? firstSession = null, secondSession = null;
-                    while (!sr.EndOfStream)
-                    {
-                        var line = sr.ReadLine()?.Trim();
-
-                        // If we have a null line, just break
-                        if (line == null)
-                            break;
-
-                        // Store the first session range
-                        if (line.Contains("session 1:"))
-                            firstSession = line["session 1: ".Length..].Trim();
-
-                        // Store the secomd session range
-                        else if (line.Contains("session 2:"))
-                            secondSession = line["session 2: ".Length..].Trim();
-                    }
-
-                    // If either is blank, we don't have multisession
-                    if (string.IsNullOrEmpty(firstSession) || string.IsNullOrEmpty(secondSession))
-                        return null;
-
-                    // Create and return the formatted output
-                    return $"Session 1: {firstSession}\nSession 2: {secondSession}";
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the multisession lines
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("multisession:") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                // Now that we're at the relevant lines, find the session info
+                string? firstSession = null, secondSession = null;
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine()?.Trim();
+
+                    // If we have a null line, just break
+                    if (line == null)
+                        break;
+
+                    // Store the first session range
+                    if (line.Contains("session 1:"))
+                        firstSession = line["session 1: ".Length..].Trim();
+
+                    // Store the secomd session range
+                    else if (line.Contains("session 2:"))
+                        secondSession = line["session 2: ".Length..].Trim();
                 }
+
+                // If either is blank, we don't have multisession
+                if (string.IsNullOrEmpty(firstSession) || string.IsNullOrEmpty(secondSession))
+                    return null;
+
+                // Create and return the formatted output
+                return $"Session 1: {firstSession}\nSession 2: {secondSession}";
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1698,32 +1684,30 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Check for the anti-modchip strings
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.Trim();
+                while (!sr.EndOfStream)
                 {
-                    // Check for the anti-modchip strings
-                    var line = sr.ReadLine()?.Trim();
-                    while (!sr.EndOfStream)
-                    {
-                        if (line == null)
-                            return false;
+                    if (line == null)
+                        return false;
 
-                        if (line.StartsWith("anti-modchip: no"))
-                            return false;
-                        else if (line.StartsWith("anti-modchip: yes"))
-                            return true;
+                    if (line.StartsWith("anti-modchip: no"))
+                        return false;
+                    else if (line.StartsWith("anti-modchip: yes"))
+                        return true;
 
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return false;
+                    line = sr.ReadLine()?.Trim();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1738,32 +1722,30 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Check for the EDC strings
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.Trim();
+                while (!sr.EndOfStream)
                 {
-                    // Check for the EDC strings
-                    var line = sr.ReadLine()?.Trim();
-                    while (!sr.EndOfStream)
-                    {
-                        if (line == null)
-                            return false;
+                    if (line == null)
+                        return false;
 
-                        if (line.Contains("EDC: no"))
-                            return false;
-                        else if (line.Contains("EDC: yes"))
-                            return true;
+                    if (line.Contains("EDC: no"))
+                        return false;
+                    else if (line.Contains("EDC: yes"))
+                        return true;
 
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return false;
+                    line = sr.ReadLine()?.Trim();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1778,30 +1760,28 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the LibCrypt line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("libcrypt:") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string? libCryptString = "", line = sr.ReadLine()?.Trim();
-                    while (line?.StartsWith("MSF:") == true)
-                    {
-                        libCryptString += line + "\n";
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return libCryptString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the LibCrypt line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("libcrypt:") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                // Now that we're at the relevant entries, read each line in and concatenate
+                string? libCryptString = "", line = sr.ReadLine()?.Trim();
+                while (line?.StartsWith("MSF:") == true)
+                {
+                    libCryptString += line + "\n";
+                    line = sr.ReadLine()?.Trim();
                 }
+
+                return libCryptString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1816,32 +1796,30 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // Check for the libcrypt strings
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.Trim();
+                while (!sr.EndOfStream)
                 {
-                    // Check for the libcrypt strings
-                    var line = sr.ReadLine()?.Trim();
-                    while (!sr.EndOfStream)
-                    {
-                        if (line == null)
-                            return false;
+                    if (line == null)
+                        return false;
 
-                        if (line.StartsWith("libcrypt: no"))
-                            return false;
-                        else if (line.StartsWith("libcrypt: yes"))
-                            return true;
+                    if (line.StartsWith("libcrypt: no"))
+                        return false;
+                    else if (line.StartsWith("libcrypt: yes"))
+                        return true;
 
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return false;
+                    line = sr.ReadLine()?.Trim();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1856,30 +1834,28 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the PVD line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("PVD:") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string? pvdString = "", line = sr.ReadLine()?.Trim();
-                    while (line?.StartsWith("03") == true)
-                    {
-                        pvdString += line + "\n";
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return pvdString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the PVD line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("PVD:") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                // Now that we're at the relevant entries, read each line in and concatenate
+                string? pvdString = "", line = sr.ReadLine()?.Trim();
+                while (line?.StartsWith("03") == true)
+                {
+                    pvdString += line + "\n";
+                    line = sr.ReadLine()?.Trim();
                 }
+
+                return pvdString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1894,27 +1870,24 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // If we find the sample range, return the start value only
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
                 {
-                    // If we find the sample range, return the start value only
-                    string? line;
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine()?.TrimStart();
-                        if (line?.StartsWith("non-zero data sample range") == true)
-                            return line["non-zero data sample range: [".Length..].Trim().Split(' ')[0];
-                    }
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("non-zero data sample range") == true)
+                        return line["non-zero data sample range: [".Length..].Trim().Split(' ')[0];
+                }
 
-                    // We couldn't detect it then
-                    return null;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                // We couldn't detect it then
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -1962,41 +1935,39 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the SS line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SS [") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
+                // Fast forward to the SS line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SS [") == false) ;
+                if (sr.EndOfStream)
+                    return null;
 
-                    string? line, headerString = "";
-                    while (!sr.EndOfStream)
+                string? line, headerString = "";
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("header:") == true)
                     {
                         line = sr.ReadLine()?.TrimStart();
-                        if (line?.StartsWith("header:") == true)
+                        while (line?.StartsWith("00") == true)
                         {
-                            line = sr.ReadLine()?.TrimStart();
-                            while (line?.StartsWith("00") == true)
-                            {
-                                headerString += line + "\n";
-                                line = sr.ReadLine()?.Trim();
-                            }
-                        }
-                        else
-                        {
-                            break;
+                            headerString += line + "\n";
+                            line = sr.ReadLine()?.Trim();
                         }
                     }
+                    else
+                    {
+                        break;
+                    }
+                }
 
-                    return headerString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                return headerString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -2011,38 +1982,36 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the SecuROM line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SecuROM [") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
-
-                    var lines = new List<string>();
-                    while (!sr.EndOfStream)
-                    {
-                        var line = sr.ReadLine()?.TrimStart();
-
-                        // Skip the "version"/"scheme" line
-                        if (line?.StartsWith("version:") == true || line?.StartsWith("scheme:") == true)
-                            continue;
-
-                        // Only read until while there are MSF lines
-                        if (line?.StartsWith("MSF:") != true)
-                            break;
-
-                        lines.Add(line);
-                    }
-
-                    return string.Join("\n", lines).TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Fast forward to the SecuROM line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SecuROM [") == false) ;
+                if (sr.EndOfStream)
                     return null;
+
+                var lines = new List<string>();
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine()?.TrimStart();
+
+                    // Skip the "version"/"scheme" line
+                    if (line?.StartsWith("version:") == true || line?.StartsWith("scheme:") == true)
+                        continue;
+
+                    // Only read until while there are MSF lines
+                    if (line?.StartsWith("MSF:") != true)
+                        break;
+
+                    lines.Add(line);
                 }
+
+                return string.Join("\n", lines).TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -2060,60 +2029,58 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Fast forward to the MCD line
-                    while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("MCD [") == false) ;
-                    if (sr.EndOfStream)
-                        return null;
+                // Fast forward to the MCD line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("MCD [") == false) ;
+                if (sr.EndOfStream)
+                    return null;
 
-                    string? line, headerString = string.Empty;
-                    while (!sr.EndOfStream)
+                string? line, headerString = string.Empty;
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line == null)
+                        break;
+
+                    if (line.StartsWith("build date:"))
+                    {
+                        buildDate = line["build date: ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+                        serial = line["serial: ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("region:"))
+                    {
+                        region = line["region: ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("regions:"))
+                    {
+                        region = line["regions: ".Length..].Trim();
+                    }
+                    else if (line.StartsWith("header:"))
                     {
                         line = sr.ReadLine()?.TrimStart();
-                        if (line == null)
-                            break;
-
-                        if (line.StartsWith("build date:"))
+                        while (line?.StartsWith("01") == true)
                         {
-                            buildDate = line["build date: ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("serial:"))
-                        {
-                            serial = line["serial: ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("region:"))
-                        {
-                            region = line["region: ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("regions:"))
-                        {
-                            region = line["regions: ".Length..].Trim();
-                        }
-                        else if (line.StartsWith("header:"))
-                        {
-                            line = sr.ReadLine()?.TrimStart();
-                            while (line?.StartsWith("01") == true)
-                            {
-                                headerString += line + "\n";
-                                line = sr.ReadLine()?.Trim();
-                            }
-                        }
-                        else
-                        {
-                            break;
+                            headerString += line + "\n";
+                            line = sr.ReadLine()?.Trim();
                         }
                     }
+                    else
+                    {
+                        break;
+                    }
+                }
 
-                    return headerString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                return headerString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -2128,27 +2095,24 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // If we find the universal hash line, return the hash only
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
                 {
-                    // If we find the universal hash line, return the hash only
-                    string? line;
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine()?.TrimStart();
-                        if (line?.StartsWith("Universal Hash") == true)
-                            return line["Universal Hash (SHA-1): ".Length..].Trim();
-                    }
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("Universal Hash") == true)
+                        return line["Universal Hash (SHA-1): ".Length..].Trim();
+                }
 
-                    // We couldn't detect it then
-                    return null;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                // We couldn't detect it then
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -2163,27 +2127,24 @@ namespace MPF.Core.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
+                // If we find the disc write offset line, return the offset
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
                 {
-                    // If we find the disc write offset line, return the offset
-                    string? line;
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine()?.TrimStart();
-                        if (line?.StartsWith("disc write offset") == true)
-                            return line["disc write offset: ".Length..].Trim();
-                    }
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("disc write offset") == true)
+                        return line["disc write offset: ".Length..].Trim();
+                }
 
-                    // We couldn't detect it then
-                    return null;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                // We couldn't detect it then
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -2202,29 +2163,27 @@ namespace MPF.Core.Modules.Redumper
             // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
             // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
 
-            using (var sr = File.OpenText(log))
+            try
             {
-                try
-                {
-                    // Skip first line (dump date)
-                    sr.ReadLine();
+                // Skip first line (dump date)
+                using var sr = File.OpenText(log);
+                sr.ReadLine();
 
-                    // Generate regex
-                    // Permissive
-                    var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
-                    // Strict
-                    //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
+                // Generate regex
+                // Permissive
+                var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
+                // Strict
+                //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
 
-                    // Extract the version string
-                    var match = regex.Match(sr.ReadLine()?.Trim() ?? string.Empty);
-                    var version = match.Groups[1].Value;
-                    return string.IsNullOrWhiteSpace(version) ? null : version;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                // Extract the version string
+                var match = regex.Match(sr.ReadLine()?.Trim() ?? string.Empty);
+                var version = match.Groups[1].Value;
+                return string.IsNullOrWhiteSpace(version) ? null : version;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 

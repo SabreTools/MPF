@@ -19,6 +19,8 @@ using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
 
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+
 namespace MPF.Core
 {
     public static class InfoTool
@@ -563,11 +565,9 @@ namespace MPF.Core
             {
                 try
                 {
-                    using (var br = new BinaryReader(File.OpenRead(sfbPath)))
-                    {
-                        br.BaseStream.Seek(0x220, SeekOrigin.Begin);
-                        return new string(br.ReadChars(0x10));
-                    }
+                    using var br = new BinaryReader(File.OpenRead(sfbPath));
+                    br.BaseStream.Seek(0x220, SeekOrigin.Begin);
+                    return new string(br.ReadChars(0x10));
                 }
                 catch
                 {
@@ -582,11 +582,9 @@ namespace MPF.Core
             {
                 try
                 {
-                    using (var br = new BinaryReader(File.OpenRead(sfoPath)))
-                    {
-                        br.BaseStream.Seek(-0x18, SeekOrigin.End);
-                        return new string(br.ReadChars(9));
-                    }
+                    using var br = new BinaryReader(File.OpenRead(sfoPath));
+                    br.BaseStream.Seek(-0x18, SeekOrigin.End);
+                    return new string(br.ReadChars(9));
                 }
                 catch
                 {
@@ -635,13 +633,11 @@ namespace MPF.Core
             {
                 try
                 {
-                    using (var br = new BinaryReader(File.OpenRead(sfbPath)))
-                    {
-                        br.BaseStream.Seek(0x230, SeekOrigin.Begin);
-                        var discVersion = new string(br.ReadChars(0x10)).TrimEnd('\0');
-                        if (!string.IsNullOrWhiteSpace(discVersion))
-                            return discVersion;
-                    }
+                    using var br = new BinaryReader(File.OpenRead(sfbPath));
+                    br.BaseStream.Seek(0x230, SeekOrigin.Begin);
+                    var discVersion = new string(br.ReadChars(0x10)).TrimEnd('\0');
+                    if (!string.IsNullOrWhiteSpace(discVersion))
+                        return discVersion;
                 }
                 catch
                 {
@@ -656,11 +652,9 @@ namespace MPF.Core
             {
                 try
                 {
-                    using (var br = new BinaryReader(File.OpenRead(sfoPath)))
-                    {
-                        br.BaseStream.Seek(-0x08, SeekOrigin.End);
-                        return new string(br.ReadChars(5));
-                    }
+                    using var br = new BinaryReader(File.OpenRead(sfoPath));
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
                 }
                 catch
                 {
@@ -710,16 +704,14 @@ namespace MPF.Core
 
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(pupPath)))
-                {
-                    br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
-                    byte[] buf = new byte[2];
-                    br.Read(buf, 0, 2);
-                    Array.Reverse(buf);
-                    short location = BitConverter.ToInt16(buf, 0);
-                    br.BaseStream.Seek(location, SeekOrigin.Begin);
-                    return new string(br.ReadChars(4));
-                }
+                using var br = new BinaryReader(File.OpenRead(pupPath));
+                br.BaseStream.Seek(0x3E, SeekOrigin.Begin);
+                byte[] buf = new byte[2];
+                br.Read(buf, 0, 2);
+                Array.Reverse(buf);
+                short location = BitConverter.ToInt16(buf, 0);
+                br.BaseStream.Seek(location, SeekOrigin.Begin);
+                return new string(br.ReadChars(4));
             }
             catch
             {
@@ -767,11 +759,9 @@ namespace MPF.Core
             // Let's try reading param.sfo to find the serial at the end of the file
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
-                {
-                    br.BaseStream.Seek(-0x14, SeekOrigin.End);
-                    return new string(br.ReadChars(9));
-                }
+                using var br = new BinaryReader(File.OpenRead(paramSfoPath));
+                br.BaseStream.Seek(-0x14, SeekOrigin.End);
+                return new string(br.ReadChars(9));
             }
             catch
             {
@@ -819,11 +809,9 @@ namespace MPF.Core
             // Let's try reading param.sfo to find the version at the end of the file
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
-                {
-                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
-                    return new string(br.ReadChars(5));
-                }
+                using var br = new BinaryReader(File.OpenRead(paramSfoPath));
+                br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                return new string(br.ReadChars(5));
             }
             catch
             {
@@ -944,12 +932,10 @@ namespace MPF.Core
             // Let's try reading param.json to find the version in the unencrypted JSON
             try
             {
-                using (var br = new BinaryReader(File.OpenRead(filename)))
-                {
-                    br.BaseStream.Seek(0x800, SeekOrigin.Begin);
-                    byte[] jsonBytes = br.ReadBytes((int)(br.BaseStream.Length - 0x800));
-                    return JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonBytes)) as JObject;
-                }
+                using var br = new BinaryReader(File.OpenRead(filename));
+                br.BaseStream.Seek(0x800, SeekOrigin.Begin);
+                byte[] jsonBytes = br.ReadBytes((int)(br.BaseStream.Length - 0x800));
+                return JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonBytes)) as JObject;
             }
             catch
             {
@@ -1007,29 +993,28 @@ namespace MPF.Core
                     case 'U': return Region.UnitedStatesOfAmerica;
                     case 'P':
                         // Region of S_P_ serials may be Japan, Asia, or SouthKorea
-                        switch (serial[3])
+                        return serial[3] switch
                         {
-                            case 'S':
-                                // Check first two digits of S_PS serial
-                                return serial.Substring(5, 2) switch
-                                {
-                                    "46" => Region.SouthKorea,
-                                    "51" => Region.Asia,
-                                    "56" => Region.SouthKorea,
-                                    "55" => Region.Asia,
-                                    _ => Region.Japan,
-                                };
-                            case 'M':
-                                // Check first three digits of S_PM serial
-                                return serial.Substring(5, 3) switch
-                                {
-                                    "645" => Region.SouthKorea,
-                                    "675" => Region.SouthKorea,
-                                    "885" => Region.SouthKorea,
-                                    _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
-                                };
-                            default: return Region.Japan;
-                        }
+                            // Check first two digits of S_PS serial
+                            'S' => (Region?)(serial.Substring(5, 2) switch
+                            {
+                                "46" => Region.SouthKorea,
+                                "51" => Region.Asia,
+                                "56" => Region.SouthKorea,
+                                "55" => Region.Asia,
+                                _ => Region.Japan,
+                            }),
+
+                            // Check first three digits of S_PM serial
+                            'M' => (Region?)(serial.Substring(5, 3) switch
+                            {
+                                "645" => Region.SouthKorea,
+                                "675" => Region.SouthKorea,
+                                "885" => Region.SouthKorea,
+                                _ => Region.Japan, // Remaining S_PM serials may be Japan or Asia
+                            }),
+                            _ => (Region?)Region.Japan,
+                        };
                 }
             }
 
@@ -1075,17 +1060,17 @@ namespace MPF.Core
         /// <returns>Region, if possible</returns>
         internal static Region? GetXGDRegion(char? region)
         {
-            switch (region)
+            return region switch
             {
-                case 'W': return Region.World;
-                case 'A': return Region.UnitedStatesOfAmerica;
-                case 'J': return Region.JapanAsia;
-                case 'E': return Region.Europe;
-                case 'K': return Region.USAJapan;
-                case 'L': return Region.USAEurope;
-                case 'H': return Region.JapanEurope;
-                default: return null;
-            }
+                'W' => (Region?)Region.World,
+                'A' => (Region?)Region.UnitedStatesOfAmerica,
+                'J' => (Region?)Region.JapanAsia,
+                'E' => (Region?)Region.Europe,
+                'K' => (Region?)Region.USAJapan,
+                'L' => (Region?)Region.USAEurope,
+                'H' => (Region?)Region.JapanEurope,
+                _ => null,
+            };
         }
 
         #endregion
@@ -1613,12 +1598,10 @@ namespace MPF.Core
                 else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
-                using (var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write)))
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
+                foreach (string line in lines)
                 {
-                    foreach (string line in lines)
-                    {
-                        sw.WriteLine(line);
-                    }
+                    sw.WriteLine(line);
                 }
             }
             catch (Exception ex)
@@ -1662,11 +1645,9 @@ namespace MPF.Core
                     else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
                         path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz");
 
-                    using (var fs = File.Create(path))
-                    using (var gs = new GZipStream(fs, CompressionMode.Compress))
-                    {
-                        gs.Write(jsonBytes, 0, jsonBytes.Length);
-                    }
+                    using var fs = File.Create(path);
+                    using var gs = new GZipStream(fs, CompressionMode.Compress);
+                    gs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
 
                 // Otherwise, write out to a normal JSON
@@ -1682,10 +1663,8 @@ namespace MPF.Core
                     else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
                         path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
 
-                    using (var fs = File.Create(path))
-                    {
-                        fs.Write(jsonBytes, 0, jsonBytes.Length);
-                    }
+                    using var fs = File.Create(path);
+                    fs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
             }
             catch
@@ -1723,15 +1702,13 @@ namespace MPF.Core
                 else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
-                using (var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write)))
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
+                foreach (var kvp in info.CopyProtection.FullProtections)
                 {
-                    foreach (var kvp in info.CopyProtection.FullProtections)
-                    {
-                        if (kvp.Value == null)
-                            sw.WriteLine($"{kvp.Key}: None");
-                        else
-                            sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
-                    }
+                    if (kvp.Value == null)
+                        sw.WriteLine($"{kvp.Key}: None");
+                    else
+                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
                 }
             }
             catch

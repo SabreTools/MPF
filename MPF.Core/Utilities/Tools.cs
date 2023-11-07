@@ -230,25 +230,24 @@ namespace MPF.Core.Utilities
         /// </summary>
         private static (string? tag, string? url) GetRemoteVersionAndUrl()
         {
-            using (var hc = new System.Net.Http.HttpClient())
-            {
-                // TODO: Figure out a better way than having this hardcoded...
-                string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
-                var message = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
-                message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
-                var latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                if (latestReleaseJsonString == null)
-                    return (null, null);
+            using var hc = new System.Net.Http.HttpClient();
 
-                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
-                if (latestReleaseJson == null)
-                    return (null, null);
+            // TODO: Figure out a better way than having this hardcoded...
+            string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
+            var message = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
+            message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
+            var latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            if (latestReleaseJsonString == null)
+                return (null, null);
 
-                var latestTag = latestReleaseJson["tag_name"]?.ToString();
-                var releaseUrl = latestReleaseJson["html_url"]?.ToString();
+            var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+            if (latestReleaseJson == null)
+                return (null, null);
 
-                return (latestTag, releaseUrl);
-            }
+            var latestTag = latestReleaseJson["tag_name"]?.ToString();
+            var releaseUrl = latestReleaseJson["html_url"]?.ToString();
+
+            return (latestTag, releaseUrl);
         }
 
         #endregion

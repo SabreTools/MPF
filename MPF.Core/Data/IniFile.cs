@@ -79,10 +79,8 @@ namespace MPF.Core.Data
             if (!File.Exists(path))
                 return false;
 
-            using (var fileStream = File.OpenRead(path))
-            {
-                return Parse(fileStream);
-            }
+            using var fileStream = File.OpenRead(path);
+            return Parse(fileStream);
         }
 
         /// <summary>
@@ -97,51 +95,49 @@ namespace MPF.Core.Data
             // Keys are case-insensitive by default
             try
             {
-                using (var sr = new StreamReader(stream))
+                using var sr = new StreamReader(stream);
+                string section = string.Empty;
+                while (!sr.EndOfStream)
                 {
-                    string section = string.Empty;
-                    while (!sr.EndOfStream)
+                    var line = sr.ReadLine()?.Trim();
+
+                    // Empty lines are skipped
+                    if (string.IsNullOrWhiteSpace(line))
                     {
-                        var line = sr.ReadLine()?.Trim();
-
-                        // Empty lines are skipped
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            // No-op, we don't process empty lines
-                        }
-
-                        // Comments start with ';'
-                        else if (line.StartsWith(";"))
-                        {
-                            // No-op, we don't process comments
-                        }
-
-                        // Section titles are surrounded by square brackets
-                        else if (line.StartsWith("["))
-                        {
-                            section = line.TrimStart('[').TrimEnd(']');
-                        }
-
-                        // Valid INI lines are in the format key=value
-                        else if (line.Contains('='))
-                        {
-                            // Split the line by '=' for key-value pairs
-                            string[] data = line.Split('=');
-
-                            // If the value field contains an '=', we need to put them back in
-                            string key = data[0].Trim();
-                            string value = string.Join("=", data.Skip(1)).Trim();
-
-                            // Section names are prepended to the key with a '.' separating
-                            if (!string.IsNullOrEmpty(section))
-                                key = $"{section}.{key}";
-
-                            // Set or overwrite keys in the returned dictionary
-                            _keyValuePairs[key.ToLowerInvariant()] = value;
-                        }
-
-                        // All other lines are ignored
+                        // No-op, we don't process empty lines
                     }
+
+                    // Comments start with ';'
+                    else if (line.StartsWith(";"))
+                    {
+                        // No-op, we don't process comments
+                    }
+
+                    // Section titles are surrounded by square brackets
+                    else if (line.StartsWith("["))
+                    {
+                        section = line.TrimStart('[').TrimEnd(']');
+                    }
+
+                    // Valid INI lines are in the format key=value
+                    else if (line.Contains('='))
+                    {
+                        // Split the line by '=' for key-value pairs
+                        string[] data = line.Split('=');
+
+                        // If the value field contains an '=', we need to put them back in
+                        string key = data[0].Trim();
+                        string value = string.Join("=", data.Skip(1)).Trim();
+
+                        // Section names are prepended to the key with a '.' separating
+                        if (!string.IsNullOrEmpty(section))
+                            key = $"{section}.{key}";
+
+                        // Set or overwrite keys in the returned dictionary
+                        _keyValuePairs[key.ToLowerInvariant()] = value;
+                    }
+
+                    // All other lines are ignored
                 }
             }
             catch
@@ -162,10 +158,8 @@ namespace MPF.Core.Data
             if (_keyValuePairs == null || _keyValuePairs.Count == 0)
                 return false;
 
-            using (var fileStream = File.OpenWrite(path))
-            {
-                return Write(fileStream);
-            }
+            using var fileStream = File.OpenWrite(path);
+            return Write(fileStream);
         }
 
         /// <summary>
@@ -183,39 +177,37 @@ namespace MPF.Core.Data
 
             try
             {
-                using (var sw = new StreamWriter(stream))
+                // Order the dictionary by keys to link sections together
+                using var sw = new StreamWriter(stream);
+                var orderedKeyValuePairs = _keyValuePairs.OrderBy(kvp => kvp.Key);
+
+                string section = string.Empty;
+                foreach (var keyValuePair in orderedKeyValuePairs)
                 {
-                    // Order the dictionary by keys to link sections together
-                    var orderedKeyValuePairs = _keyValuePairs.OrderBy(kvp => kvp.Key);
+                    // Extract the key and value
+                    string key = keyValuePair.Key;
+                    string value = keyValuePair.Value;
 
-                    string section = string.Empty;
-                    foreach (var keyValuePair in orderedKeyValuePairs)
+                    // We assume '.' is a section name separator
+                    if (key.Contains('.'))
                     {
-                        // Extract the key and value
-                        string key = keyValuePair.Key;
-                        string value = keyValuePair.Value;
+                        // Split the key by '.'
+                        string[] data = keyValuePair.Key.Split('.');
 
-                        // We assume '.' is a section name separator
-                        if (key.Contains('.'))
+                        // If the key contains an '.', we need to put them back in
+                        string newSection = data[0].Trim();
+                        key = string.Join(".", data.Skip(1)).Trim();
+
+                        // If we have a new section, write it out
+                        if (!string.Equals(newSection, section, StringComparison.OrdinalIgnoreCase))
                         {
-                            // Split the key by '.'
-                            string[] data = keyValuePair.Key.Split('.');
-
-                            // If the key contains an '.', we need to put them back in
-                            string newSection = data[0].Trim();
-                            key = string.Join(".", data.Skip(1)).Trim();
-
-                            // If we have a new section, write it out
-                            if (!string.Equals(newSection, section, StringComparison.OrdinalIgnoreCase))
-                            {
-                                sw.WriteLine($"[{newSection}]");
-                                section = newSection;
-                            }
+                            sw.WriteLine($"[{newSection}]");
+                            section = newSection;
                         }
-
-                        // Now write out the key and value in a standardized way
-                        sw.WriteLine($"{key}={value}");
                     }
+
+                    // Now write out the key and value in a standardized way
+                    sw.WriteLine($"{key}={value}");
                 }
             }
             catch

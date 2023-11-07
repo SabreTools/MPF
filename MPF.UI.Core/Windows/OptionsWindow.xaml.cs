@@ -149,7 +149,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private async Task ValidateRedumpCredentials()
         {
-            (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+            (bool? success, string? message) = await MPF.Core.UI.ViewModels.OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
 
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);

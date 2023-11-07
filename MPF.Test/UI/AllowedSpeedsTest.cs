@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using MPF.Core.Data;
+﻿using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -16,7 +15,7 @@ namespace MPF.Test.Data
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
             var actual = Interface.GetSpeedsForMediaType(mediaType);
-            Assert.Equal(maxExpected, actual.Last());
+            Assert.Equal(maxExpected, actual[actual.Count - 1]);
         }
     }
 }

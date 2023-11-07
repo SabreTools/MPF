@@ -15,26 +15,24 @@ namespace MPF.Core.Utilities
         /// <returns>True if Windows show see a disc when dumping, false otherwise</returns>
         public static bool DetectedByWindows(this RedumpSystem? system)
         {
-            switch (system)
+            return system switch
             {
-                case RedumpSystem.AmericanLaserGames3DO:
-                case RedumpSystem.AppleMacintosh:
-                case RedumpSystem.Atari3DO:
-                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
-                case RedumpSystem.NewJatreCDi:
-                case RedumpSystem.NintendoGameCube:
-                case RedumpSystem.NintendoWii:
-                case RedumpSystem.NintendoWiiU:
-                case RedumpSystem.PhilipsCDi:
-                case RedumpSystem.PhilipsCDiDigitalVideo:
-                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
-                case RedumpSystem.PanasonicM2:
-                case RedumpSystem.PioneerLaserActive:
-                case RedumpSystem.SuperAudioCD:
-                    return false;
-                default:
-                    return true;
-            }
+                RedumpSystem.AmericanLaserGames3DO
+                    or RedumpSystem.AppleMacintosh
+                    or RedumpSystem.Atari3DO
+                    or RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem
+                    or RedumpSystem.NewJatreCDi
+                    or RedumpSystem.NintendoGameCube
+                    or RedumpSystem.NintendoWii
+                    or RedumpSystem.NintendoWiiU
+                    or RedumpSystem.PhilipsCDi
+                    or RedumpSystem.PhilipsCDiDigitalVideo
+                    or RedumpSystem.Panasonic3DOInteractiveMultiplayer
+                    or RedumpSystem.PanasonicM2
+                    or RedumpSystem.PioneerLaserActive
+                    or RedumpSystem.SuperAudioCD => false,
+                _ => true,
+            };
         }
 
         /// <summary>
@@ -44,19 +42,17 @@ namespace MPF.Core.Utilities
         /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
         public static bool DoesSupportDriveSpeed(this MediaType? type)
         {
-            switch (type)
+            return type switch
             {
-                case MediaType.CDROM:
-                case MediaType.DVD:
-                case MediaType.GDROM:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return true;
-                default:
-                    return false;
-            }
+                MediaType.CDROM
+                    or MediaType.DVD
+                    or MediaType.GDROM
+                    or MediaType.HDDVD
+                    or MediaType.BluRay
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => true,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -66,17 +62,15 @@ namespace MPF.Core.Utilities
         /// <returns>True if the system has reversed ringcodes, false otherwise</returns>
         public static bool HasReversedRingcodes(this RedumpSystem? system)
         {
-            switch (system)
+            return system switch
             {
-                case RedumpSystem.SonyPlayStation2:
-                case RedumpSystem.SonyPlayStation3:
-                case RedumpSystem.SonyPlayStation4:
-                //case RedumpSystem.SonyPlayStation5:
-                case RedumpSystem.SonyPlayStationPortable:
-                    return true;
-                default:
-                    return false;
-            }
+                RedumpSystem.SonyPlayStation2
+                    or RedumpSystem.SonyPlayStation3
+                    or RedumpSystem.SonyPlayStation4
+                    or RedumpSystem.SonyPlayStation5
+                    or RedumpSystem.SonyPlayStationPortable => true,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -90,23 +84,21 @@ namespace MPF.Core.Utilities
         /// </remarks>
         public static bool IsAudio(this RedumpSystem? system)
         {
-            switch (system)
+            return system switch
             {
-                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
-                case RedumpSystem.AudioCD:
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.HasbroiONEducationalGamingSystem:
-                case RedumpSystem.HasbroVideoNow:
-                case RedumpSystem.HasbroVideoNowColor:
-                case RedumpSystem.HasbroVideoNowJr:
-                case RedumpSystem.HasbroVideoNowXP:
-                case RedumpSystem.PhilipsCDi:
-                case RedumpSystem.PlayStationGameSharkUpdates:
-                case RedumpSystem.SuperAudioCD:
-                    return true;
-                default:
-                    return false;
-            }
+                RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem
+                    or RedumpSystem.AudioCD
+                    or RedumpSystem.DVDAudio
+                    or RedumpSystem.HasbroiONEducationalGamingSystem
+                    or RedumpSystem.HasbroVideoNow
+                    or RedumpSystem.HasbroVideoNowColor
+                    or RedumpSystem.HasbroVideoNowJr
+                    or RedumpSystem.HasbroVideoNowXP
+                    or RedumpSystem.PhilipsCDi
+                    or RedumpSystem.PlayStationGameSharkUpdates
+                    or RedumpSystem.SuperAudioCD => true,
+                _ => false,
+            };
         }
 
         /// <summary>
@@ -116,16 +108,14 @@ namespace MPF.Core.Utilities
         /// <returns>True if the system is XGD, false otherwise</returns>
         public static bool IsXGD(this RedumpSystem? system)
         {
-            switch (system)
+            return system switch
             {
-                case RedumpSystem.MicrosoftXbox:
-                case RedumpSystem.MicrosoftXbox360:
-                case RedumpSystem.MicrosoftXboxOne:
-                case RedumpSystem.MicrosoftXboxSeriesXS:
-                    return true;
-                default:
-                    return false;
-            }
+                RedumpSystem.MicrosoftXbox
+                    or RedumpSystem.MicrosoftXbox360
+                    or RedumpSystem.MicrosoftXboxOne
+                    or RedumpSystem.MicrosoftXboxSeriesXS => true,
+                _ => false,
+            };
         }
 
         /// <summary>

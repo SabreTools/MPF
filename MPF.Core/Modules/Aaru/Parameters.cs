@@ -2499,10 +2499,8 @@ namespace MPF.Core.Modules.Aaru
                 if (ms == null)
                     return null;
 
-                using (var sr = new StreamReader(ms))
-                {
-                    return sr.ReadToEnd();
-                }
+                using var sr = new StreamReader(ms);
+                return sr.ReadToEnd();
             }
 
             return null;
@@ -3077,34 +3075,32 @@ namespace MPF.Core.Modules.Aaru
             long? totalErrors = null;
 
             // Parse the resume XML file
-            using (var sr = File.OpenText(resume))
+            try
             {
-                try
+                // Read in the error count whenever we find it
+                using var sr = File.OpenText(resume);
+                while (!sr.EndOfStream)
                 {
-                    // Read in the error count whenever we find it
-                    while (!sr.EndOfStream)
-                    {
-                        var line = sr.ReadLine()?.Trim();
+                    var line = sr.ReadLine()?.Trim();
 
-                        // Initialize on seeing the open tag
-                        if (string.IsNullOrWhiteSpace(line))
-                            continue;
-                        else if (line.StartsWith("<BadBlocks>"))
-                            totalErrors = 0;
-                        else if (line.StartsWith("</BadBlocks>"))
-                            return totalErrors ?? -1;
-                        else if (line.StartsWith("<Block>") && totalErrors != null)
-                            totalErrors++;
-                    }
+                    // Initialize on seeing the open tag
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+                    else if (line.StartsWith("<BadBlocks>"))
+                        totalErrors = 0;
+                    else if (line.StartsWith("</BadBlocks>"))
+                        return totalErrors ?? -1;
+                    else if (line.StartsWith("<Block>") && totalErrors != null)
+                        totalErrors++;
+                }
 
-                    // If we haven't found anything, return -1
-                    return totalErrors ?? -1;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return Int64.MaxValue;
-                }
+                // If we haven't found anything, return -1
+                return totalErrors ?? -1;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return Int64.MaxValue;
             }
         }
 

@@ -155,44 +155,27 @@ namespace MPF.UI.Core.Windows
         public bool? DisplayUserMessage(string title, string message, int optionCount, bool flag)
         {
             // Set the correct button style
-            MessageBoxButton button;
-            switch (optionCount)
+            var button = optionCount switch
             {
-                case 1:
-                    button = MessageBoxButton.OK;
-                    break;
-                case 2:
-                    button = MessageBoxButton.YesNo;
-                    break;
-                case 3:
-                    button = MessageBoxButton.YesNoCancel;
-                    break;
+                1 => MessageBoxButton.OK,
+                2 => MessageBoxButton.YesNo,
+                3 => MessageBoxButton.YesNoCancel,
 
                 // This should not happen, but default to "OK"
-                default:
-                    button = MessageBoxButton.OK;
-                    break;
-            }
+                _ => MessageBoxButton.OK,
+            };
 
             // Set the correct icon
             MessageBoxImage image = flag ? MessageBoxImage.Question : MessageBoxImage.Exclamation;
 
             // Display and get the result
             MessageBoxResult result = CustomMessageBox.Show(this, message, title, button, image);
-            switch (result)
+            return result switch
             {
-                case MessageBoxResult.OK:
-                case MessageBoxResult.Yes:
-                    return true;
-
-                case MessageBoxResult.No:
-                    return false;
-
-                case MessageBoxResult.Cancel:
-                case MessageBoxResult.None:
-                default:
-                    return null;
-            }
+                MessageBoxResult.OK or MessageBoxResult.Yes => true,
+                MessageBoxResult.No => false,
+                _ => null,
+            };
         }
 
         /// <summary>

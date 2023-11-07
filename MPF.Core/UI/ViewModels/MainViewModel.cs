@@ -936,8 +936,7 @@ namespace MPF.Core.UI.ViewModels
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Ensure the first run flag is unset
-            var continuingOptions = new Data.Options(optionsToSave);
-            continuingOptions.FirstRun = false;
+            var continuingOptions = new Data.Options(optionsToSave) { FirstRun = false };
             this.Options = continuingOptions;
 
             // If settings were changed, reinitialize the UI

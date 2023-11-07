@@ -11,23 +11,17 @@ namespace MPF.UI.Core
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch (value)
+            return value switch
             {
-                case DiscCategory discCategory:
-                    return new Element<DiscCategory>(discCategory);
-                case InternalProgram internalProgram:
-                    return new Element<InternalProgram>(internalProgram);
-                case MediaType mediaType:
-                    return new Element<MediaType>(mediaType);
-                case RedumpSystem redumpSystem:
-                    return new RedumpSystemComboBoxItem(redumpSystem);
-                case Region region:
-                    return new Element<Region>(region);
+                DiscCategory discCategory => new Element<DiscCategory>(discCategory),
+                InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
+                MediaType mediaType => new Element<MediaType>(mediaType),
+                RedumpSystem redumpSystem => new RedumpSystemComboBoxItem(redumpSystem),
+                Region region => new Element<Region>(region),
 
                 // Null values are treated as a system value
-                default:
-                    return new RedumpSystemComboBoxItem((RedumpSystem?)null);
-            }
+                _ => new RedumpSystemComboBoxItem((RedumpSystem?)null),
+            };
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -36,21 +30,15 @@ namespace MPF.UI.Core
             if (value is not IElement element)
                 return null;
 
-            switch (element)
+            return element switch
             {
-                case Element<DiscCategory> dcElement:
-                    return dcElement.Value;
-                case Element<InternalProgram> ipElement:
-                    return ipElement.Value;
-                case Element<MediaType> mtElement:
-                    return mtElement.Value;
-                case RedumpSystemComboBoxItem rsElement:
-                    return rsElement.Value;
-                case Element<Region> reValue:
-                    return reValue.Value;
-
-                default: return null;
-            }
+                Element<DiscCategory> dcElement => dcElement.Value,
+                Element<InternalProgram> ipElement => ipElement.Value,
+                Element<MediaType> mtElement => mtElement.Value,
+                RedumpSystemComboBoxItem rsElement => rsElement.Value,
+                Element<Region> reValue => reValue.Value,
+                _ => null,
+            };
         }
     }
 }

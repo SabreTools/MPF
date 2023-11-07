@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MPF.Core.Data
 {
-    public class ProcessingQueue<T> : IDisposable
+    public sealed class ProcessingQueue<T> : IDisposable
     {
         /// <summary>
         /// Internal queue to hold data to process
@@ -54,7 +54,7 @@ namespace MPF.Core.Data
             while (true)
             {
                 // Nothing in the queue means we get to idle
-                if (this.InternalQueue.Count == 0)
+                if (InternalQueue.IsEmpty)
                 {
                     if (this.TokenSource.IsCancellationRequested)
                         break;

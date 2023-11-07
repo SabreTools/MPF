@@ -156,28 +156,26 @@ namespace MPF.Core.Modules.UmdImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (var sr = File.OpenText(mainInfo))
+            try
             {
-                try
-                {
-                    // Make sure we're in the right sector
-                    while (sr.ReadLine()?.StartsWith("========== LBA[000016, 0x0000010]: Main Channel ==========") == false) ;
+                // Make sure we're in the right sector
+                using var sr = File.OpenText(mainInfo);
+                while (sr.ReadLine()?.StartsWith("========== LBA[000016, 0x0000010]: Main Channel ==========") == false) ;
 
-                    // Fast forward to the PVD
-                    while (sr.ReadLine()?.StartsWith("0310") == false) ;
+                // Fast forward to the PVD
+                while (sr.ReadLine()?.StartsWith("0310") == false) ;
 
-                    // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = "";
-                    for (int i = 0; i < 6; i++)
-                        pvd += sr.ReadLine() + "\n"; // 320-370
+                // Now that we're at the PVD, read each line in and concatenate
+                string pvd = "";
+                for (int i = 0; i < 6; i++)
+                    pvd += sr.ReadLine() + "\n"; // 320-370
 
-                    return pvd;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                return pvd;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -194,41 +192,38 @@ namespace MPF.Core.Modules.UmdImageCreator
             if (!File.Exists(disc))
                 return false;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
+                // Loop through everything to get the first instance of each required field
+                using var sr = File.OpenText(disc);
+                while (!sr.EndOfStream)
                 {
-                    // Loop through everything to get the first instance of each required field
-                    var line = string.Empty;
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine()?.Trim();
-                        if (line == null)
-                            break;
+                    string? line = sr.ReadLine()?.Trim();
+                    if (line == null)
+                        break;
 
-                        if (line.StartsWith("TITLE") && title == null)
-                            title = line["TITLE: ".Length..];
-                        else if (line.StartsWith("DISC_VERSION") && umdversion == null)
-                            umdversion = line.Split(' ')[1];
-                        else if (line.StartsWith("pspUmdTypes"))
-                            umdcat = InfoTool.GetUMDCategory(line.Split(' ')[1]);
-                        else if (line.StartsWith("L0 length"))
-                            umdlayer = line.Split(' ')[2];
-                        else if (line.StartsWith("FileSize:"))
-                            umdsize = Int64.Parse(line.Split(' ')[1]);
-                    }
-
-                    // If the L0 length is the size of the full disc, there's no layerbreak
-                    if (Int64.TryParse(umdlayer, out long umdlayerValue) && umdlayerValue * 2048 == umdsize)
-                        umdlayer = null;
-
-                    return true;
+                    if (line.StartsWith("TITLE") && title == null)
+                        title = line["TITLE: ".Length..];
+                    else if (line.StartsWith("DISC_VERSION") && umdversion == null)
+                        umdversion = line.Split(' ')[1];
+                    else if (line.StartsWith("pspUmdTypes"))
+                        umdcat = InfoTool.GetUMDCategory(line.Split(' ')[1]);
+                    else if (line.StartsWith("L0 length"))
+                        umdlayer = line.Split(' ')[2];
+                    else if (line.StartsWith("FileSize:"))
+                        umdsize = Int64.Parse(line.Split(' ')[1]);
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+
+                // If the L0 length is the size of the full disc, there's no layerbreak
+                if (Int64.TryParse(umdlayer, out long umdlayerValue) && umdlayerValue * 2048 == umdsize)
+                    umdlayer = null;
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 

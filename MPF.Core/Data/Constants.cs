@@ -30,22 +30,17 @@ namespace MPF.Core.Data
         /// <returns>Read-only list of drive speeds</returns>
         public static IReadOnlyList<int> GetSpeedsForMediaType(MediaType? type)
         {
-            switch (type)
+            return type switch
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                    return CD;
-                case MediaType.DVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return DVD;
-                case MediaType.HDDVD:
-                    return HDDVD;
-                case MediaType.BluRay:
-                    return BD;
-                default:
-                    return Unknown;
-            }
+                MediaType.CDROM
+                    or MediaType.GDROM => CD,
+                MediaType.DVD
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => DVD,
+                MediaType.HDDVD => HDDVD,
+                MediaType.BluRay => BD,
+                _ => Unknown,
+            };
         }
     }
 

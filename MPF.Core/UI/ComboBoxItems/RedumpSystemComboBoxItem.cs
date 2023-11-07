@@ -81,6 +81,12 @@ namespace MPF.Core.UI.ComboBoxItems
         }
 
         /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as RedumpSystemComboBoxItem);
+        }
+
+        /// <inheritdoc/>
         public bool Equals(RedumpSystemComboBoxItem? other)
         {
             if (other == null)
@@ -88,5 +94,8 @@ namespace MPF.Core.UI.ComboBoxItems
 
             return Value == other.Value;
         }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

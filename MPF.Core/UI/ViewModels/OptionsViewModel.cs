@@ -46,12 +46,12 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
+        public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
+        public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Test Redump login credentials
         /// </summary>
-        public async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
+        public static async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
         {
             return await RedumpHttpClient.ValidateCredentials(username, password);
         }

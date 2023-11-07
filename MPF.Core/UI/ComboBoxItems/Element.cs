@@ -49,6 +49,12 @@ namespace MPF.Core.UI.ComboBoxItems
         }
 
         /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as Element<T>);
+        }
+
+        /// <inheritdoc/>
         public bool Equals(Element<T>? other)
         {
             if (other == null)
@@ -56,5 +62,8 @@ namespace MPF.Core.UI.ComboBoxItems
 
             return Name == other.Name;
         }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

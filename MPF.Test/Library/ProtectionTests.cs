@@ -11,7 +11,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsActiveMARKTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "ActiveMARK",
                 "ActiveMARK 5",
@@ -24,7 +24,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsCactusDataShieldTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Cactus Data Shield 200",
                 "Cactus Data Shield 200 (Build 3.0.100a)",
@@ -37,7 +37,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsCDCheckTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Anything Else Protection",
                 "Executable-Based CD Check",
@@ -50,7 +50,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsCDCopsTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "CD-Cops",
                 "CD-Cops v1.2.0",
@@ -63,7 +63,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsCDKeyTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Anything Else Protection",
                 "CD-Key / Serial",
@@ -76,7 +76,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsEACdKeyTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "EA CdKey Registration Module",
                 "EA CdKey Registration Module v1.2.0",
@@ -89,7 +89,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsEADRMTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "EA DRM Protection",
                 "EA DRM Protection v1.2.0",
@@ -102,7 +102,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsGFWLTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Games for Windows LIVE",
                 "Games for Windows LIVE v1.2.0",
@@ -115,7 +115,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsGFWLZDPPTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Games for Windows LIVE",
                 "Games for Windows LIVE Zero Day Piracy Protection",
@@ -128,7 +128,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsImpulseReactorTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Impulse Reactor",
                 "Impulse Reactor Core Module v1.2.0",
@@ -145,7 +145,7 @@ namespace MPF.Test.Library
         [InlineData(3)]
         public void SanitizeFoundProtectionsJoWoodXProtTest(int skip)
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "JoWood X-Prot 1.2.0.00",
                 "JoWood X-Prot v2",
@@ -168,7 +168,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsOnlineRegistrationTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Anything Else Protection",
                 "Executable-Based Online Registration",
@@ -185,7 +185,7 @@ namespace MPF.Test.Library
         [InlineData(3)]
         public void SanitizeFoundProtectionStarForceTest(int skip)
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "StarForce 1.20.000.000",
                 "StarForce 5 [Protected Module]",
@@ -208,7 +208,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsSysiphusTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "Sysiphus",
                 "Sysiphus v1.2.0",
@@ -221,7 +221,7 @@ namespace MPF.Test.Library
         [Fact]
         public void SanitizeFoundProtectionsXCPTest()
         {
-            List<string> protections = new List<string>()
+            List<string> protections = new()
             {
                 "XCP",
                 "XCP v1.2.0",

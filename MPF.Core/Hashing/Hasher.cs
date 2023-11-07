@@ -133,9 +133,6 @@ namespace MPF.Core.Hashing
             // Set the file size
             size = new FileInfo(filename).Length;
 
-            // Create the output dictionary
-            var hashDict = new Dictionary<Hash, string?>();
-
             // Open the input file
             var input = File.OpenRead(filename);
 

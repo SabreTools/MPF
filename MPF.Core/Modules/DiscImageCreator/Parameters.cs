@@ -2681,60 +2681,58 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(drive))
                 return false;
 
-            using (var sr = File.OpenText(drive))
+            try
             {
-                try
+                // Create a hashset to contain all of the found values
+                var discTypeOrBookTypeSet = new HashSet<string>();
+
+                using var sr = File.OpenText(drive);
+                var line = sr.ReadLine();
+                while (line != null)
                 {
-                    // Create a hashset to contain all of the found values
-                    var discTypeOrBookTypeSet = new HashSet<string>();
+                    // Trim the line for later use
+                    line = line.Trim();
 
-                    var line = sr.ReadLine();
-                    while (line != null)
+                    // Concatenate all found values for each possible line type
+                    if (line.StartsWith("DiscType:"))
                     {
-                        // Trim the line for later use
-                        line = line.Trim();
-
-                        // Concatenate all found values for each possible line type
-                        if (line.StartsWith("DiscType:"))
-                        {
-                            // DiscType: <discType>
-                            string identifier = line["DiscType: ".Length..];
-                            discTypeOrBookTypeSet.Add(identifier);
-                        }
-                        else if (line.StartsWith("DiscTypeIdentifier:"))
-                        {
-                            // DiscTypeIdentifier: <discType>
-                            string identifier = line["DiscTypeIdentifier: ".Length..];
-                            discTypeOrBookTypeSet.Add(identifier);
-                        }
-                        else if (line.StartsWith("DiscTypeSpecific:"))
-                        {
-                            // DiscTypeSpecific: <discType>
-                            string identifier = line["DiscTypeSpecific: ".Length..];
-                            discTypeOrBookTypeSet.Add(identifier);
-                        }
-                        else if (line.StartsWith("BookType:"))
-                        {
-                            // BookType: <discType>
-                            string identifier = line["BookType: ".Length..];
-                            discTypeOrBookTypeSet.Add(identifier);
-                        }
-
-                        line = sr.ReadLine();
+                        // DiscType: <discType>
+                        string identifier = line["DiscType: ".Length..];
+                        discTypeOrBookTypeSet.Add(identifier);
+                    }
+                    else if (line.StartsWith("DiscTypeIdentifier:"))
+                    {
+                        // DiscTypeIdentifier: <discType>
+                        string identifier = line["DiscTypeIdentifier: ".Length..];
+                        discTypeOrBookTypeSet.Add(identifier);
+                    }
+                    else if (line.StartsWith("DiscTypeSpecific:"))
+                    {
+                        // DiscTypeSpecific: <discType>
+                        string identifier = line["DiscTypeSpecific: ".Length..];
+                        discTypeOrBookTypeSet.Add(identifier);
+                    }
+                    else if (line.StartsWith("BookType:"))
+                    {
+                        // BookType: <discType>
+                        string identifier = line["BookType: ".Length..];
+                        discTypeOrBookTypeSet.Add(identifier);
                     }
 
-                    // Create the output string
-                    if (discTypeOrBookTypeSet.Any())
-                        discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet.OrderBy(s => s));
+                    line = sr.ReadLine();
+                }
 
-                    return true;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    discTypeOrBookType = null;
-                    return false;
-                }
+                // Create the output string
+                if (discTypeOrBookTypeSet.Any())
+                    discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet.OrderBy(s => s));
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                discTypeOrBookType = null;
+                return false;
             }
         }
 
@@ -2782,50 +2780,48 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Get everything from _CSSKey.txt next, if it exists
             if (File.Exists(cssKey))
             {
-                using (var sr = File.OpenText(cssKey))
+                try
                 {
-                    try
+                    // Read until the end
+                    using var sr = File.OpenText(cssKey);
+                    while (!sr.EndOfStream)
                     {
-                        // Read until the end
-                        while (!sr.EndOfStream)
+                        var line = sr.ReadLine()?.Trim();
+                        if (line == null)
+                            break;
+
+                        if (line.StartsWith("DecryptedDiscKey"))
                         {
-                            var line = sr.ReadLine()?.Trim();
-                            if (line == null)
-                                break;
+                            decryptedDiscKey = line["DecryptedDiscKey[020]: ".Length..];
+                        }
+                        else if (line.StartsWith("LBA:"))
+                        {
+                            // Set the key string if necessary
+                            vobKeys ??= string.Empty;
 
-                            if (line.StartsWith("DecryptedDiscKey"))
+                            // No keys
+                            if (line.Contains("No TitleKey"))
                             {
-                                decryptedDiscKey = line["DecryptedDiscKey[020]: ".Length..];
+                                var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$", RegexOptions.Compiled);
+                                string matchedFilename = match.Groups[1].Value;
+                                if (matchedFilename.EndsWith(";1"))
+                                    matchedFilename = matchedFilename[..^2];
+
+                                vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
                             }
-                            else if (line.StartsWith("LBA:"))
+                            else
                             {
-                                // Set the key string if necessary
-                                vobKeys ??= string.Empty;
+                                var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$", RegexOptions.Compiled);
+                                string matchedFilename = match.Groups[1].Value;
+                                if (matchedFilename.EndsWith(";1"))
+                                    matchedFilename = matchedFilename[..^2];
 
-                                // No keys
-                                if (line.Contains("No TitleKey"))
-                                {
-                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$", RegexOptions.Compiled);
-                                    string matchedFilename = match.Groups[1].Value;
-                                    if (matchedFilename.EndsWith(";1"))
-                                        matchedFilename = matchedFilename[..^2];
-
-                                    vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
-                                }
-                                else
-                                {
-                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$", RegexOptions.Compiled);
-                                    string matchedFilename = match.Groups[1].Value;
-                                    if (matchedFilename.EndsWith(";1"))
-                                        matchedFilename = matchedFilename[..^2];
-
-                                    vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
-                                }
+                                vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
                             }
                         }
                     }
-                    catch { }
                 }
+                catch { }
             }
 
             // Now we format everything we can
@@ -2861,46 +2857,44 @@ namespace MPF.Core.Modules.DiscImageCreator
             long? totalErrors = null;
 
             // First line of defense is the EdcEcc error file
-            using (var sr = File.OpenText(edcecc))
+            try
             {
-                try
+                // Read in the error count whenever we find it
+                using var sr = File.OpenText(edcecc);
+                while (!sr.EndOfStream)
                 {
-                    // Read in the error count whenever we find it
-                    while (!sr.EndOfStream)
+                    var line = sr.ReadLine()?.Trim();
+                    if (line == null)
+                        break;
+
+                    if (line.StartsWith("[NO ERROR]"))
                     {
-                        var line = sr.ReadLine()?.Trim();
-                        if (line == null)
-                            break;
-
-                        if (line.StartsWith("[NO ERROR]"))
-                        {
-                            totalErrors = 0;
-                            break;
-                        }
-                        else if (line.StartsWith("Total errors"))
-                        {
-                            totalErrors ??= 0;
-
-                            if (Int64.TryParse(line["Total errors: ".Length..].Trim(), out long te))
-                                totalErrors += te;
-                        }
-                        else if (line.StartsWith("Total warnings"))
-                        {
-                            totalErrors ??= 0;
-
-                            if (Int64.TryParse(line["Total warnings: ".Length..].Trim(), out long tw))
-                                totalErrors += tw;
-                        }
+                        totalErrors = 0;
+                        break;
                     }
+                    else if (line.StartsWith("Total errors"))
+                    {
+                        totalErrors ??= 0;
 
-                    // If we haven't found anything, return -1
-                    return totalErrors ?? -1;
+                        if (Int64.TryParse(line["Total errors: ".Length..].Trim(), out long te))
+                            totalErrors += te;
+                    }
+                    else if (line.StartsWith("Total warnings"))
+                    {
+                        totalErrors ??= 0;
+
+                        if (Int64.TryParse(line["Total warnings: ".Length..].Trim(), out long tw))
+                            totalErrors += tw;
+                    }
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return Int64.MaxValue;
-                }
+
+                // If we haven't found anything, return -1
+                return totalErrors ?? -1;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return Int64.MaxValue;
             }
         }
 
@@ -2949,43 +2943,41 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(drive))
                 return false;
 
-            using (var sr = File.OpenText(drive))
+            try
             {
-                try
+                using var sr = File.OpenText(drive);
+                var line = sr.ReadLine();
+                while (line != null)
                 {
-                    var line = sr.ReadLine();
-                    while (line != null)
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // Only take the first instance of each value
+                    if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
                     {
-                        // Trim the line for later use
-                        line = line.Trim();
-
-                        // Only take the first instance of each value
-                        if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
-                        {
-                            // VendorId: <manufacturer>
-                            manufacturer = line["VendorId: ".Length..];
-                        }
-                        else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
-                        {
-                            // ProductId: <model>
-                            model = line["ProductId: ".Length..];
-                        }
-                        else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
-                        {
-                            // ProductRevisionLevel: <firmware>
-                            firmware = line["ProductRevisionLevel: ".Length..];
-                        }
-
-                        line = sr.ReadLine();
+                        // VendorId: <manufacturer>
+                        manufacturer = line["VendorId: ".Length..];
+                    }
+                    else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
+                    {
+                        // ProductId: <model>
+                        model = line["ProductId: ".Length..];
+                    }
+                    else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
+                    {
+                        // ProductRevisionLevel: <firmware>
+                        firmware = line["ProductRevisionLevel: ".Length..];
                     }
 
-                    return true;
+                    line = sr.ReadLine();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 
@@ -3001,49 +2993,47 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
+                using var sr = File.OpenText(disc);
+                var line = sr.ReadLine();
+                while (line != null)
                 {
-                    var line = sr.ReadLine();
-                    while (line != null)
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // Single-layer discs have no layerbreak
+                    if (line.Contains("NumberOfLayers: Single Layer"))
                     {
-                        // Trim the line for later use
-                        line = line.Trim();
-
-                        // Single-layer discs have no layerbreak
-                        if (line.Contains("NumberOfLayers: Single Layer"))
-                        {
-                            return null;
-                        }
-
-                        // Xbox discs have a special layerbreaks
-                        else if (xgd && line.StartsWith("LayerBreak"))
-                        {
-                            // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            return split[1];
-                        }
-
-                        // Dual-layer discs have a regular layerbreak
-                        else if (!xgd && line.StartsWith("LayerZeroSector"))
-                        {
-                            // LayerZeroSector: <size> (<hex>)
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            return split[1];
-                        }
-
-                        line = sr.ReadLine();
+                        return null;
                     }
 
-                    // If we get to the end, there's an issue
-                    return null;
+                    // Xbox discs have a special layerbreaks
+                    else if (xgd && line.StartsWith("LayerBreak"))
+                    {
+                        // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
+                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        return split[1];
+                    }
+
+                    // Dual-layer discs have a regular layerbreak
+                    else if (!xgd && line.StartsWith("LayerZeroSector"))
+                    {
+                        // LayerZeroSector: <size> (<hex>)
+                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        return split[1];
+                    }
+
+                    line = sr.ReadLine();
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+
+                // If we get to the end, there's an issue
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3058,130 +3048,128 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
-                {
-                    // Seek to the TOC data
-                    var line = sr.ReadLine();
-                    if (line == null)
-                        return null;
-
-                    if (!line.StartsWith("========== TOC"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== TOC") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // Create the required regex
-                    var trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$", RegexOptions.Compiled);
-
-                    // Read in the track length data
-                    var trackLengthMapping = new Dictionary<string, string>();
-                    while ((line = sr.ReadLine())?.Contains("Track") == true)
-                    {
-                        var match = trackLengthRegex.Match(line);
-                        trackLengthMapping[match.Groups[1].Value] = match.Groups[2].Value;
-                    }
-
-                    if (line == null)
-                        return null;
-
-                    // Seek to the FULL TOC data
-                    line = sr.ReadLine();
-                    if (line == null)
-                        return null;
-
-                    if (!line.StartsWith("========== FULL TOC"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== FULL TOC") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // Create the required regex
-                    var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$", RegexOptions.Compiled);
-
-                    // Read in the track session data
-                    var trackSessionMapping = new Dictionary<string, string>();
-                    while ((line = sr.ReadLine())?.StartsWith("========== OpCode") == false)
-                    {
-                        if (line == null)
-                            return null;
-
-                        var match = trackSessionRegex.Match(line);
-                        if (!match.Success)
-                            continue;
-
-                        trackSessionMapping[match.Groups[2].Value] = match.Groups[1].Value;
-                    }
-
-                    // If we have all Session 1, we can just skip out
-                    if (trackSessionMapping.All(kvp => kvp.Value == "1"))
-                        return null;
-
-                    // Seek to the multisession data
-                    line = sr.ReadLine()?.Trim();
-                    if (line == null)
-                        return null;
-
-                    if (!line.StartsWith("Lead-out length"))
-                        while ((line = sr.ReadLine()?.Trim())?.StartsWith("Lead-out length") == false) ;
-
-                    // TODO: Are there any examples of 3+ session discs?
-
-                    // Read the first session lead-out
-                    var firstSessionLeadOutLengthString = line?["Lead-out length of 1st session: ".Length..];
-                    line = sr.ReadLine()?.Trim();
-                    if (line == null)
-                        return null;
-
-                    // Read the second session lead-in, if it exists
-                    string? secondSessionLeadInLengthString = null;
-                    while (line?.StartsWith("Lead-in length") == false)
-                    {
-                        secondSessionLeadInLengthString = line?["Lead-in length of 2nd session: ".Length..];
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    // Read the second session pregap
-                    var secondSessionPregapLengthString = line?["Pregap length of 1st track of 2nd session: ".Length..];
-
-                    // Calculate the session gap total
-                    if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
-                        firstSessionLeadOutLength = 0;
-                    if (!int.TryParse(secondSessionLeadInLengthString, out int secondSessionLeadInLength))
-                        secondSessionLeadInLength = 0;
-                    if (!int.TryParse(secondSessionPregapLengthString, out int secondSessionPregapLength))
-                        secondSessionPregapLength = 0;
-                    int sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength + secondSessionPregapLength;
-
-                    // Calculate first session length and total length
-                    int firstSessionLength = 0, totalLength = 0;
-                    foreach (var lengthMapping in trackLengthMapping)
-                    {
-                        if (!int.TryParse(lengthMapping.Value, out int trackLength))
-                            trackLength = 0;
-
-                        if (trackSessionMapping.TryGetValue(lengthMapping.Key, out var session))
-                            firstSessionLength += session == "1" ? trackLength : 0;
-
-                        totalLength += trackLength;
-                    }
-
-                    // Adjust the session gap in a consistent way
-                    if (firstSessionLength - sessionGapTotal < 0)
-                        sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength;
-
-                    // Create and return the formatted output
-                    string multisessionData =
-                        $"Session 1: 0-{firstSessionLength - sessionGapTotal - 1}\n"
-                        + $"Session 2: {firstSessionLength}-{totalLength - 1}";
-
-                    return multisessionData;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Seek to the TOC data
+                using var sr = File.OpenText(disc);
+                var line = sr.ReadLine();
+                if (line == null)
                     return null;
+
+                if (!line.StartsWith("========== TOC"))
+                    while ((line = sr.ReadLine())?.StartsWith("========== TOC") == false) ;
+                if (line == null)
+                    return null;
+
+                // Create the required regex
+                var trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$", RegexOptions.Compiled);
+
+                // Read in the track length data
+                var trackLengthMapping = new Dictionary<string, string>();
+                while ((line = sr.ReadLine())?.Contains("Track") == true)
+                {
+                    var match = trackLengthRegex.Match(line);
+                    trackLengthMapping[match.Groups[1].Value] = match.Groups[2].Value;
                 }
+
+                if (line == null)
+                    return null;
+
+                // Seek to the FULL TOC data
+                line = sr.ReadLine();
+                if (line == null)
+                    return null;
+
+                if (!line.StartsWith("========== FULL TOC"))
+                    while ((line = sr.ReadLine())?.StartsWith("========== FULL TOC") == false) ;
+                if (line == null)
+                    return null;
+
+                // Create the required regex
+                var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$", RegexOptions.Compiled);
+
+                // Read in the track session data
+                var trackSessionMapping = new Dictionary<string, string>();
+                while ((line = sr.ReadLine())?.StartsWith("========== OpCode") == false)
+                {
+                    if (line == null)
+                        return null;
+
+                    var match = trackSessionRegex.Match(line);
+                    if (!match.Success)
+                        continue;
+
+                    trackSessionMapping[match.Groups[2].Value] = match.Groups[1].Value;
+                }
+
+                // If we have all Session 1, we can just skip out
+                if (trackSessionMapping.All(kvp => kvp.Value == "1"))
+                    return null;
+
+                // Seek to the multisession data
+                line = sr.ReadLine()?.Trim();
+                if (line == null)
+                    return null;
+
+                if (!line.StartsWith("Lead-out length"))
+                    while ((line = sr.ReadLine()?.Trim())?.StartsWith("Lead-out length") == false) ;
+
+                // TODO: Are there any examples of 3+ session discs?
+
+                // Read the first session lead-out
+                var firstSessionLeadOutLengthString = line?["Lead-out length of 1st session: ".Length..];
+                line = sr.ReadLine()?.Trim();
+                if (line == null)
+                    return null;
+
+                // Read the second session lead-in, if it exists
+                string? secondSessionLeadInLengthString = null;
+                while (line?.StartsWith("Lead-in length") == false)
+                {
+                    secondSessionLeadInLengthString = line?["Lead-in length of 2nd session: ".Length..];
+                    line = sr.ReadLine()?.Trim();
+                }
+
+                // Read the second session pregap
+                var secondSessionPregapLengthString = line?["Pregap length of 1st track of 2nd session: ".Length..];
+
+                // Calculate the session gap total
+                if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
+                    firstSessionLeadOutLength = 0;
+                if (!int.TryParse(secondSessionLeadInLengthString, out int secondSessionLeadInLength))
+                    secondSessionLeadInLength = 0;
+                if (!int.TryParse(secondSessionPregapLengthString, out int secondSessionPregapLength))
+                    secondSessionPregapLength = 0;
+                int sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength + secondSessionPregapLength;
+
+                // Calculate first session length and total length
+                int firstSessionLength = 0, totalLength = 0;
+                foreach (var lengthMapping in trackLengthMapping)
+                {
+                    if (!int.TryParse(lengthMapping.Value, out int trackLength))
+                        trackLength = 0;
+
+                    if (trackSessionMapping.TryGetValue(lengthMapping.Key, out var session))
+                        firstSessionLength += session == "1" ? trackLength : 0;
+
+                    totalLength += trackLength;
+                }
+
+                // Adjust the session gap in a consistent way
+                if (firstSessionLength - sessionGapTotal < 0)
+                    sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength;
+
+                // Create and return the formatted output
+                string multisessionData =
+                    $"Session 1: 0-{firstSessionLength - sessionGapTotal - 1}\n"
+                    + $"Session 2: {firstSessionLength}-{totalLength - 1}";
+
+                return multisessionData;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3196,35 +3184,33 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
-                {
-                    // Check for either antimod string
-                    var line = sr.ReadLine()?.Trim();
-                    if (line == null)
-                        return null;
-
-                    while (!sr.EndOfStream)
-                    {
-                        if (line == null)
-                            return false;
-
-                        if (line.StartsWith("Detected anti-mod string"))
-                            return true;
-                        else if (line.StartsWith("No anti-mod string"))
-                            return false;
-
-                        line = sr.ReadLine()?.Trim();
-                    }
-
-                    return false;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // Check for either antimod string
+                using var sr = File.OpenText(disc);
+                var line = sr.ReadLine()?.Trim();
+                if (line == null)
                     return null;
+
+                while (!sr.EndOfStream)
+                {
+                    if (line == null)
+                        return false;
+
+                    if (line.StartsWith("Detected anti-mod string"))
+                        return true;
+                    else if (line.StartsWith("No anti-mod string"))
+                        return false;
+
+                    line = sr.ReadLine()?.Trim();
                 }
+
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3242,46 +3228,44 @@ namespace MPF.Core.Modules.DiscImageCreator
             // First line of defense is the EdcEcc error file
             int modeTwoNoEdc = 0;
             int modeTwoFormTwo = 0;
-            using (var sr = File.OpenText(edcecc))
+            try
             {
-                try
+                using var sr = File.OpenText(edcecc);
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
-                    {
-                        var line = sr.ReadLine();
-                        if (line == null)
-                            break;
+                    var line = sr.ReadLine();
+                    if (line == null)
+                        break;
 
-                        if (line.Contains("mode 2 form 2"))
-                            modeTwoFormTwo++;
-                        else if (line.Contains("mode 2 no edc"))
-                            modeTwoNoEdc++;
-                    }
-
-                    // This shouldn't happen
-                    if (modeTwoNoEdc == 0 && modeTwoFormTwo == 0)
-                        return null;
-
-                    // EDC exists
-                    else if (modeTwoNoEdc == 0 && modeTwoFormTwo != 0)
-                        return true;
-
-                    // EDC doesn't exist
-                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo == 0)
-                        return false;
-
-                    // This shouldn't happen
-                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo != 0)
-                        return null;
-
-                    // No idea how it would fall through
-                    return null;
+                    if (line.Contains("mode 2 form 2"))
+                        modeTwoFormTwo++;
+                    else if (line.Contains("mode 2 no edc"))
+                        modeTwoNoEdc++;
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
+
+                // This shouldn't happen
+                if (modeTwoNoEdc == 0 && modeTwoFormTwo == 0)
                     return null;
-                }
+
+                // EDC exists
+                else if (modeTwoNoEdc == 0 && modeTwoFormTwo != 0)
+                    return true;
+
+                // EDC doesn't exist
+                else if (modeTwoNoEdc != 0 && modeTwoFormTwo == 0)
+                    return false;
+
+                // This shouldn't happen
+                else if (modeTwoNoEdc != 0 && modeTwoFormTwo != 0)
+                    return null;
+
+                // No idea how it would fall through
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3296,63 +3280,61 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (var sr = File.OpenText(mainInfo))
+            try
             {
-                try
-                {
-                    // If we're in a new mainInfo, the location of the header changed
-                    var line = sr.ReadLine();
-                    if (line == null)
-                        return null;
-
-                    if (line.StartsWith("========== OpCode")
-                        || line.StartsWith("========== TOC (Binary)")
-                        || line.StartsWith("========== FULL TOC (Binary)"))
-                    {
-                        // Seek to unscrambled data
-                        while ((line = sr.ReadLine())?.StartsWith("========== Check Volume Descriptor ==========") == false) ;
-
-                        // Read the next line so the search goes properly
-                        line = sr.ReadLine();
-                    }
-
-                    if (line == null)
-                        return null;
-
-                    // Make sure we're in the area
-                    if (line.StartsWith("========== LBA") == false)
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // If we have a Sega disc, skip sector 0
-                    if (line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // If we have a PlayStation disc, skip sector 4
-                    if (line.StartsWith("========== LBA[000004, 0x00004]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // We assume the first non-LBA0/4 sector listed is the proper one
-                    // Fast forward to the PVD
-                    while ((line = sr.ReadLine())?.StartsWith("0310") == false) ;
-
-                    // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = "";
-                    for (int i = 0; i < 6; i++)
-                        pvd += sr.ReadLine() + "\n"; // 320-370
-
-                    return pvd;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // If we're in a new mainInfo, the location of the header changed
+                using var sr = File.OpenText(mainInfo);
+                var line = sr.ReadLine();
+                if (line == null)
                     return null;
+
+                if (line.StartsWith("========== OpCode")
+                    || line.StartsWith("========== TOC (Binary)")
+                    || line.StartsWith("========== FULL TOC (Binary)"))
+                {
+                    // Seek to unscrambled data
+                    while ((line = sr.ReadLine())?.StartsWith("========== Check Volume Descriptor ==========") == false) ;
+
+                    // Read the next line so the search goes properly
+                    line = sr.ReadLine();
                 }
+
+                if (line == null)
+                    return null;
+
+                // Make sure we're in the area
+                if (line.StartsWith("========== LBA") == false)
+                    while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
+                if (line == null)
+                    return null;
+
+                // If we have a Sega disc, skip sector 0
+                if (line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
+                    while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
+                if (line == null)
+                    return null;
+
+                // If we have a PlayStation disc, skip sector 4
+                if (line.StartsWith("========== LBA[000004, 0x00004]: Main Channel =========="))
+                    while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
+                if (line == null)
+                    return null;
+
+                // We assume the first non-LBA0/4 sector listed is the proper one
+                // Fast forward to the PVD
+                while ((line = sr.ReadLine())?.StartsWith("0310") == false) ;
+
+                // Now that we're at the PVD, read each line in and concatenate
+                string pvd = "";
+                for (int i = 0; i < 6; i++)
+                    pvd += sr.ReadLine() + "\n"; // 320-370
+
+                return pvd;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3457,60 +3439,58 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(mainInfo))
                 return null;
 
-            using (var sr = File.OpenText(mainInfo))
+            try
             {
-                try
-                {
-                    // If we're in a new mainInfo, the location of the header changed
-                    var line = sr.ReadLine();
-                    if (line == null)
-                        return null;
-
-                    if (line.StartsWith("========== OpCode")
-                        || line.StartsWith("========== TOC (Binary)")
-                        || line.StartsWith("========== FULL TOC (Binary)"))
-                    {
-                        // Seek to unscrambled data
-                        while ((line = sr.ReadLine())?.Contains("Check MCN and/or ISRC") == false) ;
-                        if (line == null)
-                            return null;
-
-                        // Read the next line so the search goes properly
-                        line = sr.ReadLine();
-                    }
-
-                    if (line == null)
-                        return null;
-
-                    // Make sure we're in the area
-                    if (!line.StartsWith("========== LBA"))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // Make sure we're in the right sector
-                    if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
-                        while ((line = sr.ReadLine())?.StartsWith("========== LBA[000000, 0000000]: Main Channel ==========") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // Fast forward to the header
-                    while ((line = sr.ReadLine())?.Trim()?.StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F") == false) ;
-                    if (line == null)
-                        return null;
-
-                    // Now that we're at the Header, read each line in and concatenate
-                    string header = "";
-                    for (int i = 0; i < 32; i++)
-                        header += sr.ReadLine() + "\n"; // 0000-01F0
-
-                    return header;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
+                // If we're in a new mainInfo, the location of the header changed
+                using var sr = File.OpenText(mainInfo);
+                var line = sr.ReadLine();
+                if (line == null)
                     return null;
+
+                if (line.StartsWith("========== OpCode")
+                    || line.StartsWith("========== TOC (Binary)")
+                    || line.StartsWith("========== FULL TOC (Binary)"))
+                {
+                    // Seek to unscrambled data
+                    while ((line = sr.ReadLine())?.Contains("Check MCN and/or ISRC") == false) ;
+                    if (line == null)
+                        return null;
+
+                    // Read the next line so the search goes properly
+                    line = sr.ReadLine();
                 }
+
+                if (line == null)
+                    return null;
+
+                // Make sure we're in the area
+                if (!line.StartsWith("========== LBA"))
+                    while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
+                if (line == null)
+                    return null;
+
+                // Make sure we're in the right sector
+                if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
+                    while ((line = sr.ReadLine())?.StartsWith("========== LBA[000000, 0000000]: Main Channel ==========") == false) ;
+                if (line == null)
+                    return null;
+
+                // Fast forward to the header
+                while ((line = sr.ReadLine())?.Trim()?.StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F") == false) ;
+                if (line == null)
+                    return null;
+
+                // Now that we're at the Header, read each line in and concatenate
+                string header = "";
+                for (int i = 0; i < 32; i++)
+                    header += sr.ReadLine() + "\n"; // 0000-01F0
+
+                return header;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3525,24 +3505,22 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(disc))
                 return null;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
-                {
-                    // Fast forward to the offsets
-                    while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
-                    sr.ReadLine(); // Combined Offset
-                    sr.ReadLine(); // Drive Offset
-                    sr.ReadLine(); // Separator line
+                // Fast forward to the offsets
+                using var sr = File.OpenText(disc);
+                while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
+                sr.ReadLine(); // Combined Offset
+                sr.ReadLine(); // Drive Offset
+                sr.ReadLine(); // Separator line
 
-                    // Now that we're at the offsets, attempt to get the sample offset
-                    return sr.ReadLine()?.Split(' ')?.LastOrDefault();
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
+                // Now that we're at the offsets, attempt to get the sample offset
+                return sr.ReadLine()?.Split(' ')?.LastOrDefault();
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 
@@ -3597,75 +3575,73 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
+                using var sr = File.OpenText(disc);
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
+                    var line = sr.ReadLine()?.Trim();
+                    if (line == null)
+                        break;
+
+                    // Security Sector version
+                    if (line.StartsWith("Version of challenge table"))
                     {
-                        var line = sr.ReadLine()?.Trim();
+                        ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
+                    }
+
+                    // Security Sector ranges
+                    else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
+                    {
+                        // Set the flag so we don't read duplicate data
+                        foundSecuritySectors = true;
+
+                        var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
+
+                        line = sr.ReadLine()?.Trim();
                         if (line == null)
                             break;
 
-                        // Security Sector version
-                        if (line.StartsWith("Version of challenge table"))
+                        while (!line.StartsWith("========== TotalLength ==========")
+                            && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                         {
-                            ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
-                        }
-
-                        // Security Sector ranges
-                        else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
-                        {
-                            // Set the flag so we don't read duplicate data
-                            foundSecuritySectors = true;
-
-                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
+                            // If we have a recognized line format, parse it
+                            if (line.StartsWith("Layer "))
+                            {
+                                var match = layerRegex.Match(line);
+                                ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                            }
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)
                                 break;
-
-                            while (!line.StartsWith("========== TotalLength ==========")
-                                && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
-                            {
-                                // If we have a recognized line format, parse it
-                                if (line.StartsWith("Layer "))
-                                {
-                                    var match = layerRegex.Match(line);
-                                    ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
-                                }
-
-                                line = sr.ReadLine()?.Trim();
-                                if (line == null)
-                                    break;
-                            }
-
-                            if (line == null)
-                                break;
                         }
 
-                        // Special File Hashes
-                        else if (line.StartsWith("<rom"))
-                        {
-                            if (InfoTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
-                            {
-                                if (line.Contains("SS.bin"))
-                                    sshash = crc32?.ToUpperInvariant();
-                                else if (line.Contains("PFI.bin"))
-                                    pfihash = crc32?.ToUpperInvariant();
-                                else if (line.Contains("DMI.bin"))
-                                    dmihash = crc32?.ToUpperInvariant();
-                            }
-                        }
+                        if (line == null)
+                            break;
                     }
 
-                    return true;
+                    // Special File Hashes
+                    else if (line.StartsWith("<rom"))
+                    {
+                        if (InfoTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
+                        {
+                            if (line.Contains("SS.bin"))
+                                sshash = crc32?.ToUpperInvariant();
+                            else if (line.Contains("PFI.bin"))
+                                pfihash = crc32?.ToUpperInvariant();
+                            else if (line.Contains("DMI.bin"))
+                                dmihash = crc32?.ToUpperInvariant();
+                        }
+                    }
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 
@@ -3687,61 +3663,59 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
-            using (var sr = File.OpenText(disc))
+            try
             {
-                try
+                using var sr = File.OpenText(disc);
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
+                    var line = sr.ReadLine()?.Trim();
+                    if (line == null)
+                        break;
+
+                    // Security Sector version
+                    if (line.StartsWith("Version of challenge table"))
                     {
-                        var line = sr.ReadLine()?.Trim();
+                        ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
+                    }
+
+                    // Security Sector ranges
+                    else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
+                    {
+                        // Set the flag so we don't read duplicate data
+                        foundSecuritySectors = true;
+
+                        var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
+
+                        line = sr.ReadLine()?.Trim();
                         if (line == null)
                             break;
 
-                        // Security Sector version
-                        if (line.StartsWith("Version of challenge table"))
+                        while (!line.StartsWith("========== TotalLength ==========")
+                            && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                         {
-                            ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
-                        }
-
-                        // Security Sector ranges
-                        else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
-                        {
-                            // Set the flag so we don't read duplicate data
-                            foundSecuritySectors = true;
-
-                            var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
+                            // If we have a recognized line format, parse it
+                            if (line.StartsWith("Layer "))
+                            {
+                                var match = layerRegex.Match(line);
+                                ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                            }
 
                             line = sr.ReadLine()?.Trim();
                             if (line == null)
                                 break;
-
-                            while (!line.StartsWith("========== TotalLength ==========")
-                                && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
-                            {
-                                // If we have a recognized line format, parse it
-                                if (line.StartsWith("Layer "))
-                                {
-                                    var match = layerRegex.Match(line);
-                                    ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
-                                }
-
-                                line = sr.ReadLine()?.Trim();
-                                if (line == null)
-                                    break;
-                            }
-
-                            if (line == null)
-                                break;
                         }
-                    }
 
-                    return true;
+                        if (line == null)
+                            break;
+                    }
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 
@@ -3755,17 +3729,15 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(dmi))
                 return string.Empty;
 
-            using (var br = new BinaryReader(File.OpenRead(dmi)))
+            try
             {
-                try
-                {
-                    br.BaseStream.Seek(8, SeekOrigin.Begin);
-                    return new string(br.ReadChars(8));
-                }
-                catch
-                {
-                    return string.Empty;
-                }
+                using var br = new BinaryReader(File.OpenRead(dmi));
+                br.BaseStream.Seek(8, SeekOrigin.Begin);
+                return new string(br.ReadChars(8));
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 
@@ -3779,17 +3751,15 @@ namespace MPF.Core.Modules.DiscImageCreator
             if (!File.Exists(dmi))
                 return string.Empty;
 
-            using (var br = new BinaryReader(File.OpenRead(dmi)))
+            try
             {
-                try
-                {
-                    br.BaseStream.Seek(64, SeekOrigin.Begin);
-                    return new string(br.ReadChars(14));
-                }
-                catch
-                {
-                    return string.Empty;
-                }
+                using var br = new BinaryReader(File.OpenRead(dmi));
+                br.BaseStream.Seek(64, SeekOrigin.Begin);
+                return new string(br.ReadChars(14));
+            }
+            catch
+            {
+                return string.Empty;
             }
         }
 

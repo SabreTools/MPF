@@ -5,7 +5,7 @@ using System.Threading;
 //namespace Compress.ThreadReaders
 namespace MPF.Core.Hashing
 {
-    public class ThreadLoadBuffer : IDisposable
+    public sealed class ThreadLoadBuffer : IDisposable
     {
         private readonly AutoResetEvent _waitEvent;
         private readonly AutoResetEvent _outEvent;

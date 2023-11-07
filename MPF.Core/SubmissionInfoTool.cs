@@ -15,6 +15,7 @@ using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
 #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
 namespace MPF.Core
 {
@@ -1071,132 +1072,130 @@ namespace MPF.Core
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
             info.PartiallyMatchedIDs = new List<int>();
 
-            using (var wc = new RedumpHttpClient())
+            // Login to Redump
+            using var wc = new RedumpHttpClient();
+            bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+            if (loggedIn == null)
             {
-                // Login to Redump
-                bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
-                if (loggedIn == null)
+                resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
+                return false;
+            }
+            else if (loggedIn == false)
+            {
+                // Don't log the as a failure or error
+                return false;
+            }
+
+            // Setup the full-track checks
+            bool allFound = true;
+            List<int>? fullyMatchedIDs = null;
+
+            // Loop through all of the hashdata to find matching IDs
+            resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
+            var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
+            int trackCount = splitData?.Length ?? 0;
+            foreach (string hashData in splitData ?? Array.Empty<string>())
+            {
+                // Catch any errant blank lines
+                if (string.IsNullOrWhiteSpace(hashData))
                 {
-                    resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
-                    return false;
-                }
-                else if (loggedIn == false)
-                {
-                    // Don't log the as a failure or error
-                    return false;
-                }
-
-                // Setup the full-track checks
-                bool allFound = true;
-                List<int>? fullyMatchedIDs = null;
-
-                // Loop through all of the hashdata to find matching IDs
-                resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-                var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
-                int trackCount = splitData?.Length ?? 0;
-                foreach (string hashData in splitData ?? Array.Empty<string>())
-                {
-                    // Catch any errant blank lines
-                    if (string.IsNullOrWhiteSpace(hashData))
-                    {
-                        trackCount--;
-                        resultProgress?.Report(Result.Success("Blank line found, skipping!"));
-                        continue;
-                    }
-
-                    // If the line ends in a known extra track names, skip them for checking
-                    if (hashData.Contains("(Track 0).bin")
-                        || hashData.Contains("(Track 0.2).bin")
-                        || hashData.Contains("(Track 00).bin")
-                        || hashData.Contains("(Track 00.2).bin")
-                        || hashData.Contains("(Track A).bin")
-                        || hashData.Contains("(Track AA).bin"))
-                    {
-                        trackCount--;
-                        resultProgress?.Report(Result.Success("Extra track found, skipping!"));
-                        continue;
-                    }
-
-                    (bool singleFound, var foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
-
-                    // Ensure that all tracks are found
-                    allFound &= singleFound;
-
-                    // If we found a track, only keep track of distinct found tracks
-                    if (singleFound && foundIds != null)
-                    {
-                        if (fullyMatchedIDs == null)
-                            fullyMatchedIDs = foundIds;
-                        else
-                            fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
-                    }
-                    // If no tracks were found, remove all fully matched IDs found so far
-                    else
-                    {
-                        fullyMatchedIDs = new List<int>();
-                    }
+                    trackCount--;
+                    resultProgress?.Report(Result.Success("Blank line found, skipping!"));
+                    continue;
                 }
 
-                // If we don't have any matches but we have a universal hash
-                if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+                // If the line ends in a known extra track names, skip them for checking
+                if (hashData.Contains("(Track 0).bin")
+                    || hashData.Contains("(Track 0.2).bin")
+                    || hashData.Contains("(Track 00).bin")
+                    || hashData.Contains("(Track 00.2).bin")
+                    || hashData.Contains("(Track A).bin")
+                    || hashData.Contains("(Track AA).bin"))
                 {
-                    (bool singleFound, var foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+                    trackCount--;
+                    resultProgress?.Report(Result.Success("Extra track found, skipping!"));
+                    continue;
+                }
 
-                    // Ensure that the hash is found
-                    allFound = singleFound;
+                (bool singleFound, var foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
 
-                    // If we found a track, only keep track of distinct found tracks
-                    if (singleFound && foundIds != null)
-                    {
+                // Ensure that all tracks are found
+                allFound &= singleFound;
+
+                // If we found a track, only keep track of distinct found tracks
+                if (singleFound && foundIds != null)
+                {
+                    if (fullyMatchedIDs == null)
                         fullyMatchedIDs = foundIds;
-                    }
-                    // If no tracks were found, remove all fully matched IDs found so far
                     else
-                    {
-                        fullyMatchedIDs = new List<int>();
-                    }
+                        fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
                 }
-
-                // Make sure we only have unique IDs
-                info.PartiallyMatchedIDs = info.PartiallyMatchedIDs
-                    .Distinct()
-                    .OrderBy(id => id)
-                    .ToList();
-
-                resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
-                    ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
-                    : "No matches found")));
-
-                // Exit early if one failed or there are no matched IDs
-                if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
-                    return false;
-
-                // Find the first matched ID where the track count matches, we can grab a bunch of info from it
-                int totalMatchedIDsCount = fullyMatchedIDs.Count;
-                for (int i = 0; i < totalMatchedIDsCount; i++)
+                // If no tracks were found, remove all fully matched IDs found so far
+                else
                 {
-                    // Skip if the track count doesn't match
-                    if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
-                        continue;
-
-                    // Fill in the fields from the existing ID
-                    resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-                    _ = await FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
-                    resultProgress?.Report(Result.Success("Information filling complete!"));
-
-                    // Set the fully matched ID to the current
-                    info.FullyMatchedID = fullyMatchedIDs[i];
-                    break;
+                    fullyMatchedIDs = new List<int>();
                 }
+            }
 
-                // Clear out fully matched IDs from the partial list
-                if (info.FullyMatchedID.HasValue)
+            // If we don't have any matches but we have a universal hash
+            if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+            {
+                (bool singleFound, var foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+
+                // Ensure that the hash is found
+                allFound = singleFound;
+
+                // If we found a track, only keep track of distinct found tracks
+                if (singleFound && foundIds != null)
                 {
-                    if (info.PartiallyMatchedIDs.Count == 1)
-                        info.PartiallyMatchedIDs = null;
-                    else
-                        info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
+                    fullyMatchedIDs = foundIds;
                 }
+                // If no tracks were found, remove all fully matched IDs found so far
+                else
+                {
+                    fullyMatchedIDs = new List<int>();
+                }
+            }
+
+            // Make sure we only have unique IDs
+            info.PartiallyMatchedIDs = info.PartiallyMatchedIDs
+                .Distinct()
+                .OrderBy(id => id)
+                .ToList();
+
+            resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
+                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
+                : "No matches found")));
+
+            // Exit early if one failed or there are no matched IDs
+            if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
+                return false;
+
+            // Find the first matched ID where the track count matches, we can grab a bunch of info from it
+            int totalMatchedIDsCount = fullyMatchedIDs.Count;
+            for (int i = 0; i < totalMatchedIDsCount; i++)
+            {
+                // Skip if the track count doesn't match
+                if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+                    continue;
+
+                // Fill in the fields from the existing ID
+                resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+                _ = await FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+                resultProgress?.Report(Result.Success("Information filling complete!"));
+
+                // Set the fully matched ID to the current
+                info.FullyMatchedID = fullyMatchedIDs[i];
+                break;
+            }
+
+            // Clear out fully matched IDs from the partial list
+            if (info.FullyMatchedID.HasValue)
+            {
+                if (info.PartiallyMatchedIDs.Count == 1)
+                    info.PartiallyMatchedIDs = null;
+                else
+                    info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
             }
 
             return true;
