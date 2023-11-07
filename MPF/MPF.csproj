@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net6.0-windows;net7.0-windows</TargetFrameworks>
+    <TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
     <Title>MPF</Title>
     <Description>Frontend for various dumping programs</Description>
@@ -15,10 +16,6 @@
     <InternalsVisibleTo>MPF.Test</InternalsVisibleTo>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'!='net48'">
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
     <Resource Include="Images\Icon.ico" />
   </ItemGroup>
@@ -26,10 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
-    <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 
   <ItemGroup>
