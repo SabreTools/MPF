@@ -11,6 +11,7 @@
 - Consolidate build script information
 - Remove lingering script reference
 - Make releases less verbose
+- Remove .NET Framework 4.8 from issue report
 
 ### 2.7.5 (2023-11-06)
 

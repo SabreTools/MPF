@@ -8,6 +8,7 @@ assignees: mnadareski
 ---
 
 **Before You Submit**
+
 - Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the issue has already been addressed.
 - Is it copy protection related? If so, report the issue [here](https://github.com/mnadareski/BurnOutSharp/issues) instead.
 - Check multiple discs to help narrow down the issue
@@ -16,7 +17,7 @@ assignees: mnadareski
 If all of those fail, then continue...
 
 **Version**
-What version are you using? 
+What version are you using?
 
 - [ ] Stable release (version here)
 - [ ] WIP release (version here)
@@ -24,7 +25,6 @@ What version are you using?
 **Build**
 What runtime version are you using?
 
-- [ ] .NET Framework 4.8 running on (Operating System)
 - [ ] .NET 6.0 running on (Operating System)
 - [ ] .NET 7.0 running on (Operating System)
 
@@ -33,6 +33,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
