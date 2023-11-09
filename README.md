@@ -79,7 +79,7 @@ A list of all changes in each stable release and current WIP builds can now be f
 
 MPF uses some external libraries to assist with additional information gathering after the dumping process.
 
-- **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
+- **BinaryObjectScanner** - Protection scanning - [GitHub](https://github.com/SabreTools/BinaryObjectScanner)
 - **WPFCustomMessageBox.thabse** - Custom message boxes in UI - [GitHub](https://github.com/thabse/WPFCustomMessageBox)
 
 ## Contributors

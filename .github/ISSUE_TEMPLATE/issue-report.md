@@ -10,7 +10,7 @@ assignees: mnadareski
 **Before You Submit**
 
 - Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the issue has already been addressed.
-- Is it copy protection related? If so, report the issue [here](https://github.com/mnadareski/BurnOutSharp/issues) instead.
+- Is it copy protection related? If so, report the issue [here](hhttps://github.com/SabreTools/BinaryObjectScanner/issues) instead.
 - Check multiple discs to help narrow down the issue
 - Check the Options to see if changing any of those affects your issue.
 
