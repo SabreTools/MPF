@@ -18,7 +18,7 @@ namespace MPF.Test.Modules
         [InlineData(RedumpSystem.SonyPlayStation3, MediaType.BluRay, CommandStrings.BluRay)]
         [InlineData(RedumpSystem.AppleMacintosh, MediaType.FloppyDisk, CommandStrings.Floppy)]
         [InlineData(RedumpSystem.RawThrillsVarious, MediaType.GDROM, null)]
-        public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string expected)
+        public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string? expected)
         {
             var options = new Options();
             var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
@@ -29,7 +29,7 @@ namespace MPF.Test.Modules
         [InlineData(RedumpSystem.AppleMacintosh, MediaType.LaserDisc, null)] // Deliberately unsupported
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
         [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, new string[] { FlagStrings.Raw })]
-        public void ParametersFromOptionsSpecialDefaultTest(RedumpSystem? knownSystem, MediaType? mediaType,string[] expected)
+        public void ParametersFromOptionsSpecialDefaultTest(RedumpSystem? knownSystem, MediaType? mediaType, string[]? expected)
         {
             var options = new Options();
             var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
@@ -147,7 +147,7 @@ namespace MPF.Test.Modules
         [InlineData("bd D longer\\path_test.iso 16", true)]
         [InlineData("stop D", true)]
         [InlineData("ls", false)]
-        public void ValidateParametersTest(string parameters, bool expected)
+        public void ValidateParametersTest(string? parameters, bool expected)
         {
             var actual = new Parameters(parameters);
             Assert.Equal(expected, actual.IsValid());
@@ -215,7 +215,7 @@ namespace MPF.Test.Modules
             Assert.Equal(expected, actual);
         }
 
-#endregion
+        #endregion
 
         [Fact]
         public void DiscImageCreatorAudioParametersTest()

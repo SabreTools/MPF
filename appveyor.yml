@@ -24,44 +24,44 @@ build_script:
   - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
   - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
-  # .NET 7.0 Debug
-  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  # .NET 8.0 Debug
+  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r linux-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r osx-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
 
-  # .NET 7.0 Release
-  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  # .NET 8.0 Release
+  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
 # post-build step
 after_build:
 
 # Aaru
 - ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip
-- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Aaru *
+- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Aaru *
 
 # DiscImageCreator
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/11660558/DiscImageCreator_20230606.zip
-- 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_247/redumper-2023.11.01_build247-win64.zip
-- 7z e redumper-2023.11.01_build247-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.11.01_build247-win64\bin\*
+- 7z e redumper-2023.11.01_build247-win64.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Redumper redumper-2023.11.01_build247-win64\bin\*
 
 # Create MPF Debug archives
-- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_%APPVEYOR_BUILD_NUMBER%_net6.0_win-x64_debug.zip *
+- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net8.0-windows\win-x64\publish\
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip *
 
 # Create MPF.Check Debug archives
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_win-x64_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\linux-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_linux-x64_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\osx-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_osx-x64_debug.zip *
+- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\win-x64\publish\
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip *
+- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\linux-x64\publish\
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_linux-x64_debug.zip *
+- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\osx-x64\publish\
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_osx-x64_debug.zip *
 
 # success/failure tracking
 on_success:
@@ -73,12 +73,12 @@ on_failure:
 
 # artifact linking
 artifacts:
-- path: MPF_%APPVEYOR_BUILD_NUMBER%_net6.0_win-x64_debug.zip
-  name: MPF (.NET 6.0, Debug, Windows x64)
+- path: MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
+  name: MPF (.NET 8.0, Debug, Windows x64)
 
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_win-x64_debug.zip
-  name: MPF.Check (.NET 6.0, Debug, Windows x64)
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_linux-x64_debug.zip
-  name: MPF.Check (.NET 6.0, Debug, Linux x64)
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net6.0_osx-x64_debug.zip
-  name: MPF.Check (.NET 6.0, Debug, OSX x64)
+- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
+  name: MPF.Check (.NET 8.0, Debug, Windows x64)
+- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_linux-x64_debug.zip
+  name: MPF.Check (.NET 8.0, Debug, Linux x64)
+- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_osx-x64_debug.zip
+  name: MPF.Check (.NET 8.0, Debug, OSX x64)

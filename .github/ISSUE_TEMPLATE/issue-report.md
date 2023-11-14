@@ -26,7 +26,7 @@ What version are you using?
 What runtime version are you using?
 
 - [ ] .NET 6.0 running on (Operating System)
-- [ ] .NET 7.0 running on (Operating System)
+- [ ] .NET 8.0 running on (Operating System)
 
 **Describe the issue**
 A clear and concise description of what the bug is.
