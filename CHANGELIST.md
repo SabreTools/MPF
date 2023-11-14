@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.0.0 (2023-11-14)
 
 - Remove .NET Framework 4.8 from build
 - Remove .NET Framework 4.8 from projects
@@ -15,6 +15,7 @@
 - Remove Unshield reference
 - Update documentation for BOS change
 - Bump library versions
+- Update to .NET 8
 
 ### 2.7.5 (2023-11-06)
 
