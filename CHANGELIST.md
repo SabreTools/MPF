@@ -14,6 +14,7 @@
 - Remove .NET Framework 4.8 from issue report
 - Remove Unshield reference
 - Update documentation for BOS change
+- Bump library versions
 
 ### 2.7.5 (2023-11-06)
 

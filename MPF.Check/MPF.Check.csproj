@@ -21,14 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.9.0" GeneratePathProperty="true">
+    <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.0.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.2.0" />
   </ItemGroup>
   
   <ItemGroup>
-    <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
+    <Content Include="$(PkgBinaryObjectScanner)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
   </ItemGroup>
 
 </Project>
