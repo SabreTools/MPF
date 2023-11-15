@@ -6,6 +6,7 @@
 - Support ancient .NET in Core
 - Support ancient .NET in UI Core
 - Support C# 12 syntax
+- Support ancient .NET in Check
 
 ### 3.0.0 (2023-11-14)
 

@@ -45,7 +45,11 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
+#if NETFRAMEWORK
+            (bool? _, string? message) = RedumpWebClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
+#else
             (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
+#endif
             if (!string.IsNullOrWhiteSpace(message))
                 Console.WriteLine(message);
 
@@ -65,7 +69,7 @@ namespace MPF.Check
                 // Now populate an environment
                 Drive? drive = null;
                 if (!string.IsNullOrWhiteSpace(path))
-                    drive = Drive.Create(null, path);
+                    drive = Drive.Create(null, path!);
 
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
