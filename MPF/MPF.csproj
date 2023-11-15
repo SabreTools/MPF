@@ -1,20 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!-- Assembly Properties -->
+    <TargetFrameworks>net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
+    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
-    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
-    <Title>MPF</Title>
-    <Description>Frontend for various dumping programs</Description>
+
+    <!-- Package Properties -->
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2023</Copyright>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <InternalsVisibleTo>MPF.Test</InternalsVisibleTo>
+    <Description>Frontend for various dumping programs</Description>
+    <Copyright>Copyright (c) Matt Nadareski 2019-2023</Copyright>
+    <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MPF.Test" />
+  </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Images\Icon.ico" />
@@ -23,6 +34,10 @@
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+    <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 
   <ItemGroup>
