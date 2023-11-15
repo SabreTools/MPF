@@ -1016,7 +1016,7 @@ namespace MPF.Core.Modules.Redumper
 
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters.Trim();
+            parameters = parameters!.Trim();
             List<string> parts = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
                 .Cast<Match>()
                 .Select(m => m.Value)
@@ -1105,12 +1105,12 @@ namespace MPF.Core.Modules.Redumper
                 // Image Path
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImagePath, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
-                    ImagePathValue = $"\"{stringValue.Trim('"')}\"";
+                    ImagePathValue = $"\"{stringValue!.Trim('"')}\"";
 
                 // Image Name
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImageName, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
-                    ImageNameValue = $"\"{stringValue.Trim('"')}\"";
+                    ImageNameValue = $"\"{stringValue!.Trim('"')}\"";
 
                 // Overwrite
                 ProcessFlagParameter(parts, FlagStrings.Overwrite, ref i);
@@ -1352,7 +1352,7 @@ namespace MPF.Core.Modules.Redumper
                     if (line.StartsWith("current profile:"))
                     {
                         // current profile: <discType>
-                        discTypeOrBookType = line["current profile: ".Length..];
+                        discTypeOrBookType = line.Substring("current profile: ".Length);
                     }
 
                     line = sr.ReadLine();
@@ -1394,17 +1394,17 @@ namespace MPF.Core.Modules.Redumper
                     {
                         if (line.StartsWith("protection system type"))
                         {
-                            copyrightProtectionSystemType = line["protection system type: ".Length..];
+                            copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
                             if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
                                 copyrightProtectionSystemType = "No";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
-                            region = line["region management information: ".Length..];
+                            region = line.Substring("region management information: ".Length);
                         }
                         else if (line.StartsWith("disc key"))
                         {
-                            decryptedDiscKey = line["disc key: ".Length..].Replace(':', ' ');
+                            decryptedDiscKey = line.Substring("disc key: ".Length).Replace(':', ' ');
                         }
                         else if (line.StartsWith("title keys"))
                         {
@@ -1488,7 +1488,7 @@ namespace MPF.Core.Modules.Redumper
                         break;
 
                     // REDUMP.ORG errors: <error count>
-                    string[] parts = line.Split(' ');
+                    string[] parts = line!.Split(' ');
                     if (long.TryParse(parts[2], out long redump))
                         return redump;
                     else
@@ -1596,24 +1596,24 @@ namespace MPF.Core.Modules.Redumper
                     else if (line.StartsWith("layer break:"))
                     {
                         // layer break: <layerbreak>
-                        layerbreak1 = line["layer break: ".Length..].Trim();
+                        layerbreak1 = line.Substring("layer break: ".Length).Trim();
                     }
 
                     // Multi-layer discs have the layer in the name
                     else if (line.StartsWith("layer break (layer: 0):"))
                     {
                         // layer break (layer: 0): <layerbreak>
-                        layerbreak1 = line["layer break (layer: 0): ".Length..].Trim();
+                        layerbreak1 = line.Substring("layer break (layer: 0): ".Length).Trim();
                     }
                     else if (line.StartsWith("layer break (layer: 1):"))
                     {
                         // layer break (layer: 1): <layerbreak>
-                        layerbreak2 = line["layer break (layer: 1): ".Length..].Trim();
+                        layerbreak2 = line.Substring("layer break (layer: 1): ".Length).Trim();
                     }
                     else if (line.StartsWith("layer break (layer: 2):"))
                     {
                         // layer break (layer: 2): <layerbreak>
-                        layerbreak3 = line["layer break (layer: 2): ".Length..].Trim();
+                        layerbreak3 = line.Substring("layer break (layer: 2): ".Length).Trim();
                     }
                 }
 
@@ -1658,11 +1658,11 @@ namespace MPF.Core.Modules.Redumper
 
                     // Store the first session range
                     if (line.Contains("session 1:"))
-                        firstSession = line["session 1: ".Length..].Trim();
+                        firstSession = line.Substring("session 1: ".Length).Trim();
 
                     // Store the secomd session range
                     else if (line.Contains("session 2:"))
-                        secondSession = line["session 2: ".Length..].Trim();
+                        secondSession = line.Substring("session 2: ".Length).Trim();
                 }
 
                 // If either is blank, we don't have multisession
@@ -1884,7 +1884,7 @@ namespace MPF.Core.Modules.Redumper
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("non-zero data sample range") == true)
-                        return line["non-zero data sample range: [".Length..].Trim().Split(' ')[0];
+                        return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
                 }
 
                 // We couldn't detect it then
@@ -1914,12 +1914,12 @@ namespace MPF.Core.Modules.Redumper
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = segaHeader.Split('\n');
-                string serialVersionLine = header[2][58..];
-                string dateLine = header[3][58..];
-                serial = serialVersionLine[..10].Trim();
+                string[] header = segaHeader!.Split('\n');
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
+                serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
-                date = dateLine[..8];
+                date = dateLine.Substring(0, 8);
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
@@ -2052,19 +2052,19 @@ namespace MPF.Core.Modules.Redumper
 
                     if (line.StartsWith("build date:"))
                     {
-                        buildDate = line["build date: ".Length..].Trim();
+                        buildDate = line.Substring("build date: ".Length).Trim();
                     }
                     else if (line.StartsWith("serial:"))
                     {
-                        serial = line["serial: ".Length..].Trim();
+                        serial = line.Substring("serial: ".Length).Trim();
                     }
                     else if (line.StartsWith("region:"))
                     {
-                        region = line["region: ".Length..].Trim();
+                        region = line.Substring("region: ".Length).Trim();
                     }
                     else if (line.StartsWith("regions:"))
                     {
-                        region = line["regions: ".Length..].Trim();
+                        region = line.Substring("regions: ".Length).Trim();
                     }
                     else if (line.StartsWith("header:"))
                     {
@@ -2109,7 +2109,7 @@ namespace MPF.Core.Modules.Redumper
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("Universal Hash") == true)
-                        return line["Universal Hash (SHA-1): ".Length..].Trim();
+                        return line.Substring("Universal Hash (SHA-1): ".Length).Trim();
                 }
 
                 // We couldn't detect it then
@@ -2141,7 +2141,7 @@ namespace MPF.Core.Modules.Redumper
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("disc write offset") == true)
-                        return line["disc write offset: ".Length..].Trim();
+                        return line.Substring("disc write offset: ".Length).Trim();
                 }
 
                 // We couldn't detect it then

@@ -7,7 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Modules;
 using Newtonsoft.Json;
@@ -90,8 +89,12 @@ namespace MPF.Core
 
                 // Loop through and get the main node, if possible
                 XmlNode? mainNode = null;
-                foreach (XmlNode tempNode in bodyNode.ChildNodes)
+                foreach (XmlNode? tempNode in bodyNode.ChildNodes)
                 {
+                    // Invalid nodes are skipped
+                    if (tempNode == null)
+                        continue;
+
                     // We only care about div elements
                     if (!string.Equals(tempNode.Name, "div", StringComparison.OrdinalIgnoreCase))
                         continue;
@@ -113,8 +116,12 @@ namespace MPF.Core
                     return null;
 
                 // Try to find elements as we're going
-                foreach (XmlNode childNode in mainNode.ChildNodes)
+                foreach (XmlNode? childNode in mainNode.ChildNodes)
                 {
+                    // Invalid nodes are skipped
+                    if (childNode == null)
+                        continue;
+
                     // The title is the only thing in h1 tags
                     if (string.Equals(childNode.Name, "h1", StringComparison.OrdinalIgnoreCase))
                         info.CommonDiscInfo.Title = childNode.InnerText;
@@ -132,8 +139,12 @@ namespace MPF.Core
                             continue;
 
                         // The game node contains multiple other elements
-                        foreach (XmlNode gameNode in childNode.ChildNodes)
+                        foreach (XmlNode? gameNode in childNode.ChildNodes)
                         {
+                            // Invalid nodes are skipped
+                            if (gameNode == null)
+                                continue;
+
                             // Table elements contain multiple other parts of information
                             if (string.Equals(gameNode.Name, "table", StringComparison.OrdinalIgnoreCase))
                             {
@@ -150,8 +161,12 @@ namespace MPF.Core
                                         continue;
 
                                     // Loop through each of the rows
-                                    foreach (XmlNode gameInfoNode in gameNode.ChildNodes)
+                                    foreach (XmlNode? gameInfoNode in gameNode.ChildNodes)
                                     {
+                                        // Invalid nodes are skipped
+                                        if (gameInfoNode == null)
+                                            continue;
+
                                         // If we run into anything not a row, ignore it
                                         if (!string.Equals(gameInfoNode.Name, "tr", StringComparison.OrdinalIgnoreCase))
                                             continue;
@@ -288,7 +303,7 @@ namespace MPF.Core
             Data.Options options,
             BaseParameters? parameters,
             IProgress<Result>? resultProgress = null,
-            IProgress<ProtectionProgress>? protectionProgress = null)
+            IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null)
         {
             // Ensure the current disc combination should exist
             if (!system.MediaTypes().Contains(mediaType))
@@ -692,12 +707,20 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="includeAllData">True to include all pullable information, false to do bare minimum</param>
+#if NETFRAMEWORK
+        public async static Task<bool> FillFromId(RedumpWebClient wc, SubmissionInfo info, int id, bool includeAllData)
+#else
         public async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
+#endif
         {
             // Ensure that required sections exist
             info = EnsureAllSections(info);
 
+#if NETFRAMEWORK
+            var discData = await Task.Run(() => wc.DownloadSingleSiteID(id));
+#else
             var discData = await wc.DownloadSingleSiteID(id);
+#endif
             if (string.IsNullOrEmpty(discData))
                 return false;
 
@@ -711,7 +734,7 @@ namespace MPF.Core
                 int firstParenLocation = title.IndexOf(" (");
                 if (firstParenLocation >= 0)
                 {
-                    info.CommonDiscInfo!.Title = title[..firstParenLocation];
+                    info.CommonDiscInfo!.Title = title.Substring(0, firstParenLocation);
                     var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
                     foreach (Match subMatch in subMatches.Cast<Match>())
                     {
@@ -1069,12 +1092,17 @@ namespace MPF.Core
 
             // Set the current dumper based on username
             info.DumpersAndStatus ??= new DumpersAndStatusSection();
-            info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
+            info.DumpersAndStatus.Dumpers = [options.RedumpUsername!];
             info.PartiallyMatchedIDs = new List<int>();
 
             // Login to Redump
+#if NETFRAMEWORK
+            using var wc = new RedumpWebClient();
+            bool? loggedIn = wc.Login(options.RedumpUsername!, options.RedumpPassword!);
+#else
             using var wc = new RedumpHttpClient();
             bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+#endif
             if (loggedIn == null)
             {
                 resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
@@ -1094,7 +1122,11 @@ namespace MPF.Core
             resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
             var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
+#if NET40 || NET452
+            foreach (string hashData in splitData ?? [])
+#else
             foreach (string hashData in splitData ?? Array.Empty<string>())
+#endif
             {
                 // Catch any errant blank lines
                 if (string.IsNullOrWhiteSpace(hashData))
@@ -1270,7 +1302,7 @@ namespace MPF.Core
             }
         }
 
-        #endregion
+#endregion
 
         #region Helpers
 
@@ -1342,7 +1374,11 @@ namespace MPF.Core
         /// <param name="query">Query string to attempt to search for</param>
         /// <param name="filterForwardSlashes">True to filter forward slashes, false otherwise</param>
         /// <returns>All disc IDs for the given query, null on error</returns>
+#if NETFRAMEWORK
+        private async static Task<List<int>?> ListSearchResults(RedumpWebClient wc, string? query, bool filterForwardSlashes = true)
+#else
         private async static Task<List<int>?> ListSearchResults(RedumpHttpClient wc, string? query, bool filterForwardSlashes = true)
+#endif
         {
             // If there is an invalid query
             if (string.IsNullOrWhiteSpace(query))
@@ -1351,7 +1387,7 @@ namespace MPF.Core
             var ids = new List<int>();
 
             // Strip quotes
-            query = query.Trim('"', '\'');
+            query = query!.Trim('"', '\'');
 
             // Special characters become dashes
             query = query.Replace(' ', '-');
@@ -1368,7 +1404,11 @@ namespace MPF.Core
                 int pageNumber = 1;
                 while (true)
                 {
+#if NETFRAMEWORK
+                    List<int> pageIds = await Task.Run(() => wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++)));
+#else
                     List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+#endif
                     ids.AddRange(pageIds);
                     if (pageIds.Count <= 1)
                         break;
@@ -1391,7 +1431,11 @@ namespace MPF.Core
         /// <param name="hashData">DAT-formatted hash data to parse out</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
+#if NETFRAMEWORK
+        private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
+#else
         private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
+#endif
         {
             // If the line isn't parseable, we can't validate
             if (!InfoTool.GetISOHashValues(hashData, out long _, out var _, out var _, out var sha1))
@@ -1430,7 +1474,11 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
+#if NETFRAMEWORK
+        private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#else
         private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#endif
         {
             // If we don't have special fields
             if (info.CommonDiscInfo?.CommentsSpecialFields == null)
@@ -1448,7 +1496,7 @@ namespace MPF.Core
             }
 
             // Format the universal hash for finding within the comments
-            universalHash = $"{universalHash[..^1]}/comments/only";
+            universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
 
             // Get all matching IDs for the hash
             var newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
@@ -1480,10 +1528,18 @@ namespace MPF.Core
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="localCount">Local count of tracks for the current disc</param>
         /// <returns>True if the track count matches, false otherwise</returns>
+#if NETFRAMEWORK
+        private async static Task<bool> ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
+#else
         private async static Task<bool> ValidateTrackCount(RedumpHttpClient wc, int id, int localCount)
+#endif
         {
             // If we can't pull the remote data, we can't match
+#if NETFRAMEWORK
+            string? discData = await Task.Run(() => wc.DownloadSingleSiteID(id));
+#else
             string? discData = await wc.DownloadSingleSiteID(id);
+#endif
             if (string.IsNullOrEmpty(discData))
                 return false;
 
@@ -1502,6 +1558,6 @@ namespace MPF.Core
             return localCount == remoteCount;
         }
 
-        #endregion
+#endregion
     }
 }

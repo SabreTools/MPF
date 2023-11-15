@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BinaryObjectScanner;
-using BinaryObjectScanner.Protection;
 using psxt001z;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
@@ -21,13 +19,13 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<ProtectionProgress>? progress = null)
+        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
         {
             try
             {
                 var found = await Task.Run(() =>
                 {
-                    var scanner = new Scanner(
+                    var scanner = new BinaryObjectScanner.Scanner(
                         options.ScanArchivesForProtection,
                         scanContents: true, // Hardcoded value to avoid issues
                         scanGameEngines: false, // Hardcoded value to avoid issues
@@ -99,7 +97,7 @@ namespace MPF.Core
             {
                 try
                 {
-                    var antiModchip = new PSXAntiModchip();
+                    var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
                     foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
                     {
                         try
@@ -142,9 +140,15 @@ namespace MPF.Core
             if (foundProtections.Any(p => p.StartsWith("[Exception opening file")))
             {
                 foundProtections = foundProtections.Where(p => !p.StartsWith("[Exception opening file"));
+#if NET40 || NET452 || NET462
+                var tempList = new List<string> { "Exception occurred while scanning [RESCAN NEEDED]" };
+                tempList.AddRange(foundProtections);
+                foundProtections = tempList.OrderBy(p => p);
+#else
                 foundProtections = foundProtections
                     .Prepend("Exception occurred while scanning [RESCAN NEEDED]")
                     .OrderBy(p => p);
+#endif
             }
 
             // ActiveMARK
@@ -225,7 +229,16 @@ namespace MPF.Core
                     .Where(p => p != "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)");
 
                 if (foundProtections.Any(p => !p.StartsWith("SafeDisc")))
+                {
+#if NET40 || NET452 || NET462
+                    var tempList = new List<string>();
+                    tempList.AddRange(foundProtections);
+                    tempList.Add("Cactus Data Shield 300");
+                    foundProtections = tempList;
+#else
                     foundProtections = foundProtections.Append("Cactus Data Shield 300");
+#endif
+                }
             }
 
             // SafeDisc

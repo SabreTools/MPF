@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET6_0_OR_GREATER
 using System.IO.Hashing;
+#endif
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -16,7 +18,11 @@ namespace MPF.Core.Hashing
         /// <summary>
         /// Hash type associated with the current state
         /// </summary>
+#if NETFRAMEWORK || NETCOREAPP3_1
+        public Hash HashType { get; private set; }
+#else
         public Hash HashType { get; init; }
+#endif
 
         /// <summary>
         /// Current hash in bytes
@@ -71,14 +77,18 @@ namespace MPF.Core.Hashing
             _hasher = HashType switch
             {
                 Hash.CRC32 => new Crc32(),
+#if NET6_0_OR_GREATER
                 Hash.CRC64 => new Crc64(),
+#endif
                 Hash.MD5 => MD5.Create(),
                 Hash.SHA1 => SHA1.Create(),
                 Hash.SHA256 => SHA256.Create(),
                 Hash.SHA384 => SHA384.Create(),
                 Hash.SHA512 => SHA512.Create(),
+#if NET6_0_OR_GREATER
                 Hash.XxHash32 => new XxHash32(),
                 Hash.XxHash64 => new XxHash64(),
+#endif
                 _ => null,
             };
         }
@@ -156,14 +166,18 @@ namespace MPF.Core.Hashing
                 var hashers = new Dictionary<Hash, Hasher>
                 {
                     { Hash.CRC32, new Hasher(Hash.CRC32) },
+#if NET6_0_OR_GREATER
                     { Hash.CRC64, new Hasher(Hash.CRC64) },
+#endif
                     { Hash.MD5, new Hasher(Hash.MD5) },
                     { Hash.SHA1, new Hasher(Hash.SHA1) },
                     { Hash.SHA256, new Hasher(Hash.SHA256) },
                     { Hash.SHA384, new Hasher(Hash.SHA384) },
                     { Hash.SHA512, new Hasher(Hash.SHA512) },
+#if NET6_0_OR_GREATER
                     { Hash.XxHash32, new Hasher(Hash.XxHash32) },
                     { Hash.XxHash64, new Hasher(Hash.XxHash64) },
+#endif
                 };
 
                 // Initialize the hashing helpers
@@ -216,15 +230,18 @@ namespace MPF.Core.Hashing
 
                 // Get the results
                 hashDict[Hash.CRC32] = hashers[Hash.CRC32].CurrentHashString;
+#if NET6_0_OR_GREATER
                 hashDict[Hash.CRC64] = hashers[Hash.CRC64].CurrentHashString;
+#endif
                 hashDict[Hash.MD5] = hashers[Hash.MD5].CurrentHashString;
                 hashDict[Hash.SHA1] = hashers[Hash.SHA1].CurrentHashString;
                 hashDict[Hash.SHA256] = hashers[Hash.SHA256].CurrentHashString;
                 hashDict[Hash.SHA384] = hashers[Hash.SHA384].CurrentHashString;
                 hashDict[Hash.SHA512] = hashers[Hash.SHA512].CurrentHashString;
+#if NET6_0_OR_GREATER
                 hashDict[Hash.XxHash32] = hashers[Hash.XxHash32].CurrentHashString;
                 hashDict[Hash.XxHash64] = hashers[Hash.XxHash64].CurrentHashString;
-                hashDict[Hash.CRC64] = hashers[Hash.CRC64].CurrentHashString;
+#endif
 
                 // Dispose of the hashers
                 loadBuffer.Dispose();
@@ -272,7 +289,11 @@ namespace MPF.Core.Hashing
         /// <remarks>NonCryptographicHashAlgorithm implementations do not need finalization</remarks>
         public void Terminate()
         {
+#if NET40 || NET452
+            byte[] emptyBuffer = [];
+#else
             byte[] emptyBuffer = Array.Empty<byte>();
+#endif
             switch (_hasher)
             {
                 case HashAlgorithm ha:

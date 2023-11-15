@@ -6,14 +6,18 @@
     public enum Hash
     {
         CRC32,
+#if NET6_0_OR_GREATER
         CRC64,
+#endif
         MD5,
         SHA1,
         SHA256,
         SHA384,
         SHA512,
+#if NET6_0_OR_GREATER
         XxHash32,
         XxHash64,
+#endif
     }
 
     /// <summary>

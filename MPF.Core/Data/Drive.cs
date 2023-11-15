@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if NET462_OR_GREATER || NETCOREAPP
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
+#endif
 using MPF.Core.Converters;
 using SabreTools.RedumpLib.Data;
 
@@ -61,7 +63,7 @@ namespace MPF.Core.Data
         {
             get
             {
-                string volumeLabel = Template.DiscNotDetected;
+                string? volumeLabel = Template.DiscNotDetected;
                 if (this.MarkedActive)
                 {
                     if (string.IsNullOrWhiteSpace(this.VolumeLabel))
@@ -71,7 +73,7 @@ namespace MPF.Core.Data
                 }
 
                 foreach (char c in Path.GetInvalidFileNameChars())
-                    volumeLabel = volumeLabel.Replace(c, '_');
+                    volumeLabel = volumeLabel?.Replace(c, '_');
 
                 return volumeLabel;
             }
@@ -109,7 +111,7 @@ namespace MPF.Core.Data
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
-                devicePath = devicePath["\\\\.\\".Length..];
+                devicePath = devicePath.Substring("\\\\.\\".Length);
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);
@@ -249,7 +251,7 @@ namespace MPF.Core.Data
         public RedumpSystem? GetRedumpSystem(RedumpSystem? defaultValue)
         {
             // If we can't read the media in that drive, we can't do anything
-            if (!Directory.Exists(this.Name))
+            if (string.IsNullOrWhiteSpace(this.Name) || !Directory.Exists(this.Name))
                 return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
@@ -456,7 +458,7 @@ namespace MPF.Core.Data
                 return null;
 
             // Audio CD
-            if (this.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.AudioCD;
 
             // Microsoft Xbox
@@ -547,6 +549,7 @@ namespace MPF.Core.Data
             }
 
             // Find and update all floppy drives
+#if NET462_OR_GREATER
             try
             {
                 CimSession session = CimSession.Create(null);
@@ -567,6 +570,7 @@ namespace MPF.Core.Data
             {
                 // No-op
             }
+#endif
 
             return drives;
         }

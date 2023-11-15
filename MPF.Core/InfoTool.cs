@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Modules;
 using MPF.Core.Utilities;
@@ -104,7 +103,7 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
+        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
@@ -980,7 +979,7 @@ namespace MPF.Core
                 return null;
 
             // Standardized "S" serials
-            if (serial.StartsWith("S"))
+            if (serial!.StartsWith("S"))
             {
                 // string publisher = serial[0] + serial[1];
                 // char secondRegion = serial[3];
@@ -1135,8 +1134,13 @@ namespace MPF.Core
                     }
                     else
                     {
-                        string entryName = file[outputDirectory.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        string entryName = file.Substring(outputDirectory!.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+#else
                         zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
+#endif
                     }
 
                     // If the file is MPF-specific, don't delete
@@ -1256,8 +1260,8 @@ namespace MPF.Core
                 AddIfExists(output, Template.FullyMatchingIDField, info.FullyMatchedID?.ToString(), 1);
                 AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo?.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
-                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo?.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo?.LanguageSelection ?? Array.Empty<LanguageSelection?>()).Select(l => l.LongName()).ToArray(), 1);
+                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo?.Languages ?? [null]).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo?.LanguageSelection ?? []).Select(l => l.LongName()).ToArray(), 1);
                 AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo?.Serial, 1);
 
                 // All ringcode information goes in an indented area
@@ -1383,12 +1387,12 @@ namespace MPF.Core
                     output.Add(""); output.Add("Copy Protection:");
                     if (info.CommonDiscInfo?.System == RedumpSystem.SonyPlayStation)
                     {
-                        AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection.AntiModchip.LongName(), 1);
+                        AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection!.AntiModchip.LongName(), 1);
                         AddIfExists(output, Template.PlayStationLibCryptField, info.CopyProtection.LibCrypt.LongName(), 1);
                         AddIfExists(output, Template.SubIntentionField, info.CopyProtection.LibCryptData, 1);
                     }
 
-                    AddIfExists(output, Template.CopyProtectionField, info.CopyProtection.Protection, 1);
+                    AddIfExists(output, Template.CopyProtectionField, info.CopyProtection!.Protection, 1);
                     AddIfExists(output, Template.SubIntentionField, info.CopyProtection.SecuROMData, 1);
                 }
 
@@ -1401,7 +1405,7 @@ namespace MPF.Core
                 if (!string.IsNullOrWhiteSpace(info.TracksAndWriteOffsets?.ClrMameProData))
                 {
                     output.Add(""); output.Add("Tracks and Write Offsets:");
-                    AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets.ClrMameProData + "\n", 1);
+                    AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets!.ClrMameProData + "\n", 1);
                     AddIfExists(output, Template.CuesheetField, info.TracksAndWriteOffsets.Cuesheet, 1);
                     var offset = info.TracksAndWriteOffsets.OtherWriteOffsets;
                     if (Int32.TryParse(offset, out int i))
@@ -1880,7 +1884,7 @@ namespace MPF.Core
             return files;
         }
 
-        #endregion
+#endregion
 
         #region Normalization
 
@@ -1894,7 +1898,7 @@ namespace MPF.Core
         {
             // If we have no set languages, then assume English
             if (languages == null || languages.Length == 0)
-                languages = new Language[] { Language.English };
+                languages = [Language.English];
 
             // Loop through all of the given languages
             foreach (var language in languages)
@@ -2358,7 +2362,7 @@ namespace MPF.Core
                     return string.Empty;
 
                 // Remove quotes from path
-                path = path.Replace("\"", string.Empty);
+                path = path!.Replace("\"", string.Empty);
 
                 // Try getting the combined path and returning that directly
                 string fullPath = getFullPath ? Path.GetFullPath(path) : path;

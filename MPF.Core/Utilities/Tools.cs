@@ -236,7 +236,8 @@ namespace MPF.Core.Utilities
             string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
             var message = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
             message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
-            var latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            var latestReleaseJsonString = hc.SendAsync(message)?.ConfigureAwait(false).GetAwaiter().GetResult()
+                .Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             if (latestReleaseJsonString == null)
                 return (null, null);
 

@@ -1677,10 +1677,10 @@ namespace MPF.Core.UI.ViewModels
             }
 
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (_environment.Drive?.MarkedActive != true && _displayUserMessage != null)
+            if (_environment?.Drive?.MarkedActive != true && _displayUserMessage != null)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
-                    + (!_environment.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
+                    + (!_environment!.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
                     + "Do you want to continue?";
 
                 bool? mbresult = _displayUserMessage("No Disc Detected", message, 2, false);
@@ -1692,7 +1692,7 @@ namespace MPF.Core.UI.ViewModels
             }
 
             // Pre-split the output path
-            var outputDirectory = Path.GetDirectoryName(_environment.OutputPath);
+            var outputDirectory = Path.GetDirectoryName(_environment!.OutputPath);
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists

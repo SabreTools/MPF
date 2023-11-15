@@ -127,7 +127,7 @@ namespace MPF.Core.Utilities
 
             foreach (var val in Enum.GetValues(typeof(InternalProgram)))
             {
-                if (((InternalProgram)val) == InternalProgram.NONE)
+                if (((InternalProgram)val!) == InternalProgram.NONE)
                     continue;
 
                 programs.Add($"{((InternalProgram?)val).LongName()}");

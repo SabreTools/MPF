@@ -108,7 +108,7 @@ namespace MPF.Core.Data
                     }
 
                     // Comments start with ';'
-                    else if (line.StartsWith(";"))
+                    else if (line!.StartsWith(";"))
                     {
                         // No-op, we don't process comments
                     }

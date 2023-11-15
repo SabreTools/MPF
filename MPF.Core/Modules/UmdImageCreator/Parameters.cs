@@ -203,7 +203,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
-                        title = line["TITLE: ".Length..];
+                        title = line.Substring("TITLE: ".Length);
                     else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                         umdversion = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))

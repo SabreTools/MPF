@@ -14,11 +14,27 @@ namespace MPF.Core.Modules
     {
         #region Event Handlers
 
+#if NET40
+        /// <summary>
+        /// Wrapper event args class for old .NET
+        /// </summary>
+        public class StringEventArgs : EventArgs
+        {
+            public string Value { get; set; }
+        }
+
+        /// <summary>
+        /// Geneeic way of reporting a message
+        /// </summary>
+        /// <param name="message">String value to report</param>
+        public EventHandler<StringEventArgs>? ReportStatus;
+#else
         /// <summary>
         /// Geneeic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>
         public EventHandler<string>? ReportStatus;
+#endif
 
         #endregion
 
@@ -261,7 +277,7 @@ namespace MPF.Core.Modules
             // Create the start info
             var startInfo = new ProcessStartInfo()
             {
-                FileName = ExecutablePath,
+                FileName = ExecutablePath!,
                 Arguments = GenerateParameters() ?? "",
                 CreateNoWindow = !separateWindow,
                 UseShellExecute = separateWindow,
@@ -1104,7 +1120,7 @@ namespace MPF.Core.Modules
                     return null;
 
                 if (trimLength > -1)
-                    hex = hex[..trimLength];
+                    hex = hex.Substring(0, trimLength);
 
                 return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }
@@ -1117,6 +1133,6 @@ namespace MPF.Core.Modules
 
 
 
-        #endregion
+#endregion
     }
 }

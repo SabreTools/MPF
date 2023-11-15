@@ -226,9 +226,9 @@ namespace MPF.Core.Modules.Aaru
                 if (!string.IsNullOrWhiteSpace(discType) && !string.IsNullOrWhiteSpace(discSubType))
                     fullDiscType = $"{discType} ({discSubType})";
                 else if (!string.IsNullOrWhiteSpace(discType) && string.IsNullOrWhiteSpace(discSubType))
-                    fullDiscType = discType;
+                    fullDiscType = discType!;
                 else if (string.IsNullOrWhiteSpace(discType) && !string.IsNullOrWhiteSpace(discSubType))
-                    fullDiscType = discSubType;
+                    fullDiscType = discSubType!;
 
                 info.DumpingInfo.ReportedDiscType = fullDiscType;
             }
@@ -1630,7 +1630,7 @@ namespace MPF.Core.Modules.Aaru
 
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters.Trim();
+            parameters = parameters!.Trim();
             List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
                 .Cast<Match>()
                 .Select(m => m.Value)
@@ -2384,7 +2384,11 @@ namespace MPF.Core.Modules.Aaru
             var cueFiles = new List<CueFile>();
             var cueSheet = new CueSheet
             {
+#if NET40 || NET452
+                Performer = string.Join(", ", cicmSidecar.Performer ?? []),
+#else
                 Performer = string.Join(", ", cicmSidecar.Performer ?? Array.Empty<string>()),
+#endif
             };
 
             // Only care about OpticalDisc types
@@ -2931,16 +2935,24 @@ namespace MPF.Core.Modules.Aaru
         /// Generate a single 16-byte sector line from a byte array
         /// </summary>
         /// <param name="row">Row ID for outputting</param>
-        /// <param name="bytes">Byte span representing the data to write</param>
+        /// <param name="bytes">Bytes representing the data to write</param>
         /// <returns>Formatted string representing the sector line</returns>
+#if NET40
+        private static string? GenerateSectorOutputLine(string row, byte[] bytes)
+#else
         private static string? GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
+#endif
         {
             // If the data isn't correct, return null
             if (bytes == null || bytes.Length != 16)
                 return null;
 
             string pvdLine = $"{row} : ";
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+            pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
+#else
             pvdLine += BitConverter.ToString(bytes[..8].ToArray()).Replace("-", " ");
+#endif
             pvdLine += "  ";
             pvdLine += BitConverter.ToString(bytes.Slice(8, 8).ToArray().ToArray()).Replace("-", " ");
             pvdLine += "   ";
@@ -3086,7 +3098,7 @@ namespace MPF.Core.Modules.Aaru
                     // Initialize on seeing the open tag
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
-                    else if (line.StartsWith("<BadBlocks>"))
+                    else if (line!.StartsWith("<BadBlocks>"))
                         totalErrors = 0;
                     else if (line.StartsWith("</BadBlocks>"))
                         return totalErrors ?? -1;
@@ -3400,6 +3412,6 @@ namespace MPF.Core.Modules.Aaru
             return false;
         }
 
-        #endregion
+#endregion
     }
 }

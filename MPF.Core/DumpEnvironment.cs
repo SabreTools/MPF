@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Modules;
 using MPF.Core.Utilities;
@@ -75,14 +74,18 @@ namespace MPF.Core
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
+#if NET40
+        private void OutputToLog(object? proc, BaseParameters.StringEventArgs args) => outputQueue?.Enqueue(args.Value);
+#else
         private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
+#endif
 
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
         private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Constructor for a full DumpEnvironment object from user information
@@ -256,7 +259,7 @@ namespace MPF.Core
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result>? resultProgress = null,
-            IProgress<ProtectionProgress>? protectionProgress = null,
+            IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null,
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
@@ -432,8 +435,8 @@ namespace MPF.Core
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = parameters.ExecutablePath,
-                        Arguments = parameters.GenerateParameters(),
+                        FileName = parameters.ExecutablePath!,
+                        Arguments = parameters.GenerateParameters()!,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardInput = true,
@@ -477,7 +480,7 @@ namespace MPF.Core
                 return Result.Failure($"Error! {Parameters.ExecutablePath} does not exist!");
 
             // Validate that the dumping drive doesn't contain the executable
-            string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath);
+            string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath!);
             if (Drive?.Name != null && fullExecutablePath.StartsWith(Drive.Name))
                 return Result.Failure("Error! Cannot dump same drive that executable resides on!");
 

@@ -1940,7 +1940,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters.Trim();
+            parameters = parameters!.Trim();
             List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
                 .Cast<Match>()
                 .Select(m => m.Value)
@@ -2697,25 +2697,25 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (line.StartsWith("DiscType:"))
                     {
                         // DiscType: <discType>
-                        string identifier = line["DiscType: ".Length..];
+                        string identifier = line.Substring("DiscType: ".Length);
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("DiscTypeIdentifier:"))
                     {
                         // DiscTypeIdentifier: <discType>
-                        string identifier = line["DiscTypeIdentifier: ".Length..];
+                        string identifier = line.Substring("DiscTypeIdentifier: ".Length);
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("DiscTypeSpecific:"))
                     {
                         // DiscTypeSpecific: <discType>
-                        string identifier = line["DiscTypeSpecific: ".Length..];
+                        string identifier = line.Substring("DiscTypeSpecific: ".Length);
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("BookType:"))
                     {
                         // BookType: <discType>
-                        string identifier = line["BookType: ".Length..];
+                        string identifier = line.Substring("BookType: ".Length);
                         discTypeOrBookTypeSet.Add(identifier);
                     }
 
@@ -2767,9 +2767,9 @@ namespace MPF.Core.Modules.DiscImageCreator
                             break;
 
                         if (line.StartsWith("CopyrightProtectionType"))
-                            copyrightProtectionSystemType = line["CopyrightProtectionType: ".Length..];
+                            copyrightProtectionSystemType = line.Substring("CopyrightProtectionType: ".Length);
                         else if (line.StartsWith("RegionManagementInformation"))
-                            region = line["RegionManagementInformation: ".Length..];
+                            region = line.Substring("RegionManagementInformation: ".Length);
 
                         line = sr.ReadLine()?.Trim();
                     }
@@ -2792,7 +2792,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         if (line.StartsWith("DecryptedDiscKey"))
                         {
-                            decryptedDiscKey = line["DecryptedDiscKey[020]: ".Length..];
+                            decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
                         }
                         else if (line.StartsWith("LBA:"))
                         {
@@ -2805,7 +2805,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                                 var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$", RegexOptions.Compiled);
                                 string matchedFilename = match.Groups[1].Value;
                                 if (matchedFilename.EndsWith(";1"))
-                                    matchedFilename = matchedFilename[..^2];
+                                    matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
 
                                 vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
                             }
@@ -2814,7 +2814,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                                 var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$", RegexOptions.Compiled);
                                 string matchedFilename = match.Groups[1].Value;
                                 if (matchedFilename.EndsWith(";1"))
-                                    matchedFilename = matchedFilename[..^2];
+                                    matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
 
                                 vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
                             }
@@ -2876,14 +2876,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                     {
                         totalErrors ??= 0;
 
-                        if (Int64.TryParse(line["Total errors: ".Length..].Trim(), out long te))
+                        if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
                             totalErrors += te;
                     }
                     else if (line.StartsWith("Total warnings"))
                     {
                         totalErrors ??= 0;
 
-                        if (Int64.TryParse(line["Total warnings: ".Length..].Trim(), out long tw))
+                        if (Int64.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
                             totalErrors += tw;
                     }
                 }
@@ -2914,12 +2914,12 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = segaHeader.Split('\n');
-                string versionLine = header[4][58..];
-                string dateLine = header[5][58..];
-                serial = versionLine[..10].TrimEnd();
+                string[] header = segaHeader!.Split('\n');
+                string versionLine = header[4].Substring(58);
+                string dateLine = header[5].Substring(58);
+                serial = versionLine.Substring(0, 10).TrimEnd();
                 version = versionLine.Substring(10, 6).TrimStart('V', 'v');
-                date = dateLine[..8];
+                date = dateLine.Substring(0, 8);
                 return true;
             }
             catch
@@ -2956,17 +2956,17 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
                     {
                         // VendorId: <manufacturer>
-                        manufacturer = line["VendorId: ".Length..];
+                        manufacturer = line.Substring("VendorId: ".Length);
                     }
                     else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
                     {
                         // ProductId: <model>
-                        model = line["ProductId: ".Length..];
+                        model = line.Substring("ProductId: ".Length);
                     }
                     else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
                     {
                         // ProductRevisionLevel: <firmware>
-                        firmware = line["ProductRevisionLevel: ".Length..];
+                        firmware = line.Substring("ProductRevisionLevel: ".Length);
                     }
 
                     line = sr.ReadLine();
@@ -3117,7 +3117,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 // TODO: Are there any examples of 3+ session discs?
 
                 // Read the first session lead-out
-                var firstSessionLeadOutLengthString = line?["Lead-out length of 1st session: ".Length..];
+                var firstSessionLeadOutLengthString = line?.Substring("Lead-out length of 1st session: ".Length);
                 line = sr.ReadLine()?.Trim();
                 if (line == null)
                     return null;
@@ -3126,12 +3126,12 @@ namespace MPF.Core.Modules.DiscImageCreator
                 string? secondSessionLeadInLengthString = null;
                 while (line?.StartsWith("Lead-in length") == false)
                 {
-                    secondSessionLeadInLengthString = line?["Lead-in length of 2nd session: ".Length..];
+                    secondSessionLeadInLengthString = line?.Substring("Lead-in length of 2nd session: ".Length);
                     line = sr.ReadLine()?.Trim();
                 }
 
                 // Read the second session pregap
-                var secondSessionPregapLengthString = line?["Pregap length of 1st track of 2nd session: ".Length..];
+                var secondSessionPregapLengthString = line?.Substring("Pregap length of 1st track of 2nd session: ".Length);
 
                 // Calculate the session gap total
                 if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
@@ -3354,12 +3354,12 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = segaHeader.Split('\n');
-                string serialVersionLine = header[2][58..];
-                string dateLine = header[3][58..];
-                serial = serialVersionLine[..10].Trim();
+                string[] header = segaHeader!.Split('\n');
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
+                serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
-                date = dateLine[..8];
+                date = dateLine.Substring(0, 8);
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
@@ -3387,17 +3387,17 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = segaHeader.Split('\n');
-                string serialVersionLine = header[8][58..];
-                string dateLine = header[1][58..];
+                string[] header = segaHeader!.Split('\n');
+                string serialVersionLine = header[8].Substring(58);
+                string dateLine = header[1].Substring(58);
                 serial = serialVersionLine.Substring(3, 8).TrimEnd('-', ' ');
-                date = dateLine[8..].Trim();
+                date = dateLine.Substring(8).Trim();
 
                 // Properly format the date string, if possible
                 string[] dateSplit = date.Split('.');
 
                 if (dateSplit.Length == 1)
-                    dateSplit = new string[] { date[..4], date[4..] };
+                    dateSplit = [date.Substring(0, 4), date.Substring(4)];
 
                 string month = dateSplit[1];
                 dateSplit[1] = month switch
