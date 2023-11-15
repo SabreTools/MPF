@@ -64,7 +64,11 @@ namespace MPF.Core
         /// <summary>
         /// Generic way of reporting a message
         /// </summary>
+#if NET40
+        public EventHandler<BaseParameters.StringEventArgs>? ReportStatus;
+#else
         public EventHandler<string>? ReportStatus;
+#endif
 
         /// <summary>
         /// Queue of items that need to be logged
@@ -83,9 +87,13 @@ namespace MPF.Core
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
+#if NET40
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new BaseParameters.StringEventArgs { Value = nextOutput });
+#else
         private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
+#endif
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Constructor for a full DumpEnvironment object from user information
@@ -197,20 +205,34 @@ namespace MPF.Core
         /// <summary>
         /// Eject the disc using DiscImageCreator
         /// </summary>
+#if NET40
+        public string? EjectDisc() =>
+            RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
+#else
         public async Task<string?> EjectDisc() =>
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
+#endif
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
-        /// </summary>
+        /// </summary>\
+#if NET40
+        public string? ResetDrive() =>
+            RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
+#else
         public async Task<string?> ResetDrive() =>
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
+#endif
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
+#if NET40
+        public Result Run(IProgress<Result>? progress = null)
+#else
         public async Task<Result> Run(IProgress<Result>? progress = null)
+#endif
         {
             // If we don't have parameters
             if (Parameters == null)
@@ -236,7 +258,11 @@ namespace MPF.Core
             if (!string.IsNullOrWhiteSpace(directoryName))
                 Directory.CreateDirectory(directoryName);
 
+#if NET40
+            Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow)).Wait();
+#else
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+#endif
             progress?.Report(Result.Success($"{InternalProgram} has finished!"));
 
             // Remove event handler if needed
@@ -257,7 +283,11 @@ namespace MPF.Core
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
+#if NET40
+        public Result VerifyAndSaveDumpOutput(
+#else
         public async Task<Result> VerifyAndSaveDumpOutput(
+#endif
             IProgress<Result>? resultProgress = null,
             IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null,
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
@@ -279,7 +309,11 @@ namespace MPF.Core
 
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
+#if NET40
+            var submissionInfo = SubmissionInfoTool.ExtractOutputInformation(
+#else
             var submissionInfo = await SubmissionInfoTool.ExtractOutputInformation(
+#endif
                 OutputPath,
                 Drive,
                 System,
@@ -302,14 +336,22 @@ namespace MPF.Core
             if (Options.EjectAfterDump == true)
             {
                 resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Name}"));
+#if NET40
+                EjectDisc();
+#else
                 await EjectDisc();
+#endif
             }
 
             // Reset the drive automatically if configured to
             if (InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Name}"));
+#if NET40
+                ResetDrive();
+#else
                 await ResetDrive();
+#endif
             }
 
             // Get user-modifiable information if confugured to
@@ -426,10 +468,18 @@ namespace MPF.Core
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
+#if NET40
+        private static string ExecuteInternalProgram(BaseParameters parameters)
+#else
         private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
+#endif
         {
             Process childProcess;
+#if NET40
+            var executeTask = Task.Factory.StartNew(() =>
+#else
             string output = await Task.Run(() =>
+#endif
             {
                 childProcess = new Process()
                 {
@@ -454,6 +504,11 @@ namespace MPF.Core
                 childProcess.Dispose();
                 return stdout;
             });
+
+#if NET40
+            executeTask.Wait();
+            string output = executeTask.Result;
+#endif
 
             return output;
         }
@@ -510,7 +565,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="command">Command string to run</param>
         /// <returns>The output of the command on success, null on error</returns>
+#if NET40
+        private string? RunStandaloneDiscImageCreatorCommand(string command)
+#else
         private async Task<string?> RunStandaloneDiscImageCreatorCommand(string command)
+#endif
         {
             // Validate that DiscImageCreator is all set
             if (!RequiredProgramsExist())
@@ -529,7 +588,11 @@ namespace MPF.Core
                 ExecutablePath = Options.DiscImageCreatorPath,
             };
 
+#if NET40
+            return ExecuteInternalProgram(parameters);
+#else
             return await ExecuteInternalProgram(parameters);
+#endif
         }
 
         #endregion

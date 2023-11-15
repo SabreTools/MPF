@@ -295,7 +295,11 @@ namespace MPF.Core
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
+#if NET40
+        public static SubmissionInfo? ExtractOutputInformation(
+#else
         public static async Task<SubmissionInfo?> ExtractOutputInformation(
+#endif
             string outputPath,
             Drive? drive,
             RedumpSystem? system,
@@ -364,7 +368,11 @@ namespace MPF.Core
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
+#if NET40
+                _ = FillFromRedump(options, info, resultProgress);
+#else
                 _ = await FillFromRedump(options, info, resultProgress);
+#endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums?.CRC32))
@@ -493,7 +501,11 @@ namespace MPF.Core
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
+#if NET40
+                    var (protectionString, fullProtections) = InfoTool.GetCopyProtection(drive, options, protectionProgress);
+#else
                     var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
+#endif
 
                     info.CopyProtection!.Protection = protectionString;
                     info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
@@ -653,7 +665,11 @@ namespace MPF.Core
                     if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
+#if NET40
+                        info.CopyProtection.AntiModchip = InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
+#else
                         info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
+#endif
                         resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
                     }
 
@@ -707,7 +723,9 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="includeAllData">True to include all pullable information, false to do bare minimum</param>
-#if NETFRAMEWORK
+#if NET40
+        public static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id, bool includeAllData)
+#elif NETFRAMEWORK
         public async static Task<bool> FillFromId(RedumpWebClient wc, SubmissionInfo info, int id, bool includeAllData)
 #else
         public async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
@@ -715,8 +733,9 @@ namespace MPF.Core
         {
             // Ensure that required sections exist
             info = EnsureAllSections(info);
-
-#if NETFRAMEWORK
+#if NET40
+            var discData = wc.DownloadSingleSiteID(id);
+#elif NETFRAMEWORK
             var discData = await Task.Run(() => wc.DownloadSingleSiteID(id));
 #else
             var discData = await wc.DownloadSingleSiteID(id);
@@ -1084,7 +1103,11 @@ namespace MPF.Core
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
+#if NET40
+        public static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#else
         public async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#endif
         {
             // If no username is provided
             if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
@@ -1145,7 +1168,11 @@ namespace MPF.Core
                     continue;
                 }
 
+#if NET40
+                (bool singleFound, var foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
+#else
                 (bool singleFound, var foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
+#endif
 
                 // Ensure that all tracks are found
                 allFound &= singleFound;
@@ -1168,7 +1195,11 @@ namespace MPF.Core
             // If we don't have any matches but we have a universal hash
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
+#if NET40
+                (bool singleFound, var foundIds) = ValidateUniversalHash(wc, info, resultProgress);
+#else
                 (bool singleFound, var foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+#endif
 
                 // Ensure that the hash is found
                 allFound = singleFound;
@@ -1201,12 +1232,20 @@ namespace MPF.Core
             for (int i = 0; i < totalMatchedIDsCount; i++)
             {
                 // Skip if the track count doesn't match
+#if NET40
+                if (!ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+#else
                 if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+#endif
                     continue;
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+#if NET40
+                _ = FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+#else
                 _ = await FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+#endif
                 resultProgress?.Report(Result.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current
@@ -1295,7 +1334,7 @@ namespace MPF.Core
             }
         }
 
-#endregion
+        #endregion
 
         #region Helpers
 
@@ -1367,7 +1406,9 @@ namespace MPF.Core
         /// <param name="query">Query string to attempt to search for</param>
         /// <param name="filterForwardSlashes">True to filter forward slashes, false otherwise</param>
         /// <returns>All disc IDs for the given query, null on error</returns>
-#if NETFRAMEWORK
+#if NET40
+        private static List<int>? ListSearchResults(RedumpWebClient wc, string? query, bool filterForwardSlashes = true)
+#elif NETFRAMEWORK
         private async static Task<List<int>?> ListSearchResults(RedumpWebClient wc, string? query, bool filterForwardSlashes = true)
 #else
         private async static Task<List<int>?> ListSearchResults(RedumpHttpClient wc, string? query, bool filterForwardSlashes = true)
@@ -1397,7 +1438,9 @@ namespace MPF.Core
                 int pageNumber = 1;
                 while (true)
                 {
-#if NETFRAMEWORK
+#if NET40
+                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+#elif NETFRAMEWORK
                     List<int> pageIds = await Task.Run(() => wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++)));
 #else
                     List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
@@ -1424,7 +1467,9 @@ namespace MPF.Core
         /// <param name="hashData">DAT-formatted hash data to parse out</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NETFRAMEWORK
+#if NET40
+        private static (bool, List<int>?) ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
+#elif NETFRAMEWORK
         private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
 #else
         private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
@@ -1438,7 +1483,11 @@ namespace MPF.Core
             }
 
             // Get all matching IDs for the track
+#if NET40
+            var newIds = ListSearchResults(wc, sha1);
+#else
             var newIds = await ListSearchResults(wc, sha1);
+#endif
 
             // If we got null back, there was an error
             if (newIds == null)
@@ -1467,7 +1516,9 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NETFRAMEWORK
+#if NET40
+        private static (bool, List<int>?) ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#elif NETFRAMEWORK
         private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #else
         private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
@@ -1492,7 +1543,11 @@ namespace MPF.Core
             universalHash = $"{universalHash[..^1]}/comments/only";
 
             // Get all matching IDs for the hash
+#if NET40
+            var newIds = ListSearchResults(wc, universalHash, filterForwardSlashes: false);
+#else
             var newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
+#endif
 
             // If we got null back, there was an error
             if (newIds == null)
@@ -1521,14 +1576,18 @@ namespace MPF.Core
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="localCount">Local count of tracks for the current disc</param>
         /// <returns>True if the track count matches, false otherwise</returns>
-#if NETFRAMEWORK
+#if NET40
+        private static bool ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
+#elif NETFRAMEWORK
         private async static Task<bool> ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
 #else
         private async static Task<bool> ValidateTrackCount(RedumpHttpClient wc, int id, int localCount)
 #endif
         {
             // If we can't pull the remote data, we can't match
-#if NETFRAMEWORK
+#if NET40
+            string? discData = wc.DownloadSingleSiteID(id);
+#elif NETFRAMEWORK
             string? discData = await Task.Run(() => wc.DownloadSingleSiteID(id));
 #else
             string? discData = await wc.DownloadSingleSiteID(id);
@@ -1551,6 +1610,6 @@ namespace MPF.Core
             return localCount == remoteCount;
         }
 
-#endregion
+        #endregion
     }
 }

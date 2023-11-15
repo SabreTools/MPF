@@ -34,7 +34,7 @@
     <PackageReference Include="SabreTools.Serialization" Version="1.2.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
     <PackageReference Include="IndexRange" Version="1.0.3" />
   </ItemGroup>
 

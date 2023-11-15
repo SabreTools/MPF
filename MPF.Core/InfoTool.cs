@@ -93,8 +93,17 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-        internal static async Task<bool> GetAntiModchipDetected(Drive drive)
-            => await Protection.GetPlayStationAntiModchipDetected(drive.Name);
+#if NET40
+        internal static bool GetAntiModchipDetected(Drive drive)
+        {
+            var protectionTask = Protection.GetPlayStationAntiModchipDetected(drive.Name);
+            protectionTask.Wait();
+            return protectionTask.Result;
+        }
+#else
+        internal static async Task<bool> GetAntiModchipDetected(Drive drive) =>
+            await Protection.GetPlayStationAntiModchipDetected(drive.Name);
+#endif
 
         /// <summary>
         /// Get the current detected copy protection(s), if possible
@@ -103,11 +112,21 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
+#if NET40
+        internal static (string?, Dictionary<string, List<string>>?) GetCopyProtection(Drive? drive, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+#else
         internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+#endif
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
+#if NET40
+                var protectionTask = Protection.RunProtectionScanOnPath(drive.Name, options, progress);
+                protectionTask.Wait();
+                (var protection, _) = protectionTask.Result;
+#else
                 (var protection, _) = await Protection.RunProtectionScanOnPath(drive.Name, options, progress);
+#endif
                 return (Protection.FormatProtections(protection), protection);
             }
 
@@ -286,8 +305,13 @@ namespace MPF.Core
                 if (bytes == null)
                     return default;
 
+#if NET40
+                byte[] rev = new byte[0x04];
+                Array.Copy(bytes, offset, rev, 0, 0x04);
+#else
                 var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
                 byte[] rev = span.ToArray();
+#endif
                 Array.Reverse(rev);
                 return BitConverter.ToInt32(rev, 0);
             }
@@ -943,7 +967,7 @@ namespace MPF.Core
             }
         }
 
-        #endregion
+#endregion
 
         #region Category Extraction
 
@@ -1086,6 +1110,9 @@ namespace MPF.Core
         /// <returns>True if the process succeeded, false otherwise</returns>
         public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseParameters? parameters)
         {
+#if NET40
+            return (false, "Log compression is not available for .NET Framework 4.0");
+#else
             // If there are no parameters
             if (parameters == null)
                 return (false, "No parameters provided!");
@@ -1164,6 +1191,7 @@ namespace MPF.Core
             {
                 zf?.Dispose();
             }
+#endif
         }
 
         /// <summary>

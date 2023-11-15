@@ -9,6 +9,7 @@
 - Support ancient .NET in Check
 - Support ancient .NET in UI
 - Fix TLS for older .NET
+- Perform more ancient .NET support work
 
 ### 3.0.0 (2023-11-14)
 
