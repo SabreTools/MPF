@@ -844,6 +844,12 @@ namespace MPF.Core.Modules.Redumper
                 case MediaType.DVD:
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.manufacturer"))
+                        logFiles.Add($"{basePath}.manufacturer");
+                    if (File.Exists($"{basePath}.1.manufacturer"))
+                        logFiles.Add($"{basePath}.1.manufacturer");
+                    if (File.Exists($"{basePath}.2.manufacturer"))
+                        logFiles.Add($"{basePath}.2.manufacturer");
                     if (File.Exists($"{basePath}.physical"))
                         logFiles.Add($"{basePath}.physical");
                     if (File.Exists($"{basePath}.1.physical"))
