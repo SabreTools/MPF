@@ -13,6 +13,7 @@
 - Prepare XAML for ancient .NET support
 - Suppress deprecation warnings
 - Fix reversed ringcode test
+- Add C#12 syntax to tests
 
 ### 3.0.0 (2023-11-14)
 

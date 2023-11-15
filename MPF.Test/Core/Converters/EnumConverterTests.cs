@@ -15,12 +15,12 @@ namespace MPF.Test.Core.Converters
         /// <summary>
         /// DiscType values that map to InternalDriveType
         /// </summary>
-        private static readonly DriveType[] _mappableDriveTypes = new DriveType[]
-        {
+        private static readonly DriveType[] _mappableDriveTypes =
+        [
             DriveType.CDRom,
             DriveType.Fixed,
             DriveType.Removable,
-        };
+        ];
 
         /// <summary>
         /// Check that every supported DriveType maps to an InternalDriveType
@@ -49,9 +49,9 @@ namespace MPF.Test.Core.Converters
             foreach (DriveType driveType in Enum.GetValues(typeof(DriveType)))
             {
                 if (_mappableDriveTypes.Contains(driveType))
-                    testData.Add(new object?[] { driveType, false });
+                    testData.Add([driveType, false]);
                 else
-                    testData.Add(new object?[] { driveType, true });
+                    testData.Add([driveType, true]);
             }
 
             return testData;
@@ -84,7 +84,7 @@ namespace MPF.Test.Core.Converters
             var testData = new List<object?[]>() { new object?[] { null } };
             foreach (InternalProgram? internalProgram in Enum.GetValues(typeof(InternalProgram)))
             {
-                testData.Add(new object?[] { internalProgram });
+                testData.Add([internalProgram]);
             }
 
             return testData;

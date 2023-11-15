@@ -12,8 +12,8 @@ namespace MPF.Test.Core.Utilities
         /// <summary>
         /// MediaType values that support drive speeds
         /// </summary>
-        private static readonly MediaType?[] _supportDriveSpeeds = new MediaType?[]
-        {
+        private static readonly MediaType?[] _supportDriveSpeeds =
+        [
             MediaType.CDROM,
             MediaType.DVD,
             MediaType.GDROM,
@@ -21,13 +21,13 @@ namespace MPF.Test.Core.Utilities
             MediaType.BluRay,
             MediaType.NintendoGameCubeGameDisc,
             MediaType.NintendoWiiOpticalDisc,
-        };
+        ];
 
         /// <summary>
         /// RedumpSystem values that are considered Audio
         /// </summary>
-        private static readonly RedumpSystem?[] _audioSystems = new RedumpSystem?[]
-        {
+        private static readonly RedumpSystem?[] _audioSystems =
+        [
             RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem,
             RedumpSystem.AudioCD,
             RedumpSystem.DVDAudio,
@@ -39,41 +39,41 @@ namespace MPF.Test.Core.Utilities
             RedumpSystem.PlayStationGameSharkUpdates,
             RedumpSystem.PhilipsCDi,
             RedumpSystem.SuperAudioCD,
-        };
+        ];
 
         /// <summary>
         /// RedumpSystem values that are considered markers
         /// </summary>
-        private static readonly RedumpSystem?[] _markerSystems = new RedumpSystem?[]
-        {
+        private static readonly RedumpSystem?[] _markerSystems =
+        [
             RedumpSystem.MarkerArcadeEnd,
             RedumpSystem.MarkerComputerEnd,
             RedumpSystem.MarkerDiscBasedConsoleEnd,
             RedumpSystem.MarkerOtherEnd,
-        };
+        ];
 
         /// <summary>
         /// RedumpSystem values that are have reversed ringcodes
         /// </summary>
-        private static readonly RedumpSystem?[] _reverseRingcodeSystems = new RedumpSystem?[]
-        {
+        private static readonly RedumpSystem?[] _reverseRingcodeSystems =
+        [
             RedumpSystem.SonyPlayStation2,
             RedumpSystem.SonyPlayStation3,
             RedumpSystem.SonyPlayStation4,
             RedumpSystem.SonyPlayStation5,
             RedumpSystem.SonyPlayStationPortable,
-        };
+        ];
 
         /// <summary>
         /// RedumpSystem values that are considered XGD
         /// </summary>
-        private static readonly RedumpSystem?[] _xgdSystems = new RedumpSystem?[]
-        {
+        private static readonly RedumpSystem?[] _xgdSystems =
+        [
             RedumpSystem.MicrosoftXbox,
             RedumpSystem.MicrosoftXbox360,
             RedumpSystem.MicrosoftXboxOne,
             RedumpSystem.MicrosoftXboxSeriesXS,
-        };
+        ];
 
         /// <summary>
         /// Check that all optical media support drive speeds
@@ -150,9 +150,9 @@ namespace MPF.Test.Core.Utilities
             foreach (MediaType mediaType in Enum.GetValues(typeof(MediaType)))
             {
                 if (_supportDriveSpeeds.Contains(mediaType))
-                    testData.Add(new object?[] { mediaType, true });
+                    testData.Add([mediaType, true]);
                 else
-                    testData.Add(new object?[] { mediaType, false });
+                    testData.Add([mediaType, false]);
             }
 
             return testData;
@@ -168,9 +168,9 @@ namespace MPF.Test.Core.Utilities
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_audioSystems.Contains(redumpSystem))
-                    testData.Add(new object?[] { redumpSystem, true });
+                    testData.Add([redumpSystem, true]);
                 else
-                    testData.Add(new object?[] { redumpSystem, false });
+                    testData.Add([redumpSystem, false]);
             }
 
             return testData;
@@ -186,9 +186,9 @@ namespace MPF.Test.Core.Utilities
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_markerSystems.Contains(redumpSystem))
-                    testData.Add(new object?[] { redumpSystem, true });
+                    testData.Add([redumpSystem, true]);
                 else
-                    testData.Add(new object?[] { redumpSystem, false });
+                    testData.Add([redumpSystem, false]);
             }
 
             return testData;
@@ -204,9 +204,9 @@ namespace MPF.Test.Core.Utilities
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_reverseRingcodeSystems.Contains(redumpSystem))
-                    testData.Add(new object?[] { redumpSystem, true });
+                    testData.Add([redumpSystem, true]);
                 else
-                    testData.Add(new object?[] { redumpSystem, false });
+                    testData.Add([redumpSystem, false]);
             }
 
             return testData;
@@ -222,9 +222,9 @@ namespace MPF.Test.Core.Utilities
             foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 if (_xgdSystems.Contains(redumpSystem))
-                    testData.Add(new object?[] { redumpSystem, true });
+                    testData.Add([redumpSystem, true]);
                 else
-                    testData.Add(new object?[] { redumpSystem, false });
+                    testData.Add([redumpSystem, false]);
             }
 
             return testData;
