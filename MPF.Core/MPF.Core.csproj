@@ -6,6 +6,7 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <VersionPrefix>3.0.0</VersionPrefix>
 
@@ -31,6 +32,10 @@
     <PackageReference Include="SabreTools.Models" Version="1.2.0" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.2.0" />
     <PackageReference Include="SabreTools.Serialization" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+    <PackageReference Include="IndexRange" Version="1.0.3" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(TargetFramework.StartsWith(`net40`))">

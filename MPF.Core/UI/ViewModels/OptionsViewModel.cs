@@ -8,7 +8,10 @@ using SabreTools.RedumpLib.Web;
 
 namespace MPF.Core.UI.ViewModels
 {
-    public class OptionsViewModel : INotifyPropertyChanged
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public class OptionsViewModel(Options baseOptions) : INotifyPropertyChanged
     {
         #region Fields
 
@@ -29,7 +32,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Current set of options
         /// </summary>
-        public Options Options { get; }
+        public Options Options { get; } = new Options(baseOptions);
 
         /// <summary>
         /// Flag for if settings were saved or not
@@ -54,14 +57,6 @@ namespace MPF.Core.UI.ViewModels
         public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public OptionsViewModel(Options baseOptions)
-        {
-            Options = new Options(baseOptions);
-        }
 
         #region Population
 

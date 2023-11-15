@@ -273,8 +273,8 @@ namespace MPF.Core
             info.DumpingInfo ??= new DumpingInfoSection();
 
             // Ensure special dictionaries
-            info.CommonDiscInfo.CommentsSpecialFields ??= new Dictionary<SiteCode, string>();
-            info.CommonDiscInfo.ContentsSpecialFields ??= new Dictionary<SiteCode, string>();
+            info.CommonDiscInfo.CommentsSpecialFields ??= [];
+            info.CommonDiscInfo.ContentsSpecialFields ??= [];
 
             return info;
         }
@@ -496,7 +496,7 @@ namespace MPF.Core
                     var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
 
                     info.CopyProtection!.Protection = protectionString;
-                    info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? new Dictionary<string, List<string>?>();
+                    info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
@@ -668,7 +668,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+                    info.CommonDiscInfo!.LanguageSelection = [LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu];
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -734,7 +734,7 @@ namespace MPF.Core
                 int firstParenLocation = title.IndexOf(" (");
                 if (firstParenLocation >= 0)
                 {
-                    info.CommonDiscInfo!.Title = title.Substring(0, firstParenLocation);
+                    info.CommonDiscInfo!.Title = title[..firstParenLocation];
                     var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
                     foreach (Match subMatch in subMatches.Cast<Match>())
                     {
@@ -837,7 +837,7 @@ namespace MPF.Core
                     tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
                 }
 
-                info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
+                info.DumpersAndStatus.Dumpers = [.. tempDumpers];
             }
 
             // TODO: Unify handling of fields that can include site codes (Comments/Contents)
@@ -1093,7 +1093,7 @@ namespace MPF.Core
             // Set the current dumper based on username
             info.DumpersAndStatus ??= new DumpersAndStatusSection();
             info.DumpersAndStatus.Dumpers = [options.RedumpUsername!];
-            info.PartiallyMatchedIDs = new List<int>();
+            info.PartiallyMatchedIDs = [];
 
             // Login to Redump
 #if NETFRAMEWORK
@@ -1122,11 +1122,7 @@ namespace MPF.Core
             resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
             var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
-#if NET40 || NET452
             foreach (string hashData in splitData ?? [])
-#else
-            foreach (string hashData in splitData ?? Array.Empty<string>())
-#endif
             {
                 // Catch any errant blank lines
                 if (string.IsNullOrWhiteSpace(hashData))
@@ -1165,7 +1161,7 @@ namespace MPF.Core
                 // If no tracks were found, remove all fully matched IDs found so far
                 else
                 {
-                    fullyMatchedIDs = new List<int>();
+                    fullyMatchedIDs = [];
                 }
             }
 
@@ -1185,15 +1181,12 @@ namespace MPF.Core
                 // If no tracks were found, remove all fully matched IDs found so far
                 else
                 {
-                    fullyMatchedIDs = new List<int>();
+                    fullyMatchedIDs = [];
                 }
             }
 
             // Make sure we only have unique IDs
-            info.PartiallyMatchedIDs = info.PartiallyMatchedIDs
-                .Distinct()
-                .OrderBy(id => id)
-                .ToList();
+            info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
 
             resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
                 ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
@@ -1496,7 +1489,7 @@ namespace MPF.Core
             }
 
             // Format the universal hash for finding within the comments
-            universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
+            universalHash = $"{universalHash[..^1]}/comments/only";
 
             // Get all matching IDs for the hash
             var newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);

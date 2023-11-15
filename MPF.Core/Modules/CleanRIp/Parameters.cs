@@ -107,7 +107,7 @@ namespace MPF.Core.Modules.CleanRip
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-                info.Artifacts ??= new Dictionary<string, string>();
+                info.Artifacts ??= [];
 
                 if (File.Exists(basePath + ".bca"))
                     info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
@@ -171,25 +171,25 @@ namespace MPF.Core.Modules.CleanRip
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     else if (line!.StartsWith("CRC32"))
-                        crc = line.Substring(7).ToLowerInvariant();
+                        crc = line[7..].ToLowerInvariant();
                     else if (line.StartsWith("MD5"))
-                        md5 = line.Substring(5);
+                        md5 = line[5..];
                     else if (line.StartsWith("SHA-1"))
-                        sha1 = line.Substring(7);
+                        sha1 = line[7..];
                 }
 
                 return new Datafile
                 {
-                    Games = new Game[]
-                    {
-                        new Game
+                    Games =
+                    [
+                        new()
                         {
-                            Roms = new Rom[]
-                            {
+                            Roms =
+                            [
                                 new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), Crc = crc, Md5 = md5, Sha1 = sha1 },
-                            }
+                            ]
                         }
-                    }
+                    ]
                 };
             }
             catch
@@ -257,11 +257,11 @@ namespace MPF.Core.Modules.CleanRip
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     else if (line!.StartsWith("CRC32"))
-                        crc = line.Substring(7).ToLowerInvariant();
+                        crc = line[7..].ToLowerInvariant();
                     else if (line.StartsWith("MD5"))
-                        md5 = line.Substring(5);
+                        md5 = line[5..];
                     else if (line.StartsWith("SHA-1"))
-                        sha1 = line.Substring(7);
+                        sha1 = line[7..];
                 }
 
                 return $"<rom name=\"{Path.GetFileName(iso)}\" size=\"{size}\" crc=\"{crc}\" md5=\"{md5}\" sha1=\"{sha1}\" />";
@@ -306,15 +306,15 @@ namespace MPF.Core.Modules.CleanRip
                     }
                     else if (line!.StartsWith("Version"))
                     {
-                        version = line.Substring("Version: ".Length);
+                        version = line["Version: ".Length..];
                     }
                     else if (line.StartsWith("Internal Name"))
                     {
-                        name = line.Substring("Internal Name: ".Length);
+                        name = line["Internal Name: ".Length..];
                     }
                     else if (line.StartsWith("Filename"))
                     {
-                        string serial = line.Substring("Filename: ".Length);
+                        string serial = line["Filename: ".Length..];
 
                         // char gameType = serial[0];
                         // string gameid = serial[1] + serial[2];

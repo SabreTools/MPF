@@ -495,14 +495,14 @@ namespace MPF.Core.UI.ViewModels
             _options = OptionsLoader.LoadFromConfig();
 
             // Added to clear warnings, all are set externally
-            _drives = new List<Drive>();
-            _driveSpeeds = new List<int>();
-            _internalPrograms = new List<Element<InternalProgram>>();
+            _drives = [];
+            _driveSpeeds = [];
+            _internalPrograms = [];
             _outputPath = string.Empty;
             _parameters = string.Empty;
             _startStopButtonText = string.Empty;
             _status = string.Empty;
-            _systems = new List<RedumpSystemComboBoxItem>();
+            _systems = [];
 
             OptionsMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
@@ -517,9 +517,9 @@ namespace MPF.Core.UI.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
-            MediaTypes = new List<Element<MediaType>>();
+            MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements().ToList();
-            InternalPrograms = new List<Element<InternalProgram>>();
+            InternalPrograms = [];
         }
 
         /// <summary>
@@ -764,7 +764,7 @@ namespace MPF.Core.UI.ViewModels
             {
                 SchemaVersion = 1,
                 FullyMatchedID = 3,
-                PartiallyMatchedIDs = new List<int> { 0, 1, 2, 3 },
+                PartiallyMatchedIDs = [0, 1, 2, 3],
                 Added = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow,
 
@@ -778,8 +778,8 @@ namespace MPF.Core.UI.ViewModels
                     DiscTitle = "Install Disc",
                     Category = DiscCategory.Games,
                     Region = Region.World,
-                    Languages = new Language?[] { Language.English, Language.Spanish, Language.French },
-                    LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings },
+                    Languages = [Language.English, Language.Spanish, Language.French],
+                    LanguageSelection = [LanguageSelection.BiosSettings],
                     Serial = "Disc Serial",
                     Layer0MasteringRing = "L0 Mastering Ring",
                     Layer0MasteringSID = "L0 Mastering SID",
@@ -817,7 +817,7 @@ namespace MPF.Core.UI.ViewModels
                 {
                     Version = "Original",
                     VersionDatfile = "Alt",
-                    CommonEditions = new string[] { "Taikenban" },
+                    CommonEditions = ["Taikenban"],
                     OtherEditions = "Rerelease",
                 },
 
@@ -855,7 +855,7 @@ namespace MPF.Core.UI.ViewModels
                 DumpersAndStatus = new DumpersAndStatusSection()
                 {
                     Status = DumpStatus.TwoOrMoreGreen,
-                    Dumpers = new string[] { "Dumper1", "Dumper2" },
+                    Dumpers = ["Dumper1", "Dumper2"],
                     OtherDumpers = "Dumper3",
                 },
 
@@ -863,7 +863,7 @@ namespace MPF.Core.UI.ViewModels
                 {
                     ClrMameProData = "Datfile",
                     Cuesheet = "Cuesheet",
-                    CommonWriteOffsets = new int[] { 0, 12, -12 },
+                    CommonWriteOffsets = [0, 12, -12],
                     OtherWriteOffsets = "-2",
                 },
 

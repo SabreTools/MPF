@@ -48,7 +48,7 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Set of flags to pass to the executable
         /// </summary>
-        protected Dictionary<string, bool?> flags = new();
+        protected Dictionary<string, bool?> flags = [];
         protected internal IEnumerable<string> Keys => flags.Keys;
 
         /// <summary>
@@ -1120,7 +1120,7 @@ namespace MPF.Core.Modules
                     return null;
 
                 if (trimLength > -1)
-                    hex = hex.Substring(0, trimLength);
+                    hex = hex[..trimLength];
 
                 return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }

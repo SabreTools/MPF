@@ -111,7 +111,7 @@ namespace MPF.Core.Data
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
-                devicePath = devicePath.Substring("\\\\.\\".Length);
+                devicePath = devicePath["\\\\.\\".Length..];
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);
@@ -161,7 +161,7 @@ namespace MPF.Core.Data
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = drives.OrderBy(i => i == null ? "\0" : i.Name).ToList();
+            drives = [.. drives.OrderBy(i => i == null ? "\0" : i.Name)];
             return drives;
         }
 

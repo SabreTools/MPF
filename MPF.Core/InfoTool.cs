@@ -1134,7 +1134,7 @@ namespace MPF.Core
                     }
                     else
                     {
-                        string entryName = file.Substring(outputDirectory!.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        string entryName = file[outputDirectory!.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
 #if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
                         zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);

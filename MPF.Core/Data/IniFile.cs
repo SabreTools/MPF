@@ -8,13 +8,13 @@ namespace MPF.Core.Data
 {
     public class IniFile : IDictionary<string, string>
     {
-        private Dictionary<string, string> _keyValuePairs = new();
+        private Dictionary<string, string> _keyValuePairs = [];
 
         public string this[string key]
         {
             get
             {
-                _keyValuePairs ??= new Dictionary<string, string>();
+                _keyValuePairs ??= [];
 
                 key = key.ToLowerInvariant();
                 if (_keyValuePairs.ContainsKey(key))
@@ -24,7 +24,7 @@ namespace MPF.Core.Data
             }
             set
             {
-                _keyValuePairs ??= new Dictionary<string, string>();
+                _keyValuePairs ??= [];
 
                 key = key.ToLowerInvariant();
                 _keyValuePairs[key] = value;

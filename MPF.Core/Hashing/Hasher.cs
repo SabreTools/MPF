@@ -289,11 +289,7 @@ namespace MPF.Core.Hashing
         /// <remarks>NonCryptographicHashAlgorithm implementations do not need finalization</remarks>
         public void Terminate()
         {
-#if NET40 || NET452
             byte[] emptyBuffer = [];
-#else
-            byte[] emptyBuffer = Array.Empty<byte>();
-#endif
             switch (_hasher)
             {
                 case HashAlgorithm ha:

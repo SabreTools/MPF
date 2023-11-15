@@ -409,7 +409,7 @@ namespace MPF.Core.Modules.Aaru
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-                info.Artifacts ??= new Dictionary<string, string>();
+                info.Artifacts ??= [];
                 if (File.Exists(basePath + ".cicm.xml"))
                     info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
                 if (File.Exists(basePath + ".ibg"))
@@ -1128,48 +1128,42 @@ namespace MPF.Core.Modules.Aaru
             {
                 #region Archive Family
 
-                [CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo] = new List<string>()
-                {
-                },
+                [CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo] = [],
 
                 #endregion
 
                 #region Database Family
 
-                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = new List<string>()
-                {
-                },
+                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = [],
 
-                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseUpdate] = new List<string>()
-                {
+                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseUpdate] =
+                [
                     FlagStrings.ClearLong,
                     FlagStrings.ClearAllLong,
-                },
+                ],
 
                 #endregion
 
                 #region Device Family
 
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo] = new List<string>()
-                {
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo] =
+                [
                     FlagStrings.OutputPrefixLong,
-                },
+                ],
 
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList] = new List<string>()
-                {
-                },
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList] = [],
 
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport] = new List<string>()
-                {
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport] =
+                [
                     FlagStrings.TrapDiscLong,
-                },
+                ],
 
                 #endregion
 
                 #region Filesystem Family
 
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract] =
+                [
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
                     FlagStrings.ExtendedAttributesLong,
@@ -1178,10 +1172,10 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.NamespaceShort,
                     FlagStrings.OptionsLong,
                     FlagStrings.OptionsShort,
-                },
+                ],
 
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo] = new List<string>()
-                {
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo] =
+                [
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
                     FlagStrings.ExtendedAttributesLong,
@@ -1190,10 +1184,10 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.NamespaceShort,
                     FlagStrings.OptionsLong,
                     FlagStrings.OptionsShort,
-                },
+                ],
 
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] =
+                [
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
                     FlagStrings.FilesystemsLong,
@@ -1202,18 +1196,16 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.LongFormatShort,
                     FlagStrings.PartitionsLong,
                     FlagStrings.PartitionsShort,
-                },
+                ],
 
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = [],
 
                 #endregion
 
                 #region Image Family
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] =
+                [
                     FlagStrings.Adler32Long,
                     FlagStrings.Adler32Short,
                     FlagStrings.CRC16Long,
@@ -1235,14 +1227,12 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.SpamSumShort,
                     FlagStrings.WholeDiscLong,
                     FlagStrings.WholeDiscShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong] = new List<string>()
-                {
-                },
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong] = [],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert] =
+                [
                     FlagStrings.CommentsLong,
                     FlagStrings.CountLong,
                     FlagStrings.CountShort,
@@ -1275,20 +1265,20 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.ResumeFileShort,
                     FlagStrings.XMLSidecarLong,
                     FlagStrings.XMLSidecarShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar] =
+                [
                     FlagStrings.BlockSizeLong,
                     FlagStrings.BlockSizeShort,
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
                     FlagStrings.TapeLong,
                     FlagStrings.TapeShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode] =
+                [
                     FlagStrings.DiskTagsLong,
                     FlagStrings.DiskTagsShort,
                     FlagStrings.LengthLong,
@@ -1297,28 +1287,24 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.SectorTagsShort,
                     FlagStrings.StartLong,
                     FlagStrings.StartShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy] =
+                [
                     FlagStrings.DuplicatedSectorsLong,
                     FlagStrings.DuplicatedSectorsShort,
                     FlagStrings.SeparatedTracksLong,
                     FlagStrings.SeparatedTracksShort,
                     FlagStrings.WholeDiscLong,
                     FlagStrings.WholeDiscShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo] = new List<string>()
-                {
-                },
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo] = [],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageOptions] = new List<string>()
-                {
-                },
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageOptions] = [],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint] =
+                [
                     FlagStrings.LengthLong,
                     FlagStrings.LengthShort,
                     FlagStrings.LongSectorsLong,
@@ -1327,22 +1313,22 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.StartShort,
                     FlagStrings.WidthLong,
                     FlagStrings.WidthShort,
-                },
+                ],
 
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify] = new List<string>()
-                {
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify] =
+                [
                     FlagStrings.VerifyDiscLong,
                     FlagStrings.VerifyDiscShort,
                     FlagStrings.VerifySectorsLong,
                     FlagStrings.VerifySectorsShort,
-                },
+                ],
 
                 #endregion
 
                 #region Media Family
 
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump] = new List<string>()
-                {
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump] =
+                [
                     FlagStrings.EjectLong,
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
@@ -1380,29 +1366,29 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.UseBufferedReadsLong,
                     FlagStrings.XMLSidecarLong,
                     FlagStrings.XMLSidecarShort,
-                },
+                ],
 
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo] = new List<string>()
-                {
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo] =
+                [
                     FlagStrings.OutputPrefixLong,
                     FlagStrings.OutputPrefixShort,
-                },
+                ],
 
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan] = new List<string>()
-                {
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan] =
+                [
                     FlagStrings.ImgBurnLogLong,
                     FlagStrings.ImgBurnLogShort,
                     FlagStrings.MHDDLogLong,
                     FlagStrings.MHDDLogShort,
                     FlagStrings.UseBufferedReadsLong,
-                },
+                ],
 
                 #endregion
 
                 #region Standalone Commands
 
-                [CommandStrings.NONE] = new List<string>()
-                {
+                [CommandStrings.NONE] =
+                [
                     FlagStrings.DebugLong,
                     FlagStrings.DebugShort,
                     FlagStrings.HelpLong,
@@ -1411,27 +1397,17 @@ namespace MPF.Core.Modules.Aaru
                     FlagStrings.VerboseLong,
                     FlagStrings.VerboseShort,
                     FlagStrings.VersionLong,
-                },
+                ],
 
-                [CommandStrings.Configure] = new List<string>()
-                {
-                },
+                [CommandStrings.Configure] = [],
 
-                [CommandStrings.Formats] = new List<string>()
-                {
-                },
+                [CommandStrings.Formats] = [],
 
-                [CommandStrings.ListEncodings] = new List<string>()
-                {
-                },
+                [CommandStrings.ListEncodings] = [],
 
-                [CommandStrings.ListNamespaces] = new List<string>()
-                {
-                },
+                [CommandStrings.ListNamespaces] = [],
 
-                [CommandStrings.Remote] = new List<string>()
-                {
-                },
+                [CommandStrings.Remote] = [],
 
                 #endregion
             };
@@ -1500,7 +1476,7 @@ namespace MPF.Core.Modules.Aaru
         {
             BaseCommand = CommandStrings.NONE;
 
-            flags = new Dictionary<string, bool?>();
+            flags = [];
 
             BlockSizeValue = null;
             CommentsValue = null;
@@ -2470,14 +2446,14 @@ namespace MPF.Core.Modules.Aaru
                             }
                         }
 
-                        cueTrack.Indices = cueIndicies.ToArray();
+                        cueTrack.Indices = [.. cueIndicies];
                     }
                     else
                     {
                         // Default if index data missing from sidecar
                         cueTrack.Indices = new CueIndex[]
                         {
-                            new CueIndex
+                            new()
                             {
                                 Index = 1,
                                 Minutes = 0,
@@ -2496,7 +2472,7 @@ namespace MPF.Core.Modules.Aaru
             }
 
             // If we have a cuesheet to write out, do so
-            cueSheet.Files = cueFiles.ToArray();
+            cueSheet.Files = [.. cueFiles];
             if (cueSheet != null && cueSheet != default)
             {
                 var ms = new SabreTools.Serialization.Streams.CueSheet().Serialize(cueSheet);
@@ -2726,7 +2702,7 @@ namespace MPF.Core.Modules.Aaru
 
             // Assign the roms to a new game
             datafile.Games = new Game[1];
-            datafile.Games[0] = new Game { Roms = roms.ToArray() };
+            datafile.Games[0] = new Game { Roms = [.. roms] };
 
             return datafile;
         }
@@ -2887,7 +2863,7 @@ namespace MPF.Core.Modules.Aaru
             pvdData.AddRange(new string((char)0, 14).ToCharArray().Select(c => (byte)c));
 
             // Return the filled array
-            return pvdData.ToArray();
+            return [.. pvdData];
         }
 
         /// <summary>
@@ -2928,7 +2904,7 @@ namespace MPF.Core.Modules.Aaru
             // Get and return the byte array
             List<byte> dateTimeList = dateTimeString.ToCharArray().Select(c => (byte)c).ToList();
             dateTimeList.Add(timeZoneNumber);
-            return dateTimeList.ToArray();
+            return [.. dateTimeList];
         }
 
         /// <summary>

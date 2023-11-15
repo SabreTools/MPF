@@ -102,7 +102,7 @@ namespace MPF.Core.Modules.UmdImageCreator
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-                info.Artifacts ??= new Dictionary<string, string>();
+                info.Artifacts ??= [];
 
                 if (File.Exists(basePath + "_disc.txt"))
                     info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt")) ?? string.Empty;
@@ -203,7 +203,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
-                        title = line.Substring("TITLE: ".Length);
+                        title = line["TITLE: ".Length..];
                     else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                         umdversion = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
