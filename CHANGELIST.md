@@ -2,6 +2,7 @@
 
 - Add Bandai Pippin detection
 - Zip manufacturer files for Redumper
+- Fix BE flag logic bug in DIC
 
 ### 3.0.0 (2023-11-14)
 

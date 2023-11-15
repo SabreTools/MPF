@@ -1016,7 +1016,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             // BE Opcode
             if (IsFlagSupported(FlagStrings.BEOpcode))
             {
-                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] == false)
+                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] != true)
                 {
                     parameters.Add(FlagStrings.BEOpcode);
                     if (BEOpcodeValue != null
