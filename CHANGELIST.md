@@ -12,6 +12,7 @@
 - Perform more ancient .NET support work
 - Prepare XAML for ancient .NET support
 - Suppress deprecation warnings
+- Fix reversed ringcode test
 
 ### 3.0.0 (2023-11-14)
 

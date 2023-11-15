@@ -60,6 +60,7 @@ namespace MPF.Test.Core.Utilities
             RedumpSystem.SonyPlayStation2,
             RedumpSystem.SonyPlayStation3,
             RedumpSystem.SonyPlayStation4,
+            RedumpSystem.SonyPlayStation5,
             RedumpSystem.SonyPlayStationPortable,
         };
 
