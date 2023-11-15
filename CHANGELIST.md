@@ -4,6 +4,7 @@
 - Zip manufacturer files for Redumper
 - Fix BE flag logic bug in DIC
 - Support ancient .NET in Core
+- Support ancient .NET in UI Core
 
 ### 3.0.0 (2023-11-14)
 

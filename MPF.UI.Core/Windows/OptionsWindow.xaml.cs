@@ -65,7 +65,7 @@ namespace MPF.UI.Core.Windows
                 return;
 
             // Strips button prefix to obtain the setting name
-            string pathSettingName = button.Name[..button.Name.IndexOf("Button")];
+            string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
 
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";

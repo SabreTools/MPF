@@ -1,14 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <!-- Assembly Properties -->
+    <TargetFrameworks>net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
+
+    <!-- Package Properties -->
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2023</Copyright>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <Description>Common code for all MPF UI implementations</Description>
+    <Copyright>Copyright (c) Matt Nadareski 2019-2023</Copyright>
+    <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

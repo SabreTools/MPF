@@ -104,7 +104,7 @@ namespace MPF.UI.Core.Windows
             else if (string.IsNullOrWhiteSpace(currentPath))
                 currentPath = "track.bin";
             if (string.IsNullOrWhiteSpace(currentPath))
-                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "track.bin");
+                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "track.bin");
 
             // Get the full path
             currentPath = Path.GetFullPath(currentPath);
