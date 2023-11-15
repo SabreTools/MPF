@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Reflection;
 using MPF.Core.Data;
 using Newtonsoft.Json.Linq;
@@ -231,6 +232,9 @@ namespace MPF.Core.Utilities
         private static (string? tag, string? url) GetRemoteVersionAndUrl()
         {
             using var hc = new System.Net.Http.HttpClient();
+#if NET40 || NET452
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+#endif
 
             // TODO: Figure out a better way than having this hardcoded...
             string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
@@ -251,6 +255,6 @@ namespace MPF.Core.Utilities
             return (latestTag, releaseUrl);
         }
 
-        #endregion
+#endregion
     }
 }
