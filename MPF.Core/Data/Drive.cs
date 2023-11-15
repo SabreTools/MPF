@@ -277,6 +277,12 @@ namespace MPF.Core.Data
             }
             catch { }
 
+            // Bandai Pippin
+            if (File.Exists(Path.Combine(this.Name, "PippinAuthenticationFile")))
+            {
+                return RedumpSystem.BandaiPippin;
+            }
+
             // Mattel Fisher-Price iXL
             if (File.Exists(Path.Combine(this.Name, "iXL", "iXLUpdater.exe")))
             {

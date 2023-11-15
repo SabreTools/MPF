@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add Bandai Pippin detection
+
 ### 3.0.0 (2023-11-14)
 
 - Remove .NET Framework 4.8 from build
