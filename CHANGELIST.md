@@ -11,6 +11,7 @@
 - Fix TLS for older .NET
 - Perform more ancient .NET support work
 - Prepare XAML for ancient .NET support
+- Suppress deprecation warnings
 
 ### 3.0.0 (2023-11-14)
 

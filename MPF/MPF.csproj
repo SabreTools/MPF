@@ -6,6 +6,7 @@
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
