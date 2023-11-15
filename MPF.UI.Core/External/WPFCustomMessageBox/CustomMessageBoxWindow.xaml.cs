@@ -88,6 +88,15 @@ namespace WPFCustomMessageBox
 
         internal CustomMessageBoxWindow(Window? owner, string? message, string? caption = null, MessageBoxButton? button = null, MessageBoxImage? image = null, bool removeTitleBarIcon = true)
         {
+#if NET452_OR_GREATER
+            var chrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(0),
+            };
+            System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
+#endif
+
             InitializeComponent();
 
             _removeTitleBarIcon = removeTitleBarIcon;

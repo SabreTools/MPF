@@ -15,10 +15,7 @@
     <Window.Resources>
         <core:ElementConverter x:Key="ElementConverter" />
     </Window.Resources>
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-    
+
     <Grid>
         <StackPanel Orientation="Vertical" Width="500" MaxHeight="650">
             <Grid Margin="0,10,0,0">

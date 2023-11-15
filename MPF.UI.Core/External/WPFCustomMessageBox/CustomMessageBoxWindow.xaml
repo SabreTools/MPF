@@ -9,10 +9,6 @@
         Title="" MinHeight="155" MaxWidth="470" MinWidth="154"
         BorderBrush="DarkGray" BorderThickness="2">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

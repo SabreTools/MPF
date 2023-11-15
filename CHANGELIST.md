@@ -10,6 +10,7 @@
 - Support ancient .NET in UI
 - Fix TLS for older .NET
 - Perform more ancient .NET support work
+- Prepare XAML for ancient .NET support
 
 ### 3.0.0 (2023-11-14)
 

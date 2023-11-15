@@ -10,10 +10,6 @@
         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
         BorderBrush="DarkGray" BorderThickness="2">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-    
     <Grid>
         <StackPanel Orientation="Vertical">
             <Grid Margin="0,10,0,0">

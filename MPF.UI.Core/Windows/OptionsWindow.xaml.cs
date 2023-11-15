@@ -24,6 +24,15 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public OptionsWindow(Options options)
         {
+#if NET452_OR_GREATER
+            var chrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(0),
+            };
+            System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
+#endif
+
             InitializeComponent();
             DataContext = new OptionsViewModel(options);
 
@@ -159,7 +168,7 @@ namespace MPF.UI.Core.Windows
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 

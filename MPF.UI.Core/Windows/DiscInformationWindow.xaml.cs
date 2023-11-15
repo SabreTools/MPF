@@ -22,6 +22,15 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public DiscInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
+#if NET452_OR_GREATER
+            var chrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(0),
+            };
+            System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
+#endif
+
             InitializeComponent();
             DataContext = new DiscInformationViewModel(options, submissionInfo);
             DiscInformationViewModel.Load();
@@ -341,7 +350,7 @@ namespace MPF.UI.Core.Windows
             }
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 

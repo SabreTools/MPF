@@ -20,7 +20,19 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindow() => InitializeComponent();
+        public MainWindow()
+        {
+#if NET452_OR_GREATER
+            var chrome = new System.Windows.Shell.WindowChrome
+            {
+                CaptionHeight = 0,
+                ResizeBorderThickness = new Thickness(0),
+            };
+            System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
+#endif
+
+            InitializeComponent();
+        }
 
         /// <summary>
         /// Handler for MainWindow OnContentRendered event
