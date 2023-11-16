@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 #pragma warning disable IDE0051 // Remove unused private members
@@ -64,7 +65,7 @@ namespace MPF.Core.Modules.CleanRip
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
         {
             // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
+            info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a CleanRip version anywhere
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 #pragma warning disable IDE0051 // Remove unused private members
@@ -255,7 +256,7 @@ namespace MPF.Core.Modules.Redumper
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
         {
             // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
+            info = Builder.EnsureAllSections(info);
 
             // Get the dumping program and version
             info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";

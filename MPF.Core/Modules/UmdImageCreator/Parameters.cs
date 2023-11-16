@@ -5,6 +5,7 @@ using System.Linq;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Hashing;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Modules.UmdImageCreator
@@ -65,7 +66,7 @@ namespace MPF.Core.Modules.UmdImageCreator
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
         {
             // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
+            info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);

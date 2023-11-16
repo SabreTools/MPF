@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MPF.Core.Data;
 using MPF.Core.Modules;
 using MPF.Core.Utilities;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core
@@ -328,7 +329,7 @@ namespace MPF.Core
             if (seedInfo != null)
             {
                 resultProgress?.Report(Result.Success("Injecting user-supplied information..."));
-                SubmissionInfoTool.InjectSubmissionInformation(submissionInfo, seedInfo);
+                Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress?.Report(Result.Success("Information injection complete!"));
             }
 
@@ -370,12 +371,12 @@ namespace MPF.Core
 
             // Process special fields for site codes
             resultProgress?.Report(Result.Success("Processing site codes..."));
-            InfoTool.ProcessSpecialFields(submissionInfo);
+            Formatter.ProcessSpecialFields(submissionInfo);
             resultProgress?.Report(Result.Success("Processing complete!"));
 
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
-            (var formattedValues, var formatResult) = InfoTool.FormatOutputData(submissionInfo, Options);
+            (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, Options.EnableRedumpCompatibility);
             if (formattedValues == null)
                 resultProgress?.Report(Result.Success(formatResult));
             else

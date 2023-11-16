@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using MPF.Core;
 using MPF.Core.UI.ViewModels;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
@@ -197,7 +198,7 @@ namespace MPF.UI.Core.Windows
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
             var result = ShowDiscInformationWindow(submissionInfo);
-            InfoTool.ProcessSpecialFields(result.Item2);
+            Formatter.ProcessSpecialFields(result.Item2);
         }
 
         /// <summary>

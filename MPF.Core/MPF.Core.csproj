@@ -31,7 +31,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="psxt001z" Version="0.21.0-beta2" />
     <PackageReference Include="SabreTools.Models" Version="1.2.0" />
-    <PackageReference Include="SabreTools.RedumpLib" Version="1.2.0" />
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.2.1" />
     <PackageReference Include="SabreTools.Serialization" Version="1.2.0" />
   </ItemGroup>
 

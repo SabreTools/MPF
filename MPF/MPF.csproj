@@ -45,7 +45,7 @@
     <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.0.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SabreTools.RedumpLib" Version="1.2.0" />
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.2.1" />
   </ItemGroup>
 
   <ItemGroup>

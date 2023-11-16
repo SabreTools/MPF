@@ -4,6 +4,7 @@ using System.IO;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using Newtonsoft.Json;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Utilities
@@ -177,12 +178,12 @@ namespace MPF.Core.Utilities
                 else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
                 {
                     string seedInfo = args[startIndex].Split('=')[1];
-                    info = SubmissionInfoTool.CreateFromFile(seedInfo);
+                    info = Builder.CreateFromFile(seedInfo);
                 }
                 else if (args[startIndex] == "-l" || args[startIndex] == "--load-seed")
                 {
                     string seedInfo = args[startIndex + 1];
-                    info = SubmissionInfoTool.CreateFromFile(seedInfo);
+                    info = Builder.CreateFromFile(seedInfo);
                     startIndex++;
                 }
 

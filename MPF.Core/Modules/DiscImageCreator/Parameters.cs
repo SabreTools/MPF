@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Modules.DiscImageCreator
@@ -384,7 +385,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             var outputDirectory = Path.GetDirectoryName(basePath);
 
             // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
+            info = Builder.EnsureAllSections(info);
 
             // Get the dumping program and version
             var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);

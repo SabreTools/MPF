@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.Models.CueSheets;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Schemas;
 
@@ -202,7 +203,7 @@ namespace MPF.Core.Modules.Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
 
             // Ensure that required sections exist
-            info = SubmissionInfoTool.EnsureAllSections(info);
+            info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's an Aaru version anywhere
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
