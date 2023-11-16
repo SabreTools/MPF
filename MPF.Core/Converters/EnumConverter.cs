@@ -50,9 +50,9 @@ namespace MPF.Core.Converters
 
                 if (!LongNameMethods.TryGetValue(sourceType, out var method))
                 {
-                    method = typeof(Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    method = typeof(Extensions).GetMethod("LongName", [typeof(Nullable<>).MakeGenericType(sourceType)]);
                     if (method == null)
-                        method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                        method = typeof(EnumConverter).GetMethod("LongName", [typeof(Nullable<>).MakeGenericType(sourceType)]);
 
                     LongNameMethods.TryAdd(sourceType, method);
                 }

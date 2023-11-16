@@ -38,12 +38,12 @@ namespace MPF.Core
                 });
 
                 // If nothing was returned, return
-                if (found == null || !found.Any())
+                if (found == null || found.IsEmpty)
                     return (null, null);
 
                 // Filter out any empty protections
                 var filteredProtections = found
-                    .Where(kvp => kvp.Value != null && kvp.Value.Any())
+                    .Where(kvp => kvp.Value != null && !kvp.Value.IsEmpty)
                     .ToDictionary(
                         kvp => kvp.Key,
                         kvp => kvp.Value.OrderBy(s => s).ToList());

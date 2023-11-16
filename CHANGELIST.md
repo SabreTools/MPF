@@ -17,6 +17,7 @@
 - Trim PS3 serial and add unrelated notes
 - Update RedumpLib and use moved methods
 - Perform some post-move cleanup
+- More C# 12 cleanup in Core
 
 ### 3.0.0 (2023-11-14)
 

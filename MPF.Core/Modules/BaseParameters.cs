@@ -1131,8 +1131,6 @@ namespace MPF.Core.Modules
             }
         }
 
-
-
-#endregion
+        #endregion
     }
 }

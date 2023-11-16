@@ -7,8 +7,6 @@ using MPF.Core.Data;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
-#pragma warning disable IDE0051 // Remove unused private members
-
 namespace MPF.Core.Modules.CleanRip
 {
     /// <summary>

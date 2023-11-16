@@ -17,8 +17,8 @@ namespace MPF.Core.Data
                 _keyValuePairs ??= [];
 
                 key = key.ToLowerInvariant();
-                if (_keyValuePairs.ContainsKey(key))
-                    return _keyValuePairs[key];
+                if (_keyValuePairs.TryGetValue(key, out string? val))
+                    return val;
 
                 return string.Empty;
             }

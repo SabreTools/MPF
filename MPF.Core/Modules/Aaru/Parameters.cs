@@ -15,7 +15,6 @@ using SabreTools.RedumpLib.Data;
 using Schemas;
 
 #pragma warning disable CS0618 // Ignore "Type or member is obsolete"
-#pragma warning disable IDE0051 // Remove unused private members
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 
 namespace MPF.Core.Modules.Aaru
@@ -2925,7 +2924,7 @@ namespace MPF.Core.Modules.Aaru
                 return null;
 
             string pvdLine = $"{row} : ";
-#if NETFRAMEWORK
+#if NET40
             pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
 #else
             pvdLine += BitConverter.ToString(bytes[..8].ToArray()).Replace("-", " ");
