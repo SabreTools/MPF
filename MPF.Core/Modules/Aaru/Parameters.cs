@@ -2925,7 +2925,7 @@ namespace MPF.Core.Modules.Aaru
                 return null;
 
             string pvdLine = $"{row} : ";
-#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+#if NETFRAMEWORK
             pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
 #else
             pvdLine += BitConverter.ToString(bytes[..8].ToArray()).Replace("-", " ");

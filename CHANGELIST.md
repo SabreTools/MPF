@@ -16,6 +16,7 @@
 - Add C#12 syntax to tests
 - Trim PS3 serial and add unrelated notes
 - Update RedumpLib and use moved methods
+- Perform some post-move cleanup
 
 ### 3.0.0 (2023-11-14)
 

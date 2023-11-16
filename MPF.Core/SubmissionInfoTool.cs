@@ -9,9 +9,6 @@ using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
-#pragma warning disable IDE0051 // Remove unused private members
-#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-
 namespace MPF.Core
 {
     /// <summary>
@@ -42,7 +39,7 @@ namespace MPF.Core
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Data.Options options,
+            Options options,
             BaseParameters? parameters,
             IProgress<Result>? resultProgress = null,
             IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null)
@@ -56,7 +53,7 @@ namespace MPF.Core
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, parameters, false);
+            (bool foundFiles, List<string> missingFiles) = parameters.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
@@ -461,9 +458,9 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
 #if NET40
-        public static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+        public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #else
-        public async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+        public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #endif
         {
             // If no username is provided

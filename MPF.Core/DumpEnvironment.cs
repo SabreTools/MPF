@@ -301,7 +301,7 @@ namespace MPF.Core
             var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, Parameters, false);
+            (bool foundFiles, List<string> missingFiles) = Parameters.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));

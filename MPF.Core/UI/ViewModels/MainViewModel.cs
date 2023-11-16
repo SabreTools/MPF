@@ -1696,7 +1696,7 @@ namespace MPF.Core.UI.ViewModels
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists
-            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, _environment.Parameters, true);
+            (bool foundFiles, List<string> _) = _environment.Parameters.FoundAllFiles(outputDirectory, outputFilename, true);
             if (foundFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);

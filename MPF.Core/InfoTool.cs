@@ -34,7 +34,7 @@ namespace MPF.Core
         /// <param name="parameters">Parameters object representing what to send to the internal program</param>
         /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        internal static (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters, bool preCheck)
+        internal static (bool, List<string>) FoundAllFiles(this BaseParameters? parameters, string? outputDirectory, string outputFilename, bool preCheck)
         {
             // If there are no parameters set
             if (parameters == null)
@@ -113,9 +113,9 @@ namespace MPF.Core
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
 #if NET40
-        internal static (string?, Dictionary<string, List<string>>?) GetCopyProtection(Drive? drive, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+        internal static (string?, Dictionary<string, List<string>>?) GetCopyProtection(Drive? drive, Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
 #else
-        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
 #endif
         {
             if (options.ScanForProtection && drive?.Name != null)
@@ -1282,6 +1282,7 @@ namespace MPF.Core
             return (true, "Writing complete!");
         }
 
+        // MOVE TO REDUMPLIB
         /// <summary>
         /// Write the data to the output folder
         /// </summary>
@@ -1346,6 +1347,7 @@ namespace MPF.Core
             return true;
         }
 
+        // MOVE TO REDUMPLIB
         /// <summary>
         /// Write the protection data to the output folder
         /// </summary>
