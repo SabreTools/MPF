@@ -56,6 +56,7 @@ namespace MPF.Core.Data
         }
     }
 
+    // Moved to RedumpLib
     /// <summary>
     /// Template field values for submission info
     /// </summary>

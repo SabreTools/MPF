@@ -25,6 +25,7 @@ namespace MPF.Core
     {
         #region Creation
 
+        // Moved to RedumpLib
         /// <summary>
         /// Create a SubmissionInfo from a JSON file path
         /// </summary>
@@ -54,6 +55,7 @@ namespace MPF.Core
             }
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Create a new SubmissionInfo object from a disc page
         /// </summary>
@@ -251,6 +253,7 @@ namespace MPF.Core
             return info;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Ensure all required sections in a submission info exist
         /// </summary>
@@ -716,6 +719,7 @@ namespace MPF.Core
             return info;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Fill out an existing SubmissionInfo object based on a disc page
         /// </summary>
@@ -1265,6 +1269,7 @@ namespace MPF.Core
             return true;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Inject information from a seed SubmissionInfo into the existing one
         /// </summary>
@@ -1338,6 +1343,7 @@ namespace MPF.Core
 
         #region Helpers
 
+        // Moved to RedumpLib
         /// <summary>
         /// Check if a site code is multi-line or not
         /// </summary>
@@ -1364,6 +1370,7 @@ namespace MPF.Core
             };
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Process a text block and replace with internal identifiers
         /// </summary>
@@ -1399,6 +1406,7 @@ namespace MPF.Core
             return text;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// List the disc IDs associated with a given quicksearch query
         /// </summary>
@@ -1459,6 +1467,7 @@ namespace MPF.Core
             return ids;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Validate a single track against Redump, if possible
         /// </summary>
@@ -1509,6 +1518,7 @@ namespace MPF.Core
             return (true, newIds);
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Validate a universal hash against Redump, if possible
         /// </summary>
@@ -1569,6 +1579,7 @@ namespace MPF.Core
             return (true, newIds);
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Validate that the current track count and remote track count match
         /// </summary>

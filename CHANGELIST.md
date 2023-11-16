@@ -14,6 +14,7 @@
 - Suppress deprecation warnings
 - Fix reversed ringcode test
 - Add C#12 syntax to tests
+- Trim PS3 serial and add unrelated notes
 
 ### 3.0.0 (2023-11-14)
 

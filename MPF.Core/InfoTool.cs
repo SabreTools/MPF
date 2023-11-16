@@ -590,7 +590,7 @@ namespace MPF.Core
                 {
                     using var br = new BinaryReader(File.OpenRead(sfbPath));
                     br.BaseStream.Seek(0x220, SeekOrigin.Begin);
-                    return new string(br.ReadChars(0x10));
+                    return new string(br.ReadChars(0x10)).TrimEnd('\0');
                 }
                 catch
                 {
@@ -607,7 +607,7 @@ namespace MPF.Core
                 {
                     using var br = new BinaryReader(File.OpenRead(sfoPath));
                     br.BaseStream.Seek(-0x18, SeekOrigin.End);
-                    return new string(br.ReadChars(9));
+                    return new string(br.ReadChars(9)).TrimEnd('\0'); ;
                 }
                 catch
                 {
@@ -677,7 +677,7 @@ namespace MPF.Core
                 {
                     using var br = new BinaryReader(File.OpenRead(sfoPath));
                     br.BaseStream.Seek(-0x08, SeekOrigin.End);
-                    return new string(br.ReadChars(5));
+                    return new string(br.ReadChars(5)).TrimEnd('\0');
                 }
                 catch
                 {
@@ -967,7 +967,7 @@ namespace MPF.Core
             }
         }
 
-#endregion
+        #endregion
 
         #region Category Extraction
 
@@ -1241,6 +1241,7 @@ namespace MPF.Core
             }
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
@@ -1492,6 +1493,7 @@ namespace MPF.Core
             }
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Get the adjusted name of the media based on layers, if applicable
         /// </summary>
@@ -1542,6 +1544,7 @@ namespace MPF.Core
             }
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Process any fields that have to be combined
         /// </summary>
@@ -1752,6 +1755,7 @@ namespace MPF.Core
             return true;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Add the properly formatted key and value, if possible
         /// </summary>
@@ -1802,6 +1806,7 @@ namespace MPF.Core
             }
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Add the properly formatted key and value, if possible
         /// </summary>
@@ -1818,6 +1823,7 @@ namespace MPF.Core
             AddIfExists(output, key, string.Join(", ", value), indent);
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Add the properly formatted key and value, if possible
         /// </summary>
@@ -1838,6 +1844,7 @@ namespace MPF.Core
             output.Add(prefix + key + ": " + value);
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Add the properly formatted key and value, if possible
         /// </summary>
@@ -1912,7 +1919,7 @@ namespace MPF.Core
             return files;
         }
 
-#endregion
+        #endregion
 
         #region Normalization
 
@@ -2309,6 +2316,7 @@ namespace MPF.Core
             return newTitle;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Adjust the disc type based on size and layerbreak information
         /// </summary>
@@ -2422,6 +2430,7 @@ namespace MPF.Core
 
         #region Helpers
 
+        // Moved to RedumpLib
         /// <summary>
         /// Format a single site tag to string
         /// </summary>
@@ -2444,6 +2453,7 @@ namespace MPF.Core
             return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Check if a site code is boolean or not
         /// </summary>
@@ -2460,6 +2470,7 @@ namespace MPF.Core
             };
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Order comment code tags according to Redump requirements
         /// </summary>
@@ -2583,6 +2594,7 @@ namespace MPF.Core
             return sorted;
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Order content code tags according to Redump requirements
         /// </summary>

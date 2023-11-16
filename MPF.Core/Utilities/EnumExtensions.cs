@@ -8,6 +8,7 @@ namespace MPF.Core.Utilities
 {
     public static class EnumExtensions
     {
+        // Moved to RedumpLib
         /// <summary>
         /// Determine if a system is okay if it's not detected by Windows
         /// </summary>
@@ -55,6 +56,7 @@ namespace MPF.Core.Utilities
             };
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Determine if a system has reversed ringcodes
         /// </summary>
@@ -73,6 +75,7 @@ namespace MPF.Core.Utilities
             };
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Determine if a system is considered audio-only
         /// </summary>
@@ -101,6 +104,7 @@ namespace MPF.Core.Utilities
             };
         }
 
+        // Moved to RedumpLib
         /// <summary>
         /// Determine if a system is considered XGD
         /// </summary>
