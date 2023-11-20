@@ -31,6 +31,10 @@
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net40`))">
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="SabreTools.RedumpLib" Version="1.2.1" />
   </ItemGroup>

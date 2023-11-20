@@ -19,16 +19,12 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-#if NET40
-        public static (Dictionary<string, List<string>>?, string?) RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
-#else
         public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
-#endif
         {
             try
             {
 #if NET40
-                var task = Task.Factory.StartNew(() =>
+                var found = await Task.Factory.StartNew(() =>
                 {
                     var scanner = new BinaryObjectScanner.Scanner(
                         options.ScanArchivesForProtection,
@@ -41,8 +37,6 @@ namespace MPF.Core
 
                     return scanner.GetProtections(path);
                 });
-                task.Wait();
-                var found = task.Result;
 #else
                 var found = await Task.Run(() =>
                 {
@@ -109,18 +103,14 @@ namespace MPF.Core
         /// </summary>
         /// <param name="path">Path to scan for anti-modchip strings</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-#if NET40
-        public static bool GetPlayStationAntiModchipDetected(string? path)
-#else
         public static async Task<bool> GetPlayStationAntiModchipDetected(string? path)
-#endif
         {
             // If there is no valid path
             if (string.IsNullOrEmpty(path))
                 return false;
 
 #if NET40
-            var task = Task.Factory.StartNew(() =>
+            return await Task.Factory.StartNew(() =>
             {
                 try
                 {
@@ -141,8 +131,6 @@ namespace MPF.Core
 
                 return false;
             });
-            task.Wait();
-            return task.Result;
 #else
             return await Task.Run(() =>
             {

@@ -35,6 +35,10 @@
     <PackageReference Include="SabreTools.Serialization" Version="1.2.1" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net40`))">
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" />
+  </ItemGroup>
+
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
     <PackageReference Include="IndexRange" Version="1.0.3" />
   </ItemGroup>

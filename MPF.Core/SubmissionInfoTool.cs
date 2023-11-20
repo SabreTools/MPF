@@ -30,11 +30,7 @@ namespace MPF.Core
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
-#if NET40
-        public static SubmissionInfo? ExtractOutputInformation(
-#else
         public static async Task<SubmissionInfo?> ExtractOutputInformation(
-#endif
             string outputPath,
             Drive? drive,
             RedumpSystem? system,
@@ -103,11 +99,7 @@ namespace MPF.Core
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
-#if NET40
-                _ = FillFromRedump(options, info, resultProgress);
-#else
                 _ = await FillFromRedump(options, info, resultProgress);
-#endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums?.CRC32))
@@ -236,11 +228,7 @@ namespace MPF.Core
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-#if NET40
-                    var (protectionString, fullProtections) = InfoTool.GetCopyProtection(drive, options, protectionProgress);
-#else
                     var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
-#endif
 
                     info.CopyProtection!.Protection = protectionString;
                     info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
@@ -400,11 +388,7 @@ namespace MPF.Core
                     if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
-#if NET40
-                        info.CopyProtection.AntiModchip = InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-#else
                         info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-#endif
                         resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
                     }
 
@@ -457,11 +441,8 @@ namespace MPF.Core
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-#if NET40
-        public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#else
+        /// TODO: All instances of Task.Factory.StartNew should be propigated down to RedumpLib
         public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#endif
         {
             // If no username is provided
             if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
@@ -523,7 +504,7 @@ namespace MPF.Core
                 }
 
 #if NET40
-                (bool singleFound, var foundIds, string? result) = Validator.ValidateSingleTrack(wc, info, hashData);
+                (bool singleFound, var foundIds, string? result) = await Task.Factory.StartNew(() => Validator.ValidateSingleTrack(wc, info, hashData));
 #else
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, hashData);
 #endif
@@ -554,7 +535,7 @@ namespace MPF.Core
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
 #if NET40
-                (bool singleFound, var foundIds, string? result) = Validator.ValidateUniversalHash(wc, info);
+                (bool singleFound, var foundIds, string? result) = await Task.Factory.StartNew(() => Validator.ValidateUniversalHash(wc, info));
 #else
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
 #endif
@@ -595,7 +576,7 @@ namespace MPF.Core
             {
                 // Skip if the track count doesn't match
 #if NET40
-                if (!Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+                if (!await Task.Factory.StartNew(() => Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount)))
 #else
                 if (!await Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
 #endif
@@ -604,7 +585,7 @@ namespace MPF.Core
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
 #if NET40
-                _ = Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+                _ = await Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
 #else
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
 #endif

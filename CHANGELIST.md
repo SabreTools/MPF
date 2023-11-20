@@ -24,6 +24,7 @@
 - Get UI.Core building with Framework 4.0
 - Get Check building with Framework 4.0
 - Use TryGetValue on dictionaries
+- Support proper async in .NET Framework 4.0
 
 ### 3.0.0 (2023-11-14)
 

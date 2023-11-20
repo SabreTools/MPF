@@ -74,11 +74,7 @@ namespace MPF.Check
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
-#if NET40
-                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
-#else
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
                 Console.WriteLine(result.Message);
             }
         }

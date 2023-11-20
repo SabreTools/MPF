@@ -294,13 +294,8 @@ namespace MPF.Core.Modules
             // Start processing tasks, if necessary
             if (!separateWindow)
             {
-#if NET40
-                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
-                Logging.OutputToLog(process.StandardError, this, ReportStatus);
-#else
                 _ = Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
                 _ = Logging.OutputToLog(process.StandardError, this, ReportStatus);
-#endif
             }
 
             process.WaitForExit();

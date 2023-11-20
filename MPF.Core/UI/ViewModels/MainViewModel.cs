@@ -899,11 +899,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Toggle the Start/Stop button
         /// </summary>
-#if NET40
-        public void ToggleStartStop()
-#else
         public async void ToggleStartStop()
-#endif
         {
             // Dump or stop the dump
             if (this.StartStopButtonText as string == Interface.StartDumping)
@@ -919,21 +915,13 @@ namespace MPF.Core.UI.ViewModels
                 if (_environment != null && _environment.Options.EjectAfterDump)
                 {
                     VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Name}");
-#if NET40
-                    _environment.EjectDisc();
-#else
                     await _environment.EjectDisc();
-#endif
                 }
 
                 if (_environment != null && this.Options.DICResetDriveAfterDump)
                 {
                     VerboseLogLn($"Resetting drive {_environment.Drive?.Name}");
-#if NET40
-                    _environment.ResetDrive();
-#else
                     await _environment.ResetDrive();
-#endif
                 }
             }
         }
@@ -1423,11 +1411,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-#if NET40
-        public (string?, string?) ScanAndShowProtection()
-#else
         public async Task<(string?, string?)> ScanAndShowProtection()
-#endif
         {
             // Determine current environment, just in case
             _environment ??= DetermineEnvironment();
@@ -1447,11 +1431,7 @@ namespace MPF.Core.UI.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
-#if NET40
-            var (protections, error) = Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
-#else
             var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
-#endif
             var output = Protection.FormatProtections(protections);
 
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
@@ -1558,11 +1538,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Begin the dumping process using the given inputs
         /// </summary>
-#if NET40
-        public void StartDumping()
-#else
         public async void StartDumping()
-#endif
         {
             // One last check to determine environment, just in case
             _environment = DetermineEnvironment();
@@ -1617,11 +1593,7 @@ namespace MPF.Core.UI.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-#if NET40
-                Result result = _environment.Run(resultProgress);
-#else
                 Result result = await _environment.Run(resultProgress);
-#endif
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (_environment.Parameters?.IsDumpingCommand() != true)
@@ -1637,11 +1609,7 @@ namespace MPF.Core.UI.ViewModels
                 // Verify dump output and save it
                 if (result)
                 {
-#if NET40
-                    result = _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, _processUserInfo);
-#else
                     result = await _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, _processUserInfo);
-#endif
                 }
                 else
                 {

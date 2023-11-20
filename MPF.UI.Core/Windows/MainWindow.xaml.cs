@@ -328,17 +328,9 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
-#if NET40
-        public void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
-#else
         public async void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
-#endif
         {
-#if NET40
-            var (output, error) = MainViewModel.ScanAndShowProtection();
-#else
             var (output, error) = await MainViewModel.ScanAndShowProtection();
-#endif
 
             if (!MainViewModel.LogPanelExpanded)
             {

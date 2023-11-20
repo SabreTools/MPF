@@ -15,7 +15,7 @@ namespace MPF.Core.Utilities
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
 #if NET40
-        public static void OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
+        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
 #else
         public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
 #endif
@@ -31,7 +31,7 @@ namespace MPF.Core.Utilities
                 {
                     // Try to read the next chunk of characters
 #if NET40
-                    read = reader.Read(buffer, 0, buffer.Length);
+                    read = await Task.Factory.StartNew(() => reader.Read(buffer, 0, buffer.Length));
 #else
                     read = await reader.ReadAsync(buffer, 0, buffer.Length);
 #endif

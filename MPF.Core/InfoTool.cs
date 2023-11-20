@@ -93,13 +93,8 @@ namespace MPF.Core
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-#if NET40
-        internal static bool GetAntiModchipDetected(Drive drive) =>
-            Protection.GetPlayStationAntiModchipDetected(drive.Name);
-#else
         internal static async Task<bool> GetAntiModchipDetected(Drive drive) =>
             await Protection.GetPlayStationAntiModchipDetected(drive.Name);
-#endif
 
         /// <summary>
         /// Get the current detected copy protection(s), if possible
@@ -108,19 +103,11 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-#if NET40
-        internal static (string?, Dictionary<string, List<string>>?) GetCopyProtection(Drive? drive, Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
-#else
         internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
-#endif
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
-#if NET40
-                (var protection, _) = Protection.RunProtectionScanOnPath(drive.Name, options, progress);
-#else
                 (var protection, _) = await Protection.RunProtectionScanOnPath(drive.Name, options, progress);
-#endif
                 return (Protection.FormatProtections(protection), protection);
             }
 

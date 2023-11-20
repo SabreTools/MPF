@@ -28,7 +28,7 @@ namespace MPF.Core.Data
             this.CustomProcessing = customProcessing;
             this.TokenSource = new CancellationTokenSource();
 #if NET40
-            ProcessQueue();
+            Task.Factory.StartNew(() => ProcessQueue());
 #else
             Task.Run(() => ProcessQueue(), this.TokenSource.Token);
 #endif
