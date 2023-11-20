@@ -21,6 +21,7 @@
 - Update to BinaryObjectScanner 3.0.1
 - Update Xunit packages
 - Get Core building with Framework 4.0
+- Get UI.Core building with Framework 4.0
 
 ### 3.0.0 (2023-11-14)
 

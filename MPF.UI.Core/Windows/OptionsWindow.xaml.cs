@@ -74,7 +74,7 @@ namespace MPF.UI.Core.Windows
                 return;
 
             // Strips button prefix to obtain the setting name
-            string pathSettingName = button.Name[..button.Name.IndexOf("Button")];
+            string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
 
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
@@ -156,7 +156,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
+#if NET40
+        private void ValidateRedumpCredentials()
+#else
         private async Task ValidateRedumpCredentials()
+#endif
         {
 #if NET40
             (bool? success, string? message) = OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
@@ -211,7 +215,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
+#if NET40
+        private void OnRedumpTestClick(object sender, EventArgs e) => ValidateRedumpCredentials();
+#else
         private async void OnRedumpTestClick(object sender, EventArgs e) => await ValidateRedumpCredentials();
+#endif
 
         #endregion
     }
