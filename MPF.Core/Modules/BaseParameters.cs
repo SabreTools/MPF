@@ -58,8 +58,8 @@ namespace MPF.Core.Modules
         {
             get
             {
-                if (flags.ContainsKey(key))
-                    return flags[key];
+                if (flags.TryGetValue(key, out bool? val))
+                    return val;
 
                 return null;
             }
@@ -232,9 +232,9 @@ namespace MPF.Core.Modules
                 return false;
             if (this.BaseCommand == null)
                 return false;
-            if (!CommandSupport.ContainsKey(this.BaseCommand))
+            if (!CommandSupport.TryGetValue(this.BaseCommand, out var supported))
                 return false;
-            return CommandSupport[this.BaseCommand].Contains(flag);
+            return supported.Contains(flag);
         }
 
         /// <summary>
