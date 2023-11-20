@@ -15,7 +15,7 @@ namespace MPF.Core.Utilities
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
 #if NET40
-        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
+        public static void OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
 #else
         public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
 #endif
@@ -30,7 +30,11 @@ namespace MPF.Core.Utilities
                 while (true)
                 {
                     // Try to read the next chunk of characters
+#if NET40
+                    read = reader.Read(buffer, 0, buffer.Length);
+#else
                     read = await reader.ReadAsync(buffer, 0, buffer.Length);
+#endif
                     if (read == 0)
                     {
                         Thread.Sleep(10);
@@ -68,7 +72,11 @@ namespace MPF.Core.Utilities
             catch { }
             finally
             {
+#if NET40
+                handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
+#else
                 handler?.Invoke(baseClass, sb.ToString());
+#endif
             }
         }
 
@@ -104,7 +112,11 @@ namespace MPF.Core.Utilities
                 if (i == 0)
                 {
                     sb.Append(split[i]);
+#if NET40
+                    handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
+#else
                     handler?.Invoke(baseClass, sb.ToString());
+#endif
                     sb.Clear();
                 }
 
@@ -117,7 +129,11 @@ namespace MPF.Core.Utilities
                 // For everything else, directly write out
                 else
                 {
+#if NET40
+                    handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = split[i] });
+#else
                     handler?.Invoke(baseClass, split[i]);
+#endif
                 }
             }
         }
@@ -139,7 +155,11 @@ namespace MPF.Core.Utilities
 
             // Append and log the first
             sb.Append(split[0]);
+#if NET40
+            handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
+#else
             handler?.Invoke(baseClass, sb.ToString());
+#endif
 
             // Append the last
             sb.Clear();

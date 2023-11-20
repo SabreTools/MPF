@@ -277,7 +277,12 @@ namespace MPF.Core.Hashing
                     ha.TransformBlock(buffer, 0, size, null, 0);
                     break;
                 case NonCryptographicHashAlgorithm ncha:
+#if NET40
+                    byte[] bufferSpan = new byte[size];
+                    Array.Copy(buffer, bufferSpan, size);
+#else
                     var bufferSpan = new ReadOnlySpan<byte>(buffer, 0, size);
+#endif
                     ncha.Append(bufferSpan);
                     break;
             }

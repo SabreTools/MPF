@@ -2360,11 +2360,7 @@ namespace MPF.Core.Modules.Aaru
             var cueFiles = new List<CueFile>();
             var cueSheet = new CueSheet
             {
-#if NET40 || NET452
                 Performer = string.Join(", ", cicmSidecar.Performer ?? []),
-#else
-                Performer = string.Join(", ", cicmSidecar.Performer ?? Array.Empty<string>()),
-#endif
             };
 
             // Only care about OpticalDisc types
@@ -2757,12 +2753,28 @@ namespace MPF.Core.Modules.Aaru
 
                     // Build each row in consecutive order
                     string pvd = string.Empty;
-                    pvd += GenerateSectorOutputLine("0320", new ReadOnlySpan<byte>(pvdData, 0, 16));
-                    pvd += GenerateSectorOutputLine("0330", new ReadOnlySpan<byte>(pvdData, 16, 16));
-                    pvd += GenerateSectorOutputLine("0340", new ReadOnlySpan<byte>(pvdData, 32, 16));
-                    pvd += GenerateSectorOutputLine("0350", new ReadOnlySpan<byte>(pvdData, 48, 16));
-                    pvd += GenerateSectorOutputLine("0360", new ReadOnlySpan<byte>(pvdData, 64, 16));
-                    pvd += GenerateSectorOutputLine("0370", new ReadOnlySpan<byte>(pvdData, 80, 16));
+#if NET40
+                    byte[] pvdLine = new byte[16];
+                    Array.Copy(pvdData, 0, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0320", pvdLine);
+                    Array.Copy(pvdData, 16, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0330", pvdLine);
+                    Array.Copy(pvdData, 32, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0340", pvdLine);
+                    Array.Copy(pvdData, 48, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0350", pvdLine);
+                    Array.Copy(pvdData, 64, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0360", pvdLine);
+                    Array.Copy(pvdData, 80, pvdLine, 0, 16);
+                    pvd += GenerateSectorOutputLine("0370", pvdLine);
+#else
+                    pvd += GenerateSectorOutputLine("0320", new ReadOnlySpan<byte>(pvdData, 0, 16).ToArray());
+                    pvd += GenerateSectorOutputLine("0330", new ReadOnlySpan<byte>(pvdData, 16, 16).ToArray());
+                    pvd += GenerateSectorOutputLine("0340", new ReadOnlySpan<byte>(pvdData, 32, 16).ToArray());
+                    pvd += GenerateSectorOutputLine("0350", new ReadOnlySpan<byte>(pvdData, 48, 16).ToArray());
+                    pvd += GenerateSectorOutputLine("0360", new ReadOnlySpan<byte>(pvdData, 64, 16).ToArray());
+                    pvd += GenerateSectorOutputLine("0370", new ReadOnlySpan<byte>(pvdData, 80, 16).ToArray());
+#endif
 
                     return pvd;
                 }
@@ -2913,26 +2925,18 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="row">Row ID for outputting</param>
         /// <param name="bytes">Bytes representing the data to write</param>
         /// <returns>Formatted string representing the sector line</returns>
-#if NET40
         private static string? GenerateSectorOutputLine(string row, byte[] bytes)
-#else
-        private static string? GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
-#endif
         {
             // If the data isn't correct, return null
             if (bytes == null || bytes.Length != 16)
                 return null;
 
             string pvdLine = $"{row} : ";
-#if NET40
-            pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
-#else
-            pvdLine += BitConverter.ToString(bytes[..8].ToArray()).Replace("-", " ");
-#endif
+            pvdLine += BitConverter.ToString(bytes.Take(8).ToArray()).Replace("-", " ");
             pvdLine += "  ";
-            pvdLine += BitConverter.ToString(bytes.Slice(8, 8).ToArray().ToArray()).Replace("-", " ");
+            pvdLine += BitConverter.ToString(bytes.Skip(8).Take(8).ToArray()).Replace("-", " ");
             pvdLine += "   ";
-            pvdLine += Encoding.ASCII.GetString(bytes.ToArray()).Replace((char)0, '.').Replace('?', '.');
+            pvdLine += Encoding.ASCII.GetString([.. bytes]).Replace((char)0, '.').Replace('?', '.');
             pvdLine += "\n";
 
             return pvdLine;
@@ -3388,6 +3392,6 @@ namespace MPF.Core.Modules.Aaru
             return false;
         }
 
-#endregion
+        #endregion
     }
 }

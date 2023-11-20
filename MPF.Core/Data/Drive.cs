@@ -111,7 +111,7 @@ namespace MPF.Core.Data
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
-                devicePath = devicePath["\\\\.\\".Length..];
+                devicePath = devicePath.Substring("\\\\.\\".Length);
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);

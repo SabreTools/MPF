@@ -19,10 +19,31 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
+#if NET40
+        public static (Dictionary<string, List<string>>?, string?) RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+#else
         public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+#endif
         {
             try
             {
+#if NET40
+                var task = Task.Factory.StartNew(() =>
+                {
+                    var scanner = new BinaryObjectScanner.Scanner(
+                        options.ScanArchivesForProtection,
+                        scanContents: true, // Hardcoded value to avoid issues
+                        scanGameEngines: false, // Hardcoded value to avoid issues
+                        options.ScanPackersForProtection,
+                        scanPaths: true, // Hardcoded value to avoid issues
+                        options.IncludeDebugProtectionInformation,
+                        progress);
+
+                    return scanner.GetProtections(path);
+                });
+                task.Wait();
+                var found = task.Result;
+#else
                 var found = await Task.Run(() =>
                 {
                     var scanner = new BinaryObjectScanner.Scanner(
@@ -36,6 +57,7 @@ namespace MPF.Core
 
                     return scanner.GetProtections(path);
                 });
+#endif
 
                 // If nothing was returned, return
                 if (found == null || found.IsEmpty)
@@ -87,12 +109,41 @@ namespace MPF.Core
         /// </summary>
         /// <param name="path">Path to scan for anti-modchip strings</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
+#if NET40
+        public static bool GetPlayStationAntiModchipDetected(string? path)
+#else
         public static async Task<bool> GetPlayStationAntiModchipDetected(string? path)
+#endif
         {
             // If there is no valid path
             if (string.IsNullOrEmpty(path))
                 return false;
 
+#if NET40
+            var task = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
+                    foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                    {
+                        try
+                        {
+                            byte[] fileContent = File.ReadAllBytes(file);
+                            var protection = antiModchip.CheckContents(file, fileContent, false);
+                            if (!string.IsNullOrWhiteSpace(protection))
+                                return true;
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+
+                return false;
+            });
+            task.Wait();
+            return task.Result;
+#else
             return await Task.Run(() =>
             {
                 try
@@ -114,6 +165,7 @@ namespace MPF.Core
 
                 return false;
             });
+#endif
         }
 
         /// <summary>

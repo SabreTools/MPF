@@ -248,7 +248,7 @@ namespace MPF.Core.Utilities
             return supportedArguments;
         }
 
-#endregion
+        #endregion
 
         #region Configuration
 

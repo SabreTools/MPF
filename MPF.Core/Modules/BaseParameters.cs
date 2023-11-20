@@ -20,7 +20,7 @@ namespace MPF.Core.Modules
         /// </summary>
         public class StringEventArgs : EventArgs
         {
-            public string Value { get; set; }
+            public string? Value { get; set; }
         }
 
         /// <summary>
@@ -294,8 +294,13 @@ namespace MPF.Core.Modules
             // Start processing tasks, if necessary
             if (!separateWindow)
             {
+#if NET40
+                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
+                Logging.OutputToLog(process.StandardError, this, ReportStatus);
+#else
                 _ = Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
                 _ = Logging.OutputToLog(process.StandardError, this, ReportStatus);
+#endif
             }
 
             process.WaitForExit();
@@ -318,7 +323,7 @@ namespace MPF.Core.Modules
             { }
         }
 
-        #endregion
+#endregion
 
         #region Parameter Parsing
 
@@ -1120,7 +1125,7 @@ namespace MPF.Core.Modules
                     return null;
 
                 if (trimLength > -1)
-                    hex = hex[..trimLength];
+                    hex = hex.Substring(0, trimLength);
 
                 return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }

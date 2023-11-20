@@ -231,8 +231,12 @@ namespace MPF.Core.Utilities
         /// </summary>
         private static (string? tag, string? url) GetRemoteVersionAndUrl()
         {
+#if NET40
+            // Not supported in .NET Framework 4.0
+            return (null, null);
+#else
             using var hc = new System.Net.Http.HttpClient();
-#if NET40 || NET452
+#if NET452
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 #endif
 
@@ -253,8 +257,9 @@ namespace MPF.Core.Utilities
             var releaseUrl = latestReleaseJson["html_url"]?.ToString();
 
             return (latestTag, releaseUrl);
+#endif
         }
 
-#endregion
+        #endregion
     }
 }

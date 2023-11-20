@@ -94,12 +94,8 @@ namespace MPF.Core
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
 #if NET40
-        internal static bool GetAntiModchipDetected(Drive drive)
-        {
-            var protectionTask = Protection.GetPlayStationAntiModchipDetected(drive.Name);
-            protectionTask.Wait();
-            return protectionTask.Result;
-        }
+        internal static bool GetAntiModchipDetected(Drive drive) =>
+            Protection.GetPlayStationAntiModchipDetected(drive.Name);
 #else
         internal static async Task<bool> GetAntiModchipDetected(Drive drive) =>
             await Protection.GetPlayStationAntiModchipDetected(drive.Name);
@@ -121,9 +117,7 @@ namespace MPF.Core
             if (options.ScanForProtection && drive?.Name != null)
             {
 #if NET40
-                var protectionTask = Protection.RunProtectionScanOnPath(drive.Name, options, progress);
-                protectionTask.Wait();
-                (var protection, _) = protectionTask.Result;
+                (var protection, _) = Protection.RunProtectionScanOnPath(drive.Name, options, progress);
 #else
                 (var protection, _) = await Protection.RunProtectionScanOnPath(drive.Name, options, progress);
 #endif

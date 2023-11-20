@@ -3,7 +3,7 @@
     /// <summary>
     /// Generic success/failure result object, with optional message
     /// </summary>
-    public class Result
+    public class Result : System.EventArgs
     {
         /// <summary>
         /// Internal representation of success

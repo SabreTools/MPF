@@ -27,7 +27,11 @@ namespace MPF.Core.Data
             this.InternalQueue = new ConcurrentQueue<T>();
             this.CustomProcessing = customProcessing;
             this.TokenSource = new CancellationTokenSource();
+#if NET40
+            ProcessQueue();
+#else
             Task.Run(() => ProcessQueue(), this.TokenSource.Token);
+#endif
         }
 
         /// <summary>
@@ -39,7 +43,7 @@ namespace MPF.Core.Data
         /// Enqueue a new item for processing
         /// </summary>
         /// <param name="item"></param>
-        public void Enqueue(T item)
+        public void Enqueue(T? item)
         {
             // Only accept new data when not cancelled
             if (item != null && !this.TokenSource.IsCancellationRequested)
