@@ -19,6 +19,7 @@
 - Perform some post-move cleanup
 - More C# 12 cleanup in Core
 - Update to BinaryObjectScanner 3.0.1
+- Update Xunit packages
 
 ### 3.0.0 (2023-11-14)
 
