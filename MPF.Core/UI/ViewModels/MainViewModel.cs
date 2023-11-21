@@ -1411,7 +1411,11 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
+#if NET40
+        public (string?, string?) ScanAndShowProtection()
+#else
         public async Task<(string?, string?)> ScanAndShowProtection()
+#endif
         {
             // Determine current environment, just in case
             _environment ??= DetermineEnvironment();
@@ -1431,7 +1435,13 @@ namespace MPF.Core.UI.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
+#if NET40
+            var protectionTask = Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+            protectionTask.Wait();
+            var (protections, error) = protectionTask.Result;
+#else
             var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+#endif
             var output = Protection.FormatProtections(protections);
 
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice

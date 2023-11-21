@@ -442,7 +442,11 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// TODO: All instances of Task.Factory.StartNew should be propigated down to RedumpLib
+#if NET40
+        public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#else
         public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#endif
         {
             // If no username is provided
             if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
@@ -504,7 +508,9 @@ namespace MPF.Core
                 }
 
 #if NET40
-                (bool singleFound, var foundIds, string? result) = await Task.Factory.StartNew(() => Validator.ValidateSingleTrack(wc, info, hashData));
+                var validateTask = Task.Factory.StartNew(() => Validator.ValidateSingleTrack(wc, info, hashData));
+                validateTask.Wait();
+                (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, hashData);
 #endif
@@ -535,7 +541,9 @@ namespace MPF.Core
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
 #if NET40
-                (bool singleFound, var foundIds, string? result) = await Task.Factory.StartNew(() => Validator.ValidateUniversalHash(wc, info));
+                var validateTask = Task.Factory.StartNew(() => Validator.ValidateUniversalHash(wc, info));
+                validateTask.Wait();
+                (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
 #endif
@@ -576,7 +584,9 @@ namespace MPF.Core
             {
                 // Skip if the track count doesn't match
 #if NET40
-                if (!await Task.Factory.StartNew(() => Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount)))
+                var validateTask = Task.Factory.StartNew(() => Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount));
+                validateTask.Wait();
+                if (!validateTask.Result)
 #else
                 if (!await Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
 #endif
@@ -585,7 +595,9 @@ namespace MPF.Core
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
 #if NET40
-                _ = await Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
+                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
+                fillTask.Wait();
+                _ = fillTask.Result;
 #else
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
 #endif
