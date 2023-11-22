@@ -28,6 +28,7 @@
 - Temporarily remove .NET Framework 4.0
 - Update to BinaryObjectScanner 3.0.2
 - Re-enable .NET Framework 4.0 building in Core
+- Re-enable .NET Framework 4.0 building in UI.Core
 
 ### 3.0.0 (2023-11-14)
 
