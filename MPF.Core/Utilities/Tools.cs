@@ -231,8 +231,8 @@ namespace MPF.Core.Utilities
         /// </summary>
         private static (string? tag, string? url) GetRemoteVersionAndUrl()
         {
-#if NET40
-            // Not supported in .NET Framework 4.0
+#if NET20 || NET35 || NET40
+            // Not supported in .NET Frameworks 2.0, 3.5, or 4.0
             return (null, null);
 #else
             using var hc = new System.Net.Http.HttpClient();

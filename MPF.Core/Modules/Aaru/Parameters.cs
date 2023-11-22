@@ -223,11 +223,11 @@ namespace MPF.Core.Modules.Aaru
             if (GetDiscType(sidecar, out var discType, out var discSubType))
             {
                 string fullDiscType = string.Empty;
-                if (!string.IsNullOrWhiteSpace(discType) && !string.IsNullOrWhiteSpace(discSubType))
+                if (!string.IsNullOrEmpty(discType) && !string.IsNullOrEmpty(discSubType))
                     fullDiscType = $"{discType} ({discSubType})";
-                else if (!string.IsNullOrWhiteSpace(discType) && string.IsNullOrWhiteSpace(discSubType))
+                else if (!string.IsNullOrEmpty(discType) && string.IsNullOrEmpty(discSubType))
                     fullDiscType = discType!;
-                else if (string.IsNullOrWhiteSpace(discType) && !string.IsNullOrWhiteSpace(discSubType))
+                else if (string.IsNullOrEmpty(discType) && !string.IsNullOrEmpty(discSubType))
                     fullDiscType = discSubType!;
 
                 info.DumpingInfo.ReportedDiscType = fullDiscType;
@@ -285,7 +285,7 @@ namespace MPF.Core.Modules.Aaru
                         layerbreak = info.SizeAndChecksums!.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
-                    if (string.IsNullOrWhiteSpace(layerbreak))
+                    if (string.IsNullOrEmpty(layerbreak))
                     {
                         // Currently no-op
                     }
@@ -456,7 +456,7 @@ namespace MPF.Core.Modules.Aaru
 
             BaseCommand ??= CommandStrings.NONE;
 
-            if (!string.IsNullOrWhiteSpace(BaseCommand))
+            if (!string.IsNullOrEmpty(BaseCommand))
                 parameters.Add(BaseCommand);
             else
                 return null;
@@ -1082,7 +1082,7 @@ namespace MPF.Core.Modules.Aaru
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify:
                 case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo:
                 case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan:
-                    if (string.IsNullOrWhiteSpace(InputValue))
+                    if (string.IsNullOrEmpty(InputValue))
                         return null;
 
                     parameters.Add($"\"{InputValue}\"");
@@ -1090,7 +1090,7 @@ namespace MPF.Core.Modules.Aaru
 
                 // Two input values
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong:
-                    if (string.IsNullOrWhiteSpace(Input1Value) || string.IsNullOrWhiteSpace(Input2Value))
+                    if (string.IsNullOrEmpty(Input1Value) || string.IsNullOrEmpty(Input2Value))
                         return null;
 
                     parameters.Add($"\"{Input1Value}\"");
@@ -1101,7 +1101,7 @@ namespace MPF.Core.Modules.Aaru
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert:
                 case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump:
-                    if (string.IsNullOrWhiteSpace(InputValue) || string.IsNullOrWhiteSpace(OutputValue))
+                    if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
                         return null;
 
                     parameters.Add($"\"{InputValue}\"");
@@ -1111,7 +1111,7 @@ namespace MPF.Core.Modules.Aaru
                 // Remote host value only
                 case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList:
                 case CommandStrings.Remote:
-                    if (string.IsNullOrWhiteSpace(RemoteHostValue))
+                    if (string.IsNullOrEmpty(RemoteHostValue))
                         return null;
 
                     parameters.Add($"\"{RemoteHostValue}\"");
@@ -1601,7 +1601,7 @@ namespace MPF.Core.Modules.Aaru
             BaseCommand = CommandStrings.NONE;
 
             // The string has to be valid by itself first
-            if (string.IsNullOrWhiteSpace(parameters))
+            if (string.IsNullOrEmpty(parameters))
                 return false;
 
             // Now split the string into parts for easier validation
@@ -1646,7 +1646,7 @@ namespace MPF.Core.Modules.Aaru
 
             // Determine what the commandline should look like given the first item
             BaseCommand = NormalizeCommand(parts, ref start);
-            if (string.IsNullOrWhiteSpace(BaseCommand))
+            if (string.IsNullOrEmpty(BaseCommand))
                 return false;
 
             // Set the start position
@@ -2151,7 +2151,7 @@ namespace MPF.Core.Modules.Aaru
         private static string? NormalizeCommand(string baseCommand)
         {
             // If the base command is inavlid, just return nulls
-            if (string.IsNullOrWhiteSpace(baseCommand))
+            if (string.IsNullOrEmpty(baseCommand))
                 return null;
 
             // Split the command otherwise
@@ -2273,11 +2273,11 @@ namespace MPF.Core.Modules.Aaru
             }
 
             // If the command itself is invalid, then return null
-            if (string.IsNullOrWhiteSpace(command))
+            if (string.IsNullOrEmpty(command))
                 return null;
 
             // Combine the result
-            if (!string.IsNullOrWhiteSpace(family))
+            if (!string.IsNullOrEmpty(family))
                 return $"{family} {command}";
             else
                 return command;
@@ -2753,7 +2753,7 @@ namespace MPF.Core.Modules.Aaru
 
                     // Build each row in consecutive order
                     string pvd = string.Empty;
-#if NET40
+#if NET20 || NET35 || NET40
                     byte[] pvdLine = new byte[16];
                     Array.Copy(pvdData, 0, pvdLine, 0, 16);
                     pvd += GenerateSectorOutputLine("0320", pvdLine);
@@ -3024,7 +3024,7 @@ namespace MPF.Core.Modules.Aaru
             // Loop through each OpticalDisc in the metadata
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
-                if (!string.IsNullOrWhiteSpace(opticalDisc.CopyProtection))
+                if (!string.IsNullOrEmpty(opticalDisc.CopyProtection))
                     copyrightProtectionSystemType += $", {opticalDisc.CopyProtection}";
             }
 
@@ -3076,7 +3076,7 @@ namespace MPF.Core.Modules.Aaru
                     var line = sr.ReadLine()?.Trim();
 
                     // Initialize on seeing the open tag
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                         continue;
                     else if (line!.StartsWith("<BadBlocks>"))
                         totalErrors = 0;

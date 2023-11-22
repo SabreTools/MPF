@@ -27,6 +27,7 @@
 - Support proper async in .NET Framework 4.0
 - Temporarily remove .NET Framework 4.0
 - Update to BinaryObjectScanner 3.0.2
+- Re-enable .NET Framework 4.0 building in Core
 
 ### 3.0.0 (2023-11-14)
 

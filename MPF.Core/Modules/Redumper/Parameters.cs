@@ -289,7 +289,7 @@ namespace MPF.Core.Modules.Redumper
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+                    if (!string.IsNullOrEmpty(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get the universal hash, if it's an audio disc
@@ -724,7 +724,7 @@ namespace MPF.Core.Modules.Redumper
             // Skip
             if (this[FlagStrings.Skip] == true)
             {
-                if (!string.IsNullOrWhiteSpace(SkipValue))
+                if (!string.IsNullOrEmpty(SkipValue))
                     parameters.Add($"{FlagStrings.Skip}={SkipValue}");
             }
 
@@ -982,17 +982,17 @@ namespace MPF.Core.Modules.Redumper
             }
 
             // Set the output paths
-            if (!string.IsNullOrWhiteSpace(filename))
+            if (!string.IsNullOrEmpty(filename))
             {
                 var imagePath = Path.GetDirectoryName(filename);
-                if (!string.IsNullOrWhiteSpace(imagePath))
+                if (!string.IsNullOrEmpty(imagePath))
                 {
                     this[FlagStrings.ImagePath] = true;
                     ImagePathValue = $"\"{imagePath}\"";
                 }
 
                 string imageName = Path.GetFileNameWithoutExtension(filename);
-                if (!string.IsNullOrWhiteSpace(imageName))
+                if (!string.IsNullOrEmpty(imageName))
                 {
                     this[FlagStrings.ImageName] = true;
                     ImageNameValue = $"\"{imageName}\"";
@@ -1009,7 +1009,7 @@ namespace MPF.Core.Modules.Redumper
             BaseCommand = CommandStrings.NONE;
 
             // The string has to be valid by itself first
-            if (string.IsNullOrWhiteSpace(parameters))
+            if (string.IsNullOrEmpty(parameters))
                 return false;
 
             // Now split the string into parts for easier validation
@@ -1087,7 +1087,7 @@ namespace MPF.Core.Modules.Redumper
 
                 // Drive
                 stringValue = ProcessStringParameter(parts, FlagStrings.Drive, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveValue = stringValue;
 
                 // Speed
@@ -1102,12 +1102,12 @@ namespace MPF.Core.Modules.Redumper
 
                 // Image Path
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImagePath, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     ImagePathValue = $"\"{stringValue!.Trim('"')}\"";
 
                 // Image Name
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImageName, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     ImageNameValue = $"\"{stringValue!.Trim('"')}\"";
 
                 // Overwrite
@@ -1119,7 +1119,7 @@ namespace MPF.Core.Modules.Redumper
 
                 // Drive Type
                 stringValue = ProcessStringParameter(parts, FlagStrings.DriveType, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveTypeValue = stringValue;
 
                 // Drive Read Offset
@@ -1139,12 +1139,12 @@ namespace MPF.Core.Modules.Redumper
 
                 // Drive Read Method
                 stringValue = ProcessStringParameter(parts, FlagStrings.DriveReadMethod, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveReadMethodValue = stringValue;
 
                 // Drive Sector Order
                 stringValue = ProcessStringParameter(parts, FlagStrings.DriveSectorOrder, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveSectorOrderValue = stringValue;
 
                 #endregion
@@ -1222,12 +1222,12 @@ namespace MPF.Core.Modules.Redumper
 
                 // Skip
                 stringValue = ProcessStringParameter(parts, FlagStrings.Skip, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     SkipValue = stringValue;
 
                 // Skip
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
-                if (!string.IsNullOrWhiteSpace(stringValue))
+                if (!string.IsNullOrEmpty(stringValue))
                     DumpReadSizeValue = intValue;
 
                 // Overread Leadout
@@ -1237,7 +1237,7 @@ namespace MPF.Core.Modules.Redumper
             }
 
             // If the image name was not set, set it with a default value
-            if (string.IsNullOrWhiteSpace(this.ImageNameValue))
+            if (string.IsNullOrEmpty(this.ImageNameValue))
                 this.ImageNameValue = "track";
 
             return true;
@@ -1268,7 +1268,7 @@ namespace MPF.Core.Modules.Redumper
 
                 // Now that we're at the relevant entries, read each line in and concatenate
                 string? cueString = string.Empty, line = sr.ReadLine()?.Trim();
-                while (!string.IsNullOrWhiteSpace(line))
+                while (!string.IsNullOrEmpty(line))
                 {
                     cueString += line + "\n";
                     line = sr.ReadLine()?.Trim();
@@ -1409,7 +1409,7 @@ namespace MPF.Core.Modules.Redumper
                             vobKeys = string.Empty;
 
                             line = sr.ReadLine()?.Trim();
-                            while (!string.IsNullOrWhiteSpace(line))
+                            while (!string.IsNullOrEmpty(line))
                             {
                                 var match = Regex.Match(line, @"^(.*?): (.*?)$", RegexOptions.Compiled);
                                 if (match.Success)
@@ -1906,7 +1906,7 @@ namespace MPF.Core.Modules.Redumper
             serial = null; version = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (string.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrEmpty(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing
@@ -2182,7 +2182,7 @@ namespace MPF.Core.Modules.Redumper
                 // Extract the version string
                 var match = regex.Match(sr.ReadLine()?.Trim() ?? string.Empty);
                 var version = match.Groups[1].Value;
-                return string.IsNullOrWhiteSpace(version) ? null : version;
+                return string.IsNullOrEmpty(version) ? null : version;
             }
             catch
             {

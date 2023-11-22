@@ -17,7 +17,7 @@ namespace MPF.UI.Core
         public static DoubleCollection SpeedsForHDDVDAsCollection { get; } = GetDoubleCollectionFromIntList(HDDVD);
         public static DoubleCollection SpeedsForBDAsCollection { get; } = GetDoubleCollectionFromIntList(BD);
 
-#if NET40
+#if NET20 || NET35 || NET40
         private static DoubleCollection GetDoubleCollectionFromIntList(IList<int> list)
 #else
         private static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list)

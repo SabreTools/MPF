@@ -14,7 +14,9 @@ namespace MPF.Core.Utilities
         /// <param name="reader">TextReader representing the input</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET40
+#if NET20 || NET35
+        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
+#elif NET40
         public static void OutputToLog(TextReader reader, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
 #else
         public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
@@ -30,7 +32,9 @@ namespace MPF.Core.Utilities
                 while (true)
                 {
                     // Try to read the next chunk of characters
-#if NET40
+#if NET20 || NET35
+                    read = await Task.Run(() => reader.Read(buffer, 0, buffer.Length));
+#elif NET40
                     var readTask = Task.Factory.StartNew(() => reader.Read(buffer, 0, buffer.Length));
                     readTask.Wait();
                     read = readTask.Result;
@@ -74,7 +78,7 @@ namespace MPF.Core.Utilities
             catch { }
             finally
             {
-#if NET40
+#if NET20 || NET35 || NET40
                 handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
 #else
                 handler?.Invoke(baseClass, sb.ToString());
@@ -89,7 +93,7 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET40
+#if NET20 || NET35 || NET40
         private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
 #else
         private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
@@ -114,12 +118,13 @@ namespace MPF.Core.Utilities
                 if (i == 0)
                 {
                     sb.Append(split[i]);
-#if NET40
+#if NET20 || NET35 || NET40
                     handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
+                    sb = new();
 #else
                     handler?.Invoke(baseClass, sb.ToString());
-#endif
                     sb.Clear();
+#endif
                 }
 
                 // For the last item, just append so it's dealt with the next time
@@ -131,7 +136,7 @@ namespace MPF.Core.Utilities
                 // For everything else, directly write out
                 else
                 {
-#if NET40
+#if NET20 || NET35 || NET40
                     handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = split[i] });
 #else
                     handler?.Invoke(baseClass, split[i]);
@@ -147,7 +152,7 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET40
+#if NET20 || NET35 || NET40
         private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<Modules.BaseParameters.StringEventArgs>? handler)
 #else
         private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
@@ -157,14 +162,15 @@ namespace MPF.Core.Utilities
 
             // Append and log the first
             sb.Append(split[0]);
-#if NET40
+#if NET20 || NET35 || NET40
             handler?.Invoke(baseClass, new Modules.BaseParameters.StringEventArgs { Value = sb.ToString() });
+            sb = new();
 #else
             handler?.Invoke(baseClass, sb.ToString());
+            sb.Clear();
 #endif
 
             // Append the last
-            sb.Clear();
             sb.Append($"\r{split[split.Length - 1]}");
         }
     }

@@ -144,13 +144,13 @@ namespace MPF.UI.Core.Windows
                 DMIHash.Visibility = Visibility.Collapsed;
             if (submissionInfo.EDC?.EDC == null)
                 EDC.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.CommonDiscInfo?.ErrorsCount))
+            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.ErrorsCount))
                 ErrorsCount.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
+            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
                 EXEDateBuildDate.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.Filename) != true)
                 Filename.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.Header))
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.Header))
                 Header.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.InternalName) != true)
                 InternalName.Visibility = Visibility.Collapsed;
@@ -160,21 +160,21 @@ namespace MPF.UI.Core.Windows
                 Multisession.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.LibCrypt == null)
                 LibCrypt.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.LibCryptData))
+            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData))
                 LibCryptData.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.PFIHash) != true)
                 PFIHash.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PIC))
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.PIC))
                 PIC.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PVD))
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.PVD))
                 PVD.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingNonZeroDataStart) != true)
                 RingNonZeroDataStart.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.SecuROMData))
+            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData))
                 SecuROMData.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSHash) != true)
                 SSHash.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.SecuritySectorRanges))
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.SecuritySectorRanges))
                 SecuritySectorRanges.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSVersion) != true)
                 SSVersion.Visibility = Visibility.Collapsed;

@@ -62,7 +62,7 @@ namespace MPF.Core
 
             // Create the SubmissionInfo object with all user-inputted values by default
             string combinedBase;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrEmpty(outputDirectory))
                 combinedBase = outputFilename;
             else
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
@@ -99,10 +99,14 @@ namespace MPF.Core
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
+#if NET20 || NET35 || NET40
+                _ = FillFromRedump(options, info, resultProgress);
+#else
                 _ = await FillFromRedump(options, info, resultProgress);
+#endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums?.CRC32))
+            if (!string.IsNullOrEmpty(info.SizeAndChecksums?.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
@@ -441,15 +445,14 @@ namespace MPF.Core
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        /// TODO: All instances of Task.Factory.StartNew should be propigated down to RedumpLib
-#if NET40
+#if NET20 || NET35 || NET40
         public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #else
         public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #endif
         {
             // If no username is provided
-            if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
+            if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
                 return false;
 
             // Set the current dumper based on username
@@ -487,7 +490,7 @@ namespace MPF.Core
             foreach (string hashData in splitData ?? [])
             {
                 // Catch any errant blank lines
-                if (string.IsNullOrWhiteSpace(hashData))
+                if (string.IsNullOrEmpty(hashData))
                 {
                     trackCount--;
                     resultProgress?.Report(Result.Success("Blank line found, skipping!"));
@@ -507,8 +510,8 @@ namespace MPF.Core
                     continue;
                 }
 
-#if NET40
-                var validateTask = Task.Factory.StartNew(() => Validator.ValidateSingleTrack(wc, info, hashData));
+#if NET20 || NET35 || NET40
+                var validateTask = Validator.ValidateSingleTrack(wc, info, hashData);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
@@ -540,8 +543,8 @@ namespace MPF.Core
             // If we don't have any matches but we have a universal hash
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
-#if NET40
-                var validateTask = Task.Factory.StartNew(() => Validator.ValidateUniversalHash(wc, info));
+#if NET20 || NET35 || NET40
+                var validateTask = Validator.ValidateUniversalHash(wc, info);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
@@ -583,8 +586,8 @@ namespace MPF.Core
             for (int i = 0; i < totalMatchedIDsCount; i++)
             {
                 // Skip if the track count doesn't match
-#if NET40
-                var validateTask = Task.Factory.StartNew(() => Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount));
+#if NET20 || NET35 || NET40
+                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount);
                 validateTask.Wait();
                 if (!validateTask.Result)
 #else
@@ -594,7 +597,7 @@ namespace MPF.Core
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET40
+#if NET20 || NET35 || NET40
                 var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
                 fillTask.Wait();
                 _ = fillTask.Result;
@@ -620,6 +623,6 @@ namespace MPF.Core
             return true;
         }
 
-        #endregion
+#endregion
     }
 }

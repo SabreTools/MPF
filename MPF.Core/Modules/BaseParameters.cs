@@ -14,7 +14,7 @@ namespace MPF.Core.Modules
     {
         #region Event Handlers
 
-#if NET40
+#if NET20 || NET35 || NET40
         /// <summary>
         /// Wrapper event args class for old .NET
         /// </summary>
@@ -262,7 +262,7 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
-        protected virtual bool ValidateAndSetParameters(string? parameters) => !string.IsNullOrWhiteSpace(parameters);
+        protected virtual bool ValidateAndSetParameters(string? parameters) => !string.IsNullOrEmpty(parameters);
 
         #endregion
 
@@ -294,8 +294,13 @@ namespace MPF.Core.Modules
             // Start processing tasks, if necessary
             if (!separateWindow)
             {
+#if NET40
+                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
+                Logging.OutputToLog(process.StandardError, this, ReportStatus);
+#else
                 _ = Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
                 _ = Logging.OutputToLog(process.StandardError, this, ReportStatus);
+#endif
             }
 
             process.WaitForExit();
@@ -926,7 +931,7 @@ namespace MPF.Core.Modules
 
                     return null;
                 }
-                else if (string.IsNullOrWhiteSpace(parts[i + 1]))
+                else if (string.IsNullOrEmpty(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;

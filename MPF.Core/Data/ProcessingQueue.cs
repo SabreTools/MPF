@@ -1,5 +1,9 @@
 ﻿using System;
+#if NET20 || NET35
+using System.Collections.Generic;
+#else
 using System.Collections.Concurrent;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +14,11 @@ namespace MPF.Core.Data
         /// <summary>
         /// Internal queue to hold data to process
         /// </summary>
+#if NET20 || NET35
+        private readonly Queue<T> InternalQueue;
+#else
         private readonly ConcurrentQueue<T> InternalQueue;
+#endif
 
         /// <summary>
         /// Custom processing step for dequeued data
@@ -24,10 +32,16 @@ namespace MPF.Core.Data
 
         public ProcessingQueue(Action<T> customProcessing)
         {
+#if NET20 || NET35
+            this.InternalQueue = new Queue<T>();
+#else
             this.InternalQueue = new ConcurrentQueue<T>();
+#endif
             this.CustomProcessing = customProcessing;
             this.TokenSource = new CancellationTokenSource();
-#if NET40
+#if NET20 || NET35
+            Task.Run(() => ProcessQueue());
+#elif NET40
             Task.Factory.StartNew(() => ProcessQueue());
 #else
             Task.Run(() => ProcessQueue(), this.TokenSource.Token);
@@ -58,7 +72,11 @@ namespace MPF.Core.Data
             while (true)
             {
                 // Nothing in the queue means we get to idle
+#if NET20 || NET35
+                if (InternalQueue.Count == 0)
+#else
                 if (InternalQueue.IsEmpty)
+#endif
                 {
                     if (this.TokenSource.IsCancellationRequested)
                         break;
@@ -67,12 +85,17 @@ namespace MPF.Core.Data
                     continue;
                 }
 
+#if NET20 || NET35
+                // Get the next item from the queue and invoke the lambda, if possible
+                this.CustomProcessing?.Invoke(this.InternalQueue.Dequeue());
+#else
                 // Get the next item from the queue
                 if (!this.InternalQueue.TryDequeue(out var nextItem))
                     continue;
 
                 // Invoke the lambda, if possible
                 this.CustomProcessing?.Invoke(nextItem);
+#endif
             }
         }
     }

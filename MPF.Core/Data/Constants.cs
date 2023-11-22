@@ -17,7 +17,7 @@ namespace MPF.Core.Data
         public static readonly byte[] SaturnSectorZeroStart = [0x53, 0x45, 0x47, 0x41, 0x20, 0x53, 0x45, 0x47, 0x41, 0x53, 0x41, 0x54, 0x55, 0x52, 0x4E, 0x20];
 
         // Lists of known drive speed ranges
-#if NET40
+#if NET20 || NET35 || NET40
         public static IList<int> CD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         public static IList<int> DVD { get; } = CD.Where(s => s <= 24).ToList();
         public static IList<int> HDDVD { get; } = CD.Where(s => s <= 24).ToList();
@@ -36,7 +36,7 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="type">MediaType? that represents the current item</param>
         /// <returns>Read-only list of drive speeds</returns>
-#if NET40
+#if NET20 || NET35 || NET40
         public static IList<int> GetSpeedsForMediaType(MediaType? type)
 #else
         public static IReadOnlyList<int> GetSpeedsForMediaType(MediaType? type)

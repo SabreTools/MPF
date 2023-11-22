@@ -442,7 +442,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+                    if (!string.IsNullOrEmpty(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 
                     break;
@@ -543,7 +543,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.MicrosoftXbox:
 
                     string xmidString;
-                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                    if (string.IsNullOrEmpty(outputDirectory))
                         xmidString = GetXGD1XMID($"{basePath}_DMI.bin");
                     else
                         xmidString = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
@@ -592,7 +592,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                 case RedumpSystem.MicrosoftXbox360:
                     string xemidString;
-                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                    if (string.IsNullOrEmpty(outputDirectory))
                         xemidString = GetXGD23XeMID($"{basePath}_DMI.bin");
                     else
                         xemidString = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
@@ -887,7 +887,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
             BaseCommand ??= CommandStrings.NONE;
 
-            if (!string.IsNullOrWhiteSpace(BaseCommand))
+            if (!string.IsNullOrEmpty(BaseCommand))
                 parameters.Add(BaseCommand);
             else
                 return null;
@@ -1913,7 +1913,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             BaseCommand = CommandStrings.NONE;
 
             // The string has to be valid by itself first
-            if (string.IsNullOrWhiteSpace(parameters))
+            if (string.IsNullOrEmpty(parameters))
                 return false;
 
             // Now split the string into parts for easier validation
@@ -2556,7 +2556,7 @@ namespace MPF.Core.Modules.DiscImageCreator
         private static (string?, string?) GetCommandFilePathAndVersion(string basePath)
         {
             // If we have an invalid base path, we can do nothing
-            if (string.IsNullOrWhiteSpace(basePath))
+            if (string.IsNullOrEmpty(basePath))
                 return (null, null);
 
             // Generate the matching regex based on the base path
@@ -2565,12 +2565,12 @@ namespace MPF.Core.Modules.DiscImageCreator
 
             // Find the first match for the command file
             var parentDirectory = Path.GetDirectoryName(basePath);
-            if (string.IsNullOrWhiteSpace(parentDirectory))
+            if (string.IsNullOrEmpty(parentDirectory))
                 return (null, null);
 
             var currentFiles = Directory.GetFiles(parentDirectory);
             var commandPath = currentFiles.FirstOrDefault(f => cmdFilenameRegex.IsMatch(f));
-            if (string.IsNullOrWhiteSpace(commandPath))
+            if (string.IsNullOrEmpty(commandPath))
                 return (null, null);
 
             // Extract the version string
@@ -2886,7 +2886,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             serial = null; version = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (string.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrEmpty(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing
@@ -3326,7 +3326,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             serial = null; version = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (string.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrEmpty(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing
@@ -3359,7 +3359,7 @@ namespace MPF.Core.Modules.DiscImageCreator
             serial = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (string.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrEmpty(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing

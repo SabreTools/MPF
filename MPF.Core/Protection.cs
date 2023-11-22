@@ -23,7 +23,7 @@ namespace MPF.Core
         {
             try
             {
-#if NET40
+#if NET20 || NET35 || NET40
                 var found = await Task.Factory.StartNew(() =>
                 {
                     var scanner = new BinaryObjectScanner.Scanner(
@@ -92,7 +92,7 @@ namespace MPF.Core
 
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(orderedDistinctProtections);
-            if (string.IsNullOrWhiteSpace(protectionString))
+            if (string.IsNullOrEmpty(protectionString))
                 return "None found [OMIT FROM SUBMISSION]";
 
             return protectionString;
@@ -109,7 +109,7 @@ namespace MPF.Core
             if (string.IsNullOrEmpty(path))
                 return false;
 
-#if NET40
+#if NET20 || NET35 || NET40
             return await Task.Factory.StartNew(() =>
             {
                 try
@@ -121,7 +121,7 @@ namespace MPF.Core
                         {
                             byte[] fileContent = File.ReadAllBytes(file);
                             var protection = antiModchip.CheckContents(file, fileContent, false);
-                            if (!string.IsNullOrWhiteSpace(protection))
+                            if (!string.IsNullOrEmpty(protection))
                                 return true;
                         }
                         catch { }
@@ -143,7 +143,7 @@ namespace MPF.Core
                         {
                             byte[] fileContent = File.ReadAllBytes(file);
                             var protection = antiModchip.CheckContents(file, fileContent, false);
-                            if (!string.IsNullOrWhiteSpace(protection))
+                            if (!string.IsNullOrEmpty(protection))
                                 return true;
                         }
                         catch { }
@@ -167,7 +167,7 @@ namespace MPF.Core
             if (!File.Exists(sub))
                 return null;
 
-            return LibCrypt.CheckSubfile(sub);
+            return LibCrypt.DetectLibCrypt([sub]);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace MPF.Core
             if (foundProtections.Any(p => p.StartsWith("[Exception opening file")))
             {
                 foundProtections = foundProtections.Where(p => !p.StartsWith("[Exception opening file"));
-#if NET40 || NET452 || NET462
+#if NET20 || NET35 || NET40 || NET452 || NET462
                 var tempList = new List<string> { "Exception occurred while scanning [RESCAN NEEDED]" };
                 tempList.AddRange(foundProtections);
                 foundProtections = tempList.OrderBy(p => p);
@@ -270,7 +270,7 @@ namespace MPF.Core
 
                 if (foundProtections.Any(p => !p.StartsWith("SafeDisc")))
                 {
-#if NET40 || NET452 || NET462
+#if NET20 || NET35 || NET40 || NET452 || NET462
                     var tempList = new List<string>();
                     tempList.AddRange(foundProtections);
                     tempList.Add("Cactus Data Shield 300");

@@ -219,8 +219,8 @@ namespace MPF.Core.Utilities
             }
 
             // Now deal with the complex options
-            options.ScanForProtection = scan && !string.IsNullOrWhiteSpace(parsedPath);
-            options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrWhiteSpace(parsedPath);
+            options.ScanForProtection = scan && !string.IsNullOrEmpty(parsedPath);
+            options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrEmpty(parsedPath);
 
             return (options, info, parsedPath, startIndex);
         }

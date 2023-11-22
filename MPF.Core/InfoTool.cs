@@ -45,7 +45,7 @@ namespace MPF.Core
 
             // Then get the base path for all checking
             string basePath;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrEmpty(outputDirectory))
                 basePath = outputFilename;
             else
                 basePath = Path.Combine(outputDirectory, outputFilename);
@@ -122,7 +122,7 @@ namespace MPF.Core
         internal static Datafile? GetDatafile(string? dat)
         {
             // If there's no path, we can't read the file
-            if (string.IsNullOrWhiteSpace(dat))
+            if (string.IsNullOrEmpty(dat))
                 return null;
 
             // If the file doesn't exist, we can't read it
@@ -182,7 +182,7 @@ namespace MPF.Core
         /// <returns>Filled DateTime on success, null on failure</returns>
         internal static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
         {
-            if (string.IsNullOrWhiteSpace(filename))
+            if (string.IsNullOrEmpty(filename))
                 return fallback ? (DateTime?)DateTime.UtcNow : null;
             else if (!File.Exists(filename))
                 return fallback ? (DateTime?)DateTime.UtcNow : null;
@@ -248,7 +248,7 @@ namespace MPF.Core
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
-            if (string.IsNullOrWhiteSpace(hashData))
+            if (string.IsNullOrEmpty(hashData))
                 return false;
 
             var hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""", RegexOptions.Compiled);
@@ -286,7 +286,7 @@ namespace MPF.Core
                 if (bytes == null)
                     return default;
 
-#if NET40
+#if NET20 || NET35 || NET40
                 byte[] rev = new byte[0x04];
                 Array.Copy(bytes, offset, rev, 0, 0x04);
 #else
@@ -416,7 +416,7 @@ namespace MPF.Core
             serial = null; region = null; date = null;
 
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return false;
 
             // If the folder no longer exists, we can't do this part
@@ -465,11 +465,11 @@ namespace MPF.Core
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
-            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
+            if (string.IsNullOrEmpty(exeName) && File.Exists(psxExePath))
                 exeName = "PSX.EXE";
 
             // If neither can be found, we return false
-            if (string.IsNullOrWhiteSpace(exeName))
+            if (string.IsNullOrEmpty(exeName))
                 return false;
 
             // Get the region, if possible
@@ -513,7 +513,7 @@ namespace MPF.Core
         internal static string? GetPlayStation2Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -556,7 +556,7 @@ namespace MPF.Core
         internal static string? GetPlayStation3Serial(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -624,7 +624,7 @@ namespace MPF.Core
         internal static string? GetPlayStation3Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -640,7 +640,7 @@ namespace MPF.Core
                     using var br = new BinaryReader(File.OpenRead(sfbPath));
                     br.BaseStream.Seek(0x230, SeekOrigin.Begin);
                     var discVersion = new string(br.ReadChars(0x10)).TrimEnd('\0');
-                    if (!string.IsNullOrWhiteSpace(discVersion))
+                    if (!string.IsNullOrEmpty(discVersion))
                         return discVersion;
                 }
                 catch
@@ -694,7 +694,7 @@ namespace MPF.Core
         internal static string? GetPlayStation3FirmwareVersion(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -748,7 +748,7 @@ namespace MPF.Core
         internal static string? GetPlayStation4Serial(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -798,7 +798,7 @@ namespace MPF.Core
         internal static string? GetPlayStation4Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -910,7 +910,7 @@ namespace MPF.Core
         private static JObject? GetPlayStation5ParamsJsonFromDrive(string? drivePath)
         {
             // If there's no drive path, we can't do this part
-            if (string.IsNullOrWhiteSpace(drivePath))
+            if (string.IsNullOrEmpty(drivePath))
                 return null;
 
             // If the folder no longer exists, we can't do this part
@@ -930,7 +930,7 @@ namespace MPF.Core
         private static JObject? GetPlayStation5ParamsJsonFromFile(string? filename)
         {
             // If the file doesn't exist
-            if (string.IsNullOrWhiteSpace(filename) || !File.Exists(filename))
+            if (string.IsNullOrEmpty(filename) || !File.Exists(filename))
                 return null;
 
             // Let's try reading param.json to find the version in the unencrypted JSON
@@ -980,7 +980,7 @@ namespace MPF.Core
         internal static Region? GetPlayStationRegion(string? serial)
         {
             // If we have a fully invalid serial
-            if (string.IsNullOrWhiteSpace(serial))
+            if (string.IsNullOrEmpty(serial))
                 return null;
 
             // Standardized "S" serials
@@ -1091,8 +1091,8 @@ namespace MPF.Core
         /// <returns>True if the process succeeded, false otherwise</returns>
         public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseParameters? parameters)
         {
-#if NET40
-            return (false, "Log compression is not available for .NET Framework 4.0");
+#if NET20 || NET35 || NET40
+            return (false, "Log compression is not available for this framework version");
 #else
             // If there are no parameters
             if (parameters == null)
@@ -1101,7 +1101,7 @@ namespace MPF.Core
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
             string combinedBase;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrEmpty(outputDirectory))
                 combinedBase = outputFilename;
             else
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
@@ -1136,7 +1136,7 @@ namespace MPF.Core
                 zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
                 foreach (string file in files)
                 {
-                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                    if (string.IsNullOrEmpty(outputDirectory))
                     {
                         zf.CreateEntryFromFile(file, file, CompressionLevel.Optimal);
                     }
@@ -1191,7 +1191,7 @@ namespace MPF.Core
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
             string combinedBase;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrEmpty(outputDirectory))
                 combinedBase = outputFilename;
             else
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
@@ -1240,13 +1240,13 @@ namespace MPF.Core
             {
                 // Get the file path
                 var path = string.Empty;
-                if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                     path = "!submissionInfo.txt";
-                else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = $"!submissionInfo_{filenameSuffix}.txt";
-                else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, "!submissionInfo.txt");
-                else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
@@ -1288,13 +1288,13 @@ namespace MPF.Core
                 if (includedArtifacts)
                 {
                     var path = string.Empty;
-                    if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                         path = "!submissionInfo.json.gz";
-                    else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                         path = $"!submissionInfo_{filenameSuffix}.json.gz";
-                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                         path = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
-                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                         path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz");
 
                     using var fs = File.Create(path);
@@ -1306,13 +1306,13 @@ namespace MPF.Core
                 else
                 {
                     var path = string.Empty;
-                    if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                         path = "!submissionInfo.json";
-                    else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                         path = $"!submissionInfo_{filenameSuffix}.json";
-                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                         path = Path.Combine(outputDirectory, "!submissionInfo.json");
-                    else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                         path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
 
                     using var fs = File.Create(path);
@@ -1346,13 +1346,13 @@ namespace MPF.Core
             try
             {
                 var path = string.Empty;
-                if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                     path = "!protectionInfo.txt";
-                else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = $"!protectionInfo{filenameSuffix}.txt";
-                else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, "!protectionInfo.txt");
-                else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
@@ -1383,7 +1383,7 @@ namespace MPF.Core
         {
             var files = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+            if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
             {
                 if (File.Exists("!submissionInfo.txt"))
                     files.Add("!submissionInfo.txt");
@@ -1394,7 +1394,7 @@ namespace MPF.Core
                 if (File.Exists("!protectionInfo.txt"))
                     files.Add("!protectionInfo.txt");
             }
-            else if (string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+            else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
             {
                 if (File.Exists($"!submissionInfo_{filenameSuffix}.txt"))
                     files.Add($"!submissionInfo_{filenameSuffix}.txt");
@@ -1405,7 +1405,7 @@ namespace MPF.Core
                 if (File.Exists($"!protectionInfo_{filenameSuffix}.txt"))
                     files.Add($"!protectionInfo_{filenameSuffix}.txt");
             }
-            else if (!string.IsNullOrWhiteSpace(outputDirectory) && string.IsNullOrWhiteSpace(filenameSuffix))
+            else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
             {
                 if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
                     files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
@@ -1416,7 +1416,7 @@ namespace MPF.Core
                 if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
                     files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
             }
-            else if (!string.IsNullOrWhiteSpace(outputDirectory) && !string.IsNullOrWhiteSpace(filenameSuffix))
+            else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
             {
                 if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt")))
                     files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt"));
@@ -1477,11 +1477,11 @@ namespace MPF.Core
         public static string NormalizeDiscTitle(string title, Language language)
         {
             // If we have an invalid title, just return it as-is
-            if (string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrEmpty(title))
                 return title;
 
             // Get the title split into parts
-            string[] splitTitle = title.Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            string[] splitTitle = title.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
 
             // If we only have one part, we can't do anything
             if (splitTitle.Length <= 1)
@@ -1838,7 +1838,7 @@ namespace MPF.Core
             try
             {
                 // If we have an invalid path
-                if (string.IsNullOrWhiteSpace(path))
+                if (string.IsNullOrEmpty(path))
                     return string.Empty;
 
                 // Remove quotes from path
@@ -1860,7 +1860,7 @@ namespace MPF.Core
                 foreach (char c in Path.GetInvalidFileNameChars())
                     fullFile = fullFile.Replace(c, '_');
 
-                if (string.IsNullOrWhiteSpace(fullDirectory))
+                if (string.IsNullOrEmpty(fullDirectory))
                     return fullFile;
                 else
                     return Path.Combine(fullDirectory, fullFile);

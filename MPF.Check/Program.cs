@@ -50,7 +50,7 @@ namespace MPF.Check
 #else
             (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
-            if (!string.IsNullOrWhiteSpace(message))
+            if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
 
             // Loop through all the rest of the args
@@ -68,13 +68,13 @@ namespace MPF.Check
 
                 // Now populate an environment
                 Drive? drive = null;
-                if (!string.IsNullOrWhiteSpace(path))
+                if (!string.IsNullOrEmpty(path))
                     drive = Drive.Create(null, path!);
 
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
-#if NET40
+#if NET20 || NET35 || NET40
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
 #else
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();

@@ -112,11 +112,11 @@ namespace MPF.UI.Core.Windows
         {
             // Get the current path, if possible
             string currentPath = MainViewModel.OutputPath;
-            if (string.IsNullOrWhiteSpace(currentPath) && !string.IsNullOrWhiteSpace(MainViewModel.Options.DefaultOutputPath))
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.DefaultOutputPath))
                 currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, "track.bin");
-            else if (string.IsNullOrWhiteSpace(currentPath))
+            else if (string.IsNullOrEmpty(currentPath))
                 currentPath = "track.bin";
-            if (string.IsNullOrWhiteSpace(currentPath))
+            if (string.IsNullOrEmpty(currentPath))
                 currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "track.bin");
 
             // Get the full path

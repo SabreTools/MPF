@@ -65,7 +65,7 @@ namespace MPF.Core
         /// <summary>
         /// Generic way of reporting a message
         /// </summary>
-#if NET40
+#if NET20 || NET35 || NET40
         public EventHandler<BaseParameters.StringEventArgs>? ReportStatus;
 #else
         public EventHandler<string>? ReportStatus;
@@ -79,7 +79,7 @@ namespace MPF.Core
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-#if NET40
+#if NET20 || NET35 || NET40
         private void OutputToLog(object? proc, BaseParameters.StringEventArgs args) => outputQueue?.Enqueue(args.Value);
 #else
         private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
@@ -88,7 +88,7 @@ namespace MPF.Core
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-#if NET40
+#if NET20 || NET35 || NET40
         private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new BaseParameters.StringEventArgs { Value = nextOutput });
 #else
         private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
@@ -211,7 +211,7 @@ namespace MPF.Core
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
-        /// </summary>\
+        /// </summary>
         public async Task<string?> ResetDrive() =>
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
 
@@ -219,7 +219,11 @@ namespace MPF.Core
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
+#if NET20 || NET35 || NET40
+        public Result Run(IProgress<Result>? progress = null)
+#else
         public async Task<Result> Run(IProgress<Result>? progress = null)
+#endif
         {
             // If we don't have parameters
             if (Parameters == null)
@@ -242,11 +246,12 @@ namespace MPF.Core
             progress?.Report(Result.Success($"Executing {InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
-            if (!string.IsNullOrWhiteSpace(directoryName))
+            if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
-#if NET40
-            await Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+#if NET20 || NET35 || NET40
+            var executeTask = Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+            executeTask.Wait();
 #else
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
 #endif
@@ -442,7 +447,7 @@ namespace MPF.Core
         private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
-#if NET40
+#if NET20 || NET35 || NET40
             string output = await Task.Factory.StartNew(() =>
 #else
             string output = await Task.Run(() =>
@@ -512,7 +517,7 @@ namespace MPF.Core
         private bool RequiredProgramsExist()
         {
             // Validate that the path is configured
-            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
+            if (string.IsNullOrEmpty(Options.DiscImageCreatorPath))
                 return false;
 
             // Validate that the required program exists

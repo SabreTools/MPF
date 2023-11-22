@@ -598,7 +598,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Determine if a complete set of Redump credentials might exist
         /// </summary>
-        public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(RedumpUsername) && !string.IsNullOrWhiteSpace(RedumpPassword); }
+        public bool HasRedumpLogin { get => !string.IsNullOrEmpty(RedumpUsername) && !string.IsNullOrEmpty(RedumpPassword); }
 
         #endregion
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Assembly Properties -->
-    <TargetFrameworks>net452;net462;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <LangVersion>latest</LangVersion>
@@ -25,20 +25,21 @@
   </ItemGroup>
 
   <!-- Support for old .NET versions -->
-  <!--<ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
-    <PackageReference Include="MinAsyncBridge" Version="0.12.0" />
-    <PackageReference Include="MinThreadingBridge" Version="0.11.0" />
-  </ItemGroup>-->
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
+    <PackageReference Include="MinAsyncBridge" Version="0.12.2" />
+    <PackageReference Include="MinTasksExtensionsBridge" Version="0.3.2" />
+    <PackageReference Include="MinThreadingBridge" Version="0.11.2" />
+  </ItemGroup>
+  <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))">
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+  </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
     <PackageReference Include="IndexRange" Version="1.0.3" />
   </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith(`net40`))">
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net40`)) OR $(TargetFramework.StartsWith(`net452`))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net452`))">
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
   </ItemGroup>
-  <ItemGroup Condition="!$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
+  <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
     <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
@@ -53,7 +54,7 @@
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="psxt001z" Version="0.21.0-beta2" />
+    <PackageReference Include="psxt001z.Library" Version="0.21.0-beta3" />
     <PackageReference Include="SabreTools.Models" Version="1.3.0" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.3.0" />
     <PackageReference Include="SabreTools.Serialization" Version="1.3.0" />

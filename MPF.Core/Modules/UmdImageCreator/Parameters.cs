@@ -93,7 +93,7 @@ namespace MPF.Core.Modules.UmdImageCreator
                         info.VersionAndEditions!.Version = umdversion ?? string.Empty;
                         info.SizeAndChecksums!.Size = umdsize;
 
-                        if (!string.IsNullOrWhiteSpace(umdlayer))
+                        if (!string.IsNullOrEmpty(umdlayer))
                             info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
                     }
 

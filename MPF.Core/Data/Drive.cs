@@ -66,7 +66,7 @@ namespace MPF.Core.Data
                 string? volumeLabel = Template.DiscNotDetected;
                 if (this.MarkedActive)
                 {
-                    if (string.IsNullOrWhiteSpace(this.VolumeLabel))
+                    if (string.IsNullOrEmpty(this.VolumeLabel))
                         volumeLabel = "track";
                     else
                         volumeLabel = this.VolumeLabel;
@@ -106,7 +106,7 @@ namespace MPF.Core.Data
             };
 
             // If we have an invalid device path, return null
-            if (string.IsNullOrWhiteSpace(devicePath))
+            if (string.IsNullOrEmpty(devicePath))
                 return null;
 
             // Sanitize a Windows-formatted long device path
@@ -251,7 +251,7 @@ namespace MPF.Core.Data
         public RedumpSystem? GetRedumpSystem(RedumpSystem? defaultValue)
         {
             // If we can't read the media in that drive, we can't do anything
-            if (string.IsNullOrWhiteSpace(this.Name) || !Directory.Exists(this.Name))
+            if (string.IsNullOrEmpty(this.Name) || !Directory.Exists(this.Name))
                 return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
@@ -269,7 +269,11 @@ namespace MPF.Core.Data
             // Bandai Playdia Quick Interactive System
             try
             {
+#if NET20 || NET35
+                List<string> files = Directory.GetFiles(this.Name, "*", SearchOption.TopDirectoryOnly).ToList();
+#else
                 List<string> files = Directory.EnumerateFiles(this.Name, "*", SearchOption.TopDirectoryOnly).ToList();
+#endif
 
                 if (files.Any(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
                     && files.Any(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
@@ -286,7 +290,11 @@ namespace MPF.Core.Data
             }
 
             // Mattel Fisher-Price iXL
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(this.Name, "iXL"), "iXLUpdater.exe")))
+#else
             if (File.Exists(Path.Combine(this.Name, "iXL", "iXLUpdater.exe")))
+#endif
             {
                 return RedumpSystem.MattelFisherPriceiXL;
             }
@@ -295,7 +303,11 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(this.Name, "$SystemUpdate"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "$SystemUpdate")).Any()
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "$SystemUpdate")).Any()
+#endif
                     && this.TotalSize <= 500_000_000)
                 {
                     return RedumpSystem.MicrosoftXbox360;
@@ -307,7 +319,11 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(this.Name, "MSXC"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "MSXC")).Any())
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "MSXC")).Any())
+#endif
                 {
                     return RedumpSystem.MicrosoftXboxOne;
                 }
@@ -321,10 +337,17 @@ namespace MPF.Core.Data
             }
 
             // Sega Mega-CD / Sega-CD
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(this.Name, "_BOOT"), "IP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(this.Name, "_BOOT"), "SP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(this.Name, "_BOOT"), "SP_AS.BIN"))
+                || File.Exists(Path.Combine(this.Name, "FILESYSTEM.BIN")))
+#else
             if (File.Exists(Path.Combine(this.Name, "_BOOT", "IP.BIN"))
                 || File.Exists(Path.Combine(this.Name, "_BOOT", "SP.BIN"))
                 || File.Exists(Path.Combine(this.Name, "_BOOT", "SP_AS.BIN"))
                 || File.Exists(Path.Combine(this.Name, "FILESYSTEM.BIN")))
+#endif
             {
                 return RedumpSystem.SegaMegaCDSegaCD;
             }
@@ -370,7 +393,11 @@ namespace MPF.Core.Data
             //        Is used as an on-disc update for the base game app without needing to get update from the internet.
             //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
             //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(this.Name, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
+#else
             if (File.Exists(Path.Combine(this.Name, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+#endif
             {
                 return RedumpSystem.SonyPlayStation4;
             }
@@ -381,7 +408,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-            #endregion
+#endregion
 
             #region Computers
 
@@ -406,13 +433,21 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(this.Name, "AUDIO_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "AUDIO_TS")).Any())
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "AUDIO_TS")).Any())
+#endif
                 {
                     return RedumpSystem.DVDAudio;
                 }
 
                 else if (Directory.Exists(Path.Combine(this.Name, "VIDEO_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "VIDEO_TS")).Any())
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "VIDEO_TS")).Any())
+#endif
                 {
                     return RedumpSystem.DVDVideo;
                 }
@@ -423,7 +458,11 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(this.Name, "HVDVD_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "HVDVD_TS")).Any())
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "HVDVD_TS")).Any())
+#endif
                 {
                     return RedumpSystem.HDDVDVideo;
                 }
@@ -434,14 +473,18 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(this.Name, "VCD"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "VCD")).Any())
+#else
                     && Directory.EnumerateFiles(Path.Combine(this.Name, "VCD")).Any())
+#endif
                 {
                     return RedumpSystem.VideoCD;
                 }
             }
             catch { }
 
-            #endregion
+#endregion
 
             // Default return
             return defaultValue;
@@ -454,7 +497,7 @@ namespace MPF.Core.Data
         public RedumpSystem? GetRedumpSystemFromVolumeLabel()
         {
             // If the volume label is empty, we can't do anything
-            if (string.IsNullOrWhiteSpace(this.VolumeLabel))
+            if (string.IsNullOrEmpty(this.VolumeLabel))
                 return null;
 
             // Audio CD
@@ -507,7 +550,7 @@ namespace MPF.Core.Data
             this.PopulateFromDriveInfo(driveInfo);
         }
 
-        #endregion
+#endregion
 
         #region Helpers
 

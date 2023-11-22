@@ -102,7 +102,7 @@ namespace MPF.Core.Data
                     var line = sr.ReadLine()?.Trim();
 
                     // Empty lines are skipped
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                     {
                         // No-op, we don't process empty lines
                     }
@@ -127,7 +127,7 @@ namespace MPF.Core.Data
 
                         // If the value field contains an '=', we need to put them back in
                         string key = data[0].Trim();
-                        string value = string.Join("=", data.Skip(1)).Trim();
+                        string value = string.Join("=", data.Skip(1).ToArray()).Trim();
 
                         // Section names are prepended to the key with a '.' separating
                         if (!string.IsNullOrEmpty(section))

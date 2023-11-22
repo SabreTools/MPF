@@ -269,7 +269,7 @@ namespace MPF.Test.RedumpLib
             foreach (Language? language in fullLanguages)
             {
                 var code = language.TwoLetterCode();
-                if (string.IsNullOrWhiteSpace(code))
+                if (string.IsNullOrEmpty(code))
                     continue;
 
                 // Throw if the code already exists
@@ -296,7 +296,7 @@ namespace MPF.Test.RedumpLib
             foreach (Language? language in fullLanguages)
             {
                 var code = language.ThreeLetterCode();
-                if (string.IsNullOrWhiteSpace(code))
+                if (string.IsNullOrEmpty(code))
                     continue;
 
                 // Throw if the code already exists
@@ -323,7 +323,7 @@ namespace MPF.Test.RedumpLib
             foreach (Language? language in fullLanguages)
             {
                 var code = language.ThreeLetterCodeAlt();
-                if (string.IsNullOrWhiteSpace(code))
+                if (string.IsNullOrEmpty(code))
                     continue;
 
                 // Throw if the code already exists
@@ -492,7 +492,7 @@ namespace MPF.Test.RedumpLib
             foreach (Region? region in fullRegions)
             {
                 var code = region.ShortName();
-                if (string.IsNullOrWhiteSpace(code))
+                if (string.IsNullOrEmpty(code))
                     continue;
 
                 // Throw if the code already exists

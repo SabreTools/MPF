@@ -1411,7 +1411,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-#if NET40
+#if NET20 || NET35 || NET40
         public (string?, string?) ScanAndShowProtection()
 #else
         public async Task<(string?, string?)> ScanAndShowProtection()
@@ -1435,7 +1435,7 @@ namespace MPF.Core.UI.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
-#if NET40
+#if NET20 || NET35 || NET40
             var protectionTask = Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
             protectionTask.Wait();
             var (protections, error) = protectionTask.Result;
@@ -1603,7 +1603,11 @@ namespace MPF.Core.UI.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
+#if NET20 || NET35 || NET40
+                Result result = _environment.Run(resultProgress);
+#else
                 Result result = await _environment.Run(resultProgress);
+#endif
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (_environment.Parameters?.IsDumpingCommand() != true)
@@ -1679,7 +1683,7 @@ namespace MPF.Core.UI.ViewModels
         private bool ValidateBeforeDumping()
         {
             // Validate that we have an output path of any sort
-            if (string.IsNullOrWhiteSpace(_environment?.OutputPath))
+            if (string.IsNullOrEmpty(_environment?.OutputPath))
             {
                 if (_displayUserMessage != null)
                     _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
@@ -1721,7 +1725,7 @@ namespace MPF.Core.UI.ViewModels
             // Validate that at least some space exists
             // TODO: Tie this to the size of the disc, type of disc, etc.
             string fullPath;
-            if (string.IsNullOrWhiteSpace(outputDirectory))
+            if (string.IsNullOrEmpty(outputDirectory))
                 fullPath = Path.GetFullPath(_environment.OutputPath);
             else
                 fullPath = Path.GetFullPath(outputDirectory);
@@ -1741,14 +1745,14 @@ namespace MPF.Core.UI.ViewModels
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Progress Reporting
 
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
-#if NET40
+#if NET20 || NET35 || NET40
         private void ProgressUpdated(object? sender, BaseParameters.StringEventArgs value)
 #else
         private void ProgressUpdated(object? sender, string value)
@@ -1756,7 +1760,7 @@ namespace MPF.Core.UI.ViewModels
         {
             try
             {
-#if NET40
+#if NET20 || NET35 || NET40
                 value.Value ??= string.Empty;
                 LogLn(value.Value);
 #else

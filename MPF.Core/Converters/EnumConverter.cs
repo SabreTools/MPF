@@ -1,5 +1,9 @@
 ﻿using System;
+#if NET20 || NET35
+using System.Collections.Generic;
+#else
 using System.Collections.Concurrent;
+#endif
 using System.IO;
 using System.Reflection;
 using MPF.Core.Data;
@@ -34,7 +38,11 @@ namespace MPF.Core.Converters
         /// <summary>
         /// Long name method cache
         /// </summary>
-        private static readonly ConcurrentDictionary<Type, MethodInfo?> LongNameMethods = new();
+#if NET20 || NET35
+        private static readonly Dictionary<Type, MethodInfo?> LongNameMethods = [];
+#else
+        private static readonly ConcurrentDictionary<Type, MethodInfo?> LongNameMethods = [];
+#endif
 
         /// <summary>
         /// Get the string representation of a generic enumerable value
@@ -51,10 +59,13 @@ namespace MPF.Core.Converters
                 if (!LongNameMethods.TryGetValue(sourceType, out var method))
                 {
                     method = typeof(Extensions).GetMethod("LongName", [typeof(Nullable<>).MakeGenericType(sourceType)]);
-                    if (method == null)
-                        method = typeof(EnumConverter).GetMethod("LongName", [typeof(Nullable<>).MakeGenericType(sourceType)]);
+                    method ??= typeof(EnumConverter).GetMethod("LongName", [typeof(Nullable<>).MakeGenericType(sourceType)]);
 
+#if NET20 || NET35
+                    LongNameMethods[sourceType] = method;
+#else
                     LongNameMethods.TryAdd(sourceType, method);
+#endif
                 }
 
                 if (method != null)
@@ -99,7 +110,7 @@ namespace MPF.Core.Converters
             };
         }
 
-        #endregion
+#endregion
 
         #region Convert From String
 

@@ -31,7 +31,7 @@ namespace MPF.Core.Hashing
     /// </summary>
     internal abstract class NonCryptographicHashAlgorithm
     {
-#if NET40
+#if NET20 || NET35 || NET40
         /// <summary>
         /// When overridden in a derived class, appends the contents of source to
         /// the data already processed for the current hash computation.
@@ -109,7 +109,7 @@ namespace MPF.Core.Hashing
         }
 
         /// <inheritdoc/>
-#if NET40
+#if NET20 || NET35 || NET40
         public override void Append(byte[] source)
         {
             Update(source, 0, source.Length);

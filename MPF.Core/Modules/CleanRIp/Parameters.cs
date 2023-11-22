@@ -167,7 +167,7 @@ namespace MPF.Core.Modules.CleanRip
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                         continue;
                     else if (line!.StartsWith("CRC32"))
                         crc = line.Substring(7).ToLowerInvariant();
@@ -253,7 +253,7 @@ namespace MPF.Core.Modules.CleanRip
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                         continue;
                     else if (line!.StartsWith("CRC32"))
                         crc = line.Substring(7).ToLowerInvariant();
@@ -299,7 +299,7 @@ namespace MPF.Core.Modules.CleanRip
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (string.IsNullOrWhiteSpace(line))
+                    if (string.IsNullOrEmpty(line))
                     {
                         continue;
                     }
