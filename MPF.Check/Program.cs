@@ -75,7 +75,9 @@ namespace MPF.Check
 
                 // Finally, attempt to do the output dance
 #if NET20 || NET35 || NET40
-                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
+                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
+                resultTask.Wait();
+                var result = resultTask.Result;
 #else
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
