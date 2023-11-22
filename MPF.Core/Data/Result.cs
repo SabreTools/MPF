@@ -1,4 +1,6 @@
-﻿namespace MPF.Core.Data
+﻿using System;
+
+namespace MPF.Core.Data
 {
     /// <summary>
     /// Generic success/failure result object, with optional message
@@ -43,6 +45,11 @@
         /// </summary>
         /// <param name="message">String to add as a message</param>
         public static Result Failure(string? message) => new(false, message ?? string.Empty);
+
+        internal static Result Success(object value)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Results can be compared to boolean values based on the success value

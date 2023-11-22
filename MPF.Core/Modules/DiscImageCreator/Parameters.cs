@@ -646,7 +646,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
@@ -664,7 +664,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     // Take only the last 16 lines for Sega CD
                     if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16));
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16).ToArray());
 
                     if (GetSegaCDBuildInfo(info.Extras.Header, out var scdSerial, out var fixedDate))
                     {
@@ -682,7 +682,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
@@ -702,7 +702,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
@@ -722,7 +722,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
@@ -742,7 +742,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
                         {
@@ -760,7 +760,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
@@ -1360,7 +1360,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                     parameters.Add(FlagStrings.VideoNowXP);
             }
 
-            return string.Join(" ", parameters);
+            return string.Join(" ", [.. parameters]);
         }
 
         /// <inheritdoc/>
@@ -2702,7 +2702,7 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                 // Create the output string
                 if (discTypeOrBookTypeSet.Any())
-                    discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet.OrderBy(s => s));
+                    discTypeOrBookType = string.Join(", ", [.. discTypeOrBookTypeSet.OrderBy(s => s)]);
 
                 return true;
             }

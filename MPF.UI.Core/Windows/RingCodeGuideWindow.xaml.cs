@@ -7,7 +7,7 @@
     {
         public RingCodeGuideWindow()
         {
-#if NET452_OR_GREATER
+#if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
                 CaptionHeight = 0,

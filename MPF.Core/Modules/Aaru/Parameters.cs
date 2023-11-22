@@ -1118,7 +1118,7 @@ namespace MPF.Core.Modules.Aaru
                     break;
             }
 
-            return string.Join(" ", parameters);
+            return string.Join(" ", [.. parameters]);
         }
 
         /// <inheritdoc/>
@@ -2957,7 +2957,9 @@ namespace MPF.Core.Modules.Aaru
             XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
             {
                 CheckCharacters = false,
+#if NET40_OR_GREATER || NETCOREAPP
                 DtdProcessing = DtdProcessing.Ignore,
+#endif
                 IgnoreComments = true,
                 IgnoreWhitespace = true,
                 ValidationFlags = XmlSchemaValidationFlags.None,
@@ -3392,6 +3394,6 @@ namespace MPF.Core.Modules.Aaru
             return false;
         }
 
-        #endregion
+#endregion
     }
 }

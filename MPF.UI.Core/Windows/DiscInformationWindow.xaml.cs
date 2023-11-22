@@ -22,7 +22,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public DiscInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
-#if NET452_OR_GREATER
+#if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
                 CaptionHeight = 0,

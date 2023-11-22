@@ -211,8 +211,16 @@ namespace MPF.Core.Hashing
 
                     byte[] buffer = bufferSelect ? buffer0 : buffer1;
 
-                    // Run hashes in parallel
+#if NET20 || NET35
+                    // Run hashers sequentially on each chunk
+                    foreach (var h in hashers)
+                    {
+                        h.Value.Process(buffer, current);
+                    }
+#else
+                    // Run hashers in parallel on each chunk
                     Parallel.ForEach(hashers, h => h.Value.Process(buffer, current));
+#endif
 
                     // Wait for the load buffer worker, if needed
                     if (next > 0)
@@ -226,7 +234,14 @@ namespace MPF.Core.Hashing
 
                 // Finalize all hashing helpers
                 loadBuffer.Finish();
+#if NET20 || NET35
+                foreach (var h in hashers)
+                {
+                    h.Value.Terminate();
+                }
+#else
                 Parallel.ForEach(hashers, h => h.Value.Terminate());
+#endif
 
                 // Get the results
                 hashDict[Hash.CRC32] = hashers[Hash.CRC32].CurrentHashString;
@@ -262,7 +277,7 @@ namespace MPF.Core.Hashing
             }
         }
 
-        #endregion
+#endregion
 
         #region Hashing
 

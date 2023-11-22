@@ -5,7 +5,6 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight"
-        TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
         Title="" MinHeight="155" MaxWidth="470" MinWidth="154"
         BorderBrush="DarkGray" BorderThickness="2">
 

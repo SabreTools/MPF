@@ -88,7 +88,13 @@ namespace WPFCustomMessageBox
 
         internal CustomMessageBoxWindow(Window? owner, string? message, string? caption = null, MessageBoxButton? button = null, MessageBoxImage? image = null, bool removeTitleBarIcon = true)
         {
-#if NET452_OR_GREATER
+#if NET40_OR_GREATER || NETCOREAPP
+            System.Windows.Media.TextOptions.SetTextFormattingMode(this, System.Windows.Media.TextFormattingMode.Display);
+            System.Windows.Media.TextOptions.SetTextRenderingMode(this, System.Windows.Media.TextRenderingMode.ClearType);
+            UseLayoutRounding = true;
+#endif
+
+#if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
                 CaptionHeight = 0,

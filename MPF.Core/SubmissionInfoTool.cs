@@ -52,7 +52,7 @@ namespace MPF.Core
             (bool foundFiles, List<string> missingFiles) = parameters.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
-                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
+                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
                 resultProgress?.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
                 return null;
             }
@@ -318,7 +318,7 @@ namespace MPF.Core
                         if (drive != null && Directory.Exists(xboxOneMsxcPath))
                         {
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-                                Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                                Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
 
@@ -331,7 +331,7 @@ namespace MPF.Core
                         if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
                         {
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-                                Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                                Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
 
@@ -445,7 +445,7 @@ namespace MPF.Core
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
         public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #else
         public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
@@ -574,7 +574,7 @@ namespace MPF.Core
             info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
 
             resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
-                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
+                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs.Select(i => i.ToString()).ToArray())
                 : "No matches found")));
 
             // Exit early if one failed or there are no matched IDs
@@ -597,7 +597,7 @@ namespace MPF.Core
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
                 var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
                 fillTask.Wait();
                 _ = fillTask.Result;

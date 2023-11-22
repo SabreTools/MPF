@@ -23,7 +23,7 @@ namespace MPF.Core
         {
             try
             {
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
                 var found = await Task.Factory.StartNew(() =>
                 {
                     var scanner = new BinaryObjectScanner.Scanner(
@@ -54,12 +54,20 @@ namespace MPF.Core
 #endif
 
                 // If nothing was returned, return
+#if NET20 || NET35
+                if (found == null || found.Count == 0)
+#else
                 if (found == null || found.IsEmpty)
+#endif
                     return (null, null);
 
                 // Filter out any empty protections
                 var filteredProtections = found
+#if NET20 || NET35
+                    .Where(kvp => kvp.Value != null && kvp.Value.Count > 0)
+#else
                     .Where(kvp => kvp.Value != null && !kvp.Value.IsEmpty)
+#endif
                     .ToDictionary(
                         kvp => kvp.Key,
                         kvp => kvp.Value.OrderBy(s => s).ToList());
@@ -109,7 +117,7 @@ namespace MPF.Core
             if (string.IsNullOrEmpty(path))
                 return false;
 
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
             return await Task.Factory.StartNew(() =>
             {
                 try
@@ -137,7 +145,11 @@ namespace MPF.Core
                 try
                 {
                     var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
+#if NET20 || NET35
+                    foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+#else
                     foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+#endif
                     {
                         try
                         {
@@ -380,7 +392,7 @@ namespace MPF.Core
             if (foundProtections.Any(p => p == "XCP") && foundProtections.Any(p => p.StartsWith("XCP") && p.Length > "XCP".Length))
                 foundProtections = foundProtections.Where(p => p != "XCP");
 
-            return string.Join(", ", foundProtections);
+            return string.Join(", ", foundProtections.ToArray());
         }
     }
 }

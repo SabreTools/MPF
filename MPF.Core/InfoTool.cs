@@ -135,7 +135,9 @@ namespace MPF.Core
                 XmlReader xtr = XmlReader.Create(dat, new XmlReaderSettings
                 {
                     CheckCharacters = false,
+#if NET40_OR_GREATER || NETCOREAPP
                     DtdProcessing = DtdProcessing.Ignore,
+#endif
                     IgnoreComments = true,
                     IgnoreWhitespace = true,
                     ValidationFlags = XmlSchemaValidationFlags.None,
@@ -581,7 +583,11 @@ namespace MPF.Core
             }
 
             // Attempt to use PARAM.SFO
+#if NET20 || NET35
+            string sfoPath = Path.Combine(Path.Combine(drivePath, "PS3_GAME"), "PARAM.SFO");
+#else
             string sfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+#endif
             if (File.Exists(sfoPath))
             {
                 try
@@ -651,7 +657,11 @@ namespace MPF.Core
             }
 
             // Attempt to use PARAM.SFO
+#if NET20 || NET35
+            string sfoPath = Path.Combine(Path.Combine(drivePath, "PS3_GAME"), "PARAM.SFO");
+#else
             string sfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+#endif
             if (File.Exists(sfoPath))
             {
                 try
@@ -702,7 +712,11 @@ namespace MPF.Core
                 return null;
 
             // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
+#if NET20 || NET35
+            string pupPath = Path.Combine(Path.Combine(drivePath, "PS3_UPDATE"), "PS3UPDAT.PUP");
+#else
             string pupPath = Path.Combine(drivePath, "PS3_UPDATE", "PS3UPDAT.PUP");
+#endif
             if (!File.Exists(pupPath))
                 return null;
 
@@ -756,7 +770,11 @@ namespace MPF.Core
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
+#if NET20 || NET35
+            string paramSfoPath = Path.Combine(Path.Combine(drivePath, "bd"), "param.sfo");
+#else
             string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+#endif
             if (!File.Exists(paramSfoPath))
                 return null;
 
@@ -806,7 +824,11 @@ namespace MPF.Core
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
+#if NET20 || NET35
+            string paramSfoPath = Path.Combine(Path.Combine(drivePath, "bd"), "param.sfo");
+#else
             string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+#endif
             if (!File.Exists(paramSfoPath))
                 return null;
 
@@ -918,7 +940,11 @@ namespace MPF.Core
                 return null;
 
             // If we can't find param.json, we don't have a PlayStation 5 disc
+#if NET20 || NET35
+            string paramJsonPath = Path.Combine(Path.Combine(drivePath, "bd"), "param.json");
+#else
             string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
+#endif
             return GetPlayStation5ParamsJsonFromFile(paramJsonPath);
         }
 
@@ -948,7 +974,7 @@ namespace MPF.Core
             }
         }
 
-        #endregion
+#endregion
 
         #region Category Extraction
 
@@ -1361,7 +1387,7 @@ namespace MPF.Core
                     if (kvp.Value == null)
                         sw.WriteLine($"{kvp.Key}: None");
                     else
-                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
+                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", [.. kvp.Value])}");
                 }
             }
             catch

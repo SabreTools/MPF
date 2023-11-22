@@ -219,7 +219,7 @@ namespace MPF.Core
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
         public Result Run(IProgress<Result>? progress = null)
 #else
         public async Task<Result> Run(IProgress<Result>? progress = null)
@@ -249,7 +249,7 @@ namespace MPF.Core
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
             var executeTask = Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             executeTask.Wait();
 #else
@@ -291,7 +291,7 @@ namespace MPF.Core
             (bool foundFiles, List<string> missingFiles) = Parameters.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
-                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
+                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
             }
 
@@ -447,7 +447,7 @@ namespace MPF.Core
         private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
             string output = await Task.Factory.StartNew(() =>
 #else
             string output = await Task.Run(() =>

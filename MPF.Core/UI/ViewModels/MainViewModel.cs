@@ -586,7 +586,7 @@ namespace MPF.Core.UI.ViewModels
 
             if (Drives.Count > 0)
             {
-                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Name))}");
+                VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Name).ToArray())}");
 
                 // Check for the last selected drive, if possible
                 int index = -1;
@@ -1326,7 +1326,11 @@ namespace MPF.Core.UI.ViewModels
                     directory = Path.GetDirectoryName(directory);
 
                 if (directory != null && label != null)
+#if NET20 || NET35
+                    this.OutputPath = Path.Combine(Path.Combine(directory, label), filename);
+#else
                     this.OutputPath = Path.Combine(directory, label, filename);
+#endif
                 else
                     this.OutputPath = filename;
             }
@@ -1349,7 +1353,11 @@ namespace MPF.Core.UI.ViewModels
                     directory = Path.GetDirectoryName(directory);
 
                 if (directory != null && label != null)
+#if NET20 || NET35
+                    this.OutputPath = Path.Combine(Path.Combine(directory, label), filename);
+#else
                     this.OutputPath = Path.Combine(directory, label, filename);
+#endif
                 else
                     this.OutputPath = filename;
             }
@@ -1505,7 +1513,7 @@ namespace MPF.Core.UI.ViewModels
         {
             // Set the drive speed list that's appropriate
             this.DriveSpeeds = (List<int>)Interface.GetSpeedsForMediaType(CurrentMediaType);
-            VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
+            VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds.Select(ds => ds.ToString()).ToArray())}");
 
             // Set the selected speed
             int speed = (CurrentMediaType) switch
@@ -1603,7 +1611,7 @@ namespace MPF.Core.UI.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-#if NET20 || NET35 || NET40
+#if NET20 || NET40
                 Result result = _environment.Run(resultProgress);
 #else
                 Result result = await _environment.Run(resultProgress);

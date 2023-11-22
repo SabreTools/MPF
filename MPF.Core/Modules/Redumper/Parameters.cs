@@ -417,7 +417,7 @@ namespace MPF.Core.Modules.Redumper
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
@@ -741,7 +741,7 @@ namespace MPF.Core.Modules.Redumper
 
             #endregion
 
-            return string.Join(" ", parameters);
+            return string.Join(" ", [.. parameters]);
         }
 
         /// <inheritdoc/>
@@ -2010,7 +2010,7 @@ namespace MPF.Core.Modules.Redumper
                     lines.Add(line);
                 }
 
-                return string.Join("\n", lines).TrimEnd('\n');
+                return string.Join("\n", [.. lines]).TrimEnd('\n');
             }
             catch
             {

@@ -196,7 +196,7 @@ namespace MPF.Core.Data
 
                         // If the key contains an '.', we need to put them back in
                         string newSection = data[0].Trim();
-                        key = string.Join(".", data.Skip(1)).Trim();
+                        key = string.Join(".", data.Skip(1).ToArray()).Trim();
 
                         // If we have a new section, write it out
                         if (!string.Equals(newSection, section, StringComparison.OrdinalIgnoreCase))

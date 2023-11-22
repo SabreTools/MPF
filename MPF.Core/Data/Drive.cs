@@ -592,7 +592,7 @@ namespace MPF.Core.Data
             }
 
             // Find and update all floppy drives
-#if NET462_OR_GREATER
+#if NET462_OR_GREATER || NETCOREAPP
             try
             {
                 CimSession session = CimSession.Create(null);
