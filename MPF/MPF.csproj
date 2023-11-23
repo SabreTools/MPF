@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Assembly Properties -->
-    <TargetFrameworks>net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
@@ -24,6 +24,16 @@
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
+  <!-- Special handling for Aero2 on non-Framework .NET -->
+  <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+    <ReferenceWpfAeroTheme>false</ReferenceWpfAeroTheme>
+    <ReferenceWpfAero2Theme>true</ReferenceWpfAero2Theme>
+    <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
+    <ReferenceWpfClassicTheme>false</ReferenceWpfClassicTheme>
+    <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
+    <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
+  </PropertyGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="MPF.Test" />
   </ItemGroup>
@@ -37,8 +47,11 @@
     <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
     <Reference Include="PresentationFramework.Aero" />
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+    <Reference Include="PresentationFramework.Aero2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,4 +65,37 @@
     <Content Include="$(PkgBinaryObjectScanner)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
   </ItemGroup>
 
-</Project>
+  <!-- Special handling for Aero2 on non-Framework .NET -->
+  <Target Name="SelectWpfThemeAssembly" AfterTargets="ResolveAssemblyReferences" Condition="'$(ReferenceWpfAeroTheme)' == 'true'     Or&#xD;&#xA;                     '$(ReferenceWpfAero2Theme)' == 'true'    Or&#xD;&#xA;                     '$(ReferenceWpfAeroLiteTheme)' == 'true' Or&#xD;&#xA;                     '$(ReferenceWpfClassicTheme)' == 'true'  Or &#xD;&#xA;                     '$(ReferenceWpfLunaTheme)' == 'true'     Or&#xD;&#xA;                     '$(ReferenceWpfRoyaleTheme)' == 'true'">
+    <ItemGroup  Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.Aero'">
+        <Aliases Condition="'$(WpfAeroThemeAliases)'!=''">$(WpfAeroThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.Aero2'">
+        <Aliases Condition="'$(WpfAero2ThemeAliases)'!=''">$(WpfAero2ThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.AeroLite'">
+        <Aliases Condition="'$(WpfAeroLiteThemeAliases)'!=''">$(WpfAeroLiteThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.Classic'">
+        <Aliases Condition="'$(WpfClassicThemeAliases)'!=''">$(WpfClassicThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.Luna'">
+        <Aliases Condition="'$(WpfLunaThemeAliases)'!=''">$(WpfLunaThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref'  And &#xD;&#xA;                                   '%(ReferencePath.FileName)'=='PresentationFramework.Royale'">
+        <Aliases Condition="'$(WpfRoyaleThemeAliases)'!=''">$(WpfRoyaleThemeAliases)</Aliases>
+      </_WpfThemeAssemblies>
+
+      <ReferencePath Remove="@(_WpfThemeAssemblies)" />
+      <ReferencePath Include="@(_WpfThemeAssemblies)" Condition="('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero' And '$(ReferenceWpfAeroTheme)'=='true')          Or &#xD;&#xA;                                ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero2' And '$(ReferenceWpfAero2Theme)'=='true')        Or &#xD;&#xA;                                ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.AeroLite' And '$(ReferenceWpfAeroLiteTheme)'=='true')  Or &#xD;&#xA;                                ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Classic' And '$(ReferenceWpfClassicTheme)'=='true')    Or &#xD;&#xA;                                ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Luna' And '$(ReferenceWpfLunaTheme)'=='true')          Or&#xD;&#xA;                                ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Royale' And '$(ReferenceWpfRoyaleTheme)'=='true')" />
+    </ItemGroup>
+  </Target>
+
+
+</Project>        
