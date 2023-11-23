@@ -31,6 +31,7 @@
 - Re-enable .NET Framework 4.0 building in UI.Core
 - Re-enable .NET Framework 4.0 building in Check
 - Support .NET Framework 3.5
+- Update compatibility libraries
 
 ### 3.0.0 (2023-11-14)
 
