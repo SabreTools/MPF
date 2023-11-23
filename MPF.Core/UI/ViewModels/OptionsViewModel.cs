@@ -11,7 +11,7 @@ namespace MPF.Core.UI.ViewModels
     /// <summary>
     /// Constructor
     /// </summary>
-    public class OptionsViewModel(Options baseOptions) : INotifyPropertyChanged
+    public class OptionsViewModel : INotifyPropertyChanged
     {
         #region Fields
 
@@ -32,7 +32,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Current set of options
         /// </summary>
-        public Options Options { get; } = new Options(baseOptions);
+        public Options Options { get; }
 
         /// <summary>
         /// Flag for if settings were saved or not
@@ -57,6 +57,22 @@ namespace MPF.Core.UI.ViewModels
         public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
+
+        /// <summary>
+        /// Constructor for pure view model
+        /// </summary>
+        public OptionsViewModel()
+        {
+            Options = new Options();
+        }
+
+        /// <summary>
+        /// Constructor for in-code
+        /// </summary>
+        public OptionsViewModel(Options baseOptions)
+        {
+            Options = new Options(baseOptions);
+        }
 
         #region Population
 

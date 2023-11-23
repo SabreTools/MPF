@@ -5,11 +5,15 @@
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:core="clr-namespace:MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
+                        xmlns:viewModels="clr-namespace:MPF.Core.UI.ViewModels;assembly=MPF.Core"
                         mc:Ignorable="d"
                         Width="515.132" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         BorderBrush="DarkGray" BorderThickness="2">
 
+    <Window.DataContext>
+        <viewModels:OptionsViewModel/>
+    </Window.DataContext>
     <Window.Resources>
         <core:ElementConverter x:Key="ElementConverter" />
     </Window.Resources>
@@ -27,14 +31,8 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
-                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
-                    <Label.Content>
-                        <TextBlock>
-                            <TextBlock.Inlines>
-                                <Run FontWeight="Bold" Text="{Binding Title, Mode=OneWay}"/>
-                            </TextBlock.Inlines>
-                        </TextBlock>
-                    </Label.Content>
+                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown"
+                       Content="{Binding Path=Title, Mode=OneWay}" FontWeight="Bold">
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
