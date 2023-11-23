@@ -24,6 +24,8 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public OptionsWindow(Options options)
         {
+            InitializeComponent();
+
 #if NET40_OR_GREATER || NETCOREAPP
             DumpSpeedCDTextBox.IsReadOnlyCaretVisible = false;
             DumpSpeedDVDTextBox.IsReadOnlyCaretVisible = false;
@@ -39,8 +41,6 @@ namespace MPF.UI.Core.Windows
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
-
-            InitializeComponent();
             DataContext = new OptionsViewModel(options);
 
             // Set initial value for binding

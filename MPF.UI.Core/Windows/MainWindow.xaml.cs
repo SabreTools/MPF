@@ -23,6 +23,8 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public MainWindow()
         {
+            InitializeComponent();
+
 #if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
@@ -31,8 +33,6 @@ namespace MPF.UI.Core.Windows
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
-
-            InitializeComponent();
         }
 
         /// <summary>

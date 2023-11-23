@@ -24,7 +24,7 @@ namespace MPF
             AddDropShadowChrome("ComboBoxTemplate");
             AddDropShadowChrome("ComboBoxEditableTemplate");
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if FALSE && (NET452_OR_GREATER || NETCOREAPP)
             AddVirtualizingCondition("ComboBoxTemplate");
             AddVirtualizingCondition("ComboBoxEditableTemplate");
 #endif
@@ -207,12 +207,19 @@ namespace MPF
                 return;
 
             // Set the virtualizing condition
-            var condition = new Condition
+            var isVirtualizing = new Condition
             {
                 Property = VirtualizingPanel.IsVirtualizingWhenGroupingProperty,
                 Value = "false",
             };
-            multiTrigger.Conditions.Add(condition);
+
+            var currentConditions = multiTrigger.Conditions.ToList();
+            multiTrigger.Conditions.Clear();
+            foreach (var condition in currentConditions)
+            {
+                multiTrigger.Conditions.Add(condition);
+            }
+            multiTrigger.Conditions.Add(isVirtualizing);
         }
 #endif
 

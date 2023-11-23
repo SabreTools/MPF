@@ -7,6 +7,8 @@
     {
         public RingCodeGuideWindow()
         {
+            InitializeComponent();
+
 #if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
@@ -15,8 +17,6 @@
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
-
-            InitializeComponent();
         }
     }
 }
