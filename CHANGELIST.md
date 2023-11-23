@@ -32,6 +32,7 @@
 - Re-enable .NET Framework 4.0 building in Check
 - Support .NET Framework 3.5
 - Update compatibility libraries
+- Support .NET Framework 2.0
 
 ### 3.0.0 (2023-11-14)
 

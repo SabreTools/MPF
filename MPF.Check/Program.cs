@@ -74,7 +74,7 @@ namespace MPF.Check
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
-#if NET20 || NET35 || NET40
+#if NET40
                 var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
                 resultTask.Wait();
                 var result = resultTask.Result;

@@ -23,7 +23,7 @@ namespace MPF.Core
         {
             try
             {
-#if NET20 || NET40
+#if NET40
                 var found = await Task.Factory.StartNew(() =>
                 {
                     var scanner = new BinaryObjectScanner.Scanner(
@@ -117,7 +117,7 @@ namespace MPF.Core
             if (string.IsNullOrEmpty(path))
                 return false;
 
-#if NET20 || NET40
+#if NET40
             return await Task.Factory.StartNew(() =>
             {
                 try

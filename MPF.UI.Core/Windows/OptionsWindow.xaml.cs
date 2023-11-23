@@ -207,7 +207,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
-#if NET20 || NET35 || NET40
+#if NET40
         private void OnRedumpTestClick(object sender, EventArgs e)
         {
             var validateTask = ValidateRedumpCredentials();

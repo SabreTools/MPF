@@ -99,7 +99,7 @@ namespace MPF.Core
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
-#if NET20 || NET35 || NET40
+#if NET40
                 _ = FillFromRedump(options, info, resultProgress);
 #else
                 _ = await FillFromRedump(options, info, resultProgress);
@@ -445,7 +445,7 @@ namespace MPF.Core
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-#if NET20 || NET40
+#if NET40
         public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #else
         public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
@@ -510,7 +510,7 @@ namespace MPF.Core
                     continue;
                 }
 
-#if NET20 || NET35 || NET40
+#if NET40
                 var validateTask = Validator.ValidateSingleTrack(wc, info, hashData);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
@@ -543,7 +543,7 @@ namespace MPF.Core
             // If we don't have any matches but we have a universal hash
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
-#if NET20 || NET35 || NET40
+#if NET40
                 var validateTask = Validator.ValidateUniversalHash(wc, info);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
@@ -586,7 +586,7 @@ namespace MPF.Core
             for (int i = 0; i < totalMatchedIDsCount; i++)
             {
                 // Skip if the track count doesn't match
-#if NET20 || NET35 || NET40
+#if NET40
                 var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount);
                 validateTask.Wait();
                 if (!validateTask.Result)
@@ -597,7 +597,7 @@ namespace MPF.Core
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET20 || NET40
+#if NET40
                 var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
                 fillTask.Wait();
                 _ = fillTask.Result;

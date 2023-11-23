@@ -219,7 +219,7 @@ namespace MPF.Core
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
-#if NET20 || NET40
+#if NET40
         public Result Run(IProgress<Result>? progress = null)
 #else
         public async Task<Result> Run(IProgress<Result>? progress = null)
@@ -249,7 +249,7 @@ namespace MPF.Core
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
-#if NET20 || NET40
+#if NET40
             var executeTask = Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             executeTask.Wait();
 #else
@@ -447,7 +447,7 @@ namespace MPF.Core
         private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
-#if NET20 || NET40
+#if NET40
             string output = await Task.Factory.StartNew(() =>
 #else
             string output = await Task.Run(() =>

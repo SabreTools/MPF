@@ -328,13 +328,13 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
-#if NET20 || NET35 || NET40
+#if NET40
         public void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
 #else
         public async void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
 #endif
         {
-#if NET20 || NET35 || NET40
+#if NET40
             var (output, error) = MainViewModel.ScanAndShowProtection();
 #else
             var (output, error) = await MainViewModel.ScanAndShowProtection();

@@ -1419,7 +1419,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-#if NET20 || NET35 || NET40
+#if NET40
         public (string?, string?) ScanAndShowProtection()
 #else
         public async Task<(string?, string?)> ScanAndShowProtection()
@@ -1443,7 +1443,7 @@ namespace MPF.Core.UI.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
-#if NET20 || NET35 || NET40
+#if NET40
             var protectionTask = Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
             protectionTask.Wait();
             var (protections, error) = protectionTask.Result;
@@ -1611,7 +1611,7 @@ namespace MPF.Core.UI.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-#if NET20 || NET40
+#if NET40
                 Result result = _environment.Run(resultProgress);
 #else
                 Result result = await _environment.Run(resultProgress);

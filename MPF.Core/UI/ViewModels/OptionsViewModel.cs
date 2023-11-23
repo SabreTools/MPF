@@ -82,9 +82,7 @@ namespace MPF.Core.UI.ViewModels
         public static async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
 #endif
         {
-#if NET20 || NET35
-            return await Task.Run(() => RedumpWebClient.ValidateCredentials(username, password));
-#elif NET40
+#if NET40
             return Task.Factory.StartNew(() => RedumpWebClient.ValidateCredentials(username, password));
 #elif NETFRAMEWORK
             return await Task.Run(() => RedumpWebClient.ValidateCredentials(username, password));
