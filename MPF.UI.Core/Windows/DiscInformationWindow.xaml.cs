@@ -135,7 +135,7 @@ namespace MPF.UI.Core.Windows
             if (submissionInfo.PartiallyMatchedIDs == null)
                 PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
             else
-                PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs);
+                PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 AntiModchip.Visibility = Visibility.Collapsed;
             if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)

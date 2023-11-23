@@ -33,6 +33,7 @@
 - Support .NET Framework 3.5
 - Update compatibility libraries
 - Support .NET Framework 2.0
+- Support .NET Framework 3.5 in UI.Core
 
 ### 3.0.0 (2023-11-14)
 

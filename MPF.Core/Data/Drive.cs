@@ -270,7 +270,7 @@ namespace MPF.Core.Data
             try
             {
 #if NET20 || NET35
-                List<string> files = Directory.GetFiles(this.Name, "*", SearchOption.TopDirectoryOnly).ToList();
+                List<string> files = [.. Directory.GetFiles(this.Name, "*", SearchOption.TopDirectoryOnly)];
 #else
                 List<string> files = Directory.EnumerateFiles(this.Name, "*", SearchOption.TopDirectoryOnly).ToList();
 #endif

@@ -24,6 +24,13 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public OptionsWindow(Options options)
         {
+#if NET40_OR_GREATER || NETCOREAPP
+            DumpSpeedCDTextBox.IsReadOnlyCaretVisible = false;
+            DumpSpeedDVDTextBox.IsReadOnlyCaretVisible = false;
+            DumpSpeedHDDVDTextBox.IsReadOnlyCaretVisible = false;
+            DumpSpeedBDTextBox.IsReadOnlyCaretVisible = false;
+#endif
+
 #if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
             {
