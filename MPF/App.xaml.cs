@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -23,11 +22,6 @@ namespace MPF
 
             AddDropShadowChrome("ComboBoxTemplate");
             AddDropShadowChrome("ComboBoxEditableTemplate");
-
-#if FALSE && (NET452_OR_GREATER || NETCOREAPP)
-            AddVirtualizingCondition("ComboBoxTemplate");
-            AddVirtualizingCondition("ComboBoxEditableTemplate");
-#endif
         }
 
         private void AddDropShadowChrome(string resourceName)
@@ -189,40 +183,6 @@ namespace MPF
             triggers.Add(hasItems);
             triggers.Add(canContentScroll);
         }
-
-#if NET452_OR_GREATER || NETCOREAPP
-        private void AddVirtualizingCondition(string resourceName)
-        {
-            // Get the template resource
-            if (Resources[resourceName] is not ControlTemplate controlTemplate)
-                return;
-
-            // Get the triggers
-            var triggers = controlTemplate.Triggers;
-            if (triggers == null)
-                return;
-
-            // Get the multitrigger
-            if (triggers.FirstOrDefault(t => t is MultiTrigger) is not MultiTrigger multiTrigger)
-                return;
-
-            // Set the virtualizing condition
-            var isVirtualizing = new Condition
-            {
-                Property = VirtualizingPanel.IsVirtualizingWhenGroupingProperty,
-                Value = "false",
-            };
-
-            var currentConditions = multiTrigger.Conditions.ToList();
-            multiTrigger.Conditions.Clear();
-            foreach (var condition in currentConditions)
-            {
-                multiTrigger.Conditions.Add(condition);
-            }
-            multiTrigger.Conditions.Add(isVirtualizing);
-        }
-#endif
-
 #endif
     }
 }

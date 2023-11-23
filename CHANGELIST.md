@@ -36,6 +36,7 @@
 - Support .NET Framework 3.5 in UI.Core
 - Get UI building with Framework 4.0
 - Temporarily remove .NET Framework 4.0 from UI
+- Get UI building with Framework 4.0 again
 
 ### 3.0.0 (2023-11-14)
 

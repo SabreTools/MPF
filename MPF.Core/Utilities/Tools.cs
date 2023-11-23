@@ -190,7 +190,7 @@ namespace MPF.Core.Utilities
 
                 // Get the latest tag from GitHub
                 var (tag, url) = GetRemoteVersionAndUrl();
-                bool different = version != tag;
+                bool different = version != tag && tag != null;
 
                 string message = $"Local version: {version}"
                     + $"{Environment.NewLine}Remote version: {tag}"

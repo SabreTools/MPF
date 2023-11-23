@@ -150,7 +150,7 @@ namespace MPF.UI.Core.Windows
             (bool different, string message, var url) = MainViewModel.CheckForUpdates();
 
             // If we have a new version, put it in the clipboard
-            if (different)
+            if (different && !string.IsNullOrEmpty(url))
                 Clipboard.SetText(url);
 
             if (showIfSame || different)
