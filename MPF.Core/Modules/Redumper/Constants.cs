@@ -11,13 +11,15 @@ namespace MPF.Core.Modules.Redumper
         public const string BluRay = "bd"; // Synonym for CD
         public const string SACD = "sacd"; // Synonym for CD
         public const string Dump = "dump";
-        public const string Info = "info";
-        public const string Protection = "protection";
         public const string Refine = "refine";
-        public const string Split = "split";
         public const string Verify = "verify";
         public const string DVDKey = "dvdkey";
         public const string DVDIsoKey = "dvdisokey";
+        public const string Protection = "protection";
+        public const string Split = "split";
+        public const string Hash = "hash";
+        public const string Info = "info";
+        public const string Skeleton = "skeleton";
     }
 
     /// <summary>

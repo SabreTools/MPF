@@ -1038,13 +1038,15 @@ namespace MPF.Core.Modules.Redumper
                     case CommandStrings.BluRay:
                     case CommandStrings.SACD:
                     case CommandStrings.Dump:
-                    case CommandStrings.Protection:
                     case CommandStrings.Refine:
-                    case CommandStrings.Split:
                     case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
                     case CommandStrings.DVDIsoKey:
+                    case CommandStrings.Protection:
+                    case CommandStrings.Split:
+                    case CommandStrings.Hash:
                     case CommandStrings.Info:
+                    case CommandStrings.Skeleton:
                         ModeValues.Add(part);
                         break;
 

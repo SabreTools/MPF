@@ -38,6 +38,7 @@
 - Temporarily remove .NET Framework 4.0 from UI
 - Get UI building with Framework 4.0 again
 - Support .NET Framework 3.5 in UI
+- Update Redumper to build 268
 
 ### 3.0.0 (2023-11-14)
 
