@@ -358,6 +358,9 @@ namespace MPF.Core.Modules.Redumper
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log") ?? string.Empty;
+
+                    // Needed for some odd copy protections
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
                     break;
 
                 case RedumpSystem.DVDAudio:

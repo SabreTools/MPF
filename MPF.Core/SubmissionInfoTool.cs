@@ -234,7 +234,7 @@ namespace MPF.Core
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
 
-                    info.CopyProtection!.Protection = protectionString;
+                    info.CopyProtection!.Protection += protectionString;
                     info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 

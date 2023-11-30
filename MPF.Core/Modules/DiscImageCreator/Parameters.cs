@@ -521,6 +521,9 @@ namespace MPF.Core.Modules.DiscImageCreator
                             info.CopyProtection!.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
                     }
 
+                    // Needed for some odd copy protections
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
+
                     break;
 
                 case RedumpSystem.DVDAudio:

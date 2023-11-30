@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Read CSS for some copy protections
+
 ### 3.0.1 (2023-11-30)
 
 - Add Bandai Pippin detection
