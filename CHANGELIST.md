@@ -8,6 +8,7 @@
 - Fix most .NET Framework 3.5 issues
 - Fix cross-framework UI styles
 - Update Redumper to build 271
+- Update USE_ALL in Powershell script
 
 ### 3.0.1 (2023-11-30)
 
