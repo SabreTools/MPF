@@ -345,8 +345,17 @@ namespace MPF.UI.Core.Windows
             var system = submissionInfo?.CommonDiscInfo?.System;
             switch (system)
             {
+                case RedumpSystem.NintendoWiiU:
+                    DiscKeyTextBox.Visibility = Visibility.Visible;
+                    break;
+
                 case RedumpSystem.SonyPlayStation2:
                     LanguageSelectionGrid.Visibility = Visibility.Visible;
+                    break;
+
+                case RedumpSystem.SonyPlayStation3:
+                    DiscKeyTextBox.Visibility = Visibility.Visible;
+                    DiscIDTextBox.Visibility = Visibility.Visible;
                     break;
             }
         }

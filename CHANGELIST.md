@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Read CSS for some copy protections
+- Add Disc ID and Key fields in info window
 
 ### 3.0.1 (2023-11-30)
 
