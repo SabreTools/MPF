@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <!-- Assembly Properties -->
-    <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>

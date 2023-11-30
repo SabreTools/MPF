@@ -5,6 +5,7 @@
 - Replace build script with Powershell
 - Fix Powershell build script
 - Fix cross-framework UI rendering
+- Fix most .NET Framework 3.5 issues
 
 ### 3.0.1 (2023-11-30)
 
