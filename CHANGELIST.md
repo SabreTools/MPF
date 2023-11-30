@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.0.1 (2023-11-30)
 
 - Add Bandai Pippin detection
 - Zip manufacturer files for Redumper

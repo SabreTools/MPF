@@ -2,14 +2,14 @@
 
   <PropertyGroup>
     <!-- Assembly Properties -->
-    <TargetFrameworks>net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionPrefix>3.0.1</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
 
