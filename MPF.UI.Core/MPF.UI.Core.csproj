@@ -5,6 +5,7 @@
     <TargetFrameworks>net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
@@ -27,6 +28,11 @@
     <Resource Include="Images\ring-code-guide-2-layer.png" />
   </ItemGroup>
 
+  <!-- Support for old .NET versions -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
+    <Reference Include="WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+  </ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
   </ItemGroup>

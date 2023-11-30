@@ -9,6 +9,7 @@
 - Fix cross-framework UI styles
 - Update Redumper to build 271
 - Update USE_ALL in Powershell script
+- Import WinFX for .NET Framework 3.5
 
 ### 3.0.1 (2023-11-30)
 
