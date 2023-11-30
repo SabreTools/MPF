@@ -13,6 +13,8 @@ namespace MPF
 
 #if NET35_OR_GREATER || NETCOREAPP
 
+        #region ControlTemplates
+
         /// <summary>
         /// ComboBoxTemplate ControlTemplate XAML (.NET Framework 4.0 and above)
         /// </summary>
@@ -207,6 +209,98 @@ namespace MPF
             </ControlTemplate.Triggers>
         </ControlTemplate>";
 
+        #endregion
+
+        #region Styles
+
+        /// <summary>
+        /// ComboBoxEditableTextBox Style XAML (.NET Framework 4.0 and above)
+        /// </summary>
+        private const string _comboBoxEditableTextBoxStyleDefault = @"<Style TargetType=""{x:Type TextBox}"">
+            <Setter Property=""OverridesDefaultStyle"" Value=""true""/>
+            <Setter Property=""AllowDrop"" Value=""true""/>
+            <Setter Property=""MinWidth"" Value=""0""/>
+            <Setter Property=""MinHeight"" Value=""0""/>
+            <Setter Property=""FocusVisualStyle"" Value=""{x:Null}""/>
+            <Setter Property=""ScrollViewer.PanningMode"" Value=""VerticalFirst""/>
+            <Setter Property=""Stylus.IsFlicksEnabled"" Value=""False""/>
+            <Setter Property=""Template"">
+                <Setter.Value>
+                    <ControlTemplate TargetType=""{x:Type TextBox}"">
+                        <ScrollViewer x:Name=""PART_ContentHost"" Background=""Transparent"" Focusable=""false"" HorizontalScrollBarVisibility=""Hidden"" VerticalScrollBarVisibility=""Hidden""/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>";
+
+        /// <summary>
+        /// ComboBoxEditableTextBox Style XAML (.NET Framework 3.5)
+        /// </summary>
+        private const string _comboBoxEditableTextBoxStyleNet35 = @"<Style TargetType=""{x:Type TextBox}"">
+            <Setter Property=""OverridesDefaultStyle"" Value=""true""/>
+            <Setter Property=""AllowDrop"" Value=""true""/>
+            <Setter Property=""MinWidth"" Value=""0""/>
+            <Setter Property=""MinHeight"" Value=""0""/>
+            <Setter Property=""FocusVisualStyle"" Value=""{x:Null}""/>
+            <Setter Property=""Stylus.IsFlicksEnabled"" Value=""False""/>
+            <Setter Property=""Template"">
+                <Setter.Value>
+                    <ControlTemplate TargetType=""{x:Type TextBox}"">
+                        <ScrollViewer x:Name=""PART_ContentHost"" Background=""Transparent"" Focusable=""false"" HorizontalScrollBarVisibility=""Hidden"" VerticalScrollBarVisibility=""Hidden""/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>";
+
+        /// <summary>
+        /// CustomComboBoxStyle Style XAML (.NET Framework 4.0 and above)
+        /// </summary>
+        private const string _customComboBoxStyleDefault = @"<Style x:Key=""CustomComboBoxStyle"" TargetType=""{x:Type ComboBox}"">
+            <Setter Property=""FocusVisualStyle"" Value=""{DynamicResource FocusVisual}""/>
+            <Setter Property=""Background"" Value=""{DynamicResource ComboBox.Static.Background}""/>
+            <Setter Property=""BorderBrush"" Value=""{DynamicResource ComboBox.Static.Border}""/>
+            <Setter Property=""Foreground"" Value=""{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}""/>
+            <Setter Property=""BorderThickness"" Value=""1""/>
+            <Setter Property=""ScrollViewer.HorizontalScrollBarVisibility"" Value=""Auto""/>
+            <Setter Property=""ScrollViewer.VerticalScrollBarVisibility"" Value=""Auto""/>
+            <Setter Property=""Padding"" Value=""6,3,5,3""/>
+            <Setter Property=""ScrollViewer.CanContentScroll"" Value=""true""/>
+            <Setter Property=""ScrollViewer.PanningMode"" Value=""VerticalFirst""/>
+            <Setter Property=""Stylus.IsFlicksEnabled"" Value=""False""/>
+            <Setter Property=""Template"" Value=""{DynamicResource ComboBoxTemplate}""/>
+            <Style.Triggers>
+                <Trigger Property=""IsEditable"" Value=""true"">
+                    <Setter Property=""IsTabStop"" Value=""false""/>
+                    <Setter Property=""Padding"" Value=""2""/>
+                    <Setter Property=""Template"" Value=""{DynamicResource ComboBoxEditableTemplate}""/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>";
+
+        /// <summary>
+        /// CustomComboBoxStyle Style XAML (.NET Framework 3.5)
+        /// </summary>
+        private const string _customComboBoxStyleNet35 = @"<Style TargetType=""{x:Type ComboBox}"">
+            <Setter Property=""FocusVisualStyle"" Value=""{DynamicResource FocusVisual}""/>
+            <Setter Property=""Background"" Value=""{DynamicResource ComboBox.Static.Background}""/>
+            <Setter Property=""BorderBrush"" Value=""{DynamicResource ComboBox.Static.Border}""/>
+            <Setter Property=""Foreground"" Value=""{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}""/>
+            <Setter Property=""BorderThickness"" Value=""1""/>
+            <Setter Property=""ScrollViewer.HorizontalScrollBarVisibility"" Value=""Auto""/>
+            <Setter Property=""ScrollViewer.VerticalScrollBarVisibility"" Value=""Auto""/>
+            <Setter Property=""Padding"" Value=""6,3,5,3""/>
+            <Setter Property=""ScrollViewer.CanContentScroll"" Value=""true""/>
+            <Setter Property=""Stylus.IsFlicksEnabled"" Value=""False""/>
+            <Setter Property=""Template"" Value=""{DynamicResource ComboBoxTemplate}""/>
+            <Style.Triggers>
+                <Trigger Property=""IsEditable"" Value=""true"">
+                    <Setter Property=""IsTabStop"" Value=""false""/>
+                    <Setter Property=""Padding"" Value=""2""/>
+                    <Setter Property=""Template"" Value=""{DynamicResource ComboBoxEditableTemplate}""/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>";
+
         /// <summary>
         /// CustomProgressBarStyle Style XAML (.NET Framework 4.0 and above)
         /// </summary>
@@ -315,13 +409,20 @@ namespace MPF
                 </Setter.Value>
             </Setter>
         </Style>";
+
+        #endregion
         public App()
         {
             InitializeComponent();
 
+            // Create control templates
             CreateControlTemplate("ComboBoxTemplate");
             CreateControlTemplate("ComboBoxEditableTemplate");
-            CreateProgressBarStyle();
+
+            // Create styles
+            CreateStyle("ComboBoxEditableTextBox");
+            CreateStyle("CustomComboBoxStyle");
+            CreateStyle("CustomProgressBarStyle");
         }
 
         /// <summary>
@@ -366,19 +467,27 @@ namespace MPF
         }
 
         /// <summary>
-        /// Create the custom progress bar style and add it to the current set of resources
+        /// Create a named style and add it to the current set of resources
         /// </summary>
-        private void CreateProgressBarStyle()
+        private void CreateStyle(string resourceName)
         {
             var parserContext = CreateParserContext();
+            var style = resourceName switch
+            {
 #if NET35
-            var style = XamlReader.Parse(_customProgressBarStyleNet35, parserContext) as Style;
+                "ComboBoxEditableTextBox" => XamlReader.Parse(_comboBoxEditableTextBoxStyleNet35, parserContext) as Style,
+                "CustomComboBoxStyle" => XamlReader.Parse(_customComboBoxStyleNet35, parserContext) as Style,
+                "CustomProgressBarStyle" => XamlReader.Parse(_customProgressBarStyleNet35, parserContext) as Style,
 #else
-            var style = XamlReader.Parse(_customProgressBarStyleDefault, parserContext) as Style;
+                "ComboBoxEditableTextBox" => XamlReader.Parse(_comboBoxEditableTextBoxStyleDefault, parserContext) as Style,
+                "CustomComboBoxStyle" => XamlReader.Parse(_customComboBoxStyleDefault, parserContext) as Style,
+                "CustomProgressBarStyle" => XamlReader.Parse(_customProgressBarStyleDefault, parserContext) as Style,
 #endif
+                _ => throw new ArgumentException($"'{resourceName}' is not a recognized style", nameof(resourceName)),
+            };
 
             // Add the style
-            Resources["CustomProgressBarStyle"] = style;
+            Resources[resourceName] = style;
         }
 #endif
     }
