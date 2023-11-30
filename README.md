@@ -60,9 +60,9 @@ Choose one of `win-x64`, `linux-x64`, or `osx-x64` depending on the machine you 
 
 ### Build Scripts
 
-Windows users may run `publish-win.bat` and Linux users may run `publish-nix.sh` to perform a full release build.
+Windows users may run `publish-win.ps1` and Linux users may run `publish-nix.sh` to perform a full release build.
 
-- `publish-win.bat` will build and package all variants of MPF UI and MPF.Check
+- `publish-win.ps1` will build and package all variants of MPF UI and MPF.Check
   - The script requires [7-zip commandline](https://www.7-zip.org/download.html) and [Git for Windows](https://git-scm.com/downloads) to be installed and in `PATH`
 - `publish-nix.sh` will _only_ build and package all variants of MPF.Check
   - The script requires `zip` and `git` to be installed and in `PATH`

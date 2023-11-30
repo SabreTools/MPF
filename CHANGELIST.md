@@ -3,6 +3,7 @@
 - Read CSS for some copy protections
 - Add Disc ID and Key fields in info window
 - Replace build script with Powershell
+- Fix Powershell build script
 
 ### 3.0.1 (2023-11-30)
 
