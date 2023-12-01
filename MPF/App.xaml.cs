@@ -413,7 +413,9 @@ namespace MPF
         #endregion
         public App()
         {
+#if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
+#endif
 
             // Create control templates
             CreateControlTemplate("ComboBoxTemplate");

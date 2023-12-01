@@ -25,7 +25,7 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Bold>Ring Code Guide</Bold></TextBlock>
+                        <Run FontWeight="Bold" BaselineAlignment="Center" Text="Ring Code Guide" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -81,22 +81,34 @@
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
+                                    <Run Text=" Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="2">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Green">2. Mastering SID:</Bold> IFPI L553</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Green" Text="2. Mastering SID:" />
+                                    <Run Text=" IFPI L553" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="3">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Purple">3. Toolstamp/Mastering Code:</Bold> A2</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
+                                    <Run Text=" A2" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="4">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="LightBlue">4. Mould SID:</Bold> IFPI 94V1</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
+                                    <Run Text=" IFPI 94V1" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                     </Grid>
@@ -122,27 +134,42 @@
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Red">1. Outer Mastering Ring:</Bold> IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
+                                    <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="2">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Green">2. Inner Mastering Ring:</Bold> IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
+                                    <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="3">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Purple">3. Outer Mastering SID:</Bold> IFPI LB48</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Purple" Text="3. Outer Mastering SID:" />
+                                    <Run Text=" IFPI LB48" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="4">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="LightBlue">4. Inner Mastering SID:</Bold> IFPI LB48</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Inner Mastering SID:" />
+                                    <Run Text=" IFPI LB48" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="5">
                             <Label.Content>
-                                <TextBlock><Bold>Note:</Bold> See the 1-Layer guide for more details on additional fields</TextBlock>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Text="Note:" />
+                                    <Run Text=" See the 1-Layer guide for more details on additional fields" />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                     </Grid>

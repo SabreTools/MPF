@@ -31,7 +31,7 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Bold>Disc Information</Bold></TextBlock>
+                        <Run FontWeight="Bold" Text="Disc Information" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"

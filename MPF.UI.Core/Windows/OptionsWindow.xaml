@@ -464,7 +464,10 @@
 
                         <Label>
                             <Label.Content>
-                                <TextBlock TextWrapping="Wrap"><Bold Foreground="Red">WARNING:</Bold> If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</TextBlock>
+                                <TextBlock TextWrapping="Wrap">
+                                    <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
+                                    <Run Text="If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny." />
+                                </TextBlock>
                             </Label.Content>
                         </Label>
                     </StackPanel>

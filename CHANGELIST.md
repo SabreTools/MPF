@@ -11,6 +11,7 @@
 - Update USE_ALL in Powershell script
 - Import WinFX for .NET Framework 3.5
 - Reference .NET Framework 3.0 for 3.5
+- Handle most VS and dotnet differences
 
 ### 3.0.1 (2023-11-30)
 

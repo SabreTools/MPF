@@ -51,17 +51,18 @@
     <Resource Include="Images\Icon.ico" />
   </ItemGroup>
 
-  <!-- Support for old .NET versions -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
-    <Reference Include="PresentationCore" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" />
-    <Reference Include="WindowsBase" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
   </ItemGroup>
 
+  <!-- Support for old .NET versions -->
+  <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
+    <Reference Include="PresentationBuildTasks" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationBuildTasks.dll" />
+    <Reference Include="PresentationCore" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" />
+    <Reference Include="PresentationFramework" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationFramework.dll" />
+    <Reference Include="WindowsBase" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" />
+  </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
     <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>

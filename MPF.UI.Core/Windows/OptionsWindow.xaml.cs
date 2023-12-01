@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using MPF.Core.Data;
 using MPF.Core.UI.ViewModels;
@@ -19,12 +20,28 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel(new Options());
 
+#if NET35
+
+        private System.Windows.Controls.Button? _AaruPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AaruPathButton");
+        private System.Windows.Controls.Button? _AcceptButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AcceptButton");
+        private System.Windows.Controls.Button? _CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
+        private System.Windows.Controls.Button? _DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
+        private System.Windows.Controls.Button? _DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
+        private System.Windows.Controls.Button? _RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
+        private System.Windows.Controls.Button? _RedumpLoginTestButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumpLoginTestButton");
+        private PasswordBox? _RedumpPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpPasswordBox");
+        private System.Windows.Controls.TextBox? _RedumpUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpUsernameTextBox");
+
+#endif
+
         /// <summary>
         /// Constructor
         /// </summary>
         public OptionsWindow(Options options)
         {
+#if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
+#endif
 
 #if NET40_OR_GREATER || NETCOREAPP
             DumpSpeedCDTextBox.IsReadOnlyCaretVisible = false;
@@ -44,9 +61,24 @@ namespace MPF.UI.Core.Windows
             DataContext = new OptionsViewModel(options);
 
             // Set initial value for binding
+#if NET35
+            _RedumpPasswordBox!.Password = options.RedumpPassword;
+#else
             RedumpPasswordBox.Password = options.RedumpPassword;
+#endif
 
             // Add handlers
+#if NET35
+            _AaruPathButton!.Click += BrowseForPathClick;
+            _DiscImageCreatorPathButton!.Click += BrowseForPathClick;
+            _RedumperPathButton!.Click += BrowseForPathClick;
+            _DefaultOutputPathButton!.Click += BrowseForPathClick;
+
+            _AcceptButton!.Click += OnAcceptClick;
+            _CancelButton!.Click += OnCancelClick;
+            _RedumpPasswordBox!.PasswordChanged += OnPasswordChanged;
+            _RedumpLoginTestButton!.Click += OnRedumpTestClick;
+#else
             AaruPathButton.Click += BrowseForPathClick;
             DiscImageCreatorPathButton.Click += BrowseForPathClick;
             RedumperPathButton.Click += BrowseForPathClick;
@@ -56,6 +88,7 @@ namespace MPF.UI.Core.Windows
             CancelButton.Click += OnCancelClick;
             RedumpPasswordBox.PasswordChanged += OnPasswordChanged;
             RedumpLoginTestButton.Click += OnRedumpTestClick;
+#endif
         }
 
         /// <summary>
@@ -165,7 +198,11 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private async Task ValidateRedumpCredentials()
         {
+#if NET35
+            (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(_RedumpUsernameTextBox!.Text, _RedumpPasswordBox!.Password);
+#else
             (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+#endif
 
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -175,7 +212,7 @@ namespace MPF.UI.Core.Windows
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        #endregion
+#endregion
 
         #region Event Handlers
 
@@ -208,7 +245,11 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnPasswordChanged(object sender, EventArgs e)
         {
+#if NET35
+            OptionsViewModel.Options.RedumpPassword = _RedumpPasswordBox!.Password;
+#else
             OptionsViewModel.Options.RedumpPassword = RedumpPasswordBox.Password;
+#endif
         }
 
         /// <summary>
@@ -224,6 +265,6 @@ namespace MPF.UI.Core.Windows
         private async void OnRedumpTestClick(object sender, EventArgs e) => await ValidateRedumpCredentials();
 #endif
 
-        #endregion
+#endregion
     }
 }

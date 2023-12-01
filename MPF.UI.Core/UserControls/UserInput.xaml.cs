@@ -39,7 +39,7 @@ namespace MPF.UI.Core.UserControls
 
         public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
             DependencyProperty.Register("VerticalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(UserInput));
-        
+
         #endregion
 
         #region Properties
@@ -118,7 +118,9 @@ namespace MPF.UI.Core.UserControls
             HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
+#if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
+#endif
         }
     }
 }

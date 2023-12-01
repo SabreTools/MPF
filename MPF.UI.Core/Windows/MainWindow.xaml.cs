@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core;
 using MPF.Core.UI.ViewModels;
+using MPF.UI.Core.UserControls;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
@@ -18,12 +18,56 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
+#if NET35
+
+        #region Top Menu Bar
+
+        private MenuItem? _AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
+        private MenuItem? _AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
+        private MenuItem? _CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
+        private MenuItem? _DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
+        private MenuItem? _OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
+
+        #endregion
+
+        #region Settings
+
+        private ComboBox? _DriveLetterComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveLetterComboBox");
+        private ComboBox? _DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
+        private ComboBox? _DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
+        private CheckBox? _EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
+        private ComboBox? _MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
+        private Button? _OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
+        private TextBox? _OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
+        private ComboBox? _SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
+
+        #endregion
+
+        #region Controls
+
+        private Button? _CopyProtectScanButton => ItemHelper.FindChild<Button>(this, "CopyProtectScanButton");
+        private Button? _MediaScanButton => ItemHelper.FindChild<Button>(this, "MediaScanButton");
+        private Button? _StartStopButton => ItemHelper.FindChild<Button>(this, "StartStopButton");
+        private Button? _UpdateVolumeLabel => ItemHelper.FindChild<Button>(this, "UpdateVolumeLabel");
+
+        #endregion
+
+        #region Status
+
+        private LogOutput? _LogOutput => ItemHelper.FindChild<LogOutput>(this, "LogOutput");
+
+        #endregion
+
+#endif
+
         /// <summary>
         /// Constructor
         /// </summary>
         public MainWindow()
         {
+#if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
+#endif
 
 #if NET452_OR_GREATER || NETCOREAPP
             var chrome = new System.Windows.Shell.WindowChrome
@@ -53,9 +97,17 @@ namespace MPF.UI.Core.Windows
 
             // Display the debug option in the menu, if necessary
             if (MainViewModel.Options.ShowDebugViewMenuItem)
+#if NET35
+                _DebugViewMenuItem!.Visibility = Visibility.Visible;
+#else
                 DebugViewMenuItem.Visibility = Visibility.Visible;
+#endif
 
+#if NET35
+            MainViewModel.Init(_LogOutput!.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
+#else
             MainViewModel.Init(LogOutput.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
+#endif
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -80,29 +132,58 @@ namespace MPF.UI.Core.Windows
         public void AddEventHandlers()
         {
             // Menu Bar Click
+#if NET35
+            _AboutMenuItem!.Click += AboutClick;
+            _AppExitMenuItem!.Click += AppExitClick;
+            _CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
+            _DebugViewMenuItem!.Click += DebugViewClick;
+            _OptionsMenuItem!.Click += OptionsMenuItemClick;
+#else
             AboutMenuItem.Click += AboutClick;
             AppExitMenuItem.Click += AppExitClick;
             CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
             DebugViewMenuItem.Click += DebugViewClick;
             OptionsMenuItem.Click += OptionsMenuItemClick;
+#endif
 
             // User Area Click
+#if NET35
+            _CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
+            _EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
+            _MediaScanButton!.Click += MediaScanButtonClick;
+            _UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
+            _OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
+            _StartStopButton!.Click += StartStopButtonClick;
+#else
             CopyProtectScanButton.Click += CopyProtectScanButtonClick;
             EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
             MediaScanButton.Click += MediaScanButtonClick;
             UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
             OutputPathBrowseButton.Click += OutputPathBrowseButtonClick;
             StartStopButton.Click += StartStopButtonClick;
+#endif
 
             // User Area SelectionChanged
+#if NET35
+            _SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            _MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            _DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            _DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            _DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
+#else
             SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
             MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
             DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
+#endif
 
             // User Area TextChanged
+#if NET35
+            _OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
+#else
             OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
+#endif
         }
 
         /// <summary>
@@ -264,7 +345,7 @@ namespace MPF.UI.Core.Windows
             theme.Apply();
         }
 
-        #endregion
+#endregion
 
         #region Event Handlers
 

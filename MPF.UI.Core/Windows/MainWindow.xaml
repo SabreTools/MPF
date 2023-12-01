@@ -76,7 +76,7 @@
                 </StackPanel>
                 <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Bold>Media Preservation Frontend</Bold></TextBlock>
+                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="Media Preservation Frontend" /></TextBlock>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
