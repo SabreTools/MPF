@@ -53,7 +53,8 @@
 
   <!-- Support for old .NET versions -->
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
-    <Reference Include="WindowsBase, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="PresentationCore" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" />
+    <Reference Include="WindowsBase" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" />
   </ItemGroup>
 
   <ItemGroup>
