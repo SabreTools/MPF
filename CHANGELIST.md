@@ -2,6 +2,7 @@
 
 - Fix broken tests
 - Fix using SHA-1 for track checks
+- Fix build warning for NRE
 
 ### 3.0.2 (2023-12-01)
 
