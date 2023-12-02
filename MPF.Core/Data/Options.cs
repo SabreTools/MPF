@@ -608,7 +608,7 @@ namespace MPF.Core.Data
         /// <param name="settings"></param>
         public Options(Dictionary<string, string?>? settings = null)
         {
-            this.Settings = settings ?? new Dictionary<string, string?>();
+            this.Settings = settings ?? [];
         }
 
         /// <summary>
@@ -617,7 +617,7 @@ namespace MPF.Core.Data
         /// <param name="source"></param>
         public Options(Options? source)
         {
-            Settings = new Dictionary<string, string?>(source?.Settings ?? new Dictionary<string, string?>());
+            Settings = new Dictionary<string, string?>(source?.Settings ?? []);
         }
 
         /// <summary>

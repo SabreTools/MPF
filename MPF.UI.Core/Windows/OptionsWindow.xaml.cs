@@ -8,6 +8,8 @@ using MPF.Core.Data;
 using MPF.Core.UI.ViewModels;
 using WPFCustomMessageBox;
 
+#pragma warning disable IDE1006 // Naming Styles
+
 namespace MPF.UI.Core.Windows
 {
     /// <summary>

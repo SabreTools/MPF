@@ -7,6 +7,8 @@ using MPF.Core.Utilities;
 using MPF.UI.Core.UserControls;
 using SabreTools.RedumpLib.Data;
 
+#pragma warning disable IDE1006 // Naming Styles
+
 namespace MPF.UI.Core.Windows
 {
     /// <summary>

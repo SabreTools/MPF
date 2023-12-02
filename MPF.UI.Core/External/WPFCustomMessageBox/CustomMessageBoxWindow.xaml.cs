@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using MPF.UI.Core;
 
+#pragma warning disable IDE1006 // Naming Styles
+
 namespace WPFCustomMessageBox
 {
     /// <summary>

@@ -7,6 +7,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using MPF.Core.Data;
 
+#pragma warning disable IDE1006 // Naming Styles
+
 namespace MPF.UI.Core.UserControls
 {
     public partial class LogOutput : UserControl
@@ -115,18 +117,13 @@ namespace MPF.UI.Core.UserControls
             /// <returns>Brush representing the color</returns>
             public Brush GetForegroundColor()
             {
-                switch (this.LogLevel)
+                return this.LogLevel switch
                 {
-                    case LogLevel.SECRET:
-                        return Brushes.Blue;
-                    case LogLevel.ERROR:
-                        return Brushes.Red;
-                    case LogLevel.VERBOSE:
-                        return Brushes.Yellow;
-                    case LogLevel.USER:
-                    default:
-                        return Brushes.White;
-                }
+                    LogLevel.SECRET => Brushes.Blue,
+                    LogLevel.ERROR => Brushes.Red,
+                    LogLevel.VERBOSE => Brushes.Yellow,
+                    _ => Brushes.White,
+                };
             }
 
             /// <summary>
@@ -206,13 +203,11 @@ namespace MPF.UI.Core.UserControls
         /// </summary>
         private void SaveInlines()
         {
-            using (var sw = new StreamWriter(File.OpenWrite("console.log")))
+            using var sw = new StreamWriter(File.OpenWrite("console.log"));
+            foreach (var inline in _paragraph.Inlines)
             {
-                foreach (var inline in _paragraph.Inlines)
-                {
-                    if (inline is Run run)
-                        sw.Write(run.Text);
-                }
+                if (inline is Run run)
+                    sw.Write(run.Text);
             }
         }
 
