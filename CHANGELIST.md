@@ -3,6 +3,7 @@
 - Fix broken tests
 - Fix using SHA-1 for track checks
 - Fix build warning for NRE
+- Remove .NET Framework 3.5 from build script
 
 ### 3.0.2 (2023-12-01)
 
