@@ -510,12 +510,19 @@ namespace MPF.Core
                     continue;
                 }
 
+                // Get the SHA-1 hash
+                if (!InfoTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
+                {
+                    resultProgress?.Report(Result.Failure($"Line could not be parsed: {hashData}"));
+                    continue;
+                }
+
 #if NET40
-                var validateTask = Validator.ValidateSingleTrack(wc, info, hashData);
+                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, hashData);
+                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
 #endif
                 if (singleFound)
                     resultProgress?.Report(Result.Success(result));
