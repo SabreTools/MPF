@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix broken tests
+
 ### 3.0.2 (2023-12-01)
 
 - Read CSS for some copy protections
