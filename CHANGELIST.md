@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.0.3 (2023-12-04)
 
 - Fix broken tests
 - Fix using SHA-1 for track checks
