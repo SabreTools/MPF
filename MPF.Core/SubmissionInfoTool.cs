@@ -518,11 +518,11 @@ namespace MPF.Core
                 }
 
 #if NET40
-                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1!);
+                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1);
                 validateTask.Wait();
                 (bool singleFound, var foundIds, string? result) = validateTask.Result;
 #else
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1!);
+                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
 #endif
                 if (singleFound)
                     resultProgress?.Report(Result.Success(result));
