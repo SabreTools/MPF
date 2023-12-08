@@ -204,6 +204,10 @@ namespace MPF.Core.Modules.Redumper
                     //    // Depends on the disc
                     //    if (!File.Exists($"{basePath}.cdtext"))
                     //        missingFiles.Add($"{basePath}.cdtext");
+                    //
+                    //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.skeleton"))
+                    //        missingFiles.Add($"{basePath}.skeleton");
                     //}
 
                     break;
@@ -223,6 +227,13 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.state");
                     }
 
+                    // Removed or inconsistent files
+                    //{
+                    //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.skeleton"))
+                    //        missingFiles.Add($"{basePath}.skeleton");
+                    //}
+
                     break;
 
                 case MediaType.HDDVD: // TODO: Verify that this is output
@@ -238,6 +249,13 @@ namespace MPF.Core.Modules.Redumper
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
                     }
+
+                    // Removed or inconsistent files
+                    //{
+                    //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.skeleton"))
+                    //        missingFiles.Add($"{basePath}.skeleton");
+                    //}
 
                     break;
 
@@ -503,6 +521,8 @@ namespace MPF.Core.Modules.Redumper
                     info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
                 if (File.Exists($"{basePath}.2.physical"))
                     info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
+                // if (File.Exists($"{basePath}.skeleton"))
+                //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.scram"))
                 //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.scrap"))
@@ -834,6 +854,8 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.fulltoc");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.skeleton"))
+                        logFiles.Add($"{basePath}.skeleton");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     if (File.Exists($"{basePath}.subcode"))
@@ -857,6 +879,8 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.1.physical");
                     if (File.Exists($"{basePath}.2.physical"))
                         logFiles.Add($"{basePath}.2.physical");
+                    if (File.Exists($"{basePath}.skeleton"))
+                        logFiles.Add($"{basePath}.skeleton");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     break;
@@ -871,6 +895,8 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.1.physical");
                     if (File.Exists($"{basePath}.2.physical"))
                         logFiles.Add($"{basePath}.2.physical");
+                    if (File.Exists($"{basePath}.skeleton"))
+                        logFiles.Add($"{basePath}.skeleton");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     break;

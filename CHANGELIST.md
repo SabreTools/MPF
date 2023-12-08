@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Update RedumpLib
+- Update Redumper to build 294
 
 ### 3.0.3 (2023-12-04)
 
