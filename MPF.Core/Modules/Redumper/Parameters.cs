@@ -522,7 +522,7 @@ namespace MPF.Core.Modules.Redumper
                 if (File.Exists($"{basePath}.2.physical"))
                     info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.skeleton"))
-                //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
+                //     info.Artifacts["skeleton"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.scram"))
                 //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.scrap"))
