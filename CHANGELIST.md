@@ -3,6 +3,7 @@
 - Update RedumpLib
 - Update Redumper to build 294
 - Fix commented out code
+- Make missing hash data clearer
 
 ### 3.0.3 (2023-12-04)
 

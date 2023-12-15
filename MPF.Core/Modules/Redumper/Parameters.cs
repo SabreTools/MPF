@@ -190,7 +190,7 @@ namespace MPF.Core.Modules.Redumper
                         if (!File.Exists($"{basePath}.log"))
                             missingFiles.Add($"{basePath}.log");
                         else if (GetDatfile($"{basePath}.log") == null)
-                            missingFiles.Add($"{basePath}.dat");
+                            missingFiles.Add($"{basePath}.log (dat section)");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
                         if (!File.Exists($"{basePath}.subcode"))
