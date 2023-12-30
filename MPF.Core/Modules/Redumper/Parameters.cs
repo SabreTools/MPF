@@ -880,7 +880,7 @@ namespace MPF.Core.Modules.Redumper
                     {
                         foreach (CueFile? file in cueSheet.Files)
                         {
-                            string trackPath = $"{Path.Combine(Path.GetDirectoryName(basePath), Path.GetFileNameWithoutExtension(file?.FileName))}";
+                            string trackPath = Path.Combine(Path.GetDirectoryName(basePath), Path.GetFileNameWithoutExtension(file?.FileName));
                             if (File.Exists($"{trackPath}.hash"))
                                 logFiles.Add($"{trackPath}.hash");
                             if (File.Exists($"{trackPath}.skeleton"))
