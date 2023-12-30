@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -206,8 +207,12 @@ namespace MPF.Core.Modules.Redumper
                     //        missingFiles.Add($"{basePath}.cdtext");
                     //
                     //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.hash"))
+                    //        missingFiles.Add($"{basePath}.hash");
+                    //    // Also: "{basePath} (Track X).hash" (get from cuesheet)
                     //    if (!File.Exists($"{basePath}.skeleton"))
                     //        missingFiles.Add($"{basePath}.skeleton");
+                    //    // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
                     //}
 
                     break;
@@ -230,6 +235,8 @@ namespace MPF.Core.Modules.Redumper
                     // Removed or inconsistent files
                     //{
                     //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.hash"))
+                    //        missingFiles.Add($"{basePath}.hash");
                     //    if (!File.Exists($"{basePath}.skeleton"))
                     //        missingFiles.Add($"{basePath}.skeleton");
                     //}
@@ -253,6 +260,8 @@ namespace MPF.Core.Modules.Redumper
                     // Removed or inconsistent files
                     //{
                     //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.hash"))
+                    //        missingFiles.Add($"{basePath}.hash");
                     //    if (!File.Exists($"{basePath}.skeleton"))
                     //        missingFiles.Add($"{basePath}.skeleton");
                     //}
@@ -507,6 +516,9 @@ namespace MPF.Core.Modules.Redumper
                     info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
                 if (File.Exists($"{basePath}.fulltoc"))
                     info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
+                // if (File.Exists($"{basePath}.hash"))
+                //     info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
+                // // Also: "{basePath} (Track X).hash" (get from cuesheet)
                 if (File.Exists($"{basePath}.log"))
                     info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log")) ?? string.Empty;
                 if (File.Exists($"{basePath}.manufacturer"))
@@ -523,6 +535,7 @@ namespace MPF.Core.Modules.Redumper
                     info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.skeleton"))
                 //     info.Artifacts["skeleton"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
+                // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
                 // if (File.Exists($"{basePath}.scram"))
                 //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
                 // if (File.Exists($"{basePath}.scrap"))
@@ -854,17 +867,39 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.fulltoc");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
-                    if (File.Exists($"{basePath}.skeleton"))
-                        logFiles.Add($"{basePath}.skeleton");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     if (File.Exists($"{basePath}.subcode"))
                         logFiles.Add($"{basePath}.subcode");
                     if (File.Exists($"{basePath}.toc"))
                         logFiles.Add($"{basePath}.toc");
+
+                    // Include .hash and .skeleton for all files in cuesheet
+                    CueSheet? cueSheet = new SabreTools.Serialization.Files.CueSheet().Deserialize($"{basePath}.cue");
+                    if (cueSheet != default && cueSheet.Files != null)
+                    {
+                        foreach (CueFile? file in cueSheet.Files)
+                        {
+                            string trackPath = $"{Path.GetDirectoryName(basePath)}\\{Path.GetFileNameWithoutExtension(file?.FileName)}";
+                            if (File.Exists($"{trackPath}.hash"))
+                                logFiles.Add($"{trackPath}.hash");
+                            if (File.Exists($"{trackPath}.skeleton"))
+                                logFiles.Add($"{trackPath}.skeleton");
+                        }
+                    }
+                    else
+                    {
+                        if (File.Exists($"{basePath}.hash"))
+                            logFiles.Add($"{basePath}.hash");
+                        if (File.Exists($"{basePath}.skeleton"))
+                            logFiles.Add($"{basePath}.skeleton");
+                    }
+
                     break;
 
                 case MediaType.DVD:
+                    if (File.Exists($"{basePath}.hash"))
+                        logFiles.Add($"{basePath}.hash");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.manufacturer"))
@@ -887,6 +922,8 @@ namespace MPF.Core.Modules.Redumper
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
                 case MediaType.BluRay:
+                    if (File.Exists($"{basePath}.hash"))
+                        logFiles.Add($"{basePath}.hash");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.physical"))
