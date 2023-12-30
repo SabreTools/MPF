@@ -516,9 +516,9 @@ namespace MPF.Core.Modules.Redumper
                     info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
                 if (File.Exists($"{basePath}.fulltoc"))
                     info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
-                // if (File.Exists($"{basePath}.hash"))
-                //     info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
-                // // Also: "{basePath} (Track X).hash" (get from cuesheet)
+                if (File.Exists($"{basePath}.hash"))
+                    info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
+                // TODO: "{basePath} (Track X).hash" (get from cuesheet)
                 if (File.Exists($"{basePath}.log"))
                     info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log")) ?? string.Empty;
                 if (File.Exists($"{basePath}.manufacturer"))
@@ -875,12 +875,12 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.toc");
 
                     // Include .hash and .skeleton for all files in cuesheet
-                    CueSheet? cueSheet = new SabreTools.Serialization.Files.CueSheet().Deserialize($"{basePath}.cue");
-                    if (cueSheet != default && cueSheet.Files != null)
+                    var cueSheet = new SabreTools.Serialization.Files.CueSheet().Deserialize($"{basePath}.cue");
+                    if (cueSheet?.Files != null)
                     {
                         foreach (CueFile? file in cueSheet.Files)
                         {
-                            string trackPath = $"{Path.GetDirectoryName(basePath)}\\{Path.GetFileNameWithoutExtension(file?.FileName)}";
+                            string trackPath = $"{Path.Combine(Path.GetDirectoryName(basePath), Path.GetFileNameWithoutExtension(file?.FileName))}";
                             if (File.Exists($"{trackPath}.hash"))
                                 logFiles.Add($"{trackPath}.hash");
                             if (File.Exists($"{trackPath}.skeleton"))
