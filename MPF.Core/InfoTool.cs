@@ -1384,10 +1384,11 @@ namespace MPF.Core
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
                 foreach (var kvp in info.CopyProtection.FullProtections)
                 {
+                    int pathRoot = (Path.GetPathRoot(kvp.Key) ?? String.Empty).Length;
                     if (kvp.Value == null)
-                        sw.WriteLine($"{kvp.Key}: None");
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{kvp.Key.Substring(pathRoot)}: None");
                     else
-                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", [.. kvp.Value])}");
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{kvp.Key.Substring(pathRoot)}: {string.Join(", ", [.. kvp.Value])}");
                 }
             }
             catch
