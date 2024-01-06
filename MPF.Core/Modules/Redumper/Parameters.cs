@@ -879,15 +879,20 @@ namespace MPF.Core.Modules.Redumper
 
                     // Include .hash and .skeleton for all files in cuesheet
                     var cueSheet = new SabreTools.Serialization.Files.CueSheet().Deserialize($"{basePath}.cue");
-                    if (cueSheet?.Files != null)
+                    string? baseDir = Path.GetDirectoryName(basePath);
+                    if (cueSheet?.Files != null && baseDir != null)
                     {
                         foreach (CueFile? file in cueSheet.Files)
                         {
-                            string trackPath = Path.Combine(Path.GetDirectoryName(basePath), Path.GetFileNameWithoutExtension(file?.FileName));
-                            if (File.Exists($"{trackPath}.hash"))
-                                logFiles.Add($"{trackPath}.hash");
-                            if (File.Exists($"{trackPath}.skeleton"))
-                                logFiles.Add($"{trackPath}.skeleton");
+                            string? trackName = Path.GetFileNameWithoutExtension(file?.FileName);
+                            if (trackName != null)
+                            {
+                                string trackPath = Path.Combine(baseDir, trackName);
+                                if (File.Exists($"{trackPath}.hash"))
+                                    logFiles.Add($"{trackPath}.hash");
+                                if (File.Exists($"{trackPath}.skeleton"))
+                                    logFiles.Add($"{trackPath}.skeleton");
+                            }
                         }
                     }
                     else
