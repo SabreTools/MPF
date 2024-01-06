@@ -1382,13 +1382,16 @@ namespace MPF.Core
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
-                foreach (var kvp in info.CopyProtection.FullProtections)
+
+                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
+                foreach (string key in sortedKeys)
                 {
-                    int pathRoot = (Path.GetPathRoot(kvp.Key) ?? String.Empty).Length;
-                    if (kvp.Value == null)
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{kvp.Key.Substring(pathRoot)}: None");
+                    int pathRoot = (Path.GetPathRoot(key) ?? String.Empty).Length;
+                    List<string>? value = info.CopyProtection.FullProtections[key];
+                    if (value == null)
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{key.Substring(pathRoot)}: None");
                     else
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{kvp.Key.Substring(pathRoot)}: {string.Join(", ", [.. kvp.Value])}");
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{key.Substring(pathRoot)}: {string.Join(", ", [.. value])}");
                 }
             }
             catch
