@@ -885,14 +885,14 @@ namespace MPF.Core.Modules.Redumper
                         foreach (CueFile? file in cueSheet.Files)
                         {
                             string? trackName = Path.GetFileNameWithoutExtension(file?.FileName);
-                            if (trackName != null)
-                            {
-                                string trackPath = Path.Combine(baseDir, trackName);
-                                if (File.Exists($"{trackPath}.hash"))
-                                    logFiles.Add($"{trackPath}.hash");
-                                if (File.Exists($"{trackPath}.skeleton"))
-                                    logFiles.Add($"{trackPath}.skeleton");
-                            }
+                            if (trackName == null)
+                                continue;
+
+                            string trackPath = Path.Combine(baseDir, trackName);
+                            if (File.Exists($"{trackPath}.hash"))
+                                logFiles.Add($"{trackPath}.hash");
+                            if (File.Exists($"{trackPath}.skeleton"))
+                                logFiles.Add($"{trackPath}.skeleton");
                         }
                     }
                     else
