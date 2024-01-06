@@ -372,6 +372,9 @@ namespace MPF.Core.Modules.Redumper
                         }
 
                         info.Extras!.PIC = GetPIC($"{basePath}.physical", trimLength) ?? string.Empty;
+
+                        var di = InfoTool.GetDiscInformation($"{basePath}.physical");
+                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
                     }
 
                     break;
