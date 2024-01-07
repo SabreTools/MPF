@@ -496,14 +496,17 @@ namespace MPF.Core.Modules.DiscImageCreator
                             case RedumpSystem.SonyPlayStation3:
                             case RedumpSystem.SonyPlayStation4:
                             case RedumpSystem.SonyPlayStation5:
-                                trimLength = 264;
-                                if (info.SizeAndChecksums!.Layerbreak2 != default)
-                                {
-                                    trimLength += 128;
-                                }
                                 if (info.SizeAndChecksums!.Layerbreak3 != default)
                                 {
-                                    trimLength += 128;
+                                    trimLength = 520;
+                                }
+                                else if (info.SizeAndChecksums!.Layerbreak2 != default)
+                                {
+                                    trimLength = 392;
+                                }
+                                else
+                                {
+                                    trimLength = 264;
                                 }
                                 break;
                         }
