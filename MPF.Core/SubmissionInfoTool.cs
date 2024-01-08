@@ -141,6 +141,38 @@ namespace MPF.Core
                         info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
+                    else if (info.SizeAndChecksums!.Layerbreak2 == default)
+                    {
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+
+                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    }
+                    // If we have a triple-layer disc
+                    else if (info.SizeAndChecksums!.Layerbreak3 == default)
+                    {
+                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+
+                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+
+                        info.CommonDiscInfo.Layer2MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    }
+                    // If we have a quad-layer disc
                     else
                     {
                         info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
@@ -153,6 +185,14 @@ namespace MPF.Core
                         info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+
+                        info.CommonDiscInfo.Layer2MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+
+                        info.CommonDiscInfo.Layer3MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
                     break;
