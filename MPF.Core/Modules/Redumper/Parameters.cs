@@ -368,17 +368,11 @@ namespace MPF.Core.Modules.Redumper
                             case RedumpSystem.SonyPlayStation4:
                             case RedumpSystem.SonyPlayStation5:
                                 if (info.SizeAndChecksums!.Layerbreak3 != default)
-                                {
                                     trimLength = 520;
-                                }
                                 else if (info.SizeAndChecksums!.Layerbreak2 != default)
-                                {
                                     trimLength = 392;
-                                }
                                 else
-                                {
                                     trimLength = 264;
-                                }
                                 break;
                         }
 
