@@ -147,6 +147,11 @@ namespace MPF.Core.Modules.Redumper
         public string? SkipValue { get; set; }
 
         /// <summary>
+        /// Write offset for dumps when reading as data
+        /// </summary>
+        public int? DumpWriteOffsetValue { get; set; }
+
+        /// <summary>
         /// Number of sectors to read at once on initial dump, DVD only (Default 32)
         /// </summary>
         public int? DumpReadSizeValue { get; set; }
@@ -573,6 +578,10 @@ namespace MPF.Core.Modules.Redumper
             if (this[FlagStrings.HelpLong] == true)
                 parameters.Add(FlagStrings.HelpLong);
 
+            // Version
+            if (this[FlagStrings.Version] == true)
+                parameters.Add(FlagStrings.Version);
+
             // Verbose
             if (this[FlagStrings.Verbose] == true)
                 parameters.Add(FlagStrings.Verbose);
@@ -671,8 +680,8 @@ namespace MPF.Core.Modules.Redumper
             #region Drive Specific
 
             // Plextor Leadin Skip
-            if (this[FlagStrings.PlextorLeadinSkip] == true)
-                parameters.Add(FlagStrings.PlextorLeadinSkip);
+            if (this[FlagStrings.PlextorSkipLeadin] == true)
+                parameters.Add(FlagStrings.PlextorSkipLeadin);
 
             // Plextor Leadin Retries
             if (this[FlagStrings.PlextorLeadinRetries] == true)
@@ -767,6 +776,13 @@ namespace MPF.Core.Modules.Redumper
                     parameters.Add($"{FlagStrings.Skip}={SkipValue}");
             }
 
+            // Dump Write Offset
+            if (this[FlagStrings.DumpWriteOffset] == true)
+            {
+                if (DumpWriteOffsetValue != null && DumpWriteOffsetValue > 0)
+                    parameters.Add($"{FlagStrings.DumpWriteOffset}={DumpWriteOffsetValue}");
+            }
+
             // Dump Read Size
             if (this[FlagStrings.DumpReadSize] == true)
             {
@@ -777,6 +793,14 @@ namespace MPF.Core.Modules.Redumper
             // Overread Leadout
             if (this[FlagStrings.OverreadLeadout] == true)
                 parameters.Add(FlagStrings.OverreadLeadout);
+
+            // Legacy Subs
+            if (this[FlagStrings.LegacySubs] == true)
+                parameters.Add(FlagStrings.LegacySubs);
+
+            // Disable CD Text
+            if (this[FlagStrings.DisableCDText] == true)
+                parameters.Add(FlagStrings.DisableCDText);
 
             #endregion
 
@@ -794,6 +818,7 @@ namespace MPF.Core.Modules.Redumper
                     // General
                     FlagStrings.HelpLong,
                     FlagStrings.HelpShort,
+                    FlagStrings.Version,
                     FlagStrings.Verbose,
                     FlagStrings.Debug,
                     FlagStrings.Drive,
@@ -812,7 +837,7 @@ namespace MPF.Core.Modules.Redumper
                     FlagStrings.DriveSectorOrder,
 
                     // Drive Specific
-                    FlagStrings.PlextorLeadinSkip,
+                    FlagStrings.PlextorSkipLeadin,
                     FlagStrings.PlextorLeadinRetries,
                     FlagStrings.AsusSkipLeadout,
 
@@ -834,8 +859,11 @@ namespace MPF.Core.Modules.Redumper
                     FlagStrings.LBAEnd,
                     FlagStrings.RefineSubchannel,
                     FlagStrings.Skip,
+                    FlagStrings.DumpWriteOffset,
                     FlagStrings.DumpReadSize,
                     FlagStrings.OverreadLeadout,
+                    FlagStrings.LegacySubs,
+                    FlagStrings.DisableCDText,
                 ],
             };
         }
@@ -1111,8 +1139,11 @@ namespace MPF.Core.Modules.Redumper
                     case CommandStrings.DVD:
                     case CommandStrings.BluRay:
                     case CommandStrings.SACD:
+                    case CommandStrings.Rings:
                     case CommandStrings.Dump:
+                    case CommandStrings.DumpNew: // Temporary command, to be removed later
                     case CommandStrings.Refine:
+                    case CommandStrings.RefineNew: // Temporary command, to be removed later
                     case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
                     case CommandStrings.DVDIsoKey:
@@ -1154,6 +1185,9 @@ namespace MPF.Core.Modules.Redumper
 
                 // Help
                 ProcessFlagParameter(parts, FlagStrings.HelpShort, FlagStrings.HelpLong, ref i);
+
+                // Version
+                ProcessFlagParameter(parts, FlagStrings.Version, ref i);
 
                 // Verbose
                 ProcessFlagParameter(parts, FlagStrings.Verbose, ref i);
@@ -1227,8 +1261,8 @@ namespace MPF.Core.Modules.Redumper
 
                 #region Drive Specific
 
-                // Plextor Leadin Skip
-                ProcessFlagParameter(parts, FlagStrings.PlextorLeadinSkip, ref i);
+                // Plextor Skip Leadin
+                ProcessFlagParameter(parts, FlagStrings.PlextorSkipLeadin, ref i);
 
                 // Plextor Leadin Retries
                 intValue = ProcessInt32Parameter(parts, FlagStrings.PlextorLeadinRetries, ref i);
@@ -1301,13 +1335,24 @@ namespace MPF.Core.Modules.Redumper
                 if (!string.IsNullOrEmpty(stringValue))
                     SkipValue = stringValue;
 
-                // Skip
+                // Dump Write Offset
+                intValue = ProcessInt32Parameter(parts, FlagStrings.DumpWriteOffset, ref i);
+                if (!string.IsNullOrEmpty(stringValue))
+                    DumpWriteOffsetValue = intValue;
+
+                // Dump Read Size
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
                 if (!string.IsNullOrEmpty(stringValue))
                     DumpReadSizeValue = intValue;
 
                 // Overread Leadout
                 ProcessFlagParameter(parts, FlagStrings.OverreadLeadout, ref i);
+
+                // Legacy Subs
+                ProcessFlagParameter(parts, FlagStrings.LegacySubs, ref i);
+
+                // Disable CD Text
+                ProcessFlagParameter(parts, FlagStrings.DisableCDText, ref i);
 
                 #endregion
             }
