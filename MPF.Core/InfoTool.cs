@@ -1361,6 +1361,7 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
+        /// <param name="hideDriveLetters">True if drive letters are to be removed from output, false otherwise</param>
         /// <returns>True on success, false on error</returns>
         public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
@@ -1386,18 +1387,16 @@ namespace MPF.Core
                 List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
                 foreach (string key in sortedKeys)
                 {
-                    string scanPath;
+                    string scanPath = key;
                     if (hideDriveLetters)
-                        scanPath = key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
-                    else
-                        scanPath = key;
+                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
 
                     List<string>? scanResult = info.CopyProtection.FullProtections[key];
 
                     if (scanResult == null)
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{scanPath}: None");
+                        sw.WriteLine($"{scanPath}: None");
                     else
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{scanPath}: {string.Join(", ", [.. scanResult])}");
+                        sw.WriteLine($"{scanPath}: {string.Join(", ", [.. scanResult])}");
                 }
             }
             catch
