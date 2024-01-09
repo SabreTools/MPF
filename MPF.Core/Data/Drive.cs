@@ -58,18 +58,34 @@ namespace MPF.Core.Data
 
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs
+        /// If no volume label present, use PSX or PS2 serial if valid
+        /// Otherwise, use "track" as volume label
         /// </summary>
         public string? FormattedVolumeLabel
         {
             get
             {
                 string? volumeLabel = Template.DiscNotDetected;
-                if (this.MarkedActive)
+                if (!this.MarkedActive)
+                    return volumeLabel;
+
+                if (!string.IsNullOrEmpty(this.VolumeLabel))
+                    volumeLabel = this.VolumeLabel;
+                else
                 {
-                    if (string.IsNullOrEmpty(this.VolumeLabel))
-                        volumeLabel = "track";
-                    else
-                        volumeLabel = this.VolumeLabel;
+                    // No Volume Label found, fallback to something sensible
+                    switch (this.GetRedumpSystem(null))
+                    {
+                        case RedumpSystem.SonyPlayStation:
+                        case RedumpSystem.SonyPlayStation2:
+                            InfoTool.GetPlayStationExecutableInfo(this.Name, out string? serial, out _, out _);
+                            volumeLabel = serial ?? "track";
+                            break;
+                        
+                        default:
+                            volumeLabel = "track";
+                            break;
+                    }
                 }
 
                 foreach (char c in Path.GetInvalidFileNameChars())

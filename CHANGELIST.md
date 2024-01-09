@@ -9,6 +9,7 @@
 - Support ringcode and PIC for triple/quad-layer (fuzz6001)
 - Cleanup !protectionInfo.txt (Deterous)
 - Update Redumper to build 311 (Deterous)
+- Use PSX/PS2 serial as filename when Volume Label not present (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
