@@ -66,22 +66,25 @@ namespace MPF.Core.Data
             get
             {
                 string? volumeLabel = Template.DiscNotDetected;
-                if (this.MarkedActive)
+                if (!this.MarkedActive)
+                    return volumeLabel;
+
+                if (!string.IsNullOrEmpty(this.VolumeLabel))
+                    volumeLabel = this.VolumeLabel;
+                else
                 {
-                    if (!string.IsNullOrEmpty(this.VolumeLabel))
-                        volumeLabel = this.VolumeLabel;
-                    else
+                    // No Volume Label found, fallback to something sensible
+                    switch (this.GetRedumpSystem(null))
                     {
-                        RedumpSystem? system = this.GetRedumpSystem(null);
-                        if (system == RedumpSystem.SonyPlayStation || system == RedumpSystem.SonyPlayStation2)
-                        {
+                        case RedumpSystem.SonyPlayStation:
+                        case RedumpSystem.SonyPlayStation2:
                             InfoTool.GetPlayStationExecutableInfo(this.Name, out string? serial, out _, out _);
                             volumeLabel = serial ?? "track";
-                        }
-                        else
-                        {
+                            break;
+                        
+                        default:
                             volumeLabel = "track";
-                        }
+                            break;
                     }
                 }
 
