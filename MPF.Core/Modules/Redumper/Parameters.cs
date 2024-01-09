@@ -784,7 +784,7 @@ namespace MPF.Core.Modules.Redumper
             // Dump Write Offset
             if (this[FlagStrings.DumpWriteOffset] == true)
             {
-                if (DumpWriteOffsetValue != null && DumpWriteOffsetValue > 0)
+                if (DumpWriteOffsetValue != null)
                     parameters.Add($"{FlagStrings.DumpWriteOffset}={DumpWriteOffsetValue}");
             }
 
@@ -1342,12 +1342,12 @@ namespace MPF.Core.Modules.Redumper
 
                 // Dump Write Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpWriteOffset, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
+                if (intValue != null && intValue != Int32.MinValue)
                     DumpWriteOffsetValue = intValue;
 
                 // Dump Read Size
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
+                if (intValue != null && intValue != Int32.MinValue)
                     DumpReadSizeValue = intValue;
 
                 // Overread Leadout
