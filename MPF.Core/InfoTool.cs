@@ -1361,8 +1361,9 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
+        /// <param name="hideDriveLetters">True if drive letters are to be removed from output, false otherwise</param>
         /// <returns>True on success, false on error</returns>
-        public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
+        public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
             // Check to see if the inputs are valid
             if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
@@ -1382,12 +1383,20 @@ namespace MPF.Core
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
-                foreach (var kvp in info.CopyProtection.FullProtections)
+
+                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
+                foreach (string key in sortedKeys)
                 {
-                    if (kvp.Value == null)
-                        sw.WriteLine($"{kvp.Key}: None");
+                    string scanPath = key;
+                    if (hideDriveLetters)
+                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
+
+                    List<string>? scanResult = info.CopyProtection.FullProtections[key];
+
+                    if (scanResult == null)
+                        sw.WriteLine($"{scanPath}: None");
                     else
-                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", [.. kvp.Value])}");
+                        sw.WriteLine($"{scanPath}: {string.Join(", ", [.. scanResult])}");
                 }
             }
             catch

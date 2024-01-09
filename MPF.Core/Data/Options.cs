@@ -553,6 +553,15 @@ namespace MPF.Core.Data
             set { Settings["IncludeDebugProtectionInformation"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Remove drive letters from protection scan output
+        /// </summary>
+        public bool HideDriveLetters
+        {
+            get { return GetBooleanSetting(Settings, "HideDriveLetters", false); }
+            set { Settings["HideDriveLetters"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Logging Options

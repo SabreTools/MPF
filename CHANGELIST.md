@@ -6,6 +6,8 @@
 - Make missing hash data clearer
 - Get BD PIC Identifier for redumper (Deterous)
 - Support redumper skeleton and hash files (Deterous)
+- Support ringcode and PIC for triple/quad-layer (fuzz6001)
+- Cleanup !protectionInfo.txt (Deterous)
 
 ### 3.0.3 (2023-12-04)
 

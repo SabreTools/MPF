@@ -374,7 +374,7 @@ namespace MPF.Core
                 if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
                 {
                     resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo);
+                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, Options.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress?.Report(Result.Success("Writing complete!"));
                     else

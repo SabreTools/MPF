@@ -105,7 +105,7 @@ namespace MPF.Core.Utilities
             string? parsedPath = null;
 
             // These values require multiple parts to be active
-            bool scan = false, protectFile = false;
+            bool scan = false, protectFile = false, hideDriveLetters = false;
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
@@ -174,6 +174,12 @@ namespace MPF.Core.Utilities
                     protectFile = true;
                 }
 
+                // Hide drive letters from scan output (requires --protect-file)
+                else if (args[startIndex].Equals("-g") || args[startIndex].Equals("--hide-drive-letters"))
+                {
+                    hideDriveLetters = true;
+                }
+
                 // Include seed info file
                 else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
                 {
@@ -221,6 +227,7 @@ namespace MPF.Core.Utilities
             // Now deal with the complex options
             options.ScanForProtection = scan && !string.IsNullOrEmpty(parsedPath);
             options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrEmpty(parsedPath);
+            options.HideDriveLetters = hideDriveLetters && scan && protectFile && !string.IsNullOrEmpty(parsedPath);
 
             return (options, info, parsedPath, startIndex);
         }
@@ -238,6 +245,7 @@ namespace MPF.Core.Utilities
                 "-p, --path <drivepath>         Physical drive path for additional checks",
                 "-s, --scan                     Enable copy protection scan (requires --path)",
                 "-f, --protect-file             Output protection to separate file (requires --scan)",
+                "-g, --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)",
                 "-l, --load-seed <path>         Load a seed submission JSON for user information",
                 "-x, --suffix                   Enable adding filename suffix",
                 "-j, --json                     Enable submission JSON output",
