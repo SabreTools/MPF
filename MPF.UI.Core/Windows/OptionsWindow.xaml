@@ -264,7 +264,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Protection">
-                            <UniformGrid Columns="2" Rows="2">
+                            <UniformGrid Columns="2" Rows="3">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Protection Scan"
                                           IsChecked="{Binding Options.ScanForProtection}"
                                           ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
@@ -283,6 +283,11 @@
                                 <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
                                           IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
                                           ToolTip="Include debug information during protection scans" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Hide Drive Letters"
+                                          IsChecked="{Binding Options.HideDriveLetters}"
+                                          ToolTip="Remove drive letters from protection scan output" Margin="0,4"
                                 />
                             </UniformGrid>
                         </GroupBox>

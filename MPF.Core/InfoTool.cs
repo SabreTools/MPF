@@ -1362,7 +1362,7 @@ namespace MPF.Core
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
         /// <returns>True on success, false on error</returns>
-        public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info)
+        public static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
             // Check to see if the inputs are valid
             if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
@@ -1386,12 +1386,18 @@ namespace MPF.Core
                 List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
                 foreach (string key in sortedKeys)
                 {
-                    int pathRoot = (Path.GetPathRoot(key) ?? String.Empty).Length;
-                    List<string>? value = info.CopyProtection.FullProtections[key];
-                    if (value == null)
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{key.Substring(pathRoot)}: None");
+                    string scanPath;
+                    if (hideDriveLetters)
+                        scanPath = key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
                     else
-                        sw.WriteLine($"{Path.DirectorySeparatorChar}{key.Substring(pathRoot)}: {string.Join(", ", [.. value])}");
+                        scanPath = key;
+
+                    List<string>? scanResult = info.CopyProtection.FullProtections[key];
+
+                    if (scanResult == null)
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{scanPath}: None");
+                    else
+                        sw.WriteLine($"{Path.DirectorySeparatorChar}{scanPath}: {string.Join(", ", [.. scanResult])}");
                 }
             }
             catch
