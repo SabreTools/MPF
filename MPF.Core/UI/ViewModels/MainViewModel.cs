@@ -148,7 +148,7 @@ namespace MPF.Core.UI.ViewModels
 
         /// <summary>
         /// Currently provided output path
-        /// May not a valid path
+        /// Not guaranteed to be a valid path
         /// </summary>
         public string OutputPath
         {
@@ -163,7 +163,7 @@ namespace MPF.Core.UI.ViewModels
 
         /// <summary>
         /// Currently provided output path, with < > variables evaluated
-        /// May not be a valid path
+        /// Not guaranteed to be a valid path
         /// </summary>
         public string OutputPathEvaluated
         {
