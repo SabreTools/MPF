@@ -169,21 +169,21 @@ namespace MPF.Core.UI.ViewModels
         {
             get
             {
-                string system_long = this._currentSystem.LongName() ?? "Unknown System";
-                string system_short = this._currentSystem.ShortName() ?? "unknown";
-                string media_long = this._currentMediaType.LongName() ?? "Unknown Media";
+                string systemLong = this._currentSystem.LongName() ?? "Unknown System";
+                string systemShort = this._currentSystem.ShortName() ?? "unknown";
+                string mediaLong = this._currentMediaType.LongName() ?? "Unknown Media";
                 string program = this._currentProgram.ToString() ?? "Unknown Program";
-                string program_short = program == "DiscImageCreator" ? "DIC" : program;
+                string programShort = program == "DiscImageCreator" ? "DIC" : program;
                 string label = this._currentDrive?.VolumeLabel ?? "track";
                 string date = DateTime.Today.ToString("yyyyMMdd");
                 string datetime = DateTime.Now.ToString("yyyyMMdd-HHmmss");
 
                 return _outputPath
-                    .Replace("<SYSTEM>", system_long)
-                    .Replace("<SYS>", system_short)
-                    .Replace("<MEDIA>", media_long)
+                    .Replace("<SYSTEM>", systemLong)
+                    .Replace("<SYS>", systemShort)
+                    .Replace("<MEDIA>", mediaLong)
                     .Replace("<PROGRAM>", program)
-                    .Replace("<PROG>", program_short)
+                    .Replace("<PROG>", programShort)
                     .Replace("<LABEL>", label)
                     .Replace("<DATE>", date)
                     .Replace("<DATETIME>", datetime);
