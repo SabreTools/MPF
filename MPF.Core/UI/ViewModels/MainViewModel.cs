@@ -148,6 +148,7 @@ namespace MPF.Core.UI.ViewModels
 
         /// <summary>
         /// Currently provided output path
+        /// May not a valid path
         /// </summary>
         public string OutputPath
         {
@@ -159,6 +160,35 @@ namespace MPF.Core.UI.ViewModels
             }
         }
         private string _outputPath;
+
+        /// <summary>
+        /// Currently provided output path, with < > variables evaluated
+        /// May not be a valid path
+        /// </summary>
+        public string OutputPathEvaluated
+        {
+            get
+            {
+                string system_long = this._currentSystem.LongName() ?? "Unknown System";
+                string system_short = this._currentSystem.ShortName() ?? "unknown";
+                string media_long = this._currentMediaType.LongName() ?? "Unknown Media";
+                string program = this._currentProgram.ToString() ?? "Unknown Program";
+                string program_short = program == "DiscImageCreator" ? "DIC" : program;
+                string label = this._currentDrive?.VolumeLabel ?? "track";
+                string date = DateTime.Today.ToString("yyyyMMdd");
+                string datetime = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+
+                return _outputPath
+                    .Replace("<SYSTEM>", system_long)
+                    .Replace("<SYS>", system_short)
+                    .Replace("<MEDIA>", media_long)
+                    .Replace("<PROGRAM>", program)
+                    .Replace("<PROG>", program_short)
+                    .Replace("<LABEL>", label)
+                    .Replace("<DATE>", date)
+                    .Replace("<DATETIME>", datetime);
+            }
+        }
 
         /// <summary>
         /// Indicates the status of the output path text box
@@ -1190,7 +1220,7 @@ namespace MPF.Core.UI.ViewModels
         {
             return new DumpEnvironment(
                 this.Options,
-                this.OutputPath,
+                this.OutputPathEvaluated,
                 this.CurrentDrive,
                 this.CurrentSystem,
                 this.CurrentMediaType,

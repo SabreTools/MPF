@@ -70,7 +70,9 @@ namespace MPF.Core.Data
                     return volumeLabel;
 
                 if (!string.IsNullOrEmpty(this.VolumeLabel))
+                {
                     volumeLabel = this.VolumeLabel;
+                }
                 else
                 {
                     // No Volume Label found, fallback to something sensible
