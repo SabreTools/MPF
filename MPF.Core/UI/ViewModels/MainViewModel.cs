@@ -50,7 +50,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         /// <remarks>
         /// T1 - Title to display to the user
-        /// T1 - Message to display to the user
+        /// T2 - Message to display to the user
         /// T3 - Number of default options to display
         /// T4 - true for inquiry, false otherwise
         /// TResult - true for positive, false for negative, null for neutral
@@ -1767,6 +1767,57 @@ namespace MPF.Core.UI.ViewModels
             if (foundFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
+                if (mbresult != true)
+                {
+                    LogLn("Dumping aborted!");
+                    return false;
+                }
+            }
+
+            // If a complete dump exists from a different program
+            InternalProgram? programFound = null;
+            if (programFound == null && _environment.InternalProgram != InternalProgram.Aaru)
+            {
+                Modules.Aaru.Parameters parameters = new("")
+                {
+                    Type = _environment.Type,
+                    System = _environment.System
+                };
+                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                if (foundOtherFiles)
+                {
+                    programFound = InternalProgram.Aaru;
+                }
+            }
+            if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
+            {
+                Modules.DiscImageCreator.Parameters parameters = new("")
+                {
+                    Type = _environment.Type,
+                    System = _environment.System
+                };
+                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                if (foundOtherFiles)
+                {
+                    programFound = InternalProgram.DiscImageCreator;
+                }
+            }
+            if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
+            {
+                Modules.Redumper.Parameters parameters = new("")
+                {
+                    Type = _environment.Type,
+                    System = _environment.System
+                };
+                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                if (foundOtherFiles)
+                {
+                    programFound = InternalProgram.Redumper;
+                }
+            }
+            if (programFound != null && _displayUserMessage != null)
+            {
+                bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                 if (mbresult != true)
                 {
                     LogLn("Dumping aborted!");
