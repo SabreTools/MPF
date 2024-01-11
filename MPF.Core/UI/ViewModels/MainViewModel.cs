@@ -170,23 +170,39 @@ namespace MPF.Core.UI.ViewModels
             get
             {
                 string systemLong = this._currentSystem.LongName() ?? "Unknown System";
+                if (String.IsNullOrEmpty(systemLong))
+                    systemLong = "Unknown System";
                 string systemShort = this._currentSystem.ShortName() ?? "unknown";
+                if (String.IsNullOrEmpty(systemShort))
+                    systemShort = "unknown";
                 string mediaLong = this._currentMediaType.LongName() ?? "Unknown Media";
+                if (String.IsNullOrEmpty(mediaLong))
+                    mediaLong = "Unknown Media";
                 string program = this._currentProgram.ToString() ?? "Unknown Program";
+                if (String.IsNullOrEmpty(program))
+                    program = "Unknown Program";
                 string programShort = program == "DiscImageCreator" ? "DIC" : program;
-                string label = this._currentDrive?.VolumeLabel ?? "track";
+                if (String.IsNullOrEmpty(programShort))
+                    programShort = "Unknown Program";
+                string label = this._currentDrive?.FormattedVolumeLabel ?? "track";
+                if (String.IsNullOrEmpty(label))
+                    label = "track";
                 string date = DateTime.Today.ToString("yyyyMMdd");
+                if (String.IsNullOrEmpty(date))
+                    date = "UNKNOWN";
                 string datetime = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                if (String.IsNullOrEmpty(datetime))
+                    datetime = "UNKNOWN";
 
                 return _outputPath
-                    .Replace("<SYSTEM>", systemLong)
-                    .Replace("<SYS>", systemShort)
-                    .Replace("<MEDIA>", mediaLong)
-                    .Replace("<PROGRAM>", program)
-                    .Replace("<PROG>", programShort)
-                    .Replace("<LABEL>", label)
-                    .Replace("<DATE>", date)
-                    .Replace("<DATETIME>", datetime);
+                    .Replace("%SYSTEM%", systemLong)
+                    .Replace("%SYS%", systemShort)
+                    .Replace("%MEDIA%", mediaLong)
+                    .Replace("%PROGRAM%", program)
+                    .Replace("%PROG%", programShort)
+                    .Replace("%LABEL%", label)
+                    .Replace("%DATE%", date)
+                    .Replace("%DATETIME%", datetime);
             }
         }
 
