@@ -1783,11 +1783,9 @@ namespace MPF.Core.UI.ViewModels
                     Type = _environment.Type,
                     System = _environment.System
                 };
-                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
-                {
                     programFound = InternalProgram.Aaru;
-                }
             }
             if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
             {
@@ -1796,11 +1794,9 @@ namespace MPF.Core.UI.ViewModels
                     Type = _environment.Type,
                     System = _environment.System
                 };
-                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
-                {
                     programFound = InternalProgram.DiscImageCreator;
-                }
             }
             if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
             {
@@ -1809,11 +1805,9 @@ namespace MPF.Core.UI.ViewModels
                     Type = _environment.Type,
                     System = _environment.System
                 };
-                (bool foundOtherFiles, List<string> _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
-                {
                     programFound = InternalProgram.Redumper;
-                }
             }
             if (programFound != null && _displayUserMessage != null)
             {
