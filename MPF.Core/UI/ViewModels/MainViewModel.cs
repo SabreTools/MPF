@@ -148,6 +148,7 @@ namespace MPF.Core.UI.ViewModels
 
         /// <summary>
         /// Currently provided output path
+        /// Not guaranteed to be a valid path
         /// </summary>
         public string OutputPath
         {
@@ -1190,7 +1191,7 @@ namespace MPF.Core.UI.ViewModels
         {
             return new DumpEnvironment(
                 this.Options,
-                this.OutputPath,
+                EvaluateOutputPath(this.OutputPath),
                 this.CurrentDrive,
                 this.CurrentSystem,
                 this.CurrentMediaType,
@@ -1297,6 +1298,49 @@ namespace MPF.Core.UI.ViewModels
                 if (generated != null)
                     this.Parameters = generated;
             }
+        }
+
+        /// <summary>
+        /// Replaces %-delimited variables inside a path string with their values
+        /// </summary>
+        /// <param name="outputPath">Path to be evaluated</param>
+        /// <returns>String with %-delimited variables evaluated</returns>
+        public string EvaluateOutputPath(string outputPath)
+        {
+            string systemLong = this._currentSystem.LongName() ?? "Unknown System";
+            if (string.IsNullOrEmpty(systemLong))
+                systemLong = "Unknown System";
+            string systemShort = this._currentSystem.ShortName() ?? "unknown";
+            if (string.IsNullOrEmpty(systemShort))
+                systemShort = "unknown";
+            string mediaLong = this._currentMediaType.LongName() ?? "Unknown Media";
+            if (string.IsNullOrEmpty(mediaLong))
+                mediaLong = "Unknown Media";
+            string program = this._currentProgram.ToString() ?? "Unknown Program";
+            if (string.IsNullOrEmpty(program))
+                program = "Unknown Program";
+            string programShort = program == "DiscImageCreator" ? "DIC" : program;
+            if (string.IsNullOrEmpty(programShort))
+                programShort = "Unknown Program";
+            string label = this._currentDrive?.FormattedVolumeLabel ?? "track";
+            if (string.IsNullOrEmpty(label))
+                label = "track";
+            string date = DateTime.Today.ToString("yyyyMMdd");
+            if (string.IsNullOrEmpty(date))
+                date = "UNKNOWN";
+            string datetime = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+            if (string.IsNullOrEmpty(datetime))
+                datetime = "UNKNOWN";
+
+            return outputPath
+                .Replace("%SYSTEM%", systemLong)
+                .Replace("%SYS%", systemShort)
+                .Replace("%MEDIA%", mediaLong)
+                .Replace("%PROGRAM%", program)
+                .Replace("%PROG%", programShort)
+                .Replace("%LABEL%", label)
+                .Replace("%DATE%", date)
+                .Replace("%DATETIME%", datetime);
         }
 
         /// <summary>

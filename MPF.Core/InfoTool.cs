@@ -1876,8 +1876,10 @@ namespace MPF.Core
                 if (string.IsNullOrEmpty(path))
                     return string.Empty;
 
-                // Remove quotes from path
+                // Remove quotes and angle brackets from path
                 path = path!.Replace("\"", string.Empty);
+                path = path!.Replace("<", string.Empty);
+                path = path!.Replace(">", string.Empty);
 
                 // Try getting the combined path and returning that directly
                 string fullPath = getFullPath ? Path.GetFullPath(path) : path;
