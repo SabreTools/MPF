@@ -1522,6 +1522,11 @@ namespace MPF.Core.Modules.Redumper
                     if (line.StartsWith("volume identifier: "))
                     {
                         string label = line.Substring("volume identifier: ".Length);
+
+                        // Skip if label is blank
+                        if (label == null || label.Length <= 0)
+                            break;
+
                         if (volLabels.ContainsKey(label))
                             volLabels[label].Add("ISO");
                         else

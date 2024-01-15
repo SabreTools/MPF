@@ -2773,6 +2773,19 @@ namespace MPF.Core.Modules.DiscImageCreator
                     else if (line.StartsWith("Volume Identifier: "))
                     {
                         label = line.Substring("Volume Identifier: ".Length);
+
+                        // Remove leading non-printable character (unsure why DIC outputs this)
+                        if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
+                            label = label.Substring(1);
+
+                        // Skip if label is blank
+                        if (label == null || label.Length <= 0)
+                        {
+                            volType = "UNKNOWN";
+                            line = sr.ReadLine();
+                            continue;
+                        }
+
                         if (volLabels.ContainsKey(label))
                             volLabels[label].Add(volType);
                         else
