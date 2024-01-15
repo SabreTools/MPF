@@ -12,6 +12,7 @@
 - Use PSX/PS2 serial as filename when Volume Label not present (Deterous)
 - Allow variables in output path (Deterous)
 - Check for presence of complete dump from other programs (Deterous)
+- Retrieve volume label from logs (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
