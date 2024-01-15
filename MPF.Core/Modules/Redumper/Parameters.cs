@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
@@ -302,6 +303,10 @@ namespace MPF.Core.Modules.Redumper
             // Fill in the disc type data
             if (GetDiscType($"{basePath}.log", out var discTypeOrBookType))
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
+
+            // Fill in the volume labels
+            if (GetVolumeLabels($"{basePath}.log", out var volLabels))
+                VolumeLabels = volLabels;
 
             switch (this.Type)
             {
@@ -1452,20 +1457,20 @@ namespace MPF.Core.Modules.Redumper
         /// <summary>
         /// Get reported disc type information, if possible
         /// </summary>
-        /// <param name="drive">_disc.txt file location</param>
+        /// <param name="log">Log file location</param>
         /// <returns>True if disc type info was set, false otherwise</returns>
-        private static bool GetDiscType(string drive, out string? discTypeOrBookType)
+        private static bool GetDiscType(string log, out string? discTypeOrBookType)
         {
             // Set the default values
             discTypeOrBookType = null;
 
             // If the file doesn't exist, we can't get the info
-            if (!File.Exists(drive))
+            if (!File.Exists(log))
                 return false;
 
             try
             {
-                using var sr = File.OpenText(drive);
+                using var sr = File.OpenText(log);
                 var line = sr.ReadLine();
                 while (line != null)
                 {
@@ -1488,6 +1493,55 @@ namespace MPF.Core.Modules.Redumper
             {
                 // We don't care what the exception is right now
                 discTypeOrBookType = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get all Volume Identifiers
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Volume labels (by type), or null if none present</returns>
+        private static bool GetVolumeLabels(string log, out Dictionary<string, List<string>> volLabels)
+        {
+            // If the file doesn't exist, can't get the volume labels
+            volLabels = [];
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // ISO9660 Volume Identifier
+                    if (line.StartsWith("volume identifier: "))
+                    {
+                        string label = line.Substring("volume identifier: ".Length);
+                        if (volLabels.ContainsKey(label))
+                            volLabels[label].Add("ISO");
+                        else
+                            volLabels[label] = ["ISO"];
+
+                        // Redumper log currently only outputs ISO9660 label, end here
+                        break;
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                // Return true if a volume label was found
+                return volLabels.Count > 0;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                volLabels = [];
                 return false;
             }
         }
