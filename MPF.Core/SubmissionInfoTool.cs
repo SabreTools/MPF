@@ -712,7 +712,7 @@ namespace MPF.Core
             List<string> volLabels = [];
             
             // Begin formatted output with the label from Windows, if it is unique and not a common volume label
-            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
                 volLabels.Add(driveLabel);
 
             // Add remaining labels with their corresponding filesystems
