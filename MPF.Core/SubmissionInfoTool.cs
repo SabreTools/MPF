@@ -682,13 +682,12 @@ namespace MPF.Core
         /// <returns>Formatted string of volume labels and their filesystems</returns>
         private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
-
             // Must have at least one label to format
-            if (driveLabel == null && (labels == null || labels.Count <= 0))
+            if (driveLabel == null && (labels == null || labels.Count == 0))
                 return null;
 
             // If no labels given, use drive label
-            if (labels == null || labels.Count <= 0)
+            if (labels == null || labels.Count == 0)
             {
                 // Ignore common volume labels
                 if (Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
@@ -698,7 +697,7 @@ namespace MPF.Core
             }
 
             // If only one label, don't mention fs
-            string firstLabel = labels.FirstOrDefault().Key;
+            string firstLabel = labels.First().Key;
             if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
             {
                 // Ignore common volume labels
@@ -724,7 +723,7 @@ namespace MPF.Core
             }
 
             // Print each label separated by a comma and a space
-            if (volLabels == null)
+            if (volLabels.Count == 0)
                 return null;
 
             return string.Join(", ", [.. volLabels]);
