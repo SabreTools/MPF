@@ -13,6 +13,7 @@
 - Allow variables in output path (Deterous)
 - Check for presence of complete dump from other programs (Deterous)
 - Retrieve volume label from logs (Deterous)
+- Correct missing space in PVD (fuzz6001)
 
 ### 3.0.3 (2023-12-04)
 
