@@ -2031,11 +2031,11 @@ namespace MPF.Core.Modules.Redumper
                     return null;
 
                 // Now that we're at the relevant entries, read each line in and concatenate
-                string? pvdString = "", line = sr.ReadLine()?.Trim();
+                string? pvdString = "", line = sr.ReadLine();
                 while (line?.StartsWith("03") == true)
                 {
                     pvdString += line + "\n";
-                    line = sr.ReadLine()?.Trim();
+                    line = sr.ReadLine();
                 }
 
                 return pvdString.TrimEnd('\n');
