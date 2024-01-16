@@ -74,6 +74,11 @@ namespace MPF.Core.Modules
         /// </summary>
         private Process? process;
 
+        /// <summary>
+        /// All found volume labels and their corresponding file systems
+        /// </summary>
+        public Dictionary<string, List<string>>? VolumeLabels;
+
         #endregion
 
         #region Virtual Dumping Information

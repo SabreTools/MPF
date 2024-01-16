@@ -277,7 +277,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.IBMPCcompatible;
 
             // Check volume labels first
-            RedumpSystem? systemFromLabel = GetRedumpSystemFromVolumeLabel();
+            RedumpSystem? systemFromLabel = GetRedumpSystemFromVolumeLabel(this.VolumeLabel);
             if (systemFromLabel != null)
                 return systemFromLabel;
 
@@ -512,48 +512,48 @@ namespace MPF.Core.Data
         /// Get the current system from the drive volume label
         /// </summary>
         /// <returns>The system based on volume label, null if none detected</returns>
-        public RedumpSystem? GetRedumpSystemFromVolumeLabel()
+        public static RedumpSystem? GetRedumpSystemFromVolumeLabel(string? volumeLabel)
         {
             // If the volume label is empty, we can't do anything
-            if (string.IsNullOrEmpty(this.VolumeLabel))
+            if (string.IsNullOrEmpty(volumeLabel))
                 return null;
 
             // Audio CD
-            if (this.VolumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.AudioCD;
 
             // Microsoft Xbox
-            if (this.VolumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox;
-            else if (this.VolumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
+            else if (volumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox;
 
             // Microsoft Xbox 360
-            if (this.VolumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox360;
-            else if (this.VolumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
+            else if (volumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox360;
 
             // Microsoft Xbox 360 - Too overly broad even if a lot of discs use this
-            //if (this.VolumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
+            //if (volumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
             //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
-            //if (this.VolumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
+            //if (volumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
             //    return RedumpSystem.MicrosoftXbox360;
 
             // Sega Mega-CD / Sega-CD
-            if (this.VolumeLabel.Equals("Sega_CD", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("Sega_CD", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SegaMegaCDSegaCD;
 
             // Sony PlayStation 3
-            if (this.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation3;
 
             // Sony PlayStation 4
-            if (this.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation4;
 
             // Sony PlayStation 5
-            if (this.VolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation5;
 
             return null;

@@ -409,6 +409,10 @@ namespace MPF.Core.Modules.DiscImageCreator
             // Fill in the hash data
             info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 
+            // Fill in the volume labels
+            if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
+                VolumeLabels = volLabels;
+
             // Extract info based generically on MediaType
             switch (this.Type)
             {
@@ -2718,6 +2722,89 @@ namespace MPF.Core.Modules.DiscImageCreator
             {
                 // We don't care what the exception is right now
                 discTypeOrBookType = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get all Volume Identifiers
+        /// </summary>
+        /// <param name="volDesc">_volDesc.txt file location</param>
+        /// <returns>Volume labels (by type), or null if none present</returns>
+        private static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
+        {
+            // If the file doesn't exist, can't get the volume labels
+            volLabels = [];
+            if (!File.Exists(volDesc))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(volDesc);
+                var line = sr.ReadLine();
+
+                string volType = "UNKNOWN";
+                string label;
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+                    
+                    // ISO9660 and extensions section
+                    if (line.StartsWith("Volume Descriptor Type: "))
+                    {
+                        Int32.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+                        volType = volTypeInt switch
+                        {
+                            // 0 => "Boot Record" // Should not not contain a Volume Identifier
+                            1 => "ISO", // ISO9660
+                            2 => "Joliet",
+                            // 3 => "Volume Partition Descriptor" // Should not not contain a Volume Identifier
+                            // 255 => "???" // Should not not contain a Volume Identifier
+                            _ => "UNKNOWN" // Should not contain a Volume Identifier
+                        };
+                    }
+                    // UDF section
+                    else if (line.StartsWith("Primary Volume Descriptor Number:"))
+                    {
+                        volType = "UDF";
+                    }
+                    // Identifier
+                    else if (line.StartsWith("Volume Identifier: "))
+                    {
+                        label = line.Substring("Volume Identifier: ".Length);
+
+                        // Remove leading non-printable character (unsure why DIC outputs this)
+                        if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
+                            label = label.Substring(1);
+
+                        // Skip if label is blank
+                        if (label == null || label.Length <= 0)
+                        {
+                            volType = "UNKNOWN";
+                            line = sr.ReadLine();
+                            continue;
+                        }
+
+                        if (volLabels.ContainsKey(label))
+                            volLabels[label].Add(volType);
+                        else
+                            volLabels.Add(label, [volType]);
+
+                        // Reset volume type
+                        volType = "UNKNOWN";
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                // Return true if a volume label was found
+                return volLabels.Count > 0;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                volLabels = [];
                 return false;
             }
         }

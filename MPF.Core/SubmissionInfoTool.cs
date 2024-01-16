@@ -110,8 +110,9 @@ namespace MPF.Core
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            if (drive?.VolumeLabel != null && drive.GetRedumpSystemFromVolumeLabel() == null)
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = drive.VolumeLabel;
+            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, parameters?.VolumeLabels);
+            if (volLabels != null)
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
             switch (mediaType)
@@ -670,6 +671,64 @@ namespace MPF.Core
             return true;
         }
 
-#endregion
+        #endregion
+
+        #region Helper Functions
+
+        /// <summary>
+        /// Formats a list of volume labels and their corresponding filesystems
+        /// </summary>
+        /// <param name="labels">Dictionary of volume labels and their filesystems</param>
+        /// <returns>Formatted string of volume labels and their filesystems</returns>
+        private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
+        {
+            // Must have at least one label to format
+            if (driveLabel == null && (labels == null || labels.Count == 0))
+                return null;
+
+            // If no labels given, use drive label
+            if (labels == null || labels.Count == 0)
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                    return null;
+
+                return driveLabel;
+            }
+
+            // If only one label, don't mention fs
+            string firstLabel = labels.First().Key;
+            if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
+                    return null;
+
+                return firstLabel;
+            }
+
+            // Otherwise, state filesystem for each label
+            List<string> volLabels = [];
+            
+            // Begin formatted output with the label from Windows, if it is unique and not a common volume label
+            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
+                volLabels.Add(driveLabel);
+
+            // Add remaining labels with their corresponding filesystems
+            foreach (KeyValuePair<string, List<string>> label in labels)
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(label.Key) == null)
+                    volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
+            }
+
+            // Print each label separated by a comma and a space
+            if (volLabels.Count == 0)
+                return null;
+
+            return string.Join(", ", [.. volLabels]);
+        }
+
+        #endregion
     }
 }
