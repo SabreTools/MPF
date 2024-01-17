@@ -639,7 +639,10 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (sbyte)(sbyte.Parse(value) * factor);
+                bool isSByte = sbyte.TryParse(value, out sbyte sByteValue);
+                if (!isSByte)
+                    return null;
+                return (sbyte)(sByteValue * factor);
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -654,7 +657,10 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (sbyte)(sbyte.Parse(value) * factor);
+                bool isSByte = sbyte.TryParse(value, out sbyte sByteValue);
+                if (!isSByte)
+                    return null;
+                return (sbyte)(sByteValue * factor);
             }
 
             return SByte.MinValue;
@@ -716,7 +722,10 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (short)(short.Parse(value) * factor);
+                bool isShort = short.TryParse(value, out short shortValue);
+                if (!isShort)
+                    return null;
+                return (byte)(shortValue * factor);
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -731,7 +740,10 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (short)(short.Parse(value) * factor);
+                bool isShort = short.TryParse(value, out short shortValue);
+                if (!isShort)
+                    return null;
+                return (byte)(shortValue * factor);
             }
 
             return Int16.MinValue;
@@ -793,7 +805,10 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (int)(int.Parse(value) * factor);
+                bool isInt = int.TryParse(value, out int intValue);
+                if (!isInt)
+                    return null;
+                return (int)(intValue * factor);
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -808,7 +823,10 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (int)(int.Parse(value) * factor);
+                bool isInt = int.TryParse(value, out int intValue);
+                if (!isInt)
+                    return null;
+                return (int)(intValue * factor);
             }
 
             return Int32.MinValue;
@@ -870,7 +888,10 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return long.Parse(value) * factor;
+                bool isLong = long.TryParse(value, out long longValue);
+                if (!isLong)
+                    return null;
+                return (int)(longValue * factor);
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -885,7 +906,10 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return long.Parse(value) * factor;
+                bool isLong = long.TryParse(value, out long longValue);
+                if (!isLong)
+                    return null;
+                return (int)(longValue * factor);
             }
 
             return Int64.MinValue;
@@ -1023,7 +1047,10 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (byte)(byte.Parse(value) * factor);
+                bool isByte = byte.TryParse(value, out byte byteValue);
+                if (!isByte)
+                    return null;
+                return (byte)(byteValue * factor);
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -1038,14 +1065,17 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (byte)(byte.Parse(value) * factor);
+                bool isByte = byte.TryParse(value, out byte byteValue);
+                if (!isByte)
+                    return null;
+                return (byte)(byteValue * factor);
             }
 
             return Byte.MinValue;
         }
 
         /// <summary>
-        /// Get yhe trimmed value and multiplication factor from a value
+        /// Get the trimmed value and multiplication factor from a value
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>
         /// <returns>Trimmed value and multiplication factor</returns>
