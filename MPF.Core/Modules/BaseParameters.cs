@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -639,10 +640,11 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                bool isSByte = sbyte.TryParse(value, out sbyte sByteValue);
-                if (!isSByte)
-                    return null;
-                return (sbyte)(sByteValue * factor);
+                if (sbyte.TryParse(value, out sbyte sByteValue))
+                    return (sbyte)(sByteValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && sbyte.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out sbyte sByteHexValue))
+                    return (sbyte)(sByteHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -657,10 +659,11 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                bool isSByte = sbyte.TryParse(value, out sbyte sByteValue);
-                if (!isSByte)
-                    return null;
-                return (sbyte)(sByteValue * factor);
+                if (sbyte.TryParse(value, out sbyte sByteValue))
+                    return (sbyte)(sByteValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && sbyte.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out sbyte sByteHexValue))
+                    return (sbyte)(sByteHexValue * factor);
+                return null;
             }
 
             return SByte.MinValue;
@@ -722,10 +725,11 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                bool isShort = short.TryParse(value, out short shortValue);
-                if (!isShort)
-                    return null;
-                return (byte)(shortValue * factor);
+                if (short.TryParse(value, out short shortValue))
+                    return (short)(shortValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && short.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out short shortHexValue))
+                    return (short)(shortHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -740,10 +744,11 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                bool isShort = short.TryParse(value, out short shortValue);
-                if (!isShort)
-                    return null;
-                return (byte)(shortValue * factor);
+                if (short.TryParse(value, out short shortValue))
+                    return (short)(shortValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && short.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out short shortHexValue))
+                    return (short)(shortHexValue * factor);
+                return null;
             }
 
             return Int16.MinValue;
@@ -805,10 +810,11 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                bool isInt = int.TryParse(value, out int intValue);
-                if (!isInt)
-                    return null;
-                return (int)(intValue * factor);
+                if (int.TryParse(value, out int intValue))
+                    return (int)(intValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && int.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int intHexValue))
+                    return (int)(intHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -823,10 +829,11 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                bool isInt = int.TryParse(value, out int intValue);
-                if (!isInt)
-                    return null;
-                return (int)(intValue * factor);
+                if (int.TryParse(value, out int intValue))
+                    return (int)(intValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && int.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int intHexValue))
+                    return (int)(intHexValue * factor);
+                return null;
             }
 
             return Int32.MinValue;
@@ -888,10 +895,11 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                bool isLong = long.TryParse(value, out long longValue);
-                if (!isLong)
-                    return null;
-                return (int)(longValue * factor);
+                if (long.TryParse(value, out long longValue))
+                    return (long)(longValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && long.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
+                    return (long)(longHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -906,10 +914,11 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                bool isLong = long.TryParse(value, out long longValue);
-                if (!isLong)
-                    return null;
-                return (int)(longValue * factor);
+                if (long.TryParse(value, out long longValue))
+                    return (long)(longValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && long.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
+                    return (long)(longHexValue * factor);
+                return null;
             }
 
             return Int64.MinValue;
@@ -1047,10 +1056,11 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                bool isByte = byte.TryParse(value, out byte byteValue);
-                if (!isByte)
-                    return null;
-                return (byte)(byteValue * factor);
+                if (byte.TryParse(value, out byte byteValue))
+                    return (byte)(byteValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && byte.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out byte byteHexValue))
+                    return (byte)(byteHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -1065,10 +1075,11 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                bool isByte = byte.TryParse(value, out byte byteValue);
-                if (!isByte)
-                    return null;
-                return (byte)(byteValue * factor);
+                if (byte.TryParse(value, out byte byteValue))
+                    return (byte)(byteValue * factor);
+                if (value.Length > 2 && value[0] == '0' && (value[1] == 'x' || value[1] == 'X') && byte.TryParse(value.Substring(2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out byte byteHexValue))
+                    return (byte)(byteHexValue * factor);
+                return null;
             }
 
             return Byte.MinValue;
