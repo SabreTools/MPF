@@ -1476,7 +1476,7 @@ namespace MPF.Core
         /// <param name="title">Existing title to potentially reformat</param>
         /// <param name="languages">Array of languages to use for assuming articles</param>
         /// <returns>The reformatted title</returns>
-        public static string NormalizeDiscTitle(string title, Language[] languages)
+        public static string? NormalizeDiscTitle(string? title, Language?[]? languages)
         {
             // If we have no set languages, then assume English
             if (languages == null || languages.Length == 0)
@@ -1486,8 +1486,8 @@ namespace MPF.Core
             foreach (var language in languages)
             {
                 // If the new title is different, assume it was normalized and return it
-                string newTitle = NormalizeDiscTitle(title, language);
-                if (newTitle == title)
+                string? newTitle = NormalizeDiscTitle(title, language);
+                if (newTitle != title)
                     return newTitle;
             }
 
@@ -1509,14 +1509,18 @@ namespace MPF.Core
         /// If the language of the title is unknown or if it's multilingual,
         /// pass in Language.English for standardized coverage.
         /// </remarks>
-        public static string NormalizeDiscTitle(string title, Language language)
+        public static string? NormalizeDiscTitle(string? title, Language? language)
         {
             // If we have an invalid title, just return it as-is
             if (string.IsNullOrEmpty(title))
                 return title;
 
+            // If we have an invalid language, assume Language.English
+            if (language == null)
+                language = Language.English;
+
             // Get the title split into parts
-            string[] splitTitle = title.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            string[] splitTitle = title!.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
 
             // If we only have one part, we can't do anything
             if (splitTitle.Length <= 1)
@@ -1587,6 +1591,8 @@ namespace MPF.Core
                 case "die"
                     when language is Language.Afrikaans
                         || language is Language.German:
+                case "du"
+                    when language is Language.French:
                 case "e"
                     when language is Language.Papiamento:
                 case "een"
@@ -1829,8 +1835,6 @@ namespace MPF.Core
                 case "אַן"
                     when language is Language.Yiddish:
 
-                // Seen by Redump, unknown origin
-                case "du":
                     break;
 
                 // Otherwise, just return it as-is

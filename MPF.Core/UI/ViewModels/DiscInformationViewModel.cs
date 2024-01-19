@@ -217,11 +217,13 @@ namespace MPF.Core.UI.ViewModels
         /// TODO: Convert selected list item to binding
         public void Save()
         {
-            if (SubmissionInfo.CommonDiscInfo == null) SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
+            if (SubmissionInfo.CommonDiscInfo == null)
+                SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
             SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
             if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
-                SubmissionInfo.CommonDiscInfo.Languages = new Language?[] { null };
+                SubmissionInfo.CommonDiscInfo.Languages = [null];
             SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
+            SubmissionInfo.CommonDiscInfo.Title = InfoTool.NormalizeDiscTitle(SubmissionInfo.CommonDiscInfo.Title, SubmissionInfo.CommonDiscInfo.Languages);
         }
 
         /// <summary>
