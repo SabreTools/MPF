@@ -307,6 +307,18 @@ namespace MPF.Core.Data
                 return RedumpSystem.BandaiPippin;
             }
 
+            // Commodore CDTV (currently also detects CD32 as CDTV)
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(this.Name, "S"), "STARTUP-SEQUENCE"))
+                || File.Exists(Path.Combine(this.Name, "CDTV.TM")))
+#else
+            if (File.Exists(Path.Combine(this.Name, "S", "STARTUP-SEQUENCE"))
+                || File.Exists(Path.Combine(this.Name, "CDTV.TM")))
+#endif
+            {
+                return RedumpSystem.CommodoreAmigaCDTV;
+            }
+
             // Mattel Fisher-Price iXL
 #if NET20 || NET35
             if (File.Exists(Path.Combine(Path.Combine(this.Name, "iXL"), "iXLUpdater.exe")))
