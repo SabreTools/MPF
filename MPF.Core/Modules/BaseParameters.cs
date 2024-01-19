@@ -1157,10 +1157,6 @@ namespace MPF.Core.Modules
             return (value, factor);
         }
 
-        #endregion
-
-        #region Helpers
-
         /// <summary>
         /// Removes a leading 0x if it exists, case insensitive
         /// </summary>
