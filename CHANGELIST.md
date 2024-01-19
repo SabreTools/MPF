@@ -17,6 +17,7 @@
 - Prevent crashing on invalid parameters (Deterous)
 - Detect CDTV discs (Deterous)
 - Differentiate CD32 from CDTV (Deterous)
+- Normalise Disc Titles in Submission Info (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
