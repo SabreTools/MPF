@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -639,7 +640,12 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (sbyte)(sbyte.Parse(value) * factor);
+                if (sbyte.TryParse(value, out sbyte sByteValue))
+                    return (sbyte)(sByteValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (sbyte.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out sbyte sByteHexValue))
+                    return (sbyte)(sByteHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -654,7 +660,12 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (sbyte)(sbyte.Parse(value) * factor);
+                if (sbyte.TryParse(value, out sbyte sByteValue))
+                    return (sbyte)(sByteValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (sbyte.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out sbyte sByteHexValue))
+                    return (sbyte)(sByteHexValue * factor);
+                return null;
             }
 
             return SByte.MinValue;
@@ -716,7 +727,12 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (short)(short.Parse(value) * factor);
+                if (short.TryParse(value, out short shortValue))
+                    return (short)(shortValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (short.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out short shortHexValue))
+                    return (short)(shortHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -731,7 +747,12 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (short)(short.Parse(value) * factor);
+                if (short.TryParse(value, out short shortValue))
+                    return (short)(shortValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (short.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out short shortHexValue))
+                    return (short)(shortHexValue * factor);
+                return null;
             }
 
             return Int16.MinValue;
@@ -793,7 +814,12 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (int)(int.Parse(value) * factor);
+                if (int.TryParse(value, out int intValue))
+                    return (int)(intValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (int.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int intHexValue))
+                    return (int)(intHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -808,7 +834,12 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (int)(int.Parse(value) * factor);
+                if (int.TryParse(value, out int intValue))
+                    return (int)(intValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (int.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int intHexValue))
+                    return (int)(intHexValue * factor);
+                return null;
             }
 
             return Int32.MinValue;
@@ -870,7 +901,12 @@ namespace MPF.Core.Modules
                 this[longFlagString] = true;
                 i++;
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return long.Parse(value) * factor;
+                if (long.TryParse(value, out long longValue))
+                    return (long)(longValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (long.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
+                    return (long)(longHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -885,7 +921,12 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return long.Parse(value) * factor;
+                if (long.TryParse(value, out long longValue))
+                    return (long)(longValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (long.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
+                    return (long)(longHexValue * factor);
+                return null;
             }
 
             return Int64.MinValue;
@@ -1023,7 +1064,12 @@ namespace MPF.Core.Modules
                 i++;
 
                 (string value, long factor) = ExtractFactorFromValue(parts[i]);
-                return (byte)(byte.Parse(value) * factor);
+                if (byte.TryParse(value, out byte byteValue))
+                    return (byte)(byteValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (byte.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out byte byteHexValue))
+                    return (byte)(byteHexValue * factor);
+                return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
             {
@@ -1038,14 +1084,19 @@ namespace MPF.Core.Modules
 
                 this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
-                return (byte)(byte.Parse(value) * factor);
+                if (byte.TryParse(value, out byte byteValue))
+                    return (byte)(byteValue * factor);
+                string hexValue = RemoveHexIdentifier(value);
+                if (byte.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out byte byteHexValue))
+                    return (byte)(byteHexValue * factor);
+                return null;
             }
 
             return Byte.MinValue;
         }
 
         /// <summary>
-        /// Get yhe trimmed value and multiplication factor from a value
+        /// Get the trimmed value and multiplication factor from a value
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>
         /// <returns>Trimmed value and multiplication factor</returns>
@@ -1104,6 +1155,23 @@ namespace MPF.Core.Modules
             }
 
             return (value, factor);
+        }
+
+        /// <summary>
+        /// Removes a leading 0x if it exists, case insensitive
+        /// </summary>
+        /// <param name="value">String with removed leading 0x</param>
+        /// <returns></returns>
+        private static string RemoveHexIdentifier(string value)
+        {
+            if (value.Length <= 2)
+                return value;
+            if (value[0] != '0')
+                return value;
+            if (value[1] != 'x' && value[1] != 'X')
+                return value;
+
+            return value.Substring(2);
         }
 
         #endregion

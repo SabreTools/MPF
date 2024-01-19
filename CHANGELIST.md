@@ -14,6 +14,7 @@
 - Check for presence of complete dump from other programs (Deterous)
 - Retrieve volume label from logs (Deterous)
 - Correct missing space in PVD (fuzz6001)
+- Prevent crashing on invalid parameters (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
