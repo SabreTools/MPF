@@ -397,7 +397,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Performs MPF.Check functionality
         /// </summary>
-        /// <returns>An error message if failed, otherwise null</returns>
+        /// <returns>An error message if failed, otherwise string.Empty/null</returns>
         public string? CheckDump()
         {
 
@@ -408,10 +408,7 @@ namespace MPF.Core.UI.ViewModels
                 return "Input Path is not a valid file";
 
             // Populate an environment
-            //string driveLetter;
-            //Drive? drive = Drive.Create(null, driveLetter);
-            Drive? drive = null;
-            var env = new DumpEnvironment(Options, Path.GetFullPath(this.InputPath.Trim('"')), drive, this.CurrentSystem, this.CurrentMediaType, this.CurrentProgram, parameters: null);
+            var env = new DumpEnvironment(Options, Path.GetFullPath(this.InputPath.Trim('"')), null, this.CurrentSystem, this.CurrentMediaType, this.CurrentProgram, parameters: null);
 
             // Make new Progress objects
             var resultProgress = new Progress<Result>();

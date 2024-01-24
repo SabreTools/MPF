@@ -18,6 +18,7 @@
 - Detect CDTV discs (Deterous)
 - Differentiate CD32 from CDTV (Deterous)
 - Normalise Disc Titles in Submission Info (Deterous)
+- Add a GUI for MPF.Check (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
