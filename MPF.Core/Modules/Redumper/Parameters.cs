@@ -2357,6 +2357,11 @@ namespace MPF.Core.Modules.Redumper
                 using var sr = File.OpenText(log);
                 sr.ReadLine();
 
+                // Get the next non-warning line
+                string nextLine = sr.ReadLine()?.Trim() ?? string.Empty;
+                if (nextLine.StartsWith("warning:", StringComparison.OrdinalIgnoreCase))
+                    nextLine = sr.ReadLine()?.Trim() ?? string.Empty;
+
                 // Generate regex
                 // Permissive
                 var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
@@ -2364,7 +2369,7 @@ namespace MPF.Core.Modules.Redumper
                 //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
 
                 // Extract the version string
-                var match = regex.Match(sr.ReadLine()?.Trim() ?? string.Empty);
+                var match = regex.Match(nextLine);
                 var version = match.Groups[1].Value;
                 return string.IsNullOrEmpty(version) ? null : version;
             }
