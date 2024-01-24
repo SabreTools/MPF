@@ -17,8 +17,8 @@
 - Prevent crashing on invalid parameters (Deterous)
 - Detect CDTV discs (Deterous)
 - Differentiate CD32 from CDTV (Deterous)
+- Skip warning line in Redumper log
 - Normalise Disc Titles in Submission Info (Deterous)
-- Add a GUI for MPF.Check (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
