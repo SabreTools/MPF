@@ -16,12 +16,10 @@ namespace MPF.UI.Core.Windows
     /// </summary>
     public partial class CheckDumpWindow : WindowBase
     {
-
         /// <summary>
         /// Read-only access to the current check dump view model
         /// </summary>
         public CheckDumpViewModel CheckDumpViewModel => DataContext as CheckDumpViewModel ?? new CheckDumpViewModel();
-
 
 #if NET35
 

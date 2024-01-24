@@ -400,7 +400,6 @@ namespace MPF.Core.UI.ViewModels
         /// <returns>An error message if failed, otherwise string.Empty/null</returns>
         public string? CheckDump(Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
         {
-
             if (string.IsNullOrEmpty(InputPath))
                 return "Invalid Input path";
 
