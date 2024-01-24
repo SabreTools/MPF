@@ -28,6 +28,7 @@ namespace MPF.UI.Core.Windows
         private MenuItem? _AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
         private MenuItem? _CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
         private MenuItem? _DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
+        private MenuItem? _CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
         private MenuItem? _OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
 
         #endregion
@@ -139,12 +140,14 @@ namespace MPF.UI.Core.Windows
             _AppExitMenuItem!.Click += AppExitClick;
             _CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
             _DebugViewMenuItem!.Click += DebugViewClick;
+            _CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
             _OptionsMenuItem!.Click += OptionsMenuItemClick;
 #else
             AboutMenuItem.Click += AboutClick;
             AppExitMenuItem.Click += AppExitClick;
             CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
             DebugViewMenuItem.Click += DebugViewClick;
+            CheckDumpMenuItem.Click += CheckDumpMenuItemClick;
             OptionsMenuItem.Click += OptionsMenuItemClick;
 #endif
 
@@ -314,6 +317,31 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
+        /// Show the Check Dump window
+        /// </summary>
+        public void ShowCheckDumpWindow()
+        {
+            // Hide MainWindow while Check GUI is open
+            this.Hide();
+
+            var checkDumpWindow = new CheckDumpWindow(this)
+            {
+                Focusable = true,
+                Owner = this,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            checkDumpWindow.Closed += delegate {
+                // Unhide Main window after Check window has been closed
+                this.Show();
+                this.Activate();
+            };
+            checkDumpWindow.Show();
+        }
+
+        /// <summary>
         /// Show the Options window
         /// </summary>
         public void ShowOptionsWindow(string? title = null)
@@ -385,6 +413,12 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public void AppExitClick(object sender, RoutedEventArgs e) =>
             Application.Current.Shutdown();
+
+        /// <summary>
+        /// Handler for CheckDumpMenuItem Click event
+        /// </summary>
+        public void CheckDumpMenuItemClick(object sender, RoutedEventArgs e) =>
+            ShowCheckDumpWindow();
 
         /// <summary>
         /// Handler for CheckForUpdatesMenuItem Click event
