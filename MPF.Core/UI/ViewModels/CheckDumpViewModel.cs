@@ -398,7 +398,7 @@ namespace MPF.Core.UI.ViewModels
         /// Performs MPF.Check functionality
         /// </summary>
         /// <returns>An error message if failed, otherwise string.Empty/null</returns>
-        public string? CheckDump()
+        public string? CheckDump(Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
         {
 
             if (string.IsNullOrEmpty(InputPath))
@@ -422,7 +422,7 @@ namespace MPF.Core.UI.ViewModels
                 resultTask.Wait();
                 var result = resultTask.Result;
 #else
-            var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
+            var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, processUserInfo).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
 
             return result.Message;

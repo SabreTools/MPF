@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Core.UI.ViewModels;
+using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
@@ -176,6 +177,32 @@ namespace MPF.UI.Core.Windows
             };
         }
 
+        /// <summary>
+        /// Show the disc information window
+        /// </summary>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
+        public (bool?, SubmissionInfo?) ShowDiscInformationWindow(SubmissionInfo? submissionInfo)
+        {
+            var discInformationWindow = new DiscInformationWindow(CheckDumpViewModel.Options, submissionInfo)
+            {
+                Focusable = true,
+                Owner = this,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            discInformationWindow.Closed += delegate { this.Activate(); };
+            bool? result = discInformationWindow.ShowDialog();
+
+            // Copy back the submission info changes, if necessary
+            if (result == true)
+                submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+
+            return (result, submissionInfo!);
+        }
+
         #endregion
 
         #region Event Handlers
@@ -185,7 +212,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCheckDumpClick(object sender, EventArgs e)
         {
-            string? errorMessage = CheckDumpViewModel.CheckDump();
+            string? errorMessage = CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
