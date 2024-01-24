@@ -77,6 +77,20 @@ namespace MPF.Core.UI.ViewModels
         #region Properties
 
         /// <summary>
+        /// Indicates the status of the check dump menu item
+        /// </summary>
+        public bool CheckDumpMenuItemEnabled
+        {
+            get => _checkDumpMenuItemEnabled;
+            set
+            {
+                _checkDumpMenuItemEnabled = value;
+                TriggerPropertyChanged(nameof(CheckDumpMenuItemEnabled));
+            }
+        }
+        private bool _checkDumpMenuItemEnabled;
+
+        /// <summary>
         /// Indicates the status of the options menu item
         /// </summary>
         public bool OptionsMenuItemEnabled
@@ -507,6 +521,7 @@ namespace MPF.Core.UI.ViewModels
             _systems = [];
 
             OptionsMenuItemEnabled = true;
+            CheckDumpMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
