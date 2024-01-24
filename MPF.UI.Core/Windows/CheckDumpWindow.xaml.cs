@@ -121,7 +121,7 @@ namespace MPF.UI.Core.Windows
         public void BrowseFile()
         {
             // Get the current path, if possible
-            string currentPath = CheckDumpViewModel.InputPath;
+            string? currentPath = CheckDumpViewModel.InputPath;
             if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CheckDumpViewModel.Options.DefaultOutputPath))
                 currentPath = CheckDumpViewModel.Options.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
@@ -185,8 +185,17 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCheckDumpClick(object sender, EventArgs e)
         {
-            DisplayUserMessage("Check Complete", "The dump has been processed", 1, false);
-            Close();
+            string? errorMessage = CheckDumpViewModel.CheckDump();
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
+                if (checkAgain == false)
+                    Close();
+            }
+            else
+            {
+                DisplayUserMessage("Check Failed", errorMessage!, 1, false);
+            }
         }
 
         /// <summary>
@@ -195,23 +204,6 @@ namespace MPF.UI.Core.Windows
         private void OnCancelClick(object sender, EventArgs e)
         {
             Close();
-        }
-
-        /// <summary>
-        /// Handler for SystemTypeComboBox SelectionChanged event
-        /// </summary>
-        public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CheckDumpViewModel.CanExecuteSelectionChanged)
-                CheckDumpViewModel.ChangeSystem();
-        }
-
-        /// <summary>
-        /// Handler for InputPathBrowseButton Click event
-        /// </summary>
-        public void InputPathBrowseButtonClick(object sender, RoutedEventArgs e)
-        {
-            BrowseFile();
         }
 
         /// <summary>
@@ -224,12 +216,13 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
-        /// Handler for MediaTypeComboBox SelectionChanged event
+        /// Handler for InputPathBrowseButton Click event
         /// </summary>
-        public void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void InputPathBrowseButtonClick(object sender, RoutedEventArgs e)
         {
+            BrowseFile();
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
-                CheckDumpViewModel.ChangeMediaType();
+                CheckDumpViewModel.ChangeInputPath();
         }
 
         /// <summary>
@@ -239,6 +232,24 @@ namespace MPF.UI.Core.Windows
         {
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
                 CheckDumpViewModel.ChangeInputPath();
+        }
+
+        /// <summary>
+        /// Handler for MediaTypeComboBox SelectionChanged event
+        /// </summary>
+        public void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CheckDumpViewModel.CanExecuteSelectionChanged)
+                CheckDumpViewModel.ChangeMediaType();
+        }
+
+        /// <summary>
+        /// Handler for SystemTypeComboBox SelectionChanged event
+        /// </summary>
+        public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CheckDumpViewModel.CanExecuteSelectionChanged)
+                CheckDumpViewModel.ChangeSystem();
         }
 
         #endregion

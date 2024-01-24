@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
@@ -22,13 +24,8 @@ namespace MPF.Core.UI.ViewModels
         public Data.Options Options
         {
             get => _options;
-            set
-            {
-                _options = value;
-                OptionsLoader.SaveToConfig(_options);
-            }
         }
-        private Data.Options _options;
+        private readonly Data.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -101,7 +98,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Currently provided input path
         /// </summary>
-        public string InputPath
+        public string? InputPath
         {
             get => _inputPath;
             set
@@ -110,7 +107,7 @@ namespace MPF.Core.UI.ViewModels
                 TriggerPropertyChanged(nameof(InputPath));
             }
         }
-        private string _inputPath;
+        private string? _inputPath;
 
         /// <summary>
         /// Indicates the status of the input path text box
@@ -374,7 +371,7 @@ namespace MPF.Core.UI.ViewModels
 
         private bool ShouldEnableCheckDumpButton()
         {
-            return this.CurrentSystem != null && this.CurrentMediaType != null && this.InputPath != string.Empty;
+            return this.CurrentSystem != null && this.CurrentMediaType != null && !string.IsNullOrEmpty(this.InputPath);
         }
 
         /// <summary>
@@ -391,6 +388,47 @@ namespace MPF.Core.UI.ViewModels
         private void DisableEventHandlers()
         {
             CanExecuteSelectionChanged = false;
+        }
+
+        #endregion
+
+        #region MPF.Check
+
+        /// <summary>
+        /// Performs MPF.Check functionality
+        /// </summary>
+        /// <returns>An error message if failed, otherwise null</returns>
+        public string? CheckDump()
+        {
+
+            if (string.IsNullOrEmpty(InputPath))
+                return "Invalid Input path";
+
+            if (!File.Exists(this.InputPath!.Trim('"')))
+                return "Input Path is not a valid file";
+
+            // Populate an environment
+            //string driveLetter;
+            //Drive? drive = Drive.Create(null, driveLetter);
+            Drive? drive = null;
+            var env = new DumpEnvironment(Options, Path.GetFullPath(this.InputPath.Trim('"')), drive, this.CurrentSystem, this.CurrentMediaType, this.CurrentProgram, parameters: null);
+
+            // Make new Progress objects
+            var resultProgress = new Progress<Result>();
+            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
+            var protectionProgress = new Progress<ProtectionProgress>();
+            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
+
+            // Finally, attempt to do the output dance
+#if NET40
+                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
+                resultTask.Wait();
+                var result = resultTask.Result;
+#else
+            var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
+#endif
+
+            return result.Message;
         }
 
         #endregion
