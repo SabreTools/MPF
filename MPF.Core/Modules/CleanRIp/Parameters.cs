@@ -69,7 +69,11 @@ namespace MPF.Core.Modules.CleanRip
             info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
+            // Get the Datafile information
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
+
+            // Fill in the hash data
+            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
             if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))

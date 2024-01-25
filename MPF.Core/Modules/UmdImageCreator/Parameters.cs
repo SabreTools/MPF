@@ -80,6 +80,15 @@ namespace MPF.Core.Modules.UmdImageCreator
 
                     if (Hasher.GetFileHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
                     {
+                        // Get the Datafile information
+                        var datafile = new Datafile
+                        {
+                            Games = [new Game { Roms = [new Rom { Name = string.Empty, Size = filesize.ToString(), Crc = crc32, Md5 = md5, Sha1 = sha1, }] }]
+                        };
+
+                        // Fill in the hash data
+                        info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+
                         info.SizeAndChecksums!.Size = filesize;
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
