@@ -466,6 +466,8 @@ namespace MPF.UI.Core.Windows
                 case DiscType.NintendoWiiOpticalDiscSL:
                 case DiscType.NintendoWiiOpticalDiscDL:
                 case DiscType.NintendoWiiUOpticalDiscSL:
+                case DiscType.UMDSL:
+                case DiscType.UMDDL:
                     // Quad-layer discs
                     if (submissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
                     {
