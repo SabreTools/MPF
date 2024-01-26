@@ -21,6 +21,7 @@
 - Normalise Disc Titles in Submission Info (Deterous)
 - Fix information pulling for CleanRip and UIC
 - Add UMD handling for the disc info window
+- Detect Photo CD
 
 ### 3.0.3 (2023-12-04)
 

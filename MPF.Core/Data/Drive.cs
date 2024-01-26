@@ -500,6 +500,21 @@ namespace MPF.Core.Data
             }
             catch { }
 
+            // Photo CD
+            try
+            {
+                if (Directory.Exists(Path.Combine(this.Name, "PHOTO_CD"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(this.Name, "PHOTO_CD")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(this.Name, "PHOTO_CD")).Any())
+#endif
+                {
+                    return RedumpSystem.PhotoCD;
+                }
+            }
+            catch { }
+
             // VCD
             try
             {
