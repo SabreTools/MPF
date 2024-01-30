@@ -795,7 +795,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxSerial))
-                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", psxSerial) ?? info.CommonDiscInfo.EXEDateBuildDate;
+                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", psxSerial, true) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
@@ -2982,8 +2982,9 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <param name="serial">Internal serial</param>
+        /// <param name="psx">True if PSX disc, false otherwise</param>
         /// <returns>EXE date if possible, null otherwise</returns>
-        public static string? GetEXEDate(string log, string? serial)
+        public static string? GetEXEDate(string log, string? serial, bool psx = false)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(log))
@@ -2994,7 +2995,7 @@ namespace MPF.Core.Modules.DiscImageCreator
                 return null;
 
             // First 11 characters of exe filename follow ABCD_123.45 (corresponds to ABCD-12345)
-            string filename = $"{serial[..4]}_{serial.Substring(5, 3)}.{serial[9..]}";
+            string filename = $"{serial.Substring(0, 4)}_{serial.Substring(5, 3)}.{serial.Substring(8, 2)}";
 
             try
             {
@@ -3011,6 +3012,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                         line.StartsWith("File Identifier:") &&
                         line.Substring("File Identifier: ".Length, 11) == filename)
                     {
+                        // Account for PSX date formatting
+                        if (psx && exeDate != null && exeDate!.Substring(0, 2) == "19")
+                        {
+                            string decade = exeDate!.Substring(2, 1);
+                            if (decade == "0" ||  decade == "1" ||  decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6")
+                                exeDate = $"20{exeDate!.Substring(2)}";
+                        }
+
                         // Currently stored date is the EXE date, return it
                         return exeDate;
                     }
