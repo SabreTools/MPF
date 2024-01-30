@@ -548,6 +548,8 @@ namespace MPF.Core.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Serial))
+                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", kp2Serial) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
@@ -792,6 +794,8 @@ namespace MPF.Core.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxSerial))
+                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", psxSerial) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
@@ -811,6 +815,8 @@ namespace MPF.Core.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Serial))
+                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", ps2Serial) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
@@ -2968,6 +2974,64 @@ namespace MPF.Core.Modules.DiscImageCreator
             {
                 // We don't care what the exception is right now
                 return Int64.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <param name="serial">Internal serial</param>
+        /// <returns>EXE date if possible, null otherwise</returns>
+        public static string? GetEXEDate(string log, string? serial)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            // If the serial is not valid, we can't get the info
+            if (serial == null || serial.Length != 10)
+                return null;
+
+            // First 11 characters of exe filename follow ABCD_123.45 (corresponds to ABCD-12345)
+            string filename = $"{serial[..4]}_{serial.Substring(5, 3)}.{serial[9..]}";
+
+            try
+            {
+                string? exeDate = null;
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
+                    if (line.Length >= "File Identifier: ".Length + 11 &&
+                        line.StartsWith("File Identifier:") &&
+                        line.Substring("File Identifier: ".Length, 11) == filename)
+                    {
+                        // Currently stored date is the EXE date, return it
+                        return exeDate;
+                    }
+
+                    // The exe datetime is listed in a single line
+                    if (line.Length >= "Recording Date and Time: ".Length + 10  &&
+                        line.StartsWith("Recording Date and Time:"))
+                    {
+                        // exe date: ISO datetime (yyyy-MM-ddT.....)
+                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 

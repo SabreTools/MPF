@@ -1709,10 +1709,10 @@ namespace MPF.Core.Modules.Redumper
                     // Trim the line for later use
                     line = line.Trim();
 
-                    // The profile is listed in a single line
+                    // The exe date is listed in a single line
                     if (line.StartsWith("EXE date:"))
                     {
-                        // current profile: <discType>
+                        // exe date: yyyy-MM-dd
                         return line.Substring("EXE date: ".Length);
                     }
 
