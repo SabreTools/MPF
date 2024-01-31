@@ -544,7 +544,9 @@ namespace MPF.Core
                     || hashData.Contains("(Track 00).bin")
                     || hashData.Contains("(Track 00.2).bin")
                     || hashData.Contains("(Track A).bin")
-                    || hashData.Contains("(Track AA).bin"))
+                    || hashData.Contains("(Track A.2).bin")
+                    || hashData.Contains("(Track AA).bin")
+                    || hashData.Contains("(Track AA.2).bin"))
                 {
                     trackCount--;
                     resultProgress?.Report(Result.Success("Extra track found, skipping!"));
