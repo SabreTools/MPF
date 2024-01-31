@@ -23,6 +23,7 @@
 - Add UMD handling for the disc info window
 - Detect Photo CD
 - Parse PSX/PS2/KP2 exe date from logs (Deterous)
+- Exclude extra tracks when finding disc matches (Deterous)
 
 ### 3.0.3 (2023-12-04)
 
