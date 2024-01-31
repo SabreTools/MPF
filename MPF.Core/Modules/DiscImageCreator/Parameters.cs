@@ -541,12 +541,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= pythonTwoDate;
                     }
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
@@ -785,12 +787,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name), true);
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationDate;
                     }
 
                     bool? psEdcStatus = null;
@@ -804,12 +808,14 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
                     }
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
@@ -2968,6 +2974,72 @@ namespace MPF.Core.Modules.DiscImageCreator
             {
                 // We don't care what the exception is right now
                 return Int64.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <param name="serial">Internal serial</param>
+        /// <param name="psx">True if PSX disc, false otherwise</param>
+        /// <returns>EXE date if possible, null otherwise</returns>
+        public static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            // If the EXE name is not valid, we can't get the info
+            if (string.IsNullOrEmpty(exeName))
+                return null;
+
+            try
+            {
+                string? exeDate = null;
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
+                    if (line.Length >= "File Identifier: ".Length + 11 &&
+                        line.StartsWith("File Identifier:") &&
+                        line.Substring("File Identifier: ".Length) == exeName)
+                    {
+                        // Account for Y2K date problem
+                        if (exeDate != null && exeDate!.Substring(0, 2) == "19")
+                        {
+                            string decade = exeDate!.Substring(2, 1);
+                            // Does only PSX need to account for 1920s-60s?
+                            if (decade == "0" || decade == "1" ||
+                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
+                                exeDate = $"20{exeDate!.Substring(2)}";
+                        }
+
+                        // Currently stored date is the EXE date, return it
+                        return exeDate;
+                    }
+
+                    // The exe datetime is listed in a single line
+                    if (line.Length >= "Recording Date and Time: ".Length + 10  &&
+                        line.StartsWith("Recording Date and Time:"))
+                    {
+                        // exe date: ISO datetime (yyyy-MM-ddT.....)
+                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 

@@ -413,12 +413,13 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= pythonTwoDate;
                     }
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
@@ -477,12 +478,13 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationDate;
                     }
 
                     info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
@@ -492,12 +494,13 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
                     }
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
@@ -1683,6 +1686,45 @@ namespace MPF.Core.Modules.Redumper
             {
                 // We don't care what the exception is right now
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Get the EXE Date from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>EXE date if possible, null otherwise</returns>
+        public static string? GetEXEDate(string log)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The exe date is listed in a single line
+                    if (line.StartsWith("EXE date:"))
+                    {
+                        // exe date: yyyy-MM-dd
+                        return line.Substring("EXE date: ".Length);
+                    }
+
+                    line = sr.ReadLine();   
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 

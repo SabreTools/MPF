@@ -384,6 +384,66 @@ namespace MPF.Core
             return di.Units[0]?.Body?.DiscTypeIdentifier;
         }
 
+        internal static string? GetPlayStationExecutableName(char? driveLetter)
+        {
+            // If there's no drive letter, we can't get exe name
+            if (driveLetter == null)
+                return null;
+
+            // Convert drive letter to drive path
+            string drivePath = driveLetter + ":\\";
+            return GetPlayStationExecutableName(drivePath);
+        }
+
+        internal static string? GetPlayStationExecutableName(string? drivePath)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drivePath))
+                return null;
+
+            // If the folder no longer exists, we can't get exe name
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // Get the two paths that we will need to check
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Read the CNF file as an INI file
+            var systemCnf = new IniFile(systemCnfPath);
+            string bootValue = string.Empty;
+
+            // PlayStation uses "BOOT" as the key
+            if (systemCnf.ContainsKey("BOOT"))
+                bootValue = systemCnf["BOOT"];
+
+            // PlayStation 2 uses "BOOT2" as the key
+            if (systemCnf.ContainsKey("BOOT2"))
+                bootValue = systemCnf["BOOT2"];
+
+            // If we had any boot value, parse it and get the executable name
+            if (!string.IsNullOrEmpty(bootValue))
+            {
+                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)", RegexOptions.Compiled);
+                if (match.Groups.Count > 1)
+                {
+                    string? serial = match.Groups[1].Value;
+
+                    // Some games may have the EXE in a subfolder
+                    serial = Path.GetFileName(serial);
+
+                    return serial;
+                }
+            }
+
+            // If the SYSTEM.CNF value can't be found, try PSX.EXE
+            if (File.Exists(psxExePath))
+                return "PSX.EXE";
+
+            // If neither can be found, we return null
+            return null;
+        }
+
         /// <summary>
         /// Get the EXE date from a PlayStation disc, if possible
         /// </summary>
@@ -400,7 +460,7 @@ namespace MPF.Core
             if (driveLetter == null)
                 return false;
 
-            // If the folder no longer exists, we can't do this part
+            // Convert drive letter to drive path
             string drivePath = driveLetter + ":\\";
             return GetPlayStationExecutableInfo(drivePath, out serial, out region, out date);
         }
@@ -425,54 +485,23 @@ namespace MPF.Core
             if (!Directory.Exists(drivePath))
                 return false;
 
-            // Get the two paths that we will need to check
-            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            // Get the executable name
+            string? exeName = GetPlayStationExecutableName(drivePath);
 
-            // Try both of the common paths that contain information
-            string? exeName = null;
-
-            // Read the CNF file as an INI file
-            var systemCnf = new IniFile(systemCnfPath);
-            string bootValue = string.Empty;
-
-            // PlayStation uses "BOOT" as the key
-            if (systemCnf.ContainsKey("BOOT"))
-                bootValue = systemCnf["BOOT"];
-
-            // PlayStation 2 uses "BOOT2" as the key
-            if (systemCnf.ContainsKey("BOOT2"))
-                bootValue = systemCnf["BOOT2"];
-
-            // If we had any boot value, parse it and get the executable name
-            if (!string.IsNullOrEmpty(bootValue))
-            {
-                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)", RegexOptions.Compiled);
-                if (match.Groups.Count > 1)
-                {
-                    // EXE name may have a trailing `;` after
-                    // EXE name should always be in all caps
-                    exeName = match.Groups[1].Value
-                        .Split(';')[0]
-                        .ToUpperInvariant();
-
-                    // Serial is most of the EXE name normalized
-                    serial = exeName
-                        .Replace('_', '-')
-                        .Replace(".", string.Empty);
-
-                    // Some games may have the EXE in a subfolder
-                    serial = Path.GetFileName(serial);
-                }
-            }
-
-            // If the SYSTEM.CNF value can't be found, try PSX.EXE
-            if (string.IsNullOrEmpty(exeName) && File.Exists(psxExePath))
-                exeName = "PSX.EXE";
-
-            // If neither can be found, we return false
-            if (string.IsNullOrEmpty(exeName))
+            // If no executable found, we can't do this part
+            if (exeName == null)
                 return false;
+
+            // EXE name may have a trailing `;` after
+            // EXE name should always be in all caps
+            exeName = exeName
+                .Split(';')[0]
+                .ToUpperInvariant();
+
+            // Serial is most of the EXE name normalized
+            serial = exeName
+                .Replace('_', '-')
+                .Replace(".", string.Empty);
 
             // Get the region, if possible
             region = GetPlayStationRegion(exeName);
