@@ -503,9 +503,6 @@ namespace MPF.Core
                 .Replace('_', '-')
                 .Replace(".", string.Empty);
 
-            // Some games may have the EXE in a subfolder
-            serial = Path.GetFileName(serial);
-
             // Get the region, if possible
             region = GetPlayStationRegion(exeName);
 
