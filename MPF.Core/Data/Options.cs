@@ -321,7 +321,7 @@ namespace MPF.Core.Data
         /// </summary>
         public bool RedumperEnableVerbose
         {
-            get { return GetBooleanSetting(Settings, "RedumperEnableVerbose", false); }
+            get { return GetBooleanSetting(Settings, "RedumperEnableVerbose", true); }
             set { Settings["RedumperEnableVerbose"] = value.ToString(); }
         }
 
