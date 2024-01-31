@@ -541,15 +541,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= pythonTwoDate;
                     }
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Serial))
-                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", kp2Serial) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
@@ -787,15 +787,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name), true);
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationDate;
                     }
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxSerial))
-                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", psxSerial, true) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
@@ -808,15 +808,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
+
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
                     }
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Serial))
-                        info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}_volDesc.txt", ps2Serial) ?? info.CommonDiscInfo.EXEDateBuildDate;
 
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
@@ -2984,18 +2984,15 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <param name="serial">Internal serial</param>
         /// <param name="psx">True if PSX disc, false otherwise</param>
         /// <returns>EXE date if possible, null otherwise</returns>
-        public static string? GetEXEDate(string log, string? serial, bool psx = false)
+        public static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(log))
                 return null;
 
-            // If the serial is not valid, we can't get the info
-            if (serial == null || serial.Length != 10)
+            // If the EXE name is not valid, we can't get the info
+            if (string.IsNullOrEmpty(exeName))
                 return null;
-
-            // First 11 characters of exe filename follow ABCD_123.45 (corresponds to ABCD-12345)
-            string filename = $"{serial.Substring(0, 4)}_{serial.Substring(5, 3)}.{serial.Substring(8, 2)}";
 
             try
             {
@@ -3010,13 +3007,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                     // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
                     if (line.Length >= "File Identifier: ".Length + 11 &&
                         line.StartsWith("File Identifier:") &&
-                        line.Substring("File Identifier: ".Length, 11) == filename)
+                        line.Substring("File Identifier: ".Length) == exeName)
                     {
-                        // Account for PSX date formatting
-                        if (psx && exeDate != null && exeDate!.Substring(0, 2) == "19")
+                        // Account for Y2K date problem
+                        if (exeDate != null && exeDate!.Substring(0, 2) == "19")
                         {
                             string decade = exeDate!.Substring(2, 1);
-                            if (decade == "0" ||  decade == "1" ||  decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6")
+                            // Does only PSX need to account for 1920s-60s?
+                            if (decade == "0" || decade == "1" ||
+                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
                                 exeDate = $"20{exeDate!.Substring(2)}";
                         }
 
