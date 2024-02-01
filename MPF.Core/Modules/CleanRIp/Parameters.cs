@@ -97,11 +97,12 @@ namespace MPF.Core.Modules.CleanRip
                     if (File.Exists(basePath + ".bca"))
                         info.Extras!.BCA = GetBCA(basePath + ".bca");
 
-                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName))
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName, out var gcSerial))
                     {
                         info.CommonDiscInfo!.Region = gcRegion ?? info.CommonDiscInfo.Region;
                         info.VersionAndEditions!.Version = gcVersion ?? info.VersionAndEditions.Version;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = gcName ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
                     }
 
                     break;
@@ -283,10 +284,11 @@ namespace MPF.Core.Modules.CleanRip
         /// <param name="region">Output region, if possible</param>
         /// <param name="version">Output internal version of the game</param>
         /// <param name="name">Output internal name of the game</param>
+        /// <param name="serial">Output internal serial of the game</param>
         /// <returns></returns>
-        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name)
+        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name, out string? serial)
         {
-            region = null; version = null; name = null;
+            region = null; version = null; name = null, serial = null;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dumpinfo))
@@ -317,7 +319,7 @@ namespace MPF.Core.Modules.CleanRip
                     }
                     else if (line.StartsWith("Filename"))
                     {
-                        string serial = line.Substring("Filename: ".Length);
+                        serial = line.Substring("Filename: ".Length);
 
                         // char gameType = serial[0];
                         // string gameid = serial[1] + serial[2];
