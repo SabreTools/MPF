@@ -132,6 +132,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
+                Filter = "Disc Images|*.iso;*.bin;*.aaruf",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 

@@ -27,11 +27,17 @@ namespace MPF.UI.Core.Windows
 
         private Button? _InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
         private TextBox? _InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
+        
         private Button? _LogPathBrowseButton => ItemHelper.FindChild<Button>(this, "LogPathBrowseButton");
         private TextBox? _LogPathTextBox => ItemHelper.FindChild<TextBox>(this, "LogPathTextBox");
         private Button? _KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
         private TextBox? _KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
         private TextBox? _KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
+        
+        private Button? _PhysicalPathBrowseButton => ItemHelper.FindChild<Button>(this, "PhysicalPathBrowseButton");
+        private TextBox? _PhysicalPathTextBox => ItemHelper.FindChild<TextBox>(this, "PhysicalPathTextBox");
+        private TextBox? _PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
+        private TextBox? _LayerbreakTextBox => ItemHelper.FindChild<TextBox>(this, "LayerbreakTextBox");
 
         #endregion
 
@@ -95,10 +101,12 @@ namespace MPF.UI.Core.Windows
             _InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
             _LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
             _KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
+            _PhysicalPathBrowseButton!.Click += PhysicalPathBrowseButtonClick;
 #else
             InputPathBrowseButton.Click += InputPathBrowseButtonClick;
             LogPathBrowseButton.Click += LogPathBrowseButtonClick;
             KeyPathBrowseButton.Click += KeyPathBrowseButtonClick;
+            PhysicalPathBrowseButton.Click += PhysicalPathBrowseButtonClick;
 #endif
 
             // User Area TextChanged
@@ -107,11 +115,17 @@ namespace MPF.UI.Core.Windows
             _LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
             _KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
             _KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
+            _PhysicalPathTextBox!.TextChanged += PhysicalPathTextBoxTextChanged;
+            _PICTextBox!.TextChanged += PICTextBoxTextChanged;
+            _LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
 #else
             InputPathTextBox.TextChanged += InputPathTextBoxTextChanged;
             LogPathTextBox.TextChanged += LogPathTextBoxTextChanged;
             KeyPathTextBox.TextChanged += KeyPathTextBoxTextChanged;
             KeyTextBox.TextChanged += KeyTextBoxTextChanged;
+            PhysicalPathTextBox.TextChanged += PhysicalPathTextBoxTextChanged;
+            PICTextBox.TextChanged += PICTextBoxTextChanged;
+            LayerbreakTextBox.TextChanged += LayerbreakTextBoxTextChanged;
 #endif
         }
 
@@ -133,6 +147,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
+                Filter = "ISO|*.iso",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
@@ -143,7 +158,7 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
-        /// Browse for an ManaGunZ log file path
+        /// Browse for an .getkey.log file path
         /// </summary>
         public void BrowseLogFile()
         {
@@ -160,6 +175,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
+                Filter = "GetKey Log|*.getkey.log",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
@@ -187,12 +203,41 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
+                Filter = "Key|*.key",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
             if (result == WinForms.DialogResult.OK)
             {
                 CreateIRDViewModel.KeyPath = fileDialog.FileName;
+            }
+        }
+
+        /// <summary>
+        /// Browse for an key file path
+        /// </summary>
+        public void BrowsePhysicalFile()
+        {
+            // Get the current path, if possible
+            string? currentPath = CreateIRDViewModel.LogPath;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
+                currentPath = CreateIRDViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath))
+                currentPath = AppDomain.CurrentDomain.BaseDirectory!;
+
+            // Get the full directory
+            var directory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
+
+            WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
+            {
+                InitialDirectory = directory,
+                Filter = "Physical|*.physical",
+            };
+            WinForms.DialogResult result = fileDialog.ShowDialog();
+
+            if (result == WinForms.DialogResult.OK)
+            {
+                CreateIRDViewModel.PhysicalPath = fileDialog.FileName;
             }
         }
 
@@ -324,6 +369,43 @@ namespace MPF.UI.Core.Windows
         {
             if (CreateIRDViewModel.CanExecuteSelectionChanged)
                 CreateIRDViewModel.ChangeKey();
+        }
+
+        /// <summary>
+        /// Handler for PhysicalPathBrowseButton Click event
+        /// </summary>
+        public void PhysicalPathBrowseButtonClick(object sender, RoutedEventArgs e)
+        {
+            BrowsePhysicalFile();
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePhysicalPath();
+        }
+
+        /// <summary>
+        /// Handler for PhysicalPathTextBox TextChanged event
+        /// </summary>
+        public void PhysicalPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePhysicalPath();
+        }
+
+        /// <summary>
+        /// Handler for PICTextBox TextChanged event
+        /// </summary>
+        public void PICTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePIC();
+        }
+
+        /// <summary>
+        /// Handler for LayerbreakTextBox TextChanged event
+        /// </summary>
+        public void LayerbreakTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeLayerbreak();
         }
 
         #endregion
