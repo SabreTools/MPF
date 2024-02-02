@@ -29,6 +29,7 @@ namespace MPF.UI.Core.Windows
         private MenuItem? _CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
         private MenuItem? _DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
         private MenuItem? _CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
+        private MenuItem? _CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
         private MenuItem? _OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
 
         #endregion
@@ -141,6 +142,7 @@ namespace MPF.UI.Core.Windows
             _CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
             _DebugViewMenuItem!.Click += DebugViewClick;
             _CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
+            _CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
             _OptionsMenuItem!.Click += OptionsMenuItemClick;
 #else
             AboutMenuItem.Click += AboutClick;
@@ -148,6 +150,7 @@ namespace MPF.UI.Core.Windows
             CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
             DebugViewMenuItem.Click += DebugViewClick;
             CheckDumpMenuItem.Click += CheckDumpMenuItemClick;
+            CreateIRDMenuItem.Click += CreateIRDMenuItemClick;
             OptionsMenuItem.Click += OptionsMenuItemClick;
 #endif
 
@@ -342,6 +345,31 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
+        /// Show the Create IRD window
+        /// </summary>
+        public void ShowCreateIRDWindow()
+        {
+            // Hide MainWindow while Create IRD UI is open
+            this.Hide();
+
+            var createIRDWindow = new CreateIRDWindow(this)
+            {
+                Focusable = true,
+                Owner = this,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            createIRDWindow.Closed += delegate {
+                // Unhide Main window after Create IRD window has been closed
+                this.Show();
+                this.Activate();
+            };
+            createIRDWindow.Show();
+        }
+
+        /// <summary>
         /// Show the Options window
         /// </summary>
         public void ShowOptionsWindow(string? title = null)
@@ -419,6 +447,12 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         public void CheckDumpMenuItemClick(object sender, RoutedEventArgs e) =>
             ShowCheckDumpWindow();
+
+        /// <summary>
+        /// Handler for CreateIRDMenuItem Click event
+        /// </summary>
+        public void CreateIRDMenuItemClick(object sender, RoutedEventArgs e) =>
+            ShowCreateIRDWindow();
 
         /// <summary>
         /// Handler for CheckForUpdatesMenuItem Click event

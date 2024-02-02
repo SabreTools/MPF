@@ -91,6 +91,20 @@ namespace MPF.Core.UI.ViewModels
         private bool _checkDumpMenuItemEnabled;
 
         /// <summary>
+        /// Indicates the status of the create IRD menu item
+        /// </summary>
+        public bool CreateIRDMenuItemEnabled
+        {
+            get => _createIRDMenuItemEnabled;
+            set
+            {
+                _createIRDMenuItemEnabled = value;
+                TriggerPropertyChanged(nameof(CreateIRDMenuItemEnabled));
+            }
+        }
+        private bool _createIRDMenuItemEnabled;
+
+        /// <summary>
         /// Indicates the status of the options menu item
         /// </summary>
         public bool OptionsMenuItemEnabled
@@ -522,6 +536,7 @@ namespace MPF.Core.UI.ViewModels
 
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
+            CreateIRDMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
@@ -1254,6 +1269,8 @@ namespace MPF.Core.UI.ViewModels
         public void DisableAllUIElements()
         {
             OptionsMenuItemEnabled = false;
+            CheckDumpMenuItemEnabled = false;
+            CreateIRDMenuItemEnabled = false;
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
             OutputPathTextBoxEnabled = false;
@@ -1274,6 +1291,8 @@ namespace MPF.Core.UI.ViewModels
         public void EnableAllUIElements()
         {
             OptionsMenuItemEnabled = true;
+            CheckDumpMenuItemEnabled = true;
+            CreateIRDMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;

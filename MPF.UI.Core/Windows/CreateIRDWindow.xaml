@@ -1,4 +1,4 @@
-﻿<coreWindows:WindowBase x:Class="MPF.UI.Core.Windows.CheckDumpWindow"
+﻿<coreWindows:WindowBase x:Class="MPF.UI.Core.Windows.CreateIRDWindow"
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,12 @@
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
                         xmlns:viewModels="clr-namespace:MPF.Core.UI.ViewModels;assembly=MPF.Core"
                         mc:Ignorable="d"
-                        Title="Check Existing Dump" Width="600" WindowStyle="None"
+                        Title="Create PS3 IRD" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         BorderBrush="DarkGray" BorderThickness="2">
 
     <Window.DataContext>
-        <viewModels:CheckDumpViewModel/>
+        <viewModels:CreateIRDViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <core:ElementConverter x:Key="ElementConverter" />
@@ -33,7 +33,7 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="Check Existing Dump" />
+                        <Run FontWeight="Bold" Text="Create PS3 IRD" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -65,7 +65,26 @@
                 </Grid>
             </Grid>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Input">
+                <Grid Margin="5,5,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Label x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="PS3 ISO Path"/>
+                    <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                 Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding InputPathTextBoxEnabled}" />
+                    <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                IsEnabled="{Binding InputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Key">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -75,47 +94,40 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Input Path"/>
-                    <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                 Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 IsEnabled="{Binding InputPathTextBoxEnabled}" />
-                    <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
-                IsEnabled="{Binding InputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label x:Name="LogPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="ManaGunZ Log"/>
+                    <TextBox x:Name="LogPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                 Text="{Binding LogPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding LogPathTextBoxEnabled}" />
+                    <Button x:Name="LogPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                IsEnabled="{Binding LogPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                  ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
-                        <ComboBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ComboBoxItem}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                    </ComboBox>
-                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="1" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
-                  ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="KeyPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Key File"/>
+                    <TextBox x:Name="KeyPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                 Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding KeyPathTextBoxEnabled}" />
+                    <Button x:Name="KeyPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                IsEnabled="{Binding KeyPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="DumpingProgramLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
-                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                  ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="KeyLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Hexadecimal Key"/>
+                    <TextBox x:Name="KeyTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                 Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding HexKeyTextBoxEnabled}" />
+
+                    <Label x:Name="KeyStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Key Status"/>
+                    <Label x:Name="KeyStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding KeyStatus}"/>
                 </Grid>
             </GroupBox>
 
-            <!-- Check Dump / Cancel -->
+            <!-- Create IRD / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
                     <Label/>
                     <!-- Empty label for padding -->
-                    <Button Name="CheckDumpButton" Height="25" Width="80" IsDefault="True" Content="Check Dump"
-                            IsEnabled="{Binding CheckDumpButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="Create IRD"
+                            IsEnabled="{Binding CreateIRDButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
