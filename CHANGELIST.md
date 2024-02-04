@@ -27,6 +27,7 @@
 - Verbose Redumper log by default (Deterous)
 - Retrieve serial from Cleanrip
 - Fix build from rushed code
+- Remove `-disc2` from Cleanrip serial
 
 ### 3.0.3 (2023-12-04)
 

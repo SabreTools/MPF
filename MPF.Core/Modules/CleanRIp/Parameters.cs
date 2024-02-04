@@ -320,6 +320,8 @@ namespace MPF.Core.Modules.CleanRip
                     else if (line.StartsWith("Filename"))
                     {
                         serial = line.Substring("Filename: ".Length);
+                        if (serial.EndsWith("-disc2"))
+                            serial = serial.Replace("-disc2", string.Empty);
 
                         // char gameType = serial[0];
                         // string gameid = serial[1] + serial[2];
