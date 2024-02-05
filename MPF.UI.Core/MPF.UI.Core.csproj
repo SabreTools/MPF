@@ -5,6 +5,7 @@
     <TargetFrameworks>net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

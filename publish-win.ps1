@@ -113,7 +113,7 @@ if (!$NO_ARCHIVE.IsPresent)
 	{
 		foreach ($RUNTIME in $UI_RUNTIMES)
 		{
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
 			if ($INCLUDE_PROGRAMS.IsPresent)
 			{
 				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
@@ -122,7 +122,7 @@ if (!$NO_ARCHIVE.IsPresent)
 			{
 				7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
 			}
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
 			if ($INCLUDE_PROGRAMS.IsPresent)
 			{
 				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
@@ -145,9 +145,9 @@ if (!$NO_ARCHIVE.IsPresent)
 				continue
 			}
 
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
 			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\$FRAMEWORK\${RUNTIME}\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
 			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
 		}
 	}

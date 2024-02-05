@@ -7,6 +7,7 @@
     <OutputType>WinExe</OutputType>
     <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

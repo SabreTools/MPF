@@ -28,6 +28,7 @@
 - Retrieve serial from Cleanrip
 - Fix build from rushed code
 - Remove `-disc2` from Cleanrip serial
+- Enable Windows builds on Linux and Mac
 
 ### 3.0.3 (2023-12-04)
 
