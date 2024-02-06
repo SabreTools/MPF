@@ -690,7 +690,7 @@ namespace MPF.Core.UI.ViewModels
             InternalProgram internalProgram = this.Options.InternalProgram;
 
             // Create a static list of supported programs, not everything
-            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper };
+            var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
             InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
 
             // Select the current default dumping program

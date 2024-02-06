@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Remove .NET 6 from auto-builds
+- Make Redumper the default for new users
 
 ### 3.1.0 (2024-02-06)
 
