@@ -77,6 +77,20 @@ namespace MPF.Core.UI.ViewModels
         #region Properties
 
         /// <summary>
+        /// Indicates the inability to create IRDs
+        /// </summary>
+        public bool CannotCreateIRD
+        {
+            get => _cannotCreateIRD;
+            set
+            {
+                _cannotCreateIRD = value;
+                TriggerPropertyChanged(nameof(CannotCreateIRD));
+            }
+        }
+        private bool _cannotCreateIRD;
+
+        /// <summary>
         /// Indicates the status of the check dump menu item
         /// </summary>
         public bool CheckDumpMenuItemEnabled
@@ -536,7 +550,13 @@ namespace MPF.Core.UI.ViewModels
 
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
+#if NET6_0_OR_GREATER
             CreateIRDMenuItemEnabled = true;
+            CannotCreateIRD = false;
+#else
+            CreateIRDMenuItemEnabled = false;
+            CannotCreateIRD = true;
+#endif
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
@@ -1270,7 +1290,9 @@ namespace MPF.Core.UI.ViewModels
         {
             OptionsMenuItemEnabled = false;
             CheckDumpMenuItemEnabled = false;
+#if NET6_0_OR_GREATER
             CreateIRDMenuItemEnabled = false;
+#endif
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
             OutputPathTextBoxEnabled = false;
@@ -1292,7 +1314,9 @@ namespace MPF.Core.UI.ViewModels
         {
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
+#if NET6_0_OR_GREATER
             CreateIRDMenuItemEnabled = true;
+#endif
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;

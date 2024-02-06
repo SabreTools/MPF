@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MPF.Core.Utilities;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using BinaryObjectScanner;
-using MPF.Core.Data;
-using MPF.Core.UI.ComboBoxItems;
-using MPF.Core.Utilities;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.UI.ViewModels
 {

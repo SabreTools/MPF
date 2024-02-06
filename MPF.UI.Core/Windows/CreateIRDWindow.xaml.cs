@@ -1,9 +1,8 @@
-﻿using System;
+﻿using MPF.Core.UI.ViewModels;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core.UI.ViewModels;
-using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
