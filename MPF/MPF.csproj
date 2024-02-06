@@ -67,9 +67,6 @@
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
     <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
-    <Reference Include="PresentationFramework.Aero2" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.0.2" GeneratePathProperty="true">
