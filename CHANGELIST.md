@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Remove .NET 6 from auto-builds
+
 ### 3.1.0 (2024-02-06)
 
 - Update RedumpLib

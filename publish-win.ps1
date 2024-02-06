@@ -34,9 +34,9 @@ $BUILD_FOLDER = $PSScriptRoot
 $COMMIT = git log --pretty=format:"%H" -1
 
 # Create the build matrix arrays
-$UI_FRAMEWORKS = @('net6.0-windows', 'net8.0-windows')
+$UI_FRAMEWORKS = @('net8.0-windows')
 $UI_RUNTIMES = @('win-x64')
-$CHECK_FRAMEWORKS = @('net6.0', 'net8.0')
+$CHECK_FRAMEWORKS = @('net8.0')
 $CHECK_RUNTIMES = @('win-x64', 'linux-x64', 'osx-x64')
 
 # Use expanded lists, if requested
