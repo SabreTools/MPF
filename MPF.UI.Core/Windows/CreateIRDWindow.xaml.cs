@@ -219,7 +219,7 @@ namespace MPF.UI.Core.Windows
         public string? BrowseOutputFile()
         {
             // Get the current path, if possible
-            string? currentPath = Path.GetDirectoryName(CreateIRDViewModel.InputPath);
+            string? currentPath = CreateIRDViewModel.InputPath;
             if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
                 currentPath = Path.Combine(CreateIRDViewModel.Options.DefaultOutputPath, "game.ird");
             else if (string.IsNullOrEmpty(currentPath))
@@ -240,6 +240,7 @@ namespace MPF.UI.Core.Windows
             {
                 FileName = filename,
                 InitialDirectory = directory,
+                Filter = "IRD File|*.ird|All Files|*.*"
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
             if (result == WinForms.DialogResult.OK)
