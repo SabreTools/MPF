@@ -762,6 +762,8 @@ namespace MPF.Core.UI.ViewModels
 #if NET6_0_OR_GREATER
                 // Create IRD
                 ReIRD ird = new(InputPath, Key, Layerbreak);
+                if (PIC != null)
+                    ird.PIC = PIC;
                 ird.Write(outputPath);
                 return "";
 #else
