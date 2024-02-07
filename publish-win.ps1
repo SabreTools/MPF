@@ -34,9 +34,9 @@ $BUILD_FOLDER = $PSScriptRoot
 $COMMIT = git log --pretty=format:"%H" -1
 
 # Create the build matrix arrays
-$UI_FRAMEWORKS = @('net6.0-windows', 'net8.0-windows')
+$UI_FRAMEWORKS = @('net8.0-windows')
 $UI_RUNTIMES = @('win-x64')
-$CHECK_FRAMEWORKS = @('net6.0', 'net8.0')
+$CHECK_FRAMEWORKS = @('net8.0')
 $CHECK_RUNTIMES = @('win-x64', 'linux-x64', 'osx-x64')
 
 # Use expanded lists, if requested
@@ -113,7 +113,7 @@ if (!$NO_ARCHIVE.IsPresent)
 	{
 		foreach ($RUNTIME in $UI_RUNTIMES)
 		{
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
 			if ($INCLUDE_PROGRAMS.IsPresent)
 			{
 				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
@@ -122,7 +122,7 @@ if (!$NO_ARCHIVE.IsPresent)
 			{
 				7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
 			}
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
 			if ($INCLUDE_PROGRAMS.IsPresent)
 			{
 				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
@@ -145,9 +145,9 @@ if (!$NO_ARCHIVE.IsPresent)
 				continue
 			}
 
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\$FRAMEWORK\$RUNTIME\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
 			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\$FRAMEWORK\${RUNTIME}\publish\
+			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
 			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
 		}
 	}

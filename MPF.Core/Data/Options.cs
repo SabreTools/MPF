@@ -56,9 +56,9 @@ namespace MPF.Core.Data
         {
             get
             {
-                var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
+                var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.Redumper.ToString());
                 var valueEnum = EnumConverter.ToInternalProgram(valueString);
-                return valueEnum == InternalProgram.NONE ? InternalProgram.DiscImageCreator : valueEnum;
+                return valueEnum == InternalProgram.NONE ? InternalProgram.Redumper : valueEnum;
             }
             set
             {

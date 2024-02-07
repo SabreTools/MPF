@@ -5,19 +5,20 @@
     <TargetFrameworks>net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <VersionPrefix>3.0.3</VersionPrefix>
+    <VersionPrefix>3.1.0</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
 
     <!-- Package Properties -->
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Description>Common code for all MPF UI implementations</Description>
-    <Copyright>Copyright (c) Matt Nadareski 2019-2023</Copyright>
+    <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
     <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

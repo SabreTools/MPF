@@ -1,5 +1,10 @@
 ### WIP (xxxx-xx-xx)
 
+- Remove .NET 6 from auto-builds
+- Make Redumper the default for new users
+
+### 3.1.0 (2024-02-06)
+
 - Update RedumpLib
 - Update Redumper to build 294
 - Fix commented out code
@@ -27,6 +32,9 @@
 - Verbose Redumper log by default (Deterous)
 - Retrieve serial from Cleanrip
 - Fix build from rushed code
+- Remove `-disc2` from Cleanrip serial
+- Enable Windows builds on Linux and Mac
+- Fix compiler warning (Deterous)
 
 ### 3.0.3 (2023-12-04)
 

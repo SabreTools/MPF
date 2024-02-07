@@ -81,7 +81,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
-            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper };
+            var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
             return internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
         }
 
