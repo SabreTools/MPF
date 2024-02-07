@@ -1,4 +1,7 @@
-﻿using MPF.Core.Utilities;
+﻿#if NET6_0_OR_GREATER
+using LibIRD;
+# endif
+using MPF.Core.Utilities;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -739,12 +742,46 @@ namespace MPF.Core.UI.ViewModels
         #region LibIRD
 
         /// <summary>
+        /// Performs LibIRD functionality
+        /// </summary>
+        /// <returns>An error message if failed, otherwise string.Empty/null</returns>
+        public string? CreateIRD(string outputPath)
+        {
+            if (string.IsNullOrEmpty(InputPath))
+                return "Invalid ISO path.";
+
+            if (!File.Exists(this.InputPath!.Trim('"')))
+                return $"{this.InputPath!.Trim('"')} is not a valid ISO path.";
+
+            // TODO: Implement pulling key from redump.org
+            if (Key == null)
+                return "Pulling key from redump.org is currently not implemented.";
+
+            try
+            {
+#if NET6_0_OR_GREATER
+                // Create IRD
+                ReIRD ird = new(InputPath, Key, Layerbreak);
+                ird.Write(outputPath);
+                return "";
+#else
+                return "LibIRD requires .NET Core 6 or greater.";
+#endif
+            }
+            catch (Exception e)
+            {
+                // Failed to create IRD, return error message
+                return e.Message;
+            }
+        }
+
+        /// <summary>
         /// Validates a getkey log to check for presence of valid PS3 key
         /// </summary>
         /// <param name="logPath">Path to getkey log file</param>
         /// <param name="key">Output 16 byte key, null if not valid</param>
         /// <returns>True if path to log file contains valid key, false otherwise</returns>
-        private bool ParseLog(string? logPath, out byte[]? key, out byte[]? id, out byte[]? pic)
+        private static bool ParseLog(string? logPath, out byte[]? key, out byte[]? id, out byte[]? pic)
         {
             key = null;
             id = null;
@@ -848,7 +885,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="keyPath">Path to key file</param>
         /// <param name="key">Output 16 byte key, null if not valid</param>
         /// <returns>True if path contains valid key, false otherwise</returns>
-        private byte[]? ParseKeyFile(string? keyPath)
+        private static byte[]? ParseKeyFile(string? keyPath)
         {
             if (string.IsNullOrEmpty(keyPath))
                 return null;
@@ -871,7 +908,7 @@ namespace MPF.Core.UI.ViewModels
                 int numBytes = reader.Read(key, 0, 16);
                 if (numBytes != 16)
                     return null;
-                
+
                 return key;
             }
             catch
@@ -887,7 +924,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="hexKey">String representing hexadecimal key</param>
         /// <param name="key">Output 16 byte key, null if not valid</param>
         /// <returns>True if string is a valid key, false otherwise</returns>
-        private byte[]? ParseHexKey(string? hexKey)
+        private static byte[]? ParseHexKey(string? hexKey)
         {
             if (string.IsNullOrEmpty(hexKey))
                 return null;
@@ -909,7 +946,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="picPath">Path to PIC file</param>
         /// <param name="pic">Output PIC byte array, null if not valid</param>
         /// <returns>True if PIC file contains a valid PIC, false otherwise</returns>
-        private byte[]? ParsePICFile(string? picPath)
+        private static byte[]? ParsePICFile(string? picPath)
         {
             if (string.IsNullOrEmpty(picPath))
                 return null;
@@ -957,7 +994,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="inputPIC">String representing PIC</param>
         /// <param name="pic">Output PIC byte array, null if not valid</param>
         /// <returns>True if PIC is valid, false otherwise</returns>
-        private byte[]? ParsePIC(string? inputPIC)
+        private static byte[]? ParsePIC(string? inputPIC)
         {
             if (string.IsNullOrEmpty(inputPIC))
                 return null;
@@ -979,7 +1016,7 @@ namespace MPF.Core.UI.ViewModels
         /// <param name="inputLayerbreak">String representing layerbreak value</param>
         /// <param name="layerbreak">Output layerbreak value, null if not valid</param>
         /// <returns>True if layerbreak is valid, false otherwise</returns>
-        private long? ParseLayerbreak(string? inputLayerbreak)
+        private static long? ParseLayerbreak(string? inputLayerbreak)
         {
             if (string.IsNullOrEmpty(inputLayerbreak))
                 return null;
@@ -992,38 +1029,6 @@ namespace MPF.Core.UI.ViewModels
                 return null;
 
             return layerbreak;
-        }
-
-        /// <summary>
-        /// Performs LibIRD functionality
-        /// </summary>
-        /// <returns>An error message if failed, otherwise string.Empty/null</returns>
-        public string? CreateIRD()
-        {
-            if (string.IsNullOrEmpty(InputPath))
-                return "Invalid ISO path.";
-
-            if (!File.Exists(this.InputPath!.Trim('"')))
-                return $"{this.InputPath!.Trim('"')} is not a valid ISO path.";
-
-            // TODO: Implement pulling key from redump.org
-            if (Key == null)
-                return "Pulling key from redump.org is currently not implemented";
-
-            try
-            {
-                // TODO: Create IRD using LibIRD
-            }
-            catch (FileNotFoundException e)
-            {
-                return e.Message;
-            }
-            catch (ArgumentException e)
-            {
-                return e.Message;
-            }
-
-            return "";
         }
 
         #endregion

@@ -213,6 +213,42 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
+        /// Browse for an IRD output path
+        /// </summary>
+        /// <returns>Output path if provided, else null</returns>
+        public string? BrowseOutputFile()
+        {
+            // Get the current path, if possible
+            string? currentPath = Path.GetDirectoryName(CreateIRDViewModel.InputPath);
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
+                currentPath = Path.Combine(CreateIRDViewModel.Options.DefaultOutputPath, "game.ird");
+            else if (string.IsNullOrEmpty(currentPath))
+                currentPath = "game.ird";
+            if (string.IsNullOrEmpty(currentPath))
+                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "game.ird");
+
+            // Get the full path
+            currentPath = Path.GetFullPath(currentPath);
+
+            // Get the directory
+            var directory = Path.GetDirectoryName(currentPath);
+
+            // Get the filename
+            string filename = Path.ChangeExtension(Path.GetFileName(currentPath), ".ird");
+
+            WinForms.FileDialog fileDialog = new WinForms.SaveFileDialog
+            {
+                FileName = filename,
+                InitialDirectory = directory,
+            };
+            WinForms.DialogResult result = fileDialog.ShowDialog();
+            if (result == WinForms.DialogResult.OK)
+                return fileDialog.FileName;
+            else
+                return null;
+        }
+
+        /// <summary>
         /// Browse for an PIC file path
         /// </summary>
         public void BrowsePICFile()
@@ -283,7 +319,10 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCreateIRDClick(object sender, EventArgs e)
         {
-            string? errorMessage = CreateIRDViewModel.CreateIRD();
+            string? outputPath = BrowseOutputFile();
+            string? errorMessage = "Please provide an output path";
+            if (outputPath != null)
+                errorMessage = CreateIRDViewModel.CreateIRD(outputPath);
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("IRD Create", "An IRD has been created successfully! Would you like to create another IRD?", 2, false);
