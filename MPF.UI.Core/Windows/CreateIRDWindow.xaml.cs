@@ -33,8 +33,8 @@ namespace MPF.UI.Core.Windows
         private TextBox? _KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
         private TextBox? _KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
         
-        private Button? _PhysicalPathBrowseButton => ItemHelper.FindChild<Button>(this, "PhysicalPathBrowseButton");
-        private TextBox? _PhysicalPathTextBox => ItemHelper.FindChild<TextBox>(this, "PhysicalPathTextBox");
+        private Button? _PICPathBrowseButton => ItemHelper.FindChild<Button>(this, "PICPathBrowseButton");
+        private TextBox? _PICPathTextBox => ItemHelper.FindChild<TextBox>(this, "PICPathTextBox");
         private TextBox? _PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
         private TextBox? _LayerbreakTextBox => ItemHelper.FindChild<TextBox>(this, "LayerbreakTextBox");
 
@@ -100,12 +100,12 @@ namespace MPF.UI.Core.Windows
             _InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
             _LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
             _KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
-            _PhysicalPathBrowseButton!.Click += PhysicalPathBrowseButtonClick;
+            _PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
 #else
             InputPathBrowseButton.Click += InputPathBrowseButtonClick;
             LogPathBrowseButton.Click += LogPathBrowseButtonClick;
             KeyPathBrowseButton.Click += KeyPathBrowseButtonClick;
-            PhysicalPathBrowseButton.Click += PhysicalPathBrowseButtonClick;
+            PICPathBrowseButton.Click += PICPathBrowseButtonClick;
 #endif
 
             // User Area TextChanged
@@ -114,7 +114,7 @@ namespace MPF.UI.Core.Windows
             _LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
             _KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
             _KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
-            _PhysicalPathTextBox!.TextChanged += PhysicalPathTextBoxTextChanged;
+            _PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
             _PICTextBox!.TextChanged += PICTextBoxTextChanged;
             _LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
 #else
@@ -122,7 +122,7 @@ namespace MPF.UI.Core.Windows
             LogPathTextBox.TextChanged += LogPathTextBoxTextChanged;
             KeyPathTextBox.TextChanged += KeyPathTextBoxTextChanged;
             KeyTextBox.TextChanged += KeyTextBoxTextChanged;
-            PhysicalPathTextBox.TextChanged += PhysicalPathTextBoxTextChanged;
+            PICPathTextBox.TextChanged += PICPathTextBoxTextChanged;
             PICTextBox.TextChanged += PICTextBoxTextChanged;
             LayerbreakTextBox.TextChanged += LayerbreakTextBoxTextChanged;
 #endif
@@ -146,7 +146,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
-                Filter = "ISO|*.iso",
+                Filter = "ISO|*.iso|All Files|*.*",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
@@ -174,7 +174,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
-                Filter = "GetKey Log|*.getkey.log",
+                Filter = "GetKey Log|*.getkey.log|All Files|*.*",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
@@ -202,7 +202,7 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
-                Filter = "Key|*.key",
+                Filter = "Key|*.key|All Files|*.*",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
@@ -213,9 +213,9 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
-        /// Browse for an key file path
+        /// Browse for an PIC file path
         /// </summary>
-        public void BrowsePhysicalFile()
+        public void BrowsePICFile()
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.LogPath;
@@ -230,13 +230,13 @@ namespace MPF.UI.Core.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
-                Filter = "Physical|*.physical",
+                Filter = "PIC|*.physical;*_PIC.bin;*.PIC|All Files|*.*",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 
             if (result == WinForms.DialogResult.OK)
             {
-                CreateIRDViewModel.PhysicalPath = fileDialog.FileName;
+                CreateIRDViewModel.PICPath = fileDialog.FileName;
             }
         }
 
@@ -371,22 +371,22 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
-        /// Handler for PhysicalPathBrowseButton Click event
+        /// Handler for PICPathBrowseButton Click event
         /// </summary>
-        public void PhysicalPathBrowseButtonClick(object sender, RoutedEventArgs e)
+        public void PICPathBrowseButtonClick(object sender, RoutedEventArgs e)
         {
-            BrowsePhysicalFile();
+            BrowsePICFile();
             if (CreateIRDViewModel.CanExecuteSelectionChanged)
-                CreateIRDViewModel.ChangePhysicalPath();
+                CreateIRDViewModel.ChangePICPath();
         }
 
         /// <summary>
-        /// Handler for PhysicalPathTextBox TextChanged event
+        /// Handler for PICPathTextBox TextChanged event
         /// </summary>
-        public void PhysicalPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        public void PICPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (CreateIRDViewModel.CanExecuteSelectionChanged)
-                CreateIRDViewModel.ChangePhysicalPath();
+                CreateIRDViewModel.ChangePICPath();
         }
 
         /// <summary>

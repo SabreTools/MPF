@@ -92,9 +92,8 @@
                 </Grid>
             </GroupBox>
 
-            <!--<GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Key">-->
             <Expander Name="KeyExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsExpanded="False" Header="Manually define PS3 Encryption Key">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define PS3 Encryption Key">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -111,21 +110,21 @@
                                 Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding HexKeyTextBoxEnabled}" />
 
-                    <Label x:Name="KeyPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Key File Path"/>
+                    <Label x:Name="KeyPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                           ToolTip="Typically a *.key file" Content="Key File Path"/>
                     <TextBox x:Name="KeyPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                 Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding KeyPathTextBoxEnabled}" />
                     <Button x:Name="KeyPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
                             IsEnabled="{Binding KeyPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="KeyStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Key Status"/>
-                    <Label x:Name="KeyStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding KeyStatus}"/>
+                    <Label x:Name="KeyStatusLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Key Status"/>
+                    <Label x:Name="KeyStatusText" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="{Binding KeyStatus}"/>
                 </Grid>
             </Expander>
 
-            <!--<GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Permanent Information &#x26; Control (PIC)">-->
             <Expander Name="PICExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsExpanded="False" Header="Manually define Permanent Information &#x26; Control (PIC)">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define Permanent Information &#x26; Control (PIC)">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -151,14 +150,13 @@
                                      Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding PICTextBoxEnabled}" />
 
-                    <Label x:Name="PhysicalPathLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="*.physical File Path"/>
-                    <TextBox x:Name="PhysicalPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                     Text="{Binding PhysicalPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding PhysicalPathTextBoxEnabled}" />
-                    <Button x:Name="PhysicalPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
-                                    IsEnabled="{Binding PhysicalPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
-
-
+                    <Label x:Name="PICPathLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"
+                           ToolTip="Typically a *.physical or *_PIC.bin file" Content="PIC File Path"/>
+                    <TextBox x:Name="PICPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                                     Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding PICPathTextBoxEnabled}" />
+                    <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                                    IsEnabled="{Binding PICPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
                     <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="PIC Status"/>
                     <Label x:Name="PICStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding PICStatus}"/>

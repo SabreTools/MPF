@@ -1,4 +1,5 @@
 ﻿using MPF.Core.Utilities;
+using System;
 using System.ComponentModel;
 using System.IO;
 
@@ -257,6 +258,20 @@ namespace MPF.Core.UI.ViewModels
         private bool _logPathBrowseButtonEnabled;
 
         /// <summary>
+        /// Indicates whether a .getkey.log path is not provided
+        /// </summary>
+        public bool LogPathNotProvided
+        {
+            get => _logPathNotProvided;
+            set
+            {
+                _logPathNotProvided = value;
+                TriggerPropertyChanged(nameof(LogPathNotProvided));
+            }
+        }
+        private bool _logPathNotProvided;
+
+        /// <summary>
         /// Indicates the status of the .getkey.log path text box
         /// </summary>
         public bool LogPathTextBoxEnabled
@@ -271,46 +286,46 @@ namespace MPF.Core.UI.ViewModels
         private bool _logPathTextBoxEnabled;
 
         /// <summary>
-        /// Currently provided .physical path
+        /// Currently provided PIC file path
         /// </summary>
-        public string? PhysicalPath
+        public string? PICPath
         {
-            get => _physicalPath;
+            get => _picPath;
             set
             {
-                _physicalPath = value;
-                TriggerPropertyChanged(nameof(PhysicalPath));
+                _picPath = value;
+                TriggerPropertyChanged(nameof(PICPath));
             }
         }
-        private string? _physicalPath;
+        private string? _picPath;
 
         /// <summary>
-        /// Indicates the status of the .physical path browse button
+        /// Indicates the status of the PIC file path browse button
         /// </summary>
-        public bool PhysicalPathBrowseButtonEnabled
+        public bool PICPathBrowseButtonEnabled
         {
-            get => _physicalPathBrowseButtonEnabled;
+            get => _picPathBrowseButtonEnabled;
             set
             {
-                _physicalPathBrowseButtonEnabled = value;
-                TriggerPropertyChanged(nameof(PhysicalPathBrowseButtonEnabled));
+                _picPathBrowseButtonEnabled = value;
+                TriggerPropertyChanged(nameof(PICPathBrowseButtonEnabled));
             }
         }
-        private bool _physicalPathBrowseButtonEnabled;
+        private bool _picPathBrowseButtonEnabled;
 
         /// <summary>
-        /// Indicates the status of the .physical path text box
+        /// Indicates the status of the PIC file path text box
         /// </summary>
-        public bool PhysicalPathTextBoxEnabled
+        public bool PICPathTextBoxEnabled
         {
-            get => _physicalPathTextBoxEnabled;
+            get => _picPathTextBoxEnabled;
             set
             {
-                _physicalPathTextBoxEnabled = value;
-                TriggerPropertyChanged(nameof(PhysicalPathTextBoxEnabled));
+                _picPathTextBoxEnabled = value;
+                TriggerPropertyChanged(nameof(PICPathTextBoxEnabled));
             }
         }
-        private bool _physicalPathTextBoxEnabled;
+        private bool _picPathTextBoxEnabled;
 
         /// <summary>
         /// Currently provided PIC
@@ -376,15 +391,17 @@ namespace MPF.Core.UI.ViewModels
         public CreateIRDViewModel()
         {
             _options = OptionsLoader.LoadFromConfig();
-            _inputPath = string.Empty;
 
+            _inputPath = string.Empty;
             _logPath = string.Empty;
+
             _keyPath = string.Empty;
             _hexKey = string.Empty;
             _key = null;
-            _keyStatus = "Will attempt to pull Encryption Key from redump.org";
+            //_keyStatus = "Will attempt to pull Encryption Key from redump.org";
+            _keyStatus = "Cannot create an IRD without a key";
 
-            _physicalPath = string.Empty;
+            _picPath = string.Empty;
             _layerbreakString = string.Empty;
             _picString = string.Empty;
             _pic = null;
@@ -393,12 +410,13 @@ namespace MPF.Core.UI.ViewModels
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
             LogPathTextBoxEnabled = true;
+            LogPathNotProvided = true;
             LogPathBrowseButtonEnabled = true;
             KeyPathTextBoxEnabled = true;
             KeyPathBrowseButtonEnabled = true;
             HexKeyTextBoxEnabled = true;
-            PhysicalPathTextBoxEnabled = true;
-            PhysicalPathBrowseButtonEnabled = true;
+            PICPathTextBoxEnabled = true;
+            PICPathBrowseButtonEnabled = true;
             PICTextBoxEnabled = true;
             LayerbreakTextBoxEnabled = true;
             CreateIRDButtonEnabled = false;
@@ -452,31 +470,41 @@ namespace MPF.Core.UI.ViewModels
         {
             if (string.IsNullOrEmpty(this.LogPath))
             {
+                // No .getkey.log file provided: Reset Key and PIC sections
+                LogPathNotProvided = true;
+
                 Key = null;
-                KeyStatus = "Will attempt to pull Encryption Key from redump.org";
-                PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                _keyStatus = "Cannot create an IRD without a key";
                 KeyPathTextBoxEnabled = true;
                 KeyPathBrowseButtonEnabled = true;
                 HexKeyTextBoxEnabled = true;
-                PhysicalPathTextBoxEnabled = true;
-                PhysicalPathBrowseButtonEnabled = true;
+
+                PIC = null;
+                PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
+                PICPathTextBoxEnabled = true;
+                PICPathBrowseButtonEnabled = true;
                 PICTextBoxEnabled = true;
                 LayerbreakTextBoxEnabled = true;
-                CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
+                //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
+                CreateIRDButtonEnabled = false;
+
                 return;
             }
 
+            // A .getkey.log path is provided: Disable Key and PIC sections
+            LogPathNotProvided = false;
             KeyPathTextBoxEnabled = false;
             KeyPathBrowseButtonEnabled = false;
             HexKeyTextBoxEnabled = false;
-            PhysicalPathTextBoxEnabled = false;
-            PhysicalPathBrowseButtonEnabled = false;
+            PICPathTextBoxEnabled = false;
+            PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            if (ParseLog(this.LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
+            if (ParseLog(this.LogPath, out byte[]? key, out byte[]? _, out byte[]? pic))
             {
-                // TODO: Use ID
+                // TODO: Use id
                 Key = key;
                 PIC = pic;
                 KeyStatus = $"Using key from file: {Path.GetFileName(this.LogPath)}";
@@ -486,6 +514,7 @@ namespace MPF.Core.UI.ViewModels
             else
             {
                 Key = null;
+                PIC = null;
                 if (File.Exists(this.LogPath))
                 {
                     KeyStatus = "ERROR: Invalid *.getkey.log file";
@@ -508,11 +537,13 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(this.KeyPath))
             {
                 Key = null;
-                KeyStatus = "Will attempt to pull Encryption Key from redump.org";
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                _keyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = true;
                 LogPathBrowseButtonEnabled = true;
                 HexKeyTextBoxEnabled = true;
-                CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
+                //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
+                CreateIRDButtonEnabled = false;
                 return;
             }
 
@@ -546,12 +577,14 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(this.HexKey))
             {
                 Key = null;
-                KeyStatus = "Will attempt to pull Encryption Key from redump.org";
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                _keyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = true;
                 LogPathBrowseButtonEnabled = true;
                 KeyPathTextBoxEnabled = true;
                 KeyPathBrowseButtonEnabled = true;
-                CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
+                //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
+                CreateIRDButtonEnabled = false;
                 return;
             }
 
@@ -576,13 +609,13 @@ namespace MPF.Core.UI.ViewModels
         }
 
         /// <summary>
-        /// Change the currently selected .physical path
+        /// Change the currently selected PIC file path
         /// </summary>
-        public void ChangePhysicalPath()
+        public void ChangePICPath()
         {
             Layerbreak = null;
 
-            if (string.IsNullOrEmpty(this.PhysicalPath))
+            if (string.IsNullOrEmpty(this.PICPath))
             {
                 PIC = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
@@ -595,18 +628,18 @@ namespace MPF.Core.UI.ViewModels
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            PIC = ParsePhysical(this.PhysicalPath);
+            PIC = ParsePICFile(this.PICPath);
             if (PIC != null)
             {
-                PICStatus = $"Using PIC from file: {Path.GetFileName(this.PhysicalPath)}";
+                PICStatus = $"Using PIC from file: {Path.GetFileName(this.PICPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
             {
-                if (File.Exists(this.PhysicalPath))
-                    PICStatus = "ERROR: Invalid *.physical file";
+                if (File.Exists(this.PICPath))
+                    PICStatus = "ERROR: Invalid PIC file";
                 else
-                    PICStatus = "ERROR: Invalid *.physical path";
+                    PICStatus = "ERROR: Invalid PIC path";
                 CreateIRDButtonEnabled = false;
             }
         }
@@ -622,15 +655,15 @@ namespace MPF.Core.UI.ViewModels
             {
                 PIC = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
-                PhysicalPathTextBoxEnabled = true;
-                PhysicalPathBrowseButtonEnabled = true;
+                PICPathTextBoxEnabled = true;
+                PICPathBrowseButtonEnabled = true;
                 LayerbreakTextBoxEnabled = true;
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
             
-            PhysicalPathTextBoxEnabled = false;
-            PhysicalPathBrowseButtonEnabled = false;
+            PICPathTextBoxEnabled = false;
+            PICPathBrowseButtonEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
             PIC = ParsePIC(this.PICString);
@@ -657,15 +690,15 @@ namespace MPF.Core.UI.ViewModels
             {
                 Layerbreak = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
-                PhysicalPathTextBoxEnabled = true;
-                PhysicalPathBrowseButtonEnabled = true;
+                PICPathTextBoxEnabled = true;
+                PICPathBrowseButtonEnabled = true;
                 PICTextBoxEnabled = true;
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
 
-            PhysicalPathTextBoxEnabled = false;
-            PhysicalPathBrowseButtonEnabled = false;
+            PICPathTextBoxEnabled = false;
+            PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
 
             Layerbreak = ParseLayerbreak(this.LayerbreakString);
@@ -706,9 +739,9 @@ namespace MPF.Core.UI.ViewModels
         #region LibIRD
 
         /// <summary>
-        /// Validates a ManaGunZ log to check for presence of valid PS3 key
+        /// Validates a getkey log to check for presence of valid PS3 key
         /// </summary>
-        /// <param name="logPath">Path to ManaGunZ log file</param>
+        /// <param name="logPath">Path to getkey log file</param>
         /// <param name="key">Output 16 byte key, null if not valid</param>
         /// <returns>True if path to log file contains valid key, false otherwise</returns>
         private bool ParseLog(string? logPath, out byte[]? key, out byte[]? id, out byte[]? pic)
@@ -720,12 +753,91 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(logPath))
                 return false;
 
-            if (!File.Exists(logPath))
-                return false;
+            try
+            {
+                if (!File.Exists(logPath))
+                    return false;
 
-            // TODO: Parse log file
-            //if (!LibIRD.ParseGetKeyLog(logPath, key, id, pic)
-            //    return false;
+                // Protect from attempting to read from really long files
+                FileInfo logFile = new(logPath);
+                if (logFile.Length > 65536)
+                    return false;
+
+                // Read from .getkey.log file
+                using StreamReader sr = File.OpenText(logPath);
+
+                // Determine whether GetKey was successful
+                string? line;
+                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("get_dec_key succeeded!") == false) ;
+                if (line == null)
+                    return false;
+
+                // Look for Disc Key in log
+                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_key = ") == false) ;
+                // If end of file reached, no key found
+                if (line == null)
+                    return false;
+                // Get Disc Key from log
+                string discKeyStr = line.Substring("disc_key = ".Length);
+                // Validate Disc Key from log
+                if (discKeyStr.Length != 32)
+                    return false;
+                // Convert Disc Key to byte array
+                key = HexStringToByteArray(discKeyStr);
+                if (key == null)
+                    return false;
+
+                // Read Disc ID
+                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_id = ") == false) ;
+                // If end of file reached, no ID found
+                if (line == null)
+                    return false;
+                // Get Disc ID from log
+                string discIDStr = line.Substring("disc_id = ".Length);
+                // Validate Disc ID from log
+                if (discIDStr.Length != 32)
+                    return false;
+                // Replace X's in Disc ID with 00000001
+                discIDStr = discIDStr.Substring(0, 24) + "00000001";
+                // Convert Disc ID to byte array
+                id = HexStringToByteArray(discIDStr);
+                if (id == null)
+                    return false;
+
+                // Look for PIC in log
+                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("PIC:") == false) ;
+                // If end of file reached, no PIC found
+                if (line == null)
+                    return false;
+                // Get PIC from log
+                string discPICStr = "";
+                for (int i = 0; i < 8; i++)
+                    discPICStr += sr.ReadLine();
+                if (discPICStr == null)
+                    return false;
+                // Validate PIC from log
+                if (discPICStr.Length != 256)
+                    return false;
+                // Convert PIC to byte array
+                pic = HexStringToByteArray(discPICStr.Substring(0, 230));
+                if (pic == null)
+                    return false;
+
+                // Double check for warnings in .getkey.log
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string t = line.Trim();
+                    if (t.StartsWith("WARNING"))
+                        return false;
+                    else if (t.StartsWith("SUCCESS"))
+                        return true;
+                }
+            }
+            catch
+            {
+                // We are not concerned with the error
+                return false;
+            }
 
             return true;
         }
@@ -741,13 +853,32 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(keyPath))
                 return null;
 
-            if (!File.Exists(keyPath))
+            // Try read from key file
+            try
+            {
+                if (!File.Exists(keyPath))
+                    return null;
+
+                // Key file must be exactly 16 bytes long
+                FileInfo keyFile = new(keyPath);
+                if (keyFile.Length != 16)
+                    return null;
+                byte[] key = new byte[16];
+
+                // Read 16 bytes from Key file
+                using FileStream fs = new(keyPath, FileMode.Open, FileAccess.Read);
+                using BinaryReader reader = new(fs);
+                int numBytes = reader.Read(key, 0, 16);
+                if (numBytes != 16)
+                    return null;
+                
+                return key;
+            }
+            catch
+            {
+                // Not concerned with error
                 return null;
-
-            // TODO: Parse key file
-            byte[] key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-            return key;
+            }
         }
 
         /// <summary>
@@ -761,30 +892,63 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(hexKey))
                 return null;
 
-            // TODO: Parse hex key
-            byte[] key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            string cleanHexKey = hexKey!.Trim().Replace("\n", string.Empty);
+
+            if (hexKey!.Length != 32)
+                return null;
+
+            // Convert to byte array, null if invalid hex string
+            byte[]? key = HexStringToByteArray(cleanHexKey);
 
             return key;
         }
 
         /// <summary>
-        /// Validates a .physical path
+        /// Validates a PIC file path
         /// </summary>
-        /// <param name="physicalPath">Path to .physical file</param>
+        /// <param name="picPath">Path to PIC file</param>
         /// <param name="pic">Output PIC byte array, null if not valid</param>
-        /// <returns>True if .physical contains a valid PIC, false otherwise</returns>
-        private byte[]? ParsePhysical(string? physicalPath)
+        /// <returns>True if PIC file contains a valid PIC, false otherwise</returns>
+        private byte[]? ParsePICFile(string? picPath)
         {
-            if (string.IsNullOrEmpty(physicalPath))
+            if (string.IsNullOrEmpty(picPath))
                 return null;
 
-            if (!File.Exists(physicalPath))
+            // Try read from PIC file
+            try
+            {
+                if (!File.Exists(picPath))
+                    return null;
+
+                // PIC file must be at least 115 bytes long
+                FileInfo picFile = new(picPath);
+                if (picFile.Length < 115)
+                    return null;
+                byte[] pic = new byte[115];
+
+                // Read 115 bytes from PIC file
+                using FileStream fs = new(picPath, FileMode.Open, FileAccess.Read);
+                using BinaryReader reader = new(fs);
+                int numBytes = reader.Read(pic, 0, 115);
+                if (numBytes != 115)
+                    return null;
+
+                // Validate that a PIC was read by checking first 6 bytes
+                if (pic[0] != 0x10 ||
+                    pic[1] != 0x02 ||
+                    pic[2] != 0x00 ||
+                    pic[3] != 0x00 ||
+                    pic[4] != 0x44 ||
+                    pic[5] != 0x49)
+                    return null;
+
+                return pic;
+            }
+            catch
+            {
+                // Not concerned with error
                 return null;
-
-            // TODO: Parse Physical
-            byte[]? pic = [];
-
-            return pic;
+            }
         }
 
         /// <summary>
@@ -800,10 +964,11 @@ namespace MPF.Core.UI.ViewModels
 
             string cleanPIC = inputPIC!.Trim().Replace("\n", string.Empty);
 
-            if (cleanPIC.Length < 115)
+            if (cleanPIC.Length < 230)
                 return null;
 
-            byte[]? pic = [];
+            // Convert to byte array, null if invalid hex string
+            byte[]? pic = HexStringToByteArray(cleanPIC);
 
             return pic;
         }
@@ -841,20 +1006,57 @@ namespace MPF.Core.UI.ViewModels
             if (!File.Exists(this.InputPath!.Trim('"')))
                 return $"{this.InputPath!.Trim('"')} is not a valid ISO path.";
 
+            // TODO: Implement pulling key from redump.org
             if (Key == null)
+                return "Pulling key from redump.org is currently not implemented";
+
+            try
             {
-                // TODO: Pull key from redump
-                Key = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-                // TODO: Return error if cannot pull key from redump
-                //retrun "Cannot retrieve key from redump. Please manually provide a PS3 Encrypt Key."
+                // TODO: Create IRD using LibIRD
+            }
+            catch (FileNotFoundException e)
+            {
+                return e.Message;
+            }
+            catch (ArgumentException e)
+            {
+                return e.Message;
             }
 
-            // TODO: Create IRD using LibIRD
-
-            // TODO: Catch exception about needing layerbreak
-            //return "BD-Video hybrid disc detected. Please manually provide a PIC or Layerbreak.";
-
             return "";
+        }
+
+        #endregion
+
+        #region Helper Functions
+
+        /// <summary>
+        /// Converts a hex string into a byte array
+        /// </summary>
+        /// <param name="hex">Hex string</param>
+        /// <returns>Converted byte array, or null if invalid hex string</returns>
+        private static byte[]? HexStringToByteArray(string? hexString)
+        {
+            // Valid hex string must be an even number of characters
+            if (string.IsNullOrEmpty(hexString) || hexString!.Length % 2 == 1)
+                return null;
+
+            // Convert ASCII to byte via lookup table
+            int[] hexLookup = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x00,
+                               0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F];
+            byte[] byteArray = new byte[hexString.Length / 2];
+            for (int i = 0; i < hexString.Length; i += 2)
+            {
+                // Convert next two chars to ASCII value relative to '0'
+                int a = Char.ToUpper(hexString[i]) - '0';
+                int b = Char.ToUpper(hexString[i + 1]) - '0';
+                // Ensure hex string only has '0' through '9' and 'A' through 'F' (case insensitive)
+                if ((a < 0 || b < 0 || a > 22 || b > 22) || (a > 10 && a < 17) || (b > 10 && b < 17))
+                    return null;
+                byteArray[i / 2] = (byte)(hexLookup[a] << 4 | hexLookup[b]);
+            }
+
+            return byteArray;
         }
 
         #endregion
