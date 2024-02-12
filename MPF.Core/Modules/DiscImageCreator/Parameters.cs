@@ -3720,6 +3720,9 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
+            // SS version for all Kreon DIC dumps is v1
+            ssver = "01";
+
             try
             {
                 using var sr = File.OpenText(disc);
@@ -3729,11 +3732,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (line == null)
                         break;
 
-                    // Security Sector version
+                    // XGD version (1 = Xbox, 2 = Xbox360)
+                    /*
                     if (line.StartsWith("Version of challenge table"))
                     {
-                        ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
+                        xgdver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
                     }
+                    */
 
                     // Security Sector ranges
                     else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
@@ -3808,6 +3813,9 @@ namespace MPF.Core.Modules.DiscImageCreator
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
 
+            // SS version for all Kreon DIC dumps is v1
+            ssver = "01";
+
             try
             {
                 using var sr = File.OpenText(disc);
@@ -3817,11 +3825,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                     if (line == null)
                         break;
 
-                    // Security Sector version
+                    // XGD version (1 = Xbox, 2 = Xbox360)
+                    /*
                     if (line.StartsWith("Version of challenge table"))
                     {
-                        ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
+                        xgdver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
                     }
+                    */
 
                     // Security Sector ranges
                     else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
