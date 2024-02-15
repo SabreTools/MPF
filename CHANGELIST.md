@@ -4,6 +4,7 @@
 - Make Redumper the default for new users
 - Fix DIC log parsing for SS version
 - Write outputs with UTF-8
+- Add funworld Photo Play detection
 
 ### 3.1.0 (2024-02-06)
 

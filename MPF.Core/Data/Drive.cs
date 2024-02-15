@@ -83,7 +83,7 @@ namespace MPF.Core.Data
                             InfoTool.GetPlayStationExecutableInfo(this.Name, out string? serial, out _, out _);
                             volumeLabel = serial ?? "track";
                             break;
-                        
+
                         default:
                             volumeLabel = "track";
                             break;
@@ -282,6 +282,17 @@ namespace MPF.Core.Data
                 return systemFromLabel;
 
             // Get a list of files for quicker checking
+            #region Arcade
+
+            // funworld Photo Play
+            if (File.Exists(Path.Combine(this.Name, "PP.INF"))
+                && Directory.Exists(Path.Combine(this.Name, "PPINC")))
+            {
+                return RedumpSystem.funworldPhotoPlay;
+            }
+
+            #endregion
+
             #region Consoles
 
             // Bandai Playdia Quick Interactive System
@@ -439,7 +450,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-#endregion
+            #endregion
 
             #region Computers
 
@@ -530,7 +541,7 @@ namespace MPF.Core.Data
             }
             catch { }
 
-#endregion
+            #endregion
 
             // Default return
             return defaultValue;
@@ -596,7 +607,7 @@ namespace MPF.Core.Data
             this.PopulateFromDriveInfo(driveInfo);
         }
 
-#endregion
+        #endregion
 
         #region Helpers
 
