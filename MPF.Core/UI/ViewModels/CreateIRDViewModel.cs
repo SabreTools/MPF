@@ -867,7 +867,7 @@ namespace MPF.Core.UI.ViewModels
                 ReIRD ird = new(InputPath, Key, Layerbreak);
                 if (PIC != null)
                     ird.PIC = PIC;
-                if (DiscID != null)
+                if (DiscID != null && ird.DiscID[15] != 0x00)
                     ird.DiscID = DiscID;
                 ird.Write(outputPath);
                 return "";
