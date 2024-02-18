@@ -135,8 +135,6 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-
-
                     <Label x:Name="DiscIDLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Disc ID"/>
                     <TextBox x:Name="DiscIDTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding DiscIDString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -161,8 +159,6 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-
-
                     <Label x:Name="LayerbreakLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Layerbreak (sectors)"/>
                     <TextBox x:Name="LayerbreakTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding LayerbreakString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -186,6 +182,13 @@
                     <Label x:Name="PICStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding PICStatus}"/>
                 </Grid>
             </Expander>
+            
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
+                <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
+                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Text="{Binding CreateIRDStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </UniformGrid>
+            </GroupBox>
 
             <!-- Create IRD / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

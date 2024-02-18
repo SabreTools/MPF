@@ -322,15 +322,23 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCreateIRDClick(object sender, EventArgs e)
         {
+            KeyExpander.IsExpanded = false;
+            DiscIDExpander.IsExpanded = false;
+            PICExpander.IsExpanded = false;
+            CreateIRDViewModel.CreateIRDStatus = "Creating IRD... Please Wait";
             string? outputPath = BrowseOutputFile();
             string? errorMessage = "Please provide an output path";
             if (outputPath != null)
+            {
                 errorMessage = CreateIRDViewModel.CreateIRD(outputPath);
+            }
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("IRD Create", "An IRD has been created successfully! Would you like to create another IRD?", 2, false);
                 if (checkAgain == false)
                     Close();
+                else
+                    CreateIRDViewModel.ResetFields();
             }
             else
             {

@@ -51,6 +51,20 @@ namespace MPF.Core.UI.ViewModels
         private bool _createIRDButtonEnabled;
 
         /// <summary>
+        /// Current Create IRD status message
+        /// </summary>
+        public string CreateIRDStatus
+        {
+            get => _createIRDStatus;
+            set
+            {
+                _createIRDStatus = value;
+                TriggerPropertyChanged(nameof(CreateIRDStatus));
+            }
+        }
+        private string _createIRDStatus;
+
+        /// <summary>
         /// Currently provided Disc ID
         /// </summary>
         public byte[]? DiscID
@@ -470,6 +484,8 @@ namespace MPF.Core.UI.ViewModels
             _pic = null;
             _picStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
 
+            _createIRDStatus = "Please provide an ISO";
+
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
             LogPathTextBoxEnabled = true;
@@ -515,8 +531,18 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         private bool ShouldEnableCreateIRDButton()
         {
-            return !string.IsNullOrEmpty(this.InputPath)
-                && File.Exists(this.InputPath);
+            if(string.IsNullOrEmpty(InputPath) || !File.Exists(InputPath))
+            {
+                CreateIRDStatus = "Please provide an ISO";
+                return false;
+            }
+            if (string.IsNullOrEmpty(LogPath) && string.IsNullOrEmpty(HexKey) && string.IsNullOrEmpty(KeyPath))
+            {
+                CreateIRDStatus = "Please provide a GetKey log or Disc Key";
+                return false;
+            }
+            CreateIRDStatus = "Ready to create IRD";
+            return true;
         }
 
         /// <summary>
@@ -524,7 +550,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ChangeInputPath()
         {
-            this.CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
+            CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
         }
 
         /// <summary>
@@ -532,7 +558,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ChangeLogPath()
         {
-            if (string.IsNullOrEmpty(this.LogPath))
+            if (string.IsNullOrEmpty(LogPath))
             {
                 // No .getkey.log file provided: Reset Key and PIC sections
                 LogPathNotProvided = true;
@@ -555,6 +581,7 @@ namespace MPF.Core.UI.ViewModels
                 PICTextBoxEnabled = true;
                 LayerbreakTextBoxEnabled = true;
                 //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
+                CreateIRDStatus = "Please provide a GetKey log or Disc Key";
                 CreateIRDButtonEnabled = false;
 
                 return;
@@ -571,14 +598,14 @@ namespace MPF.Core.UI.ViewModels
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            if (ParseLog(this.LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
+            if (ParseLog(LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
             {
                 Key = key;
                 DiscID = id;
                 PIC = pic;
-                KeyStatus = $"Using key from file: {Path.GetFileName(this.LogPath)}";
-                DiscIDStatus = $"Using ID from file: {Path.GetFileName(this.LogPath)}";
-                PICStatus = $"Using PIC from file: {Path.GetFileName(this.LogPath)}";
+                KeyStatus = $"Using key from file: {Path.GetFileName(LogPath)}";
+                DiscIDStatus = $"Using ID from file: {Path.GetFileName(LogPath)}";
+                PICStatus = $"Using PIC from file: {Path.GetFileName(LogPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
@@ -586,7 +613,8 @@ namespace MPF.Core.UI.ViewModels
                 Key = null;
                 DiscID = null;
                 PIC = null;
-                if (File.Exists(this.LogPath))
+                CreateIRDStatus = "Please provide a valid GetKey log file path";
+                if (File.Exists(LogPath))
                 {
                     KeyStatus = "ERROR: Invalid *.getkey.log file";
                     DiscIDStatus = "ERROR: Invalid *.getkey.log file";
@@ -607,30 +635,31 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ChangeDiscID()
         {
-            if (string.IsNullOrEmpty(this.DiscIDString))
+            if (string.IsNullOrEmpty(DiscIDString))
             {
                 DiscID = null;
                 DiscIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
                 LogPathTextBoxEnabled = true;
                 LogPathBrowseButtonEnabled = true;
-                CreateIRDButtonEnabled = true;
+                CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
 
             LogPathTextBoxEnabled = false;
             LogPathBrowseButtonEnabled = false;
 
-            byte[]? id = ParseDiscID(this.DiscIDString);
+            byte[]? id = ParseDiscID(DiscIDString);
             if (id != null)
             {
                 DiscID = id;
-                DiscIDStatus = $"Using provided ID: {this.DiscIDString}";
+                DiscIDStatus = $"Using provided ID: {DiscIDString}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
             {
                 DiscID = null;
                 DiscIDStatus = "ERROR: Invalid Disc ID";
+                CreateIRDStatus = "Please provide a valid Disc ID";
                 CreateIRDButtonEnabled = false;
             }
         }
@@ -640,7 +669,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ChangeKeyPath()
         {
-            if (string.IsNullOrEmpty(this.KeyPath))
+            if (string.IsNullOrEmpty(KeyPath))
             {
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
@@ -650,6 +679,7 @@ namespace MPF.Core.UI.ViewModels
                 HexKeyTextBoxEnabled = true;
                 //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a GetKey log or Disc Key"; // Remove this when redump key pulling is implemented
                 return;
             }
 
@@ -657,21 +687,22 @@ namespace MPF.Core.UI.ViewModels
             LogPathBrowseButtonEnabled = false;
             HexKeyTextBoxEnabled = false;
 
-            byte[]? key = ParseKeyFile(this.KeyPath);
+            byte[]? key = ParseKeyFile(KeyPath);
             if (key != null)
             {
                 Key = key;
-                KeyStatus = $"Using key from file: {Path.GetFileName(this.KeyPath)}";
+                KeyStatus = $"Using key from file: {Path.GetFileName(KeyPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
             {
                 Key = null;
-                if (File.Exists(this.KeyPath))
+                if (File.Exists(KeyPath))
                     KeyStatus = "ERROR: Invalid *.key file";
                 else
                     KeyStatus = "ERROR: Invalid *.key path";
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a valid key file path";
             }
         }
 
@@ -680,7 +711,7 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ChangeKey()
         {
-            if (string.IsNullOrEmpty(this.HexKey))
+            if (string.IsNullOrEmpty(HexKey))
             {
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
@@ -691,6 +722,7 @@ namespace MPF.Core.UI.ViewModels
                 KeyPathBrowseButtonEnabled = true;
                 //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a GetKey log or Disc Key"; // Remove this when redump key pulling is implemented
                 return;
             }
 
@@ -699,11 +731,11 @@ namespace MPF.Core.UI.ViewModels
             KeyPathTextBoxEnabled = false;
             KeyPathBrowseButtonEnabled = false;
 
-            byte[]? key = ParseHexKey(this.HexKey);
+            byte[]? key = ParseHexKey(HexKey);
             if (key != null)
             {
                 Key = key;
-                KeyStatus = $"Using provided Key: {this.HexKey}";
+                KeyStatus = $"Using provided Key: {HexKey}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
@@ -711,6 +743,7 @@ namespace MPF.Core.UI.ViewModels
                 Key = null;
                 KeyStatus = "ERROR: Invalid Key";
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a valid key";
             }
         }
 
@@ -721,7 +754,7 @@ namespace MPF.Core.UI.ViewModels
         {
             Layerbreak = null;
 
-            if (string.IsNullOrEmpty(this.PICPath))
+            if (string.IsNullOrEmpty(PICPath))
             {
                 PIC = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
@@ -734,19 +767,20 @@ namespace MPF.Core.UI.ViewModels
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            PIC = ParsePICFile(this.PICPath);
+            PIC = ParsePICFile(PICPath);
             if (PIC != null)
             {
-                PICStatus = $"Using PIC from file: {Path.GetFileName(this.PICPath)}";
+                PICStatus = $"Using PIC from file: {Path.GetFileName(PICPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
             {
-                if (File.Exists(this.PICPath))
+                if (File.Exists(PICPath))
                     PICStatus = "ERROR: Invalid PIC file";
                 else
                     PICStatus = "ERROR: Invalid PIC path";
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a valid PIC";
             }
         }
 
@@ -757,7 +791,7 @@ namespace MPF.Core.UI.ViewModels
         {
             Layerbreak = null;
 
-            if (string.IsNullOrEmpty(this.PICString))
+            if (string.IsNullOrEmpty(PICString))
             {
                 PIC = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
@@ -772,7 +806,7 @@ namespace MPF.Core.UI.ViewModels
             PICPathBrowseButtonEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            PIC = ParsePIC(this.PICString);
+            PIC = ParsePIC(PICString);
             if (PIC != null)
             {
                 PICStatus = "Using provided PIC";
@@ -782,6 +816,7 @@ namespace MPF.Core.UI.ViewModels
             {
                 PICStatus = "ERROR: Invalid PIC";
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a valid PIC";
             }
         }
 
@@ -792,7 +827,7 @@ namespace MPF.Core.UI.ViewModels
         {
             PIC = null;
 
-            if (string.IsNullOrEmpty(this.LayerbreakString))
+            if (string.IsNullOrEmpty(LayerbreakString))
             {
                 Layerbreak = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
@@ -807,7 +842,7 @@ namespace MPF.Core.UI.ViewModels
             PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
 
-            Layerbreak = ParseLayerbreak(this.LayerbreakString);
+            Layerbreak = ParseLayerbreak(LayerbreakString);
             if (Layerbreak != null)
             {
                 PICStatus = $"Will generate a PIC using a Layerbreak of {Layerbreak}";
@@ -817,6 +852,7 @@ namespace MPF.Core.UI.ViewModels
             {
                 PICStatus = "ERROR: Invalid Layerbreak";
                 CreateIRDButtonEnabled = false;
+                CreateIRDStatus = "Please provide a valid Layerbreak value";
             }
         }
 
@@ -840,6 +876,33 @@ namespace MPF.Core.UI.ViewModels
             CanExecuteSelectionChanged = false;
         }
 
+        /// <summary>
+        /// Resets all UI fields
+        /// </summary>
+        public void ResetFields()
+        {
+            InputPath = string.Empty;
+            LogPath = string.Empty;
+
+            KeyPath = string.Empty;
+            HexKey = string.Empty;
+            Key = null;
+            //_keyStatus = "Will attempt to pull Encryption Key from redump.org";
+            KeyStatus = "Cannot create an IRD without a key";
+
+            DiscID = null;
+            DiscIDString = string.Empty;
+            DiscIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
+
+            PICPath = string.Empty;
+            LayerbreakString = string.Empty;
+            PICString = string.Empty;
+            PIC = null;
+            PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
+
+            CreateIRDStatus = "Please provide an ISO";
+        }
+
         #endregion
 
         #region LibIRD
@@ -853,8 +916,8 @@ namespace MPF.Core.UI.ViewModels
             if (string.IsNullOrEmpty(InputPath))
                 return "Invalid ISO path.";
 
-            if (!File.Exists(this.InputPath!.Trim('"')))
-                return $"{this.InputPath!.Trim('"')} is not a valid ISO path.";
+            if (!File.Exists(InputPath!.Trim('"')))
+                return $"{InputPath!.Trim('"')} is not a valid ISO path.";
 
             // TODO: Implement pulling key from redump.org
             if (Key == null)
@@ -870,6 +933,7 @@ namespace MPF.Core.UI.ViewModels
                 if (DiscID != null && ird.DiscID[15] != 0x00)
                     ird.DiscID = DiscID;
                 ird.Write(outputPath);
+                CreateIRDStatus = "IRD Created Successfully";
                 return "";
 #else
                 return "LibIRD requires .NET Core 6 or greater.";
@@ -878,6 +942,7 @@ namespace MPF.Core.UI.ViewModels
             catch (Exception e)
             {
                 // Failed to create IRD, return error message
+                CreateIRDStatus = "Failed to create IRD";
                 return e.Message;
             }
         }
