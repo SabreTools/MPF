@@ -61,7 +61,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
-    <PackageReference Include="LibIRD" Version="0.4.3" />
+    <PackageReference Include="LibIRD" Version="0.5.0" />
   </ItemGroup>
 
 </Project>

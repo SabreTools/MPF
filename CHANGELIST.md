@@ -2,7 +2,7 @@
 
 - Remove .NET 6 from auto-builds
 - Make Redumper the default for new users
-- Fix DIC log parsing for SS version
+- Fix DIC log parsing for SS version (Deterous)
 - Write outputs with UTF-8
 - Add funworld Photo Play detection
 - Fix Aaru drive parameter generation

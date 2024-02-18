@@ -1,10 +1,10 @@
-﻿#if NET6_0_OR_GREATER
-using LibIRD;
-# endif
-using MPF.Core.Utilities;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
+using MPF.Core.Utilities;
+#if NET6_0_OR_GREATER
+using LibIRD;
+#endif
 
 namespace MPF.Core.UI.ViewModels
 {
@@ -49,6 +49,62 @@ namespace MPF.Core.UI.ViewModels
             }
         }
         private bool _createIRDButtonEnabled;
+
+        /// <summary>
+        /// Currently provided Disc ID
+        /// </summary>
+        public byte[]? DiscID
+        {
+            get => _discID;
+            set
+            {
+                _discID = value;
+                TriggerPropertyChanged(nameof(DiscID));
+            }
+        }
+        private byte[]? _discID;
+
+        /// <summary>
+        /// Current disc ID status message
+        /// </summary>
+        public string DiscIDStatus
+        {
+            get => _discIDStatus;
+            set
+            {
+                _discIDStatus = value;
+                TriggerPropertyChanged(nameof(DiscIDStatus));
+            }
+        }
+        private string _discIDStatus;
+
+        /// <summary>
+        /// Currently provided Disc ID string
+        /// </summary>
+        public string? DiscIDString
+        {
+            get => _discIDString;
+            set
+            {
+                _discIDString = value;
+                TriggerPropertyChanged(nameof(DiscIDString));
+            }
+        }
+        private string? _discIDString;
+
+        /// <summary>
+        /// Indicates the status of the disc ID text box
+        /// </summary>
+        public bool DiscIDTextBoxEnabled
+        {
+            get => _discIDTextBoxEnabled;
+            set
+            {
+                _discIDTextBoxEnabled = value;
+                TriggerPropertyChanged(nameof(DiscIDTextBoxEnabled));
+            }
+        }
+        private bool _discIDTextBoxEnabled;
 
         /// <summary>
         /// Currently provided hexadecimal key
@@ -404,6 +460,10 @@ namespace MPF.Core.UI.ViewModels
             //_keyStatus = "Will attempt to pull Encryption Key from redump.org";
             _keyStatus = "Cannot create an IRD without a key";
 
+            _discID = null;
+            _discIDString = string.Empty;
+            _discIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
+
             _picPath = string.Empty;
             _layerbreakString = string.Empty;
             _picString = string.Empty;
@@ -415,6 +475,7 @@ namespace MPF.Core.UI.ViewModels
             LogPathTextBoxEnabled = true;
             LogPathNotProvided = true;
             LogPathBrowseButtonEnabled = true;
+            DiscIDTextBoxEnabled = true;
             KeyPathTextBoxEnabled = true;
             KeyPathBrowseButtonEnabled = true;
             HexKeyTextBoxEnabled = true;
@@ -478,10 +539,14 @@ namespace MPF.Core.UI.ViewModels
 
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
-                _keyStatus = "Cannot create an IRD without a key";
+                KeyStatus = "Cannot create an IRD without a key";
                 KeyPathTextBoxEnabled = true;
                 KeyPathBrowseButtonEnabled = true;
                 HexKeyTextBoxEnabled = true;
+
+                DiscID = null;
+                DiscIDStatus = "Unknown Disc ID, using Region: NONE";
+                DiscIDTextBoxEnabled = true;
 
                 PIC = null;
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
@@ -500,34 +565,72 @@ namespace MPF.Core.UI.ViewModels
             KeyPathTextBoxEnabled = false;
             KeyPathBrowseButtonEnabled = false;
             HexKeyTextBoxEnabled = false;
+            DiscIDTextBoxEnabled = false;
             PICPathTextBoxEnabled = false;
             PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            if (ParseLog(this.LogPath, out byte[]? key, out byte[]? _, out byte[]? pic))
+            if (ParseLog(this.LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
             {
-                // TODO: Use id
                 Key = key;
+                DiscID = id;
                 PIC = pic;
                 KeyStatus = $"Using key from file: {Path.GetFileName(this.LogPath)}";
+                DiscIDStatus = $"Using ID from file: {Path.GetFileName(this.LogPath)}";
                 PICStatus = $"Using PIC from file: {Path.GetFileName(this.LogPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
             }
             else
             {
                 Key = null;
+                DiscID = null;
                 PIC = null;
                 if (File.Exists(this.LogPath))
                 {
                     KeyStatus = "ERROR: Invalid *.getkey.log file";
+                    DiscIDStatus = "ERROR: Invalid *.getkey.log file";
                     PICStatus = "ERROR: Invalid *.getkey.log file";
                 }
                 else
                 {
                     KeyStatus = "ERROR: Invalid *.getkey.log path";
+                    DiscIDStatus = "ERROR: Invalid *.getkey.log path";
                     PICStatus = "ERROR: Invalid *.getkey.log path";
                 }
+                CreateIRDButtonEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Change the currently selected disc ID
+        /// </summary>
+        public void ChangeDiscID()
+        {
+            if (string.IsNullOrEmpty(this.DiscIDString))
+            {
+                DiscID = null;
+                DiscIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
+                LogPathTextBoxEnabled = true;
+                LogPathBrowseButtonEnabled = true;
+                CreateIRDButtonEnabled = true;
+                return;
+            }
+
+            LogPathTextBoxEnabled = false;
+            LogPathBrowseButtonEnabled = false;
+
+            byte[]? id = ParseDiscID(this.DiscIDString);
+            if (id != null)
+            {
+                DiscID = id;
+                DiscIDStatus = $"Using provided ID: {this.DiscIDString}";
+                CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
+            }
+            else
+            {
+                DiscID = null;
+                DiscIDStatus = "ERROR: Invalid Disc ID";
                 CreateIRDButtonEnabled = false;
             }
         }
@@ -541,7 +644,7 @@ namespace MPF.Core.UI.ViewModels
             {
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
-                _keyStatus = "Cannot create an IRD without a key";
+                KeyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = true;
                 LogPathBrowseButtonEnabled = true;
                 HexKeyTextBoxEnabled = true;
@@ -581,7 +684,7 @@ namespace MPF.Core.UI.ViewModels
             {
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
-                _keyStatus = "Cannot create an IRD without a key";
+                KeyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = true;
                 LogPathBrowseButtonEnabled = true;
                 KeyPathTextBoxEnabled = true;
@@ -664,7 +767,7 @@ namespace MPF.Core.UI.ViewModels
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
-            
+
             PICPathTextBoxEnabled = false;
             PICPathBrowseButtonEnabled = false;
             LayerbreakTextBoxEnabled = false;
@@ -764,6 +867,8 @@ namespace MPF.Core.UI.ViewModels
                 ReIRD ird = new(InputPath, Key, Layerbreak);
                 if (PIC != null)
                     ird.PIC = PIC;
+                if (DiscID != null)
+                    ird.DiscID = DiscID;
                 ird.Write(outputPath);
                 return "";
 #else
@@ -882,11 +987,34 @@ namespace MPF.Core.UI.ViewModels
         }
 
         /// <summary>
+        /// Validates a hexadecimal disc ID
+        /// </summary>
+        /// <param name="discID">String representing hexadecimal disc ID</param>
+        /// <returns>True if string is a valid disc ID, false otherwise</returns>
+        private static byte[]? ParseDiscID(string? discID)
+        {
+            if (string.IsNullOrEmpty(discID))
+                return null;
+
+            string cleandiscID = discID!.Trim().Replace("\n", string.Empty);
+
+            if (discID!.Length != 32)
+                return null;
+
+            // Censor last 4 bytes by replacing with 0x00000001
+            cleandiscID = cleandiscID.Substring(0, 24) + "00000001";
+
+            // Convert to byte array, null if invalid hex string
+            byte[]? id = HexStringToByteArray(cleandiscID);
+
+            return id;
+        }
+
+        /// <summary>
         /// Validates a key file to check for presence of valid PS3 key
         /// </summary>
         /// <param name="keyPath">Path to key file</param>
-        /// <param name="key">Output 16 byte key, null if not valid</param>
-        /// <returns>True if path contains valid key, false otherwise</returns>
+        /// <returns>Output 16 byte key, null if not valid</returns>
         private static byte[]? ParseKeyFile(string? keyPath)
         {
             if (string.IsNullOrEmpty(keyPath))
@@ -924,8 +1052,7 @@ namespace MPF.Core.UI.ViewModels
         /// Validates a hexadecimal key
         /// </summary>
         /// <param name="hexKey">String representing hexadecimal key</param>
-        /// <param name="key">Output 16 byte key, null if not valid</param>
-        /// <returns>True if string is a valid key, false otherwise</returns>
+        /// <returns>Output 16 byte key, null if not valid</returns>
         private static byte[]? ParseHexKey(string? hexKey)
         {
             if (string.IsNullOrEmpty(hexKey))
@@ -946,8 +1073,7 @@ namespace MPF.Core.UI.ViewModels
         /// Validates a PIC file path
         /// </summary>
         /// <param name="picPath">Path to PIC file</param>
-        /// <param name="pic">Output PIC byte array, null if not valid</param>
-        /// <returns>True if PIC file contains a valid PIC, false otherwise</returns>
+        /// <returns>Output PIC byte array, null if not valid</returns>
         private static byte[]? ParsePICFile(string? picPath)
         {
             if (string.IsNullOrEmpty(picPath))
@@ -994,8 +1120,7 @@ namespace MPF.Core.UI.ViewModels
         /// Validates a PIC
         /// </summary>
         /// <param name="inputPIC">String representing PIC</param>
-        /// <param name="pic">Output PIC byte array, null if not valid</param>
-        /// <returns>True if PIC is valid, false otherwise</returns>
+        /// <returns>Output PIC byte array, null if not valid</returns>
         private static byte[]? ParsePIC(string? inputPIC)
         {
             if (string.IsNullOrEmpty(inputPIC))
@@ -1050,7 +1175,7 @@ namespace MPF.Core.UI.ViewModels
 
             // Convert ASCII to byte via lookup table
             int[] hexLookup = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x00,
-                               0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F];
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F];
             byte[] byteArray = new byte[hexString.Length / 2];
             for (int i = 0; i < hexString.Length; i += 2)
             {

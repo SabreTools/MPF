@@ -1,8 +1,8 @@
-﻿using MPF.Core.UI.ViewModels;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using MPF.Core.UI.ViewModels;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
@@ -32,7 +32,7 @@ namespace MPF.UI.Core.Windows
         private Button? _KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
         private TextBox? _KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
         private TextBox? _KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
-        
+        private TextBox? _DiscIDTextBox => ItemHelper.FindChild<TextBox>(this, "DiscIDTextBox");
         private Button? _PICPathBrowseButton => ItemHelper.FindChild<Button>(this, "PICPathBrowseButton");
         private TextBox? _PICPathTextBox => ItemHelper.FindChild<TextBox>(this, "PICPathTextBox");
         private TextBox? _PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
@@ -114,6 +114,7 @@ namespace MPF.UI.Core.Windows
             _LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
             _KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
             _KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
+            _DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
             _PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
             _PICTextBox!.TextChanged += PICTextBoxTextChanged;
             _LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
@@ -122,6 +123,7 @@ namespace MPF.UI.Core.Windows
             LogPathTextBox.TextChanged += LogPathTextBoxTextChanged;
             KeyPathTextBox.TextChanged += KeyPathTextBoxTextChanged;
             KeyTextBox.TextChanged += KeyTextBoxTextChanged;
+            DiscIDTextBox.TextChanged += DiscIDTextBoxTextChanged;
             PICPathTextBox.TextChanged += PICPathTextBoxTextChanged;
             PICTextBox.TextChanged += PICTextBoxTextChanged;
             LayerbreakTextBox.TextChanged += LayerbreakTextBoxTextChanged;
@@ -342,6 +344,15 @@ namespace MPF.UI.Core.Windows
         private void OnCancelClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        /// <summary>
+        /// Handler for DiscIDTextBox TextChanged event
+        /// </summary>
+        public void DiscIDTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeDiscID();
         }
 
         /// <summary>
