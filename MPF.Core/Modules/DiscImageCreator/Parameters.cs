@@ -531,13 +531,13 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
 
                     // Needed for some odd copy protections
-                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
 
                     break;
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -2820,8 +2820,9 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// </summary>
         /// <param name="cssKey">_CSSKey.txt file location</param>
         /// <param name="disc">_disc.txt file location</param>
+        /// <param name="includeAlways">Indicates whether region and protection type are always included</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-        private static string? GetDVDProtection(string cssKey, string disc)
+        private static string? GetDVDProtection(string cssKey, string disc, bool includeAlways)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(disc))
@@ -2901,6 +2902,15 @@ namespace MPF.Core.Modules.DiscImageCreator
                     }
                 }
                 catch { }
+            }
+
+            // Filter out if we're not always including information
+            if (!includeAlways)
+            {
+                if (region == "1 2 3 4 5 6 7 8")
+                    region = null;
+                if (copyrightProtectionSystemType == "No")
+                    copyrightProtectionSystemType = null;
             }
 
             // Now we format everything we can

@@ -6,6 +6,7 @@
 - Write outputs with UTF-8
 - Add funworld Photo Play detection
 - Fix Aaru drive parameter generation
+- Limit DVD protection outputs
 
 ### 3.1.0 (2024-02-06)
 
