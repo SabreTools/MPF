@@ -404,12 +404,12 @@ namespace MPF.Core.Modules.Redumper
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log") ?? string.Empty;
 
                     // Needed for some odd copy protections
-                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
                     break;
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
+                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log", true) ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -1557,8 +1557,9 @@ namespace MPF.Core.Modules.Redumper
         /// Get the DVD protection information, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
+        /// <param name="includeAlways">Indicates whether region and protection type are always included</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-        private static string? GetDVDProtection(string log)
+        private static string? GetDVDProtection(string log, bool includeAlways)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(log))
@@ -1626,6 +1627,15 @@ namespace MPF.Core.Modules.Redumper
                     }
                 }
                 catch { }
+            }
+
+            // Filter out if we're not always including information
+            if (!includeAlways)
+            {
+                if (region == "1 2 3 4 5 6 7 8")
+                    region = null;
+                if (copyrightProtectionSystemType == "No")
+                    copyrightProtectionSystemType = null;
             }
 
             // Now we format everything we can

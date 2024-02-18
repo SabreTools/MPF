@@ -1067,10 +1067,8 @@ namespace MPF.Core.Modules.Aaru
             // Handle filenames based on command, if necessary
             switch (BaseCommand)
             {
-                // Input value only
+                // Input value only (file path)
                 case CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo:
-                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
-                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo:
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong:
@@ -1080,12 +1078,21 @@ namespace MPF.Core.Modules.Aaru
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify:
+                    if (string.IsNullOrEmpty(InputValue))
+                        return null;
+
+                    parameters.Add($"\"{InputValue}\"");
+                    break;
+
+                // Input value only (device path)
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
                 case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo:
                 case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan:
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
-                    parameters.Add($"\"{InputValue}\"");
+                    parameters.Add(InputValue!.TrimEnd('\\'));
                     break;
 
                 // Two input values
@@ -1097,14 +1104,22 @@ namespace MPF.Core.Modules.Aaru
                     parameters.Add($"\"{Input2Value}\"");
                     break;
 
-                // Input and Output value
+                // Input and Output value (file path)
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert:
-                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump:
                     if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
                         return null;
 
                     parameters.Add($"\"{InputValue}\"");
+                    parameters.Add($"\"{OutputValue}\"");
+                    break;
+
+                // Input and Output value (device path)
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump:
+                    if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
+                        return null;
+
+                    parameters.Add(InputValue!.TrimEnd('\\'));
                     parameters.Add($"\"{OutputValue}\"");
                     break;
 

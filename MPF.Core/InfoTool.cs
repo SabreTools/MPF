@@ -1304,7 +1304,7 @@ namespace MPF.Core
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
-                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
                 foreach (string line in lines)
                 {
                     sw.WriteLine(line);
@@ -1411,7 +1411,7 @@ namespace MPF.Core
                 else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
                     path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
 
-                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write));
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
 
                 List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
                 foreach (string key in sortedKeys)
