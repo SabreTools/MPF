@@ -546,6 +546,21 @@ namespace MPF.Core.UI.ViewModels
         }
 
         /// <summary>
+        /// Determine if the Log Path TextBox and Browse Button should be enabled
+        /// </summary>
+        /// <returns></returns>
+        private bool ShouldEnableLogPath()
+        {
+            return string.IsNullOrEmpty(LogPath)
+                && string.IsNullOrEmpty(HexKey)
+                && string.IsNullOrEmpty(KeyPath)
+                && string.IsNullOrEmpty(DiscIDString)
+                && string.IsNullOrEmpty(PICString)
+                && string.IsNullOrEmpty(PICPath)
+                && Layerbreak == null;
+        }
+
+        /// <summary>
         /// Change the currently selected input path
         /// </summary>
         public void ChangeInputPath()
@@ -639,8 +654,8 @@ namespace MPF.Core.UI.ViewModels
             {
                 DiscID = null;
                 DiscIDStatus = "Unknown Disc ID, generating ID using Region: NONE";
-                LogPathTextBoxEnabled = true;
-                LogPathBrowseButtonEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
@@ -674,8 +689,8 @@ namespace MPF.Core.UI.ViewModels
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
                 KeyStatus = "Cannot create an IRD without a key";
-                LogPathTextBoxEnabled = true;
-                LogPathBrowseButtonEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 HexKeyTextBoxEnabled = true;
                 //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
                 CreateIRDButtonEnabled = false;
@@ -716,8 +731,8 @@ namespace MPF.Core.UI.ViewModels
                 Key = null;
                 //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
                 KeyStatus = "Cannot create an IRD without a key";
-                LogPathTextBoxEnabled = true;
-                LogPathBrowseButtonEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 KeyPathTextBoxEnabled = true;
                 KeyPathBrowseButtonEnabled = true;
                 //CreateIRDButtonEnabled = ShouldEnableCreateIRDButton(); // Use this when redump key pulling is implemented
@@ -760,10 +775,14 @@ namespace MPF.Core.UI.ViewModels
                 PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
                 PICTextBoxEnabled = true;
                 LayerbreakTextBoxEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
 
+            LogPathTextBoxEnabled = false;
+            LogPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
@@ -798,10 +817,14 @@ namespace MPF.Core.UI.ViewModels
                 PICPathTextBoxEnabled = true;
                 PICPathBrowseButtonEnabled = true;
                 LayerbreakTextBoxEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
 
+            LogPathTextBoxEnabled = false;
+            LogPathBrowseButtonEnabled = false;
             PICPathTextBoxEnabled = false;
             PICPathBrowseButtonEnabled = false;
             LayerbreakTextBoxEnabled = false;
@@ -834,10 +857,14 @@ namespace MPF.Core.UI.ViewModels
                 PICPathTextBoxEnabled = true;
                 PICPathBrowseButtonEnabled = true;
                 PICTextBoxEnabled = true;
+                LogPathTextBoxEnabled = ShouldEnableLogPath();
+                LogPathBrowseButtonEnabled = ShouldEnableLogPath();
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
                 return;
             }
 
+            LogPathTextBoxEnabled = false;
+            LogPathBrowseButtonEnabled = false;
             PICPathTextBoxEnabled = false;
             PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;

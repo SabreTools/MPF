@@ -325,6 +325,7 @@ namespace MPF.UI.Core.Windows
             KeyExpander.IsExpanded = false;
             DiscIDExpander.IsExpanded = false;
             PICExpander.IsExpanded = false;
+            string tempStatus = CreateIRDViewModel.CreateIRDStatus;
             CreateIRDViewModel.CreateIRDStatus = "Creating IRD... Please Wait";
             string? outputPath = BrowseOutputFile();
             string? errorMessage = "Please provide an output path";
@@ -343,6 +344,7 @@ namespace MPF.UI.Core.Windows
             else
             {
                 DisplayUserMessage("Failed to create IRD", errorMessage!, 1, false);
+                CreateIRDViewModel.CreateIRDStatus = tempStatus;
             }
         }
 
