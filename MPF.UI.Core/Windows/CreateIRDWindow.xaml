@@ -165,10 +165,11 @@
                                      IsEnabled="{Binding LayerbreakTextBoxEnabled}" />
 
                     <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="PIC"/>
-                    <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                     MaxHeight="145" AcceptsReturn="True" 
-                                     Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding PICTextBoxEnabled}" />
+                    <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Top"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         MinHeight="55" MaxHeight="145" AcceptsReturn="True" 
+                                         Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding PICTextBoxEnabled}" />
 
                     <Label x:Name="PICPathLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"
                            ToolTip="Typically a *.physical or *_PIC.bin file" Content="PIC File Path"/>
