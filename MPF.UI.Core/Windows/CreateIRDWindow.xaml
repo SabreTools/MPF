@@ -167,7 +167,7 @@
                     <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="PIC"/>
                     <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Top"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         MinHeight="55" MaxHeight="145" AcceptsReturn="True" 
+                                         MinHeight="55" MaxHeight="146" AcceptsReturn="True" 
                                          Text="{Binding PICString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          IsEnabled="{Binding PICTextBoxEnabled}" />
 
