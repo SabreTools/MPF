@@ -2,11 +2,12 @@
 
 - Remove .NET 6 from auto-builds
 - Make Redumper the default for new users
-- Fix DIC log parsing for SS version
+- Fix DIC log parsing for SS version (Deterous)
 - Write outputs with UTF-8
 - Add funworld Photo Play detection
 - Fix Aaru drive parameter generation
 - Limit DVD protection outputs
+- Add a GUI for PS3 IRD Creation (Deterous)
 
 ### 3.1.0 (2024-02-06)
 
@@ -27,8 +28,9 @@
 - Prevent crashing on invalid parameters (Deterous)
 - Detect CDTV discs (Deterous)
 - Differentiate CD32 from CDTV (Deterous)
-- Skip warning line in Redumper log
 - Normalise Disc Titles in Submission Info (Deterous)
+- Skip warning line in Redumper log
+- Add a GUI for MPF.Check (Deterous)
 - Fix information pulling for CleanRip and UIC
 - Add UMD handling for the disc info window
 - Detect Photo CD

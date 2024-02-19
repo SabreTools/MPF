@@ -54,6 +54,15 @@
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
+                            <MenuItem x:Name="CreateIRDMenuItem" Header="_Create PS3 IRD" HorizontalAlignment="Left" Width="185"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}"
+                                  ToolTip="IRD Creation is only available on .NET Core 6 or newer."
+                                  ToolTipService.InitialShowDelay="0"
+                                  ToolTipService.IsEnabled="{Binding CannotCreateIRD}"
+                                  ToolTipService.ShowOnDisabled="True"
+                                  IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
                             <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
