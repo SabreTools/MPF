@@ -199,7 +199,7 @@
                     <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="Create IRD"
                             IsEnabled="{Binding CreateIRDButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
-                            Style="{DynamicResource CustomButtonStyle}" />
+                            IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
                     <!-- Empty label for padding -->
                 </UniformGrid>
