@@ -37,6 +37,20 @@ namespace MPF.Core.UI.ViewModels
         #region Properties
 
         /// <summary>
+        /// Indicates the status of the cancel button
+        /// </summary>
+        public bool CancelButtonEnabled
+        {
+            get => _cancelButtonEnabled;
+            set
+            {
+                _cancelButtonEnabled = value;
+                TriggerPropertyChanged(nameof(CancelButtonEnabled));
+            }
+        }
+        private bool _cancelButtonEnabled;
+
+        /// <summary>
         /// Indicates the status of the check dump button
         /// </summary>
         public bool CreateIRDButtonEnabled
@@ -486,20 +500,21 @@ namespace MPF.Core.UI.ViewModels
 
             _createIRDStatus = "Please provide an ISO";
 
-            InputPathTextBoxEnabled = true;
-            InputPathBrowseButtonEnabled = true;
-            LogPathTextBoxEnabled = true;
-            LogPathNotProvided = true;
-            LogPathBrowseButtonEnabled = true;
-            DiscIDTextBoxEnabled = true;
-            KeyPathTextBoxEnabled = true;
-            KeyPathBrowseButtonEnabled = true;
-            HexKeyTextBoxEnabled = true;
-            PICPathTextBoxEnabled = true;
-            PICPathBrowseButtonEnabled = true;
-            PICTextBoxEnabled = true;
-            LayerbreakTextBoxEnabled = true;
-            CreateIRDButtonEnabled = false;
+            _inputPathTextBoxEnabled = true;
+            _inputPathBrowseButtonEnabled = true;
+            _logPathTextBoxEnabled = true;
+            _logPathNotProvided = true;
+            _logPathBrowseButtonEnabled = true;
+            _discIDTextBoxEnabled = true;
+            _keyPathTextBoxEnabled = true;
+            _keyPathBrowseButtonEnabled = true;
+            _hexKeyTextBoxEnabled = true;
+            _picPathTextBoxEnabled = true;
+            _picPathBrowseButtonEnabled = true;
+            _picTextBoxEnabled = true;
+            _layerbreakTextBoxEnabled = true;
+            _createIRDButtonEnabled = false;
+            _cancelButtonEnabled = true;
 
             EnableEventHandlers();
         }
@@ -928,6 +943,88 @@ namespace MPF.Core.UI.ViewModels
             PICStatus = "Will generate a PIC assuming a Layerbreak of 12219392";
 
             CreateIRDStatus = "Please provide an ISO";
+
+            InputPathTextBoxEnabled = true;
+            InputPathBrowseButtonEnabled = true;
+            LogPathTextBoxEnabled = true;
+            LogPathNotProvided = true;
+            LogPathBrowseButtonEnabled = true;
+            DiscIDTextBoxEnabled = true;
+            KeyPathTextBoxEnabled = true;
+            KeyPathBrowseButtonEnabled = true;
+            HexKeyTextBoxEnabled = true;
+            PICPathTextBoxEnabled = true;
+            PICPathBrowseButtonEnabled = true;
+            PICTextBoxEnabled = true;
+            LayerbreakTextBoxEnabled = true;
+            CreateIRDButtonEnabled = false;
+            CancelButtonEnabled = true;
+        }
+
+        /// <summary>
+        /// Disables all UI fields and returns a list of all their previous states
+        /// </summary>
+        /// <returns></returns>
+        public bool[] DisableUIFields()
+        {
+            bool[] oldValues =
+            [
+                InputPathTextBoxEnabled,
+                InputPathBrowseButtonEnabled,
+                LogPathTextBoxEnabled,
+                LogPathNotProvided,
+                LogPathBrowseButtonEnabled,
+                DiscIDTextBoxEnabled,
+                KeyPathTextBoxEnabled,
+                KeyPathBrowseButtonEnabled,
+                HexKeyTextBoxEnabled,
+                PICPathTextBoxEnabled,
+                PICPathBrowseButtonEnabled,
+                PICTextBoxEnabled,
+                LayerbreakTextBoxEnabled,
+                CreateIRDButtonEnabled,
+                CancelButtonEnabled,
+            ];
+            InputPathTextBoxEnabled = false;
+            InputPathBrowseButtonEnabled = false;
+            LogPathTextBoxEnabled = false;
+            LogPathNotProvided = false;
+            LogPathBrowseButtonEnabled = false;
+            DiscIDTextBoxEnabled = false;
+            KeyPathTextBoxEnabled = false;
+            KeyPathBrowseButtonEnabled = false;
+            HexKeyTextBoxEnabled = false;
+            PICPathTextBoxEnabled = false;
+            PICPathBrowseButtonEnabled = false;
+            PICTextBoxEnabled = false;
+            LayerbreakTextBoxEnabled = false;
+            CreateIRDButtonEnabled = false;
+            CancelButtonEnabled = false;
+
+            return oldValues;
+        }
+
+        /// <summary>
+        /// Re-enables all UI fields to their previous states
+        /// </summary>
+        /// <param name="oldValues"></param>
+        public void ReenableUIFields(bool[] oldValues)
+        {
+            InputPathTextBoxEnabled = oldValues[0];
+            InputPathBrowseButtonEnabled = oldValues[1];
+            LogPathTextBoxEnabled = oldValues[2];
+            LogPathNotProvided = oldValues[3];
+            LogPathBrowseButtonEnabled = oldValues[4];
+            DiscIDTextBoxEnabled = oldValues[5];
+            KeyPathTextBoxEnabled = oldValues[6];
+            KeyPathBrowseButtonEnabled = oldValues[7];
+            HexKeyTextBoxEnabled = oldValues[8];
+            PICPathTextBoxEnabled = oldValues[9];
+            PICPathBrowseButtonEnabled = oldValues[10];
+            PICTextBoxEnabled = oldValues[11];
+            LayerbreakTextBoxEnabled = oldValues[12];
+            CreateIRDButtonEnabled = oldValues[13];
+            CancelButtonEnabled = oldValues[14];
         }
 
         #endregion
@@ -961,7 +1058,7 @@ namespace MPF.Core.UI.ViewModels
                     ird.DiscID = DiscID;
                 ird.Write(outputPath);
                 CreateIRDStatus = "IRD Created Successfully";
-                return "";
+                return string.Empty;
 #else
                 return "LibIRD requires .NET Core 6 or greater.";
 #endif

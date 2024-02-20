@@ -8,6 +8,7 @@
 - Fix Aaru drive parameter generation
 - Limit DVD protection outputs
 - Add a GUI for PS3 IRD Creation (Deterous)
+- Update LibIRD, disable UI elements when creating IRD (Deterous)
 
 ### 3.1.0 (2024-02-06)
 
