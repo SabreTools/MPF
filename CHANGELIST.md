@@ -7,6 +7,7 @@
 - Hide unavailable dumping programs (Deterous)
 - Remove DIC and Aaru bundles from CI
 - Add x86 builds to AppVeyor
+- Make AppVeyor builds framework-dependent
 
 ### 3.1.1 (2024-02-20)
 
