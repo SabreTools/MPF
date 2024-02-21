@@ -4,6 +4,7 @@
 - Port build script fixes from BOS
 - Fix double git hash version (feat. Deterous)
 - Readd x86 builds by default
+- Hide unavailable dumping programs (Deterous)
 
 ### 3.1.1 (2024-02-20)
 

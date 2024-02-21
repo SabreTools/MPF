@@ -721,16 +721,23 @@ namespace MPF.Core.UI.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
+            // Create a static list of supported programs, not everything
+            InternalPrograms = Enum.GetValues(typeof(InternalProgram)).Cast<InternalProgram>().Where(ip => InternalProgramExists(ip)).Select(ip => new Element<InternalProgram>(ip)).ToList();
+
             // Get the current internal program
             InternalProgram internalProgram = this.Options.InternalProgram;
 
-            // Create a static list of supported programs, not everything
-            var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
-            InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
-
             // Select the current default dumping program
-            int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-            this.CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
+            if (InternalPrograms.Count == 0)
+            {
+                // If no programs are found, default to InternalProgram.NONE
+                this.CurrentProgram = InternalProgram.NONE;
+            }
+            else
+            {   
+                int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
+                this.CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
+            }
 
             // Reenable event handlers, if necessary
             if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
@@ -1341,7 +1348,10 @@ namespace MPF.Core.UI.ViewModels
 
             // Get the status to write out
             Result result = Tools.GetSupportStatus(_environment.System, _environment.Type);
-            this.Status = result.Message;
+            if (this.CurrentProgram == InternalProgram.NONE || _environment.Parameters == null)
+                this.Status = "No dumping program found";
+            else
+                this.Status = result.Message;
 
             // Enable or disable the button
             this.StartStopButtonEnabled = result && ShouldEnableDumpingButton();
@@ -1792,6 +1802,9 @@ namespace MPF.Core.UI.ViewModels
         /// <returns>True if dumping should start, false otherwise</returns>
         private bool ValidateBeforeDumping()
         {
+            if (Parameters == null)
+                return false;
+
             // Validate that we have an output path of any sort
             if (string.IsNullOrEmpty(_environment?.OutputPath))
             {
@@ -1900,7 +1913,30 @@ namespace MPF.Core.UI.ViewModels
             return true;
         }
 
-#endregion
+        /// <summary>
+        /// Checks whether a internal program is found in its path
+        /// </summary>
+        /// <param name="program">Program to check for</param>
+        /// <returns>True if the program is found, false otherwise</returns>
+        private bool InternalProgramExists(InternalProgram program)
+        {
+            try
+            {
+                return program switch
+                {
+                    InternalProgram.Redumper => File.Exists(this.Options.RedumperPath),
+                    InternalProgram.Aaru => File.Exists(this.Options.AaruPath),
+                    InternalProgram.DiscImageCreator => File.Exists(this.Options.DiscImageCreatorPath),
+                    _ => false,
+                };
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
 
         #region Progress Reporting
 

@@ -150,8 +150,11 @@ namespace MPF.Core
                 InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
                 InternalProgram.UmdImageCreator => new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null },
 
+                // If no dumping program found, set to null
+                InternalProgram.NONE => null,
+
                 // This should never happen, but it needs a fallback
-                _ => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
+                _ => new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath },
             };
 
             // Set system and type
@@ -183,12 +186,15 @@ namespace MPF.Core
                     InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
                     InternalProgram.Redumper => new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
 
+                    // If no dumping program found, set to null
+                    InternalProgram.NONE => null,
+
                     // This should never happen, but it needs a fallback
-                    _ => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    _ => new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
                 };
 
                 // Generate and return the param string
-                return Parameters.GenerateParameters();
+                return Parameters?.GenerateParameters();
             }
 
             return null;
@@ -281,6 +287,9 @@ namespace MPF.Core
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
+            if (Parameters == null)
+                return Result.Failure("Error! Current configuration is not supported!");
+
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
