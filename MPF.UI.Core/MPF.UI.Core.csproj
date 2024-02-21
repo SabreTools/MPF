@@ -6,6 +6,7 @@
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

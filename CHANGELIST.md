@@ -2,6 +2,7 @@
 
 - Remove debugging lines from build script
 - Port build script fixes from BOS
+- Fix double git hash version (feat. Deterous)
 
 ### 3.1.1 (2024-02-20)
 
