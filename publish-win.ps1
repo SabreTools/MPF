@@ -14,15 +14,15 @@ param(
     [Alias("UseAll")]
     [switch]$USE_ALL,
 
-	[Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false)]
     [Alias("IncludePrograms")]
     [switch]$INCLUDE_PROGRAMS,
 
-	[Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false)]
     [Alias("NoBuild")]
     [switch]$NO_BUILD,
 
-	[Parameter(Mandatory = $false)]
+    [Parameter(Mandatory = $false)]
     [Alias("NoArchive")]
     [switch]$NO_ARCHIVE
 )
@@ -56,102 +56,108 @@ $VALID_CROSS_PLATFORM_RUNTIMES = @('win-arm64', 'linux-x64', 'linux-arm64', 'osx
 # Only build if requested
 if (!$NO_BUILD.IsPresent)
 {
-	# Restore Nuget packages for all builds
-	Write-Host "Restoring Nuget packages"
-	dotnet restore
+    # Restore Nuget packages for all builds
+    Write-Host "Restoring Nuget packages"
+    dotnet restore
 
-	# Build UI
-	foreach ($FRAMEWORK in $UI_FRAMEWORKS)
-	{
-		foreach ($RUNTIME in $UI_RUNTIMES)
-		{
-			# Only .NET 5 and above can publish to a single file
-			if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK)
-			{
-				dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-				dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-			}
-			else
-			{
-				dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-				dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-			}
-		}
-	}
+    # Build UI
+    foreach ($FRAMEWORK in $UI_FRAMEWORKS)
+    {
+        foreach ($RUNTIME in $UI_RUNTIMES)
+        {
+            # If we have an invalid combination of framework and runtime
+            if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME)
+            {
+                continue
+            }
 
-	# Build Check
-	foreach ($FRAMEWORK in $CHECK_FRAMEWORKS)
-	{
-		foreach ($RUNTIME in $CHECK_RUNTIMES)
-		{
-			# If we have an invalid combination of framework and runtime
-			if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME)
-			{
-				continue
-			}
+            # Only .NET 5 and above can publish to a single file
+            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK)
+            {
+                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+            }
+            else
+            {
+                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+            }
+        }
+    }
 
-			# Only .NET 5 and above can publish to a single file
-			if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK)
-			{
-				dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
-				dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-			}
-			else
-			{
-				dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
-				dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
-			}
-		}
-	}
+    # Build Check
+    foreach ($FRAMEWORK in $CHECK_FRAMEWORKS)
+    {
+        foreach ($RUNTIME in $CHECK_RUNTIMES)
+        {
+            # If we have an invalid combination of framework and runtime
+            if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME)
+            {
+                continue
+            }
+
+            # Only .NET 5 and above can publish to a single file
+            if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK)
+            {
+                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+            }
+            else
+            {
+                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+            }
+        }
+    }
 }
 
 # Only create archives if requested
 if (!$NO_ARCHIVE.IsPresent)
 {
-	# Create UI archives
-	foreach ($FRAMEWORK in $UI_FRAMEWORKS)
-	{
-		foreach ($RUNTIME in $UI_RUNTIMES)
-		{
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
-			if ($INCLUDE_PROGRAMS.IsPresent)
-			{
-				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
-			}
-			else
-			{
-				7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
-			}
-			Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
-			if ($INCLUDE_PROGRAMS.IsPresent)
-			{
-				7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
-			}
-			else
-			{
-				7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
-			}
-		}
-	}
+    # Create UI archives
+    foreach ($FRAMEWORK in $UI_FRAMEWORKS)
+    {
+        foreach ($RUNTIME in $UI_RUNTIMES)
+        {
+            Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
+            if ($INCLUDE_PROGRAMS.IsPresent)
+            {
+                7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
+            }
+            else
+            {
+                7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
+            }
+            Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
+            if ($INCLUDE_PROGRAMS.IsPresent)
+            {
+                7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
+            else
+            {
+                7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
+        }
+    }
 
-	# Create Check archives
-	foreach ($FRAMEWORK in $CHECK_FRAMEWORKS)
-	{
-		foreach ($RUNTIME in $CHECK_RUNTIMES)
-		{
-			# If we have an invalid combination of framework and runtime
-			if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME)
-			{
-				continue
-			}
+    # Create Check archives
+    foreach ($FRAMEWORK in $CHECK_FRAMEWORKS)
+    {
+        foreach ($RUNTIME in $CHECK_RUNTIMES)
+        {
+            # If we have an invalid combination of framework and runtime
+            if ($VALID_CROSS_PLATFORM_FRAMEWORKS -notcontains $FRAMEWORK -and $VALID_CROSS_PLATFORM_RUNTIMES -contains $RUNTIME)
+            {
+                continue
+            }
 
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
-			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
-			Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
-			7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
-		}
-	}
+            Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
+            7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
+            Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
+            7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+        }
+    }
 
-	# Reset the directory
-	Set-Location -Path $PSScriptRoot
+    # Reset the directory
+    Set-Location -Path $PSScriptRoot
 }

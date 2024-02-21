@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Remove debugging lines from build script
+- Port build script fixes from BOS
 
 ### 3.1.1 (2024-02-20)
 

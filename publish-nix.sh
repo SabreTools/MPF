@@ -75,6 +75,15 @@ then
     do
         for RUNTIME in "${UI_RUNTIMES[@]}"
         do
+            # If we have an invalid combination of framework and runtime
+            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]
+            then
+                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]
+                then
+                    continue
+                fi
+            fi
+
             # Only .NET 5 and above can publish to a single file
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]
             then
