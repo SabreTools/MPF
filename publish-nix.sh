@@ -45,9 +45,9 @@ COMMIT=`git log --pretty=%H -1`
 
 # Create the build matrix arrays
 UI_FRAMEWORKS=("net8.0-windows")
-UI_RUNTIMES=("win-x64")
+UI_RUNTIMES=("win-x86" "win-x64")
 CHECK_FRAMEWORKS=("net8.0")
-CHECK_RUNTIMES=("win-x64" "linux-x64" "osx-x64")
+CHECK_RUNTIMES=("win-x86" "win-x64" "linux-x64" "osx-x64")
 
 # Use expanded lists, if requested
 if [ $USE_ALL = true ]
