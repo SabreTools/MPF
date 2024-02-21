@@ -66,7 +66,7 @@ artifacts:
 - path: MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
   name: MPF (.NET 8.0, Debug, Windows x64)
 
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
+- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x86_debug.zip
   name: MPF.Check (.NET 8.0, Debug, Windows x86)
 - path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
   name: MPF.Check (.NET 8.0, Debug, Windows x64)
