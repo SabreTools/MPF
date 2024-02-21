@@ -5,6 +5,7 @@
 - Fix double git hash version (feat. Deterous)
 - Readd x86 builds by default
 - Hide unavailable dumping programs (Deterous)
+- Remove DIC and Aaru bundles from CI
 
 ### 3.1.1 (2024-02-20)
 

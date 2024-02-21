@@ -27,14 +27,6 @@ build_script:
 # post-build step
 after_build:
 
-# Aaru
-- ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip
-- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Aaru *
-
-# DiscImageCreator
-- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/11660558/DiscImageCreator_20230606.zip
-- 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
-
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_311/redumper-2024.01.08_build311-win64.zip
 - 7z e redumper-2024.01.08_build311-win64.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Redumper redumper-2024.01.08_build311-win64\bin\*
