@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Remove debugging lines from build script
+
 ### 3.1.1 (2024-02-20)
 
 - Remove .NET 6 from auto-builds

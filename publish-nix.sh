@@ -120,12 +120,9 @@ then
     # Create UI archives
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"
     do
-        echo "Framework: $FRAMEWORK"
         for RUNTIME in "${UI_RUNTIMES[@]}"
         do
-            echo "Runtime: $RUNTIME"
             cd $BUILD_FOLDER/MPF/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-            echo "PWD: $PWD"
             if [ $INCLUDE_PROGRAMS = true ]
             then
                 zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_debug.zip .
@@ -133,7 +130,6 @@ then
                 zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/\*'
             fi
             cd $BUILD_FOLDER/MPF/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            echo "PWD: $PWD"
             if [ $INCLUDE_PROGRAMS = true ]
             then
                 zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_release.zip .
