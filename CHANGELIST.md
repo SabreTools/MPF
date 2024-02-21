@@ -6,6 +6,7 @@
 - Readd x86 builds by default
 - Hide unavailable dumping programs (Deterous)
 - Remove DIC and Aaru bundles from CI
+- Add x86 builds to AppVeyor
 
 ### 3.1.1 (2024-02-20)
 
