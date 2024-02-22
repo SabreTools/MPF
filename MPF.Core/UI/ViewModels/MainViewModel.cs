@@ -1844,49 +1844,51 @@ namespace MPF.Core.UI.ViewModels
                     return false;
                 }
             }
-
-            // If a complete dump exists from a different program
-            InternalProgram? programFound = null;
-            if (programFound == null && _environment.InternalProgram != InternalProgram.Aaru)
+            else
             {
-                Modules.Aaru.Parameters parameters = new("")
+                // If a complete dump exists from a different program
+                InternalProgram? programFound = null;
+                if (programFound == null && _environment.InternalProgram != InternalProgram.Aaru)
                 {
-                    Type = _environment.Type,
-                    System = _environment.System
-                };
-                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
-                if (foundOtherFiles)
-                    programFound = InternalProgram.Aaru;
-            }
-            if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
-            {
-                Modules.DiscImageCreator.Parameters parameters = new("")
+                    Modules.Aaru.Parameters parameters = new("")
+                    {
+                        Type = _environment.Type,
+                        System = _environment.System
+                    };
+                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    if (foundOtherFiles)
+                        programFound = InternalProgram.Aaru;
+                }
+                if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
                 {
-                    Type = _environment.Type,
-                    System = _environment.System
-                };
-                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
-                if (foundOtherFiles)
-                    programFound = InternalProgram.DiscImageCreator;
-            }
-            if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
-            {
-                Modules.Redumper.Parameters parameters = new("")
+                    Modules.DiscImageCreator.Parameters parameters = new("")
+                    {
+                        Type = _environment.Type,
+                        System = _environment.System
+                    };
+                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    if (foundOtherFiles)
+                        programFound = InternalProgram.DiscImageCreator;
+                }
+                if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
                 {
-                    Type = _environment.Type,
-                    System = _environment.System
-                };
-                (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
-                if (foundOtherFiles)
-                    programFound = InternalProgram.Redumper;
-            }
-            if (programFound != null && _displayUserMessage != null)
-            {
-                bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
-                if (mbresult != true)
+                    Modules.Redumper.Parameters parameters = new("")
+                    {
+                        Type = _environment.Type,
+                        System = _environment.System
+                    };
+                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    if (foundOtherFiles)
+                        programFound = InternalProgram.Redumper;
+                }
+                if (programFound != null && _displayUserMessage != null)
                 {
-                    LogLn("Dumping aborted!");
-                    return false;
+                    bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                    if (mbresult != true)
+                    {
+                        LogLn("Dumping aborted!");
+                        return false;
+                    }
                 }
             }
 
