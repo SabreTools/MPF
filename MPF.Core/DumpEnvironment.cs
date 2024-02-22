@@ -424,6 +424,19 @@ namespace MPF.Core
                     resultProgress?.Report(Result.Failure(deleteResult));
             }
 
+#if NET6_0_OR_GREATER
+            // Create PS3 IRD, if required
+            if (Options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
+            {
+                resultProgress?.Report(Result.Success("Creating IRD... please wait!"));
+                (bool deleteSuccess, string deleteResult) = InfoTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
+                if (deleteSuccess)
+                    resultProgress?.Report(Result.Success(deleteResult));
+                else
+                    resultProgress?.Report(Result.Failure(deleteResult));
+            }
+#endif
+
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
         }

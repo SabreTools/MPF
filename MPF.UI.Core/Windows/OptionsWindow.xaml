@@ -191,7 +191,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="7">
+                            <UniformGrid Columns="2" Rows="8">
                                 <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
                                      IsChecked="{Binding Options.ToolsInSeparateWindow}"
                                      ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
@@ -260,6 +260,11 @@
                                 <CheckBox VerticalAlignment="Center" Content="Delete Unnecessary Files"
                                      IsChecked="{Binding Options.DeleteUnnecessaryFiles}"
                                      ToolTip="Delete unnecesary output files to reduce space" Margin="0,4"
+                                     />
+
+                                <CheckBox VerticalAlignment="Center" Content="Create PS3 IRD After Dumping"
+                                     IsChecked="{Binding Options.CreateIRDAfterDumping}" IsEnabled="{Binding CreateIRDSupported}"
+                                     ToolTip="Automatically creates an IRD file after dumping a PS3 disc" Margin="0,4"
                                      />
                             </UniformGrid>
                         </GroupBox>
