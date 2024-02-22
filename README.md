@@ -33,8 +33,6 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 Both MPF UI and MPF.Check have the same system requirements for running, with the exception that MPF UI is Windows-only.
 
-- [Supported OS versions for .NET 6](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md)
-  - Requires [.NET 6.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) if built without bundled runtime
 - [Supported OS versions for .NET 8](https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md)
   - Requires [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) if built without bundled runtime
 
@@ -42,18 +40,18 @@ Ensure that your operating system and runtimes are as up-to-date as possible, si
 
 ## Build Instructions
 
-To build for .NET 6.0 or .NET 8.0, ensure that the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+To build for .NET 8.0, ensure that the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 **MPF UI (Windows only):**
 
 ```bash
-dotnet build MPF/MPF.csproj --framework [net6.0-windows|net8.0-windows] --runtime win-x64
+dotnet build MPF/MPF.csproj --framework net8.0-windows --runtime [win-x86|win-x64]
 ```
 
 **MPF.Check (Windows, OSX, Linux):**
 
 ```bash
-dotnet build MPF.Check/MPF.Check.csproj --framework [net6.0|net8.0] --runtime [win-x64|linux-x64|osx-x64]
+dotnet build MPF.Check/MPF.Check.csproj --framework net8.0 --runtime [win-x86|win-x64|linux-x64|osx-x64]
 ```
 
 Choose one of `win-x64`, `linux-x64`, or `osx-x64` depending on the machine you are targeting.

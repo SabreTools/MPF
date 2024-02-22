@@ -9,6 +9,7 @@
 - Add x86 builds to AppVeyor
 - Make AppVeyor builds framework-dependent
 - Fix misattributed artifact
+- Update README with current build instructions
 
 ### 3.1.1 (2024-02-20)
 
