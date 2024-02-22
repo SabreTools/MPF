@@ -514,7 +514,7 @@ namespace MPF.Core.Data
             set { Settings["CreateIRDAfterDumping"] = value.ToString(); }
         }
 
-#endregion
+        #endregion
 
         #region Skip Options
 
