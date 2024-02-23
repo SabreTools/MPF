@@ -1,0 +1,75 @@
+name: MPF CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [MPF, MPF.Check]
+        runtime: [win-x86, win-x64, linux-x64, osx-x64] #[win-x86, win-x64, win-arm64, linux-x64, linux-arm64, osx-x64]
+        framework: [net8.0, net8.0-windows] #[net20, net35, net40, net452, net472, net48, netcoreapp3.1, net5.0, net6.0, net7.0, net8.0, net5.0-windows, net6.0-windows, net7.0-windows, net8.0-windows]
+        conf: [Release, Debug]
+        exclude:
+          - project: MPF
+            runtime: linux-x64
+          - project: MPF
+            runtime: osx-x64
+          #- project: MPF
+          #  runtime: linux-arm64
+          #- project: MPF
+          #  framework: net20
+          #- project: MPF
+          #  framework: net35
+          #- project: MPF
+          #  framework: net5.0
+          #- project: MPF
+          #  framework: net6.0
+          #- project: MPF
+          #  framework: net7.0
+          - project: MPF
+            framework: net8.0
+          #- project: MPF.Check
+          #  framework: net5.0-windows
+          #- project: MPF.Check
+          #  framework: net6.0-windows
+          #- project: MPF.Check
+          #  framework: net7.0-windows
+          - project: MPF.Check
+            framework: net8.0-windows
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf == 'Release' && 'Release -p:DebugType=None -p:DebugSymbols=false' || 'Debug'}} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8'))&& '-p:PublishSingleFile=true' || ''}}
+      
+    - if: ${{ matrix.project == 'MPF' && matrix.framework == 'net8.0-windows' && matrix.conf == 'Debug'}}
+      name: Bundle Redumper
+      run: |
+        wget https://github.com/superg/redumper/releases/download/build_311/redumper-2024.01.08_build311-win64.zip
+        unzip redumper-2024.01.08_build311-win64.zip
+        mkdir -p MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
+        mv redumper-2024.01.08_build311-win64/bin/redumper.exe MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+        
+    - if: ${{ (matrix.project == 'MPF' && matrix.framework == 'net8.0-windows' && matrix.conf == 'Debug')
+              || (matrix.project == 'MPF.Check' && matrix.framework == 'net8.0' && matrix.conf == 'Debug')}}
+      name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.project }}_${{ github.run_number }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
+        path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/

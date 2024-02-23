@@ -11,6 +11,7 @@
 - Fix misattributed artifact
 - Update README with current build instructions
 - Opt-in automatic IRD creation after PS3 dump (Deterous)
+- Add CI via Github Workflows (Deterous)
 
 ### 3.1.1 (2024-02-20)
 
