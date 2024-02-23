@@ -13,6 +13,7 @@
 - Opt-in automatic IRD creation after PS3 dump (Deterous)
 - Add CI via Github Workflows (Deterous)
 - Reorganize solution items
+- Split CI workflow files
 
 ### 3.1.1 (2024-02-20)
 
