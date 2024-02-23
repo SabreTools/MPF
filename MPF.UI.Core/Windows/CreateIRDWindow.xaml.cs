@@ -46,7 +46,15 @@ namespace MPF.UI.Core.Windows
         private System.Windows.Controls.Button? _CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
 
         #endregion
-        
+
+        #region Expanders
+
+        private Expander? _KeyExpander => ItemHelper.FindChild<Expander>(this, "KeyExpander");
+        private Expander? _DiscIDExpander => ItemHelper.FindChild<Expander>(this, "DiscIDExpander");
+        private Expander? _PICExpander => ItemHelper.FindChild<Expander>(this, "PICExpander");
+
+        #endregion
+
 #endif
 
         /// <summary>
@@ -322,9 +330,15 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCreateIRDClick(object sender, EventArgs e)
         {
+#if NET35
+            if (_KeyExpander != null) _KeyExpander.IsExpanded = false;
+            if (_DiscIDExpander != null) _DiscIDExpander.IsExpanded = false;
+            if (_PICExpander != null) _PICExpander.IsExpanded = false;
+#else
             KeyExpander.IsExpanded = false;
             DiscIDExpander.IsExpanded = false;
             PICExpander.IsExpanded = false;
+#endif
             string tempStatus = CreateIRDViewModel.CreateIRDStatus;
             bool[] enabledFields = CreateIRDViewModel.DisableUIFields();
             CreateIRDViewModel.CreateIRDStatus = "Creating IRD... Please Wait";
@@ -470,6 +484,6 @@ namespace MPF.UI.Core.Windows
                 CreateIRDViewModel.ChangeLayerbreak();
         }
 
-        #endregion
+#endregion
     }
 }
