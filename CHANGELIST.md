@@ -20,6 +20,7 @@
 - Fix net35 build issue
 - Remove now-unnecessary restore step
 - Remove net35 from MPF... again
+- Fix whitespace that got unwhitespaced
 
 ### 3.1.1 (2024-02-20)
 

@@ -26,7 +26,7 @@ namespace MPF.UI.Core.Windows
 
         private Button? _InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
         private TextBox? _InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
-        
+
         private Button? _LogPathBrowseButton => ItemHelper.FindChild<Button>(this, "LogPathBrowseButton");
         private TextBox? _LogPathTextBox => ItemHelper.FindChild<TextBox>(this, "LogPathTextBox");
         private Button? _KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
@@ -484,6 +484,6 @@ namespace MPF.UI.Core.Windows
                 CreateIRDViewModel.ChangeLayerbreak();
         }
 
-#endregion
+        #endregion
     }
 }
