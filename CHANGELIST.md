@@ -15,6 +15,7 @@
 - Reorganize solution items
 - Split CI workflow files
 - Add GHA CI status badges
+- Rename badges for GHA
 
 ### 3.1.1 (2024-02-20)
 
