@@ -500,6 +500,20 @@ namespace MPF.Core.Data
             set { Settings["DeleteUnnecessaryFiles"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Create a PS3 IRD file after dumping PS3 BD-ROM discs
+        /// Always returns false if not compiled with .NET Core 6 or newer
+        /// </summary>
+        public bool CreateIRDAfterDumping
+        {
+#if NET6_0_OR_GREATER
+            get { return GetBooleanSetting(Settings, "CreateIRDAfterDumping", false); }
+#else
+            get { return false; }
+#endif
+            set { Settings["CreateIRDAfterDumping"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Skip Options

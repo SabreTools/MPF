@@ -1495,6 +1495,58 @@ namespace MPF.Core
             return files;
         }
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Create an IRD and write it to the specified output directory with optional filename suffix
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <returns>True on success, false on error</returns>
+        public static async Task<(bool, string)> WriteIRD(string isoPath, string? discKeyString, string? discIDString, string? picString, long? layerbreak, string? crc32)
+        {
+            try
+            {
+                // Output IRD file path
+                string irdPath = Path.ChangeExtension(isoPath, ".ird");
+
+                // Parse disc key from submission info (Required)
+                byte[]? discKey = Tools.ParseHexKey(discKeyString);
+                if (discKey == null)
+                    return (false, "Failed to create IRD: No key provided");
+
+                // Parse Disc ID from submission info (Optional)
+                byte[]? discID = Tools.ParseDiscID(discIDString);
+
+                // Parse PIC from submission info (Optional)
+                byte[]? pic = Tools.ParsePIC(picString);
+
+                // Parse CRC32 strings into ISO hash for Unique ID field (Optional)
+                uint? uid = Tools.ParseCRC32(crc32);
+
+                // Ensure layerbreak value is valid (Optional)
+                layerbreak = Tools.ParseLayerbreak(layerbreak);
+
+                // Create Redump-style reproducible IRD
+                LibIRD.ReIRD ird = await Task.Run(() => new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
+                if (pic != null)
+                    ird.PIC = pic;
+                if (discID != null && ird.DiscID[15] != 0x00)
+                    ird.DiscID = discID;
+
+                // Write IRD to file
+                ird.Write(irdPath);
+
+                return (true, "IRD created!");
+            }
+            catch (Exception)
+            {
+                // We don't care what the error is
+                return (false, "Failed to create IRD");
+            }
+        }
+#endif
+
         #endregion
 
         #region Normalization
