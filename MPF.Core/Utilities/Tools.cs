@@ -92,6 +92,7 @@ namespace MPF.Core.Utilities
                 // Convert next two chars to ASCII value relative to '0'
                 int a = Char.ToUpper(hexString[i]) - '0';
                 int b = Char.ToUpper(hexString[i + 1]) - '0';
+
                 // Ensure hex string only has '0' through '9' and 'A' through 'F' (case insensitive)
                 if ((a < 0 || b < 0 || a > 22 || b > 22) || (a > 10 && a < 17) || (b > 10 && b < 17))
                     return null;
@@ -330,14 +331,18 @@ namespace MPF.Core.Utilities
 
                 // Look for Disc Key in log
                 while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_key = ") == false) ;
+
                 // If end of file reached, no key found
                 if (line == null)
                     return false;
+
                 // Get Disc Key from log
                 string discKeyStr = line.Substring("disc_key = ".Length);
+
                 // Validate Disc Key from log
                 if (discKeyStr.Length != 32)
                     return false;
+
                 // Convert Disc Key to byte array
                 key = Tools.HexStringToByteArray(discKeyStr);
                 if (key == null)
@@ -345,16 +350,21 @@ namespace MPF.Core.Utilities
 
                 // Read Disc ID
                 while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_id = ") == false) ;
+
                 // If end of file reached, no ID found
                 if (line == null)
                     return false;
+
                 // Get Disc ID from log
                 string discIDStr = line.Substring("disc_id = ".Length);
+
                 // Validate Disc ID from log
                 if (discIDStr.Length != 32)
                     return false;
+
                 // Replace X's in Disc ID with 00000001
                 discIDStr = discIDStr.Substring(0, 24) + "00000001";
+
                 // Convert Disc ID to byte array
                 id = Tools.HexStringToByteArray(discIDStr);
                 if (id == null)
@@ -362,18 +372,22 @@ namespace MPF.Core.Utilities
 
                 // Look for PIC in log
                 while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("PIC:") == false) ;
+
                 // If end of file reached, no PIC found
                 if (line == null)
                     return false;
+
                 // Get PIC from log
                 string discPICStr = "";
                 for (int i = 0; i < 8; i++)
                     discPICStr += sr.ReadLine();
                 if (discPICStr == null)
                     return false;
+
                 // Validate PIC from log
                 if (discPICStr.Length != 256)
                     return false;
+
                 // Convert PIC to byte array
                 pic = Tools.HexStringToByteArray(discPICStr.Substring(0, 230));
                 if (pic == null)

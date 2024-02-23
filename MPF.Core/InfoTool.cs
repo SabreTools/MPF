@@ -1503,7 +1503,7 @@ namespace MPF.Core
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>True on success, false on error</returns>
-        public static (bool, string) WriteIRD(string isoPath, string? discKeyString, string? discIDString, string? picString, long? layerbreak, string? crc32)
+        public static async Task<(bool, string)> WriteIRD(string isoPath, string? discKeyString, string? discIDString, string? picString, long? layerbreak, string? crc32)
         {
             try
             {
@@ -1514,17 +1514,21 @@ namespace MPF.Core
                 byte[]? discKey = Tools.ParseHexKey(discKeyString);
                 if (discKey == null)
                     return (false, "Failed to create IRD: No key provided");
+
                 // Parse Disc ID from submission info (Optional)
                 byte[]? discID = Tools.ParseDiscID(discIDString);
+
                 // Parse PIC from submission info (Optional)
                 byte[]? pic = Tools.ParsePIC(picString);
+
                 // Parse CRC32 strings into ISO hash for Unique ID field (Optional)
                 uint? uid = Tools.ParseCRC32(crc32);
+
                 // Ensure layerbreak value is valid (Optional)
                 layerbreak = Tools.ParseLayerbreak(layerbreak);
 
                 // Create Redump-style reproducible IRD
-                LibIRD.ReIRD ird = new(isoPath, discKey, layerbreak, uid);
+                LibIRD.ReIRD ird = await Task.Run(() => new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
                 if (pic != null)
                     ird.PIC = pic;
                 if (discID != null && ird.DiscID[15] != 0x00)
