@@ -32,6 +32,7 @@
 - Build artifact before upload
 - Change link to WIP builds in README
 - Use commit SHA as body of rolling releases
+- Don't omit body when setting body
 
 ### 3.1.1 (2024-02-20)
 

@@ -53,9 +53,6 @@ jobs:
         allowUpdates: True
         artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
         body: '${{ github.sha }}'
-        omitBody: True
-        omitBodyDuringUpdate: True
-        omitNameDuringUpdate: True
         prerelease: True
         replacesArtifacts: True
         tag: "ui-rolling"
