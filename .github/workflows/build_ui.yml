@@ -40,22 +40,20 @@ jobs:
         
     - name: Upload build
       uses: actions/upload-artifact@v4
-      id: artifact-upload-step
       with:
         name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
         path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
 
     - name: Upload to rolling
-      uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: ${{ steps.artifact-upload-step.outputs.artifact-id }}
-        generateReleaseNotes: true
+        artifacts: '*${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}*'
+        generateReleaseNotes: True
         omitBody: True
         omitBodyDuringUpdate: True
         omitNameDuringUpdate: True
         prerelease: True
-        removeArtifacts: True
         replacesArtifacts: True
         tag: "ui-rolling"
         updateOnlyUnreleased: True

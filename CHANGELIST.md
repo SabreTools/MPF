@@ -25,6 +25,7 @@
 - Attempt to add CD to existing actions
 - Try fixing the artifact upload
 - Use recommendation from upload-artifact
+- Revert artifact ID, use name?
 
 ### 3.1.1 (2024-02-20)
 
