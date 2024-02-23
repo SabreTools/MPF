@@ -26,6 +26,7 @@
 - Try fixing the artifact upload
 - Use recommendation from upload-artifact
 - Revert artifact ID, use name?
+- Try using download-artifact
 
 ### 3.1.1 (2024-02-20)
 
