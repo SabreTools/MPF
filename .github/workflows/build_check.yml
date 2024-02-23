@@ -41,7 +41,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: True
-        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
+        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
         generateReleaseNotes: true
         omitBody: True
         omitBodyDuringUpdate: True

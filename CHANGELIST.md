@@ -23,6 +23,7 @@
 - Fix whitespace that got unwhitespaced
 - Fix link in README
 - Attempt to add CD to existing actions
+- Try fixing the artifact upload
 
 ### 3.1.1 (2024-02-20)
 
