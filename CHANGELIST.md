@@ -30,6 +30,7 @@
 - Download all artifacts?
 - Use newer download version
 - Build artifact before upload
+- Change link to WIP builds in README
 
 ### 3.1.1 (2024-02-20)
 

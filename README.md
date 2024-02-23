@@ -12,7 +12,9 @@ This is a community project, so if you have some time and knowledge to give, we'
 
 For the most recent stable build, download the latest release here: [Releases Page](https://github.com/SabreTools/MPF/releases)
 
-For the latest GitHub Actions WIP build here: [GitHub Actions](https://github.com/SabreTools/MPF/actions)
+For the latest MPF UI WIP build here: [GitHub Actions](https://github.com/SabreTools/MPF/releases/tag/ui-rolling)
+
+For the latest MPF Check WIP build here: [GitHub Actions](https://github.com/SabreTools/MPF/releases/tag/check-rolling)
 
 ## Media Preservation Frontend UI (MPF)
 
