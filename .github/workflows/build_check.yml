@@ -38,7 +38,7 @@ jobs:
         path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
 
     - name: Process artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4.1.2
       with:
         path: zip
 

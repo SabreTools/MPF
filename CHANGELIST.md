@@ -28,6 +28,7 @@
 - Revert artifact ID, use name?
 - Try using download-artifact
 - Download all artifacts?
+- Use newer download version
 
 ### 3.1.1 (2024-02-20)
 
