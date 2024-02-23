@@ -2,9 +2,9 @@ name: MPF CI
 
 on:
   push:
-    branches: [ "gh-workflows" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "gh-workflows" ]
+    branches: [ "master" ]
 
 jobs:
   build:
