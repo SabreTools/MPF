@@ -1,4 +1,4 @@
-name: Build MPF UI
+name: MPF UI
 
 on:
   push:
@@ -41,5 +41,5 @@ jobs:
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.project }}_${{ github.run_number }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
+        name: ${{ matrix.project }}_${{ github.sha }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
         path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
