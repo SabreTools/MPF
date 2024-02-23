@@ -52,7 +52,7 @@ jobs:
       with:
         allowUpdates: True
         artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
-        generateReleaseNotes: True
+        body: '${{ github.sha }}'
         omitBody: True
         omitBodyDuringUpdate: True
         omitNameDuringUpdate: True
