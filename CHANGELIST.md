@@ -22,6 +22,7 @@
 - Remove net35 from MPF... again
 - Fix whitespace that got unwhitespaced
 - Fix link in README
+- Attempt to add CD to existing actions
 
 ### 3.1.1 (2024-02-20)
 
