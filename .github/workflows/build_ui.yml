@@ -40,6 +40,7 @@ jobs:
         
     - name: Upload build
       uses: actions/upload-artifact@v4
+      id: artifact-upload-step
       with:
         name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
         path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
@@ -48,7 +49,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: True
-        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
+        artifacts: ${{ steps.artifact-upload-step.outputs.artifact-id }}
         generateReleaseNotes: true
         omitBody: True
         omitBodyDuringUpdate: True
