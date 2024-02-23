@@ -37,23 +37,21 @@ jobs:
         unzip redumper-2024.01.08_build311-win64.zip
         mkdir -p MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
         mv redumper-2024.01.08_build311-win64/bin/redumper.exe MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+
+    - name: Archive build
+      run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
         
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
-        path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
-
-    - name: Process artifacts
-      uses: actions/download-artifact@v4.1.2
-      with:
-        path: zip
+        path: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: 'zip/*'
+        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
         generateReleaseNotes: True
         omitBody: True
         omitBodyDuringUpdate: True

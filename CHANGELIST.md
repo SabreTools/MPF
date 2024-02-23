@@ -29,6 +29,7 @@
 - Try using download-artifact
 - Download all artifacts?
 - Use newer download version
+- Build artifact before upload
 
 ### 3.1.1 (2024-02-20)
 

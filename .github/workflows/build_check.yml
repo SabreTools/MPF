@@ -31,22 +31,20 @@ jobs:
     - name: Build
       run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf == 'Release' && 'Release -p:DebugType=None -p:DebugSymbols=false' || 'Debug'}} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
         
+    - name: Archive build
+      run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+        
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
-        path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
-
-    - name: Process artifacts
-      uses: actions/download-artifact@v4.1.2
-      with:
-        path: zip
+        path: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: 'zip/*'
+        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
         generateReleaseNotes: True
         omitBody: True
         omitBodyDuringUpdate: True
