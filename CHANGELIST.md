@@ -19,6 +19,7 @@
 - More tweaks to CI
 - Fix net35 build issue
 - Remove now-unnecessary restore step
+- Remove net35 from MPF... again
 
 ### 3.1.1 (2024-02-20)
 
