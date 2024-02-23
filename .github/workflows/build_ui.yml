@@ -44,16 +44,16 @@ jobs:
         name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
         path: ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
 
-    - uses: actions/download-artifact@v3
+    - name: Process artifacts
+      uses: actions/download-artifact@v3
       with:
-        name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
         path: zip
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: 'zip/${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip'
+        artifacts: 'zip/*'
         generateReleaseNotes: True
         omitBody: True
         omitBodyDuringUpdate: True

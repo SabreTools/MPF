@@ -27,6 +27,7 @@
 - Use recommendation from upload-artifact
 - Revert artifact ID, use name?
 - Try using download-artifact
+- Download all artifacts?
 
 ### 3.1.1 (2024-02-20)
 
