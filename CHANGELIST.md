@@ -18,6 +18,7 @@
 - Rename badges for GHA
 - More tweaks to CI
 - Fix net35 build issue
+- Remove now-unnecessary restore step
 
 ### 3.1.1 (2024-02-20)
 

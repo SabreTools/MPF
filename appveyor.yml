@@ -10,7 +10,6 @@ image: Visual Studio 2022
 
 # build step
 build_script:
-  - dotnet restore
   - dotnet build
 
 # post-build step
