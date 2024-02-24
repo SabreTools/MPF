@@ -37,6 +37,7 @@
 - Unified tag for rolling release
 - Generate release notes automatically
 - Remove generation, just in case
+- Change link to WIP builds in README
 
 ### 3.1.1 (2024-02-20)
 
