@@ -34,6 +34,7 @@
 - Use commit SHA as body of rolling releases
 - Don't omit body when setting body
 - Remove unnecessary empty section
+- Unified tag for rolling release
 
 ### 3.1.1 (2024-02-20)
 
