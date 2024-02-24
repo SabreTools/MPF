@@ -36,6 +36,7 @@
 - Remove unnecessary empty section
 - Unified tag for rolling release
 - Generate release notes automatically
+- Remove generation, just in case
 
 ### 3.1.1 (2024-02-20)
 
