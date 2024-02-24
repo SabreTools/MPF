@@ -399,6 +399,23 @@
                             <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="HashDataSize" Label="Size" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.Size, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataCRC" Label="CRC-32" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.CRC32, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataMD5" Label="MD5" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.MD5, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataSHA1" Label="SHA-1" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.SHA1, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataLayerbreak1" Label="Layerbreak 1" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataLayerbreak2" Label="Layerbreak 2" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak2, Mode=TwoWay}"/>
+                            <controls:UserInput x:Name="HashDataLayerbreak3" Label="Layerbreak 3" IsReadOnly="True"
+                                                Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak3, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.AntiModchip, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True"

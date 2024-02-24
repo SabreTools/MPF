@@ -77,6 +77,14 @@ namespace MPF.UI.Core.Windows
 
         private UserInput? _FullyMatchedID => ItemHelper.FindChild<UserInput>(this, "FullyMatchedID");
         private UserInput? _PartiallyMatchedIDs => ItemHelper.FindChild<UserInput>(this, "PartiallyMatchedIDs");
+        private UserInput? _HashData => ItemHelper.FindChild<UserInput>(this, "HashData");
+        private UserInput? _HashDataSize => ItemHelper.FindChild<UserInput>(this, "HashDataSize");
+        private UserInput? _HashDataCRC => ItemHelper.FindChild<UserInput>(this, "HashDataCRC");
+        private UserInput? _HashDataMD5 => ItemHelper.FindChild<UserInput>(this, "HashDataMD5");
+        private UserInput? _HashDataSHA1 => ItemHelper.FindChild<UserInput>(this, "HashDataSHA1");
+        private UserInput? _HashDataLayerbreak1 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak1");
+        private UserInput? _HashDataLayerbreak2 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak2");
+        private UserInput? _HashDataLayerbreak3 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak3");
         private UserInput? _AntiModchip => ItemHelper.FindChild<UserInput>(this, "AntiModchip");
         private UserInput? _DiscOffset => ItemHelper.FindChild<UserInput>(this, "DiscOffset");
         private UserInput? _DMIHash => ItemHelper.FindChild<UserInput>(this, "DMIHash");
@@ -295,6 +303,22 @@ namespace MPF.UI.Core.Windows
                 _PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else
                 _PartiallyMatchedIDs!.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
+            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
+                _HashData!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Size == null)
+                _HashDataSize!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.CRC32))
+                _HashDataCRC!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.MD5))
+                _HashDataMD5!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.SHA1))
+                _HashDataSHA1!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak == null)
+                _HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null)
+                _HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null)
+                _HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 _AntiModchip!.Visibility = Visibility.Collapsed;
             if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
@@ -352,6 +376,22 @@ namespace MPF.UI.Core.Windows
                 PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
+            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
+                HashData!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Size == null)
+                HashDataSize!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.CRC32))
+                HashDataCRC!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.MD5))
+                HashDataMD5!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.SHA1))
+                HashDataSHA1!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak == null)
+                HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null)
+                HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null)
+                HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 AntiModchip.Visibility = Visibility.Collapsed;
             if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
