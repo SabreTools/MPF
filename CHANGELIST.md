@@ -35,6 +35,7 @@
 - Don't omit body when setting body
 - Remove unnecessary empty section
 - Unified tag for rolling release
+- Generate release notes automatically
 
 ### 3.1.1 (2024-02-20)
 

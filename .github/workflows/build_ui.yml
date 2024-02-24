@@ -52,8 +52,9 @@ jobs:
       with:
         allowUpdates: True
         artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
-        body: '${{ github.sha }}'
+        body: 'Last built commit: ${{ github.sha }}'
         commit: ${{ github.sha }}
+        generateReleaseNotes: True
         name: 'Rolling Release'
         prerelease: True
         replacesArtifacts: True
