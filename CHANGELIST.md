@@ -39,6 +39,7 @@
 - Remove generation, just in case
 - Change link to WIP builds in README
 - Show hashes in readonly data
+- Pull PS3 Disc Key from redump (Deterous)
 
 ### 3.1.1 (2024-02-20)
 
