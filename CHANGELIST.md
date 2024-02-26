@@ -39,6 +39,7 @@
 - Remove generation, just in case
 - Change link to WIP builds in README
 - Show hashes in readonly data
+- Update to BinaryObjectScanner 3.1.0
 
 ### 3.1.1 (2024-02-20)
 
