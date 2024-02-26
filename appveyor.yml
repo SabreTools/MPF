@@ -10,46 +10,7 @@ image: Visual Studio 2022
 
 # build step
 build_script:
-  - dotnet restore
-
-  # .NET 8.0 Debug
-  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x86 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x64 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x86 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x64 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r linux-x64 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r osx-x64 -c Debug --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-
-  # .NET 8.0 Release
-  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x86 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF\MPF.csproj -f net8.0-windows -r win-x64 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x86 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r win-x64 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r linux-x64 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net8.0 -r osx-x64 -c Release --self-contained false --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
-
-# post-build step
-after_build:
-
-# Redumper
-- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_311/redumper-2024.01.08_build311-win64.zip
-- 7z e redumper-2024.01.08_build311-win64.zip -oMPF\bin\Debug\net8.0-windows\win-x64\publish\Programs\Redumper redumper-2024.01.08_build311-win64\bin\*
-
-# Create MPF Debug archives
-- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net8.0-windows\win-x86\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x86_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net8.0-windows\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip *
-
-# Create MPF.Check Debug archives
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\win-x86\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x86_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\linux-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_linux-x64_debug.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net8.0\osx-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_osx-x64_debug.zip *
+  - dotnet build
 
 # success/failure tracking
 on_success:
@@ -58,19 +19,3 @@ on_success:
 on_failure:
   - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
   - ps: ./send.ps1 failure $env:WEBHOOK_URL
-
-# artifact linking
-artifacts:
-- path: MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x86_debug.zip
-  name: MPF (.NET 8.0, Debug, Windows x86)
-- path: MPF_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
-  name: MPF (.NET 8.0, Debug, Windows x64)
-
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x86_debug.zip
-  name: MPF.Check (.NET 8.0, Debug, Windows x86)
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_win-x64_debug.zip
-  name: MPF.Check (.NET 8.0, Debug, Windows x64)
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_linux-x64_debug.zip
-  name: MPF.Check (.NET 8.0, Debug, Linux x64)
-- path: MPF.Check_%APPVEYOR_BUILD_NUMBER%_net8.0_osx-x64_debug.zip
-  name: MPF.Check (.NET 8.0, Debug, OSX x64)

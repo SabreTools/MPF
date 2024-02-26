@@ -13,9 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
 		CHANGELIST.md = CHANGELIST.md
-		.github\ISSUE_TEMPLATE\feature-request.md = .github\ISSUE_TEMPLATE\feature-request.md
-		.github\ISSUE_TEMPLATE\informational.md = .github\ISSUE_TEMPLATE\informational.md
-		.github\ISSUE_TEMPLATE\issue-report.md = .github\ISSUE_TEMPLATE\issue-report.md
 		publish-nix.sh = publish-nix.sh
 		publish-win.ps1 = publish-win.ps1
 		README.md = README.md
@@ -26,6 +23,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.UI.Core", "MPF.UI.Core\MPF.UI.Core.csproj", "{EA3768DB-694A-4653-82E4-9FF71B8963F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MPF", "MPF", "{4160167D-681D-480B-ABC6-06AC869E5769}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{ADC5FDD7-F43F-4F9C-B222-19AA1D64D3D4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\feature-request.md = .github\ISSUE_TEMPLATE\feature-request.md
+		.github\ISSUE_TEMPLATE\informational.md = .github\ISSUE_TEMPLATE\informational.md
+		.github\ISSUE_TEMPLATE\issue-report.md = .github\ISSUE_TEMPLATE\issue-report.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{440776E0-E6E2-46C6-8E85-09E64A8FC7D6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build_check.yml = .github\workflows\build_check.yml
+		.github\workflows\build_ui.yml = .github\workflows\build_ui.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +73,8 @@ Global
 		{8CFDE289-E171-4D49-A40D-5293265C1253} = {4160167D-681D-480B-ABC6-06AC869E5769}
 		{70B1265D-FE49-472A-A83D-0B462152D37A} = {4160167D-681D-480B-ABC6-06AC869E5769}
 		{EA3768DB-694A-4653-82E4-9FF71B8963F3} = {4160167D-681D-480B-ABC6-06AC869E5769}
+		{ADC5FDD7-F43F-4F9C-B222-19AA1D64D3D4} = {4D1DCF5A-F0B0-4E81-A05B-F1A7D37C9D9D}
+		{440776E0-E6E2-46C6-8E85-09E64A8FC7D6} = {4D1DCF5A-F0B0-4E81-A05B-F1A7D37C9D9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73C62E6A-6584-4D93-83B5-ECB1FBDB469B}

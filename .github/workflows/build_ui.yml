@@ -1,0 +1,61 @@
+name: MPF UI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [MPF]
+        runtime: [win-x86, win-x64]
+        framework: [net8.0-windows] #[net40, net452, net472, net48, netcoreapp3.1, net5.0-windows, net6.0-windows, net7.0-windows, net8.0-windows]
+        conf: [Release, Debug]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf == 'Release' && 'Release -p:DebugType=None -p:DebugSymbols=false' || 'Debug'}} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
+      
+    - name: Bundle Redumper
+      run: |
+        wget https://github.com/superg/redumper/releases/download/build_311/redumper-2024.01.08_build311-win64.zip
+        unzip redumper-2024.01.08_build311-win64.zip
+        mkdir -p MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
+        mv redumper-2024.01.08_build311-win64/bin/redumper.exe MPF/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+
+    - name: Archive build
+      run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+        
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
+        path: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
+
+    - name: Upload to rolling
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        allowUpdates: True
+        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
+        body: 'Last built commit: ${{ github.sha }}'
+        commit: ${{ github.sha }}
+        name: 'Rolling Release'
+        prerelease: True
+        replacesArtifacts: True
+        tag: "rolling"
+        updateOnlyUnreleased: True

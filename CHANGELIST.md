@@ -11,7 +11,34 @@
 - Fix misattributed artifact
 - Update README with current build instructions
 - Opt-in automatic IRD creation after PS3 dump (Deterous)
-- Pull PS3 Disc Key from redump (Deterous)
+- Add CI via Github Workflows (Deterous)
+- Reorganize solution items
+- Split CI workflow files
+- Add GHA CI status badges
+- Rename badges for GHA
+- More tweaks to CI
+- Fix net35 build issue
+- Remove now-unnecessary restore step
+- Remove net35 from MPF... again
+- Fix whitespace that got unwhitespaced
+- Fix link in README
+- Attempt to add CD to existing actions
+- Try fixing the artifact upload
+- Use recommendation from upload-artifact
+- Revert artifact ID, use name?
+- Try using download-artifact
+- Download all artifacts?
+- Use newer download version
+- Build artifact before upload
+- Change link to WIP builds in README
+- Use commit SHA as body of rolling releases
+- Don't omit body when setting body
+- Remove unnecessary empty section
+- Unified tag for rolling release
+- Generate release notes automatically
+- Remove generation, just in case
+- Change link to WIP builds in README
+- Show hashes in readonly data
 
 ### 3.1.1 (2024-02-20)
 

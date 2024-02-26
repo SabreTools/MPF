@@ -3,6 +3,8 @@
 Redumper/Aaru/DiscImageCreator UI in C#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
+[![UI Build](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml)
+[![Check Build](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml)
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you as a contributor to this project. If you have any suggestions, issues, bugs, or crashes, please look at the [Issues](https://github.com/SabreTools/MPF/issues) page first to see if it has been reported before and try out the latest AppVeyor WIP build below to see if it has already been addressed. If it hasn't, please open an issue that's as descriptive as you can be. Help me make this a better program for everyone :)
 
@@ -10,7 +12,7 @@ This is a community project, so if you have some time and knowledge to give, we'
 
 For the most recent stable build, download the latest release here: [Releases Page](https://github.com/SabreTools/MPF/releases)
 
-For the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
+For the latest WIP build here: [Rolling Release](https://github.com/SabreTools/MPF/releases/tag/rolling)
 
 ## Media Preservation Frontend UI (MPF)
 
