@@ -40,6 +40,7 @@
 - Change link to WIP builds in README
 - Show hashes in readonly data
 - Update to BinaryObjectScanner 3.1.0
+- Add Mattel HyperScan detection
 
 ### 3.1.1 (2024-02-20)
 
