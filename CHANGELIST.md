@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.2 (2024-02-27)
 
 - Remove debugging lines from build script
 - Port build script fixes from BOS

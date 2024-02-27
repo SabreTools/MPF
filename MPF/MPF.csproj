@@ -14,7 +14,7 @@
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <VersionPrefix>3.1.1</VersionPrefix>
+    <VersionPrefix>3.1.2</VersionPrefix>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
 
