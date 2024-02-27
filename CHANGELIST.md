@@ -3,6 +3,7 @@
 - Gate debug publishing behind use all flag
 - Hide layerbreaks if value is 0
 - Make GHA debug-only
+- Remove GHA pull request builds
 
 ### 3.1.2 (2024-02-27)
 
