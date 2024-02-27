@@ -148,6 +148,7 @@ namespace MPF.Core
                 // Verification support only
                 InternalProgram.CleanRip => new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null },
                 InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
+                InternalProgram.PS3CFW => new Modules.PS3CFW.Parameters(parameters) { ExecutablePath = null },
                 InternalProgram.UmdImageCreator => new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null },
 
                 // If no dumping program found, set to null

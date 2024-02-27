@@ -293,19 +293,19 @@ namespace MPF.Core.Utilities
 
         #endregion
 
-        #region PlayStation 3
+        #region PlayStation 3 specific tools
 
         /// <summary>
         /// Validates a getkey log to check for presence of valid PS3 key
         /// </summary>
         /// <param name="logPath">Path to getkey log file</param>
-        /// <param name="key">Output 16 byte key, null if not valid</param>
+        /// <param name="key">Output key string, null if not valid</param>
+        /// <param name="id">Output disc ID string, null if not valid</param>
+        /// <param name="pic">Output PIC string, null if not valid</param>
         /// <returns>True if path to log file contains valid key, false otherwise</returns>
-        public static bool ParseGetKeyLog(string? logPath, out byte[]? key, out byte[]? id, out byte[]? pic)
+        public static bool ParseGetKeyLog(string? logPath, out string? key, out string? id, out string? pic)
         {
-            key = null;
-            id = null;
-            pic = null;
+            key = id = pic = null;
 
             if (string.IsNullOrEmpty(logPath))
                 return false;
@@ -344,7 +344,7 @@ namespace MPF.Core.Utilities
                     return false;
 
                 // Convert Disc Key to byte array
-                key = Tools.HexStringToByteArray(discKeyStr);
+                key = discKeyStr;
                 if (key == null)
                     return false;
 
@@ -366,7 +366,7 @@ namespace MPF.Core.Utilities
                 discIDStr = discIDStr.Substring(0, 24) + "00000001";
 
                 // Convert Disc ID to byte array
-                id = Tools.HexStringToByteArray(discIDStr);
+                id = discIDStr;
                 if (id == null)
                     return false;
 
@@ -389,7 +389,7 @@ namespace MPF.Core.Utilities
                     return false;
 
                 // Convert PIC to byte array
-                pic = Tools.HexStringToByteArray(discPICStr.Substring(0, 230));
+                pic = discPICStr + "00000000";
                 if (pic == null)
                     return false;
 
@@ -410,6 +410,33 @@ namespace MPF.Core.Utilities
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Validates a getkey log to check for presence of valid PS3 key
+        /// </summary>
+        /// <param name="logPath">Path to getkey log file</param>
+        /// <param name="key">Output 16 byte disc key, null if not valid</param>
+        /// <param name="id">Output 16 byte disc ID, null if not valid</param>
+        /// <param name="pic">Output 230 byte PIC, null if not valid</param>
+        /// <returns>True if path to log file contains valid key, false otherwise</returns>
+        public static bool ParseGetKeyLog(string? logPath, out byte[]? key, out byte[]? id, out byte[]? pic)
+        {
+            key = id = pic = null;
+            if (ParseGetKeyLog(logPath, out string? keyString, out string? idString, out string? picString))
+            {
+                if (string.IsNullOrEmpty(keyString) || string.IsNullOrEmpty(idString) || string.IsNullOrEmpty(picString) || picString!.Length < 230)
+                    return false;
+
+                key = Tools.HexStringToByteArray(keyString);
+                id = Tools.HexStringToByteArray(idString);
+                pic = Tools.HexStringToByteArray(picString.Substring(0, 230));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>

@@ -46,6 +46,7 @@
         // Verification support only
         CleanRip,
         DCDumper,
+        PS3CFW,
         UmdImageCreator,
     }
 
