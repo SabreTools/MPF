@@ -5,6 +5,7 @@
 - Make GHA debug-only
 - Remove GHA pull request builds
 - Add PR check workflow
+- Don't link to AppVeyor artifacts page anymore
 
 ### 3.1.2 (2024-02-27)
 

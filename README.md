@@ -2,7 +2,7 @@
 
 Redumper/Aaru/DiscImageCreator UI in C#
 
-[![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
+[![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/MPF)
 [![UI Build](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml)
 [![Check Build](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml)
 
