@@ -331,6 +331,12 @@ namespace MPF.Core.Data
                     return RedumpSystem.CommodoreAmigaCD32;
             }
 
+            // Mattel HyperScan -- TODO: May need case-insensitivity added
+            if (File.Exists(Path.Combine(this.Name, "hyper.exe")))
+            {
+                return RedumpSystem.MattelHyperScan;
+            }
+
             // Mattel Fisher-Price iXL
 #if NET20 || NET35
             if (File.Exists(Path.Combine(Path.Combine(this.Name, "iXL"), "iXLUpdater.exe")))
