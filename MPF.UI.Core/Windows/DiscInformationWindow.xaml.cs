@@ -313,11 +313,11 @@ namespace MPF.UI.Core.Windows
                 _HashDataMD5!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.SHA1))
                 _HashDataSHA1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak == null || submissionInfo.SizeAndChecksums.Layerbreak == 0)
                 _HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null || submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
                 _HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null || submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
                 _HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 _AntiModchip!.Visibility = Visibility.Collapsed;
@@ -386,11 +386,11 @@ namespace MPF.UI.Core.Windows
                 HashDataMD5!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.SHA1))
                 HashDataSHA1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak == null || submissionInfo.SizeAndChecksums.Layerbreak == 0)
                 HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null || submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
                 HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null)
+            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null || submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
                 HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 AntiModchip.Visibility = Visibility.Collapsed;
