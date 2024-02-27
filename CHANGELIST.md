@@ -4,6 +4,7 @@
 - Hide layerbreaks if value is 0
 - Make GHA debug-only
 - Remove GHA pull request builds
+- Add PR check workflow
 
 ### 3.1.2 (2024-02-27)
 
