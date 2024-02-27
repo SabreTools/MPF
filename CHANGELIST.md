@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Gate debug publishing behind use all flag
+
 ### 3.1.2 (2024-02-27)
 
 - Remove debugging lines from build script
