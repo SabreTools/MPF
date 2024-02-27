@@ -41,6 +41,7 @@
 - Show hashes in readonly data
 - Update to BinaryObjectScanner 3.1.0
 - Add Mattel HyperScan detection
+- Pull PS3 Disc Key from redump (Deterous)
 
 ### 3.1.1 (2024-02-20)
 
