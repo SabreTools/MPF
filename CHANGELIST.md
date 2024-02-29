@@ -6,6 +6,7 @@
 - Remove GHA pull request builds
 - Add PR check workflow
 - Don't link to AppVeyor artifacts page anymore
+- Add PS3 CFW support to MPF.Check (Deterous)
 
 ### 3.1.2 (2024-02-27)
 
