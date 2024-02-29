@@ -453,7 +453,7 @@ namespace MPF.Core
 
                 case RedumpSystem.SonyPlayStation3:
                     info.Extras!.DiscKey ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.Extras.DiscID = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.Extras.DiscID ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.TomyKissSite:

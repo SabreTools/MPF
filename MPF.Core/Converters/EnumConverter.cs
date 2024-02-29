@@ -101,6 +101,7 @@ namespace MPF.Core.Converters
 
                 InternalProgram.CleanRip => "CleanRip",
                 InternalProgram.DCDumper => "DCDumper",
+                InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
 
                 #endregion
@@ -141,6 +142,11 @@ namespace MPF.Core.Converters
                 "dc"
                     or "dcd"
                     or "dcdumper" => InternalProgram.DCDumper,
+                "ps3cfw"
+                    or "ps3"
+                    or "getkey"
+                    or "managunz"
+                    or "multiman" => InternalProgram.PS3CFW,
                 "uic"
                     or "umd"
                     or "umdcreator"
