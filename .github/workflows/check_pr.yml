@@ -12,9 +12,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
-    - name: Restore dependencies
-      run: dotnet restore
       
     - name: Build
-      run: dotnet build
+      run: dotnet build --win-x64 --self-contained
