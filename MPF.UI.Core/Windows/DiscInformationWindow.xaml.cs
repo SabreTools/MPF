@@ -305,7 +305,7 @@ namespace MPF.UI.Core.Windows
                 _PartiallyMatchedIDs!.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
             if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
                 _HashData!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Size == null)
+            if (submissionInfo.SizeAndChecksums?.Size == null || submissionInfo.SizeAndChecksums.Size == 0)
                 _HashDataSize!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.CRC32))
                 _HashDataCRC!.Visibility = Visibility.Collapsed;
