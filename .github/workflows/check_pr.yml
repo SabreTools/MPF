@@ -14,4 +14,4 @@ jobs:
         dotnet-version: 8.0.x
       
     - name: Build
-      run: dotnet build --win-x64 --self-contained
+      run: dotnet build --runtime win-x64 --self-contained
