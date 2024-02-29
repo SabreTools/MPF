@@ -379,17 +379,17 @@ namespace MPF.Core.Utilities
 
                 // Get PIC from log
                 string discPICStr = "";
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 9; i++)
                     discPICStr += sr.ReadLine();
                 if (discPICStr == null)
                     return false;
 
                 // Validate PIC from log
-                if (discPICStr.Length != 256)
+                if (discPICStr.Length != 264)
                     return false;
 
                 // Convert PIC to byte array
-                pic = discPICStr + "00000000";
+                pic = discPICStr;
                 if (pic == null)
                     return false;
 

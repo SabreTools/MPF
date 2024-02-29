@@ -37,7 +37,6 @@ namespace MPF.Core.Modules.PS3CFW
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-
             
             if (this.Type != MediaType.BluRay || this.System != RedumpSystem.SonyPlayStation3)
             {
@@ -51,8 +50,8 @@ namespace MPF.Core.Modules.PS3CFW
                 if (!File.Exists($"{getKeyBasePath}.disc.pic"))
                     missingFiles.Add($"{getKeyBasePath}.disc.pic");
             }
-            return (missingFiles.Count == 0, missingFiles);
 
+            return (missingFiles.Count == 0, missingFiles);
         }
 
         /// <inheritdoc/>
@@ -82,22 +81,38 @@ namespace MPF.Core.Modules.PS3CFW
             if (GetPVD(basePath + ".iso", out string? pvd))
                 info.Extras!.PVD = pvd;
 
+            // Try get the serial, version, and firmware version if a drive is provided
+            if (drive != null)
+            {
+                info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
+                string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
+                if (firmwareVersion != null)
+                    info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
+            }
+
+            // Try to determine the name of the GetKey file(s)
             string? getKeyBasePath = GetCFWBasePath(basePath);
-            if (!File.Exists(getKeyBasePath + ".getkey.log")) // If GenerateSubmissionInfo is run, .getkey.log existence should already be checked
+
+            // If GenerateSubmissionInfo is run, .getkey.log existence should already be checked
+            if (!File.Exists(getKeyBasePath + ".getkey.log"))
                 return;
+
+            // Get dumping date from GetKey log date
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(getKeyBasePath + ".getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
             if (File.Exists(getKeyBasePath + ".disc.pic"))
-                info.Extras!.PIC = GetPIC(getKeyBasePath + ".disc.pic");
+                info.Extras!.PIC = GetPIC(getKeyBasePath + ".disc.pic", 264);
 
+            // Parse Disc Key, Disc ID, and PIC from the .getkey.log file
             if (Utilities.Tools.ParseGetKeyLog(getKeyBasePath + ".getkey.log", out string? key, out string? id, out string? pic))
             {
                 if (key != null)
-                    info.Extras!.DiscKey = key.ToUpper();
+                    info.Extras!.DiscKey = key.ToUpperInvariant();
                 if (id != null)
-                    info.Extras!.DiscID = id.ToUpper().Substring(0, 24) + "XXXXXXXX";
-                if (info.Extras!.PIC == null && !string.IsNullOrEmpty(pic))
+                    info.Extras!.DiscID = id.ToUpperInvariant().Substring(0, 24) + "XXXXXXXX";
+                if (string.IsNullOrEmpty(info.Extras!.PIC) && !string.IsNullOrEmpty(pic))
                 {
                     pic = Regex.Replace(pic, ".{32}", "$0\n");
                     info.Extras.PIC = pic;
@@ -109,7 +124,7 @@ namespace MPF.Core.Modules.PS3CFW
             {
                 info.Artifacts ??= [];
 
-                if (File.Exists(getKeyBasePath + ".bca"))
+                if (File.Exists(getKeyBasePath + ".disc.pic"))
                     info.Artifacts["discpic"] = GetBase64(GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
                 if (File.Exists(getKeyBasePath + ".getkey.log"))
                     info.Artifacts["getkeylog"] = GetBase64(GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
@@ -160,16 +175,7 @@ namespace MPF.Core.Modules.PS3CFW
                 {
                     return new Datafile
                     {
-                        Games =
-                        [
-                            new()
-                            {
-                                Roms =
-                                [
-                                    new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), Crc = crc, Md5 = md5, Sha1 = sha1 },
-                                ]
-                            }
-                        ]
+                        Games = [new Game { Roms = [new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), Crc = crc, Md5 = md5, Sha1 = sha1, }] }]
                     };
                 }
                 return null;
@@ -181,6 +187,7 @@ namespace MPF.Core.Modules.PS3CFW
             }
         }
 
+        // TODO: Don't hardcode 0x8320 and move this function to BaseParameters
         /// <summary>
         /// Get a isobuster-formatted PVD from a PS3 ISO, if possible
         /// </summary>
@@ -235,38 +242,10 @@ namespace MPF.Core.Modules.PS3CFW
         }
 
         /// <summary>
-        /// Get the hex contents of the PIC file
-        /// </summary>
-        /// <param name="picPath">Path to the PIC file associated with the dump</param>
-        /// <returns>PIC data as a hex string if possible, null on error</returns>
-        private static string? GetPIC(string picPath)
-        {
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(picPath))
-                return null;
-
-            try
-            {
-                string? hex = GetFullFile(picPath, true);
-                if (string.IsNullOrEmpty(hex) || hex!.Length < 264)
-                    return null;
-
-                hex = hex.Substring(0, 264);
-
-                return Regex.Replace(hex, ".{32}", "$0\n");
-            }
-            catch
-            {
-                // We don't care what the error was right now
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get a formatted datfile from the PS3 CFW output, if possible
         /// </summary>
         /// <param name="iso">Path to ISO file</param>
-        /// <returns></returns>
+        /// <returns>Formatted datfile, null if not valid</returns>
         private static string? GetPS3CFWDatfile(string iso)
         {
             // If the files don't exist, we can't get info from it
@@ -290,6 +269,11 @@ namespace MPF.Core.Modules.PS3CFW
 
         #region Helper Functions
 
+        /// <summary>
+        /// Estimate the base filename of the .getkey.log file associated with the dump
+        /// </summary>
+        /// <param name="iso">Path to ISO file</param>
+        /// <returns>Base filename, null if not found</returns>
         private string? GetCFWBasePath(string iso)
         {
             string? dir = Path.GetDirectoryName(iso);
