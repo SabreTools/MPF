@@ -8,6 +8,7 @@
 - Don't link to AppVeyor artifacts page anymore
 - Add PS3 CFW support to MPF.Check (Deterous)
 - Hide size if value is 0 (Deterous)
+- Fix title normalization (Deterous)
 
 ### 3.1.2 (2024-02-27)
 

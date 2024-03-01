@@ -1929,14 +1929,29 @@ namespace MPF.Core
             for (int i = 1; i < splitTitle.Length; i++)
             {
                 string segment = splitTitle[i];
-                if (segment.EndsWith(":") || segment.EndsWith("-"))
+                if (!itemInserted && segment == ":")
                 {
                     itemInserted = true;
-                    newTitleBuilder.Append($"{segment}, {firstItem}");
+                    newTitleBuilder.Append($", {firstItem} :");
+                }
+                else if (!itemInserted && segment == "-")
+                {
+                    itemInserted = true;
+                    newTitleBuilder.Append($", {firstItem} -");
+                }
+                else if (!itemInserted && segment.EndsWith(":"))
+                {
+                    itemInserted = true;
+                    newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}:");
+                }
+                else if (!itemInserted && segment.EndsWith("-"))
+                {
+                    itemInserted = true;
+                    newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}-");
                 }
                 else
                 {
-                    newTitleBuilder.Append($"{segment} ");
+                    newTitleBuilder.Append($" {segment}");
                 }
             }
 
