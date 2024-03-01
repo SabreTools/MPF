@@ -1939,12 +1939,12 @@ namespace MPF.Core
                     itemInserted = true;
                     newTitleBuilder.Append($", {firstItem} -");
                 }
-                else if (!itemInserted && segment.EndsWith(':'))
+                else if (!itemInserted && segment.EndsWith(":"))
                 {
                     itemInserted = true;
                     newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}:");
                 }
-                else if (!itemInserted && segment.EndsWith('-'))
+                else if (!itemInserted && segment.EndsWith("-"))
                 {
                     itemInserted = true;
                     newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}-");
