@@ -277,7 +277,7 @@ namespace MPF.Core.Hashing
             }
         }
 
-#endregion
+        #endregion
 
         #region Hashing
 

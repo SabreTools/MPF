@@ -9,6 +9,7 @@
 - Add PS3 CFW support to MPF.Check (Deterous)
 - Hide size if value is 0 (Deterous)
 - Fix title normalization (Deterous)
+- Ensure no labels are empty
 
 ### 3.1.2 (2024-02-27)
 

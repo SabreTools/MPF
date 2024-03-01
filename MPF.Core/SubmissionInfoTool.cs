@@ -724,6 +724,9 @@ namespace MPF.Core
                     volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
             }
 
+            // Ensure that no labels are empty
+            volLabels = volLabels.Where(l => !string.IsNullOrEmpty(l?.Trim())).ToList();
+
             // Print each label separated by a comma and a space
             if (volLabels.Count == 0)
                 return null;
