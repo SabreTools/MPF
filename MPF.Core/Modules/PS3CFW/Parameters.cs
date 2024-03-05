@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -171,7 +172,7 @@ namespace MPF.Core.Modules.PS3CFW
 
             try
             {
-                if (Hashing.Hasher.GetFileHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
+                if (HashTool.GetStandardHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
                 {
                     return new Datafile
                     {
@@ -254,7 +255,7 @@ namespace MPF.Core.Modules.PS3CFW
 
             try
             {
-                if (Hashing.Hasher.GetFileHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
+                if (HashTool.GetStandardHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
                     return $"<rom name=\"{Path.GetFileName(iso)}\" size=\"{size}\" crc=\"{crc}\" md5=\"{md5}\" sha1=\"{sha1}\" />";
                 return null;
             }

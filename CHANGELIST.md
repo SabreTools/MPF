@@ -10,6 +10,7 @@
 - Hide size if value is 0 (Deterous)
 - Fix title normalization (Deterous)
 - Ensure no labels are empty
+- Use SabreTools.Hashing
 
 ### 3.1.2 (2024-02-27)
 
