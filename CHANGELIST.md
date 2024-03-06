@@ -12,6 +12,7 @@
 - Ensure no labels are empty
 - Use SabreTools.Hashing
 - Update to SabreTools.RedumpLib 1.3.5
+- Update packages to latest
 
 ### 3.1.2 (2024-02-27)
 
