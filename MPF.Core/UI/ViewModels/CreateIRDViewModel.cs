@@ -1046,7 +1046,6 @@ namespace MPF.Core.UI.ViewModels
 
             try
             {
-#if NET6_0_OR_GREATER
                 // Create Redump-style reproducible IRD
                 LibIRD.ReIRD ird = new(InputPath, Key, Layerbreak);
                 if (PIC != null)
@@ -1056,9 +1055,6 @@ namespace MPF.Core.UI.ViewModels
                 ird.Write(outputPath);
                 CreateIRDStatus = "IRD Created Successfully";
                 return string.Empty;
-#else
-                return "LibIRD requires .NET Core 6 or greater.";
-#endif
             }
             catch (Exception e)
             {

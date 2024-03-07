@@ -13,6 +13,7 @@
 - Use SabreTools.Hashing
 - Update to SabreTools.RedumpLib 1.3.5
 - Update packages to latest
+- Enable LibIRD for all .NET frameworks (Deterous)
 
 ### 3.1.2 (2024-02-27)
 
