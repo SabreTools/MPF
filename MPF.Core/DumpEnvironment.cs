@@ -425,7 +425,6 @@ namespace MPF.Core
                     resultProgress?.Report(Result.Failure(deleteResult));
             }
 
-#if NET6_0_OR_GREATER
             // Create PS3 IRD, if required
             if (Options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
             {
@@ -436,7 +435,6 @@ namespace MPF.Core
                 else
                     resultProgress?.Report(Result.Failure(deleteResult));
             }
-#endif
 
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();

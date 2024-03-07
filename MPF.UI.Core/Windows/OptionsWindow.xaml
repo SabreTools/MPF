@@ -263,7 +263,7 @@
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Create PS3 IRD After Dumping"
-                                     IsChecked="{Binding Options.CreateIRDAfterDumping}" IsEnabled="{Binding CreateIRDSupported}"
+                                     IsChecked="{Binding Options.CreateIRDAfterDumping}"
                                      ToolTip="Automatically creates an IRD file after dumping a PS3 disc" Margin="0,4"
                                      />
                             </UniformGrid>

@@ -1495,7 +1495,6 @@ namespace MPF.Core
             return files;
         }
 
-#if NET6_0_OR_GREATER
         /// <summary>
         /// Create an IRD and write it to the specified output directory with optional filename suffix
         /// </summary>
@@ -1528,7 +1527,12 @@ namespace MPF.Core
                 layerbreak = Tools.ParseLayerbreak(layerbreak);
 
                 // Create Redump-style reproducible IRD
-                LibIRD.ReIRD ird = await Task.Run(() => new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
+#if NET40
+                LibIRD.ReIRD ird = await Task.Factory.StartNew(() =>
+#else
+                LibIRD.ReIRD ird = await Task.Run(() =>
+#endif
+                    new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
                 if (pic != null)
                     ird.PIC = pic;
                 if (discID != null && ird.DiscID[15] != 0x00)
@@ -1545,7 +1549,6 @@ namespace MPF.Core
                 return (false, "Failed to create IRD");
             }
         }
-#endif
 
         #endregion
 

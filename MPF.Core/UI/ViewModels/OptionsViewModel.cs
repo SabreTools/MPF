@@ -42,19 +42,6 @@ namespace MPF.Core.UI.ViewModels
         /// <inheritdoc/>
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        /// <summary>
-        /// Used to indicate whether LibIRD is supported
-        /// Whether compiled with .NET Core 6 or greater
-        /// </summary>
-        public static bool CreateIRDSupported
-        {
-#if NET6_0_OR_GREATER
-            get { return true; }
-#else
-            get { return false; }
-#endif
-        }
-
         #endregion
 
         #region Lists
