@@ -326,6 +326,8 @@ namespace MPF.Core.UI.ViewModels
 
         #endregion
 
+        #region UI Control
+
         /// <summary>
         /// Enables all UI elements that should be enabled
         /// </summary>
@@ -353,6 +355,8 @@ namespace MPF.Core.UI.ViewModels
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = false;
         }
+
+        #endregion
 
         #region Population
 
