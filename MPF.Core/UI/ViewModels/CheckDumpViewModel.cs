@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
@@ -179,6 +180,20 @@ namespace MPF.Core.UI.ViewModels
         }
         private bool _checkDumpButtonEnabled;
 
+        /// <summary>
+        /// Indicates the status of the check dump button
+        /// </summary>
+        public bool CancelButtonEnabled
+        {
+            get => _cancelButtonEnabled;
+            set
+            {
+                _cancelButtonEnabled = value;
+                TriggerPropertyChanged(nameof(CancelButtonEnabled));
+            }
+        }
+        private bool _cancelButtonEnabled;
+
         #endregion
 
         #region List Properties
@@ -243,6 +258,7 @@ namespace MPF.Core.UI.ViewModels
             MediaTypeComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             CheckDumpButtonEnabled = false;
+            CancelButtonEnabled = true;
 
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements().ToList();
@@ -309,6 +325,34 @@ namespace MPF.Core.UI.ViewModels
         }
 
         #endregion
+
+        /// <summary>
+        /// Enables all UI elements that should be enabled
+        /// </summary>
+        private void EnableUIElements()
+        {
+            SystemTypeComboBoxEnabled = true;
+            InputPathTextBoxEnabled = true;
+            InputPathBrowseButtonEnabled = true;
+            DumpingProgramComboBoxEnabled = true;
+            PopulateMediaType();
+            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
+            CancelButtonEnabled = true;
+        }
+
+        /// <summary>
+        /// Disables all UI elements
+        /// </summary>
+        private void DisableUIElements()
+        {
+            SystemTypeComboBoxEnabled = false;
+            InputPathTextBoxEnabled = false;
+            InputPathBrowseButtonEnabled = false;
+            MediaTypeComboBoxEnabled = false;
+            DumpingProgramComboBoxEnabled = false;
+            CheckDumpButtonEnabled = false;
+            CancelButtonEnabled = false;
+        }
 
         #region Population
 
@@ -398,13 +442,18 @@ namespace MPF.Core.UI.ViewModels
         /// Performs MPF.Check functionality
         /// </summary>
         /// <returns>An error message if failed, otherwise string.Empty/null</returns>
-        public string? CheckDump(Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
+        public async Task<string?> CheckDump(Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
         {
             if (string.IsNullOrEmpty(InputPath))
                 return "Invalid Input path";
 
             if (!File.Exists(this.InputPath!.Trim('"')))
                 return "Input Path is not a valid file";
+
+            // Disable UI while Check is running
+            DisableUIElements();
+            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
+            DisableEventHandlers();
 
             // Populate an environment
             var env = new DumpEnvironment(Options, Path.GetFullPath(this.InputPath.Trim('"')), null, this.CurrentSystem, this.CurrentMediaType, this.CurrentProgram, parameters: null);
@@ -416,13 +465,12 @@ namespace MPF.Core.UI.ViewModels
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Finally, attempt to do the output dance
-#if NET40
-                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
-                resultTask.Wait();
-                var result = resultTask.Result;
-#else
-            var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, processUserInfo).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
+            var result = await env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, processUserInfo);
+
+            // Reenable UI and event handlers, if necessary
+            EnableUIElements();
+            if (cachedCanExecuteSelectionChanged)
+                EnableEventHandlers();
 
             return result.Message;
         }

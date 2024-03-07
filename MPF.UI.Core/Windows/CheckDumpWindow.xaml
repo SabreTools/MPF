@@ -117,7 +117,7 @@
                     <Button Name="CheckDumpButton" Height="25" Width="80" IsDefault="True" Content="Check Dump"
                             IsEnabled="{Binding CheckDumpButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
-                            Style="{DynamicResource CustomButtonStyle}" />
+                            IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
                     <!-- Empty label for padding -->
                 </UniformGrid>

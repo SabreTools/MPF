@@ -209,9 +209,17 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for CheckDumpButton Click event
         /// </summary>
+#if NET40
         private void OnCheckDumpClick(object sender, EventArgs e)
         {
-            string? errorMessage = CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
+            var checkTask = CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
+            checkTask.Wait();
+            string? errorMessage = checkTask.Result;
+#else
+        private async void OnCheckDumpClick(object sender, EventArgs e)
+        {
+            string? errorMessage = await CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
+#endif
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
@@ -278,6 +286,6 @@ namespace MPF.UI.Core.Windows
                 CheckDumpViewModel.ChangeSystem();
         }
 
-        #endregion
+#endregion
     }
 }
