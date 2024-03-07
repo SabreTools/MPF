@@ -14,6 +14,7 @@
 - Update to SabreTools.RedumpLib 1.3.5
 - Update packages to latest
 - Enable LibIRD for all .NET frameworks (Deterous)
+- Try updating PR check action
 
 ### 3.1.2 (2024-02-27)
 
