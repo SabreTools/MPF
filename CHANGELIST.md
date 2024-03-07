@@ -15,6 +15,7 @@
 - Update packages to latest
 - Enable LibIRD for all .NET frameworks (Deterous)
 - Try updating PR check action
+- Fix config access persmission (Deterous)
 
 ### 3.1.2 (2024-02-27)
 

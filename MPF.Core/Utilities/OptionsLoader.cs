@@ -272,7 +272,8 @@ namespace MPF.Core.Utilities
             }
 
             var serializer = JsonSerializer.Create();
-            var reader = new StreamReader(ConfigurationPath);
+            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
             return new Options(settings);
         }
