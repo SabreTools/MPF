@@ -181,7 +181,7 @@ namespace MPF.Core.UI.ViewModels
         private bool _checkDumpButtonEnabled;
 
         /// <summary>
-        /// Indicates the status of the check dump button
+        /// Indicates the status of the cancel button
         /// </summary>
         public bool CancelButtonEnabled
         {

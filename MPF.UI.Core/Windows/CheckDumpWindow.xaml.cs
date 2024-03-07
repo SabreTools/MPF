@@ -286,6 +286,6 @@ namespace MPF.UI.Core.Windows
                 CheckDumpViewModel.ChangeSystem();
         }
 
-#endregion
+        #endregion
     }
 }
