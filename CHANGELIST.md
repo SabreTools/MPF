@@ -17,6 +17,7 @@
 - Try updating PR check action
 - Fix config access persmission (Deterous)
 - Fix Check UI deadlock (Deterous)
+- Fix formatting output formatting
 
 ### 3.1.2 (2024-02-27)
 

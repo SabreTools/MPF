@@ -363,9 +363,9 @@ namespace MPF.Core
             resultProgress?.Report(Result.Success("Formatting information..."));
             (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, Options.EnableRedumpCompatibility);
             if (formattedValues == null)
-                resultProgress?.Report(Result.Success(formatResult));
-            else
                 resultProgress?.Report(Result.Failure(formatResult));
+            else
+                resultProgress?.Report(Result.Success(formatResult));
 
             // Get the filename suffix for auto-generated files
             var filenameSuffix = Options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
