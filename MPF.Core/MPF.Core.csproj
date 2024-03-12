@@ -51,7 +51,7 @@
     <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="LibIRD" Version="0.7.1" />
+    <PackageReference Include="LibIRD" Version="0.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="psxt001z.Library" Version="0.21.0-beta4" />
     <PackageReference Include="SabreTools.Hashing" Version="1.1.4" />

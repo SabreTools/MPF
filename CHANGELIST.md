@@ -18,6 +18,7 @@
 - Fix config access persmission (Deterous)
 - Fix Check UI deadlock (Deterous)
 - Fix formatting output formatting
+- Update LibIRD to 0.8.0 (Deterous)
 
 ### 3.1.2 (2024-02-27)
 
