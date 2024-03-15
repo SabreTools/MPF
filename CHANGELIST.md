@@ -21,6 +21,7 @@
 - Update LibIRD to 0.9.0 (Deterous)
 - Update packages
 - Fix Redumper generic drive type (Deterous)
+- Add MPF version to Submission info (Deterous)
 
 ### 3.1.2 (2024-02-27)
 

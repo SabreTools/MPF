@@ -89,6 +89,10 @@ namespace MPF.Core
                     Version = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
                     OtherEditions = options.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
                 },
+                DumpingInfo = new DumpingInfoSection()
+                {
+                    FrontendVersion = Utilities.Tools.GetCurrentVersion(),
+                },
             };
 
             // Ensure that required sections exist
