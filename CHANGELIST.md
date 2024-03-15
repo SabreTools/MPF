@@ -22,6 +22,7 @@
 - Update packages
 - Fix Redumper generic drive type (Deterous)
 - Add MPF version to Submission info (Deterous)
+- Update to RedumpLib 1.3.6
 
 ### 3.1.2 (2024-02-27)
 
