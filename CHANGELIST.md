@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.3 (2024-03-15)
 
 - Gate debug publishing behind use all flag
 - Hide layerbreaks if value is 0
