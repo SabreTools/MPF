@@ -1092,7 +1092,7 @@ namespace MPF.Core.Modules.Redumper
             if (options.RedumperUseGenericDriveType)
             {
                 this[FlagStrings.DriveType] = true;
-                DriveTypeValue = "Generic";
+                DriveTypeValue = "GENERIC";
             }
 
             // Set the output paths

@@ -20,6 +20,7 @@
 - Fix formatting output formatting
 - Update LibIRD to 0.9.0 (Deterous)
 - Update packages
+- Fix Redumper generic drive type (Deterous)
 
 ### 3.1.2 (2024-02-27)
 
