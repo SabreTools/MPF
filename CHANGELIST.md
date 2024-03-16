@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Update BinaryObjectScanner to 3.1.2
+
 ### 3.1.3 (2024-03-15)
 
 - Gate debug publishing behind use all flag
