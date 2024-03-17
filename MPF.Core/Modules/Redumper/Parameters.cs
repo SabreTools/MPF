@@ -231,7 +231,7 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.manufacturer") && !File.Exists($"{basePath}.1.manufacturer") && !File.Exists($"{basePath}.2.manufacturer"))
                             missingFiles.Add($"{basePath}.manufacturer");
-                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.0.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
@@ -256,7 +256,7 @@ namespace MPF.Core.Modules.Redumper
                             missingFiles.Add($"{basePath}.log");
                         else if (GetDatfile($"{basePath}.log") == null)
                             missingFiles.Add($"{basePath}.dat");
-                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.0.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
@@ -385,9 +385,14 @@ namespace MPF.Core.Modules.Redumper
                                 break;
                         }
 
-                        info.Extras!.PIC = GetPIC($"{basePath}.physical", trimLength) ?? string.Empty;
+                        info.Extras!.PIC = GetPIC($"{basePath}.physical", trimLength)
+                            ?? GetPIC($"{basePath}.0.physical", trimLength)
+                            ?? GetPIC($"{basePath}.1.physical", trimLength)
+                            ?? string.Empty;
 
-                        var di = InfoTool.GetDiscInformation($"{basePath}.physical");
+                        var di = InfoTool.GetDiscInformation($"{basePath}.physical")
+                            ?? InfoTool.GetDiscInformation($"{basePath}.0.physical")
+                            ?? InfoTool.GetDiscInformation($"{basePath}.1.physical");
                         info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
                     }
 
@@ -549,6 +554,8 @@ namespace MPF.Core.Modules.Redumper
                     info.Artifacts["manufacturer2"] = GetBase64(GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
                 if (File.Exists($"{basePath}.physical"))
                     info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical")) ?? string.Empty;
+                if (File.Exists($"{basePath}.0.physical"))
+                    info.Artifacts["physical0"] = GetBase64(GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
                 if (File.Exists($"{basePath}.1.physical"))
                     info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
                 if (File.Exists($"{basePath}.2.physical"))
@@ -958,6 +965,8 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.2.manufacturer");
                     if (File.Exists($"{basePath}.physical"))
                         logFiles.Add($"{basePath}.physical");
+                    if (File.Exists($"{basePath}.0.physical"))
+                        logFiles.Add($"{basePath}.0.physical");
                     if (File.Exists($"{basePath}.1.physical"))
                         logFiles.Add($"{basePath}.1.physical");
                     if (File.Exists($"{basePath}.2.physical"))
@@ -976,6 +985,8 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.physical"))
                         logFiles.Add($"{basePath}.physical");
+                    if (File.Exists($"{basePath}.0.physical"))
+                        logFiles.Add($"{basePath}.0.physical");
                     if (File.Exists($"{basePath}.1.physical"))
                         logFiles.Add($"{basePath}.1.physical");
                     if (File.Exists($"{basePath}.2.physical"))
