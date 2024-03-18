@@ -320,8 +320,11 @@ namespace MPF.Core.Modules.Redumper
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // Attempt to get the error count
-                    long errorCount = GetErrorCount($"{basePath}.log");
-                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                    if (GetErrorCount($"{basePath}.log", out long redumpErrors, out long c2Errors))
+                    {
+                        info.CommonDiscInfo.ErrorsCount = (redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString());
+                        info.DumpingInfo.C2ErrorsCount = (c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString());
+                    }
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
@@ -1666,47 +1669,54 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <summary>
-        /// Get the detected error count from the input files, if possible
+        /// Get the detected error counts from the input files, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
-        /// <returns>Error count if possible, -1 on error</returns>
-        public static long GetErrorCount(string log)
+        /// <returns>True if error counts could be retrieved, false otherwise</returns>
+        public static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
         {
+            // Set the default values for error counts
+            redumpErrors = -1; c2Errors = -1;
+
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
-                return -1;
+                return false;
 
             try
             {
-                // Fast forward to the errors lines
                 using var sr = File.OpenText(log);
-                while (!sr.EndOfStream && sr.ReadLine()?.Trim()?.StartsWith("CD-ROM [") == false) ;
-                if (sr.EndOfStream)
-                    return 0;
 
-                // Now that we're at the relevant lines, find the error count
+                // Find the error counts
                 while (!sr.EndOfStream)
                 {
-                    // Skip forward to the "REDUMP.ORG" line
-                    var line = string.Empty;
-                    while (!sr.EndOfStream && (line = sr.ReadLine()?.Trim())?.StartsWith("REDUMP.ORG errors") == false) ;
-                    if (string.IsNullOrEmpty(line))
+                    var line = sr.ReadLine()?.Trim();
+                    if (line == null)
                         break;
 
+                    // C2: <error count>
+                    if (line.StartsWith("C2:"))
+                    {
+                        string[] parts = line.Split(' ');
+                        if (!long.TryParse(parts[2], out c2Errors))
+                            c2Errors = -1;
+                    }
+
                     // REDUMP.ORG errors: <error count>
-                    string[] parts = line!.Split(' ');
-                    if (long.TryParse(parts[2], out long redump))
-                        return redump;
-                    else
-                        return -1;
+                    else if (line.StartsWith("REDUMP.ORG errors:"))
+                    {
+                        string[] parts = line!.Split(' ');
+                        if (!long.TryParse(parts[2], out redumpErrors))
+                            redumpErrors = -1;
+                    }
                 }
 
-                return -1;
+                // If the Redump error count is -1, then an issue occurred
+                return redumpErrors != -1;
             }
             catch
             {
                 // We don't care what the exception is right now
-                return -1;
+                return false;
             }
         }
 
@@ -1737,7 +1747,7 @@ namespace MPF.Core.Modules.Redumper
                         return line.Substring("EXE date: ".Length);
                     }
 
-                    line = sr.ReadLine();   
+                    line = sr.ReadLine();
                 }
 
                 return null;

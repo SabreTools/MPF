@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Handle `.0.physical` files from Redumpers
+- Read C2 error count from Redumper logs
 
 ### 3.1.4 (2024-03-16)
 
