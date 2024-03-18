@@ -5,6 +5,7 @@
 - Read last instance of hash data from Redumper
 - Add Konami Python 2 system detection
 - Fix outdated information in README
+- Fix missing information in README
 
 ### 3.1.4 (2024-03-16)
 
