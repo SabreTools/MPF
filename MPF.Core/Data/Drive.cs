@@ -291,6 +291,12 @@ namespace MPF.Core.Data
                 return RedumpSystem.funworldPhotoPlay;
             }
 
+            // Konami Python 2
+            if (Directory.Exists(Path.Combine(this.Name, "PY2.D")))
+            {
+                return RedumpSystem.KonamiPython2;
+            }
+
             #endregion
 
             #region Consoles

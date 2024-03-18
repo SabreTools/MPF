@@ -3,6 +3,7 @@
 - Handle `.0.physical` files from Redumpers
 - Read C2 error count from Redumper logs
 - Read last instance of hash data from Redumper
+- Add Konami Python 2 system detection
 
 ### 3.1.4 (2024-03-16)
 
