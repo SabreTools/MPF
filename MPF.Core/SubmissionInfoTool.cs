@@ -452,7 +452,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.LanguageSelection = [LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu];
+                    info.CommonDiscInfo!.LanguageSelection = [];
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
