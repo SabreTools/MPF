@@ -1444,7 +1444,7 @@ namespace MPF.Core.Modules.Redumper
             try
             {
                 using var sr = File.OpenText(log);
-                var datString = string.Empty;
+                string? datString = null;
 
                 // Find all occurrences of the hash information 
                 while (!sr.EndOfStream)
@@ -1452,9 +1452,10 @@ namespace MPF.Core.Modules.Redumper
                     // Fast forward to the dat line
                     while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("dat:") == false) ;
                     if (sr.EndOfStream)
-                        return null;
+                        break;
 
                     // Now that we're at the relevant entries, read each line in and concatenate
+                    datString = string.Empty;
                     var line = sr.ReadLine()?.Trim();
                     while (line?.StartsWith("<rom") == true)
                     {
@@ -1466,7 +1467,7 @@ namespace MPF.Core.Modules.Redumper
                     }
                 }
 
-                return datString.TrimEnd('\n');
+                return datString?.TrimEnd('\n');
             }
             catch
             {
