@@ -1703,7 +1703,7 @@ namespace MPF.Core.Modules.Redumper
                     if (line.StartsWith("C2:"))
                     {
                         string[] parts = line.Split(' ');
-                        if (!long.TryParse(parts[2], out c2Errors))
+                        if (!long.TryParse(parts[1], out c2Errors))
                             c2Errors = -1;
                     }
 
