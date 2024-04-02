@@ -489,7 +489,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-#endregion
+            #endregion
 
             #region Computers
 
@@ -646,7 +646,7 @@ namespace MPF.Core.Data
             this.PopulateFromDriveInfo(driveInfo);
         }
 
-#endregion
+        #endregion
 
         #region Helpers
 
