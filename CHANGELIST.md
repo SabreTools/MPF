@@ -8,6 +8,7 @@
 - Fix missing information in README
 - Language selections unchecked by default
 - Update BinaryObjectScanner to 3.1.3
+- Fix information pulling for redumper (fuzz6001)
 - Update packages
 
 ### 3.1.4 (2024-03-16)
