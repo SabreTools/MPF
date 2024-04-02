@@ -369,17 +369,44 @@ namespace MPF.Core.Data
             }
             catch { }
 
-            // Microsoft Xbox One
+            // Microsoft Xbox One and Series X
             try
             {
-                if (Directory.Exists(Path.Combine(this.Name, "MSXC"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(this.Name, "MSXC")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(this.Name, "MSXC")).Any())
-#endif
+                if (Directory.Exists(Path.Combine(this.Name, "MSXC")))
                 {
-                    return RedumpSystem.MicrosoftXboxOne;
+                    try
+                    {
+#if NET20 || NET35
+                        string catalogjs = Path.Combine(this.Name, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+#else
+                        string catalogjs = Path.Combine(this.Name, "MSXC", "Metadata", "catalog.js");
+#endif
+                        if (!File.Exists(catalogjs))
+                            return RedumpSystem.MicrosoftXboxOne;
+
+                        var deserializer = new SabreTools.Serialization.Files.Catalog();
+                        SabreTools.Models.Xbox.Catalog? catalog = deserializer.Deserialize(catalogjs);
+                        if (catalog != null && catalog.Version != null && catalog.Packages != null)
+                        {
+                            if (!double.TryParse(catalog.Version, out double version))
+                                return RedumpSystem.MicrosoftXboxOne;
+
+                            if (version < 4)
+                                return RedumpSystem.MicrosoftXboxOne;
+
+                            foreach (var package in catalog.Packages)
+                            {
+                                if (package.Generation != "9")
+                                    return RedumpSystem.MicrosoftXboxOne;
+                            }
+
+                            return RedumpSystem.MicrosoftXboxSeriesXS;
+                        }
+                    }
+                    catch
+                    {
+                        return RedumpSystem.MicrosoftXboxOne;
+                    }
                 }
             }
             catch { }
@@ -462,7 +489,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-            #endregion
+#endregion
 
             #region Computers
 
@@ -619,7 +646,7 @@ namespace MPF.Core.Data
             this.PopulateFromDriveInfo(driveInfo);
         }
 
-        #endregion
+#endregion
 
         #region Helpers
 
