@@ -16,8 +16,23 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build
-      run: dotnet publish
+    - name: Build UI x86
+      run: dotnet build MPF/MPF.csproj -f net8.0-windows -r win-x86 -c Debug
+
+    - name: Build UI x64
+      run: dotnet build MPF/MPF.csproj -f net8.0-windows -r win-x64 -c Debug
+
+    - name: Build Check x86
+      run: dotnet build MPF.Check/MPF.Check.csproj -f net8.0 -r win-x86 -c Debug
+
+    - name: Build Check x64
+      run: dotnet build MPF.Check/MPF.Check.csproj -f net8.0 -r win-x64 -c Debug
+
+    - name: Build Check osx
+      run: dotnet build MPF.Check/MPF.Check.csproj -f net8.0 -r osx-x64 -c Debug
+
+    - name: Build Check linux
+      run: dotnet build MPF.Check/MPF.Check.csproj -f net8.0 -r linux-x64 -c Debug
 
     - name: Test
-      run: dotnet test -f net8.0-windows --verbosity normal
+      run: dotnet test --verbosity normal
