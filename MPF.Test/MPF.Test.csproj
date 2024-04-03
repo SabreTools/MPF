@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
@@ -11,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MPF\MPF.csproj" />
+    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
