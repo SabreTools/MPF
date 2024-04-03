@@ -11,6 +11,7 @@
 - Fix information pulling for redumper (fuzz6001)
 - Update packages
 - Update BinaryObjectScanner to 3.1.4
+- Detect Xbox Series X discs (Deterous)
 
 ### 3.1.4 (2024-03-16)
 
