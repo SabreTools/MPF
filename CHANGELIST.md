@@ -12,6 +12,7 @@
 - Update packages
 - Update BinaryObjectScanner to 3.1.4
 - Detect Xbox Series X discs (Deterous)
+- Enable Windows targeting for test project
 
 ### 3.1.4 (2024-03-16)
 
