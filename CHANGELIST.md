@@ -14,6 +14,7 @@
 - Detect Xbox Series X discs (Deterous)
 - Enable Windows targeting for test project
 - Fix test project project includes
+- Fix GHA for PRs (Deterous)
 
 ### 3.1.4 (2024-03-16)
 
