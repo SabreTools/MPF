@@ -2486,7 +2486,7 @@ namespace MPF.Core.Modules.Aaru
             cueSheet.Files = [.. cueFiles];
             if (cueSheet != null && cueSheet != default)
             {
-                var ms = new SabreTools.Serialization.Streams.CueSheet().Serialize(cueSheet);
+                var ms = SabreTools.Serialization.Serializers.CueSheet.SerializeStream(cueSheet);
                 if (ms == null)
                     return null;
 

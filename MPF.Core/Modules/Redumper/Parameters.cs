@@ -928,7 +928,7 @@ namespace MPF.Core.Modules.Redumper
                         logFiles.Add($"{basePath}.toc");
 
                     // Include .hash and .skeleton for all files in cuesheet
-                    var cueSheet = new SabreTools.Serialization.Files.CueSheet().Deserialize($"{basePath}.cue");
+                    var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{basePath}.cue");
                     string? baseDir = Path.GetDirectoryName(basePath);
                     if (cueSheet?.Files != null && baseDir != null)
                     {

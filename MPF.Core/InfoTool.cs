@@ -168,7 +168,7 @@ namespace MPF.Core
         {
             try
             {
-                return new SabreTools.Serialization.Files.PIC().Deserialize(pic);
+                return SabreTools.Serialization.Deserializers.PIC.DeserializeFile(pic);
             }
             catch
             {

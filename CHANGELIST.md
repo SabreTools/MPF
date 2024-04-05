@@ -17,6 +17,7 @@
 - Fix CleanRip hash output for Check (Deterous)
 - Enable label-side mastering SID and toolstamp
 - Enable remaining fields for label-side information
+- Update BinaryObjectScanner to 3.1.5
 
 ### 3.1.4 (2024-03-16)
 

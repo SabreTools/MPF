@@ -384,8 +384,7 @@ namespace MPF.Core.Data
                         if (!File.Exists(catalogjs))
                             return RedumpSystem.MicrosoftXboxOne;
 
-                        var deserializer = new SabreTools.Serialization.Files.Catalog();
-                        SabreTools.Models.Xbox.Catalog? catalog = deserializer.Deserialize(catalogjs);
+                        SabreTools.Models.Xbox.Catalog? catalog = SabreTools.Serialization.Deserializers.Catalog.DeserializeFile(catalogjs);
                         if (catalog != null && catalog.Version != null && catalog.Packages != null)
                         {
                             if (!double.TryParse(catalog.Version, out double version))
