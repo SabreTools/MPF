@@ -14,6 +14,7 @@
 - Detect Xbox Series X discs (Deterous)
 - Enable Windows targeting for test project
 - Fix test project project includes
+- Fix CleanRip hash output for Check (Deterous)
 
 ### 3.1.4 (2024-03-16)
 
