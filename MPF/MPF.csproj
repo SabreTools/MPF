@@ -16,7 +16,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <VersionPrefix>3.1.4</VersionPrefix>
+    <VersionPrefix>3.1.5</VersionPrefix>
 
     <!-- Package Properties -->
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
