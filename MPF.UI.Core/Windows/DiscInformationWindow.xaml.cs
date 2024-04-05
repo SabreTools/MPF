@@ -477,16 +477,16 @@ namespace MPF.UI.Core.Windows
 
 #if NET35
                     _L1Info!.Header = "Label Side";
-                    _L1MasteringRing!.Visibility = Visibility.Collapsed;
-                    _L1MasteringSID!.Visibility = Visibility.Collapsed;
-                    _L1Toolstamp!.Visibility = Visibility.Collapsed;
+                    _L1MasteringRing!.Label = "Mastering Ring";
+                    _L1MasteringSID!.Label = "Mastering SID";
+                    _L1Toolstamp!.Label = "Mastering SID";
                     _L1MouldSID!.Label = "Mould SID";
                     _L1AdditionalMould!.Label = "Additional Mould";
 #else
                     L1Info.Header = "Label Side";
-                    L1MasteringRing.Visibility = Visibility.Collapsed;
-                    L1MasteringSID.Visibility = Visibility.Collapsed;
-                    L1Toolstamp.Visibility = Visibility.Collapsed;
+                    L1MasteringRing.Label = "Mastering Ring";
+                    L1MasteringSID.Label = "Mastering SID";
+                    L1Toolstamp.Label = "Mastering SID";
                     L1MouldSID.Label = "Mould SID";
                     L1AdditionalMould.Label = "Additional Mould";
 #endif
@@ -687,14 +687,14 @@ namespace MPF.UI.Core.Windows
 
 #if NET35
                         _L1Info!.Header = "Label Side";
-                        _L1MasteringRing!.Visibility = Visibility.Collapsed;
+                        _L1MasteringRing!.Label = "Mastering Ring";
                         _L1MasteringSID!.Label = "Mastering SID";
                         _L1Toolstamp!.Label = "Toolstamp/Mastering Code";
                         _L1MouldSID!.Label = "Mould SID";
                         _L1AdditionalMould!.Label = "Additional Mould";
 #else
                         L1Info.Header = "Label Side";
-                        L1MasteringRing.Visibility = Visibility.Collapsed;
+                        L1MasteringRing.Label = "Mastering Ring";
                         L1MasteringSID.Label = "Mastering SID";
                         L1Toolstamp.Label = "Toolstamp/Mastering Code";
                         L1MouldSID.Label = "Mould SID";
