@@ -189,19 +189,6 @@ namespace MPF.Core.Modules.CleanRip
                 {
                     if (HashTool.GetStandardHashes(iso, out long isoSize, out string? isoCRC, out string? isoMD5, out string? isoSHA1))
                     {
-                        if (crc != string.Empty && crc != isoCRC)
-                        {
-                            // Warning
-                        }
-                        if (md5 != string.Empty && md5 != isoMD5)
-                        {
-                            // Warning
-                        }
-                        if (sha1 != string.Empty && sha1 != isoSHA1)
-                        {
-                            // Warning
-                        }
-
                         crc = isoCRC ?? crc;
                         md5 = isoMD5 ?? md5;
                         sha1 = isoSHA1 ?? sha1;
