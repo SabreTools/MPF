@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -72,8 +73,9 @@ namespace MPF.Core.Modules.CleanRip
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
 
-            // Fill in the hash data
-            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            // ClrMameProData format is only for CDs
+            if (this.Type == MediaType.CDROM)
+                info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
             if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
@@ -180,6 +182,17 @@ namespace MPF.Core.Modules.CleanRip
                         md5 = line.Substring(5);
                     else if (line.StartsWith("SHA-1"))
                         sha1 = line.Substring(7);
+                }
+
+                // Ensure all checksums were found in log
+                if (crc == string.Empty || md5 == string.Empty || sha1 == string.Empty)
+                {
+                    if (HashTool.GetStandardHashes(iso, out long isoSize, out string? isoCRC, out string? isoMD5, out string? isoSHA1))
+                    {
+                        crc = isoCRC ?? crc;
+                        md5 = isoMD5 ?? md5;
+                        sha1 = isoSHA1 ?? sha1;
+                    }
                 }
 
                 return new Datafile
