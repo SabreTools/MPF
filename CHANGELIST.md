@@ -15,6 +15,7 @@
 - Enable Windows targeting for test project
 - Fix test project project includes
 - Fix CleanRip hash output for Check (Deterous)
+- Enable label-side mastering SID and toolstamp
 
 ### 3.1.4 (2024-03-16)
 
