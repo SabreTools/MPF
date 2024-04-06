@@ -994,11 +994,9 @@ namespace MPF.Core.Modules
                 if (!IsFlagSupported(longFlagString))
                     return null;
 
-                string[] commandParts = parts[i].Split('=');
-                if (commandParts.Length != 2)
-                    return null;
+                int loc = parts[i].IndexOf('=');
 
-                string valuePart = commandParts[1];
+                string valuePart = parts[i].Substring(loc + 1);
 
                 this[longFlagString] = true;
                 return valuePart.Trim('"');
