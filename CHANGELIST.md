@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix parameter parsing for `=` symbol (Deterous)
+
 ### 3.1.5 (2024-04-05)
 
 - Handle `.0.physical` files from Redumpers
