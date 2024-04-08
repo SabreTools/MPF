@@ -283,6 +283,12 @@ namespace MPF.Core
                     info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
+                    if (system == RedumpSystem.EnhancedCD)
+                        info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
+
+                    if (system == RedumpSystem.SonyElectronicBook)
+                        info.CommonDiscInfo!.Category ??= DiscCategory.Multimedia;
+
                     break;
 
                 case RedumpSystem.AudioCD:
@@ -292,68 +298,78 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case RedumpSystem.BDVideo:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
-                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                case RedumpSystem.DVDVideo:
+                case RedumpSystem.HDDVDVideo:
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    info.CopyProtection!.Protection ??= options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCDTV:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
-                case RedumpSystem.DVDVideo:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.BonusDiscs;
-                    break;
-
                 case RedumpSystem.FujitsuFMTownsseries:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.FujitsuFMTownsMarty:
                     info.CommonDiscInfo!.Region ??= Region.Japan;
                     break;
 
+                case RedumpSystem.HasbroVideoNow:
+                case RedumpSystem.HasbroVideoNowColor:
+                case RedumpSystem.HasbroVideoNowJr:
+                case RedumpSystem.VideoCD:
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    break;
+
+                case RedumpSystem.HasbroVideoNowXP:
+                case RedumpSystem.PhotoCD:
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Multimedia;
+                    break;
+
                 case RedumpSystem.IncredibleTechnologiesEagle:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamieAmusement:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiFireBeat:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystem573:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiTwinkle:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MattelHyperScan:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
@@ -362,7 +378,7 @@ namespace MPF.Core
                         string xboxOneMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxOneMsxcPath))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] ??= string.Join("\n",
                                 Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
@@ -375,7 +391,7 @@ namespace MPF.Core
                         string xboxSeriesXMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] ??= string.Join("\n",
                                 Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
@@ -383,7 +399,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.NavisoftNaviken21:
@@ -405,23 +421,23 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaTitanVideo:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SharpX68000:
@@ -429,7 +445,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SNKNeoGeoCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -452,7 +468,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.LanguageSelection = [];
+                    info.CommonDiscInfo!.LanguageSelection ??= [];
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -461,11 +477,12 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.TomyKissSite:
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
                     info.CommonDiscInfo!.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.CopyProtection!.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CopyProtection!.Protection ??= options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
             }
 
