@@ -426,7 +426,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
-                            <UniformGrid Columns="2" Rows="3">
+                            <UniformGrid Columns="2" Rows="5">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
                                           IsChecked="{Binding Options.RedumperEnableDebug}"
                                           ToolTip="Enable debug output in logs" Margin="0,4"
@@ -437,20 +437,32 @@
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Enable BE Drive Reading"
-                                          IsChecked="{Binding Options.RedumperUseBEReading}"
-                                          ToolTip="Enable setting drive read method to BE_CDDA by default" Margin="0,4"
-                                />
-
-                                <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
-                                          IsChecked="{Binding Options.RedumperUseGenericDriveType}"
-                                          ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
-                                />
-
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                                          Text="{Binding Options.RedumperRereadCount}"
-                                          ToolTip="Specifies how many rereads are attempted on read error"
+                                         ToolTip="Specifies how many rereads are attempted on read error"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
+                                          IsChecked="{Binding Options.RedumperNonRedumpMode}"
+                                          ToolTip="Enable non-redump options" Margin="0,4"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
+                                          IsChecked="{Binding Options.RedumperUseGenericDriveType}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                          ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
+                                />
+
+                                <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                />
+
+                                <Label VerticalAlignment="Center" Content="Default Sector Order:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
                             </UniformGrid>
                         </GroupBox>

@@ -16,6 +16,8 @@ namespace MPF.UI.Core
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
                 MediaType mediaType => new Element<MediaType>(mediaType),
+                RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
+                RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumpSystem redumpSystem => new RedumpSystemComboBoxItem(redumpSystem),
                 Region region => new Element<Region>(region),
 
@@ -35,6 +37,8 @@ namespace MPF.UI.Core
                 Element<DiscCategory> dcElement => dcElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,
                 Element<MediaType> mtElement => mtElement.Value,
+                Element<RedumperReadMethod> rmElement => rmElement.Value,
+                Element<RedumperSectorOrder> soElement => soElement.Value,
                 RedumpSystemComboBoxItem rsElement => rsElement.Value,
                 Element<Region> reValue => reValue.Value,
                 _ => null,

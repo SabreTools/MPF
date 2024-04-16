@@ -326,12 +326,12 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Enable BE reading by default with Redumper
+        /// Enable options incompatible with redump submissions
         /// </summary>
-        public bool RedumperUseBEReading
+        public bool RedumperNonRedumpMode
         {
-            get { return GetBooleanSetting(Settings, "RedumperUseBEReading", false); }
-            set { Settings["RedumperUseBEReading"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "RedumperNonRedumpMode", false); }
+            set { Settings["RedumperNonRedumpMode"] = value.ToString(); }
         }
 
         /// <summary>
@@ -341,6 +341,38 @@ namespace MPF.Core.Data
         {
             get { return GetBooleanSetting(Settings, "RedumperUseGenericDriveType", false); }
             set { Settings["RedumperUseGenericDriveType"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Currently selected default redumper read method
+        /// </summary>
+        public RedumperReadMethod RedumperReadMethod
+        {
+            get
+            {
+                var valueString = GetStringSetting(Settings, "RedumperReadMethod", RedumperReadMethod.NONE.ToString());
+                return EnumConverter.ToRedumperReadMethod(valueString);
+            }
+            set
+            {
+                Settings["RedumperReadMethod"] = value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Currently selected default redumper sector order
+        /// </summary>
+        public RedumperSectorOrder RedumperSectorOrder
+        {
+            get
+            {
+                var valueString = GetStringSetting(Settings, "RedumperSectorOrder", RedumperSectorOrder.NONE.ToString());
+                return EnumConverter.ToRedumperSectorOrder(valueString);
+            }
+            set
+            {
+                Settings["RedumperSectorOrder"] = value.ToString();
+            }
         }
 
         /// <summary>
