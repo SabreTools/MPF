@@ -1098,10 +1098,15 @@ namespace MPF.Core.Modules.Redumper
                 this[FlagStrings.Verbose] = options.RedumperEnableVerbose;
             if (options.RedumperEnableDebug)
                 this[FlagStrings.Debug] = options.RedumperEnableDebug;
-            if (options.RedumperUseBEReading)
+            if (options.RedumperReadMethod != RedumperReadMethod.NONE)
             {
                 this[FlagStrings.DriveReadMethod] = true;
-                DriveReadMethodValue = "BE_CDDA";
+                DriveReadMethodValue = options.RedumperReadMethod.ToString();
+            }
+            if (options.RedumperSectorOrder != RedumperSectorOrder.NONE)
+            {
+                this[FlagStrings.DriveSectorOrder] = true;
+                DriveSectorOrderValue = options.RedumperSectorOrder.ToString();
             }
             if (options.RedumperUseGenericDriveType)
             {

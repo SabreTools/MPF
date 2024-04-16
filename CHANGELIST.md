@@ -2,6 +2,7 @@
 
 - Fix parameter parsing for `=` symbol (Deterous)
 - Define better default categories (Deterous)
+- Custom non-redump Redumper options (Deterous)
 
 ### 3.1.5 (2024-04-05)
 

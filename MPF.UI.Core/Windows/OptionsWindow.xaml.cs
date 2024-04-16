@@ -214,7 +214,7 @@ namespace MPF.UI.Core.Windows
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 
@@ -223,6 +223,17 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void BrowseForPathClick(object sender, EventArgs e) =>
             BrowseForPath(this, sender as System.Windows.Controls.Button);
+
+        /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
+        private void NonRedumpModeClicked(object sender, EventArgs e)
+        {
+            if (OptionsViewModel.Options.RedumperNonRedumpMode)
+                CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            else
+                OptionsViewModel.NonRedumpModeUnChecked();
+        }
 
         /// <summary>
         /// Handler for AcceptButton Click event
