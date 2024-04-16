@@ -370,7 +370,7 @@
                                 />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.AaruRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
                                 />
@@ -406,19 +406,19 @@
                                 <Label/>  <!-- Empty label for padding -->
 
                                 <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Set the default value for the /mr flag"
                                 />
 
                                 <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICRereadCount}"
                                           ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
                                 />
 
                                 <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICDVDRereadCount}"
                                           ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
                                 />
@@ -438,7 +438,7 @@
                                 />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
@@ -454,13 +454,13 @@
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" HorizontalAlignment="Left"
+                                <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default Sector Order:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" HorizontalAlignment="Left"
+                                <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
