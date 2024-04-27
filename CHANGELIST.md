@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.6 (2024-04-27)
 
 - Fix parameter parsing for `=` symbol (Deterous)
 - Define better default categories (Deterous)
