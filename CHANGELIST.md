@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Critical update to BinaryObjectScanner 3.1.9
+
 ### 3.1.6 (2024-04-27)
 
 - Fix parameter parsing for `=` symbol (Deterous)

@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.8" GeneratePathProperty="true">
+    <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.9" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="LibIRD" Version="0.9.1" />
@@ -57,7 +57,7 @@
     <PackageReference Include="SabreTools.Hashing" Version="1.2.0" />
     <PackageReference Include="SabreTools.Models" Version="1.4.5" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.3.6" />
-    <PackageReference Include="SabreTools.Serialization" Version="1.6.0" />
+    <PackageReference Include="SabreTools.Serialization" Version="1.6.1" />
   </ItemGroup>
 
 </Project>
