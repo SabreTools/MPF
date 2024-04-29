@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.7 (2024-04-28)
 
 - Critical update to BinaryObjectScanner 3.1.9
 
