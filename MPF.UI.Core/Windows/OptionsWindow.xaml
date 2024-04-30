@@ -443,7 +443,7 @@
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
-								<CheckBox VerticalAlignment="Center" Content="Custom default Plextor Lead-in retries"
+								<CheckBox VerticalAlignment="Center" Content="Set Default Plextor Lead-in Retries"
                                           IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
                                           ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
                                 />
