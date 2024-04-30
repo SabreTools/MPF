@@ -451,7 +451,7 @@
 
                                 <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding.Options.RedumperEnableLeadinRetry}"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                 />
 
