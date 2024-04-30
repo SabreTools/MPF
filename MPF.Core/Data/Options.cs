@@ -326,6 +326,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Default number of redumper Plextor leadin retries
+        /// </summary>
+        public int RedumperLeadinRetryCount
+        {
+            get { return GetInt32Setting(Settings, "RedumperLeadinRetryCount", 4); }
+            set { Settings["RedumperLeadinRetryCount"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Enable options incompatible with redump submissions
         /// </summary>
         public bool RedumperNonRedumpMode

@@ -426,7 +426,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
-                            <UniformGrid Columns="2" Rows="5">
+                            <UniformGrid Columns="2" Rows="6">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
                                           IsChecked="{Binding Options.RedumperEnableDebug}"
                                           ToolTip="Enable debug output in logs" Margin="0,4"
@@ -441,6 +441,12 @@
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error"
+                                />
+
+                                <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}"
+                                         ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
