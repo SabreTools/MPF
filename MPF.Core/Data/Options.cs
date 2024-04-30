@@ -321,7 +321,7 @@ namespace MPF.Core.Data
         /// </summary>
         public bool RedumperEnableLeadinRetry
         {
-            get { return GetBooleanSetting(Settings, "RedumperEnableLeadinRetry", true); }
+            get { return GetBooleanSetting(Settings, "RedumperEnableLeadinRetry", false); }
             set { Settings["RedumperEnableLeadinRetry"] = value.ToString(); }
         }
 
