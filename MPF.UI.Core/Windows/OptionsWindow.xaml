@@ -403,7 +403,8 @@
                                           IsChecked="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                                 />
-                                <Label/>  <!-- Empty label for padding -->
+                                <Label/> 
+								<!-- Empty label for padding -->
 
                                 <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
@@ -447,7 +448,8 @@
                                           IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
                                           ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
                                 />
-								<Label/><!-- Empty label for padding -->
+								<Label/>
+								<!-- Empty label for padding -->
 
                                 <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
