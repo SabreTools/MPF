@@ -403,7 +403,8 @@
                                           IsChecked="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                                 />
-                                <Label/>  <!-- Empty label for padding -->
+                                <Label/> 
+                                <!-- Empty label for padding -->
 
                                 <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
@@ -426,7 +427,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
-                            <UniformGrid Columns="2" Rows="5">
+                            <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
                                           IsChecked="{Binding Options.RedumperEnableDebug}"
                                           ToolTip="Enable debug output in logs" Margin="0,4"
@@ -441,6 +442,19 @@
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error"
+                                />
+
+                                <CheckBox VerticalAlignment="Center" Content="Set Default Plextor Lead-in Retries"
+                                          IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
+                                          ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
+                                />
+                                <Label/>
+                                <!-- Empty label for padding -->
+
+                                <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
+                                         ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"

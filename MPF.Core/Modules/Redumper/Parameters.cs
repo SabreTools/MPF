@@ -1134,6 +1134,12 @@ namespace MPF.Core.Modules.Redumper
 
             this[FlagStrings.Retries] = true;
             RetriesValue = options.RedumperRereadCount;
+
+            if (options.RedumperEnableLeadinRetry)
+            {
+                this[FlagStrings.PlextorLeadinRetries] = true;
+                PlextorLeadinRetriesValue = options.RedumperLeadinRetryCount;
+            }
         }
 
         /// <inheritdoc/>

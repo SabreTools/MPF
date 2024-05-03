@@ -317,12 +317,30 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Enable Redumper custom lead-in retries for Plextor drives
+        /// </summary>
+        public bool RedumperEnableLeadinRetry
+        {
+            get { return GetBooleanSetting(Settings, "RedumperEnableLeadinRetry", false); }
+            set { Settings["RedumperEnableLeadinRetry"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Enable verbose output while dumping by default
         /// </summary>
         public bool RedumperEnableVerbose
         {
             get { return GetBooleanSetting(Settings, "RedumperEnableVerbose", true); }
             set { Settings["RedumperEnableVerbose"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Default number of redumper Plextor leadin retries
+        /// </summary>
+        public int RedumperLeadinRetryCount
+        {
+            get { return GetInt32Setting(Settings, "RedumperLeadinRetryCount", 4); }
+            set { Settings["RedumperLeadinRetryCount"] = value.ToString(); }
         }
 
         /// <summary>

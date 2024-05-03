@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Option for default Redumper leadin retries (Deterous)
+
 ### 3.1.7 (2024-04-28)
 
 - Critical update to BinaryObjectScanner 3.1.9
