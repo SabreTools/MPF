@@ -296,7 +296,7 @@ namespace MPF.Core
             // SafeDisc
             if (foundProtections.Any(p => p.StartsWith("SafeDisc")))
             {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled) && !p.StartsWith("Macrovision Protection File")))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
@@ -307,7 +307,7 @@ namespace MPF.Core
                         .Where(p => p != "SafeDisc 1/Lite")
                         .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled) && !p.StartsWith("Macrovision Protection File")))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
@@ -317,7 +317,7 @@ namespace MPF.Core
                         .Where(p => p != "SafeDisc 1/Lite")
                         .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+", RegexOptions.Compiled)))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+", RegexOptions.Compiled) && !p.StartsWith("Macrovision Protection File")))
                 {
                     foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
