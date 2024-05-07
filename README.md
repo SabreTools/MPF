@@ -26,6 +26,9 @@ The main UI has some known limitations that are documented in code and in some p
   - MAUI is not a viable alternative due to lack of out-of-box support for Linux
   - Avalonia is being heavily considered as an alternative
 - For those who need .NET Framework 4.8, there is an official fork: [MPF Legacy](https://github.com/Deterous/MPF-Legacy)
+- For those who require broader archive/installer compatibility (Windows-only), please use the x86 builds as there are some specific scanning libraries that only work with that build
+  - This is actively being worked on as part of [Binary Object Scanner](https://github.com/SabreTools/BinaryObjectScanner)
+  - Please consider contributing if you have experience in dealing with multiple archive and installer types
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
@@ -77,7 +80,7 @@ A list of all changes in each stable release and current WIP builds can now be f
 
 MPF uses some external libraries to assist with additional information gathering after the dumping process.
 
-- **BinaryObjectScanner** - Protection scanning - [GitHub](https://github.com/SabreTools/BinaryObjectScanner)
+- **Binary Object Scanner** - Protection scanning - [GitHub](https://github.com/SabreTools/BinaryObjectScanner)
 - **WPFCustomMessageBox.thabse** - Custom message boxes in UI - [GitHub](https://github.com/thabse/WPFCustomMessageBox)
 
 ## Contributors
