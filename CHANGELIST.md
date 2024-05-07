@@ -3,6 +3,7 @@
 - Option for default Redumper leadin retries (Deterous)
 - Omit false positives on formatting protections
 - Critical update to BinaryObjectScanner 3.1.10
+- Add _PFI.bin support for UIC
 
 ### 3.1.7 (2024-04-28)
 
