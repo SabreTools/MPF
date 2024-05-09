@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.8 (2024-05-09)
 
 - Option for default Redumper leadin retries (Deterous)
 - Omit false positives on formatting protections
