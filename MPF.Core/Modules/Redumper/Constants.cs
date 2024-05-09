@@ -10,6 +10,7 @@ namespace MPF.Core.Modules.Redumper
         public const string DVD = "dvd"; // Synonym for CD
         public const string BluRay = "bd"; // Synonym for CD
         public const string SACD = "sacd"; // Synonym for CD
+        public const string New = "new"; // Synonym for CD; Temporary command, to be removed later
         public const string Rings = "rings";
         public const string Dump = "dump";
         public const string DumpNew = "dumpnew"; // Temporary command, to be removed later
@@ -77,6 +78,7 @@ namespace MPF.Core.Modules.Redumper
         public const string DumpWriteOffset = "--dump-write-offset";
         public const string DumpReadSize = "--dump-read-size";
         public const string OverreadLeadout = "--overread-leadout";
+        public const string ForceUnscrambled = "--force-unscrambled";
         public const string LegacySubs = "--legacy-subs";
         public const string DisableCDText = "--disable-cdtext";
     }

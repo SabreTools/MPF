@@ -816,6 +816,10 @@ namespace MPF.Core.Modules.Redumper
             if (this[FlagStrings.OverreadLeadout] == true)
                 parameters.Add(FlagStrings.OverreadLeadout);
 
+            // Force Unscrambled
+            if (this[FlagStrings.ForceUnscrambled] == true)
+                parameters.Add(FlagStrings.ForceUnscrambled);
+
             // Legacy Subs
             if (this[FlagStrings.LegacySubs] == true)
                 parameters.Add(FlagStrings.LegacySubs);
@@ -884,6 +888,7 @@ namespace MPF.Core.Modules.Redumper
                     FlagStrings.DumpWriteOffset,
                     FlagStrings.DumpReadSize,
                     FlagStrings.OverreadLeadout,
+                    FlagStrings.ForceUnscrambled,
                     FlagStrings.LegacySubs,
                     FlagStrings.DisableCDText,
                 ],
@@ -1012,7 +1017,9 @@ namespace MPF.Core.Modules.Redumper
                 || this.BaseCommand?.Contains(CommandStrings.DVD) == true
                 || this.BaseCommand?.Contains(CommandStrings.BluRay) == true
                 || this.BaseCommand?.Contains(CommandStrings.SACD) == true
-                || this.BaseCommand?.Contains(CommandStrings.Dump) == true;
+                || this.BaseCommand?.Contains(CommandStrings.New) == true
+                || this.BaseCommand?.Contains(CommandStrings.Dump) == true
+                || this.BaseCommand?.Contains(CommandStrings.DumpNew) == true;
         }
 
         /// <inheritdoc/>
@@ -1176,6 +1183,7 @@ namespace MPF.Core.Modules.Redumper
                     case CommandStrings.DVD:
                     case CommandStrings.BluRay:
                     case CommandStrings.SACD:
+                    case CommandStrings.New: // Temporary command, to be removed later
                     case CommandStrings.Rings:
                     case CommandStrings.Dump:
                     case CommandStrings.DumpNew: // Temporary command, to be removed later
@@ -1384,6 +1392,9 @@ namespace MPF.Core.Modules.Redumper
 
                 // Overread Leadout
                 ProcessFlagParameter(parts, FlagStrings.OverreadLeadout, ref i);
+
+                // Force Unscrambled
+                ProcessFlagParameter(parts, FlagStrings.ForceUnscrambled, ref i);
 
                 // Legacy Subs
                 ProcessFlagParameter(parts, FlagStrings.LegacySubs, ref i);
