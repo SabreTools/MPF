@@ -30,6 +30,7 @@ The main UI has some known limitations that are documented in code and in some p
   - This is actively being worked on as part of [Binary Object Scanner](https://github.com/SabreTools/BinaryObjectScanner)
   - Please consider contributing if you have experience in dealing with multiple archive and installer types
   - Consider using a third-party scanning tool, such as Protection ID, if this is not sufficient for your needs
+  - See [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
