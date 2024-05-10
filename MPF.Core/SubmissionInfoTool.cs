@@ -378,7 +378,7 @@ namespace MPF.Core
                         string xboxOneMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxOneMsxcPath))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] ??= string.Join("\n",
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
                                 Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
@@ -391,7 +391,7 @@ namespace MPF.Core
                         string xboxSeriesXMsxcPath = Path.Combine(drive.Name, "MSXC");
                         if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] ??= string.Join("\n",
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
                                 Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
                         }
                     }
