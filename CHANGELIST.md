@@ -2,6 +2,7 @@
 
 - Update Redumper to build 325
 - Fix CleanRip not pulling info (Deterous)
+- Fix XboxOne/XboxSX Filename bug (Deterous)
 
 ### 3.1.8 (2024-05-09)
 
