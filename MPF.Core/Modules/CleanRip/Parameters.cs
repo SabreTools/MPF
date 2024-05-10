@@ -72,10 +72,7 @@ namespace MPF.Core.Modules.CleanRip
 
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
-
-            // ClrMameProData format is only for CDs
-            if (this.Type == MediaType.CDROM)
-                info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
             if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
