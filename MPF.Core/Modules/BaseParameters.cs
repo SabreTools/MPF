@@ -1198,6 +1198,8 @@ namespace MPF.Core.Modules
                 if (trimLength > -1)
                     hex = hex.Substring(0, trimLength);
 
+                // TODO: Check for non-zero values in discarded PIC
+
                 return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
             }
             catch

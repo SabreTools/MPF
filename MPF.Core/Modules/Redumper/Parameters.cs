@@ -376,6 +376,8 @@ namespace MPF.Core.Modules.Redumper
                         int trimLength = -1;
                         switch (this.System)
                         {
+                            case RedumpSystem.MicrosoftXboxOne:
+                            case RedumpSystem.MicrosoftXboxSeriesXS:
                             case RedumpSystem.SonyPlayStation3:
                             case RedumpSystem.SonyPlayStation4:
                             case RedumpSystem.SonyPlayStation5:
