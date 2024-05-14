@@ -103,6 +103,7 @@ namespace MPF.Core.Converters
                 InternalProgram.DCDumper => "DCDumper",
                 InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
+                InternalProgram.XboxBackupCreator => "XboxBackupCreator",
 
                 #endregion
 
@@ -188,6 +189,11 @@ namespace MPF.Core.Converters
                     or "umd"
                     or "umdcreator"
                     or "umdimagecreator" => InternalProgram.UmdImageCreator,
+                "xbc"
+                    or "xbox"
+                    or "xbox360"
+                    or "xboxcreator"
+                    or "xboxbackupcreator" => InternalProgram.XboxBackupCreator,
 
                 _ => InternalProgram.NONE,
             };
