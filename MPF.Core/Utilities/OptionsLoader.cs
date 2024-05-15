@@ -29,7 +29,7 @@ namespace MPF.Core.Utilities
             if (args[0] == "-lc" || args[0] == "--listcodes")
             {
                 Console.WriteLine("Supported Site Codes:");
-                foreach (string siteCode in EnumExtensions.ListSiteCodes())
+                foreach (string siteCode in Extensions.ListSiteCodes())
                 {
                     Console.WriteLine(siteCode);
                 }

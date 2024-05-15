@@ -6,6 +6,7 @@
 - Trim PIC for XboxOne/XboxSX (Deterous)
 - Get volume label from UIC outputs
 - Add site code listing to Check
+- Update RedumpLib and related
 
 ### 3.1.8 (2024-05-09)
 
