@@ -26,7 +26,17 @@ namespace MPF.Core.Utilities
                 return false;
 
             // List options
-            if (args[0] == "-lm" || args[0] == "--listmedia")
+            if (args[0] == "-lc" || args[0] == "--listcodes")
+            {
+                Console.WriteLine("Supported Site Codes:");
+                foreach (string siteCode in EnumExtensions.ListSiteCodes())
+                {
+                    Console.WriteLine(siteCode);
+                }
+                Console.ReadLine();
+                return true;
+            }
+            else if (args[0] == "-lm" || args[0] == "--listmedia")
             {
                 Console.WriteLine("Supported Media Types:");
                 foreach (string mediaType in Extensions.ListMediaTypes())

@@ -45,5 +45,43 @@ namespace MPF.Core.Utilities
 
             return programs;
         }
+
+        /// <summary>
+        /// List all site codes with their short usable names
+        /// </summary>
+        public static List<string> ListSiteCodes()
+        {
+            var siteCodes = new List<string>();
+
+            foreach (var val in Enum.GetValues(typeof(SiteCode)))
+            {
+                string? shortName = ((SiteCode?)val).ShortName()?.TrimEnd(':');
+                string? longName = ((SiteCode?)val).LongName()?.TrimEnd(':');
+                bool multiline = ((SiteCode?)val).IsMultiLine();
+
+                // Invalid codes should be skipped
+                if (shortName == null || longName == null)
+                    continue;
+
+                // Handle site tags
+                string siteCode;
+                if (shortName == longName)
+                    siteCode = "***".PadRight(16, ' ');
+                else
+                    siteCode = shortName.PadRight(16, ' ');
+
+                // Handle expanded tags
+                siteCode += longName.PadRight(32, ' ');
+
+                // Include multiline indicator if necessary
+                if (multiline)
+                    siteCode += "[Multiline]";
+
+                // Add the formatted site code
+                siteCodes.Add(siteCode);
+            }
+
+            return siteCodes;
+        }
     }
 }
