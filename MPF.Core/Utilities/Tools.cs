@@ -647,6 +647,50 @@ namespace MPF.Core.Utilities
         #region Xbox/Xbox360 specific tools
 
         /// <summary>
+        /// Get the XGD1 Master ID (XMID) information
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>String representation of the XGD1 DMI information, empty string on error</returns>
+        public static string GetXGD1XMID(string dmi)
+        {
+            if (!File.Exists(dmi))
+                return string.Empty;
+
+            try
+            {
+                using var br = new BinaryReader(File.OpenRead(dmi));
+                br.BaseStream.Seek(8, SeekOrigin.Begin);
+                return new string(br.ReadChars(8));
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Get the XGD2/3 Master ID (XeMID) information
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>String representation of the XGD2/3 DMI information, empty string on error</returns>
+        public static string GetXGD23XeMID(string dmi)
+        {
+            if (!File.Exists(dmi))
+                return string.Empty;
+
+            try
+            {
+                using var br = new BinaryReader(File.OpenRead(dmi));
+                br.BaseStream.Seek(64, SeekOrigin.Begin);
+                return new string(br.ReadChars(14));
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Get XGD type from SS.bin file
         /// </summary>
         /// <param name="ss"></param>

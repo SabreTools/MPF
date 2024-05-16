@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -560,9 +561,9 @@ namespace MPF.Core.Modules.DiscImageCreator
 
                     string xmidString;
                     if (string.IsNullOrEmpty(outputDirectory))
-                        xmidString = GetXGD1XMID($"{basePath}_DMI.bin");
+                        xmidString = Tools.GetXGD1XMID($"{basePath}_DMI.bin");
                     else
-                        xmidString = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
+                        xmidString = Tools.GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
@@ -609,9 +610,9 @@ namespace MPF.Core.Modules.DiscImageCreator
                 case RedumpSystem.MicrosoftXbox360:
                     string xemidString;
                     if (string.IsNullOrEmpty(outputDirectory))
-                        xemidString = GetXGD23XeMID($"{basePath}_DMI.bin");
+                        xemidString = Tools.GetXGD23XeMID($"{basePath}_DMI.bin");
                     else
-                        xemidString = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
+                        xemidString = Tools.GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
 
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
@@ -3883,50 +3884,6 @@ namespace MPF.Core.Modules.DiscImageCreator
             {
                 // We don't care what the exception is right now
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Get the XGD1 Master ID (XMID) information
-        /// </summary>
-        /// <param name="dmi">DMI.bin file location</param>
-        /// <returns>String representation of the XGD1 DMI information, empty string on error</returns>
-        private static string GetXGD1XMID(string dmi)
-        {
-            if (!File.Exists(dmi))
-                return string.Empty;
-
-            try
-            {
-                using var br = new BinaryReader(File.OpenRead(dmi));
-                br.BaseStream.Seek(8, SeekOrigin.Begin);
-                return new string(br.ReadChars(8));
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get the XGD2/3 Master ID (XeMID) information
-        /// </summary>
-        /// <param name="dmi">DMI.bin file location</param>
-        /// <returns>String representation of the XGD2/3 DMI information, empty string on error</returns>
-        private static string GetXGD23XeMID(string dmi)
-        {
-            if (!File.Exists(dmi))
-                return string.Empty;
-
-            try
-            {
-                using var br = new BinaryReader(File.OpenRead(dmi));
-                br.BaseStream.Seek(64, SeekOrigin.Begin);
-                return new string(br.ReadChars(14));
-            }
-            catch
-            {
-                return string.Empty;
             }
         }
 

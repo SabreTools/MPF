@@ -96,9 +96,12 @@ namespace MPF.Core.Modules.XboxBackupCreator
             {
                 case MediaType.DVD:
 
-                    // Get PVD from ISO
-                    if (GetPVD(basePath + ".iso", out string? pvd))
-                        info.Extras!.PVD = pvd;
+                    // Get PVD from ISO (Currently only for Xbox360)
+                    if (this.System != RedumpSystem.MicrosoftXbox360)
+                    {
+                        if (GetPVD(basePath + ".iso", out string? pvd))
+                            info.Extras!.PVD = pvd;
+                    }
 
                     // Get Layerbreak from .dvd file if possible
                     if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
@@ -130,6 +133,38 @@ namespace MPF.Core.Modules.XboxBackupCreator
                         // TODO: Put Media ID in submission info if not null
                     }
                     */
+
+                    // Parse DMI.bin
+                    if (this.System == RedumpSystem.MicrosoftXbox)
+                    {
+                        string xmidString = Tools.GetXGD1XMID($"{baseDir}DMI.bin");
+
+                        var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                        if (xmid != null)
+                        {
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                            info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                            if (!options.EnableRedumpCompatibility)
+                                info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
+
+                            info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                        }
+                    }
+                    else if (this.System == RedumpSystem.MicrosoftXbox360)
+                    {
+                        string xemidString = Tools.GetXGD23XeMID($"{baseDir}DMI.bin");
+
+                        var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                        if (xemid != null)
+                        {
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                            info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                            if (!options.EnableRedumpCompatibility)
+                                info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
+
+                            info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                        }
+                    }
 
                     // Deal with SS.bin
                     if (File.Exists($"{baseDir}SS.bin"))
