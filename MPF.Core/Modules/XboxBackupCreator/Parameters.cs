@@ -371,7 +371,6 @@ namespace MPF.Core.Modules.XboxBackupCreator
             // Example:
             // LayerBreak=1913776
             // track.iso
-            // 
 
             try
             {
@@ -423,7 +422,7 @@ namespace MPF.Core.Modules.XboxBackupCreator
             //     LayerBreak file saved as: "track.dvd"
             //     A total of 1 sectors were zeroed out.
 
-            // Example for Original Xbox:
+            // Example: (for Original Xbox)
             // A total of 65,536 sectors were zeroed out.
             // A total of 31 sectors with read errors were recovered.
 
@@ -535,7 +534,7 @@ namespace MPF.Core.Modules.XboxBackupCreator
         }
 
         /// <summary>
-        /// Recreate an SS.bin byte array from an XBC log
+        /// Recreate an SS.bin byte array from an XBC log.
         /// With help from https://github.com/hadzz/SS-Angle-Fixer/
         /// </summary>
         /// <param name="log">Path to XBC log</param>
@@ -557,7 +556,8 @@ namespace MPF.Core.Modules.XboxBackupCreator
             if (xgdType == 0)
                 return false;
 
-            // Don't recreate an already raw SS (but do save to file)
+            // Don't recreate an already raw SS
+            // (but do save to file, so return true)
             if (!Tools.IsCleanSS(ss))
                  return true;
 
@@ -623,10 +623,10 @@ namespace MPF.Core.Modules.XboxBackupCreator
                             for (int j = 0; j < 5; j++)
                             {
                                 // Ignore the middle byte
-                                if (j == 3)
+                                if (j == 2)
                                     continue;
 
-                                ss[offset] = responses[i][j];
+                                ss[offset + j] = responses[i][j];
                             }
                         }
 

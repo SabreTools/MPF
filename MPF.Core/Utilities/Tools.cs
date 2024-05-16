@@ -818,7 +818,7 @@ namespace MPF.Core.Utilities
         }
 
         /// <summary>
-        /// Fix a SS sector to its predictable clean form
+        /// Fix a SS sector to its predictable clean form.
         /// With help from ss_sector_range
         /// </summary>
         /// <param name="ss">Byte array of raw SS sector</param>
@@ -929,7 +929,7 @@ namespace MPF.Core.Utilities
         }
 
         /// <summary>
-        /// Get Security Sector ranges from SS sector
+        /// Get Security Sector ranges from SS sector.
         /// With help from ss_sector_range
         /// </summary>
         /// <param name="ss">Byte array of SS sector</param>
