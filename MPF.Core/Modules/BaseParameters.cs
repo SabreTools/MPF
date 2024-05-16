@@ -1210,7 +1210,7 @@ namespace MPF.Core.Modules
         }
 
         /// <summary>
-        /// Get a isobuster-formatted PVD from a PS3 ISO, if possible
+        /// Get a isobuster-formatted PVD from a 2048 byte-per-sector image, if possible
         /// </summary>
         /// <param name="isoPath">Path to ISO file</param>
         /// <param name="pvd">Formatted PVD string, otherwise null</param>

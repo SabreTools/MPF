@@ -96,13 +96,6 @@ namespace MPF.Core.Modules.XboxBackupCreator
             {
                 case MediaType.DVD:
 
-                    // Get PVD from ISO (Currently only for Xbox360)
-                    if (this.System != RedumpSystem.MicrosoftXbox360)
-                    {
-                        if (GetPVD(basePath + ".iso", out string? pvd))
-                            info.Extras!.PVD = pvd;
-                    }
-
                     // Get Layerbreak from .dvd file if possible
                     if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
                         info.SizeAndChecksums!.Layerbreak = layerbreak;
@@ -125,45 +118,48 @@ namespace MPF.Core.Modules.XboxBackupCreator
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    /*
-                    // Get Xbox 360 Media ID
-                    if (this.System == RedumpSystem.MicrosoftXbox360)
+                    switch (this.System)
                     {
-                        string? mediaID = GetMediaID(logPath);
-                        // TODO: Put Media ID in submission info if not null
-                    }
-                    */
+                        case RedumpSystem.MicrosoftXbox:
 
-                    // Parse DMI.bin
-                    if (this.System == RedumpSystem.MicrosoftXbox)
-                    {
-                        string xmidString = Tools.GetXGD1XMID($"{baseDir}DMI.bin");
+                            // Parse DMI.bin
+                            string xmidString = Tools.GetXGD1XMID($"{baseDir}DMI.bin");
+                            var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                            if (xmid != null)
+                            {
+                                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                                info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                                if (!options.EnableRedumpCompatibility)
+                                    info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 
-                        var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                        if (xmid != null)
-                        {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                            info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
-                            if (!options.EnableRedumpCompatibility)
-                                info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
+                                info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                            }
 
-                            info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
-                        }
-                    }
-                    else if (this.System == RedumpSystem.MicrosoftXbox360)
-                    {
-                        string xemidString = Tools.GetXGD23XeMID($"{baseDir}DMI.bin");
+                            break;
 
-                        var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                        if (xemid != null)
-                        {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
-                            info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
-                            if (!options.EnableRedumpCompatibility)
-                                info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
+                        case RedumpSystem.MicrosoftXbox360:
 
-                            info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
-                        }
+                            // Get PVD from ISO
+                            if (GetPVD(basePath + ".iso", out string? pvd))
+                                info.Extras!.PVD = pvd;
+
+                            // Parse Media ID
+                            //string? mediaID = GetMediaID(logPath);
+
+                            // Parse DMI.bin
+                            string xemidString = Tools.GetXGD23XeMID($"{baseDir}DMI.bin");
+                            var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                            if (xemid != null)
+                            {
+                                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                                info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                                if (!options.EnableRedumpCompatibility)
+                                    info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
+
+                                info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                            }
+
+                            break;
                     }
 
                     // Deal with SS.bin
@@ -257,9 +253,6 @@ namespace MPF.Core.Modules.XboxBackupCreator
         {
             if (IsSuccessfulLog($"{baseDir}Log.txt"))
                 return $"{baseDir}Log.txt";
-
-            if (IsSuccessfulLog($"{baseDir}log.txt"))
-                return $"{baseDir}log.txt";
 
             // Search for a renamed log file (assume there is only one)
             string[] files = Directory.GetFiles(baseDir, "*.txt", SearchOption.TopDirectoryOnly);
