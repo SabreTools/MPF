@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using MPF.Core.Data;
@@ -639,6 +640,366 @@ namespace MPF.Core.Utilities
                 return null;
 
             return (uint)(0x01000000 * crc32[0] + 0x00010000 * crc32[1] + 0x00000100 * crc32[2] + 0x00000001 * crc32[3]);
+        }
+
+        #endregion
+
+        #region Xbox/Xbox360 specific tools
+
+        /// <summary>
+        /// Get XGD type from SS.bin file
+        /// </summary>
+        /// <param name="ss"></param>
+        /// <param name="xgdType"></param>
+        /// <returns></returns>
+        public static bool GetXGDType(string? ss, out int xgdType)
+        {
+            xgdType = 0;
+
+            if (string.IsNullOrEmpty(ss) || !File.Exists(ss))
+                return false;
+
+            using FileStream fs = File.OpenRead(ss);
+            byte[] buf = new byte[3];
+            int numBytes = fs.Read(buf, 13, 16);
+
+            if (numBytes != 3)
+                return false;
+
+            return GetXGDType(buf, out xgdType);
+        }
+
+        /// <summary>
+        /// Get XGD type from SS.bin sector
+        /// </summary>
+        /// <param name="ss">Byte array of SS.bin sector</param>
+        /// <param name="xgdType">XGD type</param>
+        /// <returns>True if successful, false otherwise</returns>
+        public static bool GetXGDType(byte[] ss, out int xgdType)
+        {
+            xgdType = 0;
+
+            // Concatenate the last three values
+            long lastThree = (((ss[13] << 8) | ss[14]) << 8) | ss[15];
+
+            // Return XGD type based on value
+            switch (lastThree)
+            {
+                case 0x2033AF:
+                    xgdType = 1;
+                    return true;
+                case 0x20339F:
+                    xgdType = 2;
+                    return true;
+                case 0x238E0F:
+                    xgdType = 3;
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine if a given SS has already been cleaned
+        /// </summary>
+        /// <param name="ss">Byte array of SS sector</param>
+        /// <returns>True if SS is clean, false otherwise</returns>
+        public static bool IsCleanSS(byte[] ss)
+        {
+            if (ss.Length != 2048)
+                return false;
+
+            if (!GetXGDType(ss, out int xgdType))
+                return false;
+
+            if (xgdType == 3 && ss.Skip(32).Take(72).All(x => x == 0))
+            {
+                // Check for a cleaned SSv2
+
+                int rtOffset = 0x24;
+
+                if (ss[rtOffset + 36] != 0x01)
+                    return false;
+                if (ss[rtOffset + 37] != 0x00)
+                    return false;
+                if (ss[rtOffset + 39] != 0x01)
+                    return false;
+                if (ss[rtOffset + 40] != 0x00)
+                    return false;
+                if (ss[rtOffset + 45] != 0x5B)
+                    return false;
+                if (ss[rtOffset + 46] != 0x00)
+                    return false;
+                if (ss[rtOffset + 48] != 0x5B)
+                    return false;
+                if (ss[rtOffset + 49] != 0x00)
+                    return false;
+                if (ss[rtOffset + 54] != 0xB5)
+                    return false;
+                if (ss[rtOffset + 55] != 0x00)
+                    return false;
+                if (ss[rtOffset + 57] != 0xB5)
+                    return false;
+                if (ss[rtOffset + 58] != 0x00)
+                    return false;
+                if (ss[rtOffset + 63] != 0x0F)
+                    return false;
+                if (ss[rtOffset + 64] != 0x01)
+                    return false;
+                if (ss[rtOffset + 66] != 0x0F)
+                    return false;
+                if (ss[rtOffset + 67] != 0x01)
+                    return false;
+            }
+            else
+            {
+                // Check for a cleaned SSv1
+
+                int rtOffset = 0x204;
+
+                if (ss[rtOffset + 36] != 0x01)
+                    return false;
+                if (ss[rtOffset + 37] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 39] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 40] != 0x00)
+                    return false;
+                if (ss[rtOffset + 45] != 0x5B)
+                    return false;
+                if (ss[rtOffset + 46] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 48] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 49] != 0x00)
+                    return false;
+                if (ss[rtOffset + 54] != 0xB5)
+                    return false;
+                if (ss[rtOffset + 55] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 57] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 58] != 0x00)
+                    return false;
+                if (ss[rtOffset + 63] != 0x0F)
+                    return false;
+                if (ss[rtOffset + 64] != 0x01)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 66] != 0x00)
+                    return false;
+                if (xgdType == 2 && ss[rtOffset + 67] != 0x00)
+                    return false;
+            }
+
+            // All angles are as expected, it is clean
+            return true;
+        }
+
+        /// <summary>
+        /// Clean a rawSS.bin file and write it to a file
+        /// </summary>
+        /// <param name="rawSS">Path to the raw SS file to read from</param>
+        /// <param name="cleanSS">Path to the clean SS file to write to</param>
+        /// <returns>True if successful, false otherwise</returns>
+        public static bool CleanSS(string rawSS, string cleanSS)
+        {
+            if (!File.Exists(rawSS))
+                return false;
+
+            byte[] ss = File.ReadAllBytes(rawSS);
+            if (ss.Length != 2048)
+                return false;
+
+            if (!CleanSS(ss))
+                return false;
+
+            File.WriteAllBytes(cleanSS, ss);
+            return true;
+        }
+
+        /// <summary>
+        /// Fix a SS sector to its predictable clean form
+        /// With help from ss_sector_range
+        /// </summary>
+        /// <param name="ss">Byte array of raw SS sector</param>
+        /// <returns>True if successful, false otherwise</returns>
+        public static bool CleanSS(byte[] ss)
+        {
+            // Must be entire sector
+            if (ss.Length != 2048)
+                return false;
+
+            // Determine XGD type
+            if (!GetXGDType(ss, out int xgdType))
+                return false;
+
+            switch (xgdType)
+            {
+                case 1:
+                    // Leave Original Xbox SS.bin unchanged
+                    return true;
+
+                case 2:
+                    // Fix standard SSv1 ss.bin
+                    ss[552] = 1;   // 0x01
+                    ss[553] = 0;   // 0x00
+                    ss[555] = 0;   // 0x00
+                    ss[556] = 0;   // 0x00
+
+                    ss[561] = 91;  // 0x5B
+                    ss[562] = 0;   // 0x00
+                    ss[564] = 0;   // 0x00
+                    ss[565] = 0;   // 0x00
+
+                    ss[570] = 181; // 0xB5
+                    ss[571] = 0;   // 0x00
+                    ss[573] = 0;   // 0x00
+                    ss[574] = 0;   // 0x00
+
+                    ss[579] = 15;  // 0x0F
+                    ss[580] = 1;   // 0x01
+                    ss[582] = 0;   // 0x00
+                    ss[583] = 0;   // 0x00
+                    return true;
+
+                case 3:
+                    // Determine if XGD3 SS.bin is SSv1 (Kreon) or SSv2 (0800)
+                    bool ssv2 = ss.Skip(32).Take(72).All(x => x == 0);
+
+                    if (ssv2)
+                    {
+                        ss[72] = 1;   // 0x01
+                        ss[73] = 0;   // 0x00
+                        ss[75] = 1;   // 0x01
+                        ss[76] = 0;   // 0x00
+
+                        ss[81] = 91;  // 0x5B
+                        ss[82] = 0;   // 0x00
+                        ss[84] = 91;  // 0x5B
+                        ss[85] = 0;   // 0x00
+
+                        ss[90] = 181; // 0xB5
+                        ss[91] = 0;   // 0x00
+                        ss[93] = 181; // 0xB5
+                        ss[94] = 0;   // 0x00
+
+                        ss[99] = 15;  // 0x0F
+                        ss[100] = 1;   // 0x01
+                        ss[102] = 15;  // 0x0F
+                        ss[103] = 1;   // 0x01
+                    }
+                    else
+                    {
+                        ss[552] = 1;   // 0x01
+                        ss[553] = 0;   // 0x00
+
+                        ss[561] = 91;  // 0x5B
+                        ss[562] = 0;   // 0x00
+
+                        ss[570] = 181; // 0xB5
+                        ss[571] = 0;   // 0x00
+
+                        ss[579] = 15;  // 0x0F
+                        ss[580] = 1;   // 0x01
+                    }
+
+                    return true;
+
+                default:
+                    // Unknown XGD type
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Get Security Sector ranges from SS.bin
+        /// </summary>
+        /// <param name="ssBin">Path to SS.bin file</param>
+        /// <returns>Sector ranges if found, null otherwise</returns>
+        public static string? GetSSRanges(string ssBin)
+        {
+            if (!File.Exists(ssBin))
+                return null;
+
+            byte[] ss = File.ReadAllBytes(ssBin);
+            if (ss.Length != 2048)
+                return null;
+
+            return GetSSRanges(ss);
+        }
+
+        /// <summary>
+        /// Get Security Sector ranges from SS sector
+        /// With help from ss_sector_range
+        /// </summary>
+        /// <param name="ss">Byte array of SS sector</param>
+        /// <returns>Sector ranges if found, null otherwise</returns>
+        public static string? GetSSRanges(byte[] ss)
+        {
+            if (ss.Length != 2048)
+                return null;
+
+            if (!GetXGDType(ss, out int xgdType))
+                return null;
+
+            //uint numRanges = ss[1632];
+            uint numRanges;
+            if (xgdType == 1)
+                numRanges = 16;
+            else
+                numRanges = 4;
+
+
+            uint[] startLBA = new uint[numRanges];
+            uint[] endLBA = new uint[numRanges];
+            for (uint i = 0; i < numRanges; i++)
+            {
+                // Determine range Physical Sector Number
+                uint startPSN = (uint)((((ss[i * 9 + 1636] << 8) | ss[i * 9 + 1637]) << 8) | ss[i * 9 + 1638]);
+                uint endPSN = (uint)((((ss[i * 9 + 1639] << 8) | ss[i * 9 + 1640]) << 8) | ss[i * 9 + 1641]);
+                
+                // Determine range Logical Sector Number
+                if (xgdType == 1 && startPSN >= (1913776 + 0x030000))
+                {
+                    // Layer 1 of XGD1
+                    startLBA[i] = (1913776 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    endLBA[i] = (1913776 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                }
+                else if (xgdType > 1 && startPSN >= (1913760 + 0x030000))
+                {
+                    // Layer 1 of XGD2 or XGD3
+                    startLBA[i] = (1913760 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    endLBA[i] = (1913760 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                }
+                else
+                {
+                    // Layer 0
+                    startLBA[i] = startPSN - 0x030000;
+                    endLBA[i] = endPSN - 0x030000;
+                }
+            }
+
+            // Sort ranges for XGD1
+            if (xgdType == 1)
+                Array.Sort(startLBA, endLBA);
+
+            // Represent ranges as string
+            string? ranges = null;
+            if (xgdType == 1)
+            {
+                for (int i = 0; i < 16; i++)
+                {
+                    ranges += $"{startLBA[i]}-{endLBA[i]}";
+                    if (i != numRanges - 1)
+                        ranges += "\r\n";
+                }
+            }
+            else
+            {
+                ranges = $"{startLBA[0]}-{endLBA[0]}\r\n{startLBA[3]}-{endLBA[3]}";
+            }
+
+            return ranges;
         }
 
         #endregion
