@@ -14,6 +14,7 @@ using MPF.Core.Modules;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SabreTools.IO;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -384,6 +385,11 @@ namespace MPF.Core
             return di.Units[0]?.Body?.DiscTypeIdentifier;
         }
 
+        /// <summary>
+        /// Get the EXE name from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Executable name on success, null otherwise</returns>
         internal static string? GetPlayStationExecutableName(char? driveLetter)
         {
             // If there's no drive letter, we can't get exe name
@@ -395,6 +401,11 @@ namespace MPF.Core
             return GetPlayStationExecutableName(drivePath);
         }
 
+        /// <summary>
+        /// Get the EXE name from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="drivePath">Drive path to use to check</param>
+        /// <returns>Executable name on success, null otherwise</returns>
         internal static string? GetPlayStationExecutableName(string? drivePath)
         {
             // If there's no drive path, we can't get exe name
@@ -411,7 +422,7 @@ namespace MPF.Core
 
             // Read the CNF file as an INI file
             var systemCnf = new IniFile(systemCnfPath);
-            string bootValue = string.Empty;
+            string? bootValue = string.Empty;
 
             // PlayStation uses "BOOT" as the key
             if (systemCnf.ContainsKey("BOOT"))
@@ -451,7 +462,7 @@ namespace MPF.Core
         /// <param name="serial">Internal disc serial, if possible</param>
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
-        /// <returns></returns>
+        /// <returns>True if information could be determined, false otherwise</returns>
         internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
         {
             serial = null; region = null; date = null;
@@ -472,7 +483,7 @@ namespace MPF.Core
         /// <param name="serial">Internal disc serial, if possible</param>
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
-        /// <returns></returns>
+        /// <returns>True if information could be determined, false otherwise</returns>
         internal static bool GetPlayStationExecutableInfo(string? drivePath, out string? serial, out Region? region, out string? date)
         {
             serial = null; region = null; date = null;
@@ -1003,7 +1014,7 @@ namespace MPF.Core
             }
         }
 
-#endregion
+        #endregion
 
         #region Category Extraction
 

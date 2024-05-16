@@ -8,6 +8,8 @@
 - Add site code listing to Check
 - Update RedumpLib and related
 - Update BinaryObjectScanner to 3.1.11
+- Remove now-unused Hash enum
+- Use IO implementation of IniFile
 - Add Xbox Backup Creator support to MPF.Check (Deterous)
 
 ### 3.1.8 (2024-05-09)
