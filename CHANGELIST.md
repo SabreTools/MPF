@@ -7,6 +7,7 @@
 - Get volume label from UIC outputs
 - Add site code listing to Check
 - Update RedumpLib and related
+- Update BinaryObjectScanner to 3.1.11
 
 ### 3.1.8 (2024-05-09)
 
