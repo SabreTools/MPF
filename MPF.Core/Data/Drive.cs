@@ -7,6 +7,7 @@ using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 #endif
 using MPF.Core.Converters;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data

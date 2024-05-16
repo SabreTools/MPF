@@ -9,6 +9,7 @@
 - Update RedumpLib and related
 - Update BinaryObjectScanner to 3.1.11
 - Remove now-unused Hash enum
+- Use IO implementation of IniFile
 
 ### 3.1.8 (2024-05-09)
 
