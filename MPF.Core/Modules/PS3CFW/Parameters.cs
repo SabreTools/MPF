@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
@@ -185,60 +183,6 @@ namespace MPF.Core.Modules.PS3CFW
             {
                 // We don't care what the exception is right now
                 return null;
-            }
-        }
-
-        // TODO: Don't hardcode 0x8320 and move this function to BaseParameters
-        /// <summary>
-        /// Get a isobuster-formatted PVD from a PS3 ISO, if possible
-        /// </summary>
-        /// <param name="isoPath">Path to ISO file</param>
-        /// <param name="pvd">Formatted PVD string, otherwise null</param>
-        /// <returns>True if PVD was successfully parsed, otherwise false</returns>
-        private static bool GetPVD(string isoPath, out string? pvd)
-        {
-            pvd = null;
-            try
-            {
-                // Get PVD bytes from ISO file
-                var buf = new byte[96];
-                using (FileStream iso = File.OpenRead(isoPath))
-                {
-                    iso.Seek(0x8320, SeekOrigin.Begin);
-
-                    int offset = 0;
-                    while (offset < 96)
-                    {
-                        int read = iso.Read(buf, offset, buf.Length - offset);
-                        if (read == 0)
-                            throw new EndOfStreamException();
-                        offset += read;
-                    }
-                }
-
-                // Format PVD to isobuster standard
-                char[] pvdCharArray = new char[96];
-                for (int i = 0; i < 96; i++)
-                {
-                    if (buf[i] >= 0x20 && buf[i] <= 0x7E)
-                        pvdCharArray[i] = (char)buf[i];
-                    else
-                        pvdCharArray[i] = '.';
-                }
-                string pvdASCII = new string(pvdCharArray, 0, 96);
-                pvd = string.Empty;
-                for (int i = 0; i < 96; i += 16)
-                {
-                    pvd += $"{(0x0320+i):X4} : {buf[i]:X2} {buf[i+1]:X2} {buf[i+2]:X2} {buf[i+3]:X2} {buf[i+4]:X2} {buf[i+5]:X2} {buf[i+6]:X2} {buf[i+7]:X2}  " +
-                        $"{buf[i+8]:X2} {buf[i+9]:X2} {buf[i+10]:X2} {buf[i+11]:X2} {buf[i+12]:X2} {buf[i+13]:X2} {buf[i+14]:X2} {buf[i+15]:X2}   {pvdASCII.Substring(i, 16)}\n";
-                }
-
-                return true;
-            }
-            catch
-            {
-                // We don't care what the error is
-                return false;
             }
         }
 

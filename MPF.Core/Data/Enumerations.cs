@@ -28,6 +28,7 @@
         DCDumper,
         PS3CFW,
         UmdImageCreator,
+        XboxBackupCreator,
     }
 
     /// <summary>
