@@ -423,16 +423,25 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    // Get metadata from log if possible
                     info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    if (!string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
+                    info.VersionAndEditions!.Version = GetDiscVersion($"{basePath}.log") ?? string.Empty;
+
+                    // Get metadata from drive if not available from log
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= pythonTwoDate;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
+                        info.CommonDiscInfo.Region ??= pythonTwoRegion;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.EXEDateBuildDate))
+                            info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions.Version))
+                        info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
@@ -488,13 +497,21 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    // Get metadata from log if possible
                     info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    if (!string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
+
+                    // Get metadata from drive if not available from log
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationDate;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
+                        info.CommonDiscInfo.Region ??= playstationRegion;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.EXEDateBuildDate))
+                            info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
                     info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
@@ -504,34 +521,59 @@ namespace MPF.Core.Modules.Redumper
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
+                    // Get metadata from log if possible
                     info.CommonDiscInfo!.EXEDateBuildDate = GetEXEDate($"{basePath}.log");
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    if (!string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
+                    info.VersionAndEditions!.Version = GetDiscVersion($"{basePath}.log") ?? string.Empty;
+
+                    // Get metadata from drive if not available from log
                     if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
+                        if (string.IsNullOrEmpty(info.CommonDiscInfo.EXEDateBuildDate))
+                            info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
                     }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions.Version))
+                        info.VersionAndEditions.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
-                    string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
+                    // Get metadata from log if possible
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetDiscVersion($"{basePath}.log") ?? string.Empty;
+                    string? firmwareVersion = GetFirmwareVersion($"{basePath}.log");
+
+                    // Get metadata from drive if not available from log
+                    if (string.IsNullOrEmpty(info.VersionAndEditions.Version))
+                        info.VersionAndEditions.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
+                    firmwareVersion ??= InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
                     if (firmwareVersion != null)
-                        info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
+                        info.CommonDiscInfo.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetDiscVersion($"{basePath}.log") ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = GetSerial($"{basePath}.log") ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetDiscVersion($"{basePath}.log") ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]))
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
                     break;
             }
 
@@ -1544,6 +1586,45 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <summary>
+        /// Get the Disc Version from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Disc Version if possible, null otherwise</returns>
+        public static string? GetDiscVersion(string log)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The disc version is listed in a single line
+                    if (line.StartsWith("version:"))
+                    {
+                        // version: 01.00
+                        return line.Substring("version: ".Length);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get all Volume Identifiers
         /// </summary>
         /// <param name="log">Log file location</param>
@@ -1775,6 +1856,45 @@ namespace MPF.Core.Modules.Redumper
                     {
                         // exe date: yyyy-MM-dd
                         return line.Substring("EXE date: ".Length);
+                    }
+
+                    line = sr.ReadLine();
+        }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the Firmware Version from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Firmware Version if possible, null otherwise</returns>
+        public static string? GetFirmwareVersion(string log)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The disc version is listed in a single line
+                    if (line.StartsWith("firmware:"))
+                    {
+                        // version: 01.00
+                        return line.Substring("firmware: ".Length);
                     }
 
                     line = sr.ReadLine();
@@ -2367,6 +2487,45 @@ namespace MPF.Core.Modules.Redumper
                 }
 
                 return headerString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the Serial from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Serial if possible, null otherwise</returns>
+        public static string? GetSerial(string log)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The serial is listed in a single line
+                    if (line.StartsWith("serial:"))
+                    {
+                        // serial: SLES-12345
+                        return line.Substring("serial: ".Length);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
             }
             catch
             {
