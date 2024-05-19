@@ -2108,7 +2108,7 @@ namespace MPF.Core.Modules.Redumper
                     }
                     else if (line.StartsWith("firmware:"))
                     {
-                        region = line.Substring("firmware: ".Length).Trim();
+                        firmware = line.Substring("firmware: ".Length).Trim();
                     }
                     else
                     {
