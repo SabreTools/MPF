@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.1.9 (2024-05-19)
 
 - Update Redumper to build 325
 - Fix CleanRip not pulling info (Deterous)
