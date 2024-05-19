@@ -11,6 +11,7 @@
 - Remove now-unused Hash enum
 - Use IO implementation of IniFile
 - Add Xbox Backup Creator support to MPF.Check (Deterous)
+- Update BinaryObjectScanner to 3.1.12
 - Prefer PlayStation info from Redumper logs (Deterous)
 
 ### 3.1.8 (2024-05-09)
