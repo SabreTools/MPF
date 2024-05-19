@@ -2106,6 +2106,10 @@ namespace MPF.Core.Modules.Redumper
                     {
                         serial = line.Substring("serial: ".Length).Trim();
                     }
+                    else if (line.StartsWith("version:"))
+                    {
+                        version = line.Substring("version: ".Length).Trim();
+                    }
                     else if (line.StartsWith("firmware:"))
                     {
                         firmware = line.Substring("firmware: ".Length).Trim();
