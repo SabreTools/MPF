@@ -82,7 +82,26 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            if (File.Exists(basePath + ".cicm.xml"))
+                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
+            if (File.Exists(basePath + ".ibg"))
+                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
+            if (File.Exists(basePath + ".log"))
+                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log")) ?? string.Empty;
+            if (File.Exists(basePath + ".mhddlog.bin"))
+                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
+            if (File.Exists(basePath + ".resume.xml"))
+                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
+            if (File.Exists(basePath + ".sub.log"))
+                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -290,24 +309,6 @@ namespace MPF.Core.Processors
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
                     break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-                if (File.Exists(basePath + ".cicm.xml"))
-                    info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
-                if (File.Exists(basePath + ".ibg"))
-                    info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
-                if (File.Exists(basePath + ".log"))
-                    info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log")) ?? string.Empty;
-                if (File.Exists(basePath + ".mhddlog.bin"))
-                    info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
-                if (File.Exists(basePath + ".resume.xml"))
-                    info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
-                if (File.Exists(basePath + ".sub.log"))
-                    info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log")) ?? string.Empty;
             }
         }
 

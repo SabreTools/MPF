@@ -51,7 +51,26 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            if (File.Exists($"{basePath}_disc.txt"))
+                info.Artifacts["disc"] = GetBase64(GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
+            if (File.Exists($"{basePath}_drive.txt"))
+                info.Artifacts["drive"] = GetBase64(GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
+            if (File.Exists($"{basePath}_mainError.txt"))
+                info.Artifacts["mainError"] = GetBase64(GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
+            if (File.Exists($"{basePath}_mainInfo.txt"))
+                info.Artifacts["mainInfo"] = GetBase64(GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
+            //if (File.Exists($"{basePath}_PFI.bin"))
+            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
+            if (File.Exists($"{basePath}_volDesc.txt"))
+                info.Artifacts["volDesc"] = GetBase64(GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -99,25 +118,6 @@ namespace MPF.Core.Processors
                     }
 
                     break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-
-                if (File.Exists($"{basePath}_disc.txt"))
-                    info.Artifacts["disc"] = GetBase64(GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
-                if (File.Exists($"{basePath}_drive.txt"))
-                    info.Artifacts["drive"] = GetBase64(GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
-                if (File.Exists($"{basePath}_mainError.txt"))
-                    info.Artifacts["mainError"] = GetBase64(GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
-                if (File.Exists($"{basePath}_mainInfo.txt"))
-                    info.Artifacts["mainInfo"] = GetBase64(GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
-                //if (File.Exists($"{basePath}_PFI.bin"))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
-                if (File.Exists($"{basePath}_volDesc.txt"))
-                    info.Artifacts["volDesc"] = GetBase64(GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
             }
         }
 

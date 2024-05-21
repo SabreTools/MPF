@@ -49,7 +49,18 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            if (File.Exists(basePath + ".bca"))
+                info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
+            if (File.Exists(basePath + "-dumpinfo.txt"))
+                info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -93,17 +104,6 @@ namespace MPF.Core.Processors
                     }
 
                     break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-
-                if (File.Exists(basePath + ".bca"))
-                    info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
-                if (File.Exists(basePath + "-dumpinfo.txt"))
-                    info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
             }
         }
 

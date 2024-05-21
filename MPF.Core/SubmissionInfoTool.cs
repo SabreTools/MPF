@@ -83,7 +83,9 @@ namespace MPF.Core
             SubmissionInfo info = CreateDefaultSubmissionInfo(system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
+            processor?.GenerateSubmissionInfo(info, options, combinedBase, drive);
+            if (options.IncludeArtifacts)
+                processor?.GenerateArtifacts(info, combinedBase);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)

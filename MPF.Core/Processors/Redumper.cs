@@ -127,7 +127,52 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            if (File.Exists($"{basePath}.cdtext"))
+                info.Artifacts["cdtext"] = GetBase64(GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
+            if (File.Exists($"{basePath}.cue"))
+                info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
+            if (File.Exists($"{basePath}.fulltoc"))
+                info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
+            if (File.Exists($"{basePath}.hash"))
+                info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
+            // TODO: "{basePath} (Track X).hash" (get from cuesheet)
+            if (File.Exists($"{basePath}.log"))
+                info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log")) ?? string.Empty;
+            if (File.Exists($"{basePath}.manufacturer"))
+                info.Artifacts["manufacturer"] = GetBase64(GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
+            if (File.Exists($"{basePath}.1.manufacturer"))
+                info.Artifacts["manufacturer1"] = GetBase64(GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
+            if (File.Exists($"{basePath}.2.manufacturer"))
+                info.Artifacts["manufacturer2"] = GetBase64(GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
+            if (File.Exists($"{basePath}.physical"))
+                info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical")) ?? string.Empty;
+            if (File.Exists($"{basePath}.0.physical"))
+                info.Artifacts["physical0"] = GetBase64(GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
+            if (File.Exists($"{basePath}.1.physical"))
+                info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
+            if (File.Exists($"{basePath}.2.physical"))
+                info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
+            // if (File.Exists($"{basePath}.skeleton"))
+            //     info.Artifacts["skeleton"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
+            // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
+            // if (File.Exists($"{basePath}.scram"))
+            //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
+            // if (File.Exists($"{basePath}.scrap"))
+            //     info.Artifacts["scrap"] = GetBase64(GetFullFile($"{basePath}.scrap")) ?? string.Empty;
+            if (File.Exists($"{basePath}.state"))
+                info.Artifacts["state"] = GetBase64(GetFullFile($"{basePath}.state")) ?? string.Empty;
+            if (File.Exists($"{basePath}.subcode"))
+                info.Artifacts["subcode"] = GetBase64(GetFullFile($"{basePath}.subcode")) ?? string.Empty;
+            if (File.Exists($"{basePath}.toc"))
+                info.Artifacts["toc"] = GetBase64(GetFullFile($"{basePath}.toc")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -436,51 +481,6 @@ namespace MPF.Core.Processors
                     }
 
                     break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-
-                if (File.Exists($"{basePath}.cdtext"))
-                    info.Artifacts["cdtext"] = GetBase64(GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
-                if (File.Exists($"{basePath}.cue"))
-                    info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
-                if (File.Exists($"{basePath}.fulltoc"))
-                    info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
-                if (File.Exists($"{basePath}.hash"))
-                    info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
-                // TODO: "{basePath} (Track X).hash" (get from cuesheet)
-                if (File.Exists($"{basePath}.log"))
-                    info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log")) ?? string.Empty;
-                if (File.Exists($"{basePath}.manufacturer"))
-                    info.Artifacts["manufacturer"] = GetBase64(GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
-                if (File.Exists($"{basePath}.1.manufacturer"))
-                    info.Artifacts["manufacturer1"] = GetBase64(GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
-                if (File.Exists($"{basePath}.2.manufacturer"))
-                    info.Artifacts["manufacturer2"] = GetBase64(GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
-                if (File.Exists($"{basePath}.physical"))
-                    info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical")) ?? string.Empty;
-                if (File.Exists($"{basePath}.0.physical"))
-                    info.Artifacts["physical0"] = GetBase64(GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
-                if (File.Exists($"{basePath}.1.physical"))
-                    info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
-                if (File.Exists($"{basePath}.2.physical"))
-                    info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
-                // if (File.Exists($"{basePath}.skeleton"))
-                //     info.Artifacts["skeleton"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
-                // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
-                // if (File.Exists($"{basePath}.scram"))
-                //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
-                // if (File.Exists($"{basePath}.scrap"))
-                //     info.Artifacts["scrap"] = GetBase64(GetFullFile($"{basePath}.scrap")) ?? string.Empty;
-                if (File.Exists($"{basePath}.state"))
-                    info.Artifacts["state"] = GetBase64(GetFullFile($"{basePath}.state")) ?? string.Empty;
-                if (File.Exists($"{basePath}.subcode"))
-                    info.Artifacts["subcode"] = GetBase64(GetFullFile($"{basePath}.subcode")) ?? string.Empty;
-                if (File.Exists($"{basePath}.toc"))
-                    info.Artifacts["toc"] = GetBase64(GetFullFile($"{basePath}.toc")) ?? string.Empty;
             }
         }
 

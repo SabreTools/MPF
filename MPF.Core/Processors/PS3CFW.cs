@@ -42,7 +42,20 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            string? getKeyBasePath = GetCFWBasePath(basePath);
+
+            if (File.Exists(getKeyBasePath + ".disc.pic"))
+                info.Artifacts["discpic"] = GetBase64(GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
+            if (File.Exists(getKeyBasePath + ".getkey.log"))
+                info.Artifacts["getkeylog"] = GetBase64(GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -104,17 +117,6 @@ namespace MPF.Core.Processors
                     pic = Regex.Replace(pic, ".{32}", "$0\n");
                     info.Extras.PIC = pic;
                 }
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-
-                if (File.Exists(getKeyBasePath + ".disc.pic"))
-                    info.Artifacts["discpic"] = GetBase64(GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
-                if (File.Exists(getKeyBasePath + ".getkey.log"))
-                    info.Artifacts["getkeylog"] = GetBase64(GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
             }
         }
 

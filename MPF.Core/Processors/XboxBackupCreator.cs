@@ -57,7 +57,30 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            info.Artifacts ??= [];
+
+            string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
+            string? logPath = GetLogName(baseDir);
+
+            if (File.Exists(logPath))
+                info.Artifacts["log"] = GetBase64(GetFullFile(logPath!)) ?? string.Empty;
+            if (File.Exists($"{basePath}.dvd"))
+                info.Artifacts["dvd"] = GetBase64(GetFullFile($"{basePath}.dvd")) ?? string.Empty;
+            //if (File.Exists($"{baseDir}DMI.bin"))
+            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}DMI.bin")) ?? string.Empty;
+            // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes
+            //if (File.Exists($"{baseDir}PFI.bin"))
+            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}PFI.bin")) ?? string.Empty;
+            //if (File.Exists($"{baseDir}SS.bin"))
+            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}SS.bin")) ?? string.Empty;
+            //if (File.Exists($"{baseDir}RawSS.bin"))
+            //    info.Artifacts["rawss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}RawSS.bin")) ?? string.Empty;
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -177,26 +200,6 @@ namespace MPF.Core.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash($"{baseDir}SS.bin", HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
 
                     break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded, if we need to
-            if (includeArtifacts)
-            {
-                info.Artifacts ??= [];
-
-                if (File.Exists(logPath))
-                    info.Artifacts["log"] = GetBase64(GetFullFile(logPath!)) ?? string.Empty;
-                if (File.Exists($"{basePath}.dvd"))
-                    info.Artifacts["dvd"] = GetBase64(GetFullFile($"{basePath}.dvd")) ?? string.Empty;
-                //if (File.Exists($"{baseDir}DMI.bin"))
-                //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}DMI.bin")) ?? string.Empty;
-                // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes
-                //if (File.Exists($"{baseDir}PFI.bin"))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}PFI.bin")) ?? string.Empty;
-                //if (File.Exists($"{baseDir}SS.bin"))
-                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}SS.bin")) ?? string.Empty;
-                //if (File.Exists($"{baseDir}RawSS.bin"))
-                //    info.Artifacts["rawss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}RawSS.bin")) ?? string.Empty;
             }
         }
 

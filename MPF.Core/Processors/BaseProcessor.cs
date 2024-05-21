@@ -51,14 +51,20 @@ namespace MPF.Core.Processors
         public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck);
 
         /// <summary>
+        /// Generate artifacts and add to the SubmissionInfo
+        /// </summary>
+        /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        public abstract void GenerateArtifacts(SubmissionInfo submissionInfo, string basePath);
+
+        /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
-        /// <param name="includeArtifacts">True to include output files as encoded artifacts, false otherwise</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive? drive, bool includeArtifacts);
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive? drive);
 
         #endregion
 
