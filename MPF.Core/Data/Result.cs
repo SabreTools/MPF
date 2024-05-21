@@ -10,7 +10,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Internal representation of success
         /// </summary>
-        private readonly bool success;
+        private readonly bool _success;
 
         /// <summary>
         /// Optional message for the result
@@ -19,8 +19,8 @@ namespace MPF.Core.Data
 
         private Result(bool success, string message)
         {
-            this.success = success;
-            this.Message = message;
+            _success = success;
+            Message = message;
         }
 
         /// <summary>
@@ -49,6 +49,6 @@ namespace MPF.Core.Data
         /// <summary>
         /// Results can be compared to boolean values based on the success value
         /// </summary>
-        public static implicit operator bool(Result result) => result.success;
+        public static implicit operator bool(Result result) => result._success;
     }
 }
