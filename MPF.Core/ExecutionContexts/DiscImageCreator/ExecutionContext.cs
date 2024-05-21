@@ -89,12 +89,13 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
         /// <summary>
         /// C2 reread options for dumping [CD only]
         /// [0] - Reread value (default 4000)
-        /// [1] - C2 offset (default: 0)
-        /// [2] - 0 reread issue sector (default), 1 reread all
-        /// [3] - First LBA to reread (default 0)
-        /// [4] - Last LBA to reread (default EOS)
+        /// [1] - Reading speed when fixing the C2 error (default: same as the <DriveSpeed(0-72)>)
+        /// [2] - C2 offset (default: 0)
+        /// [3] - 0 reread issue sector (default), 1 reread all
+        /// [4] - First LBA to reread (default 0)
+        /// [5] - Last LBA to reread (default EOS)
         /// </summary>
-        public int?[] C2OpcodeValue { get; set; } = new int?[5];
+        public int?[] C2OpcodeValue { get; set; } = new int?[6];
 
         /// <summary>
         /// C2 reread options for dumping [DVD/HD-DVD/BD only] (default 10)
@@ -125,6 +126,16 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
         /// Set the pad sector flag value (default 0)
         /// </summary>
         public byte? PadSectorValue { get; set; }
+
+        /// <summary>
+        /// Set the range End LBA value (required for DVD)
+        /// </summary>
+        public int? RangeEndLBAValue { get; set; }
+
+        /// <summary>
+        /// Set the range Start LBA value (required for DVD)
+        /// </summary>
+        public int? RangeStartLBAValue { get; set; }
 
         /// <summary>
         /// Set the reverse End LBA value (required for DVD)
@@ -334,19 +345,23 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                     }
                     if (C2OpcodeValue[2] != null)
                     {
-                        if (C2OpcodeValue[2] == 0)
+                        parameters.Add(C2OpcodeValue[2].ToString() ?? string.Empty);
+                    }
+                    if (C2OpcodeValue[3] != null)
+                    {
+                        if (C2OpcodeValue[3] == 0)
                         {
-                            parameters.Add(C2OpcodeValue[2].ToString() ?? string.Empty);
+                            parameters.Add(C2OpcodeValue[3].ToString() ?? string.Empty);
                         }
-                        else if (C2OpcodeValue[2] == 1)
+                        else if (C2OpcodeValue[3] == 1)
                         {
-                            parameters.Add(C2OpcodeValue[2].ToString() ?? string.Empty);
-                            if (C2OpcodeValue[3] != null && C2OpcodeValue[4] != null)
+                            parameters.Add(C2OpcodeValue[3].ToString() ?? string.Empty);
+                            if (C2OpcodeValue[4] != null && C2OpcodeValue[5] != null)
                             {
-                                if (C2OpcodeValue[3] > 0 && C2OpcodeValue[4] > 0)
+                                if (C2OpcodeValue[4] > 0 && C2OpcodeValue[5] > 0)
                                 {
-                                    parameters.Add(C2OpcodeValue[3].ToString() ?? string.Empty);
                                     parameters.Add(C2OpcodeValue[4].ToString() ?? string.Empty);
+                                    parameters.Add(C2OpcodeValue[5].ToString() ?? string.Empty);
                                 }
                                 else
                                 {
@@ -503,8 +518,15 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
             // Range
             if (IsFlagSupported(FlagStrings.Range))
             {
+                if (RangeStartLBAValue == null || RangeEndLBAValue == null)
+                    return null;
+
                 if (this[FlagStrings.Range] == true)
+                {
                     parameters.Add(FlagStrings.Range);
+                    parameters.Add(RangeStartLBAValue.ToString());
+                    parameters.Add(RangeEndLBAValue.ToString());
+                }
             }
 
             // Raw read (2064 byte/sector)
@@ -613,6 +635,13 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                 }
             }
 
+            // Tages
+            if (IsFlagSupported(FlagStrings.Tages))
+            {
+                if (this[FlagStrings.Tages] == true)
+                    parameters.Add(FlagStrings.Tages);
+            }
+
             // Use Anchor Volume Descriptor Pointer
             if (IsFlagSupported(FlagStrings.UseAnchorVolumeDescriptorPointer))
             {
@@ -675,6 +704,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SkipSector,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.Tages,
                 ],
 
                 [CommandStrings.BluRay] =
@@ -733,6 +763,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SkipSector,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.Tages,
                 ],
 
                 [CommandStrings.DigitalVideoDisc] =
@@ -909,7 +940,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
 
             AddOffsetValue = null;
             BEOpcodeValue = null;
-            C2OpcodeValue = new int?[5];
+            C2OpcodeValue = new int?[6];
             DVDRereadValue = null;
             FixValue = null;
             ForceUnitAccessValue = null;
@@ -1483,7 +1514,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                     if (parts[i] == FlagStrings.C2Opcode && IsFlagSupported(FlagStrings.C2Opcode))
                     {
                         this[FlagStrings.C2Opcode] = true;
-                        for (int j = 0; j < 5; j++)
+                        for (int j = 0; j < C2OpcodeValue.Length; j++)
                         {
                             if (!DoesExist(parts, i + 1))
                             {
@@ -1564,6 +1595,25 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                     byteValue = ProcessUInt8Parameter(parts, FlagStrings.PadSector, ref i, missingAllowed: true);
                     if (byteValue != null)
                         PadSectorValue = byteValue;
+
+                    // Range
+                    if (parts[i] == FlagStrings.Range && IsFlagSupported(FlagStrings.Range))
+                    {
+                        // DVD specifically requires StartLBA and EndLBA
+                        if (BaseCommand == CommandStrings.DigitalVideoDisc)
+                        {
+                            if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
+                                return false;
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
+                                return false;
+
+                            RangeStartLBAValue = Int32.Parse(parts[i + 1]);
+                            RangeEndLBAValue = Int32.Parse(parts[i + 2]);
+                            i += 2;
+                        }
+
+                        this[FlagStrings.Reverse] = true;
+                    }
 
                     // Raw
                     ProcessFlagParameter(parts, FlagStrings.Raw, ref i);

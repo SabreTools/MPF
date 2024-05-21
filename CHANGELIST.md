@@ -8,6 +8,7 @@
 - Simplify access within processors
 - Rename Parameters to ExecutionContext
 - Ensure check-only implementations still work
+- Update to DIC 20240401
 
 ### 3.1.9a (2024-05-21)
 

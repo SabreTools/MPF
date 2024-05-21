@@ -672,6 +672,7 @@ namespace MPF.Core.Processors
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
                     break;
 
+                // TODO: Support reading information from outputs -- need examples
                 case RedumpSystem.SonyPlayStation3:
                     info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
@@ -755,6 +756,7 @@ namespace MPF.Core.Processors
             var deleteableFiles = new List<string>();
             switch (Type)
             {
+                // TODO: Handle (Pregap) files -- need examples
                 case MediaType.CDROM:
                 case MediaType.GDROM:
                     if (File.Exists($"{basePath}.img"))

@@ -69,6 +69,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
         public const string SeventyFour = "/74";
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
+        public const string Tages = "/t";
         public const string UseAnchorVolumeDescriptorPointer = "/avdp";
         public const string VideoNow = "/vn";
         public const string VideoNowColor = "/vnc";
