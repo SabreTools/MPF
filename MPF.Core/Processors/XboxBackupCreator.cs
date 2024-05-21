@@ -80,7 +80,7 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive? drive, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -140,7 +140,7 @@ namespace MPF.Core.Processors
                             {
                                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                                 info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
-                                if (!options.EnableRedumpCompatibility)
+                                if (!redumpCompat)
                                     info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 
                                 info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
@@ -164,7 +164,7 @@ namespace MPF.Core.Processors
                             {
                                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                                 info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
-                                if (!options.EnableRedumpCompatibility)
+                                if (!redumpCompat)
                                     info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 
                                 info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);

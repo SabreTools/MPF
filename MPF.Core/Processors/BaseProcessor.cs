@@ -64,7 +64,8 @@ namespace MPF.Core.Processors
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive? drive);
+        /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive? drive, bool redumpCompat);
 
         #endregion
 

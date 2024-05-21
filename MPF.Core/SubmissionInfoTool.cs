@@ -83,7 +83,7 @@ namespace MPF.Core
             SubmissionInfo info = CreateDefaultSubmissionInfo(system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, options, combinedBase, drive);
+            processor?.GenerateSubmissionInfo(info,  combinedBase, drive, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
                 processor?.GenerateArtifacts(info, combinedBase);
 

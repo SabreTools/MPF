@@ -286,7 +286,7 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive? drive, bool redumpCompat)
         {
             var outputDirectory = Path.GetDirectoryName(basePath);
 
@@ -395,7 +395,7 @@ namespace MPF.Core.Processors
                     }
 
                     // Read the PVD
-                    if (!options.EnableRedumpCompatibility || System != RedumpSystem.MicrosoftXbox)
+                    if (!redumpCompat || System != RedumpSystem.MicrosoftXbox)
                         info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Bluray-specific options
@@ -476,7 +476,7 @@ namespace MPF.Core.Processors
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
-                        if (!options.EnableRedumpCompatibility)
+                        if (!redumpCompat)
                             info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 
                         info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
@@ -525,7 +525,7 @@ namespace MPF.Core.Processors
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
-                        if (!options.EnableRedumpCompatibility)
+                        if (!redumpCompat)
                             info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 
                         info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);

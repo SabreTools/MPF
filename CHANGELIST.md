@@ -26,6 +26,7 @@
 - Slight tweak to Result class variables
 - Move constants into related classes
 - Separate out artifact generation
+- Reduce surface area of generation method
 
 ### 3.1.9a (2024-05-21)
 
