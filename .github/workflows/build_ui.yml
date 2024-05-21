@@ -47,10 +47,10 @@ jobs:
 
     - name: Bundle Redumper
       run: |
-        wget https://github.com/superg/redumper/releases/download/build_325/redumper-2024.05.06_build325-win64.zip
-        unzip redumper-2024.05.06_build325-win64.zip
+        wget https://github.com/superg/redumper/releases/download/build_329/redumper-2024.05.18_build329-win64.zip
+        unzip redumper-2024.05.18_build329-win64.zip
         mkdir -p MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
-        mv redumper-2024.05.06_build325-win64/bin/redumper.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+        mv redumper-2024.05.18_build329-win64/bin/redumper.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
 
     - name: Archive build
       run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/

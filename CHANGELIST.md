@@ -9,6 +9,7 @@
 - Rename Parameters to ExecutionContext
 - Ensure check-only implementations still work
 - Update to DIC 20240401
+- Update Redumper to build 329
 
 ### 3.1.9a (2024-05-21)
 
