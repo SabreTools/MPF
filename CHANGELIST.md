@@ -16,6 +16,7 @@
 - Use Logiqx model instead of internal one
 - Split some processing code
 - Remove unnecessary field in execution contexts
+- Slight tweak to deal with net20
 
 ### 3.1.9a (2024-05-21)
 

@@ -98,7 +98,7 @@ namespace MPF.Core
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            await ProcessSystem(info, system, drive, options, resultProgress, protectionProgress);
+            _ = await ProcessSystem(info, system, drive, options, resultProgress, protectionProgress);
 
             // Set the category if it's not overriden
             info.CommonDiscInfo!.Category ??= DiscCategory.Games;
@@ -411,7 +411,7 @@ namespace MPF.Core
         /// <summary>
         /// Processes default data based on media type
         /// </summary>
-        private static void ProcessMediaType(SubmissionInfo info, MediaType? mediaType, bool addPlaceholders)
+        private static bool ProcessMediaType(SubmissionInfo info, MediaType? mediaType, bool addPlaceholders)
         {
             switch (mediaType)
             {
@@ -555,12 +555,14 @@ namespace MPF.Core
                     info.TracksAndWriteOffsets!.ClrMameProData = null;
                     break;
             }
+
+            return true;
         }
 
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static async Task ProcessSystem(SubmissionInfo info,
+        private static async Task<bool> ProcessSystem(SubmissionInfo info,
             RedumpSystem? system,
             Drive? drive,
             Data.Options options,
@@ -782,6 +784,8 @@ namespace MPF.Core
                     info.CopyProtection!.Protection ??= options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
             }
+
+            return true;
         }
 
         #endregion
