@@ -657,6 +657,7 @@ namespace MPF.Core.Processors
 
                     info.EDC!.EDC = psEdcStatus.ToYesNo();
                     info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
+                    InfoTool.GetLibCryptDetected(info, basePath);
                     break;
 
                 case RedumpSystem.SonyPlayStation2:

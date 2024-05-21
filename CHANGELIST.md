@@ -14,6 +14,7 @@
 - Fix subfolder issue from previous
 - Remove redundant BinaryReaderExtensions class
 - Use Logiqx model instead of internal one
+- Split some processing code
 
 ### 3.1.9a (2024-05-21)
 

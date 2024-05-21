@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
@@ -37,11 +38,11 @@ namespace MPF.Core
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Options options,
+            Data.Options options,
             BaseExecutionContext? executionContext,
             BaseProcessor? processor,
             IProgress<Result>? resultProgress = null,
-            IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null)
+            IProgress<ProtectionProgress>? protectionProgress = null)
         {
             // Ensure the current disc combination should exist
             if (!system.MediaTypes().Contains(mediaType))
@@ -70,36 +71,8 @@ namespace MPF.Core
             else
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
 
-            var info = new SubmissionInfo()
-            {
-                CommonDiscInfo = new CommonDiscInfoSection()
-                {
-                    System = system,
-                    Media = mediaType.ToDiscType(),
-                    Title = options.AddPlaceholders ? Template.RequiredValue : string.Empty,
-                    ForeignTitleNonLatin = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    DiscNumberLetter = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    DiscTitle = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    Category = null,
-                    Region = null,
-                    Languages = null,
-                    Serial = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
-                    Barcode = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
-                    Contents = string.Empty,
-                },
-                VersionAndEditions = new VersionAndEditionsSection()
-                {
-                    Version = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
-                    OtherEditions = options.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
-                },
-                DumpingInfo = new DumpingInfoSection()
-                {
-                    FrontendVersion = Utilities.Tools.GetCurrentVersion(),
-                },
-            };
-
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
+            // Create the default submission info
+            SubmissionInfo info = CreateDefaultSubmissionInfo(system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
             processor?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
@@ -122,16 +95,334 @@ namespace MPF.Core
                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
+            ProcessMediaType(info, mediaType, options.AddPlaceholders);
+
+            // Extract info based specifically on RedumpSystem
+            await ProcessSystem(info, system, drive, options, resultProgress, protectionProgress);
+
+            // Set the category if it's not overriden
+            info.CommonDiscInfo!.Category ??= DiscCategory.Games;
+
+            // Comments and contents have odd handling
+            if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
+                info.CommonDiscInfo.Comments = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
+            if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
+                info.CommonDiscInfo.Contents = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
+
+            // Normalize the disc type with all current information
+            Validator.NormalizeDiscType(info);
+
+            return info;
+        }
+
+        /// <summary>
+        /// Fill in a SubmissionInfo object from Redump, if possible
+        /// </summary>
+        /// <param name="options">Options object representing user-defined options</param>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="resultProgress">Optional result progress callback</param>
+#if NET40
+        public static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#else
+        public async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+#endif
+        {
+            // If no username is provided
+            if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
+                return false;
+
+            // Set the current dumper based on username
+            info.DumpersAndStatus ??= new DumpersAndStatusSection();
+            info.DumpersAndStatus.Dumpers = [options.RedumpUsername!];
+            info.PartiallyMatchedIDs = [];
+
+            // Login to Redump
+#if NETFRAMEWORK
+            using var wc = new RedumpWebClient();
+            bool? loggedIn = wc.Login(options.RedumpUsername!, options.RedumpPassword!);
+#else
+            using var wc = new RedumpHttpClient();
+            bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+#endif
+            if (loggedIn == null)
+            {
+                resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
+                return false;
+            }
+            else if (loggedIn == false)
+            {
+                // Don't log the as a failure or error
+                return false;
+            }
+
+            // Setup the full-track checks
+            bool allFound = true;
+            List<int>? fullyMatchedIDs = null;
+
+            // Loop through all of the hashdata to find matching IDs
+            resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
+            var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
+            int trackCount = splitData?.Length ?? 0;
+            foreach (string hashData in splitData ?? [])
+            {
+                // Catch any errant blank lines
+                if (string.IsNullOrEmpty(hashData))
+                {
+                    trackCount--;
+                    resultProgress?.Report(Result.Success("Blank line found, skipping!"));
+                    continue;
+                }
+
+                // If the line ends in a known extra track names, skip them for checking
+                if (hashData.Contains("(Track 0).bin")
+                    || hashData.Contains("(Track 0.2).bin")
+                    || hashData.Contains("(Track 00).bin")
+                    || hashData.Contains("(Track 00.2).bin")
+                    || hashData.Contains("(Track A).bin")
+                    || hashData.Contains("(Track A.2).bin")
+                    || hashData.Contains("(Track AA).bin")
+                    || hashData.Contains("(Track AA.2).bin"))
+                {
+                    trackCount--;
+                    resultProgress?.Report(Result.Success("Extra track found, skipping!"));
+                    continue;
+                }
+
+                // Get the SHA-1 hash
+                if (!InfoTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
+                {
+                    resultProgress?.Report(Result.Failure($"Line could not be parsed: {hashData}"));
+                    continue;
+                }
+
+#if NET40
+                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1);
+                validateTask.Wait();
+                (bool singleFound, var foundIds, string? result) = validateTask.Result;
+#else
+                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
+#endif
+                if (singleFound)
+                    resultProgress?.Report(Result.Success(result));
+                else
+                    resultProgress?.Report(Result.Failure(result));
+
+                // Ensure that all tracks are found
+                allFound &= singleFound;
+
+                // If we found a track, only keep track of distinct found tracks
+                if (singleFound && foundIds != null)
+                {
+                    if (fullyMatchedIDs == null)
+                        fullyMatchedIDs = foundIds;
+                    else
+                        fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
+                }
+                // If no tracks were found, remove all fully matched IDs found so far
+                else
+                {
+                    fullyMatchedIDs = [];
+                }
+            }
+
+            // If we don't have any matches but we have a universal hash
+            if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+            {
+#if NET40
+                var validateTask = Validator.ValidateUniversalHash(wc, info);
+                validateTask.Wait();
+                (bool singleFound, var foundIds, string? result) = validateTask.Result;
+#else
+                (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
+#endif
+                if (singleFound)
+                    resultProgress?.Report(Result.Success(result));
+                else
+                    resultProgress?.Report(Result.Failure(result));
+
+                // Ensure that the hash is found
+                allFound = singleFound;
+
+                // If we found a track, only keep track of distinct found tracks
+                if (singleFound && foundIds != null)
+                {
+                    fullyMatchedIDs = foundIds;
+                }
+                // If no tracks were found, remove all fully matched IDs found so far
+                else
+                {
+                    fullyMatchedIDs = [];
+                }
+            }
+
+            // Make sure we only have unique IDs
+            info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
+
+            resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
+                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs.Select(i => i.ToString()).ToArray())
+                : "No matches found")));
+
+            // Exit early if one failed or there are no matched IDs
+            if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
+                return false;
+
+            // Find the first matched ID where the track count matches, we can grab a bunch of info from it
+            int totalMatchedIDsCount = fullyMatchedIDs.Count;
+            for (int i = 0; i < totalMatchedIDsCount; i++)
+            {
+                // Skip if the track count doesn't match
+#if NET40
+                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount);
+                validateTask.Wait();
+                if (!validateTask.Result)
+#else
+                if (!await Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+#endif
+                    continue;
+
+                // Fill in the fields from the existing ID
+                resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+#if NET40
+                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
+                fillTask.Wait();
+                _ = fillTask.Result;
+#else
+                _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+#endif
+                resultProgress?.Report(Result.Success("Information filling complete!"));
+
+                // Set the fully matched ID to the current
+                info.FullyMatchedID = fullyMatchedIDs[i];
+                break;
+            }
+
+            // Clear out fully matched IDs from the partial list
+            if (info.FullyMatchedID.HasValue)
+            {
+                if (info.PartiallyMatchedIDs.Count == 1)
+                    info.PartiallyMatchedIDs = null;
+                else
+                    info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Helper Functions
+
+        /// <summary>
+        /// Creates a default SubmissionInfo object based on the current system and media type
+        /// </summary>
+        private static SubmissionInfo CreateDefaultSubmissionInfo(RedumpSystem? system, MediaType? mediaType, bool addPlaceholders)
+        {
+            // Create the template object
+            var info = new SubmissionInfo()
+            {
+                CommonDiscInfo = new CommonDiscInfoSection()
+                {
+                    System = system,
+                    Media = mediaType.ToDiscType(),
+                    Title = addPlaceholders ? Template.RequiredValue : string.Empty,
+                    ForeignTitleNonLatin = addPlaceholders ? Template.OptionalValue : string.Empty,
+                    DiscNumberLetter = addPlaceholders ? Template.OptionalValue : string.Empty,
+                    DiscTitle = addPlaceholders ? Template.OptionalValue : string.Empty,
+                    Category = null,
+                    Region = null,
+                    Languages = null,
+                    Serial = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
+                    Barcode = addPlaceholders ? Template.OptionalValue : string.Empty,
+                    Contents = string.Empty,
+                },
+                VersionAndEditions = new VersionAndEditionsSection()
+                {
+                    Version = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
+                    OtherEditions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
+                },
+                DumpingInfo = new DumpingInfoSection()
+                {
+                    FrontendVersion = Utilities.Tools.GetCurrentVersion(),
+                },
+            };
+
+            // Ensure that required sections exist
+            info = Builder.EnsureAllSections(info);
+            return info;
+        }
+
+        /// <summary>
+        /// Formats a list of volume labels and their corresponding filesystems
+        /// </summary>
+        /// <param name="labels">Dictionary of volume labels and their filesystems</param>
+        /// <returns>Formatted string of volume labels and their filesystems</returns>
+        private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
+        {
+            // Must have at least one label to format
+            if (driveLabel == null && (labels == null || labels.Count == 0))
+                return null;
+
+            // If no labels given, use drive label
+            if (labels == null || labels.Count == 0)
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                    return null;
+
+                return driveLabel;
+            }
+
+            // If only one label, don't mention fs
+            string firstLabel = labels.First().Key;
+            if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
+                    return null;
+
+                return firstLabel;
+            }
+
+            // Otherwise, state filesystem for each label
+            List<string> volLabels = [];
+
+            // Begin formatted output with the label from Windows, if it is unique and not a common volume label
+            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
+                volLabels.Add(driveLabel);
+
+            // Add remaining labels with their corresponding filesystems
+            foreach (KeyValuePair<string, List<string>> label in labels)
+            {
+                // Ignore common volume labels
+                if (Drive.GetRedumpSystemFromVolumeLabel(label.Key) == null)
+                    volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
+            }
+
+            // Ensure that no labels are empty
+            volLabels = volLabels.Where(l => !string.IsNullOrEmpty(l?.Trim())).ToList();
+
+            // Print each label separated by a comma and a space
+            if (volLabels.Count == 0)
+                return null;
+
+            return string.Join(", ", [.. volLabels]);
+        }
+
+        /// <summary>
+        /// Processes default data based on media type
+        /// </summary>
+        private static void ProcessMediaType(SubmissionInfo info, MediaType? mediaType, bool addPlaceholders)
+        {
             switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
 
                 case MediaType.DVD:
@@ -141,78 +432,78 @@ namespace MPF.Core
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums!.Layerbreak == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else if (info.SizeAndChecksums!.Layerbreak2 == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a triple-layer disc
                     else if (info.SizeAndChecksums!.Layerbreak3 == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a quad-layer disc
                     else
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer3MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer3MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer3ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.Extras!.BCA ??= (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
+                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.Extras!.BCA ??= (addPlaceholders ? Template.RequiredValue : string.Empty);
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
@@ -220,51 +511,62 @@ namespace MPF.Core
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums!.Layerbreak == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.Extras!.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
-                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
+                    info.Extras!.DiscKey = addPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.Extras.BCA = info.Extras.BCA ?? (addPlaceholders ? Template.RequiredValue : string.Empty);
 
                     break;
 
                 case MediaType.UMD:
                     // Both single- and dual-layer discs have two "layers" for the ring
-                    info.CommonDiscInfo!.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                    info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                    info.SizeAndChecksums!.CRC32 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 ??= (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.TracksAndWriteOffsets.ClrMameProData = null;
+                    info.SizeAndChecksums!.CRC32 ??= (addPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.MD5 ??= (addPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.SHA1 ??= (addPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.TracksAndWriteOffsets!.ClrMameProData = null;
                     break;
             }
+        }
 
+        /// <summary>
+        /// Processes default data based on system type
+        /// </summary>
+        private static async Task ProcessSystem(SubmissionInfo info,
+            RedumpSystem? system,
+            Drive? drive,
+            Data.Options options,
+            IProgress<Result>? resultProgress = null,
+            IProgress<ProtectionProgress>? protectionProgress = null)
+        {
             // Extract info based specifically on RedumpSystem
             switch (system)
             {
@@ -460,14 +762,6 @@ namespace MPF.Core
                         resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
                     }
 
-                    // Special case for DIC only
-                    if (executionContext?.InternalProgram == InternalProgram.DiscImageCreator)
-                    {
-                        resultProgress?.Report(Result.Success("Checking for LibCrypt status... this might take a while!"));
-                        InfoTool.GetLibCryptDetected(info, combinedBase);
-                        resultProgress?.Report(Result.Success("LibCrypt status checking complete!"));
-                    }
-
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -488,274 +782,6 @@ namespace MPF.Core
                     info.CopyProtection!.Protection ??= options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
             }
-
-            // Set the category if it's not overriden
-            info.CommonDiscInfo!.Category ??= DiscCategory.Games;
-
-            // Comments and contents have odd handling
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
-
-            // Normalize the disc type with all current information
-            Validator.NormalizeDiscType(info);
-
-            return info;
-        }
-
-        /// <summary>
-        /// Fill in a SubmissionInfo object from Redump, if possible
-        /// </summary>
-        /// <param name="options">Options object representing user-defined options</param>
-        /// <param name="info">Existing SubmissionInfo object to fill</param>
-        /// <param name="resultProgress">Optional result progress callback</param>
-#if NET40
-        public static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#else
-        public async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
-#endif
-        {
-            // If no username is provided
-            if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
-                return false;
-
-            // Set the current dumper based on username
-            info.DumpersAndStatus ??= new DumpersAndStatusSection();
-            info.DumpersAndStatus.Dumpers = [options.RedumpUsername!];
-            info.PartiallyMatchedIDs = [];
-
-            // Login to Redump
-#if NETFRAMEWORK
-            using var wc = new RedumpWebClient();
-            bool? loggedIn = wc.Login(options.RedumpUsername!, options.RedumpPassword!);
-#else
-            using var wc = new RedumpHttpClient();
-            bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
-#endif
-            if (loggedIn == null)
-            {
-                resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
-                return false;
-            }
-            else if (loggedIn == false)
-            {
-                // Don't log the as a failure or error
-                return false;
-            }
-
-            // Setup the full-track checks
-            bool allFound = true;
-            List<int>? fullyMatchedIDs = null;
-
-            // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-            var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
-            int trackCount = splitData?.Length ?? 0;
-            foreach (string hashData in splitData ?? [])
-            {
-                // Catch any errant blank lines
-                if (string.IsNullOrEmpty(hashData))
-                {
-                    trackCount--;
-                    resultProgress?.Report(Result.Success("Blank line found, skipping!"));
-                    continue;
-                }
-
-                // If the line ends in a known extra track names, skip them for checking
-                if (hashData.Contains("(Track 0).bin")
-                    || hashData.Contains("(Track 0.2).bin")
-                    || hashData.Contains("(Track 00).bin")
-                    || hashData.Contains("(Track 00.2).bin")
-                    || hashData.Contains("(Track A).bin")
-                    || hashData.Contains("(Track A.2).bin")
-                    || hashData.Contains("(Track AA).bin")
-                    || hashData.Contains("(Track AA.2).bin"))
-                {
-                    trackCount--;
-                    resultProgress?.Report(Result.Success("Extra track found, skipping!"));
-                    continue;
-                }
-
-                // Get the SHA-1 hash
-                if (!InfoTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
-                {
-                    resultProgress?.Report(Result.Failure($"Line could not be parsed: {hashData}"));
-                    continue;
-                }
-
-#if NET40
-                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1);
-                validateTask.Wait();
-                (bool singleFound, var foundIds, string? result) = validateTask.Result;
-#else
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
-#endif
-                if (singleFound)
-                    resultProgress?.Report(Result.Success(result));
-                else
-                    resultProgress?.Report(Result.Failure(result));
-
-                // Ensure that all tracks are found
-                allFound &= singleFound;
-
-                // If we found a track, only keep track of distinct found tracks
-                if (singleFound && foundIds != null)
-                {
-                    if (fullyMatchedIDs == null)
-                        fullyMatchedIDs = foundIds;
-                    else
-                        fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
-                }
-                // If no tracks were found, remove all fully matched IDs found so far
-                else
-                {
-                    fullyMatchedIDs = [];
-                }
-            }
-
-            // If we don't have any matches but we have a universal hash
-            if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
-            {
-#if NET40
-                var validateTask = Validator.ValidateUniversalHash(wc, info);
-                validateTask.Wait();
-                (bool singleFound, var foundIds, string? result) = validateTask.Result;
-#else
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
-#endif
-                if (singleFound)
-                    resultProgress?.Report(Result.Success(result));
-                else
-                    resultProgress?.Report(Result.Failure(result));
-
-                // Ensure that the hash is found
-                allFound = singleFound;
-
-                // If we found a track, only keep track of distinct found tracks
-                if (singleFound && foundIds != null)
-                {
-                    fullyMatchedIDs = foundIds;
-                }
-                // If no tracks were found, remove all fully matched IDs found so far
-                else
-                {
-                    fullyMatchedIDs = [];
-                }
-            }
-
-            // Make sure we only have unique IDs
-            info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
-
-            resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
-                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs.Select(i => i.ToString()).ToArray())
-                : "No matches found")));
-
-            // Exit early if one failed or there are no matched IDs
-            if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
-                return false;
-
-            // Find the first matched ID where the track count matches, we can grab a bunch of info from it
-            int totalMatchedIDsCount = fullyMatchedIDs.Count;
-            for (int i = 0; i < totalMatchedIDsCount; i++)
-            {
-                // Skip if the track count doesn't match
-#if NET40
-                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount);
-                validateTask.Wait();
-                if (!validateTask.Result)
-#else
-                if (!await Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
-#endif
-                    continue;
-
-                // Fill in the fields from the existing ID
-                resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET40
-                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
-                fillTask.Wait();
-                _ = fillTask.Result;
-#else
-                _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
-#endif
-                resultProgress?.Report(Result.Success("Information filling complete!"));
-
-                // Set the fully matched ID to the current
-                info.FullyMatchedID = fullyMatchedIDs[i];
-                break;
-            }
-
-            // Clear out fully matched IDs from the partial list
-            if (info.FullyMatchedID.HasValue)
-            {
-                if (info.PartiallyMatchedIDs.Count == 1)
-                    info.PartiallyMatchedIDs = null;
-                else
-                    info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
-            }
-
-            return true;
-        }
-
-        #endregion
-
-        #region Helper Functions
-
-        /// <summary>
-        /// Formats a list of volume labels and their corresponding filesystems
-        /// </summary>
-        /// <param name="labels">Dictionary of volume labels and their filesystems</param>
-        /// <returns>Formatted string of volume labels and their filesystems</returns>
-        private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
-        {
-            // Must have at least one label to format
-            if (driveLabel == null && (labels == null || labels.Count == 0))
-                return null;
-
-            // If no labels given, use drive label
-            if (labels == null || labels.Count == 0)
-            {
-                // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
-                    return null;
-
-                return driveLabel;
-            }
-
-            // If only one label, don't mention fs
-            string firstLabel = labels.First().Key;
-            if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
-            {
-                // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
-                    return null;
-
-                return firstLabel;
-            }
-
-            // Otherwise, state filesystem for each label
-            List<string> volLabels = [];
-            
-            // Begin formatted output with the label from Windows, if it is unique and not a common volume label
-            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
-                volLabels.Add(driveLabel);
-
-            // Add remaining labels with their corresponding filesystems
-            foreach (KeyValuePair<string, List<string>> label in labels)
-            {
-                // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(label.Key) == null)
-                    volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
-            }
-
-            // Ensure that no labels are empty
-            volLabels = volLabels.Where(l => !string.IsNullOrEmpty(l?.Trim())).ToList();
-
-            // Print each label separated by a comma and a space
-            if (volLabels.Count == 0)
-                return null;
-
-            return string.Join(", ", [.. volLabels]);
         }
 
         #endregion
