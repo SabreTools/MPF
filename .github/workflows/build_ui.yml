@@ -33,17 +33,7 @@ jobs:
         wget https://github.com/saramibreak/DiscImageCreator/files/14824363/DiscImageCreator_20240401.zip
         unzip DiscImageCreator_20240401.zip
         mkdir -p MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator
-        mv Release_ANSI/C2ErrorProtect.txt MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/default.dat MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/DiscImageCreator.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/driveOffset.txt MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/DVDAuth.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/EccEdc.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/E_WISE.INI MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/E_WISE_W.EXE MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/i6comp.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/ReadErrorProtect.txt MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
-        mv Release_ANSI/unscrambler.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
+        mv * MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
 
     - name: Bundle Redumper
       run: |
