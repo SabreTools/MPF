@@ -27,6 +27,7 @@
 - Move constants into related classes
 - Separate out artifact generation
 - Reduce surface area of generation method
+- Make GetLogFilePaths required
 
 ### 3.1.9a (2024-05-21)
 

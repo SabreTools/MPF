@@ -67,6 +67,13 @@ namespace MPF.Core.Processors
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive? drive, bool redumpCompat);
 
+        /// <summary>
+        /// Generate a list of all log files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        public abstract List<string> GetLogFilePaths(string basePath);
+
         #endregion
 
         #region Virtual Methods
@@ -77,13 +84,6 @@ namespace MPF.Core.Processors
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
         public virtual List<string> GetDeleteableFilePaths(string basePath) => [];
-
-        /// <summary>
-        /// Generate a list of all log files generated
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all log file paths, empty otherwise</returns>
-        public virtual List<string> GetLogFilePaths(string basePath) => [];
 
         #endregion
 
