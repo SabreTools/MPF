@@ -167,6 +167,68 @@ namespace MPF.Core.ExecutionContexts.Redumper
         #region BaseExecutionContext Implementations
 
         /// <inheritdoc/>
+        /// <remarks>Command support is irrelevant for redumper</remarks>
+        public override Dictionary<string, List<string>> GetCommandSupport()
+        {
+            return new Dictionary<string, List<string>>()
+            {
+                [CommandStrings.NONE] =
+                [
+                    // General
+                    FlagStrings.HelpLong,
+                    FlagStrings.HelpShort,
+                    FlagStrings.Version,
+                    FlagStrings.Verbose,
+                    FlagStrings.Debug,
+                    FlagStrings.Drive,
+                    FlagStrings.Speed,
+                    FlagStrings.Retries,
+                    FlagStrings.ImagePath,
+                    FlagStrings.ImageName,
+                    FlagStrings.Overwrite,
+
+                    // Drive Configuration
+                    FlagStrings.DriveType,
+                    FlagStrings.DriveReadOffset,
+                    FlagStrings.DriveC2Shift,
+                    FlagStrings.DrivePregapStart,
+                    FlagStrings.DriveReadMethod,
+                    FlagStrings.DriveSectorOrder,
+
+                    // Drive Specific
+                    FlagStrings.PlextorSkipLeadin,
+                    FlagStrings.PlextorLeadinRetries,
+                    FlagStrings.AsusSkipLeadout,
+
+                    // Offset
+                    FlagStrings.ForceOffset,
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CorrectOffsetShift,
+                    FlagStrings.OffsetShiftRelocate,
+
+                    // Split
+                    FlagStrings.ForceSplit,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.SkipFill,
+                    FlagStrings.ISO9660Trim,
+
+                    // Miscellaneous
+                    FlagStrings.LBAStart,
+                    FlagStrings.LBAEnd,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Skip,
+                    FlagStrings.DumpWriteOffset,
+                    FlagStrings.DumpReadSize,
+                    FlagStrings.OverreadLeadout,
+                    FlagStrings.ForceUnscrambled,
+                    FlagStrings.LegacySubs,
+                    FlagStrings.DisableCDText,
+                ],
+            };
+        }
+
+        /// <inheritdoc/>
         /// <remarks>
         /// Redumper is unique in that the base command can be multiple
         /// modes all listed together. It is also unique in that "all
@@ -421,69 +483,10 @@ namespace MPF.Core.ExecutionContexts.Redumper
         }
 
         /// <inheritdoc/>
-        /// <remarks>Command support is irrelevant for redumper</remarks>
-        public override Dictionary<string, List<string>> GetCommandSupport()
-        {
-            return new Dictionary<string, List<string>>()
-            {
-                [CommandStrings.NONE] =
-                [
-                    // General
-                    FlagStrings.HelpLong,
-                    FlagStrings.HelpShort,
-                    FlagStrings.Version,
-                    FlagStrings.Verbose,
-                    FlagStrings.Debug,
-                    FlagStrings.Drive,
-                    FlagStrings.Speed,
-                    FlagStrings.Retries,
-                    FlagStrings.ImagePath,
-                    FlagStrings.ImageName,
-                    FlagStrings.Overwrite,
-
-                    // Drive Configuration
-                    FlagStrings.DriveType,
-                    FlagStrings.DriveReadOffset,
-                    FlagStrings.DriveC2Shift,
-                    FlagStrings.DrivePregapStart,
-                    FlagStrings.DriveReadMethod,
-                    FlagStrings.DriveSectorOrder,
-
-                    // Drive Specific
-                    FlagStrings.PlextorSkipLeadin,
-                    FlagStrings.PlextorLeadinRetries,
-                    FlagStrings.AsusSkipLeadout,
-
-                    // Offset
-                    FlagStrings.ForceOffset,
-                    FlagStrings.AudioSilenceThreshold,
-                    FlagStrings.CorrectOffsetShift,
-                    FlagStrings.OffsetShiftRelocate,
-
-                    // Split
-                    FlagStrings.ForceSplit,
-                    FlagStrings.LeaveUnchanged,
-                    FlagStrings.ForceQTOC,
-                    FlagStrings.SkipFill,
-                    FlagStrings.ISO9660Trim,
-
-                    // Miscellaneous
-                    FlagStrings.LBAStart,
-                    FlagStrings.LBAEnd,
-                    FlagStrings.RefineSubchannel,
-                    FlagStrings.Skip,
-                    FlagStrings.DumpWriteOffset,
-                    FlagStrings.DumpReadSize,
-                    FlagStrings.OverreadLeadout,
-                    FlagStrings.ForceUnscrambled,
-                    FlagStrings.LegacySubs,
-                    FlagStrings.DisableCDText,
-                ],
-            };
-        }
+        public override string? GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
-        public override string? GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+        public override MediaType? GetMediaType() => null;
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()

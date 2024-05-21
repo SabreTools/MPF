@@ -148,54 +148,38 @@ namespace MPF.Core.ExecutionContexts
             SetDefaultParameters(drivePath, filename, driveSpeed, options);
         }
 
-        #region Virtual Methods
+        #region Abstract Methods
 
         /// <summary>
         /// Get all commands mapped to the supported flags
         /// </summary>
         /// <returns>Mappings from command to supported flags</returns>
-        public virtual Dictionary<string, List<string>>? GetCommandSupport() => null;
+        public abstract Dictionary<string, List<string>>? GetCommandSupport();
 
         /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Parameter string for invocation, null on error</returns>
-        public virtual string? GenerateParameters() => null;
+        public abstract string? GenerateParameters();
 
         /// <summary>
         /// Get the default extension for a given media type
         /// </summary>
         /// <param name="mediaType">MediaType value to check</param>
         /// <returns>String representing the media type, null on error</returns>
-        public virtual string? GetDefaultExtension(MediaType? mediaType) => null;
+        public abstract string? GetDefaultExtension(MediaType? mediaType);
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
         /// </summary>
         /// <returns>MediaType value if successful, null on error</returns>
-        public virtual MediaType? GetMediaType() => null;
+        public abstract MediaType? GetMediaType();
 
         /// <summary>
         /// Gets if the current command is considered a dumping command or not
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
-        public virtual bool IsDumpingCommand() => true;
-
-        /// <summary>
-        /// Gets if the flag is supported by the current command
-        /// </summary>
-        /// <param name="flag">Flag value to check</param>
-        /// <returns>True if the flag value is supported, false otherwise</returns>
-        public virtual bool IsFlagSupported(string flag)
-        {
-            if (CommandSupport == null)
-                return false;
-            if (this.BaseCommand == null)
-                return false;
-            if (!CommandSupport.TryGetValue(this.BaseCommand, out var supported))
-                return false;
-            return supported.Contains(flag);
-        }
+        public abstract bool IsDumpingCommand();
 
         /// <summary>
         /// Returns if the current Parameter object is valid
@@ -206,7 +190,7 @@ namespace MPF.Core.ExecutionContexts
         /// <summary>
         /// Reset all special variables to have default values
         /// </summary>
-        protected virtual void ResetValues() { }
+        protected abstract void ResetValues();
 
         /// <summary>
         /// Set default parameters for a given system and media type
@@ -215,14 +199,14 @@ namespace MPF.Core.ExecutionContexts
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-        protected virtual void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options) { }
+        protected abstract void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options);
 
         /// <summary>
         /// Scan a possible parameter string and populate whatever possible
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
-        protected virtual bool ValidateAndSetParameters(string? parameters) => !string.IsNullOrEmpty(parameters);
+        protected abstract bool ValidateAndSetParameters(string? parameters);
 
         #endregion
 
@@ -330,6 +314,22 @@ namespace MPF.Core.ExecutionContexts
             }
 
             return File.ReadAllText(filename);
+        }
+
+        /// <summary>
+        /// Gets if the flag is supported by the current command
+        /// </summary>
+        /// <param name="flag">Flag value to check</param>
+        /// <returns>True if the flag value is supported, false otherwise</returns>
+        protected bool IsFlagSupported(string flag)
+        {
+            if (CommandSupport == null)
+                return false;
+            if (this.BaseCommand == null)
+                return false;
+            if (!CommandSupport.TryGetValue(this.BaseCommand, out var supported))
+                return false;
+            return supported.Contains(flag);
         }
 
         /// <summary>

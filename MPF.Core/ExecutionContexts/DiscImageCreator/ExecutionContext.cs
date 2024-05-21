@@ -175,6 +175,217 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
         #region BaseExecutionContext Implementations
 
         /// <inheritdoc/>
+        public override Dictionary<string, List<string>> GetCommandSupport()
+        {
+            return new Dictionary<string, List<string>>()
+            {
+                [CommandStrings.Audio] =
+                [
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.Tages,
+                ],
+
+                [CommandStrings.BluRay] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                ],
+
+                [CommandStrings.Close] = [],
+
+                [CommandStrings.CompactDisc] =
+                [
+                    FlagStrings.AddOffset,
+                    FlagStrings.AMSF,
+                    FlagStrings.AtariJaguar,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ExtractMicroSoftCabFile,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSectorRead,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                ],
+
+                [CommandStrings.Data] =
+                [
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.Tages,
+                ],
+
+                [CommandStrings.DigitalVideoDisc] =
+                [
+                    FlagStrings.CopyrightManagementInformation,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
+                    FlagStrings.Fix,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.PadSector,
+                    FlagStrings.Range,
+                    FlagStrings.Raw,
+                    FlagStrings.Resume,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                ],
+
+                [CommandStrings.Disk] =
+                [
+                    FlagStrings.DatExpand,
+                ],
+
+                [CommandStrings.DriveSpeed] = [],
+
+                [CommandStrings.Eject] = [],
+
+                [CommandStrings.Floppy] =
+                [
+                    FlagStrings.DatExpand,
+                ],
+
+                [CommandStrings.GDROM] =
+                [
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.SubchannelReadLevel,
+                ],
+
+                [CommandStrings.MDS] = [],
+
+                [CommandStrings.Merge] = [],
+
+                [CommandStrings.Reset] = [],
+
+                [CommandStrings.SACD] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                ],
+
+                [CommandStrings.Start] = [],
+
+                [CommandStrings.Stop] = [],
+
+                [CommandStrings.Sub] = [],
+
+                [CommandStrings.Swap] =
+                [
+                    FlagStrings.AddOffset,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                ],
+
+                [CommandStrings.Tape] = [],
+
+                [CommandStrings.Version] = [],
+
+                [CommandStrings.XBOX] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                ],
+
+                [CommandStrings.XBOXSwap] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                ],
+
+                [CommandStrings.XGD2Swap] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                ],
+
+                [CommandStrings.XGD3Swap] =
+                [
+                    FlagStrings.DatExpand,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                ],
+            };
+        }
+
+        /// <inheritdoc/>
         public override string? GenerateParameters()
         {
             var parameters = new List<string>();
@@ -673,217 +884,6 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
             }
 
             return string.Join(" ", [.. parameters]);
-        }
-
-        /// <inheritdoc/>
-        public override Dictionary<string, List<string>> GetCommandSupport()
-        {
-            return new Dictionary<string, List<string>>()
-            {
-                [CommandStrings.Audio] =
-                [
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SkipSector,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.Tages,
-                ],
-
-                [CommandStrings.BluRay] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.DVDReread,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
-                ],
-
-                [CommandStrings.Close] = [],
-
-                [CommandStrings.CompactDisc] =
-                [
-                    FlagStrings.AddOffset,
-                    FlagStrings.AMSF,
-                    FlagStrings.AtariJaguar,
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ExtractMicroSoftCabFile,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSectorRead,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubQLibCrypt,
-                    FlagStrings.NoFixSubQSecuROM,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SeventyFour,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.VideoNow,
-                    FlagStrings.VideoNowColor,
-                    FlagStrings.VideoNowXP,
-                ],
-
-                [CommandStrings.Data] =
-                [
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SkipSector,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.Tages,
-                ],
-
-                [CommandStrings.DigitalVideoDisc] =
-                [
-                    FlagStrings.CopyrightManagementInformation,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.DVDReread,
-                    FlagStrings.Fix,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.PadSector,
-                    FlagStrings.Range,
-                    FlagStrings.Raw,
-                    FlagStrings.Resume,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.SkipSector,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
-                ],
-
-                [CommandStrings.Disk] =
-                [
-                    FlagStrings.DatExpand,
-                ],
-
-                [CommandStrings.DriveSpeed] = [],
-
-                [CommandStrings.Eject] = [],
-
-                [CommandStrings.Floppy] =
-                [
-                    FlagStrings.DatExpand,
-                ],
-
-                [CommandStrings.GDROM] =
-                [
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.SubchannelReadLevel,
-                ],
-
-                [CommandStrings.MDS] = [],
-
-                [CommandStrings.Merge] = [],
-
-                [CommandStrings.Reset] = [],
-
-                [CommandStrings.SACD] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                ],
-
-                [CommandStrings.Start] = [],
-
-                [CommandStrings.Stop] = [],
-
-                [CommandStrings.Sub] = [],
-
-                [CommandStrings.Swap] =
-                [
-                    FlagStrings.AddOffset,
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubQLibCrypt,
-                    FlagStrings.NoFixSubQSecuROM,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SeventyFour,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.VideoNow,
-                    FlagStrings.VideoNowColor,
-                    FlagStrings.VideoNowXP,
-                ],
-
-                [CommandStrings.Tape] = [],
-
-                [CommandStrings.Version] = [],
-
-                [CommandStrings.XBOX] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.DVDReread,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                ],
-
-                [CommandStrings.XBOXSwap] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                ],
-
-                [CommandStrings.XGD2Swap] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                ],
-
-                [CommandStrings.XGD3Swap] =
-                [
-                    FlagStrings.DatExpand,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                ],
-            };
         }
 
         /// <inheritdoc/>
