@@ -22,6 +22,7 @@
 - Invert using statement in dump environment
 - Make options internal to dump environment
 - Split constants files into component parts
+- Remove odd code from Result class
 
 ### 3.1.9a (2024-05-21)
 
