@@ -31,13 +31,6 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
 
         #endregion
 
-        #region Metadata
-
-        /// <inheritdoc/>
-        public override InternalProgram InternalProgram => InternalProgram.DiscImageCreator;
-
-        #endregion
-
         #region Common Input Values
 
         /// <summary>

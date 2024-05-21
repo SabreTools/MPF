@@ -26,13 +26,6 @@ namespace MPF.Core.ExecutionContexts.Redumper
 
         #endregion
 
-        #region Metadata
-
-        /// <inheritdoc/>
-        public override InternalProgram InternalProgram => InternalProgram.Redumper;
-
-        #endregion
-
         #region Flag Values
 
         /// <summary>

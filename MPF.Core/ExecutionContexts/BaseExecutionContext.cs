@@ -110,11 +110,6 @@ namespace MPF.Core.ExecutionContexts
         public string? ExecutablePath { get; set; }
 
         /// <summary>
-        /// Program that this set of parameters represents
-        /// </summary>
-        public virtual InternalProgram InternalProgram { get; }
-
-        /// <summary>
         /// Currently represented system
         /// </summary>
         public RedumpSystem? System { get; set; }

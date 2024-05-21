@@ -29,13 +29,6 @@ namespace MPF.Core.ExecutionContexts.Aaru
 
         #endregion
 
-        #region Metadata
-
-        /// <inheritdoc/>
-        public override InternalProgram InternalProgram => InternalProgram.Aaru;
-
-        #endregion
-
         #region Flag Values
 
         public int? BlockSizeValue { get; set; }
