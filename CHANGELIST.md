@@ -1,3 +1,7 @@
+### 3.1.9a (2024-05-21)
+
+- Fix dictionary error in Redumper parsing
+
 ### 3.1.9 (2024-05-19)
 
 - Update Redumper to build 325
