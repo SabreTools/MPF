@@ -13,7 +13,7 @@ namespace MPF.Core.Processors
     /// <summary>
     /// Represents processing Xbox Backup Creator outputs
     /// </summary>
-    public class XboxBackupCreator : BaseProcessor
+    public sealed class XboxBackupCreator : BaseProcessor
     {
         /// <inheritdoc/>
         public XboxBackupCreator(RedumpSystem? system, MediaType? type) : base(system, type) { }

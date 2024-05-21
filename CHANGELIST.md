@@ -2,6 +2,7 @@
 
 - Create currently-unused processors
 - Move DataFile to Core.Data
+- Seal XBC processor
 
 ### 3.1.9a (2024-05-21)
 
