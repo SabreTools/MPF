@@ -19,6 +19,7 @@
 - Slight tweak to deal with net20
 - Make some methods required for override
 - Remove dcdumper until further notice
+- Invert using statement in dump environment
 
 ### 3.1.9a (2024-05-21)
 

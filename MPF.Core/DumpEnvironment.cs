@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
@@ -301,7 +302,7 @@ namespace MPF.Core
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result>? resultProgress = null,
-            IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null,
+            IProgress<ProtectionProgress>? protectionProgress = null,
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
