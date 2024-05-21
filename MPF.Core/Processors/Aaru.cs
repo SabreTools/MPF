@@ -32,7 +32,7 @@ namespace MPF.Core.Processors
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
@@ -124,7 +124,7 @@ namespace MPF.Core.Processors
             // Fill in the hash data
             info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
 
-            switch (this.Type)
+            switch (Type)
             {
                 // TODO: Can this do GD-ROM?
                 case MediaType.CDROM:
@@ -164,9 +164,9 @@ namespace MPF.Core.Processors
 
                     // Deal with the layerbreak
                     string? layerbreak = null;
-                    if (this.Type == MediaType.DVD)
+                    if (Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
-                    else if (this.Type == MediaType.BluRay)
+                    else if (Type == MediaType.BluRay)
                         layerbreak = info.SizeAndChecksums!.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
@@ -186,7 +186,7 @@ namespace MPF.Core.Processors
                     break;
             }
 
-            switch (this.System)
+            switch (System)
             {
                 // TODO: Can we get SecuROM data?
                 // TODO: Can we get SS version/ranges?
@@ -314,7 +314,7 @@ namespace MPF.Core.Processors
         public override List<string> GetLogFilePaths(string basePath)
         {
             var logFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                     if (File.Exists($"{basePath}.cicm.xml"))

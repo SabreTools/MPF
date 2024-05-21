@@ -24,7 +24,7 @@ namespace MPF.Core.Processors
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.UMD:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
@@ -64,7 +64,7 @@ namespace MPF.Core.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on MediaType
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.UMD:
                     info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
@@ -124,7 +124,7 @@ namespace MPF.Core.Processors
         public override List<string> GetLogFilePaths(string basePath)
         {
             var logFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.UMD:
                     if (File.Exists($"{basePath}_disc.txt"))

@@ -24,7 +24,7 @@ namespace MPF.Core.Processors
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
@@ -75,7 +75,7 @@ namespace MPF.Core.Processors
             }
 
             // Extract info based generically on MediaType
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
@@ -110,7 +110,7 @@ namespace MPF.Core.Processors
         public override List<string> GetLogFilePaths(string basePath)
         {
             var logFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:

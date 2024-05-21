@@ -5,6 +5,7 @@
 - Seal XBC processor
 - Migrate processor functionality
 - Remove now-unneeded parameters classes
+- Simplify access within processors
 
 ### 3.1.9a (2024-05-21)
 

@@ -24,7 +24,7 @@ namespace MPF.Core.Processors
         {
             var missingFiles = new List<string>();
             
-            if (this.Type != MediaType.BluRay || this.System != RedumpSystem.SonyPlayStation3)
+            if (Type != MediaType.BluRay || System != RedumpSystem.SonyPlayStation3)
             {
                 missingFiles.Add("Media and system combination not supported for PS3 CFW");
             }
@@ -123,10 +123,10 @@ namespace MPF.Core.Processors
             var logFiles = new List<string>();
             string? getKeyBasePath = GetCFWBasePath(basePath);
 
-            if (this.System != RedumpSystem.SonyPlayStation3)
+            if (System != RedumpSystem.SonyPlayStation3)
                 return logFiles;
 
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.BluRay:
                     if (File.Exists($"{getKeyBasePath}.getkey.log"))

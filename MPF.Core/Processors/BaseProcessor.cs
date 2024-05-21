@@ -36,8 +36,8 @@ namespace MPF.Core.Processors
         /// <param name="type">MediaType value to use</param>
         public BaseProcessor(RedumpSystem? system, MediaType? type)
         {
-            this.System = system;
-            this.Type = type;
+            System = system;
+            Type = type;
         }
 
         #region Abstract Methods

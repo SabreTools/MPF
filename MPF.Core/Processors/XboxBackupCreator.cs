@@ -24,7 +24,7 @@ namespace MPF.Core.Processors
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
@@ -79,7 +79,7 @@ namespace MPF.Core.Processors
                 info.CommonDiscInfo!.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
             // Extract info based generically on MediaType
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD:
 
@@ -105,7 +105,7 @@ namespace MPF.Core.Processors
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    switch (this.System)
+                    switch (System)
                     {
                         case RedumpSystem.MicrosoftXbox:
 
@@ -204,7 +204,7 @@ namespace MPF.Core.Processors
         {
             var logFiles = new List<string>();
             string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.DVD:
                     string? logPath = GetLogName(baseDir);
@@ -459,7 +459,7 @@ namespace MPF.Core.Processors
                             bool success = long.TryParse(errorCount, out readErrors);
 
                             // Original Xbox should have 65536 read errors when dumping with XBC
-                            if (this.System == RedumpSystem.MicrosoftXbox)
+                            if (System == RedumpSystem.MicrosoftXbox)
                             {
                                 if (readErrors == 65536)
                                     readErrors = 0;
@@ -492,7 +492,7 @@ namespace MPF.Core.Processors
             if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
-            if (this.System == RedumpSystem.MicrosoftXbox)
+            if (System == RedumpSystem.MicrosoftXbox)
                 return null;
 
             // Example:

@@ -72,7 +72,7 @@ namespace MPF.Core.Processors
             */
 
             var missingFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
@@ -82,7 +82,7 @@ namespace MPF.Core.Processors
                         missingFiles.Add($"{basePath}.img");
 
                     // Audio-only discs don't output these files
-                    if (!this.System.IsAudio())
+                    if (!System.IsAudio())
                     {
                         if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
                             missingFiles.Add($"{basePath}.scm");
@@ -91,7 +91,7 @@ namespace MPF.Core.Processors
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         // GD-ROM and GD-R don't output this for the HD area
-                        if (this.Type != MediaType.GDROM)
+                        if (Type != MediaType.GDROM)
                         {
                             if (!File.Exists($"{basePath}.ccd"))
                                 missingFiles.Add($"{basePath}.ccd");
@@ -121,7 +121,7 @@ namespace MPF.Core.Processors
                             missingFiles.Add($"{basePath}_volDesc.txt");
 
                         // Audio-only discs don't output these files
-                        if (!this.System.IsAudio())
+                        if (!System.IsAudio())
                         {
                             if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
                                 missingFiles.Add($"{basePath}.img_EdcEcc.txt");
@@ -263,14 +263,14 @@ namespace MPF.Core.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on MediaType
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (this.System.IsAudio())
+                    if (System.IsAudio())
                     {
                         info.CommonDiscInfo!.ErrorsCount = "0";
                     }
@@ -314,12 +314,12 @@ namespace MPF.Core.Processors
                     }
 
                     // Deal with the layerbreaks
-                    if (this.Type == MediaType.DVD)
+                    if (Type == MediaType.DVD)
                     {
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
                         info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
-                    else if (this.Type == MediaType.BluRay)
+                    else if (Type == MediaType.BluRay)
                     {
                         var di = InfoTool.GetDiscInformation($"{basePath}_PIC.bin");
                         info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
@@ -341,10 +341,10 @@ namespace MPF.Core.Processors
                         info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Bluray-specific options
-                    if (this.Type == MediaType.BluRay)
+                    if (Type == MediaType.BluRay)
                     {
                         int trimLength = -1;
-                        switch (this.System)
+                        switch (System)
                         {
                             case RedumpSystem.MicrosoftXboxOne:
                             case RedumpSystem.MicrosoftXboxSeriesXS:
@@ -367,7 +367,7 @@ namespace MPF.Core.Processors
             }
 
             // Extract info based specifically on RedumpSystem
-            switch (this.System)
+            switch (System)
             {
                 case RedumpSystem.AppleMacintosh:
                 case RedumpSystem.EnhancedCD:
@@ -505,7 +505,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    if (this.Type == MediaType.CDROM)
+                    if (Type == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -541,7 +541,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    if (this.Type == MediaType.CDROM)
+                    if (Type == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -561,7 +561,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    if (this.Type == MediaType.CDROM)
+                    if (Type == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -581,7 +581,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    if (this.Type == MediaType.CDROM)
+                    if (Type == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -601,7 +601,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    if (this.Type == MediaType.CDROM)
+                    if (Type == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -753,7 +753,7 @@ namespace MPF.Core.Processors
         public override List<string> GetDeleteableFilePaths(string basePath)
         {
             var deleteableFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
@@ -805,7 +805,7 @@ namespace MPF.Core.Processors
             (var cmdPath, _) = GetCommandFilePathAndVersion(basePath);
 
             var logFiles = new List<string>();
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:

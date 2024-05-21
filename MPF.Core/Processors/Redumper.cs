@@ -26,7 +26,7 @@ namespace MPF.Core.Processors
         {
             var missingFiles = new List<string>();
 
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                     if (!File.Exists($"{basePath}.cue"))
@@ -152,7 +152,7 @@ namespace MPF.Core.Processors
             if (GetVolumeLabels($"{basePath}.log", out var volLabels))
                 VolumeLabels = volLabels;
 
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                     info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
@@ -177,14 +177,14 @@ namespace MPF.Core.Processors
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get the universal hash, if it's an audio disc
-                    if (this.System.IsAudio())
+                    if (System.IsAudio())
                     {
                         string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
                     }
 
                     // Attempt to get the non-zero data start, if it's an audio disc
-                    if (this.System.IsAudio())
+                    if (System.IsAudio())
                     {
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
@@ -216,10 +216,10 @@ namespace MPF.Core.Processors
                     }
 
                     // Bluray-specific options
-                    if (this.Type == MediaType.BluRay)
+                    if (Type == MediaType.BluRay)
                     {
                         int trimLength = -1;
-                        switch (this.System)
+                        switch (System)
                         {
                             case RedumpSystem.MicrosoftXboxOne:
                             case RedumpSystem.MicrosoftXboxSeriesXS:
@@ -249,7 +249,7 @@ namespace MPF.Core.Processors
                     break;
             }
 
-            switch (this.System)
+            switch (System)
             {
                 case RedumpSystem.AppleMacintosh:
                 case RedumpSystem.EnhancedCD:
@@ -502,7 +502,7 @@ namespace MPF.Core.Processors
         {
             var logFiles = new List<string>();
 
-            switch (this.Type)
+            switch (Type)
             {
                 case MediaType.CDROM:
                     if (File.Exists($"{basePath}.cdtext"))
