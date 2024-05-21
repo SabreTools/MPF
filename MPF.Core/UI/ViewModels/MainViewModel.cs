@@ -950,7 +950,7 @@ namespace MPF.Core.UI.ViewModels
                 _environment?.CancelDumping();
                 this.CopyProtectScanButtonEnabled = true;
 
-                if (_environment != null && _environment.Options.EjectAfterDump)
+                if (_environment != null && this.Options.EjectAfterDump)
                 {
                     VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Name}");
                     await _environment.EjectDisc();
@@ -1471,7 +1471,8 @@ namespace MPF.Core.UI.ViewModels
         public void ProcessCustomParameters()
         {
             _environment?.SetExecutionContext(this.Parameters);
-            if (_environment?.ExecutionContext == null)
+            _environment?.SetProcessor();
+            if (_environment?.ExecutionContext == null || _environment.Processor == null)
                 return;
 
             // Catch this in case there's an input path issue

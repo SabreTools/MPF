@@ -51,11 +51,6 @@ namespace MPF.Core
         public InternalProgram InternalProgram { get; private set; }
 
         /// <summary>
-        /// Options object representing user-defined options
-        /// </summary>
-        public Data.Options Options { get; private set; }
-
-        /// <summary>
         /// ExecutionContext object representing how to invoke the internal program
         /// </summary>
         public BaseExecutionContext? ExecutionContext { get; private set; }
@@ -64,6 +59,11 @@ namespace MPF.Core
         /// Processor object representing how to process the outputs
         /// </summary>
         public BaseProcessor? Processor { get; private set; }
+
+        /// <summary>
+        /// Options object representing user-defined options
+        /// </summary>
+        private readonly Data.Options _options;
 
         #endregion
 
@@ -122,7 +122,7 @@ namespace MPF.Core
             string? parameters)
         {
             // Set options object
-            Options = options;
+            _options = options;
 
             // Output paths
             OutputPath = InfoTool.NormalizeOutputPaths(outputPath, false);
@@ -138,7 +138,7 @@ namespace MPF.Core
             SetProcessor();
         }
 
-        #region Public Functionality
+        #region Internal Program Management
 
         /// <summary>
         /// Set the parameters object based on the internal program and parameters string
@@ -148,9 +148,9 @@ namespace MPF.Core
         {
             ExecutionContext = InternalProgram switch
             {
-                InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = Options.AaruPath },
-                InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
-                InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = Options.RedumperPath },
+                InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.AaruPath },
+                InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = _options.DiscImageCreatorPath },
+                InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = _options.RedumperPath },
 
                 // If no dumping program found, set to null
                 InternalProgram.NONE => null,
@@ -203,9 +203,9 @@ namespace MPF.Core
                 // Set the proper parameters
                 ExecutionContext = InternalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,
@@ -260,7 +260,7 @@ namespace MPF.Core
                 return result;
 
             // Invoke output processing, if needed
-            if (!Options.ToolsInSeparateWindow)
+            if (!_options.ToolsInSeparateWindow)
             {
                 outputQueue = new ProcessingQueue<string>(ProcessOutputs);
                 if (ExecutionContext.ReportStatus != null)
@@ -268,22 +268,22 @@ namespace MPF.Core
             }
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
+            progress?.Report(Result.Success($"Executing {InternalProgram}... {(_options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
 #if NET40
-            var executeTask = Task.Factory.StartNew(() => ExecutionContext.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+            var executeTask = Task.Factory.StartNew(() => ExecutionContext.ExecuteInternalProgram(_options.ToolsInSeparateWindow));
             executeTask.Wait();
 #else
-            await Task.Run(() => ExecutionContext.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+            await Task.Run(() => ExecutionContext.ExecuteInternalProgram(_options.ToolsInSeparateWindow));
 #endif
             progress?.Report(Result.Success($"{InternalProgram} has finished!"));
 
             // Remove event handler if needed
-            if (!Options.ToolsInSeparateWindow)
+            if (!_options.ToolsInSeparateWindow)
             {
                 outputQueue?.Dispose();
                 ExecutionContext.ReportStatus -= OutputToLog;
@@ -330,7 +330,7 @@ namespace MPF.Core
                 Drive,
                 System,
                 Type,
-                Options,
+                _options,
                 ExecutionContext,
                 Processor,
                 resultProgress,
@@ -346,21 +346,21 @@ namespace MPF.Core
             }
 
             // Eject the disc automatically if configured to
-            if (Options.EjectAfterDump == true)
+            if (_options.EjectAfterDump == true)
             {
                 resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Name}"));
                 await EjectDisc();
             }
 
             // Reset the drive automatically if configured to
-            if (InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
+            if (InternalProgram == InternalProgram.DiscImageCreator && _options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Name}"));
                 await ResetDrive();
             }
 
             // Get user-modifiable information if confugured to
-            if (Options.PromptForDiscInformation && processUserInfo != null)
+            if (_options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
 
@@ -380,14 +380,14 @@ namespace MPF.Core
 
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
-            (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, Options.EnableRedumpCompatibility);
+            (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility);
             if (formattedValues == null)
                 resultProgress?.Report(Result.Failure(formatResult));
             else
                 resultProgress?.Report(Result.Success(formatResult));
 
             // Get the filename suffix for auto-generated files
-            var filenameSuffix = Options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
+            var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
             resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
@@ -400,10 +400,10 @@ namespace MPF.Core
             // Write the copy protection output
             if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Any())
             {
-                if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
+                if (_options.ScanForProtection && _options.OutputSeparateProtectionFile)
                 {
                     resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, Options.HideDriveLetters);
+                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress?.Report(Result.Success("Writing complete!"));
                     else
@@ -412,10 +412,10 @@ namespace MPF.Core
             }
 
             // Write the JSON output, if required
-            if (Options.OutputSubmissionJSON)
+            if (_options.OutputSubmissionJSON)
             {
-                resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(Options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
-                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, Options.IncludeArtifacts);
+                resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(_options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
+                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
@@ -423,7 +423,7 @@ namespace MPF.Core
             }
 
             // Compress the logs, if required
-            if (Options.CompressLogFiles)
+            if (_options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
                 (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Processor);
@@ -434,7 +434,7 @@ namespace MPF.Core
             }
 
             // Delete unnecessary files, if required
-            if (Options.DeleteUnnecessaryFiles)
+            if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress?.Report(Result.Success("Deleting unnecessary files..."));
                 (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Processor);
@@ -445,7 +445,7 @@ namespace MPF.Core
             }
 
             // Create PS3 IRD, if required
-            if (Options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
+            if (_options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
             {
                 resultProgress?.Report(Result.Success("Creating IRD... please wait!"));
                 (bool deleteSuccess, string deleteResult) = await InfoTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
@@ -557,11 +557,11 @@ namespace MPF.Core
         private bool RequiredProgramsExist()
         {
             // Validate that the path is configured
-            if (string.IsNullOrEmpty(Options.DiscImageCreatorPath))
+            if (string.IsNullOrEmpty(_options.DiscImageCreatorPath))
                 return false;
 
             // Validate that the required program exists
-            if (!File.Exists(Options.DiscImageCreatorPath))
+            if (!File.Exists(_options.DiscImageCreatorPath))
                 return false;
 
             return true;
@@ -588,7 +588,7 @@ namespace MPF.Core
             {
                 BaseCommand = command,
                 DrivePath = Drive.Name,
-                ExecutablePath = Options.DiscImageCreatorPath,
+                ExecutablePath = _options.DiscImageCreatorPath,
             };
 
             return await ExecuteInternalProgram(parameters);
