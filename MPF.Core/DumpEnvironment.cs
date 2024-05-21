@@ -147,23 +147,13 @@ namespace MPF.Core
         {
             Parameters = InternalProgram switch
             {
-                // Dumping support
                 InternalProgram.Aaru => new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath },
                 InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
                 InternalProgram.Redumper => new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath },
 
-                // Verification support only
-                InternalProgram.CleanRip => new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null },
-                InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
-                InternalProgram.PS3CFW => new Modules.PS3CFW.Parameters(parameters) { ExecutablePath = null },
-                InternalProgram.UmdImageCreator => new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null },
-                InternalProgram.XboxBackupCreator => new Modules.XboxBackupCreator.Parameters(parameters) { ExecutablePath = null },
-
                 // If no dumping program found, set to null
                 InternalProgram.NONE => null,
-
-                // This should never happen, but it needs a fallback
-                _ => new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath },
+                _ => null,
             };
 
             // Set system and type

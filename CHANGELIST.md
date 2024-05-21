@@ -4,6 +4,7 @@
 - Move DataFile to Core.Data
 - Seal XBC processor
 - Migrate processor functionality
+- Remove now-unneeded parameters classes
 
 ### 3.1.9a (2024-05-21)
 
