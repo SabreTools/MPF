@@ -306,7 +306,7 @@ namespace MPF.Core
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
-            if (ExecutionContext == null)
+            if (ExecutionContext == null && Processor == null)
                 return Result.Failure("Error! Current configuration is not supported!");
 
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));

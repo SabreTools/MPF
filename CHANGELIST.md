@@ -7,6 +7,7 @@
 - Remove now-unneeded parameters classes
 - Simplify access within processors
 - Rename Parameters to ExecutionContext
+- Ensure check-only implementations still work
 
 ### 3.1.9a (2024-05-21)
 
