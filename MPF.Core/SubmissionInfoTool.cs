@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MPF.Core.Data;
 using MPF.Core.Modules;
+using MPF.Core.Processors;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
@@ -27,6 +28,7 @@ namespace MPF.Core
         /// <param name="mediaType">Currently selected media type</param>
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="parameters">Parameters object representing what to send to the internal program</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
@@ -37,6 +39,7 @@ namespace MPF.Core
             MediaType? mediaType,
             Options options,
             BaseParameters? parameters,
+            BaseProcessor? processor,
             IProgress<Result>? resultProgress = null,
             IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null)
         {
@@ -49,7 +52,7 @@ namespace MPF.Core
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = parameters.FoundAllFiles(outputDirectory, outputFilename, false);
+            (bool foundFiles, List<string> missingFiles) = processor.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
@@ -99,7 +102,7 @@ namespace MPF.Core
             info = Builder.EnsureAllSections(info);
 
             // Get specific tool output handling
-            parameters?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
+            processor?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
@@ -114,7 +117,7 @@ namespace MPF.Core
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, parameters?.VolumeLabels);
+            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
             if (volLabels != null)
                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 

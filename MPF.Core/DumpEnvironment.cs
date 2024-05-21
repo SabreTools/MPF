@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MPF.Core.Data;
 using MPF.Core.Modules;
+using MPF.Core.Processors;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -57,6 +58,11 @@ namespace MPF.Core
         /// Parameters object representing what to send to the internal program
         /// </summary>
         public BaseParameters? Parameters { get; private set; }
+
+        /// <summary>
+        /// Processor object representing post-dump processing
+        /// </summary>
+        public BaseProcessor? Processor { get; private set; }
 
         #endregion
 
@@ -128,6 +134,7 @@ namespace MPF.Core
 
             // Dumping program
             SetParameters(parameters);
+            SetProcessor();
         }
 
         #region Public Functionality
@@ -165,6 +172,28 @@ namespace MPF.Core
                 Parameters.System = System;
                 Parameters.Type = Type;
             }
+        }
+
+        /// <summary>
+        /// Set the processor object based on the internal program
+        /// </summary>
+        public void SetProcessor()
+        {
+            Processor = InternalProgram switch
+            {
+                InternalProgram.Aaru => new Processors.Aaru(System, Type),
+                InternalProgram.CleanRip => new CleanRip(System, Type),
+                InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
+                InternalProgram.DiscImageCreator => new DiscImageCreator(System, Type),
+                InternalProgram.PS3CFW => new PS3CFW(System, Type),
+                InternalProgram.Redumper => new Redumper(System, Type),
+                InternalProgram.UmdImageCreator => new UmdImageCreator(System, Type),
+                InternalProgram.XboxBackupCreator => new XboxBackupCreator(System, Type),
+
+                // If no dumping program found, set to null
+                InternalProgram.NONE => null,
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -299,7 +328,7 @@ namespace MPF.Core
             var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = Parameters.FoundAllFiles(outputDirectory, outputFilename, false);
+            (bool foundFiles, List<string> missingFiles) = Processor.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
@@ -315,6 +344,7 @@ namespace MPF.Core
                 Type,
                 Options,
                 Parameters,
+                Processor,
                 resultProgress,
                 protectionProgress);
             resultProgress?.Report(Result.Success("Extracting information complete!"));
@@ -408,7 +438,7 @@ namespace MPF.Core
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Parameters);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Processor);
                 if (compressSuccess)
                     resultProgress?.Report(Result.Success(compressResult));
                 else
@@ -419,7 +449,7 @@ namespace MPF.Core
             if (Options.DeleteUnnecessaryFiles)
             {
                 resultProgress?.Report(Result.Success("Deleting unnecessary files..."));
-                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Parameters);
+                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Processor);
                 if (deleteSuccess)
                     resultProgress?.Report(Result.Success(deleteResult));
                 else

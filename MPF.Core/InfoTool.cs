@@ -11,6 +11,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Data;
 using MPF.Core.Modules;
+using MPF.Core.Processors;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,13 +33,13 @@ namespace MPF.Core
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="parameters">Parameters object representing what to send to the internal program</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        internal static (bool, List<string>) FoundAllFiles(this BaseParameters? parameters, string? outputDirectory, string outputFilename, bool preCheck)
+        internal static (bool, List<string>) FoundAllFiles(this BaseProcessor? processor, string? outputDirectory, string outputFilename, bool preCheck)
         {
             // If there are no parameters set
-            if (parameters == null)
+            if (processor == null)
                 return (false, new List<string>());
 
             // First, sanitized the output filename to strip off any potential extension
@@ -52,7 +53,7 @@ namespace MPF.Core
                 basePath = Path.Combine(outputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return parameters.CheckAllOutputFilesExist(basePath, preCheck);
+            return processor.CheckAllOutputFilesExist(basePath, preCheck);
         }
 
         /// <summary>
@@ -1153,15 +1154,15 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="filenameSuffix">Output filename to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="parameters">Parameters object to use to derive log file paths</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseParameters? parameters)
+        public static (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, BaseProcessor? processor)
         {
 #if NET20 || NET35 || NET40
             return (false, "Log compression is not available for this framework version");
 #else
             // If there are no parameters
-            if (parameters == null)
+            if (processor == null)
                 return (false, "No parameters provided!");
 
             // Prepare the necessary paths
@@ -1175,7 +1176,7 @@ namespace MPF.Core
             string archiveName = combinedBase + "_logs.zip";
 
             // Get the list of log files from the parameters object
-            var files = parameters.GetLogFilePaths(combinedBase);
+            var files = processor.GetLogFilePaths(combinedBase);
 
             // Add on generated log files if they exist
             var mpfFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
@@ -1246,12 +1247,12 @@ namespace MPF.Core
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="parameters">Parameters object to use to derive log file paths</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public static (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters)
+        public static (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, BaseProcessor? processor)
         {
             // If there are no parameters
-            if (parameters == null)
+            if (processor == null)
                 return (false, "No parameters provided!");
 
             // Prepare the necessary paths
@@ -1263,7 +1264,7 @@ namespace MPF.Core
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
 
             // Get the list of deleteable files from the parameters object
-            var files = parameters.GetDeleteableFilePaths(combinedBase);
+            var files = processor.GetDeleteableFilePaths(combinedBase);
 
             if (!files.Any())
                 return (true, "No files to delete!");

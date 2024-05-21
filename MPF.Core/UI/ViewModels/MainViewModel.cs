@@ -1810,7 +1810,7 @@ namespace MPF.Core.UI.ViewModels
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists
-            (bool foundFiles, List<string> _) = _environment.Parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+            (bool foundFiles, List<string> _) = _environment.Processor.FoundAllFiles(outputDirectory, outputFilename, true);
             if (foundFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
@@ -1826,34 +1826,22 @@ namespace MPF.Core.UI.ViewModels
                 InternalProgram? programFound = null;
                 if (programFound == null && _environment.InternalProgram != InternalProgram.Aaru)
                 {
-                    Modules.Aaru.Parameters parameters = new("")
-                    {
-                        Type = _environment.Type,
-                        System = _environment.System
-                    };
-                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    var processor = new Processors.Aaru(_environment.System, _environment.Type);
+                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                     if (foundOtherFiles)
                         programFound = InternalProgram.Aaru;
                 }
                 if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
                 {
-                    Modules.DiscImageCreator.Parameters parameters = new("")
-                    {
-                        Type = _environment.Type,
-                        System = _environment.System
-                    };
-                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    var processor = new Processors.DiscImageCreator(_environment.System, _environment.Type);
+                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                     if (foundOtherFiles)
                         programFound = InternalProgram.DiscImageCreator;
                 }
                 if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
                 {
-                    Modules.Redumper.Parameters parameters = new("")
-                    {
-                        Type = _environment.Type,
-                        System = _environment.System
-                    };
-                    (bool foundOtherFiles, _) = parameters.FoundAllFiles(outputDirectory, outputFilename, true);
+                    var processor = new Processors.Redumper(_environment.System, _environment.Type);
+                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                     if (foundOtherFiles)
                         programFound = InternalProgram.Redumper;
                 }
