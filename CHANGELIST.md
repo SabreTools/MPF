@@ -24,6 +24,7 @@
 - Split constants files into component parts
 - Remove odd code from Result class
 - Slight tweak to Result class variables
+- Move constants into related classes
 
 ### 3.1.9a (2024-05-21)
 

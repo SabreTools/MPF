@@ -55,15 +55,4 @@ namespace MPF.Core.Data
             };
         }
     }
-
-    /// <summary>
-    /// Template field values for submission info
-    /// </summary>
-    public static class Template
-    {
-        public const string RequiredValue = "(REQUIRED)";
-        public const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
-        public const string OptionalValue = "(OPTIONAL)";
-        public const string DiscNotDetected = "Disc Not Detected";
-    }
 }

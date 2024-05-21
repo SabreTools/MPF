@@ -55,6 +55,12 @@ namespace MPF.Core.Data
 
         #endregion
 
+        #region Constants
+
+        private const string DiscNotDetected = "Disc Not Detected";
+
+        #endregion
+
         #region Derived Fields
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace MPF.Core.Data
         {
             get
             {
-                string? volumeLabel = Template.DiscNotDetected;
+                string? volumeLabel = DiscNotDetected;
                 if (!this.MarkedActive)
                     return volumeLabel;
 
