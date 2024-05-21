@@ -110,8 +110,9 @@ namespace MPF.Core
             // Extract info based specifically on RedumpSystem
             _ = await ProcessSystem(info, system, drive, options, resultProgress, protectionProgress);
 
-            // Set the category if it's not overriden
+            // Set fields that may have automatic filling otherwise
             info.CommonDiscInfo!.Category ??= DiscCategory.Games;
+            info.VersionAndEditions!.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
@@ -347,7 +348,6 @@ namespace MPF.Core
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
-                    Version = addPlaceholders ? RequiredIfExistsValue : string.Empty,
                     OtherEditions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
                 },
                 DumpingInfo = new DumpingInfoSection()
