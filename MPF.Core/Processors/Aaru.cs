@@ -8,7 +8,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.Modules;
 using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;

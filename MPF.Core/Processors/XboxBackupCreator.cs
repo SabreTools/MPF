@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.Modules;
 using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;
