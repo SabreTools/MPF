@@ -524,8 +524,8 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.Range] == true)
                 {
                     parameters.Add(FlagStrings.Range);
-                    parameters.Add(RangeStartLBAValue.ToString());
-                    parameters.Add(RangeEndLBAValue.ToString());
+                    parameters.Add(RangeStartLBAValue.ToString() ?? string.Empty);
+                    parameters.Add(RangeEndLBAValue.ToString() ?? string.Empty);
                 }
             }
 

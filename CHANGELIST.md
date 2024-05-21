@@ -12,6 +12,7 @@
 - Update Redumper to build 329
 - Simplify mv command in build config
 - Fix subfolder issue from previous
+- Remove redundant BinaryReaderExtensions class
 
 ### 3.1.9a (2024-05-21)
 
