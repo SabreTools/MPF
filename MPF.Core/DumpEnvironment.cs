@@ -173,7 +173,6 @@ namespace MPF.Core
             {
                 InternalProgram.Aaru => new Processors.Aaru(System, Type),
                 InternalProgram.CleanRip => new CleanRip(System, Type),
-                InternalProgram.DCDumper => null, // TODO: Create correct parameter type when supported
                 InternalProgram.DiscImageCreator => new DiscImageCreator(System, Type),
                 InternalProgram.PS3CFW => new PS3CFW(System, Type),
                 InternalProgram.Redumper => new Redumper(System, Type),

@@ -18,6 +18,7 @@
 - Remove unnecessary field in execution contexts
 - Slight tweak to deal with net20
 - Make some methods required for override
+- Remove dcdumper until further notice
 
 ### 3.1.9a (2024-05-21)
 

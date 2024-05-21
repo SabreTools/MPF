@@ -100,7 +100,6 @@ namespace MPF.Core.Converters
                 #region Verification support only
 
                 InternalProgram.CleanRip => "CleanRip",
-                InternalProgram.DCDumper => "DCDumper",
                 InternalProgram.PS3CFW => "PS3 CFW",
                 InternalProgram.UmdImageCreator => "UmdImageCreator",
                 InternalProgram.XboxBackupCreator => "XboxBackupCreator",
@@ -177,9 +176,6 @@ namespace MPF.Core.Converters
                 // Verification support only
                 "cleanrip"
                     or "cr" => InternalProgram.CleanRip,
-                "dc"
-                    or "dcd"
-                    or "dcdumper" => InternalProgram.DCDumper,
                 "ps3cfw"
                     or "ps3"
                     or "getkey"
