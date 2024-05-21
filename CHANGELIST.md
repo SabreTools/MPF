@@ -21,6 +21,7 @@
 - Remove dcdumper until further notice
 - Invert using statement in dump environment
 - Make options internal to dump environment
+- Split constants files into component parts
 
 ### 3.1.9a (2024-05-21)
 
