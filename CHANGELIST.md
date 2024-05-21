@@ -1,6 +1,7 @@
 ### 3.1.9a (2024-05-21)
 
 - Fix dictionary error in Redumper parsing
+- Fix overwriting placeholders in Redumper
 
 ### 3.1.9 (2024-05-19)
 
