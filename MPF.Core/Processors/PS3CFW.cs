@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.Hashing;
+using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -23,7 +24,7 @@ namespace MPF.Core.Processors
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             var missingFiles = new List<string>();
-            
+
             if (Type != MediaType.BluRay || System != RedumpSystem.SonyPlayStation3)
             {
                 missingFiles.Add("Media and system combination not supported for PS3 CFW");
@@ -161,33 +162,9 @@ namespace MPF.Core.Processors
                 {
                     return new Datafile
                     {
-                        Games = [new Game { Roms = [new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), Crc = crc, Md5 = md5, Sha1 = sha1, }] }]
+                        Game = [new Game { Rom = [new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), CRC = crc, MD5 = md5, SHA1 = sha1 }] }]
                     };
                 }
-                return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get a formatted datfile from the PS3 CFW output, if possible
-        /// </summary>
-        /// <param name="iso">Path to ISO file</param>
-        /// <returns>Formatted datfile, null if not valid</returns>
-        private static string? GetPS3CFWDatfile(string iso)
-        {
-            // If the files don't exist, we can't get info from it
-            if (!File.Exists(iso))
-                return null;
-
-            try
-            {
-                if (HashTool.GetStandardHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
-                    return $"<rom name=\"{Path.GetFileName(iso)}\" size=\"{size}\" crc=\"{crc}\" md5=\"{md5}\" sha1=\"{sha1}\" />";
                 return null;
             }
             catch

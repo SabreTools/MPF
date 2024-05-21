@@ -118,14 +118,6 @@ namespace MPF.Core.Processors
             return File.ReadAllText(filename);
         }
 
-        /// <summary>
-        /// Returns whether a string is a valid drive letter
-        /// </summary>
-        /// <param name="parameter">String value to check</param>
-        /// <returns>True if it's a valid drive letter, false otherwise</W>
-        protected static bool IsValidDriveLetter(string parameter)
-            => Regex.IsMatch(parameter, @"^[A-Z]:?\\?$");
-
         #endregion
 
         #region Methods to Move

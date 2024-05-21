@@ -5,6 +5,7 @@ using System.Linq;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.Hashing;
+using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -74,7 +75,7 @@ namespace MPF.Core.Processors
                         // Get the Datafile information
                         var datafile = new Datafile
                         {
-                            Games = [new Game { Roms = [new Rom { Name = string.Empty, Size = filesize.ToString(), Crc = crc32, Md5 = md5, Sha1 = sha1, }] }]
+                            Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
                         };
 
                         // Fill in the hash data

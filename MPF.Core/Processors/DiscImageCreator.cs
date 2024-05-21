@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
+using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -1997,17 +1998,17 @@ namespace MPF.Core.Processors
             dmihash = null; pfihash = null; sshash = null;
 
             // If we don't have a valid datafile, we can't do anything
-            if (suppl?.Games == null)
+            if (suppl?.Game == null || suppl.Game.Length == 0)
                 return false;
 
             // Try to extract the hash information
-            var roms = suppl.Games[0].Roms;
+            var roms = suppl.Game[0].Rom;
             if (roms == null || roms.Length == 0)
                 return false;
 
-            dmihash = roms.FirstOrDefault(r => r.Name?.EndsWith("DMI.bin") == true)?.Crc?.ToUpperInvariant();
-            pfihash = roms.FirstOrDefault(r => r.Name?.EndsWith("PFI.bin") == true)?.Crc?.ToUpperInvariant();
-            sshash = roms.FirstOrDefault(r => r.Name?.EndsWith("SS.bin") == true)?.Crc?.ToUpperInvariant();
+            dmihash = roms.FirstOrDefault(r => r.Name?.EndsWith("DMI.bin") == true)?.CRC?.ToUpperInvariant();
+            pfihash = roms.FirstOrDefault(r => r.Name?.EndsWith("PFI.bin") == true)?.CRC?.ToUpperInvariant();
+            sshash = roms.FirstOrDefault(r => r.Name?.EndsWith("SS.bin") == true)?.CRC?.ToUpperInvariant();
 
             return true;
         }

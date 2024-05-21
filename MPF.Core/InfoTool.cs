@@ -10,12 +10,12 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Data;
-using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.IO;
+using SabreTools.Models.Logiqx;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -64,10 +64,10 @@ namespace MPF.Core
         internal static string? GenerateDatfile(Datafile? datafile)
         {
             // If we don't have a valid datafile, we can't do anything
-            if (datafile?.Games == null || datafile.Games.Length == 0)
+            if (datafile?.Game == null || datafile.Game.Length == 0)
                 return null;
 
-            var roms = datafile.Games[0].Roms;
+            var roms = datafile.Game[0].Rom;
             if (roms == null || roms.Length == 0)
                 return null;
 
@@ -78,7 +78,7 @@ namespace MPF.Core
                 for (int i = 0; i < roms.Length; i++)
                 {
                     var rom = roms[i];
-                    datString += $"<rom name=\"{rom.Name}\" size=\"{rom.Size}\" crc=\"{rom.Crc}\" md5=\"{rom.Md5}\" sha1=\"{rom.Sha1}\" />\n";
+                    datString += $"<rom name=\"{rom.Name}\" size=\"{rom.Size}\" crc=\"{rom.CRC}\" md5=\"{rom.MD5}\" sha1=\"{rom.SHA1}\" />\n";
                 }
 
                 return datString.TrimEnd('\n');
@@ -226,19 +226,19 @@ namespace MPF.Core
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
-            if (datafile?.Games == null || datafile.Games.Length == 0)
+            if (datafile?.Game == null || datafile.Game.Length == 0)
                 return false;
 
-            var roms = datafile.Games[0].Roms;
+            var roms = datafile.Game[0].Rom;
             if (roms == null || roms.Length == 0)
                 return false;
 
             var rom = roms[0];
 
             _ = Int64.TryParse(rom.Size, out size);
-            crc32 = rom.Crc;
-            md5 = rom.Md5;
-            sha1 = rom.Sha1;
+            crc32 = rom.CRC;
+            md5 = rom.MD5;
+            sha1 = rom.SHA1;
 
             return true;
         }
