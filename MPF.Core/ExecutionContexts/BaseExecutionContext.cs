@@ -9,9 +9,9 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Modules
+namespace MPF.Core.ExecutionContexts
 {
-    public abstract class BaseParameters
+    public abstract class BaseExecutionContext
     {
         #region Event Handlers
 
@@ -130,7 +130,7 @@ namespace MPF.Core.Modules
         /// Populate a Parameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
-        public BaseParameters(string? parameters)
+        public BaseExecutionContext(string? parameters)
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
@@ -146,7 +146,7 @@ namespace MPF.Core.Modules
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-        public BaseParameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+        public BaseExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
         {
             this.System = system;
             this.Type = type;

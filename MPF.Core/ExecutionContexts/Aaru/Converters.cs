@@ -1,6 +1,6 @@
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Modules.Redumper
+namespace MPF.Core.ExecutionContexts.Aaru
 {
     public static class Converters
     {
@@ -11,16 +11,10 @@ namespace MPF.Core.Modules.Redumper
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string? Extension(MediaType? type)
+        public static string Extension(MediaType? type)
         {
-            return type switch
-            {
-                MediaType.CDROM => ".bin",
-                MediaType.DVD
-                    or MediaType.HDDVD
-                    or MediaType.BluRay => ".iso",
-                _ => null,
-            };
+            // Aaru has a single, unified output format by default
+            return ".aaruf";
         }
 
         #endregion

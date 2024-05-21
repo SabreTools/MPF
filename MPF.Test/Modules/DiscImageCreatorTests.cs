@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MPF.Core.Data;
-using MPF.Core.Modules.DiscImageCreator;
+using MPF.Core.ExecutionContexts.DiscImageCreator;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -21,7 +21,7 @@ namespace MPF.Test.Modules
         public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string? expected)
         {
             var options = new Options();
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
             Assert.Equal(expected, actual.BaseCommand);
         }
 
@@ -32,7 +32,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsSpecialDefaultTest(RedumpSystem? knownSystem, MediaType? mediaType, string[]? expected)
         {
             var options = new Options();
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -45,7 +45,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsC2RereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadC2, string[] expected)
         {
             var options = new Options { DICRereadCount = rereadC2 };
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -65,7 +65,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsDVDRereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadDVDBD, string[] expected)
         {
             var options = new Options { DICDVDRereadCount = rereadDVDBD };
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -89,7 +89,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsMultiSectorReadTest(RedumpSystem? knownSystem, MediaType? mediaType, bool multiSectorRead, string[] expected)
         {
             var options = new Options { DICMultiSectorRead = multiSectorRead };
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -110,7 +110,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsParanoidModeTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoidMode, string[] expected)
         {
             var options = new Options { DICParanoidMode = paranoidMode };
-            var actual = new Parameters(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -149,7 +149,7 @@ namespace MPF.Test.Modules
         [InlineData("ls", false)]
         public void ValidateParametersTest(string? parameters, bool expected)
         {
-            var actual = new Parameters(parameters);
+            var actual = new ExecutionContext(parameters);
             Assert.Equal(expected, actual.IsValid());
         }
 
@@ -223,11 +223,11 @@ namespace MPF.Test.Modules
             string originalParameters = "audio F \"ISO\\Audio CD\\Audio CD.bin\" 72 -5 0";
 
             // Validate that a common audio commandline is parsed
-            var parametersObject = new Parameters(originalParameters);
-            Assert.NotNull(parametersObject);
+            var executionContext = new ExecutionContext(originalParameters);
+            Assert.NotNull(executionContext);
 
             // Validate that the same set of parameters are generated on the output
-            var newParameters = parametersObject.GenerateParameters();
+            var newParameters = executionContext.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
         }
@@ -238,11 +238,11 @@ namespace MPF.Test.Modules
             string originalParameters = "data F \"ISO\\Data CD\\Data CD.bin\" 72 -5 0";
 
             // Validate that a common audio commandline is parsed
-            var parametersObject = new Parameters(originalParameters);
-            Assert.NotNull(parametersObject);
+            var executionContext = new ExecutionContext(originalParameters);
+            Assert.NotNull(executionContext);
 
             // Validate that the same set of parameters are generated on the output
-            var newParameters = parametersObject.GenerateParameters();
+            var newParameters = executionContext.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
         }
@@ -250,17 +250,17 @@ namespace MPF.Test.Modules
         /// <summary>
         /// Generate a HashSet of keys that are considered to be set
         /// </summary>
-        /// <param name="parameters">Parameters object to get keys from</param>
+        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
         /// <returns>HashSet representing the strings</returns>
-        private static HashSet<string> GenerateUsedKeys(Parameters parameters)
+        private static HashSet<string> GenerateUsedKeys(ExecutionContext executionContext)
         {
             var usedKeys = new HashSet<string>();
-            if (parameters?.Keys == null)
+            if (executionContext?.Keys == null)
                 return usedKeys;
 
-            foreach (string key in parameters.Keys)
+            foreach (string key in executionContext.Keys)
             {
-                if (parameters[key] == true)
+                if (executionContext[key] == true)
                     usedKeys.Add(key);
             }
 

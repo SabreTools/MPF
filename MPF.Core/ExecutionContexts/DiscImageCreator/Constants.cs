@@ -1,4 +1,4 @@
-namespace MPF.Core.Modules.DiscImageCreator
+namespace MPF.Core.ExecutionContexts.DiscImageCreator
 {
     /// <summary>
     /// Top-level commands for DiscImageCreator

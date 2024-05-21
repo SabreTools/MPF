@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MPF.Core.Data;
-using MPF.Core.Modules;
+using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
@@ -55,12 +55,12 @@ namespace MPF.Core
         public Data.Options Options { get; private set; }
 
         /// <summary>
-        /// Parameters object representing what to send to the internal program
+        /// ExecutionContext object representing how to invoke the internal program
         /// </summary>
-        public BaseParameters? Parameters { get; private set; }
+        public BaseExecutionContext? ExecutionContext { get; private set; }
 
         /// <summary>
-        /// Processor object representing post-dump processing
+        /// Processor object representing how to process the outputs
         /// </summary>
         public BaseProcessor? Processor { get; private set; }
 
@@ -72,7 +72,7 @@ namespace MPF.Core
         /// Generic way of reporting a message
         /// </summary>
 #if NET20 || NET35 || NET40
-        public EventHandler<BaseParameters.StringEventArgs>? ReportStatus;
+        public EventHandler<BaseExecutionContext.StringEventArgs>? ReportStatus;
 #else
         public EventHandler<string>? ReportStatus;
 #endif
@@ -86,7 +86,7 @@ namespace MPF.Core
         /// Event handler for data returned from a process
         /// </summary>
 #if NET20 || NET35 || NET40
-        private void OutputToLog(object? proc, BaseParameters.StringEventArgs args) => outputQueue?.Enqueue(args.Value);
+        private void OutputToLog(object? proc, BaseExecutionContext.StringEventArgs args) => outputQueue?.Enqueue(args.Value);
 #else
         private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
 #endif
@@ -95,7 +95,7 @@ namespace MPF.Core
         /// Process the outputs in the queue
         /// </summary>
 #if NET20 || NET35 || NET40
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new BaseParameters.StringEventArgs { Value = nextOutput });
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new BaseExecutionContext.StringEventArgs { Value = nextOutput });
 #else
         private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
 #endif
@@ -133,7 +133,7 @@ namespace MPF.Core
             InternalProgram = internalProgram ?? options.InternalProgram;
 
             // Dumping program
-            SetParameters(parameters);
+            SetExecutionContext(parameters);
             SetProcessor();
         }
 
@@ -143,13 +143,13 @@ namespace MPF.Core
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
-        public void SetParameters(string? parameters)
+        public void SetExecutionContext(string? parameters)
         {
-            Parameters = InternalProgram switch
+            ExecutionContext = InternalProgram switch
             {
-                InternalProgram.Aaru => new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath },
-                InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
-                InternalProgram.Redumper => new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath },
+                InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = Options.AaruPath },
+                InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = Options.DiscImageCreatorPath },
+                InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = Options.RedumperPath },
 
                 // If no dumping program found, set to null
                 InternalProgram.NONE => null,
@@ -157,10 +157,10 @@ namespace MPF.Core
             };
 
             // Set system and type
-            if (Parameters != null)
+            if (ExecutionContext != null)
             {
-                Parameters.System = System;
-                Parameters.Type = Type;
+                ExecutionContext.System = System;
+                ExecutionContext.Type = Type;
             }
         }
 
@@ -201,21 +201,19 @@ namespace MPF.Core
                     return null;
 
                 // Set the proper parameters
-                Parameters = InternalProgram switch
+                ExecutionContext = InternalProgram switch
                 {
-                    InternalProgram.Aaru => new Modules.Aaru.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
-                    InternalProgram.DiscImageCreator => new Modules.DiscImageCreator.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
-                    InternalProgram.Redumper => new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,
-
-                    // This should never happen, but it needs a fallback
-                    _ => new Modules.Redumper.Parameters(System, Type, Drive.Name, OutputPath, driveSpeed, Options),
+                    _ => null,
                 };
 
                 // Generate and return the param string
-                return Parameters?.GenerateParameters();
+                return ExecutionContext?.GenerateParameters();
             }
 
             return null;
@@ -228,19 +226,19 @@ namespace MPF.Core
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping() => Parameters?.KillInternalProgram();
+        public void CancelDumping() => ExecutionContext?.KillInternalProgram();
 
         /// <summary>
         /// Eject the disc using DiscImageCreator
         /// </summary>
         public async Task<string?> EjectDisc() =>
-            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
+            await RunStandaloneDiscImageCreatorCommand(ExecutionContexts.DiscImageCreator.CommandStrings.Eject);
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
         /// </summary>
         public async Task<string?> ResetDrive() =>
-            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
+            await RunStandaloneDiscImageCreatorCommand(ExecutionContexts.DiscImageCreator.CommandStrings.Reset);
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -253,7 +251,7 @@ namespace MPF.Core
 #endif
         {
             // If we don't have parameters
-            if (Parameters == null)
+            if (ExecutionContext == null)
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Check that we have the basics for dumping
@@ -265,8 +263,8 @@ namespace MPF.Core
             if (!Options.ToolsInSeparateWindow)
             {
                 outputQueue = new ProcessingQueue<string>(ProcessOutputs);
-                if (Parameters.ReportStatus != null)
-                    Parameters.ReportStatus += OutputToLog;
+                if (ExecutionContext.ReportStatus != null)
+                    ExecutionContext.ReportStatus += OutputToLog;
             }
 
             // Execute internal tool
@@ -277,10 +275,10 @@ namespace MPF.Core
                 Directory.CreateDirectory(directoryName);
 
 #if NET40
-            var executeTask = Task.Factory.StartNew(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+            var executeTask = Task.Factory.StartNew(() => ExecutionContext.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             executeTask.Wait();
 #else
-            await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
+            await Task.Run(() => ExecutionContext.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
 #endif
             progress?.Report(Result.Success($"{InternalProgram} has finished!"));
 
@@ -288,7 +286,7 @@ namespace MPF.Core
             if (!Options.ToolsInSeparateWindow)
             {
                 outputQueue?.Dispose();
-                Parameters.ReportStatus -= OutputToLog;
+                ExecutionContext.ReportStatus -= OutputToLog;
             }
 
             return result;
@@ -308,7 +306,7 @@ namespace MPF.Core
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
-            if (Parameters == null)
+            if (ExecutionContext == null)
                 return Result.Failure("Error! Current configuration is not supported!");
 
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
@@ -333,7 +331,7 @@ namespace MPF.Core
                 System,
                 Type,
                 Options,
-                Parameters,
+                ExecutionContext,
                 Processor,
                 resultProgress,
                 protectionProgress);
@@ -471,7 +469,7 @@ namespace MPF.Core
             if (Drive == null)
                 return false;
 
-            bool parametersValid = Parameters?.IsValid() ?? false;
+            bool parametersValid = ExecutionContext?.IsValid() ?? false;
             bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk);
 
             // TODO: HardDisk being in the Removable category is a hack, fix this later
@@ -484,9 +482,9 @@ namespace MPF.Core
         /// <summary>
         /// Run internal program async with an input set of parameters
         /// </summary>
-        /// <param name="parameters"></param>
+        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
         /// <returns>Standard output from commandline window</returns>
-        private static async Task<string> ExecuteInternalProgram(BaseParameters parameters)
+        private static async Task<string> ExecuteInternalProgram(BaseExecutionContext parameters)
         {
             Process childProcess;
 #if NET40
@@ -529,7 +527,7 @@ namespace MPF.Core
         private Result IsValidForDump()
         {
             // Validate that everything is good
-            if (Parameters == null || !ParametersValid())
+            if (ExecutionContext == null || !ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
@@ -540,11 +538,11 @@ namespace MPF.Core
                 return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
-            if (!File.Exists(Parameters.ExecutablePath))
-                return Result.Failure($"Error! {Parameters.ExecutablePath} does not exist!");
+            if (!File.Exists(ExecutionContext.ExecutablePath))
+                return Result.Failure($"Error! {ExecutionContext.ExecutablePath} does not exist!");
 
             // Validate that the dumping drive doesn't contain the executable
-            string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath!);
+            string fullExecutablePath = Path.GetFullPath(ExecutionContext.ExecutablePath!);
             if (Drive?.Name != null && fullExecutablePath.StartsWith(Drive.Name))
                 return Result.Failure("Error! Cannot dump same drive that executable resides on!");
 
@@ -586,7 +584,7 @@ namespace MPF.Core
 
             CancelDumping();
 
-            var parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
+            var parameters = new ExecutionContexts.DiscImageCreator.ExecutionContext(string.Empty)
             {
                 BaseCommand = command,
                 DrivePath = Drive.Name,

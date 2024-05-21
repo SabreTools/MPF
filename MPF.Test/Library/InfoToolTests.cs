@@ -20,7 +20,7 @@ namespace MPF.Test.Library
         [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
         public void NormalizeOutputPathsTest(string? outputPath, string? expectedPath)
         {
-            if (!string.IsNullOrEmpty(expectedPath))
+            if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
 
             string actualPath = InfoTool.NormalizeOutputPaths(outputPath, true);

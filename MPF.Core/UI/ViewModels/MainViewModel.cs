@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.Modules;
+using MPF.Core.ExecutionContexts;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
@@ -1324,7 +1324,7 @@ namespace MPF.Core.UI.ViewModels
 
             // Get the status to write out
             Result result = Tools.GetSupportStatus(_environment.System, _environment.Type);
-            if (this.CurrentProgram == InternalProgram.NONE || _environment.Parameters == null)
+            if (this.CurrentProgram == InternalProgram.NONE || _environment.ExecutionContext == null)
                 this.Status = "No dumping program found";
             else
                 this.Status = result.Message;
@@ -1400,7 +1400,7 @@ namespace MPF.Core.UI.ViewModels
             }
 
             // Get the extension for the file for the next two statements
-            var extension = _environment?.Parameters?.GetDefaultExtension(this.CurrentMediaType);
+            var extension = _environment?.ExecutionContext?.GetDefaultExtension(this.CurrentMediaType);
 
             // Set the output filename, if it's not already
             if (string.IsNullOrEmpty(this.OutputPath))
@@ -1470,32 +1470,32 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ProcessCustomParameters()
         {
-            _environment?.SetParameters(this.Parameters);
-            if (_environment?.Parameters == null)
+            _environment?.SetExecutionContext(this.Parameters);
+            if (_environment?.ExecutionContext == null)
                 return;
 
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Name?[0] ?? '\0').ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default);
+                int driveIndex = Drives.Select(d => d.Name?[0] ?? '\0').ToList().IndexOf(_environment.ExecutionContext?.InputPath?[0] ?? default);
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
 
-            int driveSpeed = _environment.Parameters?.Speed ?? -1;
+            int driveSpeed = _environment.ExecutionContext?.Speed ?? -1;
             if (driveSpeed > 0)
                 this.DriveSpeed = driveSpeed;
-            else if (_environment.Parameters != null)
-                _environment.Parameters.Speed = this.DriveSpeed;
+            else if (_environment.ExecutionContext != null)
+                _environment.ExecutionContext.Speed = this.DriveSpeed;
 
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters?.OutputPath, false);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.ExecutionContext?.OutputPath, false);
 
             if (MediaTypes != null)
             {
-                MediaType? mediaType = _environment.Parameters?.GetMediaType();
+                MediaType? mediaType = _environment.ExecutionContext?.GetMediaType();
                 int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
                 this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
             }
@@ -1543,9 +1543,9 @@ namespace MPF.Core.UI.ViewModels
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
             //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
             //{
-            //    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
+            //    ((ExecutionContexts.DiscImageCreator.ExecutionContext)Env.ExecutionContext)[ExecutionContexts.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
             //    if (this.Options.VerboseLogging)
-            //        this.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+            //        this.Logger.VerboseLogLn($"SmartE detected, removing {ExecutionContexts.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
             //}
 
             if (string.IsNullOrEmpty(error))
@@ -1706,7 +1706,7 @@ namespace MPF.Core.UI.ViewModels
 #endif
 
                 // If we didn't execute a dumping command we cannot get submission output
-                if (_environment.Parameters?.IsDumpingCommand() != true)
+                if (_environment.ExecutionContext?.IsDumpingCommand() != true)
                 {
                     LogLn("No dumping command was run, submission information will not be gathered.");
                     this.Status = "Execution complete!";
@@ -1910,7 +1910,7 @@ namespace MPF.Core.UI.ViewModels
         /// Handler for Result ProgressChanged event
         /// </summary>
 #if NET20 || NET35 || NET40
-        private void ProgressUpdated(object? sender, BaseParameters.StringEventArgs value)
+        private void ProgressUpdated(object? sender, BaseExecutionContext.StringEventArgs value)
 #else
         private void ProgressUpdated(object? sender, string value)
 #endif

@@ -5,12 +5,12 @@ using System.Text.RegularExpressions;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Modules.Aaru
+namespace MPF.Core.ExecutionContexts.Aaru
 {
     /// <summary>
     /// Represents a generic set of Aaru parameters
     /// </summary>
-    public class Parameters : BaseParameters
+    public class ExecutionContext : BaseExecutionContext
     {
         #region Generic Dumping Information
 
@@ -121,15 +121,15 @@ namespace MPF.Core.Modules.Aaru
         #endregion
 
         /// <inheritdoc/>
-        public Parameters(string? parameters) : base(parameters) { }
+        public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public Parameters(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
 
-        #region BaseParameters Implementations
+        #region BaseExecutionContext Implementations
 
         /// <inheritdoc/>
         public override string? GenerateParameters()

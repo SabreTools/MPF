@@ -1,4 +1,4 @@
-namespace MPF.Core.Modules.Aaru
+namespace MPF.Core.ExecutionContexts.Aaru
 {
     /// <summary>
     /// Top-level commands for Aaru

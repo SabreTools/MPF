@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MPF.Core.Data;
-using MPF.Core.Modules;
+using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -27,7 +27,7 @@ namespace MPF.Core
         /// <param name="system">Currently selected system</param>
         /// <param name="mediaType">Currently selected media type</param>
         /// <param name="options">Options object representing user-defined options</param>
-        /// <param name="parameters">Parameters object representing what to send to the internal program</param>
+        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
@@ -38,7 +38,7 @@ namespace MPF.Core
             RedumpSystem? system,
             MediaType? mediaType,
             Options options,
-            BaseParameters? parameters,
+            BaseExecutionContext? executionContext,
             BaseProcessor? processor,
             IProgress<Result>? resultProgress = null,
             IProgress<BinaryObjectScanner.ProtectionProgress>? protectionProgress = null)
@@ -461,7 +461,7 @@ namespace MPF.Core
                     }
 
                     // Special case for DIC only
-                    if (parameters?.InternalProgram == InternalProgram.DiscImageCreator)
+                    if (executionContext?.InternalProgram == InternalProgram.DiscImageCreator)
                     {
                         resultProgress?.Report(Result.Success("Checking for LibCrypt status... this might take a while!"));
                         InfoTool.GetLibCryptDetected(info, combinedBase);

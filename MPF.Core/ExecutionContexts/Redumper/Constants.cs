@@ -1,4 +1,4 @@
-namespace MPF.Core.Modules.Redumper
+namespace MPF.Core.ExecutionContexts.Redumper
 {
     /// <summary>
     /// Top-level commands for Redumper
