@@ -82,12 +82,12 @@ namespace MPF.Core
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-        private void OutputToLog(object? proc, StringEventArgs args) => outputQueue?.Enqueue(args.Value);
+        private void OutputToLog(object? proc, StringEventArgs args) => outputQueue?.Enqueue(args);
 
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new StringEventArgs { Value = nextOutput });
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new StringEventArgs(nextOutput));
 
         #endregion
 

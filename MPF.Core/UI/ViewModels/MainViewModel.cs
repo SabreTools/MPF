@@ -1919,8 +1919,7 @@ namespace MPF.Core.UI.ViewModels
         {
             try
             {
-                value.Value ??= string.Empty;
-                LogLn(value.Value);
+                LogLn(value);
             }
             catch { }
         }
