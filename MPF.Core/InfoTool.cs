@@ -1029,6 +1029,57 @@ namespace MPF.Core
             }
         }
 
+        /// <summary>
+        /// Get the current system from the drive volume label
+        /// </summary>
+        /// <returns>The system based on volume label, null if none detected</returns>
+        internal static RedumpSystem? GetRedumpSystemFromVolumeLabel(string? volumeLabel)
+        {
+            // If the volume label is empty, we can't do anything
+            if (string.IsNullOrEmpty(volumeLabel))
+                return null;
+
+            // Audio CD
+            if (volumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.AudioCD;
+
+            // Microsoft Xbox
+            if (volumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox;
+            else if (volumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox;
+
+            // Microsoft Xbox 360
+            if (volumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox360;
+
+            // Microsoft Xbox 360 - Too overly broad even if a lot of discs use this
+            //if (volumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
+            //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
+            //if (volumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
+            //    return RedumpSystem.MicrosoftXbox360;
+
+            // Sega Mega-CD / Sega-CD
+            if (volumeLabel.Equals("Sega_CD", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SegaMegaCDSegaCD;
+
+            // Sony PlayStation 3
+            if (volumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation3;
+
+            // Sony PlayStation 4
+            if (volumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation4;
+
+            // Sony PlayStation 5
+            if (volumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation5;
+
+            return null;
+        }
+
         #endregion
 
         #region Category Extraction

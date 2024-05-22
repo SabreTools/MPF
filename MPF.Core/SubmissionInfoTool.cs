@@ -387,7 +387,7 @@ namespace MPF.Core
             if (labels == null || labels.Count == 0)
             {
                 // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                if (InfoTool.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
                     return null;
 
                 return driveLabel;
@@ -398,7 +398,7 @@ namespace MPF.Core
             if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
             {
                 // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
+                if (InfoTool.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
                     return null;
 
                 return firstLabel;
@@ -408,14 +408,14 @@ namespace MPF.Core
             List<string> volLabels = [];
 
             // Begin formatted output with the label from Windows, if it is unique and not a common volume label
-            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && Drive.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
+            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && InfoTool.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
                 volLabels.Add(driveLabel);
 
             // Add remaining labels with their corresponding filesystems
             foreach (KeyValuePair<string, List<string>> label in labels)
             {
                 // Ignore common volume labels
-                if (Drive.GetRedumpSystemFromVolumeLabel(label.Key) == null)
+                if (InfoTool.GetRedumpSystemFromVolumeLabel(label.Key) == null)
                     volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
             }
 
