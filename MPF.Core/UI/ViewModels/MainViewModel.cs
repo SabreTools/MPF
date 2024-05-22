@@ -1917,7 +1917,7 @@ namespace MPF.Core.UI.ViewModels
         /// Handler for Result ProgressChanged event
         /// </summary>
 #if NET20 || NET35 || NET40
-        private void ProgressUpdated(object? sender, BaseExecutionContext.StringEventArgs value)
+        private void ProgressUpdated(object? sender, Core.ExecutionContexts.BaseExecutionContext.StringEventArgs value)
 #else
         private void ProgressUpdated(object? sender, string value)
 #endif
