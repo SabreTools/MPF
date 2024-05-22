@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
