@@ -99,6 +99,20 @@ namespace MPF.Core
             await Protection.GetPlayStationAntiModchipDetected(drive.Name);
 
         /// <summary>
+        /// Get the Base64 representation of a string
+        /// </summary>
+        /// <param name="content">String content to encode</param>
+        /// <returns>Base64-encoded contents, if possible</returns>
+        internal static string? GetBase64(string? content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+
+            byte[] temp = Encoding.UTF8.GetBytes(content);
+            return Convert.ToBase64String(temp);
+        }
+
+        /// <summary>
         /// Get the current detected copy protection(s), if possible
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>

@@ -87,24 +87,6 @@ namespace MPF.Core.Processors
 
         #endregion
 
-        #region Parameter Parsing
-
-        /// <summary>
-        /// Get the Base64 representation of a string
-        /// </summary>
-        /// <param name="content">String content to encode</param>
-        /// <returns>Base64-encoded contents, if possible</returns>
-        protected static string? GetBase64(string? content)
-        {
-            if (string.IsNullOrEmpty(content))
-                return null;
-
-            byte[] temp = Encoding.UTF8.GetBytes(content);
-            return Convert.ToBase64String(temp);
-        }
-
-        #endregion
-
         #region Methods to Move
 
         /// <summary>

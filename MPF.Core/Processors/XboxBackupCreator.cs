@@ -65,9 +65,9 @@ namespace MPF.Core.Processors
             string? logPath = GetLogName(baseDir);
 
             if (File.Exists(logPath))
-                info.Artifacts["log"] = GetBase64(InfoTool.GetFullFile(logPath!)) ?? string.Empty;
+                info.Artifacts["log"] = InfoTool.GetBase64(InfoTool.GetFullFile(logPath!)) ?? string.Empty;
             if (File.Exists($"{basePath}.dvd"))
-                info.Artifacts["dvd"] = GetBase64(InfoTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
+                info.Artifacts["dvd"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
             //if (File.Exists($"{baseDir}DMI.bin"))
             //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}DMI.bin")) ?? string.Empty;
             // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes

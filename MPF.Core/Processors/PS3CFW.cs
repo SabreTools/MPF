@@ -49,9 +49,9 @@ namespace MPF.Core.Processors
             string? getKeyBasePath = GetCFWBasePath(basePath);
 
             if (File.Exists(getKeyBasePath + ".disc.pic"))
-                info.Artifacts["discpic"] = GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
+                info.Artifacts["discpic"] = InfoTool.GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
             if (File.Exists(getKeyBasePath + ".getkey.log"))
-                info.Artifacts["getkeylog"] = GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
+                info.Artifacts["getkeylog"] = InfoTool.GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
         }
 
         /// <inheritdoc/>

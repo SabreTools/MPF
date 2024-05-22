@@ -32,6 +32,7 @@
 - Move PlayStation drive use mostly to helper
 - Separate out copy protection run
 - Remove duplicate GetFullFile method
+- Move GetBase64 to InfoTool
 
 ### 3.1.9a (2024-05-21)
 

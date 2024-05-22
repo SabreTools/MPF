@@ -281,20 +281,6 @@ namespace MPF.Core.ExecutionContexts
             => index < parameters.Count;
 
         /// <summary>
-        /// Get the Base64 representation of a string
-        /// </summary>
-        /// <param name="content">String content to encode</param>
-        /// <returns>Base64-encoded contents, if possible</returns>
-        protected static string? GetBase64(string? content)
-        {
-            if (string.IsNullOrEmpty(content))
-                return null;
-
-            byte[] temp = Encoding.UTF8.GetBytes(content);
-            return Convert.ToBase64String(temp);
-        }
-
-        /// <summary>
         /// Get the full lines from the input file, if possible
         /// </summary>
         /// <param name="filename">file location</param>
