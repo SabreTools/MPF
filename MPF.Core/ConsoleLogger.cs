@@ -9,7 +9,7 @@ namespace MPF.Core
         /// <summary>
         /// Simple process counter to write to console
         /// </summary>
-        public static void ProgressUpdated(object? sender, Result value)
+        public static void ProgressUpdated(object? sender, ResultEventArgs value)
         {
             Console.WriteLine(value.Message);
         }

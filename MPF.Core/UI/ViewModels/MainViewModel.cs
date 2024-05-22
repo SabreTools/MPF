@@ -1328,7 +1328,7 @@ namespace MPF.Core.UI.ViewModels
             _environment = DetermineEnvironment();
 
             // Get the status to write out
-            Result result = Tools.GetSupportStatus(_environment.System, _environment.Type);
+            ResultEventArgs result = Tools.GetSupportStatus(_environment.System, _environment.Type);
             if (this.CurrentProgram == InternalProgram.NONE || _environment.ExecutionContext == null)
                 this.Status = "No dumping program found";
             else
@@ -1698,7 +1698,7 @@ namespace MPF.Core.UI.ViewModels
                     LogLn("Program outputs may be slow to populate in the log window");
 
                 // Get progress indicators
-                var resultProgress = new Progress<Result>();
+                var resultProgress = new Progress<ResultEventArgs>();
                 resultProgress.ProgressChanged += ProgressUpdated;
                 var protectionProgress = new Progress<ProtectionProgress>();
                 protectionProgress.ProgressChanged += ProgressUpdated;
@@ -1706,9 +1706,9 @@ namespace MPF.Core.UI.ViewModels
 
                 // Run the program with the parameters
 #if NET40
-                Result result = _environment.Run(resultProgress);
+                ResultEventArgs result = _environment.Run(resultProgress);
 #else
-                Result result = await _environment.Run(resultProgress);
+                ResultEventArgs result = await _environment.Run(resultProgress);
 #endif
 
                 // If we didn't execute a dumping command we cannot get submission output
@@ -1927,7 +1927,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
-        private void ProgressUpdated(object? sender, Result value)
+        private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
             var message = value?.Message;
 

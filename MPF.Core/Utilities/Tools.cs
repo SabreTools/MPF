@@ -108,11 +108,11 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Verify that, given a system and a media type, they are correct
         /// </summary>
-        public static Result GetSupportStatus(RedumpSystem? system, MediaType? type)
+        public static ResultEventArgs GetSupportStatus(RedumpSystem? system, MediaType? type)
         {
             // No system chosen, update status
             if (system == null)
-                return Result.Failure("Please select a valid system");
+                return ResultEventArgs.Failure("Please select a valid system");
 
             // If we're on an unsupported type, update the status accordingly
             return type switch
@@ -126,21 +126,21 @@ namespace MPF.Core.Utilities
                     or MediaType.CompactFlash
                     or MediaType.SDCard
                     or MediaType.FlashDrive
-                    or MediaType.HDDVD => Result.Success($"{type.LongName()} ready to dump"),
+                    or MediaType.HDDVD => ResultEventArgs.Success($"{type.LongName()} ready to dump"),
 
                 // Partially supported types
                 MediaType.GDROM
                     or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => Result.Success($"{type.LongName()} partially supported for dumping"),
+                    or MediaType.NintendoWiiOpticalDisc => ResultEventArgs.Success($"{type.LongName()} partially supported for dumping"),
 
                 // Special case for other supported tools
-                MediaType.UMD => Result.Failure($"{type.LongName()} supported for submission info parsing"),
+                MediaType.UMD => ResultEventArgs.Failure($"{type.LongName()} supported for submission info parsing"),
 
                 // Specifically unknown type
-                MediaType.NONE => Result.Failure($"Please select a valid media type"),
+                MediaType.NONE => ResultEventArgs.Failure($"Please select a valid media type"),
 
                 // Undumpable but recognized types
-                _ => Result.Failure($"{type.LongName()} media are not supported for dumping"),
+                _ => ResultEventArgs.Failure($"{type.LongName()} media are not supported for dumping"),
             };
         }
 

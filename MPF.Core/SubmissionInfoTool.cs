@@ -49,7 +49,7 @@ namespace MPF.Core
             Data.Options options,
             BaseExecutionContext? executionContext,
             BaseProcessor? processor,
-            IProgress<Result>? resultProgress = null,
+            IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
         {
             // Ensure the current disc combination should exist
@@ -64,8 +64,8 @@ namespace MPF.Core
             (bool foundFiles, List<string> missingFiles) = processor.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
-                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
-                resultProgress?.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
+                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
+                resultProgress?.Report(ResultEventArgs.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
                 return null;
             }
 
@@ -113,12 +113,12 @@ namespace MPF.Core
             // Run copy protection, if possible or necessary
             if (SupportsCopyProtectionScans(system))
             {
-                resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
+                resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
                 var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
 
                 info.CopyProtection!.Protection += protectionString;
                 info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
-                resultProgress?.Report(Result.Success("Copy protection scan complete!"));
+                resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
             }
 
             // Set fields that may have automatic filling otherwise
@@ -144,9 +144,9 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
 #if NET40
-        public static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+        public static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
 #else
-        public async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
+        public async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
 #endif
         {
             // If no username is provided
@@ -168,7 +168,7 @@ namespace MPF.Core
 #endif
             if (loggedIn == null)
             {
-                resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
+                resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump"));
                 return false;
             }
             else if (loggedIn == false)
@@ -182,7 +182,7 @@ namespace MPF.Core
             List<int>? fullyMatchedIDs = null;
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
+            resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
             var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
@@ -191,7 +191,7 @@ namespace MPF.Core
                 if (string.IsNullOrEmpty(hashData))
                 {
                     trackCount--;
-                    resultProgress?.Report(Result.Success("Blank line found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Success("Blank line found, skipping!"));
                     continue;
                 }
 
@@ -206,14 +206,14 @@ namespace MPF.Core
                     || hashData.Contains("(Track AA.2).bin"))
                 {
                     trackCount--;
-                    resultProgress?.Report(Result.Success("Extra track found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Success("Extra track found, skipping!"));
                     continue;
                 }
 
                 // Get the SHA-1 hash
                 if (!InfoTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
                 {
-                    resultProgress?.Report(Result.Failure($"Line could not be parsed: {hashData}"));
+                    resultProgress?.Report(ResultEventArgs.Failure($"Line could not be parsed: {hashData}"));
                     continue;
                 }
 
@@ -225,9 +225,9 @@ namespace MPF.Core
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
 #endif
                 if (singleFound)
-                    resultProgress?.Report(Result.Success(result));
+                    resultProgress?.Report(ResultEventArgs.Success(result));
                 else
-                    resultProgress?.Report(Result.Failure(result));
+                    resultProgress?.Report(ResultEventArgs.Failure(result));
 
                 // Ensure that all tracks are found
                 allFound &= singleFound;
@@ -258,9 +258,9 @@ namespace MPF.Core
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
 #endif
                 if (singleFound)
-                    resultProgress?.Report(Result.Success(result));
+                    resultProgress?.Report(ResultEventArgs.Success(result));
                 else
-                    resultProgress?.Report(Result.Failure(result));
+                    resultProgress?.Report(ResultEventArgs.Failure(result));
 
                 // Ensure that the hash is found
                 allFound = singleFound;
@@ -280,7 +280,7 @@ namespace MPF.Core
             // Make sure we only have unique IDs
             info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
 
-            resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
+            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
                 ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs.Select(i => i.ToString()).ToArray())
                 : "No matches found")));
 
@@ -303,7 +303,7 @@ namespace MPF.Core
                     continue;
 
                 // Fill in the fields from the existing ID
-                resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
 #if NET40
                 var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
                 fillTask.Wait();
@@ -311,7 +311,7 @@ namespace MPF.Core
 #else
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
 #endif
-                resultProgress?.Report(Result.Success("Information filling complete!"));
+                resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current
                 info.FullyMatchedID = fullyMatchedIDs[i];
@@ -587,7 +587,7 @@ namespace MPF.Core
             RedumpSystem? system,
             Drive? drive,
             bool addPlaceholders,
-            IProgress<Result>? resultProgress = null)
+            IProgress<ResultEventArgs>? resultProgress = null)
         {
             // Extract info based specifically on RedumpSystem
             switch (system)
@@ -800,9 +800,9 @@ namespace MPF.Core
 
                     if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
                     {
-                        resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
+                        resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
                         info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-                        resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
+                        resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
                     }
 
                     break;

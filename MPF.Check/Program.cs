@@ -39,7 +39,7 @@ namespace MPF.Check
             }
 
             // Make new Progress objects
-            var resultProgress = new Progress<Result>();
+            var resultProgress = new Progress<ResultEventArgs>();
             resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
             var protectionProgress = new Progress<ProtectionProgress>();
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;

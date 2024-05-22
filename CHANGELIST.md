@@ -47,6 +47,7 @@
 - Make StringEventArgs more complete
 - Make implicit StringEventArgs bidirectional
 - Make implicit Result bidirectional
+- Rename Result to ResultEventArgs for consistency
 
 ### 3.1.9a (2024-05-21)
 

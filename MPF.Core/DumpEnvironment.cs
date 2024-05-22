@@ -233,17 +233,17 @@ namespace MPF.Core
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
 #if NET40
-        public Result Run(IProgress<Result>? progress = null)
+        public ResultEventArgs Run(IProgress<ResultEventArgs>? progress = null)
 #else
-        public async Task<Result> Run(IProgress<Result>? progress = null)
+        public async Task<ResultEventArgs> Run(IProgress<ResultEventArgs>? progress = null)
 #endif
         {
             // If we don't have parameters
             if (ExecutionContext == null)
-                return Result.Failure("Error! Current configuration is not supported!");
+                return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Check that we have the basics for dumping
-            Result result = IsValidForDump();
+            ResultEventArgs result = IsValidForDump();
             if (!result)
                 return result;
 
@@ -256,7 +256,7 @@ namespace MPF.Core
             }
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {InternalProgram}... {(_options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
+            progress?.Report(ResultEventArgs.Success($"Executing {InternalProgram}... {(_options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
@@ -268,7 +268,7 @@ namespace MPF.Core
 #else
             await Task.Run(() => ExecutionContext.ExecuteInternalProgram(_options.ToolsInSeparateWindow));
 #endif
-            progress?.Report(Result.Success($"{InternalProgram} has finished!"));
+            progress?.Report(ResultEventArgs.Success($"{InternalProgram} has finished!"));
 
             // Remove event handler if needed
             if (!_options.ToolsInSeparateWindow)
@@ -288,16 +288,16 @@ namespace MPF.Core
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
-        public async Task<Result> VerifyAndSaveDumpOutput(
-            IProgress<Result>? resultProgress = null,
+        public async Task<ResultEventArgs> VerifyAndSaveDumpOutput(
+            IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
             if (ExecutionContext == null && Processor == null)
-                return Result.Failure("Error! Current configuration is not supported!");
+                return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
-            resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
+            resultProgress?.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
             var outputDirectory = Path.GetDirectoryName(OutputPath);
@@ -307,12 +307,12 @@ namespace MPF.Core
             (bool foundFiles, List<string> missingFiles) = Processor.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
-                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
-                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
+                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
+                return ResultEventArgs.Failure("Error! Please check output directory as dump may be incomplete!");
             }
 
             // Extract the information from the output files
-            resultProgress?.Report(Result.Success("Extracting output information from output files..."));
+            resultProgress?.Report(ResultEventArgs.Success("Extracting output information from output files..."));
             var submissionInfo = await SubmissionInfoTool.ExtractOutputInformation(
                 OutputPath,
                 Drive,
@@ -323,128 +323,128 @@ namespace MPF.Core
                 Processor,
                 resultProgress,
                 protectionProgress);
-            resultProgress?.Report(Result.Success("Extracting information complete!"));
+            resultProgress?.Report(ResultEventArgs.Success("Extracting information complete!"));
 
             // Inject seed submission info data, if necessary
             if (seedInfo != null)
             {
-                resultProgress?.Report(Result.Success("Injecting user-supplied information..."));
+                resultProgress?.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
                 Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
-                resultProgress?.Report(Result.Success("Information injection complete!"));
+                resultProgress?.Report(ResultEventArgs.Success("Information injection complete!"));
             }
 
             // Eject the disc automatically if configured to
             if (_options.EjectAfterDump == true)
             {
-                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Name}"));
+                resultProgress?.Report(ResultEventArgs.Success($"Ejecting disc in drive {Drive?.Name}"));
                 await EjectDisc();
             }
 
             // Reset the drive automatically if configured to
             if (InternalProgram == InternalProgram.DiscImageCreator && _options.DICResetDriveAfterDump)
             {
-                resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Name}"));
+                resultProgress?.Report(ResultEventArgs.Success($"Resetting drive {Drive?.Name}"));
                 await ResetDrive();
             }
 
             // Get user-modifiable information if confugured to
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
-                resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
+                resultProgress?.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
 
                 bool? filledInfo;
                 (filledInfo, submissionInfo) = processUserInfo(submissionInfo);
 
                 if (filledInfo == true)
-                    resultProgress?.Report(Result.Success("Additional disc information added!"));
+                    resultProgress?.Report(ResultEventArgs.Success("Additional disc information added!"));
                 else
-                    resultProgress?.Report(Result.Success("Disc information skipped!"));
+                    resultProgress?.Report(ResultEventArgs.Success("Disc information skipped!"));
             }
 
             // Process special fields for site codes
-            resultProgress?.Report(Result.Success("Processing site codes..."));
+            resultProgress?.Report(ResultEventArgs.Success("Processing site codes..."));
             Formatter.ProcessSpecialFields(submissionInfo);
-            resultProgress?.Report(Result.Success("Processing complete!"));
+            resultProgress?.Report(ResultEventArgs.Success("Processing complete!"));
 
             // Format the information for the text output
-            resultProgress?.Report(Result.Success("Formatting information..."));
+            resultProgress?.Report(ResultEventArgs.Success("Formatting information..."));
             (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility);
             if (formattedValues == null)
-                resultProgress?.Report(Result.Failure(formatResult));
+                resultProgress?.Report(ResultEventArgs.Failure(formatResult));
             else
-                resultProgress?.Report(Result.Success(formatResult));
+                resultProgress?.Report(ResultEventArgs.Success(formatResult));
 
             // Get the filename suffix for auto-generated files
             var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
-            resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
+            resultProgress?.Report(ResultEventArgs.Success("Writing information to !submissionInfo.txt..."));
             (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
             if (txtSuccess)
-                resultProgress?.Report(Result.Success(txtResult));
+                resultProgress?.Report(ResultEventArgs.Success(txtResult));
             else
-                resultProgress?.Report(Result.Failure(txtResult));
+                resultProgress?.Report(ResultEventArgs.Failure(txtResult));
 
             // Write the copy protection output
             if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Any())
             {
                 if (_options.ScanForProtection && _options.OutputSeparateProtectionFile)
                 {
-                    resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
+                    resultProgress?.Report(ResultEventArgs.Success("Writing protection to !protectionInfo.txt..."));
                     bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
-                        resultProgress?.Report(Result.Success("Writing complete!"));
+                        resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
                     else
-                        resultProgress?.Report(Result.Failure("Writing could not complete!"));
+                        resultProgress?.Report(ResultEventArgs.Failure("Writing could not complete!"));
                 }
             }
 
             // Write the JSON output, if required
             if (_options.OutputSubmissionJSON)
             {
-                resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(_options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
+                resultProgress?.Report(ResultEventArgs.Success($"Writing information to !submissionInfo.json{(_options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
                 bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
-                    resultProgress?.Report(Result.Success("Writing complete!"));
+                    resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
                 else
-                    resultProgress?.Report(Result.Failure("Writing could not complete!"));
+                    resultProgress?.Report(ResultEventArgs.Failure("Writing could not complete!"));
             }
 
             // Compress the logs, if required
             if (_options.CompressLogFiles)
             {
-                resultProgress?.Report(Result.Success("Compressing log files..."));
+                resultProgress?.Report(ResultEventArgs.Success("Compressing log files..."));
                 (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Processor);
                 if (compressSuccess)
-                    resultProgress?.Report(Result.Success(compressResult));
+                    resultProgress?.Report(ResultEventArgs.Success(compressResult));
                 else
-                    resultProgress?.Report(Result.Failure(compressResult));
+                    resultProgress?.Report(ResultEventArgs.Failure(compressResult));
             }
 
             // Delete unnecessary files, if required
             if (_options.DeleteUnnecessaryFiles)
             {
-                resultProgress?.Report(Result.Success("Deleting unnecessary files..."));
+                resultProgress?.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
                 (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Processor);
                 if (deleteSuccess)
-                    resultProgress?.Report(Result.Success(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Success(deleteResult));
                 else
-                    resultProgress?.Report(Result.Failure(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
             }
 
             // Create PS3 IRD, if required
             if (_options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
             {
-                resultProgress?.Report(Result.Success("Creating IRD... please wait!"));
+                resultProgress?.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
                 (bool deleteSuccess, string deleteResult) = await InfoTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
                 if (deleteSuccess)
-                    resultProgress?.Report(Result.Success(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Success(deleteResult));
                 else
-                    resultProgress?.Report(Result.Failure(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
             }
 
-            resultProgress?.Report(Result.Success("Submission information process complete!"));
-            return Result.Success();
+            resultProgress?.Report(ResultEventArgs.Success("Submission information process complete!"));
+            return ResultEventArgs.Success();
         }
 
         /// <summary>
@@ -512,27 +512,27 @@ namespace MPF.Core
         /// Validate the current environment is ready for a dump
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private Result IsValidForDump()
+        private ResultEventArgs IsValidForDump()
         {
             // Validate that everything is good
             if (ExecutionContext == null || !ParametersValid())
-                return Result.Failure("Error! Current configuration is not supported!");
+                return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
             OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, false);
 
             // Validate that the output path isn't on the dumping drive
             if (Drive?.Name != null && OutputPath.StartsWith(Drive.Name))
-                return Result.Failure("Error! Cannot output to same drive that is being dumped!");
+                return ResultEventArgs.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
             if (!File.Exists(ExecutionContext.ExecutablePath))
-                return Result.Failure($"Error! {ExecutionContext.ExecutablePath} does not exist!");
+                return ResultEventArgs.Failure($"Error! {ExecutionContext.ExecutablePath} does not exist!");
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(ExecutionContext.ExecutablePath!);
             if (Drive?.Name != null && fullExecutablePath.StartsWith(Drive.Name))
-                return Result.Failure("Error! Cannot dump same drive that executable resides on!");
+                return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
             return Tools.GetSupportStatus(System, Type);

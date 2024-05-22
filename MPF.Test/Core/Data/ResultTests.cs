@@ -8,7 +8,7 @@ namespace MPF.Test.Core.Data
         [Fact]
         public void EmptySuccessTest()
         {
-            var actual = Result.Success();
+            var actual = ResultEventArgs.Success();
             Assert.True(actual);
             Assert.Empty(actual.Message);
         }
@@ -17,7 +17,7 @@ namespace MPF.Test.Core.Data
         public void CustomMessageSuccessTest()
         {
             string message = "Success!";
-            var actual = Result.Success(message);
+            var actual = ResultEventArgs.Success(message);
             Assert.True(actual);
             Assert.Equal(message, actual.Message);
         }
@@ -25,7 +25,7 @@ namespace MPF.Test.Core.Data
         [Fact]
         public void EmptyFailureTest()
         {
-            var actual = Result.Failure();
+            var actual = ResultEventArgs.Failure();
             Assert.False(actual);
             Assert.Empty(actual.Message);
         }
@@ -34,7 +34,7 @@ namespace MPF.Test.Core.Data
         public void CustomMessageFailureTest()
         {
             string message = "Failure!";
-            var actual = Result.Failure(message);
+            var actual = ResultEventArgs.Failure(message);
             Assert.False(actual);
             Assert.Equal(message, actual.Message);
         }
