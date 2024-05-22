@@ -33,6 +33,7 @@
 - Separate out copy protection run
 - Remove duplicate GetFullFile method
 - Move GetBase64 to InfoTool
+- Remove another redundant GetFullFile
 
 ### 3.1.9a (2024-05-21)
 
