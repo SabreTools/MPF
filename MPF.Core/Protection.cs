@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BinaryObjectScanner;
 using psxt001z;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
@@ -19,14 +20,16 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path,
+            Data.Options options,
+            IProgress<ProtectionProgress>? progress = null)
         {
             try
             {
 #if NET40
                 var found = await Task.Factory.StartNew(() =>
                 {
-                    var scanner = new BinaryObjectScanner.Scanner(
+                    var scanner = new Scanner(
                         options.ScanArchivesForProtection,
                         scanContents: true, // Hardcoded value to avoid issues
                         scanGameEngines: false, // Hardcoded value to avoid issues
@@ -40,7 +43,7 @@ namespace MPF.Core
 #else
                 var found = await Task.Run(() =>
                 {
-                    var scanner = new BinaryObjectScanner.Scanner(
+                    var scanner = new Scanner(
                         options.ScanArchivesForProtection,
                         scanContents: true, // Hardcoded value to avoid issues
                         scanGameEngines: false, // Hardcoded value to avoid issues

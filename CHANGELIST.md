@@ -68,6 +68,7 @@
 - Remove unnecessary GetAntiModchipDetected method
 - Make GetCopyProtection signature easier to read
 - Move GetLibCryptDetected back to DIC processor
+- Make RunProtectionScanOnPath signature easier to read
 
 ### 3.1.9a (2024-05-21)
 
