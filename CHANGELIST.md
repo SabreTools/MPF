@@ -54,6 +54,7 @@
 - Remove use of "this" in ProcessingQueue
 - Use proper private variable naming in ProcessingQueue
 - Seal all execution contexts
+- Remove use of "this" in Drive
 
 ### 3.1.9a (2024-05-21)
 
