@@ -87,17 +87,17 @@ namespace MPF.Core.Processors
             info.Artifacts ??= [];
 
             if (File.Exists(basePath + ".cicm.xml"))
-                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
+                info.Artifacts["cicm"] = GetBase64(InfoTool.GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
             if (File.Exists(basePath + ".ibg"))
                 info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
             if (File.Exists(basePath + ".log"))
-                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log")) ?? string.Empty;
+                info.Artifacts["log"] = GetBase64(InfoTool.GetFullFile(basePath + ".log")) ?? string.Empty;
             if (File.Exists(basePath + ".mhddlog.bin"))
                 info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
             if (File.Exists(basePath + ".resume.xml"))
-                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
+                info.Artifacts["resume"] = GetBase64(InfoTool.GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
             if (File.Exists(basePath + ".sub.log"))
-                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log")) ?? string.Empty;
+                info.Artifacts["sub_log"] = GetBase64(InfoTool.GetFullFile(basePath + ".sub.log")) ?? string.Empty;
         }
 
         /// <inheritdoc/>

@@ -54,9 +54,9 @@ namespace MPF.Core.Processors
             info.Artifacts ??= [];
 
             if (File.Exists(basePath + ".bca"))
-                info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
+                info.Artifacts["bca"] = GetBase64(InfoTool.GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
             if (File.Exists(basePath + "-dumpinfo.txt"))
-                info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
+                info.Artifacts["dumpinfo"] = GetBase64(InfoTool.GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -206,7 +206,7 @@ namespace MPF.Core.Processors
 
             try
             {
-                var hex = GetFullFile(bcaPath, true);
+                var hex = InfoTool.GetFullFile(bcaPath, true);
                 if (hex == null)
                     return null;
 

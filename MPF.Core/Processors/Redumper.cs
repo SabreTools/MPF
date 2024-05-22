@@ -132,43 +132,43 @@ namespace MPF.Core.Processors
             info.Artifacts ??= [];
 
             if (File.Exists($"{basePath}.cdtext"))
-                info.Artifacts["cdtext"] = GetBase64(GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
+                info.Artifacts["cdtext"] = GetBase64(InfoTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
+                info.Artifacts["cue"] = GetBase64(InfoTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.fulltoc"))
-                info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
+                info.Artifacts["fulltoc"] = GetBase64(InfoTool.GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
             if (File.Exists($"{basePath}.hash"))
-                info.Artifacts["hash"] = GetBase64(GetFullFile($"{basePath}.hash")) ?? string.Empty;
+                info.Artifacts["hash"] = GetBase64(InfoTool.GetFullFile($"{basePath}.hash")) ?? string.Empty;
             // TODO: "{basePath} (Track X).hash" (get from cuesheet)
             if (File.Exists($"{basePath}.log"))
-                info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log")) ?? string.Empty;
+                info.Artifacts["log"] = GetBase64(InfoTool.GetFullFile($"{basePath}.log")) ?? string.Empty;
             if (File.Exists($"{basePath}.manufacturer"))
-                info.Artifacts["manufacturer"] = GetBase64(GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer"] = GetBase64(InfoTool.GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.1.manufacturer"))
-                info.Artifacts["manufacturer1"] = GetBase64(GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer1"] = GetBase64(InfoTool.GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.2.manufacturer"))
-                info.Artifacts["manufacturer2"] = GetBase64(GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer2"] = GetBase64(InfoTool.GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.physical"))
-                info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical")) ?? string.Empty;
+                info.Artifacts["physical"] = GetBase64(InfoTool.GetFullFile($"{basePath}.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.0.physical"))
-                info.Artifacts["physical0"] = GetBase64(GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
+                info.Artifacts["physical0"] = GetBase64(InfoTool.GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.1.physical"))
-                info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
+                info.Artifacts["physical1"] = GetBase64(InfoTool.GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.2.physical"))
-                info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
+                info.Artifacts["physical2"] = GetBase64(InfoTool.GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
             // if (File.Exists($"{basePath}.skeleton"))
-            //     info.Artifacts["skeleton"] = GetBase64(GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
+            //     info.Artifacts["skeleton"] = GetBase64(InfoTool.GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
             // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
             // if (File.Exists($"{basePath}.scram"))
-            //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram")) ?? string.Empty;
+            //     info.Artifacts["scram"] = GetBase64(InfoTool.GetFullFile($"{basePath}.scram")) ?? string.Empty;
             // if (File.Exists($"{basePath}.scrap"))
-            //     info.Artifacts["scrap"] = GetBase64(GetFullFile($"{basePath}.scrap")) ?? string.Empty;
+            //     info.Artifacts["scrap"] = GetBase64(InfoTool.GetFullFile($"{basePath}.scrap")) ?? string.Empty;
             if (File.Exists($"{basePath}.state"))
-                info.Artifacts["state"] = GetBase64(GetFullFile($"{basePath}.state")) ?? string.Empty;
+                info.Artifacts["state"] = GetBase64(InfoTool.GetFullFile($"{basePath}.state")) ?? string.Empty;
             if (File.Exists($"{basePath}.subcode"))
-                info.Artifacts["subcode"] = GetBase64(GetFullFile($"{basePath}.subcode")) ?? string.Empty;
+                info.Artifacts["subcode"] = GetBase64(InfoTool.GetFullFile($"{basePath}.subcode")) ?? string.Empty;
             if (File.Exists($"{basePath}.toc"))
-                info.Artifacts["toc"] = GetBase64(GetFullFile($"{basePath}.toc")) ?? string.Empty;
+                info.Artifacts["toc"] = GetBase64(InfoTool.GetFullFile($"{basePath}.toc")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -202,7 +202,7 @@ namespace MPF.Core.Processors
                 case MediaType.CDROM:
                     info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
                     info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.TracksAndWriteOffsets.Cuesheet = InfoTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
 
                     // Attempt to get the write offset
                     string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;

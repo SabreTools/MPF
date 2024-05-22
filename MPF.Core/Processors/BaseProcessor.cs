@@ -103,28 +103,6 @@ namespace MPF.Core.Processors
             return Convert.ToBase64String(temp);
         }
 
-        /// <summary>
-        /// Get the full lines from the input file, if possible
-        /// </summary>
-        /// <param name="filename">file location</param>
-        /// <param name="binary">True if should read as binary, false otherwise (default)</param>
-        /// <returns>Full text of the file, null on error</returns>
-        protected static string? GetFullFile(string filename, bool binary = false)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(filename))
-                return null;
-
-            // If we're reading as binary
-            if (binary)
-            {
-                byte[] bytes = File.ReadAllBytes(filename);
-                return BitConverter.ToString(bytes).Replace("-", string.Empty);
-            }
-
-            return File.ReadAllText(filename);
-        }
-
         #endregion
 
         #region Methods to Move
@@ -144,7 +122,7 @@ namespace MPF.Core.Processors
 
             try
             {
-                var hex = GetFullFile(picPath, true);
+                var hex = InfoTool.GetFullFile(picPath, true);
                 if (hex == null)
                     return null;
 

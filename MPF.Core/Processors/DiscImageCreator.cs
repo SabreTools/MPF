@@ -236,33 +236,33 @@ namespace MPF.Core.Processors
             //if (File.Exists($"{basePath}.c2"))
             //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.c2")) ?? string.Empty;
             if (File.Exists($"{basePath}_c2Error.txt"))
-                info.Artifacts["c2Error"] = GetBase64(GetFullFile($"{basePath}_c2Error.txt")) ?? string.Empty;
+                info.Artifacts["c2Error"] = GetBase64(InfoTool.GetFullFile($"{basePath}_c2Error.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.ccd"))
-                info.Artifacts["ccd"] = GetBase64(GetFullFile($"{basePath}.ccd")) ?? string.Empty;
+                info.Artifacts["ccd"] = GetBase64(InfoTool.GetFullFile($"{basePath}.ccd")) ?? string.Empty;
             if (File.Exists($"{basePath}_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                info.Artifacts["cmd"] = GetBase64(GetFullFile($"{basePath}_cmd.txt")) ?? string.Empty;
+                info.Artifacts["cmd"] = GetBase64(InfoTool.GetFullFile($"{basePath}_cmd.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_CSSKey.txt"))
-                info.Artifacts["csskey"] = GetBase64(GetFullFile($"{basePath}_CSSKey.txt")) ?? string.Empty;
+                info.Artifacts["csskey"] = GetBase64(InfoTool.GetFullFile($"{basePath}_CSSKey.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue")) ?? string.Empty;
+                info.Artifacts["cue"] = GetBase64(InfoTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.dat"))
-                info.Artifacts["dat"] = GetBase64(GetFullFile($"{basePath}.dat")) ?? string.Empty;
+                info.Artifacts["dat"] = GetBase64(InfoTool.GetFullFile($"{basePath}.dat")) ?? string.Empty;
             if (File.Exists($"{basePath}_disc.txt"))
-                info.Artifacts["disc"] = GetBase64(GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
+                info.Artifacts["disc"] = GetBase64(InfoTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
             //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_DMI.bin")))
             //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"))) ?? string.Empty;
             if (File.Exists($"{basePath}_drive.txt"))
-                info.Artifacts["drive"] = GetBase64(GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
+                info.Artifacts["drive"] = GetBase64(InfoTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_img.cue"))
-                info.Artifacts["img_cue"] = GetBase64(GetFullFile($"{basePath}_img.cue")) ?? string.Empty;
+                info.Artifacts["img_cue"] = GetBase64(InfoTool.GetFullFile($"{basePath}_img.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile($"{basePath}.img_EdcEcc.txt")) ?? string.Empty;
+                info.Artifacts["img_EdcEcc"] = GetBase64(InfoTool.GetFullFile($"{basePath}.img_EdcEcc.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile($"{basePath}.img_EccEdc.txt")) ?? string.Empty;
+                info.Artifacts["img_EdcEcc"] = GetBase64(InfoTool.GetFullFile($"{basePath}.img_EccEdc.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainError.txt"))
-                info.Artifacts["mainError"] = GetBase64(GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
+                info.Artifacts["mainError"] = GetBase64(InfoTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = GetBase64(GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
+                info.Artifacts["mainInfo"] = GetBase64(InfoTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_PFI.bin"))
             //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
             //if (File.Exists($"{basePath}_PIC.bin"))
@@ -272,17 +272,17 @@ namespace MPF.Core.Processors
             if (File.Exists($"{basePath}.sub"))
                 info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.sub")) ?? string.Empty;
             if (File.Exists($"{basePath}_subError.txt"))
-                info.Artifacts["subError"] = GetBase64(GetFullFile($"{basePath}_subError.txt")) ?? string.Empty;
+                info.Artifacts["subError"] = GetBase64(InfoTool.GetFullFile($"{basePath}_subError.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_subInfo.txt"))
-                info.Artifacts["subInfo"] = GetBase64(GetFullFile($"{basePath}_subInfo.txt")) ?? string.Empty;
+                info.Artifacts["subInfo"] = GetBase64(InfoTool.GetFullFile($"{basePath}_subInfo.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_subIntention.txt"))
-                info.Artifacts["subIntention"] = GetBase64(GetFullFile($"{basePath}_subIntention.txt")) ?? string.Empty;
+                info.Artifacts["subIntention"] = GetBase64(InfoTool.GetFullFile($"{basePath}_subIntention.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_sub.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile($"{basePath}_sub.txt")) ?? string.Empty;
+            //    info.Artifacts["subReadable"] = GetBase64(InfoTool.GetFullFile($"{basePath}_sub.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_subReadable.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile($"{basePath}_subReadable.txt")) ?? string.Empty;
+            //    info.Artifacts["subReadable"] = GetBase64(InfoTool.GetFullFile($"{basePath}_subReadable.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_volDesc.txt"))
-                info.Artifacts["volDesc"] = GetBase64(GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
+                info.Artifacts["volDesc"] = GetBase64(InfoTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -344,7 +344,7 @@ namespace MPF.Core.Processors
                         info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.TracksAndWriteOffsets.Cuesheet = InfoTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
 
                     // Attempt to get the write offset
@@ -437,7 +437,7 @@ namespace MPF.Core.Processors
                     {
                         var fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
-                            info.CopyProtection!.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
+                            info.CopyProtection!.SecuROMData = InfoTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
                     }
 
                     // Needed for some odd copy protections
