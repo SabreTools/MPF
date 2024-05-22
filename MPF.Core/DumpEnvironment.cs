@@ -666,10 +666,7 @@ namespace MPF.Core
                 return false;
 
             // Validate that the required program exists
-            if (!File.Exists(_options.DiscImageCreatorPath))
-                return false;
-
-            return true;
+            return File.Exists(_options.DiscImageCreatorPath);
         }
 
         /// <summary>

@@ -63,6 +63,7 @@
 - Make media type private to DumpEnvironment
 - Make system private to DumpEnvironment
 - Make drive private to DumpEnvironment
+- Simplify RequiredProgramsExist logic
 
 ### 3.1.9a (2024-05-21)
 
