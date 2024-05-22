@@ -33,22 +33,22 @@ namespace MPF.Core
         /// <summary>
         /// Drive object representing the current drive
         /// </summary>
-        public Drive? Drive { get; private set; }
+        public Drive? Drive { get; }
 
         /// <summary>
         /// Currently selected system
         /// </summary>
-        public RedumpSystem? System { get; private set; }
+        public RedumpSystem? System { get; }
 
         /// <summary>
         /// Currently selected media type
         /// </summary>
-        public MediaType? Type { get; private set; }
+        public MediaType? Type { get; }
 
         /// <summary>
         /// Currently selected dumping program
         /// </summary>
-        public InternalProgram InternalProgram { get; private set; }
+        public InternalProgram InternalProgram { get; }
 
         /// <summary>
         /// ExecutionContext object representing how to invoke the internal program

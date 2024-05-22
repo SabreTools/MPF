@@ -48,6 +48,7 @@
 - Make implicit StringEventArgs bidirectional
 - Make implicit Result bidirectional
 - Rename Result to ResultEventArgs for consistency
+- Reduce accessors for DumpEnvironment
 
 ### 3.1.9a (2024-05-21)
 
