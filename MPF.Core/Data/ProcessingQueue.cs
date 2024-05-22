@@ -81,7 +81,7 @@ namespace MPF.Core.Data
                     if (this.TokenSource.IsCancellationRequested)
                         break;
 
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                     continue;
                 }
 

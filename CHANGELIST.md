@@ -39,6 +39,7 @@
 - Move string contents for UI to view model
 - Remove unused byte array constant
 - Fix net20, net35, and net40
+- Reduce processing queue sleep time
 
 ### 3.1.9a (2024-05-21)
 
