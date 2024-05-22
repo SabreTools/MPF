@@ -1915,21 +1915,12 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
-#if NET20 || NET35 || NET40
-        private void ProgressUpdated(object? sender, Core.ExecutionContexts.BaseExecutionContext.StringEventArgs value)
-#else
-        private void ProgressUpdated(object? sender, string value)
-#endif
+        private void ProgressUpdated(object? sender, StringEventArgs value)
         {
             try
             {
-#if NET20 || NET35 || NET40
                 value.Value ??= string.Empty;
                 LogLn(value.Value);
-#else
-                value ??= string.Empty;
-                LogLn(value);
-#endif
             }
             catch { }
         }

@@ -267,7 +267,7 @@ namespace MPF.Core.Utilities
 #else
             using var hc = new System.Net.Http.HttpClient();
 #if NET452
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 #endif
 
             // TODO: Figure out a better way than having this hardcoded...
@@ -279,7 +279,7 @@ namespace MPF.Core.Utilities
             if (latestReleaseJsonString == null)
                 return (null, null);
 
-            var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+            var latestReleaseJson = Newtonsoft.Json.Linq.JObject.Parse(latestReleaseJsonString);
             if (latestReleaseJson == null)
                 return (null, null);
 

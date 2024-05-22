@@ -15,12 +15,10 @@ namespace MPF.Core.Utilities
         /// <param name="reader">TextReader representing the input</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET20 || NET35
-        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<StringEventArgs>? handler)
-#elif NET40
+#if NET40
         public static void OutputToLog(TextReader reader, object baseClass, EventHandler<StringEventArgs>? handler)
 #else
-        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
+        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<StringEventArgs>? handler)
 #endif
         {
             // Initialize the required variables
@@ -52,38 +50,22 @@ namespace MPF.Core.Utilities
                     string line = new(buffer, 0, read);
 
                     // If we have no newline characters, store in the string builder
-#if NETFRAMEWORK
                     if (!line.Contains("\r") && !line.Contains("\n"))
-#else
-                    if (!line.Contains('\r') && !line.Contains('\n'))
-#endif
                         sb.Append(line);
 
                     // If we have a newline, append and log
-#if NETFRAMEWORK
                     else if (line.Contains("\n") || line.Contains("\r\n"))
-#else
-                    else if (line.Contains('\n') || line.Contains("\r\n"))
-#endif
                         ProcessNewLines(sb, line, baseClass, handler);
 
                     // If we have a carriage return only, append and log first and last instances
-#if NETFRAMEWORK
                     else if (line.Contains("\r"))
-#else
-                    else if (line.Contains('\r'))
-#endif
                         ProcessCarriageReturns(sb, line, baseClass, handler);
                 }
             }
             catch { }
             finally
             {
-#if NET20 || NET35 || NET40
                 handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
-#else
-                handler?.Invoke(baseClass, sb.ToString());
-#endif
             }
         }
 
@@ -94,22 +76,14 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET20 || NET35 || NET40
         private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<StringEventArgs>? handler)
-#else
-        private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
-#endif
         {
             line = line.Replace("\r\n", "\n");
             var split = line.Split('\n');
             for (int i = 0; i < split.Length; i++)
             {
                 // If the chunk contains a carriage return, handle it like a separate line
-#if NETFRAMEWORK
                 if (split[i].Contains("\r"))
-#else
-                if (split[i].Contains('\r'))
-#endif
                 {
                     ProcessCarriageReturns(sb, split[i], baseClass, handler);
                     continue;
@@ -119,13 +93,8 @@ namespace MPF.Core.Utilities
                 if (i == 0)
                 {
                     sb.Append(split[i]);
-#if NET20 || NET35 || NET40
                     handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
                     sb = new();
-#else
-                    handler?.Invoke(baseClass, sb.ToString());
-                    sb.Clear();
-#endif
                 }
 
                 // For the last item, just append so it's dealt with the next time
@@ -137,11 +106,7 @@ namespace MPF.Core.Utilities
                 // For everything else, directly write out
                 else
                 {
-#if NET20 || NET35 || NET40
                     handler?.Invoke(baseClass, new StringEventArgs { Value = split[i] });
-#else
-                    handler?.Invoke(baseClass, split[i]);
-#endif
                 }
             }
         }
@@ -153,23 +118,14 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
-#if NET20 || NET35 || NET40
         private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<StringEventArgs>? handler)
-#else
-        private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
-#endif
         {
             var split = line.Split('\r');
 
             // Append and log the first
             sb.Append(split[0]);
-#if NET20 || NET35 || NET40
             handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
             sb = new();
-#else
-            handler?.Invoke(baseClass, sb.ToString());
-            sb.Clear();
-#endif
 
             // Append the last
             sb.Append($"\r{split[split.Length - 1]}");

@@ -72,11 +72,7 @@ namespace MPF.Core
         /// <summary>
         /// Generic way of reporting a message
         /// </summary>
-#if NET20 || NET35 || NET40
-        public EventHandler<BaseExecutionContext.StringEventArgs>? ReportStatus;
-#else
-        public EventHandler<string>? ReportStatus;
-#endif
+        public EventHandler<StringEventArgs>? ReportStatus;
 
         /// <summary>
         /// Queue of items that need to be logged
@@ -86,20 +82,12 @@ namespace MPF.Core
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-#if NET20 || NET35 || NET40
-        private void OutputToLog(object? proc, BaseExecutionContext.StringEventArgs args) => outputQueue?.Enqueue(args.Value);
-#else
-        private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
-#endif
+        private void OutputToLog(object? proc, StringEventArgs args) => outputQueue?.Enqueue(args.Value);
 
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-#if NET20 || NET35 || NET40
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new BaseExecutionContext.StringEventArgs { Value = nextOutput });
-#else
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
-#endif
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new StringEventArgs { Value = nextOutput });
 
         #endregion
 

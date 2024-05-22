@@ -43,6 +43,7 @@
 - Move EnumConverter to Core.Data
 - Clean up usings
 - Separate out StringEventArgs
+- Use StringEventArgs more broadly
 
 ### 3.1.9a (2024-05-21)
 

@@ -13,19 +13,11 @@ namespace MPF.Core.ExecutionContexts
     {
         #region Event Handlers
 
-#if NET20 || NET35 || NET40
         /// <summary>
         /// Geneeic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>
         public EventHandler<StringEventArgs>? ReportStatus;
-#else
-        /// <summary>
-        /// Geneeic way of reporting a message
-        /// </summary>
-        /// <param name="message">String value to report</param>
-        public EventHandler<string>? ReportStatus;
-#endif
 
         #endregion
 
