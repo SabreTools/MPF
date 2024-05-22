@@ -26,7 +26,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Create a default success result with no message
         /// </summary>
-        public static Result Success() => new(true, "");
+        public static Result Success() => new(true, string.Empty);
 
         /// <summary>
         /// Create a success result with a custom message
@@ -38,7 +38,7 @@ namespace MPF.Core.Data
         /// Create a default failure result with no message
         /// </summary>
         /// <returns></returns>
-        public static Result Failure() => new(false, "");
+        public static Result Failure() => new(false, string.Empty);
 
         /// <summary>
         /// Create a failure result with a custom message
@@ -50,5 +50,10 @@ namespace MPF.Core.Data
         /// Results can be compared to boolean values based on the success value
         /// </summary>
         public static implicit operator bool(Result result) => result._success;
+
+        /// <summary>
+        /// Results can be compared to boolean values based on the success value
+        /// </summary>
+        public static implicit operator Result(bool bval) => new(bval, string.Empty);
     }
 }
