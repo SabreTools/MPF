@@ -52,6 +52,7 @@
 - Better handle interface constants
 - Make StringEventArgs internally consistent
 - Remove use of "this" in ProcessingQueue
+- Use proper private variable naming in ProcessingQueue
 
 ### 3.1.9a (2024-05-21)
 

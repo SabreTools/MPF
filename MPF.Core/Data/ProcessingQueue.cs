@@ -15,43 +15,43 @@ namespace MPF.Core.Data
         /// Internal queue to hold data to process
         /// </summary>
 #if NET20 || NET35
-        private readonly Queue<T> InternalQueue;
+        private readonly Queue<T> _internalQueue;
 #else
-        private readonly ConcurrentQueue<T> InternalQueue;
+        private readonly ConcurrentQueue<T> _internalQueue;
 #endif
 
         /// <summary>
         /// Custom processing step for dequeued data
         /// </summary>
-        private readonly Action<T> CustomProcessing;
+        private readonly Action<T> _customProcessing;
 
         /// <summary>
         /// Cancellation method for the processing task
         /// </summary>
-        private readonly CancellationTokenSource TokenSource;
+        private readonly CancellationTokenSource _tokenSource;
 
         public ProcessingQueue(Action<T> customProcessing)
         {
 #if NET20 || NET35
-            InternalQueue = new Queue<T>();
+            _internalQueue = new Queue<T>();
 #else
-            InternalQueue = new ConcurrentQueue<T>();
+            _internalQueue = new ConcurrentQueue<T>();
 #endif
-            CustomProcessing = customProcessing;
-            TokenSource = new CancellationTokenSource();
+            _customProcessing = customProcessing;
+            _tokenSource = new CancellationTokenSource();
 #if NET20 || NET35
             Task.Run(() => ProcessQueue());
 #elif NET40
             Task.Factory.StartNew(() => ProcessQueue());
 #else
-            Task.Run(() => ProcessQueue(), TokenSource.Token);
+            Task.Run(() => ProcessQueue(), _tokenSource.Token);
 #endif
         }
 
         /// <summary>
         /// Dispose the current instance
         /// </summary>
-        public void Dispose() => TokenSource.Cancel();
+        public void Dispose() => _tokenSource.Cancel();
 
         /// <summary>
         /// Enqueue a new item for processing
@@ -60,8 +60,8 @@ namespace MPF.Core.Data
         public void Enqueue(T? item)
         {
             // Only accept new data when not cancelled
-            if (item != null && !TokenSource.IsCancellationRequested)
-                InternalQueue.Enqueue(item);
+            if (item != null && !_tokenSource.IsCancellationRequested)
+                _internalQueue.Enqueue(item);
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace MPF.Core.Data
             {
                 // Nothing in the queue means we get to idle
 #if NET20 || NET35
-                if (InternalQueue.Count == 0)
+                if (_internalQueue.Count == 0)
 #else
-                if (InternalQueue.IsEmpty)
+                if (_internalQueue.IsEmpty)
 #endif
                 {
-                    if (TokenSource.IsCancellationRequested)
+                    if (_tokenSource.IsCancellationRequested)
                         break;
 
                     Thread.Sleep(1);
@@ -87,14 +87,14 @@ namespace MPF.Core.Data
 
 #if NET20 || NET35
                 // Get the next item from the queue and invoke the lambda, if possible
-                CustomProcessing?.Invoke(InternalQueue.Dequeue());
+                _customProcessing?.Invoke(_internalQueue.Dequeue());
 #else
                 // Get the next item from the queue
-                if (!InternalQueue.TryDequeue(out var nextItem))
+                if (!_internalQueue.TryDequeue(out var nextItem))
                     continue;
 
                 // Invoke the lambda, if possible
-                CustomProcessing?.Invoke(nextItem);
+                _customProcessing?.Invoke(nextItem);
 #endif
             }
         }
