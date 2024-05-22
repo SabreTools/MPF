@@ -9,10 +9,6 @@ namespace MPF.Core.Data
     /// </summary>
     public static class Interface
     {
-        // Button values
-        public const string StartDumping = "Start Dumping";
-        public const string StopDumping = "Stop Dumping";
-
         // Byte arrays for signatures
         public static readonly byte[] SaturnSectorZeroStart = [0x53, 0x45, 0x47, 0x41, 0x20, 0x53, 0x45, 0x47, 0x41, 0x53, 0x41, 0x54, 0x55, 0x52, 0x4E, 0x20];
 

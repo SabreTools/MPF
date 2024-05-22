@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.ExecutionContexts;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
@@ -517,6 +516,13 @@ namespace MPF.Core.UI.ViewModels
 
         #endregion
 
+        #region Constants
+
+        private const string StartDumpingValue = "Start Dumping";
+        public const string StopDumpingValue = "Stop Dumping";
+
+        #endregion
+
         /// <summary>
         /// Generic constructor
         /// </summary>
@@ -544,7 +550,7 @@ namespace MPF.Core.UI.ViewModels
             DriveLetterComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             StartStopButtonEnabled = true;
-            StartStopButtonText = Interface.StartDumping;
+            StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
@@ -940,11 +946,11 @@ namespace MPF.Core.UI.ViewModels
         public async void ToggleStartStop()
         {
             // Dump or stop the dump
-            if (this.StartStopButtonText as string == Interface.StartDumping)
+            if (this.StartStopButtonText as string == StartDumpingValue)
             {
                 StartDumping();
             }
-            else if (this.StartStopButtonText as string == Interface.StopDumping)
+            else if (this.StartStopButtonText as string == StopDumpingValue)
             {
                 VerboseLogLn("Canceling dumping process...");
                 _environment?.CancelDumping();
@@ -1286,7 +1292,7 @@ namespace MPF.Core.UI.ViewModels
             DriveSpeedComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
             EnableParametersCheckBoxEnabled = false;
-            StartStopButtonText = Interface.StopDumping;
+            StartStopButtonText = StopDumpingValue;
             MediaScanButtonEnabled = false;
             UpdateVolumeLabelEnabled = false;
             CopyProtectScanButtonEnabled = false;
@@ -1308,7 +1314,7 @@ namespace MPF.Core.UI.ViewModels
             DriveSpeedComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
-            StartStopButtonText = Interface.StartDumping;
+            StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
             UpdateVolumeLabelEnabled = true;
             CopyProtectScanButtonEnabled = true;

@@ -36,6 +36,7 @@
 - Remove another redundant GetFullFile
 - Clean up usings after moving methods
 - Remove Chime
+- Move string contents for UI to view model
 
 ### 3.1.9a (2024-05-21)
 
