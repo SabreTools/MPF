@@ -112,7 +112,7 @@ namespace MPF.Core
             if (drive != null && SupportsAntiModchipScans(system) && info.CopyProtection!.AntiModchip == YesNo.NULL)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
-                info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
+                info.CopyProtection.AntiModchip = await Protection.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
                 resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
             }
 

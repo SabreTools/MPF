@@ -63,14 +63,6 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Get the existence of an anti-modchip string from a PlayStation disc, if possible
-        /// </summary>
-        /// <param name="drive">Drive object representing the current drive</param>
-        /// <returns>Anti-modchip existence if possible, false on error</returns>
-        internal static async Task<bool> GetAntiModchipDetected(Drive drive) =>
-            await Protection.GetPlayStationAntiModchipDetected(drive.Name);
-
-        /// <summary>
         /// Get the Base64 representation of a string
         /// </summary>
         /// <param name="content">String content to encode</param>
