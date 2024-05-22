@@ -106,7 +106,15 @@ namespace MPF.Core
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            _ = await ProcessSystem(info, system, drive, options.AddPlaceholders, resultProgress);
+            ProcessSystem(info, system, drive, options.AddPlaceholders);
+
+            // Run anti-modchip check, if necessary
+            if (drive != null && SupportsAntiModchipScans(system) && info.CopyProtection!.AntiModchip == YesNo.NULL)
+            {
+                resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
+                info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
+                resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
+            }
 
             // Run copy protection, if possible or necessary
             if (SupportsCopyProtectionScans(system))
@@ -581,11 +589,7 @@ namespace MPF.Core
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static async Task<bool> ProcessSystem(SubmissionInfo info,
-            RedumpSystem? system,
-            Drive? drive,
-            bool addPlaceholders,
-            IProgress<ResultEventArgs>? resultProgress = null)
+        private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders)
         {
             // Extract info based specifically on RedumpSystem
             switch (system)
@@ -796,13 +800,6 @@ namespace MPF.Core
                         }
                     }
 
-                    if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
-                    {
-                        resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
-                        info.CopyProtection.AntiModchip = await InfoTool.GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-                        resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
-                    }
-
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -874,6 +871,18 @@ namespace MPF.Core
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Helper to determine if a system requires an anti-modchip scan
+        /// </summary>
+        private static bool SupportsAntiModchipScans(RedumpSystem? system)
+        {
+            return system switch
+            {
+                RedumpSystem.SonyPlayStation => true,
+                _ => false,
+            };
         }
 
         /// <summary>
