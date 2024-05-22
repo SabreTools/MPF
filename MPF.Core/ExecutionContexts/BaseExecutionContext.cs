@@ -15,14 +15,6 @@ namespace MPF.Core.ExecutionContexts
 
 #if NET20 || NET35 || NET40
         /// <summary>
-        /// Wrapper event args class for old .NET
-        /// </summary>
-        public class StringEventArgs : EventArgs
-        {
-            public string? Value { get; set; }
-        }
-
-        /// <summary>
         /// Geneeic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>

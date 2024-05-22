@@ -42,6 +42,7 @@
 - Reduce processing queue sleep time
 - Move EnumConverter to Core.Data
 - Clean up usings
+- Separate out StringEventArgs
 
 ### 3.1.9a (2024-05-21)
 

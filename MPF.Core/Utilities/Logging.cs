@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MPF.Core.Data;
 
 namespace MPF.Core.Utilities
 {
@@ -15,9 +16,9 @@ namespace MPF.Core.Utilities
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
 #if NET20 || NET35
-        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<ExecutionContexts.BaseExecutionContext.StringEventArgs>? handler)
+        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<StringEventArgs>? handler)
 #elif NET40
-        public static void OutputToLog(TextReader reader, object baseClass, EventHandler<ExecutionContexts.BaseExecutionContext.StringEventArgs>? handler)
+        public static void OutputToLog(TextReader reader, object baseClass, EventHandler<StringEventArgs>? handler)
 #else
         public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
 #endif
@@ -79,7 +80,7 @@ namespace MPF.Core.Utilities
             finally
             {
 #if NET20 || NET35 || NET40
-                handler?.Invoke(baseClass, new ExecutionContexts.BaseExecutionContext.StringEventArgs { Value = sb.ToString() });
+                handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
 #else
                 handler?.Invoke(baseClass, sb.ToString());
 #endif
@@ -94,7 +95,7 @@ namespace MPF.Core.Utilities
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
 #if NET20 || NET35 || NET40
-        private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<ExecutionContexts.BaseExecutionContext.StringEventArgs>? handler)
+        private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<StringEventArgs>? handler)
 #else
         private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
 #endif
@@ -119,7 +120,7 @@ namespace MPF.Core.Utilities
                 {
                     sb.Append(split[i]);
 #if NET20 || NET35 || NET40
-                    handler?.Invoke(baseClass, new ExecutionContexts.BaseExecutionContext.StringEventArgs { Value = sb.ToString() });
+                    handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
                     sb = new();
 #else
                     handler?.Invoke(baseClass, sb.ToString());
@@ -137,7 +138,7 @@ namespace MPF.Core.Utilities
                 else
                 {
 #if NET20 || NET35 || NET40
-                    handler?.Invoke(baseClass, new ExecutionContexts.BaseExecutionContext.StringEventArgs { Value = split[i] });
+                    handler?.Invoke(baseClass, new StringEventArgs { Value = split[i] });
 #else
                     handler?.Invoke(baseClass, split[i]);
 #endif
@@ -153,7 +154,7 @@ namespace MPF.Core.Utilities
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
 #if NET20 || NET35 || NET40
-        private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<ExecutionContexts.BaseExecutionContext.StringEventArgs>? handler)
+        private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<StringEventArgs>? handler)
 #else
         private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
 #endif
@@ -163,7 +164,7 @@ namespace MPF.Core.Utilities
             // Append and log the first
             sb.Append(split[0]);
 #if NET20 || NET35 || NET40
-            handler?.Invoke(baseClass, new ExecutionContexts.BaseExecutionContext.StringEventArgs { Value = sb.ToString() });
+            handler?.Invoke(baseClass, new StringEventArgs { Value = sb.ToString() });
             sb = new();
 #else
             handler?.Invoke(baseClass, sb.ToString());
