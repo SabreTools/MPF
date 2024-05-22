@@ -45,6 +45,7 @@
 - Separate out StringEventArgs
 - Use StringEventArgs more broadly
 - Make StringEventArgs more complete
+- Make implicit StringEventArgs bidirectional
 
 ### 3.1.9a (2024-05-21)
 

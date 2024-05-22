@@ -65,7 +65,7 @@ namespace MPF.Core.Utilities
             catch { }
             finally
             {
-                handler?.Invoke(baseClass, new StringEventArgs(sb));
+                handler?.Invoke(baseClass, sb);
             }
         }
 
@@ -93,7 +93,7 @@ namespace MPF.Core.Utilities
                 if (i == 0)
                 {
                     sb.Append(split[i]);
-                    handler?.Invoke(baseClass, new StringEventArgs(sb));
+                    handler?.Invoke(baseClass, sb);
                     sb = new();
                 }
 
@@ -106,7 +106,7 @@ namespace MPF.Core.Utilities
                 // For everything else, directly write out
                 else
                 {
-                    handler?.Invoke(baseClass, new StringEventArgs(split[i]));
+                    handler?.Invoke(baseClass, split[i]);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace MPF.Core.Utilities
 
             // Append and log the first
             sb.Append(split[0]);
-            handler?.Invoke(baseClass, new StringEventArgs(sb));
+            handler?.Invoke(baseClass, sb);
             sb = new();
 
             // Append the last

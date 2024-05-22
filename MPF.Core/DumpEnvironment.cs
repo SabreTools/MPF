@@ -87,7 +87,7 @@ namespace MPF.Core
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, new StringEventArgs(nextOutput));
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
 
         #endregion
 

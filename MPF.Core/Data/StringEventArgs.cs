@@ -30,8 +30,23 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Results can be compared to boolean values based on the success value
+        /// Event arguments are just the value of the string contained within
         /// </summary>
         public static implicit operator string(StringEventArgs args) => args._value;
+
+        /// <summary>
+        /// Event arguments are just the value of the string contained within
+        /// </summary>
+        public static implicit operator StringBuilder(StringEventArgs args) => new StringBuilder(args._value);
+
+        /// <summary>
+        /// Event arguments are just the value of the string contained within
+        /// </summary>
+        public static implicit operator StringEventArgs(string? str) => new(str);
+
+        /// <summary>
+        /// Event arguments are just the value of the string contained within
+        /// </summary>
+        public static implicit operator StringEventArgs(StringBuilder? sb) => new(sb);
     }
 }
