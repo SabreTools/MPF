@@ -957,13 +957,13 @@ namespace MPF.Core.UI.ViewModels
 
                 if (_environment != null && this.Options.EjectAfterDump)
                 {
-                    VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Name}");
+                    VerboseLogLn($"Ejecting disc in drive {_environment.DriveName}");
                     await _environment.EjectDisc();
                 }
 
                 if (_environment != null && this.Options.DICResetDriveAfterDump)
                 {
-                    VerboseLogLn($"Resetting drive {_environment.Drive?.Name}");
+                    VerboseLogLn($"Resetting drive {_environment.DriveName}");
                     await _environment.ResetDrive();
                 }
             }
@@ -1657,7 +1657,7 @@ namespace MPF.Core.UI.ViewModels
             _environment = DetermineEnvironment();
 
             // Force an internal drive refresh in case the user entered things manually
-            _environment.Drive?.RefreshDrive();
+            _environment.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
             if (this.ParametersCheckBoxEnabled == true && _displayUserMessage != null)
@@ -1688,7 +1688,7 @@ namespace MPF.Core.UI.ViewModels
                 DisableAllUIElements();
 
                 // Refresh the drive, if it wasn't null
-                _environment.Drive?.RefreshDrive();
+                _environment.RefreshDrive();
 
                 // Output to the label and log
                 this.Status = "Starting dumping process... please wait!";
@@ -1785,11 +1785,11 @@ namespace MPF.Core.UI.ViewModels
         /// <returns>True if dumping should start, false otherwise</returns>
         private bool ValidateBeforeDumping()
         {
-            if (Parameters == null)
+            if (Parameters == null || _environment == null)
                 return false;
 
             // Validate that we have an output path of any sort
-            if (string.IsNullOrEmpty(_environment?.OutputPath))
+            if (string.IsNullOrEmpty(_environment.OutputPath))
             {
                 if (_displayUserMessage != null)
                     _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
@@ -1798,7 +1798,7 @@ namespace MPF.Core.UI.ViewModels
             }
 
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (_environment?.Drive?.MarkedActive != true && _displayUserMessage != null)
+            if (!_environment.DriveMarkedActive && _displayUserMessage != null)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
                     + (!_environment!.DetectedByWindows() ? $"This is normal for {_environment.SystemName} as the discs may not be readable on Windows. " : string.Empty)

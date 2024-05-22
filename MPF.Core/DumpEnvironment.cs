@@ -33,7 +33,7 @@ namespace MPF.Core
         /// <summary>
         /// Drive object representing the current drive
         /// </summary>
-        public Drive? Drive { get; }
+        private readonly Drive? _drive;
 
         /// <summary>
         /// ExecutionContext object representing how to invoke the internal program
@@ -75,6 +75,12 @@ namespace MPF.Core
         /// <inheritdoc cref="BaseExecutionContext.OutputPath"/>
         public string? ContextOutputPath => _executionContext?.OutputPath;
 
+        /// <inheritdoc cref="Drive.MarkedActive/>
+        public bool DriveMarkedActive => _drive?.MarkedActive ?? false;
+
+        /// <inheritdoc cref="Drive.Name/>
+        public string? DriveName => _drive?.Name;
+
         /// <inheritdoc cref="BaseExecutionContext.Speed"/>
         public int? Speed
         {
@@ -88,7 +94,7 @@ namespace MPF.Core
 
         /// <inheritdoc cref="Extensions.LongName(RedumpSystem?)/>
         public string? SystemName => _system.LongName();
-        
+
         #endregion
 
         #region Event Handlers
@@ -140,7 +146,7 @@ namespace MPF.Core
             OutputPath = InfoTool.NormalizeOutputPaths(outputPath, false);
 
             // UI information
-            Drive = drive;
+            _drive = drive;
             _system = system ?? options.DefaultSystem;
             _type = type ?? MediaType.NONE;
             _internalProgram = internalProgram ?? options.InternalProgram;
@@ -245,15 +251,15 @@ namespace MPF.Core
             if (_system != null && _type != MediaType.NONE)
             {
                 // If drive letter is invalid, skip this
-                if (Drive == null)
+                if (_drive == null)
                     return null;
 
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, _type, Drive.Name, OutputPath, driveSpeed, _options),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, _type, Drive.Name, OutputPath, driveSpeed, _options),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, _type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, _type, _drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, _type, _drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, _type, _drive.Name, OutputPath, driveSpeed, _options),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,
@@ -315,6 +321,9 @@ namespace MPF.Core
 
             return _executionContext.IsDumpingCommand();
         }
+
+        /// <inheritdoc cref="Drive.RefreshDrive"/>
+        public void RefreshDrive() => _drive?.RefreshDrive();
 
         #endregion
 
@@ -424,7 +433,7 @@ namespace MPF.Core
             resultProgress?.Report(ResultEventArgs.Success("Extracting output information from output files..."));
             var submissionInfo = await SubmissionInfoTool.ExtractOutputInformation(
                 OutputPath,
-                Drive,
+                _drive,
                 _system,
                 _type,
                 _options,
@@ -444,14 +453,14 @@ namespace MPF.Core
             // Eject the disc automatically if configured to
             if (_options.EjectAfterDump == true)
             {
-                resultProgress?.Report(ResultEventArgs.Success($"Ejecting disc in drive {Drive?.Name}"));
+                resultProgress?.Report(ResultEventArgs.Success($"Ejecting disc in drive {_drive?.Name}"));
                 await EjectDisc();
             }
 
             // Reset the drive automatically if configured to
             if (_internalProgram == InternalProgram.DiscImageCreator && _options.DICResetDriveAfterDump)
             {
-                resultProgress?.Report(ResultEventArgs.Success($"Resetting drive {Drive?.Name}"));
+                resultProgress?.Report(ResultEventArgs.Success($"Resetting drive {_drive?.Name}"));
                 await ResetDrive();
             }
 
@@ -562,14 +571,14 @@ namespace MPF.Core
         internal bool ParametersValid()
         {
             // Missing drive means it can never be valid
-            if (Drive == null)
+            if (_drive == null)
                 return false;
 
             bool parametersValid = _executionContext?.IsValid() ?? false;
-            bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ _type == MediaType.FloppyDisk);
+            bool floppyValid = !(_drive.InternalDriveType == InternalDriveType.Floppy ^ _type == MediaType.FloppyDisk);
 
             // TODO: HardDisk being in the Removable category is a hack, fix this later
-            bool removableDiskValid = !((Drive.InternalDriveType == InternalDriveType.Removable || Drive.InternalDriveType == InternalDriveType.HardDisk)
+            bool removableDiskValid = !((_drive.InternalDriveType == InternalDriveType.Removable || _drive.InternalDriveType == InternalDriveType.HardDisk)
                 ^ (_type == MediaType.CompactFlash || _type == MediaType.SDCard || _type == MediaType.FlashDrive || _type == MediaType.HardDisk));
 
             return parametersValid && floppyValid && removableDiskValid;
@@ -630,7 +639,7 @@ namespace MPF.Core
             OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, false);
 
             // Validate that the output path isn't on the dumping drive
-            if (Drive?.Name != null && OutputPath.StartsWith(Drive.Name))
+            if (_drive?.Name != null && OutputPath.StartsWith(_drive.Name))
                 return ResultEventArgs.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -639,7 +648,7 @@ namespace MPF.Core
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(_executionContext.ExecutablePath!);
-            if (Drive?.Name != null && fullExecutablePath.StartsWith(Drive.Name))
+            if (_drive?.Name != null && fullExecutablePath.StartsWith(_drive.Name))
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
@@ -675,7 +684,7 @@ namespace MPF.Core
                 return null;
 
             // Validate we're not trying to eject a non-optical
-            if (Drive == null || Drive.InternalDriveType != InternalDriveType.Optical)
+            if (_drive == null || _drive.InternalDriveType != InternalDriveType.Optical)
                 return null;
 
             CancelDumping();
@@ -683,7 +692,7 @@ namespace MPF.Core
             var parameters = new ExecutionContexts.DiscImageCreator.ExecutionContext(string.Empty)
             {
                 BaseCommand = command,
-                DrivePath = Drive.Name,
+                DrivePath = _drive.Name,
                 ExecutablePath = _options.DiscImageCreatorPath,
             };
 
