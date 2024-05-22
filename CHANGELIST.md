@@ -66,6 +66,7 @@
 - Simplify RequiredProgramsExist logic
 - Reduce complexity of ProcessSystem method
 - Remove unnecessary GetAntiModchipDetected method
+- Make GetCopyProtection signature easier to read
 
 ### 3.1.9a (2024-05-21)
 

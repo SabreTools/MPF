@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using BinaryObjectScanner;
 using MPF.Core.Data;
 using MPF.Core.Processors;
 using MPF.Core.Utilities;
@@ -83,7 +84,9 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Options options, IProgress<BinaryObjectScanner.ProtectionProgress>? progress = null)
+        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
+            Data.Options options,
+            IProgress<ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
