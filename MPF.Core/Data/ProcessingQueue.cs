@@ -33,25 +33,25 @@ namespace MPF.Core.Data
         public ProcessingQueue(Action<T> customProcessing)
         {
 #if NET20 || NET35
-            this.InternalQueue = new Queue<T>();
+            InternalQueue = new Queue<T>();
 #else
-            this.InternalQueue = new ConcurrentQueue<T>();
+            InternalQueue = new ConcurrentQueue<T>();
 #endif
-            this.CustomProcessing = customProcessing;
-            this.TokenSource = new CancellationTokenSource();
+            CustomProcessing = customProcessing;
+            TokenSource = new CancellationTokenSource();
 #if NET20 || NET35
             Task.Run(() => ProcessQueue());
 #elif NET40
             Task.Factory.StartNew(() => ProcessQueue());
 #else
-            Task.Run(() => ProcessQueue(), this.TokenSource.Token);
+            Task.Run(() => ProcessQueue(), TokenSource.Token);
 #endif
         }
 
         /// <summary>
         /// Dispose the current instance
         /// </summary>
-        public void Dispose() => this.TokenSource.Cancel();
+        public void Dispose() => TokenSource.Cancel();
 
         /// <summary>
         /// Enqueue a new item for processing
@@ -60,8 +60,8 @@ namespace MPF.Core.Data
         public void Enqueue(T? item)
         {
             // Only accept new data when not cancelled
-            if (item != null && !this.TokenSource.IsCancellationRequested)
-                this.InternalQueue.Enqueue(item);
+            if (item != null && !TokenSource.IsCancellationRequested)
+                InternalQueue.Enqueue(item);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace MPF.Core.Data
                 if (InternalQueue.IsEmpty)
 #endif
                 {
-                    if (this.TokenSource.IsCancellationRequested)
+                    if (TokenSource.IsCancellationRequested)
                         break;
 
                     Thread.Sleep(1);
@@ -87,14 +87,14 @@ namespace MPF.Core.Data
 
 #if NET20 || NET35
                 // Get the next item from the queue and invoke the lambda, if possible
-                this.CustomProcessing?.Invoke(this.InternalQueue.Dequeue());
+                CustomProcessing?.Invoke(InternalQueue.Dequeue());
 #else
                 // Get the next item from the queue
-                if (!this.InternalQueue.TryDequeue(out var nextItem))
+                if (!InternalQueue.TryDequeue(out var nextItem))
                     continue;
 
                 // Invoke the lambda, if possible
-                this.CustomProcessing?.Invoke(nextItem);
+                CustomProcessing?.Invoke(nextItem);
 #endif
             }
         }
