@@ -30,6 +30,7 @@
 - Make GetLogFilePaths required
 - Handle version like category
 - Move PlayStation drive use mostly to helper
+- Separate out copy protection run
 
 ### 3.1.9a (2024-05-21)
 

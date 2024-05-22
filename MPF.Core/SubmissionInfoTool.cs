@@ -108,7 +108,18 @@ namespace MPF.Core
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            _ = await ProcessSystem(info, system, drive, options, resultProgress, protectionProgress);
+            _ = await ProcessSystem(info, system, drive, options.AddPlaceholders, resultProgress);
+
+            // Run copy protection, if possible or necessary
+            if (SupportsCopyProtectionScans(system))
+            {
+                resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
+                var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
+
+                info.CopyProtection!.Protection += protectionString;
+                info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
+                resultProgress?.Report(Result.Success("Copy protection scan complete!"));
+            }
 
             // Set fields that may have automatic filling otherwise
             info.CommonDiscInfo!.Category ??= DiscCategory.Games;
@@ -575,9 +586,8 @@ namespace MPF.Core
         private static async Task<bool> ProcessSystem(SubmissionInfo info,
             RedumpSystem? system,
             Drive? drive,
-            Data.Options options,
-            IProgress<Result>? resultProgress = null,
-            IProgress<ProtectionProgress>? protectionProgress = null)
+            bool addPlaceholders,
+            IProgress<Result>? resultProgress = null)
         {
             // Extract info based specifically on RedumpSystem
             switch (system)
@@ -593,13 +603,6 @@ namespace MPF.Core
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
-                    resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
-
-                    info.CopyProtection!.Protection += protectionString;
-                    info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
-                    resultProgress?.Report(Result.Success("Copy protection scan complete!"));
-
                     if (system == RedumpSystem.EnhancedCD)
                         info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
 
@@ -615,7 +618,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
@@ -623,25 +626,25 @@ namespace MPF.Core
                 case RedumpSystem.DVDVideo:
                 case RedumpSystem.HDDVDVideo:
                     info.CommonDiscInfo!.Category ??= DiscCategory.Video;
-                    info.CopyProtection!.Protection ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCDTV:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
                 case RedumpSystem.FujitsuFMTownsseries:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
@@ -662,15 +665,15 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.IncredibleTechnologiesEagle:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamieAmusement:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiFireBeat:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -691,19 +694,19 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystem573:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiTwinkle:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MattelHyperScan:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
@@ -733,11 +736,11 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.NavisoftNaviken21:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
@@ -746,7 +749,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.NECPC98series:
-                    info.CommonDiscInfo!.EXEDateBuildDate = options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo!.Region ??= Region.Japan;
                     break;
 
@@ -755,23 +758,23 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaTitanVideo:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SharpX68000:
@@ -779,7 +782,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SNKNeoGeoCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -824,8 +827,8 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.Extras!.DiscKey ??= options.AddPlaceholders ? RequiredValue : string.Empty;
-                    info.Extras.DiscID ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras!.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     if (drive?.Name != null
                         && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
@@ -868,11 +871,29 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.CopyProtection!.Protection ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Helper to determine if a system requires a copy protection scan
+        /// </summary>
+        private static bool SupportsCopyProtectionScans(RedumpSystem? system)
+        {
+            return system switch
+            {
+                RedumpSystem.AppleMacintosh => true,
+                RedumpSystem.EnhancedCD => true,
+                RedumpSystem.IBMPCcompatible => true,
+                RedumpSystem.PalmOS => true,
+                RedumpSystem.PocketPC => true,
+                RedumpSystem.RainbowDisc => true,
+                RedumpSystem.SonyElectronicBook => true,
+                _ => false,
+            };
         }
 
         #endregion
