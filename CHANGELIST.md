@@ -29,6 +29,7 @@
 - Reduce surface area of generation method
 - Make GetLogFilePaths required
 - Handle version like category
+- Move PlayStation drive use mostly to helper
 
 ### 3.1.9a (2024-05-21)
 

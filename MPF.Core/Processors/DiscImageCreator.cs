@@ -286,6 +286,7 @@ namespace MPF.Core.Processors
         }
 
         /// <inheritdoc/>
+        /// <remarks>Determining the PSX/PS2 executable name is the last use of drive in this method</remarks>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive? drive, bool redumpCompat)
         {
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -449,22 +450,7 @@ namespace MPF.Core.Processors
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
                     break;
 
-                case RedumpSystem.KonamiPython2:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
-
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= pythonTwoDate;
-                    }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-                    break;
-
                 case RedumpSystem.MicrosoftXbox:
-
                     string xmidString;
                     if (string.IsNullOrEmpty(outputDirectory))
                         xmidString = Tools.GetXGD1XMID($"{basePath}_DMI.bin");
@@ -698,14 +684,6 @@ namespace MPF.Core.Processors
                 case RedumpSystem.SonyPlayStation:
                     info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name), true);
 
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationDate;
-                    }
-
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
                         psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
@@ -719,35 +697,6 @@ namespace MPF.Core.Processors
 
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
-
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= playstationTwoDate;
-                    }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-                    break;
-
-                // TODO: Support reading information from outputs -- need examples
-                case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
-                    string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
-                    if (firmwareVersion != null)
-                        info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-                    break;
-
-                case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
-                    break;
-
-                case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
                     break;
             }
         }

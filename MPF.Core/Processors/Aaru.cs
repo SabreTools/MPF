@@ -220,18 +220,6 @@ namespace MPF.Core.Processors
                     info.CopyProtection!.Protection = GetDVDProtection(sidecar) ?? string.Empty;
                     break;
 
-                case RedumpSystem.KonamiPython2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
-                    }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-                    break;
-
                 case RedumpSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
@@ -267,47 +255,6 @@ namespace MPF.Core.Processors
                         info.VersionAndEditions!.Version = version360 ?? string.Empty;
                         info.CommonDiscInfo.Region = region360;
                     }
-                    break;
-
-                case RedumpSystem.SonyPlayStation:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
-                    }
-
-                    break;
-
-                case RedumpSystem.SonyPlayStation2:
-                    if (InfoTool.GetPlayStationExecutableInfo(drive?.Name, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
-                    }
-
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
-                    break;
-
-                case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
-                    string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
-                    if (firmwareVersion != null)
-                        info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-                    break;
-
-                case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation4Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive?.Name) ?? string.Empty;
-                    break;
-
-                case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions!.Version = InfoTool.GetPlayStation5Version(drive?.Name) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive?.Name) ?? string.Empty;
                     break;
             }
         }

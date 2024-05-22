@@ -83,7 +83,7 @@ namespace MPF.Core
             SubmissionInfo info = CreateDefaultSubmissionInfo(system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info,  combinedBase, drive, options.EnableRedumpCompatibility);
+            processor?.GenerateSubmissionInfo(info, combinedBase, drive, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
                 processor?.GenerateArtifacts(info, combinedBase);
 
@@ -673,6 +673,23 @@ namespace MPF.Core
                     info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
                     break;
 
+                case RedumpSystem.KonamiPython2:
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        if (InfoTool.GetPlayStationExecutableInfo(drive.Name, out var serial, out Region? region, out var date))
+                        {
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.Region ??= region;
+                            info.CommonDiscInfo.EXEDateBuildDate ??= date;
+                        }
+
+                        info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
+                    }
+
+                    break;
+
                 case RedumpSystem.KonamiSystemGV:
                     info.CommonDiscInfo!.EXEDateBuildDate ??= options.AddPlaceholders ? RequiredValue : string.Empty;
                     break;
@@ -766,7 +783,18 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    // Only check the disc if the dumping program couldn't detect
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        if (InfoTool.GetPlayStationExecutableInfo(drive.Name, out var serial, out Region? region, out var date))
+                        {
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.Region ??= region;
+                            info.CommonDiscInfo.EXEDateBuildDate ??= date;
+                        }
+                    }
+
                     if (drive != null && info.CopyProtection!.AntiModchip == YesNo.NULL)
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
@@ -778,11 +806,60 @@ namespace MPF.Core
 
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo!.LanguageSelection ??= [];
+
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        if (InfoTool.GetPlayStationExecutableInfo(drive.Name, out var serial, out Region? region, out var date))
+                        {
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.Region ??= region;
+                            info.CommonDiscInfo.EXEDateBuildDate ??= date;
+                        }
+
+                        info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation2Version(drive?.Name) ?? string.Empty;
+                    }
+
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
                     info.Extras!.DiscKey ??= options.AddPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.DiscID ??= options.AddPlaceholders ? RequiredValue : string.Empty;
+
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation3Version(drive.Name) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive.Name) ?? string.Empty;
+                        string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive.Name);
+                        if (firmwareVersion != null)
+                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] ??= $"PS3 Firmware {firmwareVersion}";
+                    }
+
+                    break;
+
+                case RedumpSystem.SonyPlayStation4:
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation4Version(drive.Name) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation4Serial(drive.Name) ?? string.Empty;
+                    }
+
+                    break;
+
+                case RedumpSystem.SonyPlayStation5:
+                    if (drive?.Name != null
+                        && (!info.CommonDiscInfo!.CommentsSpecialFields!.ContainsKey(SiteCode.InternalSerialName)
+                            || string.IsNullOrEmpty(info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName])))
+                    {
+                        info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation5Version(drive.Name) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation5Serial(drive.Name) ?? string.Empty;
+                    }
+
                     break;
 
                 case RedumpSystem.TomyKissSite:

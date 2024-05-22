@@ -81,16 +81,6 @@ namespace MPF.Core.Processors
             if (GetPVD(basePath + ".iso", out string? pvd))
                 info.Extras!.PVD = pvd;
 
-            // Try get the serial, version, and firmware version if a drive is provided
-            if (drive != null)
-            {
-                info.VersionAndEditions!.Version = InfoTool.GetPlayStation3Version(drive?.Name) ?? string.Empty;
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive?.Name) ?? string.Empty;
-                string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive?.Name);
-                if (firmwareVersion != null)
-                    info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-            }
-
             // Try to determine the name of the GetKey file(s)
             string? getKeyBasePath = GetCFWBasePath(basePath);
 
