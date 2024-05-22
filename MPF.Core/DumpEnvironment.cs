@@ -41,11 +41,6 @@ namespace MPF.Core
         public RedumpSystem? System { get; }
 
         /// <summary>
-        /// Currently selected media type
-        /// </summary>
-        public MediaType? Type { get; }
-
-        /// <summary>
         /// ExecutionContext object representing how to invoke the internal program
         /// </summary>
         private BaseExecutionContext? _executionContext;
@@ -64,6 +59,11 @@ namespace MPF.Core
         /// Processor object representing how to process the outputs
         /// </summary>
         private BaseProcessor? _processor;
+
+        /// <summary>
+        /// Currently selected media type
+        /// </summary>
+        private readonly MediaType? _type;
 
         #endregion
 
@@ -139,7 +139,7 @@ namespace MPF.Core
             // UI information
             Drive = drive;
             System = system ?? options.DefaultSystem;
-            Type = type ?? MediaType.NONE;
+            _type = type ?? MediaType.NONE;
             _internalProgram = internalProgram ?? options.InternalProgram;
 
             // Dumping program
@@ -158,21 +158,21 @@ namespace MPF.Core
             InternalProgram? programFound = null;
             if (programFound == null && _internalProgram != InternalProgram.Aaru)
             {
-                var processor = new Processors.Aaru(System, Type);
+                var processor = new Processors.Aaru(System, _type);
                 (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
                     programFound = InternalProgram.Aaru;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
-                var processor = new Processors.DiscImageCreator(System, Type);
+                var processor = new Processors.DiscImageCreator(System, _type);
                 (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
                     programFound = InternalProgram.DiscImageCreator;
             }
             if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Redumper(System, Type);
+                var processor = new Processors.Redumper(System, _type);
                 (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
                 if (foundOtherFiles)
                     programFound = InternalProgram.Redumper;
@@ -202,7 +202,7 @@ namespace MPF.Core
             if (_executionContext != null)
             {
                 _executionContext.System = System;
-                _executionContext.Type = Type;
+                _executionContext.Type = _type;
             }
 
             return _executionContext != null;
@@ -215,13 +215,13 @@ namespace MPF.Core
         {
             _processor = _internalProgram switch
             {
-                InternalProgram.Aaru => new Processors.Aaru(System, Type),
-                InternalProgram.CleanRip => new CleanRip(System, Type),
-                InternalProgram.DiscImageCreator => new DiscImageCreator(System, Type),
-                InternalProgram.PS3CFW => new PS3CFW(System, Type),
-                InternalProgram.Redumper => new Redumper(System, Type),
-                InternalProgram.UmdImageCreator => new UmdImageCreator(System, Type),
-                InternalProgram.XboxBackupCreator => new XboxBackupCreator(System, Type),
+                InternalProgram.Aaru => new Processors.Aaru(System, _type),
+                InternalProgram.CleanRip => new CleanRip(System, _type),
+                InternalProgram.DiscImageCreator => new DiscImageCreator(System, _type),
+                InternalProgram.PS3CFW => new PS3CFW(System, _type),
+                InternalProgram.Redumper => new Redumper(System, _type),
+                InternalProgram.UmdImageCreator => new UmdImageCreator(System, _type),
+                InternalProgram.XboxBackupCreator => new XboxBackupCreator(System, _type),
 
                 // If no dumping program found, set to null
                 InternalProgram.NONE => null,
@@ -239,7 +239,7 @@ namespace MPF.Core
         public string? GetFullParameters(int? driveSpeed)
         {
             // Populate with the correct params for inputs (if we're not on the default option)
-            if (System != null && Type != MediaType.NONE)
+            if (System != null && _type != MediaType.NONE)
             {
                 // If drive letter is invalid, skip this
                 if (Drive == null)
@@ -248,9 +248,9 @@ namespace MPF.Core
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(System, Type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(System, _type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(System, _type, Drive.Name, OutputPath, driveSpeed, _options),
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(System, _type, Drive.Name, OutputPath, driveSpeed, _options),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,
@@ -267,6 +267,9 @@ namespace MPF.Core
         #endregion
 
         #region Passthrough Functionality
+
+        /// <inheritdoc cref="EnumExtensions.DoesSupportDriveSpeed(MediaType?)"/>
+        public bool DoesSupportDriveSpeed() => _type.DoesSupportDriveSpeed();
 
         /// <inheritdoc cref="BaseProcessor.FoundAllFiles(string?, string, bool)"/>
         public bool FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)
@@ -294,6 +297,9 @@ namespace MPF.Core
 
             return _executionContext.GetMediaType();
         }
+
+        /// <inheritdoc cref="Tools.GetSupportStatus(RedumpSystem?, MediaType?)"/>
+        public ResultEventArgs GetSupportStatus() => Tools.GetSupportStatus(System, _type);
 
         /// <inheritdoc cref="BaseExecutionContext.IsDumpingCommand()"/>
         public bool IsDumpingCommand()
@@ -414,7 +420,7 @@ namespace MPF.Core
                 OutputPath,
                 Drive,
                 System,
-                Type,
+                _type,
                 _options,
                 _processor,
                 resultProgress,
@@ -529,7 +535,7 @@ namespace MPF.Core
             }
 
             // Create PS3 IRD, if required
-            if (_options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && Type == MediaType.BluRay)
+            if (_options.CreateIRDAfterDumping && System == RedumpSystem.SonyPlayStation3 && _type == MediaType.BluRay)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
                 (bool deleteSuccess, string deleteResult) = await InfoTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
@@ -554,11 +560,11 @@ namespace MPF.Core
                 return false;
 
             bool parametersValid = _executionContext?.IsValid() ?? false;
-            bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk);
+            bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ _type == MediaType.FloppyDisk);
 
             // TODO: HardDisk being in the Removable category is a hack, fix this later
             bool removableDiskValid = !((Drive.InternalDriveType == InternalDriveType.Removable || Drive.InternalDriveType == InternalDriveType.HardDisk)
-                ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive || Type == MediaType.HardDisk));
+                ^ (_type == MediaType.CompactFlash || _type == MediaType.SDCard || _type == MediaType.FlashDrive || _type == MediaType.HardDisk));
 
             return parametersValid && floppyValid && removableDiskValid;
         }
@@ -631,7 +637,7 @@ namespace MPF.Core
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
-            return Tools.GetSupportStatus(System, Type);
+            return Tools.GetSupportStatus(System, _type);
         }
 
         /// <summary>

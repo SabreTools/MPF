@@ -1328,7 +1328,7 @@ namespace MPF.Core.UI.ViewModels
             _environment = DetermineEnvironment();
 
             // Get the status to write out
-            ResultEventArgs result = Tools.GetSupportStatus(_environment.System, _environment.Type);
+            ResultEventArgs result = _environment.GetSupportStatus();
             if (this.CurrentProgram == InternalProgram.NONE)
                 this.Status = "No dumping program found";
             else
@@ -1338,7 +1338,7 @@ namespace MPF.Core.UI.ViewModels
             this.StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            this.DriveSpeedComboBoxEnabled = _environment.Type.DoesSupportDriveSpeed();
+            this.DriveSpeedComboBoxEnabled = _environment.DoesSupportDriveSpeed();
 
             // If input params are not enabled, generate the full parameters from the environment
             if (!this.ParametersCheckBoxEnabled)
