@@ -9,7 +9,7 @@ using System.Reflection;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Converters
+namespace MPF.Core.Data
 {
     public static class EnumConverter
     {

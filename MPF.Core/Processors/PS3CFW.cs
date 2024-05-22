@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
