@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using static MPF.Core.Data.Interface;
+using static MPF.Core.UI.InterfaceConstants;
 
 namespace MPF.UI.Core
 {
@@ -11,17 +11,30 @@ namespace MPF.UI.Core
     /// </summary>
     public static class Constants
     {
-        // Create collections for UI based on known drive speeds
-        public static DoubleCollection SpeedsForCDAsCollection { get; } = GetDoubleCollectionFromIntList(CD);
-        public static DoubleCollection SpeedsForDVDAsCollection { get; } = GetDoubleCollectionFromIntList(DVD);
-        public static DoubleCollection SpeedsForHDDVDAsCollection { get; } = GetDoubleCollectionFromIntList(HDDVD);
-        public static DoubleCollection SpeedsForBDAsCollection { get; } = GetDoubleCollectionFromIntList(BD);
+        /// <summary>
+        /// Set of accepted speeds for CD and GD media
+        /// </summary>
+        public static DoubleCollection SpeedsForCDAsCollection => GetDoubleCollectionFromIntList(CD);
 
-#if NET20 || NET35 || NET40
+        /// <summary>
+        /// Set of accepted speeds for DVD media
+        /// </summary>
+        public static DoubleCollection SpeedsForDVDAsCollection => GetDoubleCollectionFromIntList(DVD);
+
+        /// <summary>
+        /// Set of accepted speeds for HD-DVD media
+        /// </summary>
+        public static DoubleCollection SpeedsForHDDVDAsCollection => GetDoubleCollectionFromIntList(HDDVD);
+
+        /// <summary>
+        /// Set of accepted speeds for BD media
+        /// </summary>
+        public static DoubleCollection SpeedsForBDAsCollection => GetDoubleCollectionFromIntList(BD);
+
+        /// <summary>
+        /// Create a DoubleCollection out of a list of integer values
+        /// </summary>
         private static DoubleCollection GetDoubleCollectionFromIntList(IList<int> list)
-#else
-        private static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list)
-#endif
             => new(list.Select(i => Convert.ToDouble(i)).ToList());
     }
 }

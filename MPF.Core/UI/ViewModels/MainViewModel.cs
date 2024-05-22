@@ -1606,7 +1606,7 @@ namespace MPF.Core.UI.ViewModels
         public void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            this.DriveSpeeds = (List<int>)Interface.GetSpeedsForMediaType(CurrentMediaType);
+            this.DriveSpeeds = (List<int>)InterfaceConstants.GetSpeedsForMediaType(CurrentMediaType);
             VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds.Select(ds => ds.ToString()).ToArray())}");
 
             // Set the selected speed
