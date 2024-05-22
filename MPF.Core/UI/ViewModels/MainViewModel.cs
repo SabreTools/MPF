@@ -1329,7 +1329,7 @@ namespace MPF.Core.UI.ViewModels
 
             // Get the status to write out
             ResultEventArgs result = Tools.GetSupportStatus(_environment.System, _environment.Type);
-            if (this.CurrentProgram == InternalProgram.NONE || _environment.ExecutionContext == null)
+            if (this.CurrentProgram == InternalProgram.NONE)
                 this.Status = "No dumping program found";
             else
                 this.Status = result.Message;
@@ -1405,7 +1405,7 @@ namespace MPF.Core.UI.ViewModels
             }
 
             // Get the extension for the file for the next two statements
-            var extension = _environment?.ExecutionContext?.GetDefaultExtension(this.CurrentMediaType);
+            var extension = _environment?.GetDefaultExtension(this.CurrentMediaType);
 
             // Set the output filename, if it's not already
             if (string.IsNullOrEmpty(this.OutputPath))
@@ -1484,25 +1484,25 @@ namespace MPF.Core.UI.ViewModels
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Name?[0] ?? '\0').ToList().IndexOf(_environment.ExecutionContext?.InputPath?[0] ?? default);
+                int driveIndex = Drives.Select(d => d.Name?[0] ?? '\0').ToList().IndexOf(_environment.ContextInputPath?[0] ?? default);
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
 
-            int driveSpeed = _environment.ExecutionContext?.Speed ?? -1;
+            int driveSpeed = _environment.Speed ?? -1;
             if (driveSpeed > 0)
                 this.DriveSpeed = driveSpeed;
-            else if (_environment.ExecutionContext != null)
-                _environment.ExecutionContext.Speed = this.DriveSpeed;
+            else
+                _environment.Speed = this.DriveSpeed;
 
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.ExecutionContext?.OutputPath, false);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.ContextOutputPath, false);
 
             if (MediaTypes != null)
             {
-                MediaType? mediaType = _environment.ExecutionContext?.GetMediaType();
+                MediaType? mediaType = _environment.GetMediaType();
                 int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
                 this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
             }
@@ -1713,7 +1713,7 @@ namespace MPF.Core.UI.ViewModels
 #endif
 
                 // If we didn't execute a dumping command we cannot get submission output
-                if (_environment.ExecutionContext?.IsDumpingCommand() != true)
+                if (!_environment.IsDumpingCommand())
                 {
                     LogLn("No dumping command was run, submission information will not be gathered.");
                     this.Status = "Execution complete!";
@@ -1830,28 +1830,7 @@ namespace MPF.Core.UI.ViewModels
             else
             {
                 // If a complete dump exists from a different program
-                InternalProgram? programFound = null;
-                if (programFound == null && _environment.InternalProgram != InternalProgram.Aaru)
-                {
-                    var processor = new Processors.Aaru(_environment.System, _environment.Type);
-                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
-                    if (foundOtherFiles)
-                        programFound = InternalProgram.Aaru;
-                }
-                if (programFound == null && _environment.InternalProgram != InternalProgram.DiscImageCreator)
-                {
-                    var processor = new Processors.DiscImageCreator(_environment.System, _environment.Type);
-                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
-                    if (foundOtherFiles)
-                        programFound = InternalProgram.DiscImageCreator;
-                }
-                if (programFound == null && _environment.InternalProgram != InternalProgram.Redumper)
-                {
-                    var processor = new Processors.Redumper(_environment.System, _environment.Type);
-                    (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
-                    if (foundOtherFiles)
-                        programFound = InternalProgram.Redumper;
-                }
+                InternalProgram? programFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
                 if (programFound != null && _displayUserMessage != null)
                 {
                     bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);

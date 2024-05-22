@@ -59,6 +59,7 @@
 - Execution context is not needed to extract info
 - Remove other reference to execution context
 - Make processor private to DumpEnvironment
+- Make context private to DumpEnvironment
 
 ### 3.1.9a (2024-05-21)
 
