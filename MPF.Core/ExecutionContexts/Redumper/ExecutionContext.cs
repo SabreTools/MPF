@@ -11,7 +11,7 @@ namespace MPF.Core.ExecutionContexts.Redumper
     /// <summary>
     /// Represents a generic set of Redumper parameters
     /// </summary>
-    public class ExecutionContext : BaseExecutionContext
+    public sealed class ExecutionContext : BaseExecutionContext
     {
         #region Generic Dumping Information
 

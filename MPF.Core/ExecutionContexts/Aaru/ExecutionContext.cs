@@ -10,7 +10,7 @@ namespace MPF.Core.ExecutionContexts.Aaru
     /// <summary>
     /// Represents a generic set of Aaru parameters
     /// </summary>
-    public class ExecutionContext : BaseExecutionContext
+    public sealed class ExecutionContext : BaseExecutionContext
     {
         #region Generic Dumping Information
 

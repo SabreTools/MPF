@@ -11,7 +11,7 @@ namespace MPF.Core.ExecutionContexts.DiscImageCreator
     /// <summary>
     /// Represents a generic set of DiscImageCreator parameters
     /// </summary>
-    public class ExecutionContext : BaseExecutionContext
+    public sealed class ExecutionContext : BaseExecutionContext
     {
         #region Generic Dumping Information
 
