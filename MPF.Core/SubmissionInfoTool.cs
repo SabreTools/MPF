@@ -36,7 +36,6 @@ namespace MPF.Core
         /// <param name="system">Currently selected system</param>
         /// <param name="mediaType">Currently selected media type</param>
         /// <param name="options">Options object representing user-defined options</param>
-        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
@@ -47,7 +46,6 @@ namespace MPF.Core
             RedumpSystem? system,
             MediaType? mediaType,
             Data.Options options,
-            BaseExecutionContext? executionContext,
             BaseProcessor? processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)

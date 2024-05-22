@@ -319,7 +319,6 @@ namespace MPF.Core
                 System,
                 Type,
                 _options,
-                ExecutionContext,
                 Processor,
                 resultProgress,
                 protectionProgress);

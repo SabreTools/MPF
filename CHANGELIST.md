@@ -56,6 +56,7 @@
 - Seal all execution contexts
 - Remove use of "this" in Drive
 - Move GetRedumpSystemFromVolumeLabel to InfoTool
+- Execution context is not needed to extract info
 
 ### 3.1.9a (2024-05-21)
 
