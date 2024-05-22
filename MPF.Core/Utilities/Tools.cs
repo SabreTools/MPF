@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using MPF.Core.Data;
-using Newtonsoft.Json.Linq;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Utilities

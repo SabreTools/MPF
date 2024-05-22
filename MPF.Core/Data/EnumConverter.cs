@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 #endif
 using System.IO;
 using System.Reflection;
-using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data
