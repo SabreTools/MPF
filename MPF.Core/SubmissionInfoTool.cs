@@ -46,7 +46,7 @@ namespace MPF.Core
             RedumpSystem? system,
             MediaType? mediaType,
             Data.Options options,
-            BaseProcessor? processor,
+            BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
         {

@@ -88,6 +88,30 @@ namespace MPF.Core.Processors
         #region Methods to Move
 
         /// <summary>
+        /// Ensures that all required output files have been created
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
+        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
+        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+        public (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Then get the base path for all checking
+            string basePath;
+            if (string.IsNullOrEmpty(outputDirectory))
+                basePath = outputFilename;
+            else
+                basePath = Path.Combine(outputDirectory, outputFilename);
+
+            // Finally, let the parameters say if all files exist
+            return CheckAllOutputFilesExist(basePath, preCheck);
+        }
+
+        /// <summary>
         /// Get the hex contents of the PIC file
         /// </summary>
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>

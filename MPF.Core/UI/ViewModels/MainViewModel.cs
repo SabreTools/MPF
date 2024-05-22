@@ -1475,9 +1475,10 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         public void ProcessCustomParameters()
         {
-            _environment?.SetExecutionContext(this.Parameters);
-            _environment?.SetProcessor();
-            if (_environment?.ExecutionContext == null || _environment.Processor == null)
+            // Set the execution context and processor
+            if (_environment?.SetExecutionContext(this.Parameters) != true)
+                return;
+            if (_environment?.SetProcessor() != true)
                 return;
 
             // Catch this in case there's an input path issue
@@ -1816,7 +1817,7 @@ namespace MPF.Core.UI.ViewModels
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists
-            (bool foundFiles, List<string> _) = _environment.Processor.FoundAllFiles(outputDirectory, outputFilename, true);
+            bool foundFiles = _environment.FoundAllFiles(outputDirectory, outputFilename, true);
             if (foundFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);

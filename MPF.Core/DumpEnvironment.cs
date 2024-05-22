@@ -56,14 +56,14 @@ namespace MPF.Core
         public BaseExecutionContext? ExecutionContext { get; private set; }
 
         /// <summary>
-        /// Processor object representing how to process the outputs
-        /// </summary>
-        public BaseProcessor? Processor { get; private set; }
-
-        /// <summary>
         /// Options object representing user-defined options
         /// </summary>
         private readonly Data.Options _options;
+
+        /// <summary>
+        /// Processor object representing how to process the outputs
+        /// </summary>
+        private BaseProcessor? _processor;
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace MPF.Core
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
-        public void SetExecutionContext(string? parameters)
+        public bool SetExecutionContext(string? parameters)
         {
             ExecutionContext = InternalProgram switch
             {
@@ -151,14 +151,16 @@ namespace MPF.Core
                 ExecutionContext.System = System;
                 ExecutionContext.Type = Type;
             }
+
+            return ExecutionContext != null;
         }
 
         /// <summary>
         /// Set the processor object based on the internal program
         /// </summary>
-        public void SetProcessor()
+        public bool SetProcessor()
         {
-            Processor = InternalProgram switch
+            _processor = InternalProgram switch
             {
                 InternalProgram.Aaru => new Processors.Aaru(System, Type),
                 InternalProgram.CleanRip => new CleanRip(System, Type),
@@ -172,8 +174,19 @@ namespace MPF.Core
                 InternalProgram.NONE => null,
                 _ => null,
             };
+
+            return _processor != null;
         }
 
+        /// <inheritdoc cref="BaseProcessor.FoundAllFiles(string?, string, bool)"/>
+        public bool FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)
+        {
+            if (_processor == null)
+                return false;
+
+            return _processor.FoundAllFiles(outputDirectory, outputFilename, preCheck).Item1;
+        }
+        
         /// <summary>
         /// Get the full parameter string for either DiscImageCreator or Aaru
         /// </summary>
@@ -294,7 +307,7 @@ namespace MPF.Core
             Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
-            if (Processor == null)
+            if (_processor == null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             resultProgress?.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
@@ -304,7 +317,7 @@ namespace MPF.Core
             var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = Processor.FoundAllFiles(outputDirectory, outputFilename, false);
+            (bool foundFiles, List<string> missingFiles) = _processor.FoundAllFiles(outputDirectory, outputFilename, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
@@ -319,7 +332,7 @@ namespace MPF.Core
                 System,
                 Type,
                 _options,
-                Processor,
+                _processor,
                 resultProgress,
                 protectionProgress);
             resultProgress?.Report(ResultEventArgs.Success("Extracting information complete!"));
@@ -413,7 +426,7 @@ namespace MPF.Core
             if (_options.CompressLogFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, Processor);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, _processor);
                 if (compressSuccess)
                     resultProgress?.Report(ResultEventArgs.Success(compressResult));
                 else
@@ -424,7 +437,7 @@ namespace MPF.Core
             if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
-                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, Processor);
+                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, _processor);
                 if (deleteSuccess)
                     resultProgress?.Report(ResultEventArgs.Success(deleteResult));
                 else

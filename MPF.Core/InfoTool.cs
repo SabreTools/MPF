@@ -29,34 +29,6 @@ namespace MPF.Core
         #region Information Extraction
 
         /// <summary>
-        /// Ensures that all required output files have been created
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
-        /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="processor">Processor object representing how to process the outputs</param>
-        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        internal static (bool, List<string>) FoundAllFiles(this BaseProcessor? processor, string? outputDirectory, string outputFilename, bool preCheck)
-        {
-            // If there are no parameters set
-            if (processor == null)
-                return (false, new List<string>());
-
-            // First, sanitized the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Then get the base path for all checking
-            string basePath;
-            if (string.IsNullOrEmpty(outputDirectory))
-                basePath = outputFilename;
-            else
-                basePath = Path.Combine(outputDirectory, outputFilename);
-
-            // Finally, let the parameters say if all files exist
-            return processor.CheckAllOutputFilesExist(basePath, preCheck);
-        }
-
-        /// <summary>
         /// Generate the proper datfile from the input Datafile, if possible
         /// </summary>
         /// <param name="datafile">.dat file location</param>
