@@ -691,7 +691,9 @@ namespace MPF.Core.Processors
 
                     info.EDC!.EDC = psEdcStatus.ToYesNo();
                     info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
-                    InfoTool.GetLibCryptDetected(info, basePath);
+                    GetLibCryptDetected(basePath, out YesNo libCryptDetected, out string? libCryptData);
+                    info.CopyProtection.LibCrypt = libCryptDetected;
+                    info.CopyProtection.LibCryptData = libCryptData;
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -986,89 +988,6 @@ namespace MPF.Core.Processors
         }
 
         /// <summary>
-        /// Get all Volume Identifiers
-        /// </summary>
-        /// <param name="volDesc">_volDesc.txt file location</param>
-        /// <returns>Volume labels (by type), or null if none present</returns>
-        private static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
-        {
-            // If the file doesn't exist, can't get the volume labels
-            volLabels = [];
-            if (!File.Exists(volDesc))
-                return false;
-
-            try
-            {
-                using var sr = File.OpenText(volDesc);
-                var line = sr.ReadLine();
-
-                string volType = "UNKNOWN";
-                string label;
-                while (line != null)
-                {
-                    // Trim the line for later use
-                    line = line.Trim();
-
-                    // ISO9660 and extensions section
-                    if (line.StartsWith("Volume Descriptor Type: "))
-                    {
-                        Int32.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
-                        volType = volTypeInt switch
-                        {
-                            // 0 => "Boot Record" // Should not not contain a Volume Identifier
-                            1 => "ISO", // ISO9660
-                            2 => "Joliet",
-                            // 3 => "Volume Partition Descriptor" // Should not not contain a Volume Identifier
-                            // 255 => "???" // Should not not contain a Volume Identifier
-                            _ => "UNKNOWN" // Should not contain a Volume Identifier
-                        };
-                    }
-                    // UDF section
-                    else if (line.StartsWith("Primary Volume Descriptor Number:"))
-                    {
-                        volType = "UDF";
-                    }
-                    // Identifier
-                    else if (line.StartsWith("Volume Identifier: "))
-                    {
-                        label = line.Substring("Volume Identifier: ".Length);
-
-                        // Remove leading non-printable character (unsure why DIC outputs this)
-                        if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
-                            label = label.Substring(1);
-
-                        // Skip if label is blank
-                        if (label == null || label.Length <= 0)
-                        {
-                            volType = "UNKNOWN";
-                            line = sr.ReadLine();
-                            continue;
-                        }
-
-                        if (volLabels.ContainsKey(label))
-                            volLabels[label].Add(volType);
-                        else
-                            volLabels.Add(label, [volType]);
-
-                        // Reset volume type
-                        volType = "UNKNOWN";
-                    }
-
-                    line = sr.ReadLine();
-                }
-
-                // Return true if a volume label was found
-                return volLabels.Count > 0;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                volLabels = [];
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Get the DVD protection information, if possible
         /// </summary>
         /// <param name="cssKey">_CSSKey.txt file location</param>
@@ -1241,72 +1160,6 @@ namespace MPF.Core.Processors
         }
 
         /// <summary>
-        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
-        /// </summary>
-        /// <param name="log">Log file location</param>
-        /// <param name="serial">Internal serial</param>
-        /// <param name="psx">True if PSX disc, false otherwise</param>
-        /// <returns>EXE date if possible, null otherwise</returns>
-        public static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
-        {
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(log))
-                return null;
-
-            // If the EXE name is not valid, we can't get the info
-            if (string.IsNullOrEmpty(exeName))
-                return null;
-
-            try
-            {
-                string? exeDate = null;
-                using var sr = File.OpenText(log);
-                var line = sr.ReadLine();
-                while (line != null)
-                {
-                    // Trim the line for later use
-                    line = line.Trim();
-
-                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
-                    if (line.Length >= "File Identifier: ".Length + 11 &&
-                        line.StartsWith("File Identifier:") &&
-                        line.Substring("File Identifier: ".Length) == exeName)
-                    {
-                        // Account for Y2K date problem
-                        if (exeDate != null && exeDate!.Substring(0, 2) == "19")
-                        {
-                            string decade = exeDate!.Substring(2, 1);
-                            // Does only PSX need to account for 1920s-60s?
-                            if (decade == "0" || decade == "1" ||
-                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
-                                exeDate = $"20{exeDate!.Substring(2)}";
-                        }
-
-                        // Currently stored date is the EXE date, return it
-                        return exeDate;
-                    }
-
-                    // The exe datetime is listed in a single line
-                    if (line.Length >= "Recording Date and Time: ".Length + 10 &&
-                        line.StartsWith("Recording Date and Time:"))
-                    {
-                        // exe date: ISO datetime (yyyy-MM-ddT.....)
-                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
-                    }
-
-                    line = sr.ReadLine();
-                }
-
-                return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get the build info from a GD-ROM LD area, if possible
         /// </summary>
         /// <<param name="segaHeader">String representing a formatter variant of the GD-ROM header</param>
@@ -1442,6 +1295,49 @@ namespace MPF.Core.Processors
             {
                 // We don't care what the exception is right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get if LibCrypt data is detected in the subchannel file, if possible
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Status of the LibCrypt data, if possible</returns>
+        private static void GetLibCryptDetected(string basePath, out YesNo detected, out string? data)
+        {
+            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
+            if (psLibCryptStatus == true)
+            {
+                // Guard against false positives
+                if (File.Exists(basePath + "_subIntention.txt"))
+                {
+                    string libCryptData = InfoTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
+                    if (string.IsNullOrEmpty(libCryptData))
+                    {
+                        detected = YesNo.No;
+                        data = null;
+                    }
+                    else
+                    {
+                        detected = YesNo.Yes;
+                        data = libCryptData;
+                    }
+                }
+                else
+                {
+                    detected = YesNo.No;
+                    data = null;
+                }
+            }
+            else if (psLibCryptStatus == false)
+            {
+                detected = YesNo.No;
+                data = null;
+            }
+            else
+            {
+                detected = YesNo.NULL;
+                data = "LibCrypt could not be detected because subchannel file is missing";
             }
         }
 
@@ -1678,6 +1574,72 @@ namespace MPF.Core.Processors
         }
 
         /// <summary>
+        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <param name="serial">Internal serial</param>
+        /// <param name="psx">True if PSX disc, false otherwise</param>
+        /// <returns>EXE date if possible, null otherwise</returns>
+        private static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            // If the EXE name is not valid, we can't get the info
+            if (string.IsNullOrEmpty(exeName))
+                return null;
+
+            try
+            {
+                string? exeDate = null;
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
+                    if (line.Length >= "File Identifier: ".Length + 11 &&
+                        line.StartsWith("File Identifier:") &&
+                        line.Substring("File Identifier: ".Length) == exeName)
+                    {
+                        // Account for Y2K date problem
+                        if (exeDate != null && exeDate!.Substring(0, 2) == "19")
+                        {
+                            string decade = exeDate!.Substring(2, 1);
+                            // Does only PSX need to account for 1920s-60s?
+                            if (decade == "0" || decade == "1" ||
+                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
+                                exeDate = $"20{exeDate!.Substring(2)}";
+                        }
+
+                        // Currently stored date is the EXE date, return it
+                        return exeDate;
+                    }
+
+                    // The exe datetime is listed in a single line
+                    if (line.Length >= "Recording Date and Time: ".Length + 10 &&
+                        line.StartsWith("Recording Date and Time:"))
+                    {
+                        // exe date: ISO datetime (yyyy-MM-ddT.....)
+                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the PVD from the input file, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
@@ -1899,6 +1861,89 @@ namespace MPF.Core.Processors
             {
                 // We don't care what the exception is right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get all Volume Identifiers
+        /// </summary>
+        /// <param name="volDesc">_volDesc.txt file location</param>
+        /// <returns>Volume labels (by type), or null if none present</returns>
+        private static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
+        {
+            // If the file doesn't exist, can't get the volume labels
+            volLabels = [];
+            if (!File.Exists(volDesc))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(volDesc);
+                var line = sr.ReadLine();
+
+                string volType = "UNKNOWN";
+                string label;
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // ISO9660 and extensions section
+                    if (line.StartsWith("Volume Descriptor Type: "))
+                    {
+                        Int32.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+                        volType = volTypeInt switch
+                        {
+                            // 0 => "Boot Record" // Should not not contain a Volume Identifier
+                            1 => "ISO", // ISO9660
+                            2 => "Joliet",
+                            // 3 => "Volume Partition Descriptor" // Should not not contain a Volume Identifier
+                            // 255 => "???" // Should not not contain a Volume Identifier
+                            _ => "UNKNOWN" // Should not contain a Volume Identifier
+                        };
+                    }
+                    // UDF section
+                    else if (line.StartsWith("Primary Volume Descriptor Number:"))
+                    {
+                        volType = "UDF";
+                    }
+                    // Identifier
+                    else if (line.StartsWith("Volume Identifier: "))
+                    {
+                        label = line.Substring("Volume Identifier: ".Length);
+
+                        // Remove leading non-printable character (unsure why DIC outputs this)
+                        if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
+                            label = label.Substring(1);
+
+                        // Skip if label is blank
+                        if (label == null || label.Length <= 0)
+                        {
+                            volType = "UNKNOWN";
+                            line = sr.ReadLine();
+                            continue;
+                        }
+
+                        if (volLabels.ContainsKey(label))
+                            volLabels[label].Add(volType);
+                        else
+                            volLabels.Add(label, [volType]);
+
+                        // Reset volume type
+                        volType = "UNKNOWN";
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                // Return true if a volume label was found
+                return volLabels.Count > 0;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                volLabels = [];
+                return false;
             }
         }
 

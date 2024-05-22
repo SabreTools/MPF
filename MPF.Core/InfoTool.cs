@@ -310,49 +310,6 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Get if LibCrypt data is detected in the subchannel file, if possible
-        /// </summary>
-        /// <param name="info">Base submission info to fill in specifics for</param>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>Status of the LibCrypt data, if possible</returns>
-        internal static void GetLibCryptDetected(SubmissionInfo info, string basePath)
-        {
-            info.CopyProtection ??= new CopyProtectionSection();
-
-            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
-            if (psLibCryptStatus == true)
-            {
-                // Guard against false positives
-                if (File.Exists(basePath + "_subIntention.txt"))
-                {
-                    string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
-                    if (string.IsNullOrEmpty(libCryptData))
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.No;
-                    }
-                    else
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.Yes;
-                        info.CopyProtection.LibCryptData = libCryptData;
-                    }
-                }
-                else
-                {
-                    info.CopyProtection.LibCrypt = YesNo.No;
-                }
-            }
-            else if (psLibCryptStatus == false)
-            {
-                info.CopyProtection.LibCrypt = YesNo.No;
-            }
-            else
-            {
-                info.CopyProtection.LibCrypt = YesNo.NULL;
-                info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
-            }
-        }
-
-        /// <summary>
         /// Get the PIC identifier from the first disc information unit, if possible
         /// </summary>
         /// <param name="di">Disc information containing the data</param>
