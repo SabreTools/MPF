@@ -37,7 +37,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Event arguments are just the value of the string contained within
         /// </summary>
-        public static implicit operator StringBuilder(StringEventArgs args) => new StringBuilder(args._value);
+        public static implicit operator StringBuilder(StringEventArgs args) => new(args._value);
 
         /// <summary>
         /// Event arguments are just the value of the string contained within

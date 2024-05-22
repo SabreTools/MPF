@@ -50,6 +50,7 @@
 - Rename Result to ResultEventArgs for consistency
 - Reduce accessors for DumpEnvironment
 - Better handle interface constants
+- Make StringEventArgs internally consistent
 
 ### 3.1.9a (2024-05-21)
 
