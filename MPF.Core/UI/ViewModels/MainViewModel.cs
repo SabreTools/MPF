@@ -1801,7 +1801,7 @@ namespace MPF.Core.UI.ViewModels
             if (_environment?.Drive?.MarkedActive != true && _displayUserMessage != null)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
-                    + (!_environment!.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
+                    + (!_environment!.DetectedByWindows() ? $"This is normal for {_environment.SystemName} as the discs may not be readable on Windows. " : string.Empty)
                     + "Do you want to continue?";
 
                 bool? mbresult = _displayUserMessage("No Disc Detected", message, 2, false);
