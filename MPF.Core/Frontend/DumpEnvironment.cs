@@ -10,7 +10,7 @@ using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core
+namespace MPF.Core.Frontend
 {
     /// <summary>
     /// Represents the state of all settings to be used during dumping
