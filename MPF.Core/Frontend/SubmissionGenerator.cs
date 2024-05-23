@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Processors;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
-namespace MPF.Core.Utilities
+namespace MPF.Core.Frontend
 {
     /// <summary>
     /// Generator for SubmissionInfo objects

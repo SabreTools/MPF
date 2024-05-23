@@ -96,6 +96,7 @@
 - Move Logging to Core.Frontend
 - Decouple InfoTool from processors
 - Rename SubmissionInfoTool to SubmissionGenerator
+- Move SubmissionGenerator to Core.Frontend
 
 ### 3.1.9a (2024-05-21)
 
