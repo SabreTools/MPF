@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MPF.Core.Data
+namespace MPF.Core
 {
     public sealed class ProcessingQueue<T> : IDisposable
     {
