@@ -93,6 +93,7 @@
 - Move Options to Core.Frontend
 - Remove useless using statement
 - Move OptionsLoader to Core.Frontend
+- Move Logging to Core.Frontend
 
 ### 3.1.9a (2024-05-21)
 

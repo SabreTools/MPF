@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MPF.Core.Utilities
+namespace MPF.Core.Frontend
 {
     public static class Logging
     {
