@@ -6,11 +6,12 @@ using System.Linq;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 #endif
+using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Data
+namespace MPF.Core
 {
     /// <summary>
     /// Represents information for a single drive
