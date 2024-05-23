@@ -85,6 +85,7 @@
 - Move Options to root of Core
 - Move Enumerations to root of Core
 - Move ToInternalDriveType to Drive
+- Clean up EnumExtensions
 
 ### 3.1.9a (2024-05-21)
 

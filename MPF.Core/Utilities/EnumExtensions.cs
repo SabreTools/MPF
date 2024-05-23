@@ -10,10 +10,6 @@ namespace MPF.Core.Utilities
 {
     public static class EnumExtensions
     {
-        #region Cross-enumeration conversions
-
-        #endregion
-
         #region Convert to Long Name
 
         /// <summary>
