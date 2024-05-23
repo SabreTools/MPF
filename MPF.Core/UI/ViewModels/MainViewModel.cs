@@ -516,8 +516,9 @@ namespace MPF.Core.UI.ViewModels
 
         #region Constants
 
+        private const string DiscNotDetectedValue = "Disc Not Detected";
         private const string StartDumpingValue = "Start Dumping";
-        public const string StopDumpingValue = "Stop Dumping";
+        private const string StopDumpingValue = "Stop Dumping";
 
         #endregion
 
@@ -718,7 +719,7 @@ namespace MPF.Core.UI.ViewModels
                 this.CurrentProgram = InternalProgram.NONE;
             }
             else
-            {   
+            {
                 int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
                 this.CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
             }
@@ -1358,7 +1359,7 @@ namespace MPF.Core.UI.ViewModels
             string programShort = program == "DiscImageCreator" ? "DIC" : program;
             if (string.IsNullOrEmpty(programShort))
                 programShort = "Unknown Program";
-            string label = this._currentDrive?.FormattedVolumeLabel ?? "track";
+            string label = GetFormattedVolumeLabel(_currentDrive) ?? "track";
             if (string.IsNullOrEmpty(label))
                 label = "track";
             string date = DateTime.Today.ToString("yyyyMMdd");
@@ -1397,7 +1398,7 @@ namespace MPF.Core.UI.ViewModels
             // Set the output filename, if it's not already
             if (string.IsNullOrEmpty(this.OutputPath))
             {
-                var label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
+                var label = GetFormattedVolumeLabel(CurrentDrive) ?? this.CurrentSystem.LongName();
                 var directory = this.Options.DefaultOutputPath;
                 string filename = $"{label}{extension ?? ".bin"}";
 
@@ -1418,7 +1419,7 @@ namespace MPF.Core.UI.ViewModels
             // Set the output filename, if we changed drives
             else if (driveChanged)
             {
-                var label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
+                var label = GetFormattedVolumeLabel(CurrentDrive) ?? this.CurrentSystem.LongName();
                 string oldPath = InfoTool.NormalizeOutputPaths(this.OutputPath, false);
                 string oldFilename = Path.GetFileNameWithoutExtension(oldPath);
                 var directory = Path.GetDirectoryName(oldPath);
@@ -1554,6 +1555,47 @@ namespace MPF.Core.UI.ViewModels
             this.CopyProtectScanButtonEnabled = true;
 
             return (output, error);
+        }
+
+        /// <summary>
+        /// Media label as read by Windows, formatted to avoid odd outputs
+        /// If no volume label present, use PSX or PS2 serial if valid
+        /// Otherwise, use "track" as volume label
+        /// </summary>
+        private static string? GetFormattedVolumeLabel(Drive? drive)
+        {
+            if (drive == null)
+                return null;
+
+            string? volumeLabel = DiscNotDetectedValue;
+            if (!drive.MarkedActive)
+                return volumeLabel;
+
+            if (!string.IsNullOrEmpty(drive.VolumeLabel))
+            {
+                volumeLabel = drive.VolumeLabel;
+            }
+            else
+            {
+                // No Volume Label found, fallback to something sensible
+                switch (drive.GetRedumpSystem(null))
+                {
+                    case RedumpSystem.SonyPlayStation:
+                    case RedumpSystem.SonyPlayStation2:
+                        InfoTool.GetPlayStationExecutableInfo(drive.Name, out string? serial, out _, out _);
+                        volumeLabel = serial ?? "track";
+                        break;
+
+                    default:
+                        volumeLabel = "track";
+                        break;
+                }
+            }
+
+            foreach (char c in Path.GetInvalidFileNameChars())
+                volumeLabel = volumeLabel?.Replace(c, '_');
+
+            return volumeLabel;
         }
 
         /// <summary>

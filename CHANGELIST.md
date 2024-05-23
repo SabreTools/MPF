@@ -86,6 +86,7 @@
 - Move Enumerations to root of Core
 - Move ToInternalDriveType to Drive
 - Clean up EnumExtensions
+- Make FormattedVolumeLabel a method
 
 ### 3.1.9a (2024-05-21)
 

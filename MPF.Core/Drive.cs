@@ -55,54 +55,7 @@ namespace MPF.Core
 
         #endregion
 
-        #region Constants
-
-        private const string DiscNotDetectedValue = "Disc Not Detected";
-
-        #endregion
-
         #region Derived Fields
-
-        /// <summary>
-        /// Media label as read by Windows, formatted to avoid odd outputs
-        /// If no volume label present, use PSX or PS2 serial if valid
-        /// Otherwise, use "track" as volume label
-        /// </summary>
-        public string? FormattedVolumeLabel
-        {
-            get
-            {
-                string? volumeLabel = DiscNotDetectedValue;
-                if (!MarkedActive)
-                    return volumeLabel;
-
-                if (!string.IsNullOrEmpty(VolumeLabel))
-                {
-                    volumeLabel = VolumeLabel;
-                }
-                else
-                {
-                    // No Volume Label found, fallback to something sensible
-                    switch (GetRedumpSystem(null))
-                    {
-                        case RedumpSystem.SonyPlayStation:
-                        case RedumpSystem.SonyPlayStation2:
-                            InfoTool.GetPlayStationExecutableInfo(Name, out string? serial, out _, out _);
-                            volumeLabel = serial ?? "track";
-                            break;
-
-                        default:
-                            volumeLabel = "track";
-                            break;
-                    }
-                }
-
-                foreach (char c in Path.GetInvalidFileNameChars())
-                    volumeLabel = volumeLabel?.Replace(c, '_');
-
-                return volumeLabel;
-            }
-        }
 
         /// <summary>
         /// Read-only access to the drive letter
