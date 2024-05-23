@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Utilities
+namespace MPF.Core
 {
     public static class EnumExtensions
     {

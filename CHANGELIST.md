@@ -97,6 +97,7 @@
 - Decouple InfoTool from processors
 - Rename SubmissionInfoTool to SubmissionGenerator
 - Move SubmissionGenerator to Core.Frontend
+- Move EnumExtensions to root of core
 
 ### 3.1.9a (2024-05-21)
 

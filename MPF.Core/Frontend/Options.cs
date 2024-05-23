@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Frontend
