@@ -102,6 +102,7 @@
 - Decouple Frontend from execution contexts
 - Split Core.Frontend into separate library
 - Split Core.Processors into separate library
+- Split Core.ExecutionContexts into separate library
 
 ### 3.1.9a (2024-05-21)
 

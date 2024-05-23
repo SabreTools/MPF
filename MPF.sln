@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.Frontend", "MPF.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.Processors", "MPF.Core.Processors\MPF.Core.Processors.csproj", "{147063AA-F916-4E1C-B413-259DE17EE234}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.ExecutionContexts", "MPF.Core.ExecutionContexts\MPF.Core.ExecutionContexts.csproj", "{75609610-CE85-486E-8F42-9525A52B80BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,10 @@ Global
 		{147063AA-F916-4E1C-B413-259DE17EE234}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{147063AA-F916-4E1C-B413-259DE17EE234}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{147063AA-F916-4E1C-B413-259DE17EE234}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75609610-CE85-486E-8F42-9525A52B80BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75609610-CE85-486E-8F42-9525A52B80BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75609610-CE85-486E-8F42-9525A52B80BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75609610-CE85-486E-8F42-9525A52B80BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

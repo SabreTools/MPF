@@ -14,7 +14,7 @@
 
   <!-- Package Properties -->
   <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-  <Description>Common code for all MPF frontend implementations</Description>
+  <Description>Common code for all MPF execution contexts</Description>
   <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
   <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
   <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
@@ -27,8 +27,6 @@
 
 <ItemGroup>
   <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-  <ProjectReference Include="..\MPF.Core.ExecutionContexts\MPF.Core.ExecutionContexts.csproj" />
-  <ProjectReference Include="..\MPF.Core.Processors\MPF.Core.Processors.csproj" />
 </ItemGroup>
 
 <!-- Support for old .NET versions -->
@@ -45,10 +43,6 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.12" GeneratePathProperty="true">
-    <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
-  </PackageReference>
-  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   <PackageReference Include="SabreTools.RedumpLib" Version="1.3.8" />
 </ItemGroup>
 

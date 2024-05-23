@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
+    <ProjectReference Include="..\MPF.Core.ExecutionContexts\MPF.Core.ExecutionContexts.csproj" />
     <ProjectReference Include="..\MPF.Core.Frontend\MPF.Core.Frontend.csproj" />
   </ItemGroup>
 
