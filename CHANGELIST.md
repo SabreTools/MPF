@@ -91,6 +91,7 @@
 - Rename Core.UI namespace to Core.Frontend
 - Move DumpEnvironment to Core.Frontend
 - Move Options to Core.Frontend
+- Remove useless using statement
 
 ### 3.1.9a (2024-05-21)
 

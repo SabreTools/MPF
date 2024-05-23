@@ -11,7 +11,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using BinaryObjectScanner;
 using MPF.Core.Processors;
-using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.IO;
