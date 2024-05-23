@@ -85,7 +85,7 @@ namespace MPF.Core.Utilities
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
         internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
-            Data.Options options,
+            Core.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)

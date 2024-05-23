@@ -22,11 +22,11 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Data.Options Options
+        public Core.Options Options
         {
             get => _options;
         }
-        private readonly Data.Options _options;
+        private readonly Core.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed

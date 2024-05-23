@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core.Data;
+using MPF.Core;
 using MPF.Core.UI.ViewModels;
 using MPF.Core.Utilities;
 using MPF.UI.Core.UserControls;

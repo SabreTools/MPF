@@ -19,7 +19,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Data.Options Options
+        public Core.Options Options
         {
             get => _options;
             set
@@ -28,7 +28,7 @@ namespace MPF.Core.UI.ViewModels
                 OptionsLoader.SaveToConfig(_options);
             }
         }
-        private Data.Options _options;
+        private Core.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -962,13 +962,13 @@ namespace MPF.Core.UI.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-        public void UpdateOptions(bool savedSettings, Data.Options? newOptions)
+        public void UpdateOptions(bool savedSettings, Core.Options? newOptions)
         {
             // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Ensure the first run flag is unset
-            var continuingOptions = new Data.Options(optionsToSave) { FirstRun = false };
+            var continuingOptions = new Core.Options(optionsToSave) { FirstRun = false };
             this.Options = continuingOptions;
 
             // If settings were changed, reinitialize the UI

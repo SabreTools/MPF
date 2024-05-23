@@ -47,7 +47,7 @@ namespace MPF.Core
         /// <summary>
         /// Options object representing user-defined options
         /// </summary>
-        private readonly Data.Options _options;
+        private readonly Core.Options _options;
 
         /// <summary>
         /// Processor object representing how to process the outputs
@@ -130,7 +130,7 @@ namespace MPF.Core
         /// <param name="type"></param>
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
-        public DumpEnvironment(Data.Options options,
+        public DumpEnvironment(Core.Options options,
             string outputPath,
             Drive? drive,
             RedumpSystem? system,

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MPF.Core.Data;
+using MPF.Core;
 using MPF.Core.ExecutionContexts.DiscImageCreator;
 using SabreTools.RedumpLib.Data;
 using Xunit;
