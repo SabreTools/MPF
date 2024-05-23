@@ -417,7 +417,7 @@ namespace MPF.Core.Frontend
 
             // Extract the information from the output files
             resultProgress?.Report(ResultEventArgs.Success("Extracting output information from output files..."));
-            var submissionInfo = await SubmissionInfoTool.ExtractOutputInformation(
+            var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
                 OutputPath,
                 _drive,
                 _system,

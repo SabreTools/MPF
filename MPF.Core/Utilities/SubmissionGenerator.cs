@@ -12,9 +12,9 @@ using SabreTools.RedumpLib.Web;
 namespace MPF.Core.Utilities
 {
     /// <summary>
-    /// Class to hold all SubmissionInfo-related methods
+    /// Generator for SubmissionInfo objects
     /// </summary>
-    internal static class SubmissionInfoTool
+    internal static class SubmissionGenerator
     {
         #region Constants
 
