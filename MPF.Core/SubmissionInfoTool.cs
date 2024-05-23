@@ -830,6 +830,10 @@ namespace MPF.Core
                     {
                         info.VersionAndEditions!.Version ??= InfoTool.GetPlayStation3Version(drive.Name) ?? string.Empty;
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = InfoTool.GetPlayStation3Serial(drive.Name) ?? string.Empty;
+                    }
+
+                    if (drive?.Name != null)
+                    {
                         string? firmwareVersion = InfoTool.GetPlayStation3FirmwareVersion(drive.Name);
                         if (firmwareVersion != null)
                             info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] ??= $"PS3 Firmware {firmwareVersion}";

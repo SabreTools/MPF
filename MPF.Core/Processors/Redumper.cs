@@ -312,7 +312,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version, out var _))
+                    if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = kp2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
@@ -376,7 +376,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _, out var _))
+                    if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = psxEXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
@@ -391,7 +391,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version, out var _))
+                    if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = ps2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
@@ -403,18 +403,16 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version, out string? firmwareVersion))
+                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps3Version ?? string.Empty;
-                        if (firmwareVersion != null)
-                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
                     }
 
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version, out var _))
+                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps4Version ?? string.Empty;
@@ -423,7 +421,7 @@ namespace MPF.Core.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version, out var _))
+                    if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps5Version ?? string.Empty;
@@ -1136,10 +1134,10 @@ namespace MPF.Core.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if section found, null on error</returns>
-        private static bool GetPlayStationInfo(string log, out string? exeDate, out string? serial, out string? version, out string? firmware)
+        private static bool GetPlayStationInfo(string log, out string? exeDate, out string? serial, out string? version)
         {
             // Set the default values
-            exeDate = null; serial = null; version = null; firmware = null;
+            exeDate = null; serial = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
@@ -1180,10 +1178,6 @@ namespace MPF.Core.Processors
                     else if (line.StartsWith("version:"))
                     {
                         version = line.Substring("version: ".Length).Trim();
-                    }
-                    else if (line.StartsWith("firmware:"))
-                    {
-                        firmware = line.Substring("firmware: ".Length).Trim();
                     }
                     else
                     {

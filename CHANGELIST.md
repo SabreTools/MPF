@@ -72,6 +72,7 @@
 - Clean up usings
 - Remove automatic eject and reset options
 - Remove options from UI
+- Remove firmware output for Redumper (Deterous)
 
 ### 3.1.9a (2024-05-21)
 
