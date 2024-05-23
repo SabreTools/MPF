@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Processors
