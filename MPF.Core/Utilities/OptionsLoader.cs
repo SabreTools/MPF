@@ -80,7 +80,7 @@ namespace MPF.Core.Utilities
                 return (false, MediaType.NONE, null, "Invalid number of arguments");
 
             // Check the MediaType
-            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
+            var mediaType = EnumExtensions.ToMediaType(args[0].Trim('"'));
             if (mediaType == MediaType.NONE)
                 return (false, MediaType.NONE, null, $"{args[0]} is not a recognized media type");
 
@@ -131,12 +131,12 @@ namespace MPF.Core.Utilities
                 if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
                     string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
+                    options.InternalProgram = EnumExtensions.ToInternalProgram(internalProgram);
                 }
                 else if (args[startIndex] == "-u" || args[startIndex] == "--use")
                 {
                     string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = EnumConverter.ToInternalProgram(internalProgram);
+                    options.InternalProgram = EnumExtensions.ToInternalProgram(internalProgram);
                     startIndex++;
                 }
 

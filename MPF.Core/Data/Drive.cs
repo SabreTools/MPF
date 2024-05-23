@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 #endif
+using MPF.Core.Utilities;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
@@ -633,7 +634,7 @@ namespace MPF.Core.Data
             {
                 drives = DriveInfo.GetDrives()
                     .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                    .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
+                    .Select(d => Create(EnumExtensions.ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
                     .ToList();
             }
             catch

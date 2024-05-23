@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -177,7 +178,7 @@ namespace MPF.Core.Processors
             info = Builder.EnsureAllSections(info);
 
             // Get the dumping program and version
-            info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(InternalProgram.Redumper)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+            info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.Redumper)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data

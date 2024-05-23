@@ -93,7 +93,7 @@ namespace MPF.Core.Processors
                 return;
 
             // XBC dump info
-            info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(InternalProgram.XboxBackupCreator)} {GetVersion(logPath) ?? "Unknown Version"}";
+            info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.XboxBackupCreator)} {GetVersion(logPath) ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(logPath)?.ToString("yyyy-MM-dd HH:mm:ss");
             info.DumpingInfo.Model = GetDrive(logPath) ?? "Unknown Drive";
 

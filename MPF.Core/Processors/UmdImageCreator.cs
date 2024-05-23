@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -75,7 +76,7 @@ namespace MPF.Core.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
-            info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(InternalProgram.UmdImageCreator);
+            info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.UmdImageCreator);
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the volume labels

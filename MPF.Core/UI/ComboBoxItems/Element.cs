@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Core.Data;
+using MPF.Core.Utilities;
 
 namespace MPF.Core.UI.ComboBoxItems
 {
@@ -22,7 +22,7 @@ namespace MPF.Core.UI.ComboBoxItems
         public static implicit operator T? (Element<T> item) => item?.Data;
 
         /// <inheritdoc/>
-        public string Name => EnumConverter.GetLongName(Data);
+        public string Name => EnumExtensions.GetLongName(Data);
 
         public override string ToString() => Name;
 

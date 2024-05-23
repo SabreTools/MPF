@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -59,7 +60,7 @@ namespace MPF.Core.Processors
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
 
-            info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(InternalProgram.PS3CFW);
+            info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.PS3CFW);
 
             // Get the Datafile information
             Datafile? datafile = GeneratePS3CFWDatafile(basePath + ".iso");

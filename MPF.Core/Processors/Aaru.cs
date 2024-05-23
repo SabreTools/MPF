@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using SabreTools.Models.CueSheets;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -109,7 +110,7 @@ namespace MPF.Core.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's an Aaru version anywhere
-            info.DumpingInfo!.DumpingProgram = EnumConverter.LongName(InternalProgram.Aaru);
+            info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.Aaru);
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible

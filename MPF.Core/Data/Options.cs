@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data
@@ -56,7 +57,7 @@ namespace MPF.Core.Data
             get
             {
                 var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.Redumper.ToString());
-                var valueEnum = EnumConverter.ToInternalProgram(valueString);
+                var valueEnum = EnumExtensions.ToInternalProgram(valueString);
                 return valueEnum == InternalProgram.NONE ? InternalProgram.Redumper : valueEnum;
             }
             set
@@ -359,7 +360,7 @@ namespace MPF.Core.Data
             get
             {
                 var valueString = GetStringSetting(Settings, "RedumperReadMethod", RedumperReadMethod.NONE.ToString());
-                return EnumConverter.ToRedumperReadMethod(valueString);
+                return EnumExtensions.ToRedumperReadMethod(valueString);
             }
             set
             {
@@ -375,7 +376,7 @@ namespace MPF.Core.Data
             get
             {
                 var valueString = GetStringSetting(Settings, "RedumperSectorOrder", RedumperSectorOrder.NONE.ToString());
-                return EnumConverter.ToRedumperSectorOrder(valueString);
+                return EnumExtensions.ToRedumperSectorOrder(valueString);
             }
             set
             {

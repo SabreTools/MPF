@@ -73,6 +73,7 @@
 - Remove automatic eject and reset options
 - Remove options from UI
 - Remove firmware output for Redumper (Deterous)
+- Merge EnumConverter and EnumExtensions
 
 ### 3.1.9a (2024-05-21)
 

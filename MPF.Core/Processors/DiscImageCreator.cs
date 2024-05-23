@@ -295,7 +295,7 @@ namespace MPF.Core.Processors
 
             // Get the dumping program and version
             var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);
-            info.DumpingInfo!.DumpingProgram = $"{EnumConverter.LongName(InternalProgram.DiscImageCreator)} {dicVersion ?? "Unknown Version"}";
+            info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.DiscImageCreator)} {dicVersion ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
