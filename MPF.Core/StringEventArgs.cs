@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace MPF.Core.Data
+namespace MPF.Core
 {
     /// <summary>
     /// String wrapper for event arguments

@@ -1,6 +1,5 @@
 ﻿using System;
 using BinaryObjectScanner;
-using MPF.Core.Data;
 
 namespace MPF.Core
 {
