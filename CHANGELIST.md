@@ -77,6 +77,7 @@
 - Move event args to root of Core
 - Move processing queue to root of Core
 - Move InfoTool to Core.Utilities
+- Move SubmissionInfoTool to Core.Utilities
 
 ### 3.1.9a (2024-05-21)
 

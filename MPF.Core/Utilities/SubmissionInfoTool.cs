@@ -10,7 +10,7 @@ using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
-namespace MPF.Core
+namespace MPF.Core.Utilities
 {
     /// <summary>
     /// Class to hold all SubmissionInfo-related methods
