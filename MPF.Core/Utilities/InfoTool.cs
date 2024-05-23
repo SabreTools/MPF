@@ -31,7 +31,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="datafile">.dat file location</param>
         /// <returns>Relevant pieces of the datfile, null on error</returns>
-        internal static string? GenerateDatfile(Datafile? datafile)
+        public static string? GenerateDatfile(Datafile? datafile)
         {
             // If we don't have a valid datafile, we can't do anything
             if (datafile?.Game == null || datafile.Game.Length == 0)
@@ -65,7 +65,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="content">String content to encode</param>
         /// <returns>Base64-encoded contents, if possible</returns>
-        internal static string? GetBase64(string? content)
+        public static string? GetBase64(string? content)
         {
             if (string.IsNullOrEmpty(content))
                 return null;
@@ -81,7 +81,7 @@ namespace MPF.Core.Utilities
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        internal static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
+        public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
             Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
@@ -99,7 +99,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="dat">Path to the DAT file to parse</param>
         /// <returns>Filled Datafile on success, null on error</returns>
-        internal static Datafile? GetDatafile(string? dat)
+        public static Datafile? GetDatafile(string? dat)
         {
             // If there's no path, we can't read the file
             if (string.IsNullOrEmpty(dat))
@@ -144,7 +144,7 @@ namespace MPF.Core.Utilities
         /// <param name="pic">Path to a PIC.bin file</param>
         /// <returns>Filled DiscInformation on success, null on error</returns>
         /// <remarks>This omits the emergency brake information, if it exists</remarks>
-        internal static DiscInformation? GetDiscInformation(string pic)
+        public static DiscInformation? GetDiscInformation(string pic)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="filename">Path to the input file</param>
         /// <returns>Filled DateTime on success, null on failure</returns>
-        internal static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
+        public static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
         {
             if (string.IsNullOrEmpty(filename))
                 return fallback ? (DateTime?)DateTime.UtcNow : null;
@@ -179,7 +179,7 @@ namespace MPF.Core.Utilities
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
-        internal static string? GetFullFile(string filename, bool binary = false)
+        public static string? GetFullFile(string filename, bool binary = false)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -200,7 +200,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="datafile">Datafile represenging the hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
-        internal static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
+        public static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -226,7 +226,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
-        internal static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)
+        public static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -254,7 +254,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="di">Disc information containing unformatted data</param>
         /// <returns>True if layerbreak info was set, false otherwise</returns>
-        internal static bool GetLayerbreaks(DiscInformation? di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+        public static bool GetLayerbreaks(DiscInformation? di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
         {
             // Set the default values
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
@@ -311,7 +311,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="di">Disc information containing the data</param>
         /// <returns>String representing the PIC identifier, null on error</returns>
-        internal static string? GetPICIdentifier(DiscInformation? di)
+        public static string? GetPICIdentifier(DiscInformation? di)
         {
             // If we don't have valid disc information, we can't do anything
             if (di?.Units == null || di.Units.Length <= 1)
@@ -326,7 +326,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Executable name on success, null otherwise</returns>
-        internal static string? GetPlayStationExecutableName(char? driveLetter)
+        public static string? GetPlayStationExecutableName(char? driveLetter)
         {
             // If there's no drive letter, we can't get exe name
             if (driveLetter == null)
@@ -342,7 +342,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Executable name on success, null otherwise</returns>
-        internal static string? GetPlayStationExecutableName(string? drivePath)
+        public static string? GetPlayStationExecutableName(string? drivePath)
         {
             // If there's no drive path, we can't get exe name
             if (string.IsNullOrEmpty(drivePath))
@@ -399,7 +399,7 @@ namespace MPF.Core.Utilities
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns>True if information could be determined, false otherwise</returns>
-        internal static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
+        public static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
         {
             serial = null; region = null; date = null;
 
@@ -420,7 +420,7 @@ namespace MPF.Core.Utilities
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns>True if information could be determined, false otherwise</returns>
-        internal static bool GetPlayStationExecutableInfo(string? drivePath, out string? serial, out Region? region, out string? date)
+        public static bool GetPlayStationExecutableInfo(string? drivePath, out string? serial, out Region? region, out string? date)
         {
             serial = null; region = null; date = null;
 
@@ -472,7 +472,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation2Version(char? driveLetter)
+        public static string? GetPlayStation2Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -488,7 +488,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation2Version(string? drivePath)
+        public static string? GetPlayStation2Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -515,7 +515,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation3Serial(char? driveLetter)
+        public static string? GetPlayStation3Serial(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -531,7 +531,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation3Serial(string? drivePath)
+        public static string? GetPlayStation3Serial(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -587,7 +587,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation3Version(char? driveLetter)
+        public static string? GetPlayStation3Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -603,7 +603,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation3Version(string? drivePath)
+        public static string? GetPlayStation3Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -661,7 +661,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Firmware version if possible, null on error</returns>
-        internal static string? GetPlayStation3FirmwareVersion(char? driveLetter)
+        public static string? GetPlayStation3FirmwareVersion(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -677,7 +677,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Firmware version if possible, null on error</returns>
-        internal static string? GetPlayStation3FirmwareVersion(string? drivePath)
+        public static string? GetPlayStation3FirmwareVersion(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -719,7 +719,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation4Serial(char? driveLetter)
+        public static string? GetPlayStation4Serial(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -735,7 +735,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation4Serial(string? drivePath)
+        public static string? GetPlayStation4Serial(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -773,7 +773,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation4Version(char? driveLetter)
+        public static string? GetPlayStation4Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -789,7 +789,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation4Version(string? drivePath)
+        public static string? GetPlayStation4Version(string? drivePath)
         {
             // If there's no drive path, we can't do this part
             if (string.IsNullOrEmpty(drivePath))
@@ -827,7 +827,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation5Serial(char? driveLetter)
+        public static string? GetPlayStation5Serial(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -843,7 +843,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
-        internal static string? GetPlayStation5Serial(string? drivePath)
+        public static string? GetPlayStation5Serial(string? drivePath)
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
@@ -866,7 +866,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation5Version(char? driveLetter)
+        public static string? GetPlayStation5Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -882,7 +882,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="drivePath">Drive path to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        internal static string? GetPlayStation5Version(string? drivePath)
+        public static string? GetPlayStation5Version(string? drivePath)
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drivePath);
@@ -954,7 +954,7 @@ namespace MPF.Core.Utilities
         /// Get the current system from the drive volume label
         /// </summary>
         /// <returns>The system based on volume label, null if none detected</returns>
-        internal static RedumpSystem? GetRedumpSystemFromVolumeLabel(string? volumeLabel)
+        public static RedumpSystem? GetRedumpSystemFromVolumeLabel(string? volumeLabel)
         {
             // If the volume label is empty, we can't do anything
             if (string.IsNullOrEmpty(volumeLabel))
@@ -1010,7 +1010,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
-        internal static DiscCategory? GetUMDCategory(string? category)
+        public static DiscCategory? GetUMDCategory(string? category)
         {
             return category switch
             {
@@ -1030,7 +1030,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
         /// <returns>Region mapped from name, if possible</returns>
-        internal static Region? GetPlayStationRegion(string? serial)
+        public static Region? GetPlayStationRegion(string? serial)
         {
             // If we have a fully invalid serial
             if (string.IsNullOrEmpty(serial))
@@ -1115,7 +1115,7 @@ namespace MPF.Core.Utilities
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        internal static Region? GetXGDRegion(char? region)
+        public static Region? GetXGDRegion(char? region)
         {
             return region switch
             {
