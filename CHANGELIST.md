@@ -71,6 +71,7 @@
 - Make RunProtectionScanOnPath signature easier to read
 - Clean up usings
 - Remove automatic eject and reset options
+- Remove options from UI
 
 ### 3.1.9a (2024-05-21)
 

@@ -191,7 +191,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="8">
+                            <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
                                      IsChecked="{Binding Options.ToolsInSeparateWindow}"
                                      ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
@@ -200,11 +200,6 @@
                                 <CheckBox VerticalAlignment="Center" Content="Output Protection File"
                                     IsChecked="{Binding Options.OutputSeparateProtectionFile}" IsEnabled="{Binding Options.ScanForProtection}"
                                     ToolTip="Output protection information to a separate file" Margin="0,4,0,0"
-                                    />
-
-                                <CheckBox VerticalAlignment="Center" Content="Eject After Dump"
-                                    IsChecked="{Binding Options.EjectAfterDump}"
-                                    ToolTip="Eject the disc from the drive after dumping has completed" Margin="0,4"
                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
@@ -378,7 +373,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="DiscImageCreator">
-                            <UniformGrid Columns="2" Rows="6">
+                            <UniformGrid Columns="2" Rows="5">
                                 <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
                                           IsChecked="{Binding Options.DICQuietMode}"
                                           ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
@@ -394,17 +389,10 @@
                                           ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
-                                          IsChecked="{Binding Options.DICResetDriveAfterDump}"
-                                          ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
-                                />
-
                                 <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
                                           IsChecked="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                                 />
-                                <Label/> 
-                                <!-- Empty label for padding -->
 
                                 <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
