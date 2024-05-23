@@ -634,7 +634,7 @@ namespace MPF.Core
             {
                 drives = DriveInfo.GetDrives()
                     .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                    .Select(d => Create(EnumExtensions.ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
+                    .Select(d => Create(ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
                     .ToList();
             }
             catch
@@ -667,6 +667,22 @@ namespace MPF.Core
 #endif
 
             return drives;
+        }
+
+        /// <summary>
+        /// Convert drive type to internal version, if possible
+        /// </summary>
+        /// <param name="driveType">DriveType value to check</param>
+        /// <returns>InternalDriveType, if possible, null on error</returns>
+        internal static InternalDriveType? ToInternalDriveType(DriveType driveType)
+        {
+            return driveType switch
+            {
+                DriveType.CDRom => (InternalDriveType?)Core.InternalDriveType.Optical,
+                DriveType.Fixed => (InternalDriveType?)Core.InternalDriveType.HardDisk,
+                DriveType.Removable => (InternalDriveType?)Core.InternalDriveType.Removable,
+                _ => null,
+            };
         }
 
         #endregion

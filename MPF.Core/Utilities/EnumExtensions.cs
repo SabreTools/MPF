@@ -3,7 +3,6 @@ using System.Collections.Generic;
 #if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
-using System.IO;
 using System.Reflection;
 using SabreTools.RedumpLib.Data;
 
@@ -12,22 +11,6 @@ namespace MPF.Core.Utilities
     public static class EnumExtensions
     {
         #region Cross-enumeration conversions
-
-        /// <summary>
-        /// Convert drive type to internal version, if possible
-        /// </summary>
-        /// <param name="driveType">DriveType value to check</param>
-        /// <returns>InternalDriveType, if possible, null on error</returns>
-        public static InternalDriveType? ToInternalDriveType(this DriveType driveType)
-        {
-            return driveType switch
-            {
-                DriveType.CDRom => (InternalDriveType?)InternalDriveType.Optical,
-                DriveType.Fixed => (InternalDriveType?)InternalDriveType.HardDisk,
-                DriveType.Removable => (InternalDriveType?)InternalDriveType.Removable,
-                _ => null,
-            };
-        }
 
         #endregion
 

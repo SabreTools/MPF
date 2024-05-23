@@ -31,7 +31,7 @@ namespace MPF.Test.Core.Converters
         [MemberData(nameof(GenerateDriveTypeMappingTestData))]
         public void ToInternalDriveTypeTest(DriveType driveType, bool expectNull)
         {
-            var actual = driveType.ToInternalDriveType();
+            var actual = Drive.ToInternalDriveType(driveType);
 
             if (expectNull)
                 Assert.Null(actual);
