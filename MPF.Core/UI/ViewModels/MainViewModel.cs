@@ -1527,13 +1527,13 @@ namespace MPF.Core.UI.ViewModels
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
 #if NET40
-            var protectionTask = Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+            var protectionTask = ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
             protectionTask.Wait();
             var (protections, error) = protectionTask.Result;
 #else
-            var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+            var (protections, error) = await ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
 #endif
-            var output = Protection.FormatProtections(protections);
+            var output = ProtectionTool.FormatProtections(protections);
 
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
             //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))

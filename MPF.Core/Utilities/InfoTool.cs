@@ -90,8 +90,8 @@ namespace MPF.Core.Utilities
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
-                (var protection, _) = await Protection.RunProtectionScanOnPath(drive.Name, options, progress);
-                return (Protection.FormatProtections(protection), protection);
+                (var protection, _) = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, progress);
+                return (ProtectionTool.FormatProtections(protection), protection);
             }
 
             return ("(CHECK WITH PROTECTIONID)", null);

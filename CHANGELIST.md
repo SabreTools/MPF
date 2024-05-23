@@ -79,6 +79,7 @@
 - Move InfoTool to Core.Utilities
 - Move SubmissionInfoTool to Core.Utilities
 - Fix build
+- Rename Protection to ProtectionTool
 
 ### 3.1.9a (2024-05-21)
 

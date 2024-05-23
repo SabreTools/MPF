@@ -11,7 +11,7 @@ using psxt001z;
 
 namespace MPF.Core
 {
-    public static class Protection
+    public static class ProtectionTool
     {
         /// <summary>
         /// Run protection scan on a given path

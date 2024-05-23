@@ -17,7 +17,7 @@ namespace MPF.Test.Library
                 "ActiveMARK 5",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("ActiveMARK 5", sanitized);
         }
 
@@ -30,7 +30,7 @@ namespace MPF.Test.Library
                 "Cactus Data Shield 200 (Build 3.0.100a)",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Cactus Data Shield 200 (Build 3.0.100a)", sanitized);
         }
 
@@ -43,7 +43,7 @@ namespace MPF.Test.Library
                 "Executable-Based CD Check",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Anything Else Protection", sanitized);
         }
 
@@ -56,7 +56,7 @@ namespace MPF.Test.Library
                 "CD-Cops v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("CD-Cops v1.2.0", sanitized);
         }
 
@@ -69,7 +69,7 @@ namespace MPF.Test.Library
                 "CD-Key / Serial",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Anything Else Protection", sanitized);
         }
 
@@ -82,7 +82,7 @@ namespace MPF.Test.Library
                 "EA CdKey Registration Module v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("EA CdKey Registration Module v1.2.0", sanitized);
         }
 
@@ -95,7 +95,7 @@ namespace MPF.Test.Library
                 "EA DRM Protection v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("EA DRM Protection v1.2.0", sanitized);
         }
 
@@ -108,7 +108,7 @@ namespace MPF.Test.Library
                 "Games for Windows LIVE v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Games for Windows LIVE v1.2.0", sanitized);
         }
 
@@ -121,7 +121,7 @@ namespace MPF.Test.Library
                 "Games for Windows LIVE Zero Day Piracy Protection",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Games for Windows LIVE, Games for Windows LIVE Zero Day Piracy Protection", sanitized);
         }
 
@@ -134,7 +134,7 @@ namespace MPF.Test.Library
                 "Impulse Reactor Core Module v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Impulse Reactor Core Module v1.2.0", sanitized);
         }
 
@@ -161,7 +161,7 @@ namespace MPF.Test.Library
             // The list is in order of preference
             protections = protections.Skip(skip).ToList();
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);
         }
 
@@ -174,7 +174,7 @@ namespace MPF.Test.Library
                 "Executable-Based Online Registration",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Anything Else Protection", sanitized);
         }
 
@@ -201,7 +201,7 @@ namespace MPF.Test.Library
             // The list is in order of preference
             protections = protections.Skip(skip).ToList();
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);
         }
 
@@ -214,7 +214,7 @@ namespace MPF.Test.Library
                 "Sysiphus v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("Sysiphus v1.2.0", sanitized);
         }
 
@@ -227,7 +227,7 @@ namespace MPF.Test.Library
                 "XCP v1.2.0",
             ];
 
-            string sanitized = Protection.SanitizeFoundProtections(protections);
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("XCP v1.2.0", sanitized);
         }
     }

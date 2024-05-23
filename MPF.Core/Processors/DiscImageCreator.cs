@@ -1305,7 +1305,7 @@ namespace MPF.Core.Processors
         /// <returns>Status of the LibCrypt data, if possible</returns>
         private static void GetLibCryptDetected(string basePath, out YesNo detected, out string? data)
         {
-            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
+            bool? psLibCryptStatus = ProtectionTool.GetLibCryptDetected(basePath + ".sub");
             if (psLibCryptStatus == true)
             {
                 // Guard against false positives
