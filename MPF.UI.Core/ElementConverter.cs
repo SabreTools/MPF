@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using MPF.Core;
-using MPF.Core.Frontend.ComboBoxItems;
+using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.UI.Core

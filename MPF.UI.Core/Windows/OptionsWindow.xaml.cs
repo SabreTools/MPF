@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using MPF.Core;
-using MPF.Core.Frontend.ViewModels;
+using MPF.Frontend.ViewModels;
 using WPFCustomMessageBox;
 
 #pragma warning disable IDE1006 // Naming Styles

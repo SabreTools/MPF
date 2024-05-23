@@ -38,11 +38,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\check_pr.yml = .github\workflows\check_pr.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.Frontend", "MPF.Core.Frontend\MPF.Core.Frontend.csproj", "{92515FC1-2B4E-423F-AE8B-7B7C599C5F70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Frontend", "MPF.Frontend\MPF.Frontend.csproj", "{92515FC1-2B4E-423F-AE8B-7B7C599C5F70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.Processors", "MPF.Core.Processors\MPF.Core.Processors.csproj", "{147063AA-F916-4E1C-B413-259DE17EE234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Processors", "MPF.Processors\MPF.Processors.csproj", "{147063AA-F916-4E1C-B413-259DE17EE234}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Core.ExecutionContexts", "MPF.Core.ExecutionContexts\MPF.Core.ExecutionContexts.csproj", "{75609610-CE85-486E-8F42-9525A52B80BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.ExecutionContexts", "MPF.ExecutionContexts\MPF.ExecutionContexts.csproj", "{75609610-CE85-486E-8F42-9525A52B80BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

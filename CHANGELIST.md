@@ -103,6 +103,7 @@
 - Split Core.Frontend into separate library
 - Split Core.Processors into separate library
 - Split Core.ExecutionContexts into separate library
+- Rename Core.* libraries
 
 ### 3.1.9a (2024-05-21)
 

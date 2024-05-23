@@ -10,6 +10,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using BinaryObjectScanner;
+using MPF.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.IO;
@@ -82,7 +83,7 @@ namespace MPF.Core.Utilities
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
         public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
-            Options options,
+            Core.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)

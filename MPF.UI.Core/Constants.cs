@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
-using static MPF.Core.Frontend.InterfaceConstants;
+using static MPF.Frontend.InterfaceConstants;
 
 namespace MPF.UI.Core
 {

@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\MPF.Core.Frontend\MPF.Core.Frontend.csproj" />
+    <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
   </ItemGroup>
 
   <!-- Support for old .NET versions -->

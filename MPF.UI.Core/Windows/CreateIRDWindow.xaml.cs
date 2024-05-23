@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core.Frontend.ViewModels;
+using MPF.Frontend.ViewModels;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 

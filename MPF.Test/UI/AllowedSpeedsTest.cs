@@ -1,4 +1,4 @@
-﻿using MPF.Core.Frontend;
+﻿using MPF.Frontend;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
