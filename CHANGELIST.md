@@ -80,6 +80,7 @@
 - Move SubmissionInfoTool to Core.Utilities
 - Fix build
 - Rename Protection to ProtectionTool
+- Move ProtectionTool to Core.Utilities
 
 ### 3.1.9a (2024-05-21)
 

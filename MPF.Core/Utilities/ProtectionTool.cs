@@ -9,7 +9,7 @@ using psxt001z;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
-namespace MPF.Core
+namespace MPF.Core.Utilities
 {
     public static class ProtectionTool
     {
