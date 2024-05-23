@@ -43,7 +43,7 @@ namespace MPF.Core.Utilities
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Core.Options options,
+            Frontend.Options options,
             BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
@@ -148,9 +148,9 @@ namespace MPF.Core.Utilities
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
 #if NET40
-        public static bool FillFromRedump(Core.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
+        public static bool FillFromRedump(Frontend.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
 #else
-        public async static Task<bool> FillFromRedump(Core.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
+        public async static Task<bool> FillFromRedump(Frontend.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
 #endif
         {
             // If no username is provided

@@ -2,7 +2,7 @@
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core
+namespace MPF.Core.Frontend
 {
     public class Options
     {

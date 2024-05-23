@@ -90,6 +90,7 @@
 - Move GetRedumpSystem to MainViewModel
 - Rename Core.UI namespace to Core.Frontend
 - Move DumpEnvironment to Core.Frontend
+- Move Options to Core.Frontend
 
 ### 3.1.9a (2024-05-21)
 

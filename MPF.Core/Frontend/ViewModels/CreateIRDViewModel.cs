@@ -15,11 +15,11 @@ namespace MPF.Core.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Core.Options Options
+        public Frontend.Options Options
         {
             get => _options;
         }
-        private readonly Core.Options _options;
+        private readonly Frontend.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
