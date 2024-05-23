@@ -88,6 +88,7 @@
 - Clean up EnumExtensions
 - Make FormattedVolumeLabel a method
 - Move GetRedumpSystem to MainViewModel
+- Rename Core.UI namespace to Core.Frontend
 
 ### 3.1.9a (2024-05-21)
 

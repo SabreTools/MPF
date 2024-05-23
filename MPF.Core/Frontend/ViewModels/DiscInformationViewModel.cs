@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using MPF.Core.UI.ComboBoxItems;
+using MPF.Core.Frontend.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.UI.ViewModels
+namespace MPF.Core.Frontend.ViewModels
 {
     public class DiscInformationViewModel
     {

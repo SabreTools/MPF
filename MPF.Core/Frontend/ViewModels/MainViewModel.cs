@@ -5,12 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
-using MPF.Core.UI.ComboBoxItems;
+using MPF.Core.Frontend.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.UI.ViewModels
+namespace MPF.Core.Frontend.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {

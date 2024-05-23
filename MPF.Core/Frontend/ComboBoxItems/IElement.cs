@@ -1,4 +1,4 @@
-﻿namespace MPF.Core.UI.ComboBoxItems
+﻿namespace MPF.Core.Frontend.ComboBoxItems
 {
     public interface IElement
     {

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using MPF.Core.Utilities;
 
-namespace MPF.Core.UI.ViewModels
+namespace MPF.Core.Frontend.ViewModels
 {
     /// <summary>
     /// Constructor

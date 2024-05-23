@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.UI.ComboBoxItems
+namespace MPF.Core.Frontend.ComboBoxItems
 {
     /// <summary>
     /// Represents a single item in the System combo box

@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using MPF.Core.UI.ComboBoxItems;
+using MPF.Core.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Web;
 
-namespace MPF.Core.UI.ViewModels
+namespace MPF.Core.Frontend.ViewModels
 {
     /// <summary>
     /// Constructor

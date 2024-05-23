@@ -2,7 +2,7 @@
 using System.Linq;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.UI
+namespace MPF.Core.Frontend
 {
     /// <summary>
     /// Constant values for UI

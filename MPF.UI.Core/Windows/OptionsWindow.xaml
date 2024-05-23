@@ -5,7 +5,7 @@
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:core="clr-namespace:MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
-                        xmlns:viewModels="clr-namespace:MPF.Core.UI.ViewModels;assembly=MPF.Core"
+                        xmlns:viewModels="clr-namespace:MPF.Core.Frontend.ViewModels;assembly=MPF.Core"
                         mc:Ignorable="d"
                         Width="515.132" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
