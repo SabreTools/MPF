@@ -285,15 +285,6 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Reset drive after dumping (useful for older drives)
-        /// </summary>
-        public bool DICResetDriveAfterDump
-        {
-            get { return GetBooleanSetting(Settings, "DICResetDriveAfterDump", false); }
-            set { Settings["DICResetDriveAfterDump"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Use the CMI flag for supported disc types
         /// </summary>
         public bool DICUseCMIFlag
@@ -475,15 +466,6 @@ namespace MPF.Core.Data
         {
             get { return GetBooleanSetting(Settings, "ShowDiscEjectReminder", true); }
             set { Settings["ShowDiscEjectReminder"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Eject the disc after dumping
-        /// </summary>
-        public bool EjectAfterDump
-        {
-            get { return GetBooleanSetting(Settings, "EjectAfterDump", false); }
-            set { Settings["EjectAfterDump"] = value.ToString(); }
         }
 
         /// <summary>

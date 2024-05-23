@@ -942,7 +942,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Toggle the Start/Stop button
         /// </summary>
-        public async void ToggleStartStop()
+        public void ToggleStartStop()
         {
             // Dump or stop the dump
             if (this.StartStopButtonText as string == StartDumpingValue)
@@ -954,18 +954,6 @@ namespace MPF.Core.UI.ViewModels
                 VerboseLogLn("Canceling dumping process...");
                 _environment?.CancelDumping();
                 this.CopyProtectScanButtonEnabled = true;
-
-                if (_environment != null && this.Options.EjectAfterDump)
-                {
-                    VerboseLogLn($"Ejecting disc in drive {_environment.DriveName}");
-                    await _environment.EjectDisc();
-                }
-
-                if (_environment != null && this.Options.DICResetDriveAfterDump)
-                {
-                    VerboseLogLn($"Resetting drive {_environment.DriveName}");
-                    await _environment.ResetDrive();
-                }
             }
         }
 

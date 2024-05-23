@@ -70,6 +70,7 @@
 - Move GetLibCryptDetected back to DIC processor
 - Make RunProtectionScanOnPath signature easier to read
 - Clean up usings
+- Remove automatic eject and reset options
 
 ### 3.1.9a (2024-05-21)
 

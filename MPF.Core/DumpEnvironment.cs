@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -335,18 +334,6 @@ namespace MPF.Core
         public void CancelDumping() => _executionContext?.KillInternalProgram();
 
         /// <summary>
-        /// Eject the disc using DiscImageCreator
-        /// </summary>
-        public async Task<string?> EjectDisc() =>
-            await RunStandaloneDiscImageCreatorCommand(ExecutionContexts.DiscImageCreator.CommandStrings.Eject);
-
-        /// <summary>
-        /// Reset the current drive using DiscImageCreator
-        /// </summary>
-        public async Task<string?> ResetDrive() =>
-            await RunStandaloneDiscImageCreatorCommand(ExecutionContexts.DiscImageCreator.CommandStrings.Reset);
-
-        /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
@@ -448,20 +435,6 @@ namespace MPF.Core
                 resultProgress?.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
                 Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress?.Report(ResultEventArgs.Success("Information injection complete!"));
-            }
-
-            // Eject the disc automatically if configured to
-            if (_options.EjectAfterDump == true)
-            {
-                resultProgress?.Report(ResultEventArgs.Success($"Ejecting disc in drive {_drive?.Name}"));
-                await EjectDisc();
-            }
-
-            // Reset the drive automatically if configured to
-            if (_internalProgram == InternalProgram.DiscImageCreator && _options.DICResetDriveAfterDump)
-            {
-                resultProgress?.Report(ResultEventArgs.Success($"Resetting drive {_drive?.Name}"));
-                await ResetDrive();
             }
 
             // Get user-modifiable information if confugured to
@@ -585,47 +558,6 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Run internal program async with an input set of parameters
-        /// </summary>
-        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
-        /// <returns>Standard output from commandline window</returns>
-        private static async Task<string> ExecuteInternalProgram(BaseExecutionContext parameters)
-        {
-            Process childProcess;
-#if NET40
-            string output = await Task.Factory.StartNew(() =>
-#else
-            string output = await Task.Run(() =>
-#endif
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = parameters.ExecutablePath!,
-                        Arguments = parameters.GenerateParameters()!,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
-
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                string stdout = childProcess.StandardOutput.ReadToEnd();
-                childProcess.Dispose();
-                return stdout;
-            });
-
-            return output;
-        }
-
-        /// <summary>
         /// Validate the current environment is ready for a dump
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
@@ -653,47 +585,6 @@ namespace MPF.Core
 
             // Validate that the current configuration is supported
             return Tools.GetSupportStatus(_system, _type);
-        }
-
-        /// <summary>
-        /// Validate that DIscImageCreator is able to be found
-        /// </summary>
-        /// <returns>True if DiscImageCreator is found properly, false otherwise</returns>
-        private bool RequiredProgramsExist()
-        {
-            // Validate that the path is configured
-            if (string.IsNullOrEmpty(_options.DiscImageCreatorPath))
-                return false;
-
-            // Validate that the required program exists
-            return File.Exists(_options.DiscImageCreatorPath);
-        }
-
-        /// <summary>
-        /// Run a standalone DiscImageCreator command
-        /// </summary>
-        /// <param name="command">Command string to run</param>
-        /// <returns>The output of the command on success, null on error</returns>
-        private async Task<string?> RunStandaloneDiscImageCreatorCommand(string command)
-        {
-            // Validate that DiscImageCreator is all set
-            if (!RequiredProgramsExist())
-                return null;
-
-            // Validate we're not trying to eject a non-optical
-            if (_drive == null || _drive.InternalDriveType != InternalDriveType.Optical)
-                return null;
-
-            CancelDumping();
-
-            var parameters = new ExecutionContexts.DiscImageCreator.ExecutionContext(string.Empty)
-            {
-                BaseCommand = command,
-                DrivePath = _drive.Name,
-                ExecutablePath = _options.DiscImageCreatorPath,
-            };
-
-            return await ExecuteInternalProgram(parameters);
         }
 
         #endregion
