@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.UI.ViewModels
@@ -1245,7 +1246,7 @@ namespace MPF.Core.UI.ViewModels
             else if (!this.Options.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {this.CurrentDrive.Name}.. ");
-                var currentSystem = this.CurrentDrive?.GetRedumpSystem(this.Options.DefaultSystem) ?? this.Options.DefaultSystem;
+                var currentSystem = GetRedumpSystem(CurrentDrive, Options.DefaultSystem) ?? Options.DefaultSystem;
                 VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
                 if (currentSystem != null)
@@ -1459,6 +1460,334 @@ namespace MPF.Core.UI.ViewModels
         }
 
         /// <summary>
+        /// Get the current system from drive
+        /// </summary>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        private static RedumpSystem? GetRedumpSystem(Drive? drive, RedumpSystem? defaultValue)
+        {
+            // If the drive does not exist, we can't do anything
+            if (drive == null)
+                return defaultValue;
+
+            // If we can't read the media in that drive, we can't do anything
+            if (string.IsNullOrEmpty(drive.Name) || !Directory.Exists(drive.Name))
+                return defaultValue;
+
+            // We're going to assume for floppies, HDDs, and removable drives
+            if (drive.InternalDriveType != InternalDriveType.Optical)
+                return RedumpSystem.IBMPCcompatible;
+
+            // Check volume labels first
+            RedumpSystem? systemFromLabel = InfoTool.GetRedumpSystemFromVolumeLabel(drive.VolumeLabel);
+            if (systemFromLabel != null)
+                return systemFromLabel;
+
+            // Get a list of files for quicker checking
+            #region Arcade
+
+            // funworld Photo Play
+            if (File.Exists(Path.Combine(drive.Name, "PP.INF"))
+                && Directory.Exists(Path.Combine(drive.Name, "PPINC")))
+            {
+                return RedumpSystem.funworldPhotoPlay;
+            }
+
+            // Konami Python 2
+            if (Directory.Exists(Path.Combine(drive.Name, "PY2.D")))
+            {
+                return RedumpSystem.KonamiPython2;
+            }
+
+            #endregion
+
+            #region Consoles
+
+            // Bandai Playdia Quick Interactive System
+            try
+            {
+#if NET20 || NET35
+                List<string> files = [.. Directory.GetFiles(drive.Name, "*", SearchOption.TopDirectoryOnly)];
+#else
+                List<string> files = Directory.EnumerateFiles(drive.Name, "*", SearchOption.TopDirectoryOnly).ToList();
+#endif
+
+                if (files.Any(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
+                    && files.Any(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                }
+            }
+            catch { }
+
+            // Bandai Pippin
+            if (File.Exists(Path.Combine(drive.Name, "PippinAuthenticationFile")))
+            {
+                return RedumpSystem.BandaiPippin;
+            }
+
+            // Commodore CDTV/CD32
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "S"), "STARTUP-SEQUENCE")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "S", "STARTUP-SEQUENCE")))
+#endif
+            {
+                if (File.Exists(Path.Combine(drive.Name, "CDTV.TM")))
+                    return RedumpSystem.CommodoreAmigaCDTV;
+                else
+                    return RedumpSystem.CommodoreAmigaCD32;
+            }
+
+            // Mattel HyperScan -- TODO: May need case-insensitivity added
+            if (File.Exists(Path.Combine(drive.Name, "hyper.exe")))
+            {
+                return RedumpSystem.MattelHyperScan;
+            }
+
+            // Mattel Fisher-Price iXL
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "iXL"), "iXLUpdater.exe")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "iXL", "iXLUpdater.exe")))
+#endif
+            {
+                return RedumpSystem.MattelFisherPriceiXL;
+            }
+
+            // Microsoft Xbox 360
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "$SystemUpdate"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "$SystemUpdate")).Any()
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "$SystemUpdate")).Any()
+#endif
+                    && drive.TotalSize <= 500_000_000)
+                {
+                    return RedumpSystem.MicrosoftXbox360;
+                }
+            }
+            catch { }
+
+            // Microsoft Xbox One and Series X
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "MSXC")))
+                {
+                    try
+                    {
+#if NET20 || NET35
+                        string catalogjs = Path.Combine(drive.Name, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+#else
+                        string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
+#endif
+                        if (!File.Exists(catalogjs))
+                            return RedumpSystem.MicrosoftXboxOne;
+
+                        SabreTools.Models.Xbox.Catalog? catalog = SabreTools.Serialization.Deserializers.Catalog.DeserializeFile(catalogjs);
+                        if (catalog != null && catalog.Version != null && catalog.Packages != null)
+                        {
+                            if (!double.TryParse(catalog.Version, out double version))
+                                return RedumpSystem.MicrosoftXboxOne;
+
+                            if (version < 4)
+                                return RedumpSystem.MicrosoftXboxOne;
+
+                            foreach (var package in catalog.Packages)
+                            {
+                                if (package.Generation != "9")
+                                    return RedumpSystem.MicrosoftXboxOne;
+                            }
+
+                            return RedumpSystem.MicrosoftXboxSeriesXS;
+                        }
+                    }
+                    catch
+                    {
+                        return RedumpSystem.MicrosoftXboxOne;
+                    }
+                }
+            }
+            catch { }
+
+            // Sega Dreamcast
+            if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
+            {
+                return RedumpSystem.SegaDreamcast;
+            }
+
+            // Sega Mega-CD / Sega-CD
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "IP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "SP.BIN"))
+                || File.Exists(Path.Combine(Path.Combine(drive.Name, "_BOOT"), "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.Name, "FILESYSTEM.BIN")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "_BOOT", "IP.BIN"))
+                || File.Exists(Path.Combine(drive.Name, "_BOOT", "SP.BIN"))
+                || File.Exists(Path.Combine(drive.Name, "_BOOT", "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drive.Name, "FILESYSTEM.BIN")))
+#endif
+            {
+                return RedumpSystem.SegaMegaCDSegaCD;
+            }
+
+            // Sony PlayStation and Sony PlayStation 2
+            string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
+            if (File.Exists(systemCnfPath))
+            {
+                // Check for either BOOT or BOOT2
+                var systemCnf = new IniFile(systemCnfPath);
+                if (systemCnf.ContainsKey("BOOT"))
+                    return RedumpSystem.SonyPlayStation;
+                else if (systemCnf.ContainsKey("BOOT2"))
+                    return RedumpSystem.SonyPlayStation2;
+            }
+            else if (File.Exists(psxExePath))
+            {
+                return RedumpSystem.SonyPlayStation;
+            }
+
+            // Sony PlayStation 3
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "PS3_GAME"))
+                    || Directory.Exists(Path.Combine(drive.Name, "PS3_UPDATE"))
+                    || File.Exists(Path.Combine(drive.Name, "PS3_DISC.SFB")))
+                {
+                    return RedumpSystem.SonyPlayStation3;
+                }
+            }
+            catch { }
+
+            // Sony PlayStation 4
+            // There are more possible paths that could be checked.
+            //  There are some entries that can be found on most PS4 discs:
+            //    "/app/GAME_SERIAL/app.pkg"
+            //    "/bd/param.sfo"
+            //    "/license/rif"
+            // There are also extra files that can be found on some discs:
+            //    "/patch/GAME_SERIAL/patch.pkg" can be found in Redump entry 66816.
+            //        Originally on disc as "/patch/CUSA11302/patch.pkg".
+            //        Is used as an on-disc update for the base game app without needing to get update from the internet.
+            //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
+            //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+#endif
+            {
+                return RedumpSystem.SonyPlayStation4;
+            }
+
+            // V.Tech V.Flash / V.Smile Pro
+            if (File.Exists(Path.Combine(drive.Name, "0SYSTEM")))
+            {
+                return RedumpSystem.VTechVFlashVSmilePro;
+            }
+
+            #endregion
+
+            #region Computers
+
+            // Sharp X68000
+            if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))
+            {
+                return RedumpSystem.SharpX68000;
+            }
+
+            #endregion
+
+            #region Video Formats
+
+            // BD-Video
+            if (Directory.Exists(Path.Combine(drive.Name, "BDMV")))
+            {
+                // Technically BD-Audio has this as well, but it's hard to split that out right now
+                return RedumpSystem.BDVideo;
+            }
+
+            // DVD-Audio and DVD-Video
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "AUDIO_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "AUDIO_TS")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "AUDIO_TS")).Any())
+#endif
+                {
+                    return RedumpSystem.DVDAudio;
+                }
+
+                else if (Directory.Exists(Path.Combine(drive.Name, "VIDEO_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "VIDEO_TS")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "VIDEO_TS")).Any())
+#endif
+                {
+                    return RedumpSystem.DVDVideo;
+                }
+            }
+            catch { }
+
+            // HD-DVD-Video
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "HVDVD_TS"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "HVDVD_TS")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "HVDVD_TS")).Any())
+#endif
+                {
+                    return RedumpSystem.HDDVDVideo;
+                }
+            }
+            catch { }
+
+            // Photo CD
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "PHOTO_CD"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "PHOTO_CD")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "PHOTO_CD")).Any())
+#endif
+                {
+                    return RedumpSystem.PhotoCD;
+                }
+            }
+            catch { }
+
+            // VCD
+            try
+            {
+                if (Directory.Exists(Path.Combine(drive.Name, "VCD"))
+#if NET20 || NET35
+                    && Directory.GetFiles(Path.Combine(drive.Name, "drive.VCD")).Any())
+#else
+                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "VCD")).Any())
+#endif
+                {
+                    return RedumpSystem.VideoCD;
+                }
+            }
+            catch { }
+
+            #endregion
+
+            // Default return
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Process the current custom parameters back into UI values
         /// </summary>
         public void ProcessCustomParameters()
@@ -1578,7 +1907,7 @@ namespace MPF.Core.UI.ViewModels
             else
             {
                 // No Volume Label found, fallback to something sensible
-                switch (drive.GetRedumpSystem(null))
+                switch (GetRedumpSystem(drive, null))
                 {
                     case RedumpSystem.SonyPlayStation:
                     case RedumpSystem.SonyPlayStation2:

@@ -87,6 +87,7 @@
 - Move ToInternalDriveType to Drive
 - Clean up EnumExtensions
 - Make FormattedVolumeLabel a method
+- Move GetRedumpSystem to MainViewModel
 
 ### 3.1.9a (2024-05-21)
 
