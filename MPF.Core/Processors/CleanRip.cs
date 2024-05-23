@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;

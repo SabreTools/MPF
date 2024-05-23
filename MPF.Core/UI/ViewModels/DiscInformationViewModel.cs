@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;

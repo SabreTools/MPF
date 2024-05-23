@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using MPF.Core.Data;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;

@@ -83,6 +83,7 @@
 - Move ProtectionTool to Core.Utilities
 - Move Drive to root of Core
 - Move Options to root of Core
+- Move Enumerations to root of Core
 
 ### 3.1.9a (2024-05-21)
 

@@ -1,4 +1,4 @@
-﻿namespace MPF.Core.Data
+﻿namespace MPF.Core
 {
     /// <summary>
     /// Drive type for dumping

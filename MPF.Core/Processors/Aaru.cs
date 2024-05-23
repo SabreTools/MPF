@@ -6,7 +6,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.Models.CueSheets;
 using SabreTools.Models.Logiqx;

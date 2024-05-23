@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Utilities

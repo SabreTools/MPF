@@ -10,7 +10,6 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using BinaryObjectScanner;
-using MPF.Core.Data;
 using MPF.Core.Processors;
 using MPF.Core.Utilities;
 using Newtonsoft.Json;

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
-using MPF.Core.Data;
 using MPF.Core.ExecutionContexts;
 using MPF.Core.Processors;
 using MPF.Core.Utilities;

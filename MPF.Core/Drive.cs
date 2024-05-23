@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 #endif
-using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
@@ -201,11 +200,11 @@ namespace MPF.Core
             // Take care of the non-optical stuff first
             switch (InternalDriveType)
             {
-                case Data.InternalDriveType.Floppy:
+                case Core.InternalDriveType.Floppy:
                     return (MediaType.FloppyDisk, null);
-                case Data.InternalDriveType.HardDisk:
+                case Core.InternalDriveType.HardDisk:
                     return (MediaType.HardDisk, null);
-                case Data.InternalDriveType.Removable:
+                case Core.InternalDriveType.Removable:
                     return (MediaType.FlashDrive, null);
             }
 
@@ -281,7 +280,7 @@ namespace MPF.Core
                 return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
-            if (InternalDriveType != Data.InternalDriveType.Optical)
+            if (InternalDriveType != Core.InternalDriveType.Optical)
                 return RedumpSystem.IBMPCcompatible;
 
             // Check volume labels first
@@ -657,7 +656,7 @@ namespace MPF.Core
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
-                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
+                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Core.InternalDriveType.Floppy; } });
                     }
                 }
             }
