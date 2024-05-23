@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core.Frontend;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.ExecutionContexts.Aaru

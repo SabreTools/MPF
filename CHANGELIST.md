@@ -99,6 +99,7 @@
 - Move SubmissionGenerator to Core.Frontend
 - Move EnumExtensions to root of core
 - Move Options to root of Core
+- Decouple Frontend from execution contexts
 
 ### 3.1.9a (2024-05-21)
 

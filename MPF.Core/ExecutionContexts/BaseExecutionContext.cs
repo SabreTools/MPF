@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using MPF.Core.Frontend;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.ExecutionContexts
