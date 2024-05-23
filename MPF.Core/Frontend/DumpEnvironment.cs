@@ -503,7 +503,7 @@ namespace MPF.Core.Frontend
             if (_options.CompressLogFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, _processor);
+                (bool compressSuccess, string compressResult) = _processor?.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename) ?? (false, "No processor provided!");
                 if (compressSuccess)
                     resultProgress?.Report(ResultEventArgs.Success(compressResult));
                 else
@@ -514,7 +514,7 @@ namespace MPF.Core.Frontend
             if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
-                (bool deleteSuccess, string deleteResult) = InfoTool.DeleteUnnecessaryFiles(outputDirectory, outputFilename, _processor);
+                (bool deleteSuccess, string deleteResult) = _processor?.DeleteUnnecessaryFiles(outputDirectory, outputFilename) ?? (false, "No processor provided!");
                 if (deleteSuccess)
                     resultProgress?.Report(ResultEventArgs.Success(deleteResult));
                 else

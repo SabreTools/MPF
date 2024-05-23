@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
@@ -85,7 +88,141 @@ namespace MPF.Core.Processors
 
         #endregion
 
-        #region Methods to Move
+        #region Shared Methods
+
+        /// <summary>
+        /// Compress log files to save space
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Output filename to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
+        /// <returns>True if the process succeeded, false otherwise</returns>
+        public (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename)
+        {
+#if NET20 || NET35 || NET40
+            return (false, "Log compression is not available for this framework version");
+#else
+
+            // Prepare the necessary paths
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+            string combinedBase;
+            if (string.IsNullOrEmpty(outputDirectory))
+                combinedBase = outputFilename;
+            else
+                combinedBase = Path.Combine(outputDirectory, outputFilename);
+
+            string archiveName = combinedBase + "_logs.zip";
+
+            // Get the list of log files from the parameters object
+            var files = GetLogFilePaths(combinedBase);
+
+            // Add on generated log files if they exist
+            var mpfFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
+            files.AddRange(mpfFiles);
+
+            if (!files.Any())
+                return (true, "No files to compress!");
+
+            // If the file already exists, we want to delete the old one
+            try
+            {
+                if (File.Exists(archiveName))
+                    File.Delete(archiveName);
+            }
+            catch
+            {
+                return (false, "Could not delete old archive!");
+            }
+
+            // Add the log files to the archive and delete the uncompressed file after
+            ZipArchive? zf = null;
+            try
+            {
+                zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
+                foreach (string file in files)
+                {
+                    if (string.IsNullOrEmpty(outputDirectory))
+                    {
+                        zf.CreateEntryFromFile(file, file, CompressionLevel.Optimal);
+                    }
+                    else
+                    {
+                        string entryName = file[outputDirectory!.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+#else
+                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
+#endif
+                    }
+
+                    // If the file is MPF-specific, don't delete
+                    if (mpfFiles.Contains(file))
+                        continue;
+
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                return (true, "Compression complete!");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Compression could not complete: {ex}");
+            }
+            finally
+            {
+                zf?.Dispose();
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Compress log files to save space
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
+        /// <returns>True if the process succeeded, false otherwise</returns>
+        public (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename)
+        {
+            // Prepare the necessary paths
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+            string combinedBase;
+            if (string.IsNullOrEmpty(outputDirectory))
+                combinedBase = outputFilename;
+            else
+                combinedBase = Path.Combine(outputDirectory, outputFilename);
+
+            // Get the list of deleteable files from the parameters object
+            var files = GetDeleteableFilePaths(combinedBase);
+
+            if (!files.Any())
+                return (true, "No files to delete!");
+
+            // Attempt to delete all of the files
+            try
+            {
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                return (true, "Deletion complete!");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Deletion could not complete: {ex}");
+            }
+        }
 
         /// <summary>
         /// Ensures that all required output files have been created
@@ -196,6 +333,64 @@ namespace MPF.Core.Processors
                 // We don't care what the error is
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Generate a list of all MPF-specific log files generated
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
+        {
+            var files = new List<string>();
+
+            if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+            {
+                if (File.Exists("!submissionInfo.txt"))
+                    files.Add("!submissionInfo.txt");
+                if (File.Exists("!submissionInfo.json"))
+                    files.Add("!submissionInfo.json");
+                if (File.Exists("!submissionInfo.json.gz"))
+                    files.Add("!submissionInfo.json.gz");
+                if (File.Exists("!protectionInfo.txt"))
+                    files.Add("!protectionInfo.txt");
+            }
+            else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+            {
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.txt"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.txt");
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.json"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.json");
+                if (File.Exists($"!submissionInfo_{filenameSuffix}.json.gz"))
+                    files.Add($"!submissionInfo_{filenameSuffix}.json.gz");
+                if (File.Exists($"!protectionInfo_{filenameSuffix}.txt"))
+                    files.Add($"!protectionInfo_{filenameSuffix}.txt");
+            }
+            else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+            {
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
+                if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
+                    files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+            }
+            else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+            {
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz")))
+                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz"));
+                if (File.Exists(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt")))
+                    files.Add(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt"));
+            }
+
+            return files;
         }
 
         #endregion

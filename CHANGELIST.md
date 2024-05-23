@@ -94,6 +94,7 @@
 - Remove useless using statement
 - Move OptionsLoader to Core.Frontend
 - Move Logging to Core.Frontend
+- Decouple InfoTool from processors
 
 ### 3.1.9a (2024-05-21)
 
