@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Core.Frontend.ComboBoxItems;
-using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Frontend.ViewModels

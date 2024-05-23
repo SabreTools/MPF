@@ -92,6 +92,7 @@
 - Move DumpEnvironment to Core.Frontend
 - Move Options to Core.Frontend
 - Remove useless using statement
+- Move OptionsLoader to Core.Frontend
 
 ### 3.1.9a (2024-05-21)
 

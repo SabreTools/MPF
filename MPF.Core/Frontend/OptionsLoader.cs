@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using MPF.Core.Frontend;
+using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core.Utilities
+namespace MPF.Core.Frontend
 {
     public static class OptionsLoader
     {
