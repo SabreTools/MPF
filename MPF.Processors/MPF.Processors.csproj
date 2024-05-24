@@ -23,7 +23,6 @@
 
 <ItemGroup>
   <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-  <ProjectReference Include="..\MPF.ExecutionContexts\MPF.ExecutionContexts.csproj" />
 </ItemGroup>
 
 <!-- Support for old .NET versions -->
