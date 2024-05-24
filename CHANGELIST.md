@@ -106,6 +106,7 @@
 - Rename Core.* libraries
 - Fix up visual solution
 - Move Aaru CICM code to Core
+- Clean up Core dependencies
 
 ### 3.1.9a (2024-05-21)
 
