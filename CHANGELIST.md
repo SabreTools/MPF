@@ -104,6 +104,7 @@
 - Split Core.Processors into separate library
 - Split Core.ExecutionContexts into separate library
 - Rename Core.* libraries
+- Fix up visual solution
 
 ### 3.1.9a (2024-05-21)
 
