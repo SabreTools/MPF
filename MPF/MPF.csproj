@@ -51,11 +51,13 @@
 
   <ItemGroup>
     <Resource Include="Images\Icon.ico" />
+    <Resource Include="Images\ring-code-guide-1-layer.png" />
+    <Resource Include="Images\ring-code-guide-2-layer.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
+    <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
   </ItemGroup>
 
   <!-- Support for old .NET versions -->
@@ -78,6 +80,18 @@
 
   <ItemGroup>
     <Content Include="$(PkgBinaryObjectScanner)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\UserInput.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Windows\DiscInformationWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Windows\RingCodeGuideWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
   <!-- Special handling for Aero2 on non-Framework .NET -->

@@ -9,7 +9,7 @@ using WinForms = System.Windows.Forms;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace MPF.UI.Core.Windows
+namespace MPF.UI.Windows
 {
     /// <summary>
     /// Interaction logic for CheckDumpWindow.xaml

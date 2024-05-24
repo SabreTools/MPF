@@ -1,7 +1,7 @@
 ﻿<Application
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:windows="clr-namespace:MPF.UI.Core.Windows;assembly=MPF.UI.Core"
+             xmlns:windows="clr-namespace:MPF.UI.Windows"
              x:Class="MPF.App">
     <Application.MainWindow>
         <windows:MainWindow Visibility="Visible"/>

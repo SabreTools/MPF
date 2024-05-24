@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows;
 
-namespace MPF.UI.Core
+namespace MPF.UI
 {
     internal static class ItemHelper
     {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace MPF.UI.Core
+namespace MPF.UI
 {
     /// <summary>
     /// Represents all required mapping values for the UI

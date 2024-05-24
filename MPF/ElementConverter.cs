@@ -5,7 +5,7 @@ using MPF.Core;
 using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.UI.Core
+namespace MPF.UI
 {
     internal class ElementConverter: IValueConverter
     {

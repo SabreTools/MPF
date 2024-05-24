@@ -9,7 +9,7 @@ using MPF.Core;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace MPF.UI.Core.UserControls
+namespace MPF.UI.UserControls
 {
     public partial class LogOutput : UserControl
     {

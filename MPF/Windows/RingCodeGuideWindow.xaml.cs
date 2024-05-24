@@ -1,4 +1,4 @@
-﻿namespace MPF.UI.Core.Windows
+﻿namespace MPF.UI.Windows
 {
     /// <summary>
     /// Interaction logic for RingCodeGuideWindow.xaml

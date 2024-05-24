@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using MPF.UI.Core;
+using MPF.UI;
 
 #pragma warning disable IDE1006 // Naming Styles
 

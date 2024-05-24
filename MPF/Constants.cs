@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using static MPF.Frontend.InterfaceConstants;
 
-namespace MPF.UI.Core
+namespace MPF.UI
 {
     /// <summary>
     /// Variables for UI elements

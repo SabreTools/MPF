@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MPF.UI.Core.UserControls
+namespace MPF.UI.UserControls
 {
     /// <summary>
     /// Interaction logic for UserInput.xaml

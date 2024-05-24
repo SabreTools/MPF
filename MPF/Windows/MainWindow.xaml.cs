@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend.ViewModels;
-using MPF.UI.Core.UserControls;
+using MPF.UI.UserControls;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
@@ -11,7 +11,7 @@ using WinForms = System.Windows.Forms;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace MPF.UI.Core.Windows
+namespace MPF.UI.Windows
 {
     public partial class MainWindow : WindowBase
     {

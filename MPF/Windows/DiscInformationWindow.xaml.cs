@@ -4,12 +4,12 @@ using System.Windows.Controls;
 using MPF.Core;
 using MPF.Frontend.ViewModels;
 using MPF.Core.Utilities;
-using MPF.UI.Core.UserControls;
+using MPF.UI.UserControls;
 using SabreTools.RedumpLib.Data;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace MPF.UI.Core.Windows
+namespace MPF.UI.Windows
 {
     /// <summary>
     /// Interaction logic for DiscInformationWindow.xaml

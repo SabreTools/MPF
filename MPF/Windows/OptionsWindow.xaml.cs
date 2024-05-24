@@ -10,7 +10,7 @@ using WPFCustomMessageBox;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace MPF.UI.Core.Windows
+namespace MPF.UI.Windows
 {
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml

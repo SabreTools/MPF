@@ -108,6 +108,7 @@
 - Move Aaru CICM code to Core
 - Clean up Core dependencies
 - Move Aaru CICM code to Processors
+- Merge UI.Core into main application
 
 ### 3.1.9a (2024-05-21)
 
