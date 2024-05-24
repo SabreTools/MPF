@@ -107,6 +107,7 @@
 - Fix up visual solution
 - Move Aaru CICM code to Core
 - Clean up Core dependencies
+- Move Aaru CICM code to Processors
 
 ### 3.1.9a (2024-05-21)
 
