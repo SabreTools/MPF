@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        project: [MPF]
+        project: [MPF.UI]
         runtime: [win-x86, win-x64]
         framework: [net8.0-windows] #[net40, net452, net472, net48, netcoreapp3.1, net5.0-windows, net6.0-windows, net7.0-windows, net8.0-windows]
 
@@ -32,15 +32,15 @@ jobs:
       run: |
         wget https://github.com/saramibreak/DiscImageCreator/files/14824363/DiscImageCreator_20240401.zip
         unzip DiscImageCreator_20240401.zip
-        mkdir -p MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator
-        mv Release_ANSI/* MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
+        mkdir -p MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator
+        mv Release_ANSI/* MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
 
     - name: Bundle Redumper
       run: |
         wget https://github.com/superg/redumper/releases/download/build_329/redumper-2024.05.18_build329-win64.zip
         unzip redumper-2024.05.18_build329-win64.zip
-        mkdir -p MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
-        mv redumper-2024.05.18_build329-win64/bin/redumper.exe MPF/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+        mkdir -p MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
+        mv redumper-2024.05.18_build329-win64/bin/redumper.exe MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
 
     - name: Archive build
       run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/

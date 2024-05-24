@@ -81,15 +81,15 @@ if [ $NO_BUILD = false ]; then
             if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
                 # Only include Debug if building all
                 if [ $USE_ALL = true ]; then
-                    dotnet publish MPF/MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 fi
-                dotnet publish MPF/MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             else
                 # Only include Debug if building all
                 if [ $USE_ALL = true ]; then
-                    dotnet publish MPF/MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 fi
-                dotnet publish MPF/MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             fi
         done
     done
@@ -129,18 +129,18 @@ if [ $NO_ARCHIVE = false ]; then
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
             # Only include Debug if building all
             if [ $USE_ALL = true ]; then
-                cd $BUILD_FOLDER/MPF/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                cd $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if [ $INCLUDE_PROGRAMS = true ]; then
-                    zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip .
                 else
-                    zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/\*'
+                    zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/\*'
                 fi
             fi
-            cd $BUILD_FOLDER/MPF/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+            cd $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if [ $INCLUDE_PROGRAMS = true ]; then
-                zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_release.zip .
+                zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip .
             else
-                zip -r $BUILD_FOLDER/MPF_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/\*'
+                zip -r $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/\*'
             fi
         done
     done

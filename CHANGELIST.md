@@ -110,6 +110,7 @@
 - Move Aaru CICM code to Processors
 - Merge UI.Core into main application
 - Rename main application to MPF.UI
+- Fix build scripts
 
 ### 3.1.9a (2024-05-21)
 

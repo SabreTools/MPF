@@ -70,16 +70,16 @@ if (!$NO_BUILD.IsPresent) {
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
                 # Only include Debug if building all
                 if ($USE_ALL.IsPresent) {
-                    dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                    dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
                 # Only include Debug if building all
                 if ($USE_ALL.IsPresent) {
-                    dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                    dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF\MPF.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             }
         }
     }
@@ -118,21 +118,21 @@ if (!$NO_ARCHIVE.IsPresent) {
         foreach ($RUNTIME in $UI_RUNTIMES) {
             # Only include Debug if building all
             if ($USE_ALL.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER\MPF\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
+                Set-Location -Path $BUILD_FOLDER\MPF.UI\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    7z a -tzip $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
                 else {
-                    7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
             
-            Set-Location -Path $BUILD_FOLDER\MPF\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
+            Set-Location -Path $BUILD_FOLDER\MPF.UI\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
             if ($INCLUDE_PROGRAMS.IsPresent) {
-                7z a -tzip $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
+                7z a -tzip $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
             }
             else {
-                7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF_${FRAMEWORK}_${RUNTIME}_release.zip *
+                7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
             }
         }
     }
