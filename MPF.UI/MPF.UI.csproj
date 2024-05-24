@@ -19,6 +19,7 @@
     <VersionPrefix>3.1.9</VersionPrefix>
 
     <!-- Package Properties -->
+    <AssemblyName>MPF</AssemblyName>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Description>Frontend for various dumping programs</Description>
     <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>

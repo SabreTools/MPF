@@ -109,6 +109,7 @@
 - Clean up Core dependencies
 - Move Aaru CICM code to Processors
 - Merge UI.Core into main application
+- Rename main application to MPF.UI
 
 ### 3.1.9a (2024-05-21)
 

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF", "MPF\MPF.csproj", "{7B1B75EB-8940-466F-BD51-76471A57F9BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.UI", "MPF.UI\MPF.UI.csproj", "{7B1B75EB-8940-466F-BD51-76471A57F9BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.Test", "MPF.Test\MPF.Test.csproj", "{7CC064D2-38AB-4A05-8519-28660DE4562A}"
 EndProject

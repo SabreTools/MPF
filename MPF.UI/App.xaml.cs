@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
-namespace MPF
+namespace MPF.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -411,6 +411,7 @@ namespace MPF
         </Style>";
 
         #endregion
+
         public App()
         {
 #if NET40_OR_GREATER || NETCOREAPP
