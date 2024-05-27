@@ -111,6 +111,7 @@
 - Merge UI.Core into main application
 - Rename main application to MPF.UI
 - Fix build scripts
+- Make protection file output required
 
 ### 3.1.9a (2024-05-21)
 

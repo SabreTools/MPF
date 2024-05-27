@@ -406,15 +406,6 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Output all found protections to a separate file in the directory
-        /// </summary>
-        public bool OutputSeparateProtectionFile
-        {
-            get { return GetBooleanSetting(Settings, "OutputSeparateProtectionFile", true); }
-            set { Settings["OutputSeparateProtectionFile"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Add placeholder values in the submission info
         /// </summary>
         public bool AddPlaceholders

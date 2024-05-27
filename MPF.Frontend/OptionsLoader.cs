@@ -114,7 +114,7 @@ namespace MPF.Frontend
             string? parsedPath = null;
 
             // These values require multiple parts to be active
-            bool scan = false, protectFile = false, hideDriveLetters = false;
+            bool scan = false, hideDriveLetters = false;
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
@@ -177,12 +177,6 @@ namespace MPF.Frontend
                     scan = true;
                 }
 
-                // Output protection to separate file (requires scan for protection)
-                else if (args[startIndex].Equals("-f") || args[startIndex].Equals("--protect-file"))
-                {
-                    protectFile = true;
-                }
-
                 // Hide drive letters from scan output (requires --protect-file)
                 else if (args[startIndex].Equals("-g") || args[startIndex].Equals("--hide-drive-letters"))
                 {
@@ -235,8 +229,7 @@ namespace MPF.Frontend
 
             // Now deal with the complex options
             options.ScanForProtection = scan && !string.IsNullOrEmpty(parsedPath);
-            options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrEmpty(parsedPath);
-            options.HideDriveLetters = hideDriveLetters && scan && protectFile && !string.IsNullOrEmpty(parsedPath);
+            options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(parsedPath);
 
             return (options, info, parsedPath, startIndex);
         }
@@ -253,7 +246,6 @@ namespace MPF.Frontend
                 "-a, --pull-all                 Pull all information from Redump (requires --credentials)",
                 "-p, --path <drivepath>         Physical drive path for additional checks",
                 "-s, --scan                     Enable copy protection scan (requires --path)",
-                "-f, --protect-file             Output protection to separate file (requires --scan)",
                 "-g, --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)",
                 "-l, --load-seed <path>         Load a seed submission JSON for user information",
                 "-x, --suffix                   Enable adding filename suffix",

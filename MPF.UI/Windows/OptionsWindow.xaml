@@ -197,11 +197,6 @@
                                      ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Output Protection File"
-                                    IsChecked="{Binding Options.OutputSeparateProtectionFile}" IsEnabled="{Binding Options.ScanForProtection}"
-                                    ToolTip="Output protection information to a separate file" Margin="0,4,0,0"
-                                    />
-
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the disc information output after dumping" Margin="0,4"

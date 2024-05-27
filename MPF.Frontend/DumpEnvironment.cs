@@ -478,7 +478,7 @@ namespace MPF.Frontend
             // Write the copy protection output
             if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Any())
             {
-                if (_options.ScanForProtection && _options.OutputSeparateProtectionFile)
+                if (_options.ScanForProtection)
                 {
                     resultProgress?.Report(ResultEventArgs.Success("Writing protection to !protectionInfo.txt..."));
                     bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
