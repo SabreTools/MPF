@@ -124,6 +124,7 @@
 - Call psxt001z direct from DIC processor
 - Move GetCopyProtection to ProtectionTool
 - Slight cleanup of InfoTool
+- Move ProtectionTool to Frontend
 
 ### 3.1.9a (2024-05-21)
 
