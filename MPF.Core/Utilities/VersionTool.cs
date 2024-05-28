@@ -3,10 +3,8 @@ using System.Reflection;
 
 namespace MPF.Core.Utilities
 {
-    public static class Tools
+    public static class VersionTool
     {
-        #region Versioning
-
         /// <summary>
         /// Check for a new MPF version
         /// </summary>
@@ -97,7 +95,5 @@ namespace MPF.Core.Utilities
             return (latestTag, releaseUrl);
 #endif
         }
-
-        #endregion
     }
 }

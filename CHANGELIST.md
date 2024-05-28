@@ -138,6 +138,7 @@
 - Clean up usings
 - Centralize PS1/2 region detection
 - Move ProgramSupportsMedia to MainViewModel
+- Rename Tools to VersionTool
 
 ### 3.1.9a (2024-05-21)
 

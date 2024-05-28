@@ -369,7 +369,7 @@ namespace MPF.Frontend
                 },
                 DumpingInfo = new DumpingInfoSection()
                 {
-                    FrontendVersion = Tools.GetCurrentVersion(),
+                    FrontendVersion = VersionTool.GetCurrentVersion(),
                     DumpingProgram = GetDumpingProgramFromProcessor(processor),
                 },
             };
