@@ -264,8 +264,25 @@ namespace MPF.Frontend
         /// <inheritdoc cref="Extensions.DetectedByWindows(RedumpSystem?)"/>
         public bool DetectedByWindows() => _system.DetectedByWindows();
 
-        /// <inheritdoc cref="EnumExtensions.DoesSupportDriveSpeed(MediaType?)"/>
-        public bool DoesSupportDriveSpeed() => _type.DoesSupportDriveSpeed();
+        /// <summary>
+        /// Determine if the media supports drive speeds
+        /// </summary>
+        /// <param name="type">MediaType value to check</param>
+        /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
+        public bool DoesSupportDriveSpeed()
+        {
+            return _type switch
+            {
+                MediaType.CDROM
+                    or MediaType.DVD
+                    or MediaType.GDROM
+                    or MediaType.HDDVD
+                    or MediaType.BluRay
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => true,
+                _ => false,
+            };
+        }
 
         /// <inheritdoc cref="BaseProcessor.FoundAllFiles(string?, string, bool)"/>
         public bool FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)

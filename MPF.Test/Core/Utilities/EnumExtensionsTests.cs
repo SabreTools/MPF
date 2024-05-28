@@ -77,19 +77,6 @@ namespace MPF.Test.Core.Utilities
         ];
 
         /// <summary>
-        /// Check that all optical media support drive speeds
-        /// </summary>
-        /// <param name="mediaType">DriveType value to check</param>
-        /// <param name="expected">The expected value to come from the check</param>
-        [Theory]
-        [MemberData(nameof(GenerateSupportDriveSpeedsTestData))]
-        public void DoesSupportDriveSpeedTest(MediaType? mediaType, bool expected)
-        {
-            bool actual = mediaType.DoesSupportDriveSpeed();
-            Assert.Equal(expected, actual);
-        }
-
-        /// <summary>
         /// Check that all systems with reversed ringcodes are marked properly
         /// </summary>
         /// <param name="redumpSystem">RedumpSystem value to check</param>
@@ -139,24 +126,6 @@ namespace MPF.Test.Core.Utilities
         {
             bool actual = redumpSystem.IsXGD();
             Assert.Equal(expected, actual);
-        }
-
-        /// <summary>
-        /// Generate a test set of MediaType values that support drive speeds
-        /// </summary>
-        /// <returns>MemberData-compatible list of MediaType values</returns>
-        public static List<object?[]> GenerateSupportDriveSpeedsTestData()
-        {
-            var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (MediaType mediaType in Enum.GetValues(typeof(MediaType)))
-            {
-                if (_supportDriveSpeeds.Contains(mediaType))
-                    testData.Add([mediaType, true]);
-                else
-                    testData.Add([mediaType, false]);
-            }
-
-            return testData;
         }
 
         /// <summary>

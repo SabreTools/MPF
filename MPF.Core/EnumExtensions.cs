@@ -1,6 +1,7 @@
 ﻿using System;
+#if NET20 || NET35
 using System.Collections.Generic;
-#if NET40_OR_GREATER || NETCOREAPP
+#else
 using System.Collections.Concurrent;
 #endif
 using System.Reflection;
@@ -169,30 +170,6 @@ namespace MPF.Core
                     or "xboxbackupcreator" => InternalProgram.XboxBackupCreator,
 
                 _ => InternalProgram.NONE,
-            };
-        }
-
-        #endregion
-
-        #region Enum Helpers
-
-        /// <summary>
-        /// Determine if the media supports drive speeds
-        /// </summary>
-        /// <param name="type">MediaType value to check</param>
-        /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
-        public static bool DoesSupportDriveSpeed(this MediaType? type)
-        {
-            return type switch
-            {
-                MediaType.CDROM
-                    or MediaType.DVD
-                    or MediaType.GDROM
-                    or MediaType.HDDVD
-                    or MediaType.BluRay
-                    or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => true,
-                _ => false,
             };
         }
 
