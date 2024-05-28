@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using MPF.Core;
-using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
