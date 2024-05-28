@@ -957,11 +957,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return;
 
             // Set disable beep flag, if needed
-            if (GetBooleanSetting(options, SettingConstants.QuietMode, false))
+            if (GetBooleanSetting(options, SettingConstants.QuietMode, SettingConstants.QuietModeDefault))
                 this[FlagStrings.DisableBeep] = true;
 
             // Set the C2 reread count
-            int cdRereadCount = GetInt32Setting(options, SettingConstants.RereadCount, 20);
+            int cdRereadCount = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
             C2OpcodeValue[0] = cdRereadCount switch
             {
                 -1 => null,
@@ -970,7 +970,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             };
 
             // Set the DVD/HD-DVD/BD reread count
-            int dvdRereadCount = GetInt32Setting(options, SettingConstants.DVDRereadCount, 10);
+            int dvdRereadCount = GetInt32Setting(options, SettingConstants.DVDRereadCount, SettingConstants.DVDRereadCountDefault);
             DVDRereadValue = dvdRereadCount switch
             {
                 -1 => null,
@@ -983,9 +983,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 case MediaType.CDROM:
                     this[FlagStrings.C2Opcode] = true;
-                    this[FlagStrings.MultiSectorRead] = GetBooleanSetting(options, SettingConstants.MultiSectorRead, false);
+                    this[FlagStrings.MultiSectorRead] = GetBooleanSetting(options, SettingConstants.MultiSectorRead, SettingConstants.MultiSectorReadDefault);
                     if (this[FlagStrings.MultiSectorRead] == true)
-                        this.MultiSectorReadValue = GetInt32Setting(options, SettingConstants.MultiSectorReadValue, 0);
+                        this.MultiSectorReadValue = GetInt32Setting(options, SettingConstants.MultiSectorReadValue, SettingConstants.MultiSectorReadValueDefault);
 
                     switch (this.System)
                     {
@@ -993,8 +993,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         case RedumpSystem.IBMPCcompatible:
                             this[FlagStrings.NoFixSubQSecuROM] = true;
                             this[FlagStrings.ScanFileProtect] = true;
-                            this[FlagStrings.ScanSectorProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, false);
-                            this[FlagStrings.SubchannelReadLevel] = GetBooleanSetting(options, SettingConstants.ParanoidMode, false);
+                            this[FlagStrings.ScanSectorProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
+                            this[FlagStrings.SubchannelReadLevel] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
                             if (this[FlagStrings.SubchannelReadLevel] == true)
                                 SubchannelReadLevelValue = 2;
 
@@ -1016,15 +1016,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     }
                     break;
                 case MediaType.DVD:
-                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, false);
-                    this[FlagStrings.ScanFileProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, false);
+                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, SettingConstants.UseCMIFlagDefault);
+                    this[FlagStrings.ScanFileProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.GDROM:
                     this[FlagStrings.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, false);
+                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, SettingConstants.UseCMIFlagDefault);
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.BluRay:

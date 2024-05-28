@@ -160,6 +160,7 @@
 - Remove magic strings from settings reading
 - Move Redumper enums to a better place
 - Fix one DIC parameter test
+- Ensure setting defaults are consistent
 
 ### 3.1.9a (2024-05-21)
 

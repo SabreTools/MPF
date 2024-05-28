@@ -579,12 +579,12 @@ namespace MPF.ExecutionContexts.Redumper
             SpeedValue = driveSpeed;
 
             // Set user-defined options
-            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, true))
+            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
                 this[FlagStrings.Verbose] = true;
-            if (GetBooleanSetting(options, SettingConstants.EnableDebug, false))
+            if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
                 this[FlagStrings.Debug] = true;
 
-            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, ReadMethod.NONE.ToString());
+            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
             
             if (!string.IsNullOrEmpty(readMethod) && readMethod != ReadMethod.NONE.ToString())
             {
@@ -592,14 +592,14 @@ namespace MPF.ExecutionContexts.Redumper
                 DriveReadMethodValue = readMethod;
             }
 
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SectorOrder.NONE.ToString());
+            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault);
             if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
             {
                 this[FlagStrings.DriveSectorOrder] = true;
                 DriveSectorOrderValue = sectorOrder;
             }
 
-            if (GetBooleanSetting(options, SettingConstants.UseGenericDriveType, false))
+            if (GetBooleanSetting(options, SettingConstants.UseGenericDriveType, SettingConstants.UseGenericDriveTypeDefault))
             {
                 this[FlagStrings.DriveType] = true;
                 DriveTypeValue = "GENERIC";
@@ -624,12 +624,12 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             this[FlagStrings.Retries] = true;
-            RetriesValue = GetInt32Setting(options, SettingConstants.RereadCount, 20);
+            RetriesValue = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
 
-            if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, false))
+            if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, SettingConstants.EnableLeadinRetryDefault))
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                PlextorLeadinRetriesValue = GetInt32Setting(options, SettingConstants.LeadinRetryCount, 4);
+                PlextorLeadinRetriesValue = GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault);
             }
         }
 

@@ -186,7 +186,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool AaruEnableDebug
         {
-            get { return GetBooleanSetting(Settings, AaruSettings.EnableDebug, false); }
+            get { return GetBooleanSetting(Settings, AaruSettings.EnableDebug, AaruSettings.EnableDebugDefault); }
             set { Settings[AaruSettings.EnableDebug] = value.ToString(); }
         }
 
@@ -195,7 +195,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool AaruEnableVerbose
         {
-            get { return GetBooleanSetting(Settings, AaruSettings.EnableVerbose, false); }
+            get { return GetBooleanSetting(Settings, AaruSettings.EnableVerbose, AaruSettings.EnableVerboseDefault); }
             set { Settings[AaruSettings.EnableVerbose] = value.ToString(); }
         }
 
@@ -204,7 +204,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool AaruForceDumping
         {
-            get { return GetBooleanSetting(Settings, AaruSettings.ForceDumping, true); }
+            get { return GetBooleanSetting(Settings, AaruSettings.ForceDumping, AaruSettings.ForceDumpingDefault); }
             set { Settings[AaruSettings.ForceDumping] = value.ToString(); }
         }
 
@@ -213,7 +213,7 @@ namespace MPF.Frontend
         /// </summary>
         public int AaruRereadCount
         {
-            get { return GetInt32Setting(Settings, AaruSettings.RereadCount, 5); }
+            get { return GetInt32Setting(Settings, AaruSettings.RereadCount, AaruSettings.RereadCountDefault); }
             set { Settings[AaruSettings.RereadCount] = value.ToString(); }
         }
 
@@ -222,7 +222,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool AaruStripPersonalData
         {
-            get { return GetBooleanSetting(Settings, AaruSettings.StripPersonalData, false); }
+            get { return GetBooleanSetting(Settings, AaruSettings.StripPersonalData, AaruSettings.StripPersonalDataDefault); }
             set { Settings[AaruSettings.StripPersonalData] = value.ToString(); }
         }
 
@@ -235,7 +235,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool DICMultiSectorRead
         {
-            get { return GetBooleanSetting(Settings, DICSettings.MultiSectorRead, false); }
+            get { return GetBooleanSetting(Settings, DICSettings.MultiSectorRead, DICSettings.MultiSectorReadDefault); }
             set { Settings[DICSettings.MultiSectorRead] = value.ToString(); }
         }
 
@@ -244,7 +244,7 @@ namespace MPF.Frontend
         /// </summary>
         public int DICMultiSectorReadValue
         {
-            get { return GetInt32Setting(Settings, DICSettings.MultiSectorReadValue, 0); }
+            get { return GetInt32Setting(Settings, DICSettings.MultiSectorReadValue, DICSettings.MultiSectorReadValueDefault); }
             set { Settings[DICSettings.MultiSectorReadValue] = value.ToString(); }
         }
 
@@ -258,7 +258,7 @@ namespace MPF.Frontend
         /// </remarks>
         public bool DICParanoidMode
         {
-            get { return GetBooleanSetting(Settings, DICSettings.ParanoidMode, false); }
+            get { return GetBooleanSetting(Settings, DICSettings.ParanoidMode, DICSettings.ParanoidModeDefault); }
             set { Settings[DICSettings.ParanoidMode] = value.ToString(); }
         }
 
@@ -267,7 +267,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool DICQuietMode
         {
-            get { return GetBooleanSetting(Settings, DICSettings.QuietMode, false); }
+            get { return GetBooleanSetting(Settings, DICSettings.QuietMode, DICSettings.QuietModeDefault); }
             set { Settings[DICSettings.QuietMode] = value.ToString(); }
         }
 
@@ -276,7 +276,7 @@ namespace MPF.Frontend
         /// </summary>
         public int DICRereadCount
         {
-            get { return GetInt32Setting(Settings, DICSettings.RereadCount, 20); }
+            get { return GetInt32Setting(Settings, DICSettings.RereadCount, DICSettings.RereadCountDefault); }
             set { Settings[DICSettings.RereadCount] = value.ToString(); }
         }
 
@@ -285,7 +285,7 @@ namespace MPF.Frontend
         /// </summary>
         public int DICDVDRereadCount
         {
-            get { return GetInt32Setting(Settings, DICSettings.DVDRereadCount, 10); }
+            get { return GetInt32Setting(Settings, DICSettings.DVDRereadCount, DICSettings.DVDRereadCountDefault); }
             set { Settings[DICSettings.DVDRereadCount] = value.ToString(); }
         }
 
@@ -294,7 +294,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool DICUseCMIFlag
         {
-            get { return GetBooleanSetting(Settings, DICSettings.UseCMIFlag, false); }
+            get { return GetBooleanSetting(Settings, DICSettings.UseCMIFlag, DICSettings.UseCMIFlagDefault); }
             set { Settings[DICSettings.UseCMIFlag] = value.ToString(); }
         }
 
@@ -307,7 +307,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool RedumperEnableDebug
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableDebug, false); }
+            get { return GetBooleanSetting(Settings, RedumperSettings.EnableDebug, RedumperSettings.EnableDebugDefault); }
             set { Settings[RedumperSettings.EnableDebug] = value.ToString(); }
         }
 
@@ -316,7 +316,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool RedumperEnableLeadinRetry
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableLeadinRetry, false); }
+            get { return GetBooleanSetting(Settings, RedumperSettings.EnableLeadinRetry, RedumperSettings.EnableLeadinRetryDefault); }
             set { Settings[RedumperSettings.EnableLeadinRetry] = value.ToString(); }
         }
 
@@ -325,7 +325,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool RedumperEnableVerbose
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableVerbose, true); }
+            get { return GetBooleanSetting(Settings, RedumperSettings.EnableVerbose, RedumperSettings.EnableVerboseDefault); }
             set { Settings[RedumperSettings.EnableVerbose] = value.ToString(); }
         }
 
@@ -334,7 +334,7 @@ namespace MPF.Frontend
         /// </summary>
         public int RedumperLeadinRetryCount
         {
-            get { return GetInt32Setting(Settings, RedumperSettings.LeadinRetryCount, 4); }
+            get { return GetInt32Setting(Settings, RedumperSettings.LeadinRetryCount, RedumperSettings.LeadinRetryCountDefault); }
             set { Settings[RedumperSettings.LeadinRetryCount] = value.ToString(); }
         }
 
@@ -352,7 +352,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool RedumperUseGenericDriveType
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.UseGenericDriveType, false); }
+            get { return GetBooleanSetting(Settings, RedumperSettings.UseGenericDriveType, RedumperSettings.UseGenericDriveTypeDefault); }
             set { Settings[RedumperSettings.UseGenericDriveType] = value.ToString(); }
         }
 
@@ -363,7 +363,7 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, RedumperSettings.ReadMethod, RedumperReadMethod.NONE.ToString());
+                var valueString = GetStringSetting(Settings, RedumperSettings.ReadMethod, RedumperSettings.ReadMethodDefault);
                 return ToRedumperReadMethod(valueString);
             }
             set
@@ -379,7 +379,7 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, RedumperSettings.SectorOrder, RedumperSectorOrder.NONE.ToString());
+                var valueString = GetStringSetting(Settings, RedumperSettings.SectorOrder, RedumperSettings.SectorOrderDefault);
                 return ToRedumperSectorOrder(valueString);
             }
             set
@@ -393,7 +393,7 @@ namespace MPF.Frontend
         /// </summary>
         public int RedumperRereadCount
         {
-            get { return GetInt32Setting(Settings, RedumperSettings.RereadCount, 20); }
+            get { return GetInt32Setting(Settings, RedumperSettings.RereadCount, RedumperSettings.RereadCountDefault); }
             set { Settings[RedumperSettings.RereadCount] = value.ToString(); }
         }
 

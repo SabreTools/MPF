@@ -1208,7 +1208,7 @@ namespace MPF.ExecutionContexts.Aaru
                 return;
 
             // Set retry count
-            int rereadCount = GetInt32Setting(options, SettingConstants.RereadCount, 5);
+            int rereadCount = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
             if (rereadCount > 0)
             {
                 this[FlagStrings.RetryPassesLong] = true;
@@ -1216,13 +1216,13 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // Set user-defined options
-            if (GetBooleanSetting(options, SettingConstants.EnableDebug, false))
+            if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
                 this[FlagStrings.DebugLong] = true;
-            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, false))
+            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
                 this[FlagStrings.VerboseLong] = true;
-            if (GetBooleanSetting(options, SettingConstants.ForceDumping, true))
+            if (GetBooleanSetting(options, SettingConstants.ForceDumping, SettingConstants.ForceDumpingDefault))
                 this[FlagStrings.ForceLong] = true;
-            if (GetBooleanSetting(options, SettingConstants.StripPersonalData, false))
+            if (GetBooleanSetting(options, SettingConstants.StripPersonalData, SettingConstants.StripPersonalDataDefault))
                 this[FlagStrings.PrivateLong] = true;
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
