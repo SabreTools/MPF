@@ -13,7 +13,7 @@ namespace MPF.ExecutionContexts
         #region Event Handlers
 
         /// <summary>
-        /// Geneeic way of reporting a message
+        /// Generic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>
         public EventHandler<StringEventArgs>? ReportStatus;
@@ -196,18 +196,17 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Run internal program
         /// </summary>
-        /// <param name="separateWindow">True to show in separate window, false otherwise</param>
-        public void ExecuteInternalProgram(bool separateWindow)
+        public void ExecuteInternalProgram()
         {
             // Create the start info
             var startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutablePath!,
                 Arguments = GenerateParameters() ?? "",
-                CreateNoWindow = !separateWindow,
-                UseShellExecute = separateWindow,
-                RedirectStandardOutput = !separateWindow,
-                RedirectStandardError = !separateWindow,
+                CreateNoWindow = false,
+                UseShellExecute = true,
+                RedirectStandardOutput = false,
+                RedirectStandardError = false,
             };
 
             // Create the new process
@@ -215,19 +214,6 @@ namespace MPF.ExecutionContexts
 
             // Start the process
             process.Start();
-
-            // Start processing tasks, if necessary
-            if (!separateWindow)
-            {
-#if NET40
-                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
-                Logging.OutputToLog(process.StandardError, this, ReportStatus);
-#else
-                _ = Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
-                _ = Logging.OutputToLog(process.StandardError, this, ReportStatus);
-#endif
-            }
-
             process.WaitForExit();
             process.Close();
         }

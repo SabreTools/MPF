@@ -2052,10 +2052,7 @@ namespace MPF.Frontend.ViewModels
                 // Output to the label and log
                 this.Status = "Starting dumping process... please wait!";
                 LogLn("Starting dumping process... please wait!");
-                if (this.Options.ToolsInSeparateWindow)
-                    LogLn("Look for the separate command window for more details");
-                else
-                    LogLn("Program outputs may be slow to populate in the log window");
+                LogLn("Look for the separate command window for more details");
 
                 // Get progress indicators
                 var resultProgress = new Progress<ResultEventArgs>();

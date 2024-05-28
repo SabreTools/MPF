@@ -191,12 +191,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="7">
-                                <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
-                                     IsChecked="{Binding Options.ToolsInSeparateWindow}"
-                                     ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
-                                     />
-
+                            <UniformGrid Columns="2" Rows="6">
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the disc information output after dumping" Margin="0,4"

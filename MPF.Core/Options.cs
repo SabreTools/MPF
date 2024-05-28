@@ -469,15 +469,6 @@ namespace MPF.Core
         }
 
         /// <summary>
-        /// Show dumping tools in their own window instead of in the log
-        /// </summary>
-        public bool ToolsInSeparateWindow
-        {
-            get { return GetBooleanSetting(Settings, "ToolsInSeparateWindow", true); }
-            set { Settings["ToolsInSeparateWindow"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Add the dump filename as a suffix to the auto-generated files
         /// </summary>
         public bool AddFilenameSuffix

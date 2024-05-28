@@ -103,21 +103,6 @@ namespace MPF.Frontend
         /// </summary>
         public EventHandler<StringEventArgs>? ReportStatus;
 
-        /// <summary>
-        /// Queue of items that need to be logged
-        /// </summary>
-        private ProcessingQueue<string>? outputQueue;
-
-        /// <summary>
-        /// Event handler for data returned from a process
-        /// </summary>
-        private void OutputToLog(object? proc, StringEventArgs args) => outputQueue?.Enqueue(args);
-
-        /// <summary>
-        /// Process the outputs in the queue
-        /// </summary>
-        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
-
         #endregion
 
         /// <summary>
@@ -352,35 +337,20 @@ namespace MPF.Frontend
             if (!result)
                 return result;
 
-            // Invoke output processing, if needed
-            if (!_options.ToolsInSeparateWindow)
-            {
-                outputQueue = new ProcessingQueue<string>(ProcessOutputs);
-                if (_executionContext.ReportStatus != null)
-                    _executionContext.ReportStatus += OutputToLog;
-            }
-
             // Execute internal tool
-            progress?.Report(ResultEventArgs.Success($"Executing {_internalProgram}... {(_options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
+            progress?.Report(ResultEventArgs.Success($"Executing {_internalProgram}... please wait!"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
                 Directory.CreateDirectory(directoryName);
 
 #if NET40
-            var executeTask = Task.Factory.StartNew(() => _executionContext.ExecuteInternalProgram(_options.ToolsInSeparateWindow));
+            var executeTask = Task.Factory.StartNew(() => _executionContext.ExecuteInternalProgram());
             executeTask.Wait();
 #else
-            await Task.Run(() => _executionContext.ExecuteInternalProgram(_options.ToolsInSeparateWindow));
+            await Task.Run(_executionContext.ExecuteInternalProgram);
 #endif
             progress?.Report(ResultEventArgs.Success($"{_internalProgram} has finished!"));
-
-            // Remove event handler if needed
-            if (!_options.ToolsInSeparateWindow)
-            {
-                outputQueue?.Dispose();
-                _executionContext.ReportStatus -= OutputToLog;
-            }
 
             return result;
         }

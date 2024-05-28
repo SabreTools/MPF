@@ -114,6 +114,7 @@
 - Make protection file output required
 - Standardize PS1-5 outputs and parsing (Deterous)
 - Update Redumper to build 371
+- Tools always run in separate window
 
 ### 3.1.9a (2024-05-21)
 
