@@ -704,7 +704,7 @@ namespace MPF.Frontend
 
                 case RedumpSystem.KonamiPython2:
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && string.IsNullOrEmpty(kp2Exe))
-                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(kp2Exe);
+                        info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(kp2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
                     {
@@ -811,7 +811,7 @@ namespace MPF.Frontend
 
                 case RedumpSystem.SonyPlayStation:
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && string.IsNullOrEmpty(psxExe))
-                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(psxExe);
+                        info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(psxExe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var psxSerial, out Region? psxRegion, out var psxDate) == true)
                     {
@@ -827,7 +827,7 @@ namespace MPF.Frontend
                     info.CommonDiscInfo!.LanguageSelection ??= [];
 
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && string.IsNullOrEmpty(ps2Exe))
-                        info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(ps2Exe);
+                        info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(ps2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
                     {
