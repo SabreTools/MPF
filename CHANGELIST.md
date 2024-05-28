@@ -131,6 +131,7 @@
 - Move DoesSupportDriveSpeed to DumpEnvironment
 - Move ToInternalProgram to Options
 - Centralize dumping program information gathering
+- Move drive-reading methods to Drive
 
 ### 3.1.9a (2024-05-21)
 

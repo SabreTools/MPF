@@ -683,7 +683,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name), true);
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), true);
 
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
@@ -699,7 +699,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", InfoTool.GetPlayStationExecutableName(drive?.Name));
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
                     break;
             }
         }
