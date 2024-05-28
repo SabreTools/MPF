@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Frontend
+namespace MPF.Frontend.Tools
 {
     public static class FrontendTool
     {

@@ -2,6 +2,7 @@
 using System.IO;
 using BinaryObjectScanner;
 using MPF.Frontend;
+using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 

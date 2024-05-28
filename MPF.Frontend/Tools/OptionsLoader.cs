@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Frontend
+namespace MPF.Frontend.Tools
 {
     public static class OptionsLoader
     {

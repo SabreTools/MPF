@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Frontend;
+using MPF.Frontend.Tools;
 using Xunit;
 
 namespace MPF.Test.Library

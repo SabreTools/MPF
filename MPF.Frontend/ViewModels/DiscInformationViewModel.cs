@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MPF.Frontend.ComboBoxItems;
+using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ViewModels

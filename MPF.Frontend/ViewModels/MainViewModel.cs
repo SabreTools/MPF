@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
+using MPF.Frontend.Tools;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 

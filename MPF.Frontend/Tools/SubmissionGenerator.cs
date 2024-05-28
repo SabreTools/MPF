@@ -9,7 +9,7 @@ using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
-namespace MPF.Frontend
+namespace MPF.Frontend.Tools
 {
     /// <summary>
     /// Generator for SubmissionInfo objects

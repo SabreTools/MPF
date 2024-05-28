@@ -8,7 +8,7 @@ using BinaryObjectScanner;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
-namespace MPF.Frontend
+namespace MPF.Frontend.Tools
 {
     public static class ProtectionTool
     {
