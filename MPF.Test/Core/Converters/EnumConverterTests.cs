@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MPF.Core;
+using MPF.Frontend;
 using Xunit;
 
 namespace MPF.Test.Core.Converters

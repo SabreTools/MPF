@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 #endif
 using System.Reflection;
+using MPF.Core;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core
+namespace MPF.Frontend
 {
     public static class EnumExtensions
     {
