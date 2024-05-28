@@ -1612,13 +1612,14 @@ namespace MPF.Processors
                         line.Substring("File Identifier: ".Length) == exeName)
                     {
                         // Account for Y2K date problem
-                        if (exeDate != null && exeDate!.Substring(0, 2) == "19")
+                        if (exeDate != null && exeDate.Substring(0, 2) == "19")
                         {
                             string decade = exeDate!.Substring(2, 1);
+
                             // Does only PSX need to account for 1920s-60s?
                             if (decade == "0" || decade == "1" ||
                                 psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
-                                exeDate = $"20{exeDate!.Substring(2)}";
+                                exeDate = $"20{exeDate.Substring(2)}";
                         }
 
                         // Currently stored date is the EXE date, return it
