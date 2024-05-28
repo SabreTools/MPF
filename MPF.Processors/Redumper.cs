@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core;
-using MPF.Core.Utilities;
 using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -318,8 +317,6 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = kp2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
-                        if (!string.IsNullOrEmpty(kp2Serial))
-                            info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
                         info.VersionAndEditions!.Version = kp2Version ?? string.Empty;
                     }
 
@@ -382,8 +379,6 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = psxEXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
-                        if (!string.IsNullOrEmpty(psxSerial))
-                            info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
                     }
 
                     info.CopyProtection!.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
@@ -397,8 +392,6 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo!.EXEDateBuildDate = ps2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
-                        if (!string.IsNullOrEmpty(ps2Serial))
-                            info.CommonDiscInfo.Region = InfoTool.GetPlayStationRegion(info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName]);
                         info.VersionAndEditions!.Version = ps2Version ?? string.Empty;
                     }
 

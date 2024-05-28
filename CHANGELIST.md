@@ -136,6 +136,7 @@
 - Move Xbox/X360 helpers to ProcessingTool
 - Move PS3 helpers to ProcessingTool
 - Clean up usings
+- Centralize PS1/2 region detection
 
 ### 3.1.9a (2024-05-21)
 
