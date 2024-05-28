@@ -772,7 +772,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public (bool, string, string?) CheckForUpdates()
         {
-            (bool different, string message, var url) = VersionTool.CheckForNewVersion();
+            (bool different, string message, var url) = FrontendTool.CheckForNewVersion();
 
             SecretLogLn(message);
             if (url == null)
@@ -795,7 +795,7 @@ namespace MPF.Frontend.ViewModels
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
                 + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Version {VersionTool.GetCurrentVersion()}";
+                + $"{Environment.NewLine}Version {FrontendTool.GetCurrentVersion()}";
             SecretLogLn(aboutText);
             return aboutText;
         }

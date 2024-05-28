@@ -143,6 +143,7 @@
 - Move InfoTool to root of Core
 - Create FrontendTool and move some methods to it
 - Clear out InfoTool and remove
+- Merge VersionTool into FrontendTool
 
 ### 3.1.9a (2024-05-21)
 
