@@ -145,6 +145,7 @@
 - Clear out InfoTool and remove
 - Merge VersionTool into FrontendTool
 - Move EnumExtensions to Frontend
+- Treat KP2 like PS2 in DIC
 
 ### 3.1.9a (2024-05-21)
 

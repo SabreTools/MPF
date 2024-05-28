@@ -450,6 +450,10 @@ namespace MPF.Processors
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
                     break;
 
+                case RedumpSystem.KonamiPython2:
+                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
+                    break;
+
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString;
                     if (string.IsNullOrEmpty(outputDirectory))
