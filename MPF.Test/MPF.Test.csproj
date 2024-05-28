@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.ExecutionContexts\MPF.ExecutionContexts.csproj" />
     <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
   </ItemGroup>

@@ -26,7 +26,6 @@
 </ItemGroup>
 
 <ItemGroup>
-  <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
   <ProjectReference Include="..\MPF.ExecutionContexts\MPF.ExecutionContexts.csproj" />
   <ProjectReference Include="..\MPF.Processors\MPF.Processors.csproj" />
 </ItemGroup>
@@ -40,7 +39,12 @@
 <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
   <PackageReference Include="IndexRange" Version="1.0.3" />
 </ItemGroup>
+<ItemGroup Condition="$(TargetFramework.StartsWith(`net452`))">
+  <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
+</ItemGroup>
 <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
+  <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" />
+  <PackageReference Include="System.Net.Http" Version="4.3.4" />
   <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 </ItemGroup>
 
@@ -48,6 +52,7 @@
   <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.12" GeneratePathProperty="true">
     <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
   </PackageReference>
+  <PackageReference Include="LibIRD" Version="0.9.1" />
   <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   <PackageReference Include="SabreTools.RedumpLib" Version="1.3.8" />
 </ItemGroup>

@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
   </ItemGroup>
 
