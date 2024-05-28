@@ -120,7 +120,7 @@ namespace MPF.Frontend
             if (SupportsCopyProtectionScans(system))
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
-                var (protectionString, fullProtections) = await InfoTool.GetCopyProtection(drive, options, protectionProgress);
+                var (protectionString, fullProtections) = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
 
                 info.CopyProtection!.Protection += protectionString;
                 info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];

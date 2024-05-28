@@ -22,26 +22,6 @@ namespace MPF.Core.Utilities
         #region Information Extraction
 
         /// <summary>
-        /// Get the current detected copy protection(s), if possible
-        /// </summary>
-        /// <param name="drive">Drive object representing the current drive</param>
-        /// <param name="options">Options object that determines what to scan</param>
-        /// <param name="progress">Optional progress callback</param>
-        /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
-            Core.Options options,
-            IProgress<ProtectionProgress>? progress = null)
-        {
-            if (options.ScanForProtection && drive?.Name != null)
-            {
-                (var protection, _) = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, progress);
-                return (ProtectionTool.FormatProtections(protection), protection);
-            }
-
-            return ("(CHECK WITH PROTECTIONID)", null);
-        }
-
-        /// <summary>
         /// Get the EXE name from a PlayStation disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>

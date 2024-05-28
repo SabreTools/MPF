@@ -122,6 +122,7 @@
 - Remove unused byte array helper methods
 - Move GetSupportStatus to DumpEnvironment
 - Call psxt001z direct from DIC processor
+- Move GetCopyProtection to ProtectionTool
 
 ### 3.1.9a (2024-05-21)
 

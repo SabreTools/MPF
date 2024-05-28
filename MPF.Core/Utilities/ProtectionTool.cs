@@ -13,6 +13,26 @@ namespace MPF.Core.Utilities
     public static class ProtectionTool
     {
         /// <summary>
+        /// Get the current detected copy protection(s), if possible
+        /// </summary>
+        /// <param name="drive">Drive object representing the current drive</param>
+        /// <param name="options">Options object that determines what to scan</param>
+        /// <param name="progress">Optional progress callback</param>
+        /// <returns>Detected copy protection(s) if possible, null on error</returns>
+        public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
+            Core.Options options,
+            IProgress<ProtectionProgress>? progress = null)
+        {
+            if (options.ScanForProtection && drive?.Name != null)
+            {
+                (var protection, _) = await RunProtectionScanOnPath(drive.Name, options, progress);
+                return (FormatProtections(protection), protection);
+            }
+
+            return ("(CHECK WITH PROTECTIONID)", null);
+        }
+
+        /// <summary>
         /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
@@ -20,7 +40,7 @@ namespace MPF.Core.Utilities
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path,
-            Options options,
+            Core.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             try
