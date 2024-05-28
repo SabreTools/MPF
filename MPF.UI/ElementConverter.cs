@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using MPF.Core;
+using MPF.Frontend;
 using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 

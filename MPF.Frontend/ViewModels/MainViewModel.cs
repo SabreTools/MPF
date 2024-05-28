@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
-using MPF.Core;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
@@ -19,7 +18,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Core.Options Options
+        public Frontend.Options Options
         {
             get => _options;
             set
@@ -28,7 +27,7 @@ namespace MPF.Frontend.ViewModels
                 OptionsLoader.SaveToConfig(_options);
             }
         }
-        private Core.Options _options;
+        private Frontend.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -963,13 +962,13 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-        public void UpdateOptions(bool savedSettings, Core.Options? newOptions)
+        public void UpdateOptions(bool savedSettings, Frontend.Options? newOptions)
         {
             // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Ensure the first run flag is unset
-            var continuingOptions = new Core.Options(optionsToSave) { FirstRun = false };
+            var continuingOptions = new Frontend.Options(optionsToSave) { FirstRun = false };
             this.Options = continuingOptions;
 
             // If settings were changed, reinitialize the UI

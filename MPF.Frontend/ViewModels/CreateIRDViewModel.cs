@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using MPF.Core;
 using MPF.Processors;
 
 namespace MPF.Frontend.ViewModels

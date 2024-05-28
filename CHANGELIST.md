@@ -154,6 +154,7 @@
 - Remove unused reporter delegate
 - Move StringEventArgs to Frontend
 - Decouple execution contexts from Options class
+- Combine remaining Core into Frontend
 
 ### 3.1.9a (2024-05-21)
 

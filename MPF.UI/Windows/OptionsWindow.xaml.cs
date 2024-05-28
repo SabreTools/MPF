@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using MPF.Core;
+using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using WPFCustomMessageBox;
 

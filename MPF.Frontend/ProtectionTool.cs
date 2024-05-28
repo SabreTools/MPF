@@ -20,7 +20,7 @@ namespace MPF.Frontend
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
         public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
-            Core.Options options,
+            Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)
@@ -40,7 +40,7 @@ namespace MPF.Frontend
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path,
-            Core.Options options,
+            Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             try

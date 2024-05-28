@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;
 using MPF.Processors;
-using MPF.Core;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -50,7 +49,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Options object representing user-defined options
         /// </summary>
-        private readonly Core.Options _options;
+        private readonly Frontend.Options _options;
 
         /// <summary>
         /// Processor object representing how to process the outputs
@@ -118,7 +117,7 @@ namespace MPF.Frontend
         /// <param name="type"></param>
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
-        public DumpEnvironment(Core.Options options,
+        public DumpEnvironment(Frontend.Options options,
             string outputPath,
             Drive? drive,
             RedumpSystem? system,

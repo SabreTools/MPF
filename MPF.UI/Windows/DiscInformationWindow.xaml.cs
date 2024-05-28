@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core;
+using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using MPF.UI.UserControls;
 using SabreTools.RedumpLib.Data;
