@@ -117,6 +117,7 @@
 - Tools always run in separate window
 - Move ConsoleLogger to Check CLI
 - Move ProcessingQueue to Frontend
+- Move LogLevel enum to Frontend
 
 ### 3.1.9a (2024-05-21)
 
