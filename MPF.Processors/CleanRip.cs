@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core;
-using MPF.Core.Utilities;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -66,8 +65,7 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a CleanRip version anywhere
-            info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.CleanRip);
-            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");

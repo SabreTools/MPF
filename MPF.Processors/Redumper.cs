@@ -178,7 +178,8 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // Get the dumping program and version
-            info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.Redumper)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+            info.DumpingInfo!.DumpingProgram ??= string.Empty;
+            info.DumpingInfo.DumpingProgram += $" {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data

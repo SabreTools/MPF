@@ -60,7 +60,8 @@ namespace MPF.Processors
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
 
-            info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.PS3CFW);
+            // TODO: Determine if there's a CFW version anywhere
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + ".iso")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
             Datafile? datafile = GeneratePS3CFWDatafile(basePath + ".iso");

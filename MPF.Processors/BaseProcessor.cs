@@ -7,7 +7,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core;
-using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors

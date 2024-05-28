@@ -78,7 +78,7 @@ namespace MPF.Frontend
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
 
             // Create the default submission info
-            SubmissionInfo info = CreateDefaultSubmissionInfo(system, mediaType, options.AddPlaceholders);
+            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
             processor?.GenerateSubmissionInfo(info, combinedBase, drive, options.EnableRedumpCompatibility);
@@ -343,7 +343,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Creates a default SubmissionInfo object based on the current system and media type
         /// </summary>
-        private static SubmissionInfo CreateDefaultSubmissionInfo(RedumpSystem? system, MediaType? mediaType, bool addPlaceholders)
+        private static SubmissionInfo CreateDefaultSubmissionInfo(BaseProcessor processor, RedumpSystem? system, MediaType? mediaType, bool addPlaceholders)
         {
             // Create the template object
             var info = new SubmissionInfo()
@@ -370,12 +370,37 @@ namespace MPF.Frontend
                 DumpingInfo = new DumpingInfoSection()
                 {
                     FrontendVersion = Tools.GetCurrentVersion(),
+                    DumpingProgram = GetDumpingProgramFromProcessor(processor),
                 },
             };
 
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
             return info;
+        }
+
+        /// <summary>
+        /// Get the dumping program name from the processor
+        /// </summary>
+        /// <param name="processor"></param>
+        /// <returns></returns>
+        private static string? GetDumpingProgramFromProcessor(BaseProcessor processor)
+        {
+            // Map to the internal program
+            InternalProgram? internalProgram = processor switch
+            {
+                Processors.Aaru => InternalProgram.Aaru,
+                CleanRip => InternalProgram.CleanRip,
+                DiscImageCreator => InternalProgram.DiscImageCreator,
+                PS3CFW => InternalProgram.PS3CFW,
+                Redumper => InternalProgram.Redumper,
+                UmdImageCreator => InternalProgram.UmdImageCreator,
+                XboxBackupCreator => InternalProgram.XboxBackupCreator,
+                _ => null,
+            };
+
+            // Use the internal program to map to the name
+            return internalProgram.LongName();
         }
 
         /// <summary>
