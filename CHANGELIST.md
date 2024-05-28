@@ -137,6 +137,7 @@
 - Move PS3 helpers to ProcessingTool
 - Clean up usings
 - Centralize PS1/2 region detection
+- Move ProgramSupportsMedia to MainViewModel
 
 ### 3.1.9a (2024-05-21)
 

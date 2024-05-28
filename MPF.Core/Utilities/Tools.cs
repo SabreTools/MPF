@@ -1,66 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Utilities
 {
     public static class Tools
     {
-        #region Support
-
-        /// <summary>
-        /// Returns false if a given InternalProgram does not support a given MediaType
-        /// </summary>
-        public static bool ProgramSupportsMedia(InternalProgram program, MediaType? type)
-        {
-            // If the media type is not set, return false
-            if (type == null || type == MediaType.NONE)
-                return false;
-
-            return (program) switch
-            {
-                // Aaru
-                InternalProgram.Aaru when type == MediaType.BluRay => true,
-                InternalProgram.Aaru when type == MediaType.CDROM => true,
-                InternalProgram.Aaru when type == MediaType.CompactFlash => true,
-                InternalProgram.Aaru when type == MediaType.DVD => true,
-                InternalProgram.Aaru when type == MediaType.GDROM => true,
-                InternalProgram.Aaru when type == MediaType.FlashDrive => true,
-                InternalProgram.Aaru when type == MediaType.FloppyDisk => true,
-                InternalProgram.Aaru when type == MediaType.HardDisk => true,
-                InternalProgram.Aaru when type == MediaType.HDDVD => true,
-                InternalProgram.Aaru when type == MediaType.NintendoGameCubeGameDisc => true,
-                InternalProgram.Aaru when type == MediaType.NintendoWiiOpticalDisc => true,
-                InternalProgram.Aaru when type == MediaType.SDCard => true,
-
-                // DiscImageCreator
-                InternalProgram.DiscImageCreator when type == MediaType.BluRay => true,
-                InternalProgram.DiscImageCreator when type == MediaType.CDROM => true,
-                InternalProgram.DiscImageCreator when type == MediaType.CompactFlash => true,
-                InternalProgram.DiscImageCreator when type == MediaType.DVD => true,
-                InternalProgram.DiscImageCreator when type == MediaType.GDROM => true,
-                InternalProgram.DiscImageCreator when type == MediaType.FlashDrive => true,
-                InternalProgram.DiscImageCreator when type == MediaType.FloppyDisk => true,
-                InternalProgram.DiscImageCreator when type == MediaType.HardDisk => true,
-                InternalProgram.DiscImageCreator when type == MediaType.HDDVD => true,
-                InternalProgram.DiscImageCreator when type == MediaType.NintendoGameCubeGameDisc => true,
-                InternalProgram.DiscImageCreator when type == MediaType.NintendoWiiOpticalDisc => true,
-                InternalProgram.DiscImageCreator when type == MediaType.SDCard => true,
-
-                // Redumper
-                InternalProgram.Redumper when type == MediaType.BluRay => true,
-                InternalProgram.Redumper when type == MediaType.CDROM => true,
-                InternalProgram.Redumper when type == MediaType.DVD => true,
-                InternalProgram.Redumper when type == MediaType.GDROM => true,
-                InternalProgram.Redumper when type == MediaType.HDDVD => true,
-
-                // Default
-                _ => false,
-            };
-        }
-
-        #endregion
-
         #region Versioning
 
         /// <summary>

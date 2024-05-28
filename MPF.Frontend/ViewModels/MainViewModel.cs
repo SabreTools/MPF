@@ -2004,7 +2004,58 @@ namespace MPF.Frontend.ViewModels
                 && Drives.Count > 0
                 && this.CurrentSystem != null
                 && this.CurrentMediaType != null
-                && Tools.ProgramSupportsMedia(this.CurrentProgram, this.CurrentMediaType);
+                && ProgramSupportsMedia();
+        }
+
+        /// <summary>
+        /// Returns false if a given InternalProgram does not support a given MediaType
+        /// </summary>
+        private bool ProgramSupportsMedia()
+        {
+            // If the media type is not set, return false
+            if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
+                return false;
+
+            return (CurrentProgram) switch
+            {
+                // Aaru
+                InternalProgram.Aaru when CurrentMediaType == MediaType.BluRay => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.CDROM => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.CompactFlash => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.DVD => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.GDROM => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.FlashDrive => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.FloppyDisk => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.HardDisk => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.HDDVD => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.SDCard => true,
+
+                // DiscImageCreator
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.BluRay => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.CDROM => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.CompactFlash => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.DVD => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.GDROM => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.FlashDrive => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.FloppyDisk => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.HardDisk => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.HDDVD => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.SDCard => true,
+
+                // Redumper
+                InternalProgram.Redumper when CurrentMediaType == MediaType.BluRay => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.CDROM => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.DVD => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.GDROM => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.HDDVD => true,
+
+                // Default
+                _ => false,
+            };
         }
 
         /// <summary>
