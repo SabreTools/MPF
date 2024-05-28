@@ -127,6 +127,7 @@
 - Move ProtectionTool to Frontend
 - Move ToRedumper* methods to Options
 - Move ToMediaType to OptionsLoader
+- Move ListPrograms to OptionsLoader
 
 ### 3.1.9a (2024-05-21)
 

@@ -196,24 +196,6 @@ namespace MPF.Core
             };
         }
 
-        /// <summary>
-        /// List all programs with their short usable names
-        /// </summary>
-        public static List<string> ListPrograms()
-        {
-            var programs = new List<string>();
-
-            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
-            {
-                if (((InternalProgram)val!) == InternalProgram.NONE)
-                    continue;
-
-                programs.Add($"{((InternalProgram?)val).LongName()}");
-            }
-
-            return programs;
-        }
-
         #endregion
     }
 }

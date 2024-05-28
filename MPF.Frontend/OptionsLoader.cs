@@ -48,7 +48,7 @@ namespace MPF.Frontend
             else if (args[0] == "-lp" || args[0] == "--listprograms")
             {
                 Console.WriteLine("Supported Programs:");
-                foreach (string program in EnumExtensions.ListPrograms())
+                foreach (string program in ListPrograms())
                 {
                     Console.WriteLine(program);
                 }
@@ -255,6 +255,24 @@ namespace MPF.Frontend
             };
 
             return supportedArguments;
+        }
+
+        /// <summary>
+        /// List all programs with their short usable names
+        /// </summary>
+        private static List<string> ListPrograms()
+        {
+            var programs = new List<string>();
+
+            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
+            {
+                if (((InternalProgram)val!) == InternalProgram.NONE)
+                    continue;
+
+                programs.Add($"{((InternalProgram?)val).LongName()}");
+            }
+
+            return programs;
         }
 
         /// <summary>
