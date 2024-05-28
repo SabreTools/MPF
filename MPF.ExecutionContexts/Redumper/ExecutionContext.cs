@@ -579,26 +579,26 @@ namespace MPF.ExecutionContexts.Redumper
             SpeedValue = driveSpeed;
 
             // Set user-defined options
-            if (GetBooleanSetting(options, "RedumperEnableVerbose", true))
+            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, true))
                 this[FlagStrings.Verbose] = true;
-            if (GetBooleanSetting(options, "RedumperEnableDebug", false))
+            if (GetBooleanSetting(options, SettingConstants.EnableDebug, false))
                 this[FlagStrings.Debug] = true;
 
-            string? readMethod = GetStringSetting(options, "RedumperReadMethod", "NONE");
+            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, "NONE");
             if (!string.IsNullOrEmpty(readMethod) && readMethod != "NONE")
             {
                 this[FlagStrings.DriveReadMethod] = true;
                 DriveReadMethodValue = readMethod;
             }
 
-            string? sectorOrder = GetStringSetting(options, "RedumperSectorOrder", "NONE");
+            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, "NONE");
             if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != "NONE")
             {
                 this[FlagStrings.DriveSectorOrder] = true;
                 DriveSectorOrderValue = sectorOrder;
             }
 
-            if (GetBooleanSetting(options, "RedumperUseGenericDriveType", false))
+            if (GetBooleanSetting(options, SettingConstants.UseGenericDriveType, false))
             {
                 this[FlagStrings.DriveType] = true;
                 DriveTypeValue = "GENERIC";
@@ -623,12 +623,12 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             this[FlagStrings.Retries] = true;
-            RetriesValue = GetInt32Setting(options, "RedumperRereadCount", 20);
+            RetriesValue = GetInt32Setting(options, SettingConstants.RereadCount, 20);
 
-            if (GetBooleanSetting(options, "RedumperEnableLeadinRetry", false))
+            if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, false))
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                PlextorLeadinRetriesValue = GetInt32Setting(options, "RedumperLeadinRetryCount", 4);
+                PlextorLeadinRetriesValue = GetInt32Setting(options, SettingConstants.LeadinRetryCount, 4);
             }
         }
 
