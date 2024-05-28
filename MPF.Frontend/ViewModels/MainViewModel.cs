@@ -1421,7 +1421,7 @@ namespace MPF.Frontend.ViewModels
             else if (driveChanged)
             {
                 var label = GetFormattedVolumeLabel(CurrentDrive) ?? this.CurrentSystem.LongName();
-                string oldPath = InfoTool.NormalizeOutputPaths(this.OutputPath, false);
+                string oldPath = FrontendTool.NormalizeOutputPaths(this.OutputPath, false);
                 string oldFilename = Path.GetFileNameWithoutExtension(oldPath);
                 var directory = Path.GetDirectoryName(oldPath);
                 string filename = $"{label}{extension ?? ".bin"}";
@@ -1447,7 +1447,7 @@ namespace MPF.Frontend.ViewModels
             // Otherwise, reset the extension of the currently set path
             else
             {
-                string oldPath = InfoTool.NormalizeOutputPaths(this.OutputPath, false);
+                string oldPath = FrontendTool.NormalizeOutputPaths(this.OutputPath, false);
                 string filename = Path.GetFileNameWithoutExtension(oldPath);
                 var directory = Path.GetDirectoryName(oldPath);
                 filename = $"{filename}{extension ?? ".bin"}";
@@ -1479,7 +1479,7 @@ namespace MPF.Frontend.ViewModels
                 return RedumpSystem.IBMPCcompatible;
 
             // Check volume labels first
-            RedumpSystem? systemFromLabel = InfoTool.GetRedumpSystemFromVolumeLabel(drive.VolumeLabel);
+            RedumpSystem? systemFromLabel = FrontendTool.GetRedumpSystemFromVolumeLabel(drive.VolumeLabel);
             if (systemFromLabel != null)
                 return systemFromLabel;
 
@@ -1815,7 +1815,7 @@ namespace MPF.Frontend.ViewModels
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.ContextOutputPath, false);
+            this.OutputPath = FrontendTool.NormalizeOutputPaths(_environment.ContextOutputPath, false);
 
             if (MediaTypes != null)
             {

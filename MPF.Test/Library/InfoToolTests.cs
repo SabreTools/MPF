@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using MPF.Core;
+using MPF.Frontend;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -23,7 +23,7 @@ namespace MPF.Test.Library
             if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
 
-            string actualPath = InfoTool.NormalizeOutputPaths(outputPath, true);
+            string actualPath = FrontendTool.NormalizeOutputPaths(outputPath, true);
             Assert.Equal(expectedPath, actualPath);
         }
 

@@ -130,7 +130,7 @@ namespace MPF.Frontend
             _options = options;
 
             // Output paths
-            OutputPath = InfoTool.NormalizeOutputPaths(outputPath, false);
+            OutputPath = FrontendTool.NormalizeOutputPaths(outputPath, false);
 
             // UI information
             _drive = drive;
@@ -594,7 +594,7 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            OutputPath = InfoTool.NormalizeOutputPaths(OutputPath, false);
+            OutputPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
 
             // Validate that the output path isn't on the dumping drive
             if (_drive?.Name != null && OutputPath.StartsWith(_drive.Name))

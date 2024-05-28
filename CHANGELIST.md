@@ -141,6 +141,7 @@
 - Rename Tools to VersionTool
 - Move VersionTool to root of Core
 - Move InfoTool to root of Core
+- Create FrontendTool and move some methods to it
 
 ### 3.1.9a (2024-05-21)
 

@@ -222,7 +222,7 @@ namespace MPF.Frontend.ViewModels
             if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
                 SubmissionInfo.CommonDiscInfo.Languages = [null];
             SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
-            SubmissionInfo.CommonDiscInfo.Title = InfoTool.NormalizeDiscTitle(SubmissionInfo.CommonDiscInfo.Title, SubmissionInfo.CommonDiscInfo.Languages);
+            SubmissionInfo.CommonDiscInfo.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.CommonDiscInfo.Title, SubmissionInfo.CommonDiscInfo.Languages);
         }
 
         /// <summary>
