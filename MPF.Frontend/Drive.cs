@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Core
+namespace MPF.Frontend
 {
     /// <summary>
     /// Represents information for a single drive
@@ -156,11 +156,11 @@ namespace MPF.Core
             // Take care of the non-optical stuff first
             switch (InternalDriveType)
             {
-                case Core.InternalDriveType.Floppy:
+                case Frontend.InternalDriveType.Floppy:
                     return (MediaType.FloppyDisk, null);
-                case Core.InternalDriveType.HardDisk:
+                case Frontend.InternalDriveType.HardDisk:
                     return (MediaType.HardDisk, null);
-                case Core.InternalDriveType.Removable:
+                case Frontend.InternalDriveType.Removable:
                     return (MediaType.FlashDrive, null);
             }
 
@@ -830,7 +830,7 @@ namespace MPF.Core
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
-                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Core.InternalDriveType.Floppy; } });
+                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Frontend.InternalDriveType.Floppy; } });
                     }
                 }
             }
@@ -852,9 +852,9 @@ namespace MPF.Core
         {
             return driveType switch
             {
-                DriveType.CDRom => (InternalDriveType?)Core.InternalDriveType.Optical,
-                DriveType.Fixed => (InternalDriveType?)Core.InternalDriveType.HardDisk,
-                DriveType.Removable => (InternalDriveType?)Core.InternalDriveType.Removable,
+                DriveType.CDRom => (InternalDriveType?)Frontend.InternalDriveType.Optical,
+                DriveType.Fixed => (InternalDriveType?)Frontend.InternalDriveType.HardDisk,
+                DriveType.Removable => (InternalDriveType?)Frontend.InternalDriveType.Removable,
                 _ => null,
             };
         }

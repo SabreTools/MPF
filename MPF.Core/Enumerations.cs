@@ -1,17 +1,6 @@
 ﻿namespace MPF.Core
 {
     /// <summary>
-    /// Drive type for dumping
-    /// </summary>
-    public enum InternalDriveType
-    {
-        Optical,
-        Floppy,
-        HardDisk,
-        Removable,
-    }
-
-    /// <summary>
     /// Program that is being used to dump media
     /// </summary>
     public enum InternalProgram

@@ -149,6 +149,7 @@
 - Slight readability cleanup in DIC
 - Hacky move of DIC-specific code
 - Remove Drive dependency from GenerateSubmissionInfo
+- Move Drive to Frontend
 
 ### 3.1.9a (2024-05-21)
 
