@@ -217,7 +217,7 @@ namespace MPF.Frontend
                 }
 
                 // Get the SHA-1 hash
-                if (!InfoTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
+                if (!ProcessingTool.GetISOHashValues(hashData, out _, out _, out _, out string? sha1))
                 {
                     resultProgress?.Report(ResultEventArgs.Failure($"Line could not be parsed: {hashData}"));
                     continue;

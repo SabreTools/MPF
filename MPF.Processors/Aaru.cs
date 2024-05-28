@@ -87,17 +87,17 @@ namespace MPF.Processors
             info.Artifacts ??= [];
 
             if (File.Exists(basePath + ".cicm.xml"))
-                info.Artifacts["cicm"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
+                info.Artifacts["cicm"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
             if (File.Exists(basePath + ".ibg"))
                 info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
             if (File.Exists(basePath + ".log"))
-                info.Artifacts["log"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + ".log")) ?? string.Empty;
+                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".log")) ?? string.Empty;
             if (File.Exists(basePath + ".mhddlog.bin"))
                 info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
             if (File.Exists(basePath + ".resume.xml"))
-                info.Artifacts["resume"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
+                info.Artifacts["resume"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
             if (File.Exists(basePath + ".sub.log"))
-                info.Artifacts["sub_log"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + ".sub.log")) ?? string.Empty;
+                info.Artifacts["sub_log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".sub.log")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -111,7 +111,7 @@ namespace MPF.Processors
 
             // TODO: Determine if there's an Aaru version anywhere
             info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.Aaru);
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar(basePath + ".cicm.xml");
@@ -142,7 +142,7 @@ namespace MPF.Processors
             var datafile = GenerateDatafile(sidecar, basePath);
 
             // Fill in the hash data
-            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             switch (Type)
             {
@@ -170,7 +170,7 @@ namespace MPF.Processors
                 case MediaType.BluRay:
 
                     // Get the individual hash data, as per internal
-                    if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+                    if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
                         info.SizeAndChecksums!.CRC32 = crc32;
                         info.SizeAndChecksums.CRC32 = crc32;

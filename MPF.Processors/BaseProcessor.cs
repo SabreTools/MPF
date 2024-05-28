@@ -266,7 +266,7 @@ namespace MPF.Processors
 
             try
             {
-                var hex = InfoTool.GetFullFile(picPath, true);
+                var hex = ProcessingTool.GetFullFile(picPath, true);
                 if (hex == null)
                     return null;
 

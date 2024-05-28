@@ -54,9 +54,9 @@ namespace MPF.Processors
             info.Artifacts ??= [];
 
             if (File.Exists(basePath + ".bca"))
-                info.Artifacts["bca"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
+                info.Artifacts["bca"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
             if (File.Exists(basePath + "-dumpinfo.txt"))
-                info.Artifacts["dumpinfo"] = InfoTool.GetBase64(InfoTool.GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
+                info.Artifacts["dumpinfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -67,14 +67,14 @@ namespace MPF.Processors
 
             // TODO: Determine if there's a CleanRip version anywhere
             info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.CleanRip);
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
-            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
-            if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+            if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
                 info.SizeAndChecksums!.Size = size;
                 info.SizeAndChecksums.CRC32 = crc32;
@@ -206,7 +206,7 @@ namespace MPF.Processors
 
             try
             {
-                var hex = InfoTool.GetFullFile(bcaPath, true);
+                var hex = ProcessingTool.GetFullFile(bcaPath, true);
                 if (hex == null)
                     return null;
 

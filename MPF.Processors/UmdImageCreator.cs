@@ -56,17 +56,17 @@ namespace MPF.Processors
             info.Artifacts ??= [];
 
             if (File.Exists($"{basePath}_disc.txt"))
-                info.Artifacts["disc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
+                info.Artifacts["disc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_drive.txt"))
-                info.Artifacts["drive"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
+                info.Artifacts["drive"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainError.txt"))
-                info.Artifacts["mainError"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
+                info.Artifacts["mainError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
+                info.Artifacts["mainInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_PFI.bin"))
             //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
             if (File.Exists($"{basePath}_volDesc.txt"))
-                info.Artifacts["volDesc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
+                info.Artifacts["volDesc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -77,7 +77,7 @@ namespace MPF.Processors
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
             info.DumpingInfo!.DumpingProgram = EnumExtensions.LongName(InternalProgram.UmdImageCreator);
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the volume labels
             if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
@@ -98,7 +98,7 @@ namespace MPF.Processors
                         };
 
                         // Fill in the hash data
-                        info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+                        info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
                         info.SizeAndChecksums!.Size = filesize;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -214,7 +214,7 @@ namespace MPF.Processors
                     else if (line.StartsWith("DISC_VERSION") && umdversion == null)
                         umdversion = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
-                        umdcat = InfoTool.GetUMDCategory(line.Split(' ')[1]);
+                        umdcat = ProcessingTool.GetUMDCategory(line.Split(' ')[1]);
                     else if (line.StartsWith("L0 length"))
                         umdlayer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))

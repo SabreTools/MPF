@@ -235,33 +235,33 @@ namespace MPF.Processors
             //if (File.Exists($"{basePath}.c2"))
             //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.c2")) ?? string.Empty;
             if (File.Exists($"{basePath}_c2Error.txt"))
-                info.Artifacts["c2Error"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_c2Error.txt")) ?? string.Empty;
+                info.Artifacts["c2Error"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_c2Error.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.ccd"))
-                info.Artifacts["ccd"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.ccd")) ?? string.Empty;
+                info.Artifacts["ccd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.ccd")) ?? string.Empty;
             if (File.Exists($"{basePath}_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                info.Artifacts["cmd"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_cmd.txt")) ?? string.Empty;
+                info.Artifacts["cmd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_cmd.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_CSSKey.txt"))
-                info.Artifacts["csskey"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_CSSKey.txt")) ?? string.Empty;
+                info.Artifacts["csskey"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_CSSKey.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
+                info.Artifacts["cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.dat"))
-                info.Artifacts["dat"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.dat")) ?? string.Empty;
+                info.Artifacts["dat"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.dat")) ?? string.Empty;
             if (File.Exists($"{basePath}_disc.txt"))
-                info.Artifacts["disc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
+                info.Artifacts["disc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
             //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_DMI.bin")))
             //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"))) ?? string.Empty;
             if (File.Exists($"{basePath}_drive.txt"))
-                info.Artifacts["drive"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
+                info.Artifacts["drive"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_img.cue"))
-                info.Artifacts["img_cue"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_img.cue")) ?? string.Empty;
+                info.Artifacts["img_cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_img.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                info.Artifacts["img_EdcEcc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.img_EdcEcc.txt")) ?? string.Empty;
+                info.Artifacts["img_EdcEcc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.img_EdcEcc.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                info.Artifacts["img_EdcEcc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.img_EccEdc.txt")) ?? string.Empty;
+                info.Artifacts["img_EdcEcc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.img_EccEdc.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainError.txt"))
-                info.Artifacts["mainError"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
+                info.Artifacts["mainError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
+                info.Artifacts["mainInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_PFI.bin"))
             //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
             //if (File.Exists($"{basePath}_PIC.bin"))
@@ -271,17 +271,17 @@ namespace MPF.Processors
             if (File.Exists($"{basePath}.sub"))
                 info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.sub")) ?? string.Empty;
             if (File.Exists($"{basePath}_subError.txt"))
-                info.Artifacts["subError"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_subError.txt")) ?? string.Empty;
+                info.Artifacts["subError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subError.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_subInfo.txt"))
-                info.Artifacts["subInfo"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_subInfo.txt")) ?? string.Empty;
+                info.Artifacts["subInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subInfo.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_subIntention.txt"))
-                info.Artifacts["subIntention"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_subIntention.txt")) ?? string.Empty;
+                info.Artifacts["subIntention"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subIntention.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_sub.txt"))
-            //    info.Artifacts["subReadable"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_sub.txt")) ?? string.Empty;
+            //    info.Artifacts["subReadable"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_sub.txt")) ?? string.Empty;
             //if (File.Exists($"{basePath}_subReadable.txt"))
-            //    info.Artifacts["subReadable"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_subReadable.txt")) ?? string.Empty;
+            //    info.Artifacts["subReadable"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subReadable.txt")) ?? string.Empty;
             if (File.Exists($"{basePath}_volDesc.txt"))
-                info.Artifacts["volDesc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
+                info.Artifacts["volDesc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -296,7 +296,7 @@ namespace MPF.Processors
             // Get the dumping program and version
             var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);
             info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.DiscImageCreator)} {dicVersion ?? "Unknown Version"}";
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
             if (GetHardwareInfo($"{basePath}_drive.txt", out var manufacturer, out var model, out var firmware))
@@ -311,10 +311,10 @@ namespace MPF.Processors
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
             // Get the Datafile information
-            var datafile = InfoTool.GetDatafile($"{basePath}.dat");
+            var datafile = ProcessingTool.GetDatafile($"{basePath}.dat");
 
             // Fill in the hash data
-            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Fill in the volume labels
             if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
@@ -343,7 +343,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
-                    info.TracksAndWriteOffsets.Cuesheet = InfoTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
 
                     // Attempt to get the write offset
@@ -363,7 +363,7 @@ namespace MPF.Processors
                 case MediaType.BluRay:
 
                     // Get the individual hash data, as per internal
-                    if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+                    if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
                         info.SizeAndChecksums!.Size = size;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -379,9 +379,9 @@ namespace MPF.Processors
                     }
                     else if (Type == MediaType.BluRay)
                     {
-                        var di = InfoTool.GetDiscInformation($"{basePath}_PIC.bin");
-                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
-                        if (InfoTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        var di = ProcessingTool.GetDiscInformation($"{basePath}_PIC.bin");
+                        info.SizeAndChecksums!.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
+                        if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
@@ -436,7 +436,7 @@ namespace MPF.Processors
                     {
                         var fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
-                            info.CopyProtection!.SecuROMData = InfoTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
+                            info.CopyProtection!.SecuROMData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
                     }
 
                     // Needed for some odd copy protections
@@ -464,13 +464,13 @@ namespace MPF.Processors
                         if (!redumpCompat)
                             info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 
-                        info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        var suppl = InfoTool.GetDatafile($"{basePath}_suppl.dat");
+                        var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash))
                         {
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
@@ -513,13 +513,13 @@ namespace MPF.Processors
                         if (!redumpCompat)
                             info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 
-                        info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        var suppl = InfoTool.GetDatafile($"{basePath}_suppl.dat");
+                        var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash))
                         {
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
@@ -1311,7 +1311,7 @@ namespace MPF.Processors
                 // Guard against false positives
                 if (File.Exists(basePath + "_subIntention.txt"))
                 {
-                    string libCryptData = InfoTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
+                    string libCryptData = ProcessingTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
                     if (string.IsNullOrEmpty(libCryptData))
                     {
                         detected = YesNo.No;
@@ -2082,7 +2082,7 @@ namespace MPF.Processors
                     // Special File Hashes
                     else if (line.StartsWith("<rom"))
                     {
-                        if (InfoTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
+                        if (ProcessingTool.GetISOHashValues(line, out long _, out var crc32, out _, out _))
                         {
                             if (line.Contains("SS.bin"))
                                 sshash = crc32?.ToUpperInvariant();

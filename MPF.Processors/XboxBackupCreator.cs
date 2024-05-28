@@ -64,9 +64,9 @@ namespace MPF.Processors
             string? logPath = GetLogName(baseDir);
 
             if (File.Exists(logPath))
-                info.Artifacts["log"] = InfoTool.GetBase64(InfoTool.GetFullFile(logPath!)) ?? string.Empty;
+                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(logPath!)) ?? string.Empty;
             if (File.Exists($"{basePath}.dvd"))
-                info.Artifacts["dvd"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
+                info.Artifacts["dvd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
             //if (File.Exists($"{baseDir}DMI.bin"))
             //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}DMI.bin")) ?? string.Empty;
             // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes
@@ -94,7 +94,7 @@ namespace MPF.Processors
 
             // XBC dump info
             info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.XboxBackupCreator)} {GetVersion(logPath) ?? "Unknown Version"}";
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(logPath)?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(logPath)?.ToString("yyyy-MM-dd HH:mm:ss");
             info.DumpingInfo.Model = GetDrive(logPath) ?? "Unknown Drive";
 
             // Look for read errors
@@ -120,7 +120,7 @@ namespace MPF.Processors
                         };
 
                         // Fill in the hash data
-                        info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+                        info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
                         info.SizeAndChecksums!.Size = filesize;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -142,7 +142,7 @@ namespace MPF.Processors
                                 if (!redumpCompat)
                                     info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
 
-                                info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                                info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                             }
 
                             break;
@@ -166,7 +166,7 @@ namespace MPF.Processors
                                 if (!redumpCompat)
                                     info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 
-                                info.CommonDiscInfo.Region = InfoTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                                info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                             }
 
                             break;

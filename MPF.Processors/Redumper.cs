@@ -132,43 +132,43 @@ namespace MPF.Processors
             info.Artifacts ??= [];
 
             if (File.Exists($"{basePath}.cdtext"))
-                info.Artifacts["cdtext"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
+                info.Artifacts["cdtext"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
+                info.Artifacts["cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
             if (File.Exists($"{basePath}.fulltoc"))
-                info.Artifacts["fulltoc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
+                info.Artifacts["fulltoc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
             if (File.Exists($"{basePath}.hash"))
-                info.Artifacts["hash"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.hash")) ?? string.Empty;
+                info.Artifacts["hash"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.hash")) ?? string.Empty;
             // TODO: "{basePath} (Track X).hash" (get from cuesheet)
             if (File.Exists($"{basePath}.log"))
-                info.Artifacts["log"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.log")) ?? string.Empty;
+                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.log")) ?? string.Empty;
             if (File.Exists($"{basePath}.manufacturer"))
-                info.Artifacts["manufacturer"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.1.manufacturer"))
-                info.Artifacts["manufacturer1"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer1"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.2.manufacturer"))
-                info.Artifacts["manufacturer2"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
+                info.Artifacts["manufacturer2"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
             if (File.Exists($"{basePath}.physical"))
-                info.Artifacts["physical"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.physical")) ?? string.Empty;
+                info.Artifacts["physical"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.0.physical"))
-                info.Artifacts["physical0"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
+                info.Artifacts["physical0"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.1.physical"))
-                info.Artifacts["physical1"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
+                info.Artifacts["physical1"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.2.physical"))
-                info.Artifacts["physical2"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
+                info.Artifacts["physical2"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
             // if (File.Exists($"{basePath}.skeleton"))
-            //     info.Artifacts["skeleton"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
+            //     info.Artifacts["skeleton"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
             // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
             // if (File.Exists($"{basePath}.scram"))
-            //     info.Artifacts["scram"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.scram")) ?? string.Empty;
+            //     info.Artifacts["scram"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.scram")) ?? string.Empty;
             // if (File.Exists($"{basePath}.scrap"))
-            //     info.Artifacts["scrap"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.scrap")) ?? string.Empty;
+            //     info.Artifacts["scrap"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.scrap")) ?? string.Empty;
             if (File.Exists($"{basePath}.state"))
-                info.Artifacts["state"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.state")) ?? string.Empty;
+                info.Artifacts["state"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.state")) ?? string.Empty;
             if (File.Exists($"{basePath}.subcode"))
-                info.Artifacts["subcode"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.subcode")) ?? string.Empty;
+                info.Artifacts["subcode"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.subcode")) ?? string.Empty;
             if (File.Exists($"{basePath}.toc"))
-                info.Artifacts["toc"] = InfoTool.GetBase64(InfoTool.GetFullFile($"{basePath}.toc")) ?? string.Empty;
+                info.Artifacts["toc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.toc")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -179,7 +179,7 @@ namespace MPF.Processors
 
             // Get the dumping program and version
             info.DumpingInfo!.DumpingProgram = $"{EnumExtensions.LongName(InternalProgram.Redumper)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
             if (GetHardwareInfo($"{basePath}.log", out var manufacturer, out var model, out var firmware))
@@ -202,7 +202,7 @@ namespace MPF.Processors
                 case MediaType.CDROM:
                     info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
                     info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
-                    info.TracksAndWriteOffsets.Cuesheet = InfoTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
 
                     // Attempt to get the write offset
                     string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;
@@ -244,7 +244,7 @@ namespace MPF.Processors
                     info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
 
                     // Get the individual hash data, as per internal
-                    if (InfoTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
+                    if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
                     {
                         info.SizeAndChecksums!.Size = size;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -285,10 +285,10 @@ namespace MPF.Processors
                             ?? GetPIC($"{basePath}.1.physical", trimLength)
                             ?? string.Empty;
 
-                        var di = InfoTool.GetDiscInformation($"{basePath}.physical")
-                            ?? InfoTool.GetDiscInformation($"{basePath}.0.physical")
-                            ?? InfoTool.GetDiscInformation($"{basePath}.1.physical");
-                        info.SizeAndChecksums!.PICIdentifier = InfoTool.GetPICIdentifier(di);
+                        var di = ProcessingTool.GetDiscInformation($"{basePath}.physical")
+                            ?? ProcessingTool.GetDiscInformation($"{basePath}.0.physical")
+                            ?? ProcessingTool.GetDiscInformation($"{basePath}.1.physical");
+                        info.SizeAndChecksums!.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
                     }
 
                     break;

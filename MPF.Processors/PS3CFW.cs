@@ -49,9 +49,9 @@ namespace MPF.Processors
             string? getKeyBasePath = GetCFWBasePath(basePath);
 
             if (File.Exists(getKeyBasePath + ".disc.pic"))
-                info.Artifacts["discpic"] = InfoTool.GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
+                info.Artifacts["discpic"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
             if (File.Exists(getKeyBasePath + ".getkey.log"))
-                info.Artifacts["getkeylog"] = InfoTool.GetBase64(InfoTool.GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
+                info.Artifacts["getkeylog"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -66,10 +66,10 @@ namespace MPF.Processors
             Datafile? datafile = GeneratePS3CFWDatafile(basePath + ".iso");
 
             // Fill in the hash data
-            info.TracksAndWriteOffsets!.ClrMameProData = InfoTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
-            if (InfoTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+            if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
                 info.SizeAndChecksums!.Size = size;
                 info.SizeAndChecksums.CRC32 = crc32;
@@ -89,7 +89,7 @@ namespace MPF.Processors
                 return;
 
             // Get dumping date from GetKey log date
-            info.DumpingInfo.DumpingDate = InfoTool.GetFileModifiedDate(getKeyBasePath + ".getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyBasePath + ".getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
             if (File.Exists(getKeyBasePath + ".disc.pic"))

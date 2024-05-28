@@ -118,6 +118,7 @@
 - Move ConsoleLogger to Check CLI
 - Move ProcessingQueue to Frontend
 - Move LogLevel enum to Frontend
+- Create ProcessingTool and move some methods
 
 ### 3.1.9a (2024-05-21)
 
