@@ -158,6 +158,7 @@
 - Remove Core library, fix build
 - Create Frontend.Tools namespace
 - Remove magic strings from settings reading
+- Move Redumper enums to a better place
 
 ### 3.1.9a (2024-05-21)
 

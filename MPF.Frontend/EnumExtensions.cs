@@ -6,6 +6,8 @@ using System.Collections.Concurrent;
 #endif
 using System.Reflection;
 using SabreTools.RedumpLib.Data;
+using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
+using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
 
 namespace MPF.Frontend
 {

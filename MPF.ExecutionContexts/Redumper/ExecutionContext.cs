@@ -584,15 +584,16 @@ namespace MPF.ExecutionContexts.Redumper
             if (GetBooleanSetting(options, SettingConstants.EnableDebug, false))
                 this[FlagStrings.Debug] = true;
 
-            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, "NONE");
-            if (!string.IsNullOrEmpty(readMethod) && readMethod != "NONE")
+            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, ReadMethod.NONE.ToString());
+            
+            if (!string.IsNullOrEmpty(readMethod) && readMethod != ReadMethod.NONE.ToString())
             {
                 this[FlagStrings.DriveReadMethod] = true;
                 DriveReadMethodValue = readMethod;
             }
 
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, "NONE");
-            if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != "NONE")
+            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SectorOrder.NONE.ToString());
+            if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
             {
                 this[FlagStrings.DriveSectorOrder] = true;
                 DriveSectorOrderValue = sectorOrder;

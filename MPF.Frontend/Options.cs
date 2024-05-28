@@ -2,6 +2,8 @@
 using SabreTools.RedumpLib.Data;
 using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
+using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
+using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
 using RedumperSettings = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend

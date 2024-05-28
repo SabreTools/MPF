@@ -40,29 +40,4 @@ namespace MPF.Frontend
         ERROR,
         SECRET,
     }
-
-    /// <summary>
-    /// Drive read method option
-    /// </summary>
-    public enum RedumperReadMethod
-    {
-        NONE = 0,
-
-        BE,
-        D8,
-        BE_CDDA,
-    }
-
-    /// <summary>
-    /// Drive sector order option
-    /// </summary>
-    public enum RedumperSectorOrder
-    {
-        NONE = 0,
-
-        DATA_C2_SUB,
-        DATA_SUB_C2,
-        DATA_SUB,
-        DATA_C2,
-    }
 }

@@ -4,6 +4,8 @@ using System.Windows.Data;
 using MPF.Frontend;
 using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
+using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
+using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
 
 namespace MPF.UI
 {
