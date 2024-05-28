@@ -463,9 +463,7 @@ namespace MPF.Frontend.ViewModels
 
             // Make new Progress objects
             var resultProgress = new Progress<ResultEventArgs>();
-            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
             var protectionProgress = new Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, processUserInfo);

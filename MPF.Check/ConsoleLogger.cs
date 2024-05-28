@@ -1,7 +1,8 @@
 ﻿using System;
 using BinaryObjectScanner;
+using MPF.Core;
 
-namespace MPF.Core
+namespace MPF.Check
 {
     public static class ConsoleLogger
     {
