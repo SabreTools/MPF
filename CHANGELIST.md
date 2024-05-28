@@ -152,6 +152,7 @@
 - Move Drive to Frontend
 - Move ResultEventArgs to Frontend
 - Remove unused reporter delegate
+- Move StringEventArgs to Frontend
 
 ### 3.1.9a (2024-05-21)
 
