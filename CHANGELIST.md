@@ -140,6 +140,7 @@
 - Move ProgramSupportsMedia to MainViewModel
 - Rename Tools to VersionTool
 - Move VersionTool to root of Core
+- Move InfoTool to root of Core
 
 ### 3.1.9a (2024-05-21)
 

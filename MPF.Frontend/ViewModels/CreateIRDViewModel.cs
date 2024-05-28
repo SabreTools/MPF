@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.IO;
 using MPF.Core;
-using MPF.Core.Utilities;
 using MPF.Processors;
 
 namespace MPF.Frontend.ViewModels

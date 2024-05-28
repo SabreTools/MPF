@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using MPF.Core.Utilities;
+using MPF.Core;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Xunit;

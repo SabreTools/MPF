@@ -9,7 +9,6 @@ using BinaryObjectScanner;
 using MPF.ExecutionContexts;
 using MPF.Processors;
 using MPF.Core;
-using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;

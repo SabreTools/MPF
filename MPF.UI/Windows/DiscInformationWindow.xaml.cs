@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using MPF.Core;
 using MPF.Frontend.ViewModels;
-using MPF.Core.Utilities;
 using MPF.UI.UserControls;
 using SabreTools.RedumpLib.Data;
 

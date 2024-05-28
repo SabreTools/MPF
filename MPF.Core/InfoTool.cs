@@ -6,7 +6,7 @@ using SabreTools.RedumpLib.Data;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
-namespace MPF.Core.Utilities
+namespace MPF.Core
 {
     public static class InfoTool
     {

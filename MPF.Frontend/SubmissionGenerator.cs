@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
 using MPF.Core;
-using MPF.Core.Utilities;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;

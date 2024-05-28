@@ -328,7 +328,7 @@ namespace MPF.Core
                 .Replace(".", string.Empty);
 
             // Get the region, if possible
-            region = Utilities.InfoTool.GetPlayStationRegion(exeName);
+            region = InfoTool.GetPlayStationRegion(exeName);
 
             // Now that we have the EXE name, try to get the fileinfo for it
             string exePath = Path.Combine(Name, exeName);
