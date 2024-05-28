@@ -359,7 +359,7 @@ namespace MPF.Core
             get
             {
                 var valueString = GetStringSetting(Settings, "RedumperReadMethod", RedumperReadMethod.NONE.ToString());
-                return EnumExtensions.ToRedumperReadMethod(valueString);
+                return ToRedumperReadMethod(valueString);
             }
             set
             {
@@ -375,7 +375,7 @@ namespace MPF.Core
             get
             {
                 var valueString = GetStringSetting(Settings, "RedumperSectorOrder", RedumperSectorOrder.NONE.ToString());
-                return EnumExtensions.ToRedumperSectorOrder(valueString);
+                return ToRedumperSectorOrder(valueString);
             }
             set
             {
@@ -719,6 +719,56 @@ namespace MPF.Core
                 return settings[key];
             else
                 return defaultValue;
+        }
+
+        /// <summary>
+        /// Get the RedumperReadMethod enum value for a given string
+        /// </summary>
+        /// <param name="method">String value to convert</param>
+        /// <returns>RedumperReadMethod represented by the string, if possible</returns>
+        private static RedumperReadMethod ToRedumperReadMethod(string? method)
+        {
+            return (method?.ToLowerInvariant()) switch
+            {
+                "d8" => RedumperReadMethod.D8,
+                "be" => RedumperReadMethod.BE,
+                "be_cdda"
+                    or "be cdda"
+                    or "be-cdda"
+                    or "becdda" => RedumperReadMethod.BE_CDDA,
+
+                _ => RedumperReadMethod.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Get the RedumperSectorOrder enum value for a given string
+        /// </summary>
+        /// <param name="order">String value to convert</param>
+        /// <returns>RedumperSectorOrder represented by the string, if possible</returns>
+        private static RedumperSectorOrder ToRedumperSectorOrder(string? order)
+        {
+            return (order?.ToLowerInvariant()) switch
+            {
+                "data_c2_sub"
+                    or "data c2 sub"
+                    or "data-c2-sub"
+                    or "datac2sub" => RedumperSectorOrder.DATA_C2_SUB,
+                "data_sub_c2"
+                    or "data sub c2"
+                    or "data-sub-c2"
+                    or "datasubc2" => RedumperSectorOrder.DATA_SUB_C2,
+                "data_sub"
+                    or "data sub"
+                    or "data-sub"
+                    or "datasub" => RedumperSectorOrder.DATA_SUB,
+                "data_c2"
+                    or "data c2"
+                    or "data-c2"
+                    or "datac2" => RedumperSectorOrder.DATA_C2,
+
+                _ => RedumperSectorOrder.NONE,
+            };
         }
 
         #endregion

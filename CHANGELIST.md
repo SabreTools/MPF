@@ -125,6 +125,7 @@
 - Move GetCopyProtection to ProtectionTool
 - Slight cleanup of InfoTool
 - Move ProtectionTool to Frontend
+- Move ToRedumper* methods to Options
 
 ### 3.1.9a (2024-05-21)
 
