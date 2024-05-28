@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MPF.Core
+namespace MPF.Frontend
 {
     /// <summary>
     /// Generic success/failure result object, with optional message

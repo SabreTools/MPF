@@ -1,6 +1,6 @@
 ﻿using System;
 using BinaryObjectScanner;
-using MPF.Core;
+using MPF.Frontend;
 
 namespace MPF.Check
 {
