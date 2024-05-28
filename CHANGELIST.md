@@ -119,6 +119,7 @@
 - Move ProcessingQueue to Frontend
 - Move LogLevel enum to Frontend
 - Create ProcessingTool and move some methods
+- Remove unused byte array helper methods
 
 ### 3.1.9a (2024-05-21)
 
