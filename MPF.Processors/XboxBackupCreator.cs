@@ -134,7 +134,7 @@ namespace MPF.Processors
                         case RedumpSystem.MicrosoftXbox:
 
                             // Parse DMI.bin
-                            string xmidString = Tools.GetXGD1XMID($"{baseDir}DMI.bin");
+                            string xmidString = ProcessingTool.GetXGD1XMID($"{baseDir}DMI.bin");
                             var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                             if (xmid != null)
                             {
@@ -158,7 +158,7 @@ namespace MPF.Processors
                             //string? mediaID = GetMediaID(logPath);
 
                             // Parse DMI.bin
-                            string xemidString = Tools.GetXGD23XeMID($"{baseDir}DMI.bin");
+                            string xemidString = ProcessingTool.GetXGD23XeMID($"{baseDir}DMI.bin");
                             var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                             if (xemid != null)
                             {
@@ -177,7 +177,7 @@ namespace MPF.Processors
                     if (File.Exists($"{baseDir}SS.bin"))
                     {
                         // Save security sector ranges
-                        string? ranges = Tools.GetSSRanges($"{baseDir}SS.bin");
+                        string? ranges = ProcessingTool.GetSSRanges($"{baseDir}SS.bin");
                         if (!string.IsNullOrEmpty(ranges))
                             info.Extras!.SecuritySectorRanges = ranges;
 
@@ -188,7 +188,7 @@ namespace MPF.Processors
                         RecreateSS(logPath!, $"{baseDir}SS.bin", $"{baseDir}RawSS.bin");
 
                         // Run ss_sector_range to get repeatable SS hash
-                        Tools.CleanSS($"{baseDir}SS.bin", $"{baseDir}SS.bin");
+                        ProcessingTool.CleanSS($"{baseDir}SS.bin", $"{baseDir}SS.bin");
                     }
 
                     // DMI/PFI/SS CRC32 hashes
@@ -570,14 +570,14 @@ namespace MPF.Processors
                 return false;
 
             // Ignore XGD1 discs
-            if (!Tools.GetXGDType(ss, out int xgdType))
+            if (!ProcessingTool.GetXGDType(ss, out int xgdType))
                 return false;
             if (xgdType == 0)
                 return false;
 
             // Don't recreate an already raw SS
             // (but do save to file, so return true)
-            if (!Tools.IsCleanSS(ss))
+            if (!ProcessingTool.IsCleanSS(ss))
                 return true;
 
             // Example replay table:

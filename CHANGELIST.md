@@ -133,6 +133,7 @@
 - Centralize dumping program information gathering
 - Move drive-reading methods to Drive
 - Move output writing to DumpEnvironment
+- Move Xbox/X360 helpers to ProcessingTool
 
 ### 3.1.9a (2024-05-21)
 
