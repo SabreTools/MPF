@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;
 using MPF.Processors;
 using MPF.Core;
 using MPF.Core.Utilities;
+using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Frontend
 {
@@ -492,7 +496,7 @@ namespace MPF.Frontend
 
             // Write the text output
             resultProgress?.Report(ResultEventArgs.Success("Writing information to !submissionInfo.txt..."));
-            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
+            (bool txtSuccess, string txtResult) = WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
             if (txtSuccess)
                 resultProgress?.Report(ResultEventArgs.Success(txtResult));
             else
@@ -504,7 +508,7 @@ namespace MPF.Frontend
                 if (_options.ScanForProtection)
                 {
                     resultProgress?.Report(ResultEventArgs.Success("Writing protection to !protectionInfo.txt..."));
-                    bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
+                    bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
                     else
@@ -516,7 +520,7 @@ namespace MPF.Frontend
             if (_options.OutputSubmissionJSON)
             {
                 resultProgress?.Report(ResultEventArgs.Success($"Writing information to !submissionInfo.json{(_options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
-                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
+                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
                 else
@@ -549,7 +553,7 @@ namespace MPF.Frontend
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && _type == MediaType.BluRay)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
-                (bool deleteSuccess, string deleteResult) = await InfoTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
+                (bool deleteSuccess, string deleteResult) = await WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
                 if (deleteSuccess)
                     resultProgress?.Report(ResultEventArgs.Success(deleteResult));
                 else
@@ -608,6 +612,225 @@ namespace MPF.Frontend
 
             // Validate that the current configuration is supported
             return GetSupportStatus();
+        }
+
+        #endregion
+
+        #region Information Output
+
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <param name="lines">Preformatted list of lines to write out to the file</param>
+        /// <returns>True on success, false on error</returns>
+        private static (bool, string) WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines)
+        {
+            // Check to see if the inputs are valid
+            if (lines == null)
+                return (false, "No formatted data found to write!");
+
+            // Now write out to a generic file
+            try
+            {
+                // Get the file path
+                var path = string.Empty;
+                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = "!submissionInfo.txt";
+                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = $"!submissionInfo_{filenameSuffix}.txt";
+                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, "!submissionInfo.txt");
+                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
+
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+                foreach (string line in lines)
+                {
+                    sw.WriteLine(line);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Writing could not complete: {ex}");
+            }
+
+            return (true, "Writing complete!");
+        }
+
+        // MOVE TO REDUMPLIB
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
+        /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
+        /// <returns>True on success, false on error</returns>
+        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool includedArtifacts)
+        {
+            // Check to see if the input is valid
+            if (info == null)
+                return false;
+
+            try
+            {
+                // Serialize the JSON and get it writable
+                string json = JsonConvert.SerializeObject(info, Formatting.Indented);
+                byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+
+                // If we included artifacts, write to a GZip-compressed file
+                if (includedArtifacts)
+                {
+                    var path = string.Empty;
+                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                        path = "!submissionInfo.json.gz";
+                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                        path = $"!submissionInfo_{filenameSuffix}.json.gz";
+                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                        path = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
+                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz");
+
+                    using var fs = File.Create(path);
+                    using var gs = new GZipStream(fs, CompressionMode.Compress);
+                    gs.Write(jsonBytes, 0, jsonBytes.Length);
+                }
+
+                // Otherwise, write out to a normal JSON
+                else
+                {
+                    var path = string.Empty;
+                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                        path = "!submissionInfo.json";
+                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                        path = $"!submissionInfo_{filenameSuffix}.json";
+                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                        path = Path.Combine(outputDirectory, "!submissionInfo.json");
+                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
+
+                    using var fs = File.Create(path);
+                    fs.Write(jsonBytes, 0, jsonBytes.Length);
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        // MOVE TO REDUMPLIB
+        /// <summary>
+        /// Write the protection data to the output folder
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <param name="info">SubmissionInfo object containing the protection information</param>
+        /// <param name="hideDriveLetters">True if drive letters are to be removed from output, false otherwise</param>
+        /// <returns>True on success, false on error</returns>
+        private static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
+        {
+            // Check to see if the inputs are valid
+            if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
+                return true;
+
+            // Now write out to a generic file
+            try
+            {
+                var path = string.Empty;
+                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = "!protectionInfo.txt";
+                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = $"!protectionInfo{filenameSuffix}.txt";
+                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, "!protectionInfo.txt");
+                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, $"!protectionInfo{filenameSuffix}.txt");
+
+                using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+
+                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
+                foreach (string key in sortedKeys)
+                {
+                    string scanPath = key;
+                    if (hideDriveLetters)
+                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
+
+                    List<string>? scanResult = info.CopyProtection.FullProtections[key];
+
+                    if (scanResult == null)
+                        sw.WriteLine($"{scanPath}: None");
+                    else
+                        sw.WriteLine($"{scanPath}: {string.Join(", ", [.. scanResult])}");
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Create an IRD and write it to the specified output directory with optional filename suffix
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <returns>True on success, false on error</returns>
+        private static async Task<(bool, string)> WriteIRD(string isoPath, string? discKeyString, string? discIDString, string? picString, long? layerbreak, string? crc32)
+        {
+            try
+            {
+                // Output IRD file path
+                string irdPath = Path.ChangeExtension(isoPath, ".ird");
+
+                // Parse disc key from submission info (Required)
+                byte[]? discKey = Tools.ParseHexKey(discKeyString);
+                if (discKey == null)
+                    return (false, "Failed to create IRD: No key provided");
+
+                // Parse Disc ID from submission info (Optional)
+                byte[]? discID = Tools.ParseDiscID(discIDString);
+
+                // Parse PIC from submission info (Optional)
+                byte[]? pic = Tools.ParsePIC(picString);
+
+                // Parse CRC32 strings into ISO hash for Unique ID field (Optional)
+                uint? uid = Tools.ParseCRC32(crc32);
+
+                // Ensure layerbreak value is valid (Optional)
+                layerbreak = Tools.ParseLayerbreak(layerbreak);
+
+                // Create Redump-style reproducible IRD
+#if NET40
+                LibIRD.ReIRD ird = await Task.Factory.StartNew(() =>
+#else
+                LibIRD.ReIRD ird = await Task.Run(() =>
+#endif
+                    new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
+                if (pic != null)
+                    ird.PIC = pic;
+                if (discID != null && ird.DiscID[15] != 0x00)
+                    ird.DiscID = discID;
+
+                // Write IRD to file
+                ird.Write(irdPath);
+
+                return (true, "IRD created!");
+            }
+            catch (Exception)
+            {
+                // We don't care what the error is
+                return (false, "Failed to create IRD");
+            }
         }
 
         #endregion
