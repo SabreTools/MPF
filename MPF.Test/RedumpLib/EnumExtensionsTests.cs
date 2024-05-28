@@ -4,7 +4,7 @@ using System.Linq;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Core.Utilities
+namespace MPF.Test.RedumpLib
 {
     public class EnumExtensionsTests
     {

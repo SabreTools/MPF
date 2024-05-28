@@ -2,7 +2,7 @@
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Data
+namespace MPF.Test.Frontend
 {
     public class UIElementsTest
     {

@@ -2,7 +2,7 @@
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Library
+namespace MPF.Test.Frontend
 {
     public class DumpEnvironmentTests
     {

@@ -1,9 +1,9 @@
 ﻿using MPF.Frontend;
 using Xunit;
 
-namespace MPF.Test.Core.Data
+namespace MPF.Test.Frontend
 {
-    public class ResultTests
+    public class ResultEventArgsTests
     {
         [Fact]
         public void EmptySuccessTest()

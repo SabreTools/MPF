@@ -5,7 +5,7 @@ using System.Linq;
 using MPF.Frontend;
 using Xunit;
 
-namespace MPF.Test.Core.Converters
+namespace MPF.Test.Frontend
 {
     public class EnumConverterTests
     {

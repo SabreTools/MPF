@@ -5,7 +5,7 @@ using MPF.Frontend;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Modules
+namespace MPF.Test.ExecutionContexts
 {
     public class DiscImageCreatorTests
     {

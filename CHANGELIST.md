@@ -162,6 +162,7 @@
 - Fix one DIC parameter test
 - Ensure setting defaults are consistent
 - Move ToRedumper* back to EnumExtensions
+- Rearrange test classes to match new format
 
 ### 3.1.9a (2024-05-21)
 
