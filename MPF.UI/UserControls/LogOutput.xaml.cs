@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Threading;
 using MPF.Core;
+using MPF.Frontend;
 
 #pragma warning disable IDE1006 // Naming Styles
 

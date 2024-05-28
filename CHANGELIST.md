@@ -116,6 +116,7 @@
 - Update Redumper to build 371
 - Tools always run in separate window
 - Move ConsoleLogger to Check CLI
+- Move ProcessingQueue to Frontend
 
 ### 3.1.9a (2024-05-21)
 
