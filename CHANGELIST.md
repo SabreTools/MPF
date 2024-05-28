@@ -153,6 +153,7 @@
 - Move ResultEventArgs to Frontend
 - Remove unused reporter delegate
 - Move StringEventArgs to Frontend
+- Decouple execution contexts from Options class
 
 ### 3.1.9a (2024-05-21)
 

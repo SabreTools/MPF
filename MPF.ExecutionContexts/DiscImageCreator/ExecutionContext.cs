@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.DiscImageCreator
@@ -167,7 +166,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -944,7 +943,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
+        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
         {
             SetBaseCommand(this.System, this.Type);
 
@@ -958,23 +957,25 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return;
 
             // Set disable beep flag, if needed
-            if (options.DICQuietMode)
+            if (GetBooleanSetting(options, "DICQuietMode", false))
                 this[FlagStrings.DisableBeep] = true;
 
             // Set the C2 reread count
-            C2OpcodeValue[0] = options.DICRereadCount switch
+            int cdRereadCount = GetInt32Setting(options, "DICRereadCount", 20);
+            C2OpcodeValue[0] = cdRereadCount switch
             {
                 -1 => null,
                 0 => 20,
-                _ => options.DICRereadCount,
+                _ => cdRereadCount,
             };
 
             // Set the DVD/HD-DVD/BD reread count
-            DVDRereadValue = options.DICDVDRereadCount switch
+            int dvdRereadCount = GetInt32Setting(options, "DICDVDRereadCount", 10);
+            DVDRereadValue = dvdRereadCount switch
             {
                 -1 => null,
                 0 => 10,
-                _ => options.DICDVDRereadCount,
+                _ => dvdRereadCount,
             };
 
             // Now sort based on disc type
@@ -982,9 +983,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 case MediaType.CDROM:
                     this[FlagStrings.C2Opcode] = true;
-                    this[FlagStrings.MultiSectorRead] = options.DICMultiSectorRead;
-                    if (options.DICMultiSectorRead)
-                        this.MultiSectorReadValue = options.DICMultiSectorReadValue;
+                    this[FlagStrings.MultiSectorRead] = GetBooleanSetting(options, "DICMultiSectorRead", false);
+                    if (this[FlagStrings.MultiSectorRead] == true)
+                        this.MultiSectorReadValue = GetInt32Setting(options, "DICMultiSectorReadValue", 0);
 
                     switch (this.System)
                     {
@@ -992,8 +993,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         case RedumpSystem.IBMPCcompatible:
                             this[FlagStrings.NoFixSubQSecuROM] = true;
                             this[FlagStrings.ScanFileProtect] = true;
-                            this[FlagStrings.ScanSectorProtect] = options.DICParanoidMode;
-                            this[FlagStrings.SubchannelReadLevel] = options.DICParanoidMode;
+                            this[FlagStrings.ScanSectorProtect] = GetBooleanSetting(options, "DICParanoidMode", false);
+                            this[FlagStrings.SubchannelReadLevel] = GetBooleanSetting(options, "DICParanoidMode", false);
                             if (this[FlagStrings.SubchannelReadLevel] == true)
                                 SubchannelReadLevelValue = 2;
 
@@ -1015,15 +1016,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     }
                     break;
                 case MediaType.DVD:
-                    this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
-                    this[FlagStrings.ScanFileProtect] = options.DICParanoidMode;
+                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, "DICUseCMIFlag", false);
+                    this[FlagStrings.ScanFileProtect] = GetBooleanSetting(options, "DICParanoidMode", false);
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.GDROM:
                     this[FlagStrings.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
+                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, "DICUseCMIFlag", false);
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.BluRay:

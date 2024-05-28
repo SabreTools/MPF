@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Aaru
@@ -117,7 +116,7 @@ namespace MPF.ExecutionContexts.Aaru
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -1190,7 +1189,7 @@ namespace MPF.ExecutionContexts.Aaru
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
+        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
         {
             BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
@@ -1209,21 +1208,22 @@ namespace MPF.ExecutionContexts.Aaru
                 return;
 
             // Set retry count
-            if (options.AaruRereadCount > 0)
+            int rereadCount = GetInt32Setting(options, "AaruRereadCount", 5);
+            if (rereadCount > 0)
             {
                 this[FlagStrings.RetryPassesLong] = true;
-                RetryPassesValue = (short)options.AaruRereadCount;
+                RetryPassesValue = (short)rereadCount;
             }
 
             // Set user-defined options
-            if (options.AaruEnableDebug)
-                this[FlagStrings.DebugLong] = options.AaruEnableDebug;
-            if (options.AaruEnableVerbose)
-                this[FlagStrings.VerboseLong] = options.AaruEnableVerbose;
-            if (options.AaruForceDumping)
-                this[FlagStrings.ForceLong] = options.AaruForceDumping;
-            if (options.AaruStripPersonalData)
-                this[FlagStrings.PrivateLong] = options.AaruStripPersonalData;
+            if (GetBooleanSetting(options, "AaruEnableDebug", false))
+                this[FlagStrings.DebugLong] = true;
+            if (GetBooleanSetting(options, "AaruEnableVerbose", false))
+                this[FlagStrings.VerboseLong] = true;
+            if (GetBooleanSetting(options, "AaruForceDumping", true))
+                this[FlagStrings.ForceLong] = true;
+            if (GetBooleanSetting(options, "AaruStripPersonalData", false))
+                this[FlagStrings.PrivateLong] = true;
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type

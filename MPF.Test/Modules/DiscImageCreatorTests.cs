@@ -21,7 +21,7 @@ namespace MPF.Test.Modules
         public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string? expected)
         {
             var options = new Options();
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
             Assert.Equal(expected, actual.BaseCommand);
         }
 
@@ -32,7 +32,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsSpecialDefaultTest(RedumpSystem? knownSystem, MediaType? mediaType, string[]? expected)
         {
             var options = new Options();
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -45,7 +45,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsC2RereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadC2, string[] expected)
         {
             var options = new Options { DICRereadCount = rereadC2 };
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -65,7 +65,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsDVDRereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadDVDBD, string[] expected)
         {
             var options = new Options { DICDVDRereadCount = rereadDVDBD };
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -89,7 +89,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsMultiSectorReadTest(RedumpSystem? knownSystem, MediaType? mediaType, bool multiSectorRead, string[] expected)
         {
             var options = new Options { DICMultiSectorRead = multiSectorRead };
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
@@ -110,7 +110,7 @@ namespace MPF.Test.Modules
         public void ParametersFromOptionsParanoidModeTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoidMode, string[] expected)
         {
             var options = new Options { DICParanoidMode = paranoidMode };
-            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options);
+            var actual = new ExecutionContext(knownSystem, mediaType, "D:\\", "disc.bin", 16, options.Settings);
 
             var expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);

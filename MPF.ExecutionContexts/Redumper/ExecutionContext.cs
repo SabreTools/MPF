@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Redumper
@@ -159,7 +158,7 @@ namespace MPF.ExecutionContexts.Redumper
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Options options)
+        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -538,7 +537,7 @@ namespace MPF.ExecutionContexts.Redumper
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Options options)
+        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
         {
             // If we don't have a CD, DVD, HD-DVD, or BD, we can't dump using redumper
             if (this.Type != MediaType.CDROM
@@ -580,21 +579,26 @@ namespace MPF.ExecutionContexts.Redumper
             SpeedValue = driveSpeed;
 
             // Set user-defined options
-            if (options.RedumperEnableVerbose)
-                this[FlagStrings.Verbose] = options.RedumperEnableVerbose;
-            if (options.RedumperEnableDebug)
-                this[FlagStrings.Debug] = options.RedumperEnableDebug;
-            if (options.RedumperReadMethod != RedumperReadMethod.NONE)
+            if (GetBooleanSetting(options, "RedumperEnableVerbose", true))
+                this[FlagStrings.Verbose] = true;
+            if (GetBooleanSetting(options, "RedumperEnableDebug", false))
+                this[FlagStrings.Debug] = true;
+
+            string? readMethod = GetStringSetting(options, "RedumperReadMethod", "NONE");
+            if (!string.IsNullOrEmpty(readMethod) && readMethod != "NONE")
             {
                 this[FlagStrings.DriveReadMethod] = true;
-                DriveReadMethodValue = options.RedumperReadMethod.ToString();
+                DriveReadMethodValue = readMethod;
             }
-            if (options.RedumperSectorOrder != RedumperSectorOrder.NONE)
+
+            string? sectorOrder = GetStringSetting(options, "RedumperSectorOrder", "NONE");
+            if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != "NONE")
             {
                 this[FlagStrings.DriveSectorOrder] = true;
-                DriveSectorOrderValue = options.RedumperSectorOrder.ToString();
+                DriveSectorOrderValue = sectorOrder;
             }
-            if (options.RedumperUseGenericDriveType)
+
+            if (GetBooleanSetting(options, "RedumperUseGenericDriveType", false))
             {
                 this[FlagStrings.DriveType] = true;
                 DriveTypeValue = "GENERIC";
@@ -619,12 +623,12 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             this[FlagStrings.Retries] = true;
-            RetriesValue = options.RedumperRereadCount;
+            RetriesValue = GetInt32Setting(options, "RedumperRereadCount", 20);
 
-            if (options.RedumperEnableLeadinRetry)
+            if (GetBooleanSetting(options, "RedumperEnableLeadinRetry", false))
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                PlextorLeadinRetriesValue = options.RedumperLeadinRetryCount;
+                PlextorLeadinRetriesValue = GetInt32Setting(options, "RedumperLeadinRetryCount", 4);
             }
         }
 
