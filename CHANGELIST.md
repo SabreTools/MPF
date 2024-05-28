@@ -139,6 +139,7 @@
 - Centralize PS1/2 region detection
 - Move ProgramSupportsMedia to MainViewModel
 - Rename Tools to VersionTool
+- Move VersionTool to root of Core
 
 ### 3.1.9a (2024-05-21)
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace MPF.Core.Utilities
+namespace MPF.Core
 {
     public static class VersionTool
     {
