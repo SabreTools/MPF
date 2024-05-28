@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
-using psxt001z;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
@@ -169,20 +168,6 @@ namespace MPF.Core.Utilities
                 return false;
             });
 #endif
-        }
-
-        /// <summary>
-        /// Get if LibCrypt data is detected in the subchannel file, if possible
-        /// </summary>
-        /// <param name="sub">.sub file location</param>
-        /// <returns>Status of the LibCrypt data, if possible</returns>
-        public static bool? GetLibCryptDetected(string sub)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(sub))
-                return null;
-
-            return LibCrypt.DetectLibCrypt([sub]);
         }
 
         /// <summary>

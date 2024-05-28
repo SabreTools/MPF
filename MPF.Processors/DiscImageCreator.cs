@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core;
 using MPF.Core.Utilities;
+using psxt001z;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -1305,39 +1306,40 @@ namespace MPF.Processors
         /// <returns>Status of the LibCrypt data, if possible</returns>
         private static void GetLibCryptDetected(string basePath, out YesNo detected, out string? data)
         {
-            bool? psLibCryptStatus = ProtectionTool.GetLibCryptDetected(basePath + ".sub");
-            if (psLibCryptStatus == true)
+            string subPath = basePath + ".sub";
+            if (!File.Exists(subPath))
             {
-                // Guard against false positives
-                if (File.Exists(basePath + "_subIntention.txt"))
-                {
-                    string libCryptData = ProcessingTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
-                    if (string.IsNullOrEmpty(libCryptData))
-                    {
-                        detected = YesNo.No;
-                        data = null;
-                    }
-                    else
-                    {
-                        detected = YesNo.Yes;
-                        data = libCryptData;
-                    }
-                }
-                else
+                detected = YesNo.NULL;
+                data = "LibCrypt could not be detected because subchannel file is missing";
+                return;
+            }
+
+            if (!LibCrypt.DetectLibCrypt([subPath]))
+            {
+                detected = YesNo.No;
+                data = null;
+                return;
+            }
+
+            // Guard against false positives
+            if (File.Exists(basePath + "_subIntention.txt"))
+            {
+                string libCryptData = ProcessingTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
+                if (string.IsNullOrEmpty(libCryptData))
                 {
                     detected = YesNo.No;
                     data = null;
                 }
-            }
-            else if (psLibCryptStatus == false)
-            {
-                detected = YesNo.No;
-                data = null;
+                else
+                {
+                    detected = YesNo.Yes;
+                    data = libCryptData;
+                }
             }
             else
             {
-                detected = YesNo.NULL;
-                data = "LibCrypt could not be detected because subchannel file is missing";
+                detected = YesNo.No;
+                data = null;
             }
         }
 

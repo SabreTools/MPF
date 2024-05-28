@@ -121,6 +121,7 @@
 - Create ProcessingTool and move some methods
 - Remove unused byte array helper methods
 - Move GetSupportStatus to DumpEnvironment
+- Call psxt001z direct from DIC processor
 
 ### 3.1.9a (2024-05-21)
 
