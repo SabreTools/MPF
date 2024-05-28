@@ -6,7 +6,6 @@ using System.IO.Compression;
 #endif
 using System.Linq;
 using System.Text.RegularExpressions;
-using MPF.Core;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -64,11 +63,9 @@ namespace MPF.Processors
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
-        /// <param name="options">Options object representing user-defined options</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="drive">Drive representing the disc to get information from</param>
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive? drive, bool redumpCompat);
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, bool redumpCompat);
 
         /// <summary>
         /// Generate a list of all log files generated

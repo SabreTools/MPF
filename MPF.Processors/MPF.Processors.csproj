@@ -21,10 +21,6 @@
   <RepositoryType>git</RepositoryType>
 </PropertyGroup>
 
-<ItemGroup>
-  <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-</ItemGroup>
-
 <!-- Support for old .NET versions -->
 <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
   <PackageReference Include="MinAsyncBridge" Version="0.12.4" />

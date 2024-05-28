@@ -80,7 +80,7 @@ namespace MPF.Frontend
             SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, combinedBase, drive, options.EnableRedumpCompatibility);
+            processor?.GenerateSubmissionInfo(info, combinedBase, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
                 processor?.GenerateArtifacts(info, combinedBase);
 
@@ -703,7 +703,7 @@ namespace MPF.Frontend
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    // TODO: Remove this hack
+                    // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
@@ -814,7 +814,7 @@ namespace MPF.Frontend
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    // TODO: Remove this hack
+                    // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), psx: true);
 
@@ -834,7 +834,7 @@ namespace MPF.Frontend
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo!.LanguageSelection ??= [];
 
-                    // TODO: Remove this hack
+                    // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
