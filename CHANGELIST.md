@@ -129,6 +129,7 @@
 - Move ToMediaType to OptionsLoader
 - Move ListPrograms to OptionsLoader
 - Move DoesSupportDriveSpeed to DumpEnvironment
+- Move ToInternalProgram to Options
 
 ### 3.1.9a (2024-05-21)
 
