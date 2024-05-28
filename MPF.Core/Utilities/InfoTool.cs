@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BinaryObjectScanner;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.IO;
