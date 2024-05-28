@@ -45,45 +45,6 @@ namespace MPF.Core.Utilities
         #region Support
 
         /// <summary>
-        /// Verify that, given a system and a media type, they are correct
-        /// </summary>
-        public static ResultEventArgs GetSupportStatus(RedumpSystem? system, MediaType? type)
-        {
-            // No system chosen, update status
-            if (system == null)
-                return ResultEventArgs.Failure("Please select a valid system");
-
-            // If we're on an unsupported type, update the status accordingly
-            return type switch
-            {
-                // Fully supported types
-                MediaType.BluRay
-                    or MediaType.CDROM
-                    or MediaType.DVD
-                    or MediaType.FloppyDisk
-                    or MediaType.HardDisk
-                    or MediaType.CompactFlash
-                    or MediaType.SDCard
-                    or MediaType.FlashDrive
-                    or MediaType.HDDVD => ResultEventArgs.Success($"{type.LongName()} ready to dump"),
-
-                // Partially supported types
-                MediaType.GDROM
-                    or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => ResultEventArgs.Success($"{type.LongName()} partially supported for dumping"),
-
-                // Special case for other supported tools
-                MediaType.UMD => ResultEventArgs.Failure($"{type.LongName()} supported for submission info parsing"),
-
-                // Specifically unknown type
-                MediaType.NONE => ResultEventArgs.Failure($"Please select a valid media type"),
-
-                // Undumpable but recognized types
-                _ => ResultEventArgs.Failure($"{type.LongName()} media are not supported for dumping"),
-            };
-        }
-
-        /// <summary>
         /// Returns false if a given InternalProgram does not support a given MediaType
         /// </summary>
         public static bool ProgramSupportsMedia(InternalProgram program, MediaType? type)

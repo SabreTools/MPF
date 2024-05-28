@@ -294,8 +294,44 @@ namespace MPF.Frontend
             return _executionContext.GetMediaType();
         }
 
-        /// <inheritdoc cref="Tools.GetSupportStatus(RedumpSystem?, MediaType?)"/>
-        public ResultEventArgs GetSupportStatus() => Tools.GetSupportStatus(_system, _type);
+        /// <summary>
+        /// Verify that, given a system and a media type, they are correct
+        /// </summary>
+        public ResultEventArgs GetSupportStatus()
+        {
+            // No system chosen, update status
+            if (_system == null)
+                return ResultEventArgs.Failure("Please select a valid system");
+
+            // If we're on an unsupported type, update the status accordingly
+            return _type switch
+            {
+                // Fully supported types
+                MediaType.BluRay
+                    or MediaType.CDROM
+                    or MediaType.DVD
+                    or MediaType.FloppyDisk
+                    or MediaType.HardDisk
+                    or MediaType.CompactFlash
+                    or MediaType.SDCard
+                    or MediaType.FlashDrive
+                    or MediaType.HDDVD => ResultEventArgs.Success($"{_type.LongName()} ready to dump"),
+
+                // Partially supported types
+                MediaType.GDROM
+                    or MediaType.NintendoGameCubeGameDisc
+                    or MediaType.NintendoWiiOpticalDisc => ResultEventArgs.Success($"{_type.LongName()} partially supported for dumping"),
+
+                // Special case for other supported tools
+                MediaType.UMD => ResultEventArgs.Failure($"{_type.LongName()} supported for submission info parsing"),
+
+                // Specifically unknown type
+                MediaType.NONE => ResultEventArgs.Failure($"Please select a valid media type"),
+
+                // Undumpable but recognized types
+                _ => ResultEventArgs.Failure($"{_type.LongName()} media are not supported for dumping"),
+            };
+        }
 
         /// <inheritdoc cref="BaseExecutionContext.IsDumpingCommand()"/>
         public bool IsDumpingCommand()
@@ -554,7 +590,7 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
-            return Tools.GetSupportStatus(_system, _type);
+            return GetSupportStatus();
         }
 
         #endregion
