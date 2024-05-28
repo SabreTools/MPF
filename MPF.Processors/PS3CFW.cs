@@ -97,7 +97,7 @@ namespace MPF.Processors
                 info.Extras!.PIC = GetPIC(getKeyBasePath + ".disc.pic", 264);
 
             // Parse Disc Key, Disc ID, and PIC from the .getkey.log file
-            if (Tools.ParseGetKeyLog(getKeyBasePath + ".getkey.log", out string? key, out string? id, out string? pic))
+            if (ProcessingTool.ParseGetKeyLog(getKeyBasePath + ".getkey.log", out string? key, out string? id, out string? pic))
             {
                 if (key != null)
                     info.Extras!.DiscKey = key.ToUpperInvariant();

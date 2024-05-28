@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using MPF.Core;
 using MPF.Core.Utilities;
+using MPF.Processors;
 
 namespace MPF.Frontend.ViewModels
 {
@@ -626,7 +627,7 @@ namespace MPF.Frontend.ViewModels
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            if (Tools.ParseGetKeyLog(LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
+            if (ProcessingTool.ParseGetKeyLog(LogPath, out byte[]? key, out byte[]? id, out byte[]? pic))
             {
                 Key = key;
                 DiscID = id;
@@ -676,7 +677,7 @@ namespace MPF.Frontend.ViewModels
             LogPathTextBoxEnabled = false;
             LogPathBrowseButtonEnabled = false;
 
-            byte[]? id = Tools.ParseDiscID(DiscIDString);
+            byte[]? id = ProcessingTool.ParseDiscID(DiscIDString);
             if (id != null)
             {
                 DiscID = id;
@@ -715,7 +716,7 @@ namespace MPF.Frontend.ViewModels
             LogPathBrowseButtonEnabled = false;
             HexKeyTextBoxEnabled = false;
 
-            byte[]? key = Tools.ParseKeyFile(KeyPath);
+            byte[]? key = ProcessingTool.ParseKeyFile(KeyPath);
             if (key != null)
             {
                 Key = key;
@@ -759,7 +760,7 @@ namespace MPF.Frontend.ViewModels
             KeyPathTextBoxEnabled = false;
             KeyPathBrowseButtonEnabled = false;
 
-            byte[]? key = Tools.ParseHexKey(HexKey);
+            byte[]? key = ProcessingTool.ParseHexKey(HexKey);
             if (key != null)
             {
                 Key = key;
@@ -799,7 +800,7 @@ namespace MPF.Frontend.ViewModels
             PICTextBoxEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            PIC = Tools.ParsePICFile(PICPath);
+            PIC = ProcessingTool.ParsePICFile(PICPath);
             if (PIC != null)
             {
                 PICStatus = $"Using PIC from file: {Path.GetFileName(PICPath)}";
@@ -842,7 +843,7 @@ namespace MPF.Frontend.ViewModels
             PICPathBrowseButtonEnabled = false;
             LayerbreakTextBoxEnabled = false;
 
-            PIC = Tools.ParsePIC(PICString);
+            PIC = ProcessingTool.ParsePIC(PICString);
             if (PIC != null)
             {
                 PICStatus = "Using provided PIC";
@@ -882,7 +883,7 @@ namespace MPF.Frontend.ViewModels
             PICPathBrowseButtonEnabled = false;
             PICTextBoxEnabled = false;
 
-            Layerbreak = Tools.ParseLayerbreak(LayerbreakString);
+            Layerbreak = ProcessingTool.ParseLayerbreak(LayerbreakString);
             if (Layerbreak != null)
             {
                 PICStatus = $"Will generate a PIC using a Layerbreak of {Layerbreak}";

@@ -793,21 +793,21 @@ namespace MPF.Frontend
                 string irdPath = Path.ChangeExtension(isoPath, ".ird");
 
                 // Parse disc key from submission info (Required)
-                byte[]? discKey = Tools.ParseHexKey(discKeyString);
+                byte[]? discKey = ProcessingTool.ParseHexKey(discKeyString);
                 if (discKey == null)
                     return (false, "Failed to create IRD: No key provided");
 
                 // Parse Disc ID from submission info (Optional)
-                byte[]? discID = Tools.ParseDiscID(discIDString);
+                byte[]? discID = ProcessingTool.ParseDiscID(discIDString);
 
                 // Parse PIC from submission info (Optional)
-                byte[]? pic = Tools.ParsePIC(picString);
+                byte[]? pic = ProcessingTool.ParsePIC(picString);
 
                 // Parse CRC32 strings into ISO hash for Unique ID field (Optional)
-                uint? uid = Tools.ParseCRC32(crc32);
+                uint? uid = ProcessingTool.ParseCRC32(crc32);
 
                 // Ensure layerbreak value is valid (Optional)
-                layerbreak = Tools.ParseLayerbreak(layerbreak);
+                layerbreak = ProcessingTool.ParseLayerbreak(layerbreak);
 
                 // Create Redump-style reproducible IRD
 #if NET40

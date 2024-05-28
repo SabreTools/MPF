@@ -624,7 +624,7 @@ namespace MPF.Processors
                             // Save useful angle responses
                             if (i >= 4 && i <= 7)
                             {
-                                byte[]? angles = Tools.HexStringToByteArray(line!.Substring(34, 10));
+                                byte[]? angles = ProcessingTool.HexStringToByteArray(line!.Substring(34, 10));
                                 if (angles == null || angles.Length != 5)
                                     return false;
                                 responses[i - 4] = angles!;
