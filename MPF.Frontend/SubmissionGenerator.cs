@@ -105,7 +105,7 @@ namespace MPF.Frontend
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            ProcessSystem(info, system, drive, options.AddPlaceholders);
+            ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, combinedBase);
 
             // Run anti-modchip check, if necessary
             if (drive != null && SupportsAntiModchipScans(system) && info.CopyProtection!.AntiModchip == YesNo.NULL)
@@ -613,7 +613,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders)
+        private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
         {
             // Extract info based specifically on RedumpSystem
             switch (system)
@@ -703,6 +703,10 @@ namespace MPF.Frontend
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    // TODO: Remove this hack
+                    if (isDiscImageCreator)
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
+
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && string.IsNullOrEmpty(kp2Exe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(kp2Exe);
 
@@ -810,6 +814,10 @@ namespace MPF.Frontend
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    // TODO: Remove this hack
+                    if (isDiscImageCreator)
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), psx: true);
+
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && string.IsNullOrEmpty(psxExe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(psxExe);
 
@@ -825,6 +833,10 @@ namespace MPF.Frontend
 
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo!.LanguageSelection ??= [];
+
+                    // TODO: Remove this hack
+                    if (isDiscImageCreator)
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && string.IsNullOrEmpty(ps2Exe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(ps2Exe);

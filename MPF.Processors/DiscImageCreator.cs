@@ -450,10 +450,6 @@ namespace MPF.Processors
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
                     break;
 
-                case RedumpSystem.KonamiPython2:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
-                    break;
-
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString;
                     if (string.IsNullOrEmpty(outputDirectory))
@@ -686,8 +682,6 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), true);
-
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
                         psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
@@ -699,10 +693,6 @@ namespace MPF.Processors
                     GetLibCryptDetected(basePath, out YesNo libCryptDetected, out string? libCryptData);
                     info.CopyProtection.LibCrypt = libCryptDetected;
                     info.CopyProtection.LibCryptData = libCryptData;
-                    break;
-
-                case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.EXEDateBuildDate = GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
                     break;
             }
         }
@@ -922,6 +912,73 @@ namespace MPF.Processors
         #endregion
 
         #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <param name="serial">Internal serial</param>
+        /// <param name="psx">True if PSX disc, false otherwise</param>
+        /// <returns>EXE date if possible, null otherwise</returns>
+        public static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(log))
+                return null;
+
+            // If the EXE name is not valid, we can't get the info
+            if (string.IsNullOrEmpty(exeName))
+                return null;
+
+            try
+            {
+                string? exeDate = null;
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
+                    if (line.Length >= "File Identifier: ".Length + 11 &&
+                        line.StartsWith("File Identifier:") &&
+                        line.Substring("File Identifier: ".Length) == exeName)
+                    {
+                        // Account for Y2K date problem
+                        if (exeDate != null && exeDate.Substring(0, 2) == "19")
+                        {
+                            string decade = exeDate!.Substring(2, 1);
+
+                            // Does only PSX need to account for 1920s-60s?
+                            if (decade == "0" || decade == "1" ||
+                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
+                                exeDate = $"20{exeDate.Substring(2)}";
+                        }
+
+                        // Currently stored date is the EXE date, return it
+                        return exeDate;
+                    }
+
+                    // The exe datetime is listed in a single line
+                    if (line.Length >= "Recording Date and Time: ".Length + 10 &&
+                        line.StartsWith("Recording Date and Time:"))
+                    {
+                        // exe date: ISO datetime (yyyy-MM-ddT.....)
+                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
 
         /// <summary>
         /// Get reported disc type information, if possible
@@ -1570,73 +1627,6 @@ namespace MPF.Processors
                     return null;
 
                 // No idea how it would fall through
-                return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
-        /// </summary>
-        /// <param name="log">Log file location</param>
-        /// <param name="serial">Internal serial</param>
-        /// <param name="psx">True if PSX disc, false otherwise</param>
-        /// <returns>EXE date if possible, null otherwise</returns>
-        private static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
-        {
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(log))
-                return null;
-
-            // If the EXE name is not valid, we can't get the info
-            if (string.IsNullOrEmpty(exeName))
-                return null;
-
-            try
-            {
-                string? exeDate = null;
-                using var sr = File.OpenText(log);
-                var line = sr.ReadLine();
-                while (line != null)
-                {
-                    // Trim the line for later use
-                    line = line.Trim();
-
-                    // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
-                    if (line.Length >= "File Identifier: ".Length + 11 &&
-                        line.StartsWith("File Identifier:") &&
-                        line.Substring("File Identifier: ".Length) == exeName)
-                    {
-                        // Account for Y2K date problem
-                        if (exeDate != null && exeDate.Substring(0, 2) == "19")
-                        {
-                            string decade = exeDate!.Substring(2, 1);
-
-                            // Does only PSX need to account for 1920s-60s?
-                            if (decade == "0" || decade == "1" ||
-                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
-                                exeDate = $"20{exeDate.Substring(2)}";
-                        }
-
-                        // Currently stored date is the EXE date, return it
-                        return exeDate;
-                    }
-
-                    // The exe datetime is listed in a single line
-                    if (line.Length >= "Recording Date and Time: ".Length + 10 &&
-                        line.StartsWith("Recording Date and Time:"))
-                    {
-                        // exe date: ISO datetime (yyyy-MM-ddT.....)
-                        exeDate = line.Substring("Recording Date and Time: ".Length, 10);
-                    }
-
-                    line = sr.ReadLine();
-                }
-
                 return null;
             }
             catch
