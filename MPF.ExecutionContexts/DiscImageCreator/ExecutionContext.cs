@@ -721,11 +721,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             // Range
             if (IsFlagSupported(FlagStrings.Range))
             {
-                if (RangeStartLBAValue == null || RangeEndLBAValue == null)
-                    return null;
-
                 if (this[FlagStrings.Range] == true)
                 {
+                    if (RangeStartLBAValue == null || RangeEndLBAValue == null)
+                        return null;
+
                     parameters.Add(FlagStrings.Range);
                     parameters.Add(RangeStartLBAValue.ToString() ?? string.Empty);
                     parameters.Add(RangeEndLBAValue.ToString() ?? string.Empty);
