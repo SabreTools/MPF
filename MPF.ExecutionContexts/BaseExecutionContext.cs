@@ -10,16 +10,6 @@ namespace MPF.ExecutionContexts
 {
     public abstract class BaseExecutionContext
     {
-        #region Event Handlers
-
-        /// <summary>
-        /// Generic way of reporting a message
-        /// </summary>
-        /// <param name="message">String value to report</param>
-        public EventHandler<StringEventArgs>? ReportStatus;
-
-        #endregion
-
         #region Generic Dumping Information
 
         /// <summary>
