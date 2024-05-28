@@ -1168,9 +1168,25 @@ namespace MPF.Processors
                     if (line == null)
                         break;
 
-                    if (line.StartsWith("EXE date:"))
+                    if (line.StartsWith("anti-modchip:"))
+                    {
+                       // Valid but skip
+                    }
+                    else if (line.StartsWith("EXE:"))
+                    {
+                       // Valid but skip
+                    }
+                    else if (line.StartsWith("EXE date:"))
                     {
                         exeDate = line.Substring("EXE date: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("libcrypt:"))
+                    {
+                       // Valid but skip
+                    }
+                    else if (line.StartsWith("region:"))
+                    {
+                       // Valid but skip
                     }
                     else if (line.StartsWith("serial:"))
                     {

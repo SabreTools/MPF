@@ -571,7 +571,7 @@ namespace MPF.Core.Utilities
                 {
                     using var br = new BinaryReader(File.OpenRead(sfoPath));
                     br.BaseStream.Seek(-0x18, SeekOrigin.End);
-                    return new string(br.ReadChars(9)).TrimEnd('\0'); ;
+                    return new string(br.ReadChars(9)).TrimEnd('\0').Insert(4, "-");
                 }
                 catch
                 {
@@ -760,7 +760,7 @@ namespace MPF.Core.Utilities
             {
                 using var br = new BinaryReader(File.OpenRead(paramSfoPath));
                 br.BaseStream.Seek(-0x14, SeekOrigin.End);
-                return new string(br.ReadChars(9));
+                return new string(br.ReadChars(9)).Insert(4, "-");
             }
             catch
             {
@@ -853,7 +853,7 @@ namespace MPF.Core.Utilities
 
             try
             {
-                return json["disc"]?[0]?["masterDataId"]?.Value<string>();
+                return json["disc"]?[0]?["masterDataId"]?.Value<string>()?.Insert(4, "-");
             }
             catch
             {
