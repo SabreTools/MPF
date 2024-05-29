@@ -163,6 +163,7 @@
 - Ensure setting defaults are consistent
 - Move ToRedumper* back to EnumExtensions
 - Rearrange test classes to match new format
+- Fix logic for PS1-5 system information
 
 ### 3.1.9a (2024-05-21)
 

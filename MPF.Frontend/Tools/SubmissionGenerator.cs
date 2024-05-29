@@ -706,13 +706,14 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && string.IsNullOrEmpty(kp2Exe))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) || string.IsNullOrEmpty(kp2Exe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(kp2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
                     {
-                        if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) && string.IsNullOrEmpty(value))
+                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
+
                         info.CommonDiscInfo.Region ??= kp2Region;
                         info.CommonDiscInfo.EXEDateBuildDate ??= kp2Date;
                     }
@@ -817,13 +818,14 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), psx: true);
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && string.IsNullOrEmpty(psxExe))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) || string.IsNullOrEmpty(psxExe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(psxExe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var psxSerial, out Region? psxRegion, out var psxDate) == true)
                     {
-                        if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) && string.IsNullOrEmpty(value))
+                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
+
                         info.CommonDiscInfo.Region ??= psxRegion;
                         info.CommonDiscInfo.EXEDateBuildDate ??= psxDate;
                     }
@@ -837,13 +839,14 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && string.IsNullOrEmpty(ps2Exe))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) || string.IsNullOrEmpty(ps2Exe))
                         info.CommonDiscInfo.Region = Drive.GetPlayStationRegion(ps2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
                     {
-                        if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) && string.IsNullOrEmpty(value))
+                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
+
                         info.CommonDiscInfo.Region ??= ps2Region;
                         info.CommonDiscInfo.EXEDateBuildDate ??= ps2Date;
                     }
@@ -855,26 +858,29 @@ namespace MPF.Frontend.Tools
                     info.Extras!.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps3Serial) && string.IsNullOrEmpty(ps3Serial))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps3Serial) || string.IsNullOrEmpty(ps3Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation3Serial() ?? string.Empty;
 
                     info.VersionAndEditions!.Version ??= drive?.GetPlayStation3Version() ?? string.Empty;
 
-                    string? firmwareVersion = drive?.GetPlayStation3FirmwareVersion();
-                    if (firmwareVersion != null)
-                        info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] ??= $"PS3 Firmware {firmwareVersion}";
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.Patches, out string? ps3Firmware) || string.IsNullOrEmpty(ps3Firmware))
+                    {
+                        string? firmwareVersion = drive?.GetPlayStation3FirmwareVersion();
+                        if (firmwareVersion != null)
+                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
+                    }
 
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps4Serial) && string.IsNullOrEmpty(ps4Serial))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps4Serial) || string.IsNullOrEmpty(ps4Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation4Serial() ?? string.Empty;
 
                     info.VersionAndEditions!.Version ??= drive?.GetPlayStation4Version() ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps5Serial) && string.IsNullOrEmpty(ps5Serial))
+                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps5Serial) || string.IsNullOrEmpty(ps5Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation5Serial() ?? string.Empty;
 
                     info.VersionAndEditions!.Version ??= drive?.GetPlayStation5Version() ?? string.Empty;
