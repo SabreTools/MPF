@@ -851,7 +851,9 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.EXEDateBuildDate ??= ps2Date;
                     }
 
-                    info.VersionAndEditions!.Version ??= drive?.GetPlayStation2Version() ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions!.Version = drive?.GetPlayStation2Version() ?? string.Empty;
+
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -861,7 +863,8 @@ namespace MPF.Frontend.Tools
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps3Serial) || string.IsNullOrEmpty(ps3Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation3Serial() ?? string.Empty;
 
-                    info.VersionAndEditions!.Version ??= drive?.GetPlayStation3Version() ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions!.Version = drive?.GetPlayStation3Version() ?? string.Empty;
 
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.Patches, out string? ps3Firmware) || string.IsNullOrEmpty(ps3Firmware))
                     {
@@ -876,14 +879,18 @@ namespace MPF.Frontend.Tools
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps4Serial) || string.IsNullOrEmpty(ps4Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation4Serial() ?? string.Empty;
 
-                    info.VersionAndEditions!.Version ??= drive?.GetPlayStation4Version() ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions!.Version = drive?.GetPlayStation4Version() ?? string.Empty;
+
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps5Serial) || string.IsNullOrEmpty(ps5Serial))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation5Serial() ?? string.Empty;
 
-                    info.VersionAndEditions!.Version ??= drive?.GetPlayStation5Version() ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions!.Version = drive?.GetPlayStation5Version() ?? string.Empty;
+
                     break;
 
                 case RedumpSystem.TomyKissSite:
