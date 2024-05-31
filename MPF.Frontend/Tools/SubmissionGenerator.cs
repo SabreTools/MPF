@@ -621,23 +621,9 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo!.Region ??= Region.UnitedKingdom;
                     break;
 
-                case RedumpSystem.AppleMacintosh:
-                case RedumpSystem.EnhancedCD:
-                case RedumpSystem.IBMPCcompatible:
-                case RedumpSystem.PalmOS:
-                case RedumpSystem.PocketPC:
-                case RedumpSystem.RainbowDisc:
-                case RedumpSystem.SonyElectronicBook:
-                    if (system == RedumpSystem.EnhancedCD)
-                        info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
-
-                    if (system == RedumpSystem.SonyElectronicBook)
-                        info.CommonDiscInfo!.Category ??= DiscCategory.Multimedia;
-
-                    break;
-
                 case RedumpSystem.AudioCD:
                 case RedumpSystem.DVDAudio:
+                case RedumpSystem.EnhancedCD:
                 case RedumpSystem.SuperAudioCD:
                     info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
                     break;
@@ -686,6 +672,7 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.HasbroVideoNowXP:
                 case RedumpSystem.PhotoCD:
+                case RedumpSystem.SonyElectronicBook:
                     info.CommonDiscInfo!.Category ??= DiscCategory.Multimedia;
                     break;
 
