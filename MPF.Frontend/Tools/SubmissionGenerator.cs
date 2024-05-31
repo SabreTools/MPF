@@ -718,7 +718,9 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.EXEDateBuildDate ??= kp2Date;
                     }
 
-                    info.VersionAndEditions!.Version ??= drive?.GetPlayStation2Version() ?? string.Empty;
+                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                        info.VersionAndEditions!.Version = drive?.GetPlayStation2Version() ?? string.Empty;
+
                     break;
 
                 case RedumpSystem.KonamiSystemGV:

@@ -165,6 +165,7 @@
 - Rearrange test classes to match new format
 - Fix logic for PS1-5 system information
 - Fix setting PS1-5 version on invalid
+- Fix setting Python 2 version on invalid
 
 ### 3.1.9a (2024-05-21)
 
