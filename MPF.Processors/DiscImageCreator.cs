@@ -693,6 +693,17 @@ namespace MPF.Processors
                     info.CopyProtection.LibCrypt = libCryptDetected;
                     info.CopyProtection.LibCryptData = libCryptData;
                     break;
+
+                case RedumpSystem.SonyPlayStation3:
+                    if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
+                    {
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                        info.VersionAndEditions!.Version = ps3Version ?? string.Empty;
+                        if (ps3FirmwareVersion != null)
+                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
+                    }
+
+                    break;
             }
         }
 
@@ -1577,6 +1588,105 @@ namespace MPF.Processors
             {
                 // We don't care what the exception is right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the info from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>True if section found, null on error</returns>
+        private static bool GetPlayStation3Info(string disc, out string? serial, out string? version, out string? firmwareVersion)
+        {
+            // Set the default values
+            serial = null; version = null; firmwareVersion = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(disc);
+                var line = sr.ReadLine()?.Trim();
+                if (line == null)
+                    return false;
+
+                string section = string.Empty;
+                while (!sr.EndOfStream)
+                {
+                    if (line == null)
+                        return false;
+
+                    // Determine the section we are in
+                    if (line.EndsWith("PS3_DISC.SFB =========="))
+                    {
+                        section = "SFB";
+                    }
+                    else if (line.EndsWith("PARAM.SFO =========="))
+                    {
+                        section = "SFO";
+                    }
+                    else if (line.EndsWith("PS3UPDAT.PUP =========="))
+                    {
+                        section = "UPDATE";
+                    }
+
+                    // If we're in a section already
+                    else if (!string.IsNullOrEmpty(section))
+                    {
+                        // Firmware Version
+                        if (line.StartsWith("version") && section == "UPDATE")
+                        {
+                            firmwareVersion = line.Substring("version: ".Length);
+                        }
+
+                        // Internal Serial
+                        else if (line.StartsWith("TITLE_ID"))
+                        {
+                            // Always use the SFB if it exists
+                            if (section == "SFB")
+                                serial = line.Substring("TITLE_ID: ".Length);
+                            else if (section == "SFO" && string.IsNullOrEmpty(version))
+                                serial = line.Substring("TITLE_ID: ".Length).Insert(4, "-");
+                        }
+
+                        // Version
+                        else if (line.StartsWith("VERSION"))
+                        {
+                            // Always use the SFB if it exists
+                            if (section == "SFB")
+                                version = line.Substring("VERSION: ".Length);
+                            else if (section == "SFO" && string.IsNullOrEmpty(version))
+                                version = line.Substring("VERSION: ".Length);
+                        }
+
+                        // Set the section, if needed
+                        if (line.EndsWith("PS3_DISC.SFB =========="))
+                            section = "SFB";
+                        else if (line.EndsWith("PARAM.SFO =========="))
+                            section = "SFO";
+                        else if (line.EndsWith("PS3UPDAT.PUP =========="))
+                            section = "UPDATE";
+                        else if (line.StartsWith("=========="))
+                            section = string.Empty;
+                    }
+
+                    // Everything else resets the section
+                    else
+                    {
+                        section = string.Empty;
+                    }
+
+                    line = sr.ReadLine()?.Trim();
+                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
             }
         }
 

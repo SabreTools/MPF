@@ -167,6 +167,7 @@
 - Fix setting PS1-5 version on invalid
 - Fix setting Python 2 version on invalid
 - Clean up some ProcessSystem cases
+- Add PS3 info extraction for DIC
 
 ### 3.1.9a (2024-05-21)
 
