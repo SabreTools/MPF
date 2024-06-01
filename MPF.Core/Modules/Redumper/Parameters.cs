@@ -2094,7 +2094,7 @@ namespace MPF.Core.Modules.Redumper
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line == null)
+                    if (line == null || line.Length == 0)
                         break;
 
                     if (line.StartsWith("EXE date:"))
@@ -2112,10 +2112,6 @@ namespace MPF.Core.Modules.Redumper
                     else if (line.StartsWith("firmware:"))
                     {
                         firmware = line.Substring("firmware: ".Length).Trim();
-                    }
-                    else
-                    {
-                        break;
                     }
                 }
 
