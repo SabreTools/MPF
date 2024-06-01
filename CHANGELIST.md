@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix PSx information pulling (fuzz6001)
+
 ### 3.1.9a (2024-05-21)
 
 - Fix dictionary error in Redumper parsing
