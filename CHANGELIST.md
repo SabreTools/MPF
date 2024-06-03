@@ -170,6 +170,7 @@
 - Add PS3 info extraction for DIC
 - Update to DIC 20240601
 - Fix UI build workflow
+- Add update parameter to unzip
 
 ### 3.1.9a (2024-05-21)
 
