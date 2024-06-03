@@ -31,7 +31,7 @@ jobs:
     - name: Bundle DiscImageCreator
       run: |
         wget https://github.com/user-attachments/files/15521936/DiscImageCreator_20240601.zip
-        unzip/DiscImageCreator_20240601.zip
+        unzip DiscImageCreator_20240601.zip
         mkdir -p MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator
         mv Release_ANSI/* MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Creator/
 
