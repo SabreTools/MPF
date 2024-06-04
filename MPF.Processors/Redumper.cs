@@ -51,6 +51,8 @@ namespace MPF.Processors
                     // Removed or inconsistent files
                     //{
                     //    // Depends on the disc
+                    //    if (!File.Exists($"{basePath}.asus"))
+                    //        missingFiles.Add($"{basePath}.asus");
                     //    if (!File.Exists($"{basePath}.cdtext"))
                     //        missingFiles.Add($"{basePath}.cdtext");
                     //
@@ -82,6 +84,10 @@ namespace MPF.Processors
 
                     // Removed or inconsistent files
                     //{
+                    //    // Depends on the disc
+                    //    if (!File.Exists($"{basePath}.asus"))
+                    //        missingFiles.Add($"{basePath}.asus");
+                    //
                     //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.hash"))
                     //        missingFiles.Add($"{basePath}.hash");
@@ -107,6 +113,10 @@ namespace MPF.Processors
 
                     // Removed or inconsistent files
                     //{
+                    //    // Depends on the disc
+                    //    if (!File.Exists($"{basePath}.asus"))
+                    //        missingFiles.Add($"{basePath}.asus");
+                    //
                     //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.hash"))
                     //        missingFiles.Add($"{basePath}.hash");
@@ -129,6 +139,8 @@ namespace MPF.Processors
         {
             info.Artifacts ??= [];
 
+            if (File.Exists($"{basePath}.asus"))
+                info.Artifacts["asus"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.asus")) ?? string.Empty;
             if (File.Exists($"{basePath}.cdtext"))
                 info.Artifacts["cdtext"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
@@ -446,6 +458,8 @@ namespace MPF.Processors
             switch (Type)
             {
                 case MediaType.CDROM:
+                    if (File.Exists($"{basePath}.asus"))
+                        logFiles.Add($"{basePath}.asus");
                     if (File.Exists($"{basePath}.cdtext"))
                         logFiles.Add($"{basePath}.cdtext");
                     if (File.Exists($"{basePath}.fulltoc"))
@@ -488,6 +502,8 @@ namespace MPF.Processors
                     break;
 
                 case MediaType.DVD:
+                    if (File.Exists($"{basePath}.asus"))
+                        logFiles.Add($"{basePath}.asus");
                     if (File.Exists($"{basePath}.hash"))
                         logFiles.Add($"{basePath}.hash");
                     if (File.Exists($"{basePath}.log"))
@@ -514,6 +530,8 @@ namespace MPF.Processors
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
                 case MediaType.BluRay:
+                    if (File.Exists($"{basePath}.asus"))
+                        logFiles.Add($"{basePath}.asus");
                     if (File.Exists($"{basePath}.hash"))
                         logFiles.Add($"{basePath}.hash");
                     if (File.Exists($"{basePath}.log"))
@@ -661,60 +679,6 @@ namespace MPF.Processors
             {
                 // We don't care what the exception is right now
                 discTypeOrBookType = null;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get all Volume Identifiers
-        /// </summary>
-        /// <param name="log">Log file location</param>
-        /// <returns>Volume labels (by type), or null if none present</returns>
-        private static bool GetVolumeLabels(string log, out Dictionary<string, List<string>> volLabels)
-        {
-            // If the file doesn't exist, can't get the volume labels
-            volLabels = [];
-            if (!File.Exists(log))
-                return false;
-
-            try
-            {
-                using var sr = File.OpenText(log);
-                var line = sr.ReadLine();
-
-                while (line != null)
-                {
-                    // Trim the line for later use
-                    line = line.Trim();
-
-                    // ISO9660 Volume Identifier
-                    if (line.StartsWith("volume identifier: "))
-                    {
-                        string label = line.Substring("volume identifier: ".Length);
-
-                        // Skip if label is blank
-                        if (label == null || label.Length <= 0)
-                            break;
-
-                        if (volLabels.ContainsKey(label))
-                            volLabels[label].Add("ISO");
-                        else
-                            volLabels[label] = ["ISO"];
-
-                        // Redumper log currently only outputs ISO9660 label, end here
-                        break;
-                    }
-
-                    line = sr.ReadLine();
-                }
-
-                // Return true if a volume label was found
-                return volLabels.Count > 0;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                volLabels = [];
                 return false;
             }
         }
@@ -1644,6 +1608,60 @@ namespace MPF.Processors
             {
                 // We don't care what the exception is right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get all Volume Identifiers
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Volume labels (by type), or null if none present</returns>
+        private static bool GetVolumeLabels(string log, out Dictionary<string, List<string>> volLabels)
+        {
+            // If the file doesn't exist, can't get the volume labels
+            volLabels = [];
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine();
+
+                while (line != null)
+                {
+                    // Trim the line for later use
+                    line = line.Trim();
+
+                    // ISO9660 Volume Identifier
+                    if (line.StartsWith("volume identifier: "))
+                    {
+                        string label = line.Substring("volume identifier: ".Length);
+
+                        // Skip if label is blank
+                        if (label == null || label.Length <= 0)
+                            break;
+
+                        if (volLabels.ContainsKey(label))
+                            volLabels[label].Add("ISO");
+                        else
+                            volLabels[label] = ["ISO"];
+
+                        // Redumper log currently only outputs ISO9660 label, end here
+                        break;
+                    }
+
+                    line = sr.ReadLine();
+                }
+
+                // Return true if a volume label was found
+                return volLabels.Count > 0;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                volLabels = [];
+                return false;
             }
         }
 

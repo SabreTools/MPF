@@ -171,6 +171,7 @@
 - Update to DIC 20240601
 - Fix UI build workflow
 - Add update parameter to unzip
+- Handle Redumper .asus files
 
 ### 3.1.9a (2024-05-21)
 
