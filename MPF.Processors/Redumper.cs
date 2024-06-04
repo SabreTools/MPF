@@ -51,15 +51,19 @@ namespace MPF.Processors
                     // Removed or inconsistent files
                     //{
                     //    // Depends on the disc
-                    //    if (!File.Exists($"{basePath}.asus"))
-                    //        missingFiles.Add($"{basePath}.asus");
                     //    if (!File.Exists($"{basePath}.cdtext"))
                     //        missingFiles.Add($"{basePath}.cdtext");
                     //
                     //    // Not available in all versions
+                    //    if (!File.Exists($"{basePath}.asus"))
+                    //        missingFiles.Add($"{basePath}.asus");
+                    //    if (!File.Exists($"{basePath}.atip"))
+                    //        missingFiles.Add($"{basePath}.atip");
                     //    if (!File.Exists($"{basePath}.hash"))
                     //        missingFiles.Add($"{basePath}.hash");
                     //    // Also: "{basePath} (Track X).hash" (get from cuesheet)
+                    //    if (!File.Exists($"{basePath}.pma"))
+                    //        missingFiles.Add($"{basePath}.pma");
                     //    if (!File.Exists($"{basePath}.skeleton"))
                     //        missingFiles.Add($"{basePath}.skeleton");
                     //    // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
@@ -84,11 +88,9 @@ namespace MPF.Processors
 
                     // Removed or inconsistent files
                     //{
-                    //    // Depends on the disc
+                    //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.asus"))
                     //        missingFiles.Add($"{basePath}.asus");
-                    //
-                    //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.hash"))
                     //        missingFiles.Add($"{basePath}.hash");
                     //    if (!File.Exists($"{basePath}.skeleton"))
@@ -113,11 +115,9 @@ namespace MPF.Processors
 
                     // Removed or inconsistent files
                     //{
-                    //    // Depends on the disc
+                    //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.asus"))
                     //        missingFiles.Add($"{basePath}.asus");
-                    //
-                    //    // Not available in all versions
                     //    if (!File.Exists($"{basePath}.hash"))
                     //        missingFiles.Add($"{basePath}.hash");
                     //    if (!File.Exists($"{basePath}.skeleton"))
@@ -141,6 +141,8 @@ namespace MPF.Processors
 
             if (File.Exists($"{basePath}.asus"))
                 info.Artifacts["asus"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.asus")) ?? string.Empty;
+            if (File.Exists($"{basePath}.atip"))
+                info.Artifacts["atip"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.atip")) ?? string.Empty;
             if (File.Exists($"{basePath}.cdtext"))
                 info.Artifacts["cdtext"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
             if (File.Exists($"{basePath}.cue"))
@@ -166,6 +168,8 @@ namespace MPF.Processors
                 info.Artifacts["physical1"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
             if (File.Exists($"{basePath}.2.physical"))
                 info.Artifacts["physical2"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
+            if (File.Exists($"{basePath}.pma"))
+                info.Artifacts["pma"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.pma")) ?? string.Empty;
             // if (File.Exists($"{basePath}.skeleton"))
             //     info.Artifacts["skeleton"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
             // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
@@ -460,12 +464,16 @@ namespace MPF.Processors
                 case MediaType.CDROM:
                     if (File.Exists($"{basePath}.asus"))
                         logFiles.Add($"{basePath}.asus");
+                    if (File.Exists($"{basePath}.atip"))
+                        logFiles.Add($"{basePath}.atip");
                     if (File.Exists($"{basePath}.cdtext"))
                         logFiles.Add($"{basePath}.cdtext");
                     if (File.Exists($"{basePath}.fulltoc"))
                         logFiles.Add($"{basePath}.fulltoc");
                     if (File.Exists($"{basePath}.log"))
                         logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.pma"))
+                        logFiles.Add($"{basePath}.pma");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     if (File.Exists($"{basePath}.subcode"))

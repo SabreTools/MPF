@@ -172,6 +172,7 @@
 - Fix UI build workflow
 - Add update parameter to unzip
 - Handle Redumper .asus files
+- Handle Redumper .atip and .pma files
 
 ### 3.1.9a (2024-05-21)
 
