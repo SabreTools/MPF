@@ -450,12 +450,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    string xmidString;
-                    if (string.IsNullOrEmpty(outputDirectory))
-                        xmidString = ProcessingTool.GetXGD1XMID($"{basePath}_DMI.bin");
-                    else
-                        xmidString = ProcessingTool.GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
-
+                    string xmidString = ProcessingTool.GetXGD1XMID($"{basePath}_DMI.bin");
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
                     {
@@ -499,12 +494,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    string xemidString;
-                    if (string.IsNullOrEmpty(outputDirectory))
-                        xemidString = ProcessingTool.GetXGD23XeMID($"{basePath}_DMI.bin");
-                    else
-                        xemidString = ProcessingTool.GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
-
+                    string xemidString = ProcessingTool.GetXGD23XeMID($"{basePath}_DMI.bin");
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
                     {
