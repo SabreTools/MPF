@@ -233,9 +233,6 @@ namespace MPF.Frontend.Tools
                 else
                     resultProgress?.Report(ResultEventArgs.Failure(result));
 
-                // Ensure that all tracks are found
-                allFound &= singleFound;
-
                 // If we found a track, only keep track of distinct found tracks
                 if (singleFound && foundIds != null)
                 {
@@ -249,6 +246,9 @@ namespace MPF.Frontend.Tools
                 {
                     fullyMatchedIDs = [];
                 }
+
+                // Ensure that all tracks are found
+                allFound &= fullyMatchedIDs.Count > 0
             }
 
             // If we don't have any matches but we have a universal hash
