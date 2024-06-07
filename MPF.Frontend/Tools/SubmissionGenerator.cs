@@ -248,7 +248,7 @@ namespace MPF.Frontend.Tools
                 }
 
                 // Ensure that all tracks are found
-                allFound &= fullyMatchedIDs.Count > 0
+                allFound &= fullyMatchedIDs.Count > 0;
             }
 
             // If we don't have any matches but we have a universal hash
