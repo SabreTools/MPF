@@ -183,7 +183,7 @@ namespace MPF.Frontend.Tools
 
             // Setup the checks
             bool allFound = true;
-            List<List<int>> foundIdSets = []; 
+            List<int[]> foundIdSets = []; 
 
             // Loop through all of the hashdata to find matching IDs
             resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
@@ -234,7 +234,7 @@ namespace MPF.Frontend.Tools
                     resultProgress?.Report(ResultEventArgs.Failure(result));
 
                 // Add the found IDs to the map
-                foundIdSets.Add(foundIds ?? []);
+                foundIdSets.Add(foundIds?.ToArray() ?? []);
 
                 // Ensure that all tracks are found
                 allFound &= singleFound;
@@ -250,7 +250,7 @@ namespace MPF.Frontend.Tools
                     // First track is always all IDs
                     if (fullyMatchedIDs == null)
                     {
-                        fullyMatchedIDs = set;
+                        fullyMatchedIDs = [.. set];
                         continue;
                     }
                     
