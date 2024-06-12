@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # This batch file assumes the following:
 # - .NET 8.0 (or newer) SDK is installed and in PATH
