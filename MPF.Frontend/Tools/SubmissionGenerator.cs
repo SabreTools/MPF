@@ -181,9 +181,9 @@ namespace MPF.Frontend.Tools
                 return false;
             }
 
-            // Setup the full-track checks
+            // Setup the checks
             bool allFound = true;
-            List<int>? fullyMatchedIDs = null;
+            List<List<int>> foundIdSets = []; 
 
             // Loop through all of the hashdata to find matching IDs
             resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
@@ -233,21 +233,31 @@ namespace MPF.Frontend.Tools
                 else
                     resultProgress?.Report(ResultEventArgs.Failure(result));
 
+                // Add the found IDs to the map
+                foundIdSets.Add(foundIds ?? []);
+
                 // Ensure that all tracks are found
                 allFound &= singleFound;
+            }
 
-                // If we found a track, only keep track of distinct found tracks
-                if (singleFound && foundIds != null)
+            // If all tracks were found, check if there are any fully-matched IDs
+            List<int>? fullyMatchedIDs = null;
+            if (allFound)
+            {
+                fullyMatchedIDs = null;
+                foreach (var set in foundIdSets)
                 {
+                    // First track is always all IDs
                     if (fullyMatchedIDs == null)
-                        fullyMatchedIDs = foundIds;
-                    else
-                        fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
-                }
-                // If no tracks were found, remove all fully matched IDs found so far
-                else
-                {
-                    fullyMatchedIDs = [];
+                    {
+                        fullyMatchedIDs = set;
+                        continue;
+                    }
+                    
+                    // Try to intersect with all known IDs
+                    fullyMatchedIDs = fullyMatchedIDs.Intersect(set).ToList();
+                    if (!fullyMatchedIDs.Any())
+                        break;
                 }
             }
 
@@ -269,16 +279,11 @@ namespace MPF.Frontend.Tools
                 // Ensure that the hash is found
                 allFound = singleFound;
 
-                // If we found a track, only keep track of distinct found tracks
+                // If we found a match, then the disc is a match
                 if (singleFound && foundIds != null)
-                {
                     fullyMatchedIDs = foundIds;
-                }
-                // If no tracks were found, remove all fully matched IDs found so far
                 else
-                {
                     fullyMatchedIDs = [];
-                }
             }
 
             // Make sure we only have unique IDs

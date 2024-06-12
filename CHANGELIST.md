@@ -174,6 +174,7 @@
 - Handle Redumper .asus files
 - Handle Redumper .atip and .pma files
 - Simplify DIC DMI location finding
+- Move track full matching to separate loop
 
 ### 3.1.9a (2024-05-21)
 
