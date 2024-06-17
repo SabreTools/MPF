@@ -177,6 +177,7 @@
 - Move track full matching to separate loop
 - Fix... something with Linux publish script
 - Make match sets immutable
+- Update BinaryObjectScanner to 3.1.12
 
 ### 3.1.9a (2024-05-21)
 
