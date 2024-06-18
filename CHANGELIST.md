@@ -178,6 +178,7 @@
 - Fix... something with Linux publish script
 - Make match sets immutable
 - Update BinaryObjectScanner to 3.1.12
+- Fix excluding programs in nix script
 
 ### 3.1.9a (2024-05-21)
 
