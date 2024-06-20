@@ -35,7 +35,7 @@ $COMMIT = git log --pretty=format:"%H" -1
 
 # Output the selected options
 Write-Host "Selected Options:"
-Write-Host "  Use all builds (-UseAll)              $USE_ALL"
+Write-Host "  Use all frameworks (-UseAll)          $USE_ALL"
 Write-Host "  Include programs (-IncludePrograms)   $INCLUDE_PROGRAMS"
 Write-Host "  No build (-NoBuild)                   $NO_BUILD"
 Write-Host "  No archive (-NoArchive)               $NO_ARCHIVE"
@@ -45,14 +45,12 @@ Write-Host " "
 $UI_FRAMEWORKS = @('net8.0-windows')
 $UI_RUNTIMES = @('win-x86', 'win-x64')
 $CHECK_FRAMEWORKS = @('net8.0')
-$CHECK_RUNTIMES = @('win-x86', 'win-x64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
+$CHECK_RUNTIMES = @('win-x86', 'win-x64', 'win-arm64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
 
-# Use expanded lists, if requested
+# Use expanded framework lists, if requested
 if ($USE_ALL.IsPresent) {
     $UI_FRAMEWORKS = @('net40', 'net452', 'net462', 'net472', 'net48', 'netcoreapp3.1', 'net5.0-windows', 'net6.0-windows', 'net7.0-windows', 'net8.0-windows')
-    $UI_RUNTIMES = @('win-x86', 'win-x64')
     $CHECK_FRAMEWORKS = @('net20', 'net35', 'net40', 'net452', 'net462', 'net472', 'net48', 'netcoreapp3.1', 'net5.0', 'net6.0', 'net7.0', 'net8.0')
-    $CHECK_RUNTIMES = @('win-x86', 'win-x64', 'win-arm64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
 }
 
 # Create the filter arrays

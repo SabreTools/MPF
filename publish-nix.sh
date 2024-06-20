@@ -44,7 +44,7 @@ COMMIT=$(git log --pretty=%H -1)
 
 # Output the selected options
 echo "Selected Options:"
-echo "  Use all builds (-u)                   $USE_ALL"
+echo "  Use all frameworks (-u)               $USE_ALL"
 echo "  Include programs (-p)                 $INCLUDE_PROGRAMS"
 echo "  No build (-b)                         $NO_BUILD"
 echo "  No archive (-a)                       $NO_ARCHIVE"
@@ -54,14 +54,12 @@ echo " "
 UI_FRAMEWORKS=("net8.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
 CHECK_FRAMEWORKS=("net8.0")
-CHECK_RUNTIMES=("win-x86" "win-x64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
+CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
-# Use expanded lists, if requested
+# Use expanded framework lists, if requested
 if [ $USE_ALL = true ]; then
     UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows")
-    UI_RUNTIMES=("win-x86" "win-x64")
     CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0")
-    CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 fi
 
 # Create the filter arrays

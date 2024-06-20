@@ -9,6 +9,7 @@
 - Better support build matricies
 - Show script settings
 - Add flag values to script settings
+- Enable last runtime by default
 
 ### 3.2.0 (2024-06-20)
 
