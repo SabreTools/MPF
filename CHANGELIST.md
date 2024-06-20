@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.2.0 (2024-06-20)
 
 - Create currently-unused processors
 - Move DataFile to Core.Data
