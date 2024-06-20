@@ -42,6 +42,14 @@ BUILD_FOLDER=$PWD
 # Set the current commit hash
 COMMIT=$(git log --pretty=%H -1)
 
+# Output the selected options
+echo "Selected Options:"
+echo "  Use all builds (-u)                   $USE_ALL"
+echo "  Include programs (-p)                 $INCLUDE_PROGRAMS"
+echo "  No build (-b)                         $NO_BUILD"
+echo "  No archive (-a)                       $NO_ARCHIVE"
+echo " "
+
 # Create the build matrix arrays
 UI_FRAMEWORKS=("net8.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")

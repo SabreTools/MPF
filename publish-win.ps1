@@ -33,6 +33,14 @@ $BUILD_FOLDER = $PSScriptRoot
 # Set the current commit hash
 $COMMIT = git log --pretty=format:"%H" -1
 
+# Output the selected options
+Write-Host "Selected Options:"
+Write-Host "  Use all builds (-UseAll)              $USE_ALL"
+Write-Host "  Include programs (-IncludePrograms)   $INCLUDE_PROGRAMS"
+Write-Host "  No build (-NoBuild)                   $NO_BUILD"
+Write-Host "  No archive (-NoArchive)               $NO_ARCHIVE"
+Write-Host " "
+
 # Create the build matrix arrays
 $UI_FRAMEWORKS = @('net8.0-windows')
 $UI_RUNTIMES = @('win-x86', 'win-x64')

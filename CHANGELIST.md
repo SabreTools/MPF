@@ -7,6 +7,8 @@
 - Forgot to upload packages to release
 - Add `osx-arm64` to libraries
 - Better support build matricies
+- Show script settings
+- Add flag values to script settings
 
 ### 3.2.0 (2024-06-20)
 
