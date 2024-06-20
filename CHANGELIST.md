@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Add nuget packing for processors and contexts
+- Address build warnings for packages
 
 ### 3.2.0 (2024-06-20)
 

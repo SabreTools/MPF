@@ -11,6 +11,7 @@
   <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   <VersionPrefix>3.2.0</VersionPrefix>
+  <WarningsNotAsErrors>NU5104</WarningsNotAsErrors>
 
   <!-- Package Properties -->
   <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
