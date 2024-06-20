@@ -30,17 +30,29 @@ jobs:
         name: 'Execution Contexts Package'
         path: 'MPF.ExecutionContexts/bin/Release/*.nupkg'
 
+    - name: Upload Execution Contexts to rolling
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        allowUpdates: True
+        artifacts: 'MPF.ExecutionContexts/bin/Release/*.nupkg'
+        body: 'Last built commit: ${{ github.sha }}'
+        name: 'Rolling Release'
+        prerelease: True
+        replacesArtifacts: True
+        tag: "rolling"
+        updateOnlyUnreleased: True
+
     - name: Upload Processors package
       uses: actions/upload-artifact@v4
       with:
         name: 'Processors Package'
         path: 'MPF.Processors/bin/Release/*.nupkg'
 
-    - name: Upload to rolling
+    - name: Upload Execution Contexts to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: 'BinaryObjectScanner/bin/Release/*.nupkg'
+        artifacts: 'MPF.Processors/bin/Release/*.nupkg'
         body: 'Last built commit: ${{ github.sha }}'
         name: 'Rolling Release'
         prerelease: True
