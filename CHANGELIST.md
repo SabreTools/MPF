@@ -5,6 +5,7 @@
 - Add Linux ARM64 as target by default
 - Fix nuget package naming
 - Forgot to upload packages to release
+- Add `osx-arm64` to libraries
 
 ### 3.2.0 (2024-06-20)
 
