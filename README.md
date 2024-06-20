@@ -58,10 +58,10 @@ dotnet build MPF/MPF.csproj --framework net8.0-windows --runtime [win-x86|win-x6
 **MPF.Check (Windows, OSX, Linux):**
 
 ```bash
-dotnet build MPF.Check/MPF.Check.csproj --framework net8.0 --runtime [win-x86|win-x64|linux-x64|osx-x64]
+dotnet build MPF.Check/MPF.Check.csproj --framework net8.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
 ```
 
-Choose one of `win-x86`, `win-x64`, `linux-x64`, or `osx-x64` depending on the machine you are targeting.
+Choose one of `win-x86`, `win-x64`, `win-arm64`, `linux-x64`, `linux-arm64`, `osx-x64`, or `osx-arm64` depending on the machine you are targeting.
 
 ### Build Scripts
 

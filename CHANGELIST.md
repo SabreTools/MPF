@@ -10,6 +10,7 @@
 - Show script settings
 - Add flag values to script settings
 - Enable last runtime by default
+- Update README with new build matricies
 
 ### 3.2.0 (2024-06-20)
 
