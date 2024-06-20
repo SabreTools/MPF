@@ -27,13 +27,13 @@ jobs:
     - name: Upload Execution Contexts package
       uses: actions/upload-artifact@v4
       with:
-        name: 'Nuget Package'
+        name: 'Execution Contexts Package'
         path: 'MPF.ExecutionContexts/bin/Release/*.nupkg'
 
     - name: Upload Processors package
       uses: actions/upload-artifact@v4
       with:
-        name: 'Nuget Package'
+        name: 'Processors Package'
         path: 'MPF.Processors/bin/Release/*.nupkg'
 
     - name: Upload to rolling

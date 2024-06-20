@@ -3,6 +3,7 @@
 - Add nuget packing for processors and contexts
 - Address build warnings for packages
 - Add Linux ARM64 as target by default
+- Fix nuget package naming
 
 ### 3.2.0 (2024-06-20)
 
