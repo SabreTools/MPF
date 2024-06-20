@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add nuget packing for processors and contexts
+
 ### 3.2.0 (2024-06-20)
 
 - Create currently-unused processors

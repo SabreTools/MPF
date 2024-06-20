@@ -67,6 +67,10 @@ if [ $NO_BUILD = false ]; then
     echo "Restoring Nuget packages"
     dotnet restore
 
+    # Create Nuget Packages
+    dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
+    dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER
+
     # Build UI
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do

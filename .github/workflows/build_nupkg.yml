@@ -1,0 +1,49 @@
+name: Nuget Pack
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Pack
+      run: dotnet pack
+
+    - name: Upload Execution Contexts package
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Nuget Package'
+        path: 'MPF.ExecutionContexts/bin/Release/*.nupkg'
+
+    - name: Upload Processors package
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Nuget Package'
+        path: 'MPF.Processors/bin/Release/*.nupkg'
+
+    - name: Upload to rolling
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        allowUpdates: True
+        artifacts: 'BinaryObjectScanner/bin/Release/*.nupkg'
+        body: 'Last built commit: ${{ github.sha }}'
+        name: 'Rolling Release'
+        prerelease: True
+        replacesArtifacts: True
+        tag: "rolling"
+        updateOnlyUnreleased: True

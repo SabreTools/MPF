@@ -58,6 +58,10 @@ if (!$NO_BUILD.IsPresent) {
     Write-Host "Restoring Nuget packages"
     dotnet restore
 
+    # Create Nuget Packages
+    dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
+    dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER
+
     # Build UI
     foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
         foreach ($RUNTIME in $UI_RUNTIMES) {
