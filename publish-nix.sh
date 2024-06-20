@@ -46,20 +46,21 @@ COMMIT=$(git log --pretty=%H -1)
 UI_FRAMEWORKS=("net8.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
 CHECK_FRAMEWORKS=("net8.0")
-CHECK_RUNTIMES=("win-x86" "win-x64" "linux-x64" "linux-arm64" "osx-x64")
+CHECK_RUNTIMES=("win-x86" "win-x64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Use expanded lists, if requested
 if [ $USE_ALL = true ]; then
     UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows")
     UI_RUNTIMES=("win-x86" "win-x64")
     CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0")
-    CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64")
+    CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 fi
 
 # Create the filter arrays
 SINGLE_FILE_CAPABLE=("net5.0" "net5.0-windows" "net6.0" "net6.0-windows" "net7.0" "net7.0-windows" "net8.0" "net8.0-windows")
+VALID_APPLE_FRAMEWORKS=("net6.0" "net7.0" "net8.0")
 VALID_CROSS_PLATFORM_FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0")
-VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64")
+VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Only build if requested
 if [ $NO_BUILD = false ]; then
@@ -74,9 +75,21 @@ if [ $NO_BUILD = false ]; then
     # Build UI
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Build UI - $FRAMEWORK, $RUNTIME ====="
+
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
                 if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
                     continue
                 fi
             fi
@@ -101,9 +114,21 @@ if [ $NO_BUILD = false ]; then
     # Build Check
     for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Build Check - $FRAMEWORK, $RUNTIME ====="
+
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
                 if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
                     continue
                 fi
             fi
@@ -131,6 +156,25 @@ if [ $NO_ARCHIVE = false ]; then
     # Create UI archives
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Archive UI - $FRAMEWORK, $RUNTIME ====="
+
+            # If we have an invalid combination of framework and runtime
+            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
+                    continue
+                fi
+            fi
+
             # Only include Debug if building all
             if [ $USE_ALL = true ]; then
                 cd $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
@@ -152,9 +196,21 @@ if [ $NO_ARCHIVE = false ]; then
     # Create Check archives
     for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Archive Check - $FRAMEWORK, $RUNTIME ====="
+
             # If we have an invalid combination of framework and runtime
             if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
                 if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
                     continue
                 fi
             fi
