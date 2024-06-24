@@ -21,6 +21,7 @@
 - Save default config values for CLI
 - Allow custom parameters for CLI
 - Load options before anything else
+- Dispose of stream when creating config
 
 ### 3.2.0 (2024-06-20)
 
