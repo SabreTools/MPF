@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -105,16 +106,15 @@ namespace MPF.CLI
                 speed = 8; // Reasonable default for most media types
             string filepath = args[4].Trim('"');
 
-            // TODO: Additional arguments get passed to dumping program?
-            // - Should it be an explicit option, like --params?
-            // - Should it be that everything after is treated like an addition to default?
-            // - Should it be that everything after is a replacement of default?
-            // - Two separate options for replace and add params?
-
             // Now populate an environment
             var drive = Drive.Create(null, path);
             var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, options.InternalProgram, parameters: null);
             string? paramStr = env.GetFullParameters(speed);
+
+            // Process custom parameters
+            if (args.Length > 5)
+                paramStr = string.Join(" ", args.Skip(5).ToArray());
+            
             if (string.IsNullOrEmpty(paramStr))
             {
                 DisplayHelp("No valid environment could be created, exiting...");
@@ -131,6 +131,13 @@ namespace MPF.CLI
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return;
+
+            // If it was not a dumping command
+            if (!env.IsDumpingCommand())
+            {
+                Console.WriteLine("Execution not recognized as dumping command, skipping processing...");
+                return;
+            }
 
             // Finally, attempt to do the output dance
 #if NET40
@@ -153,7 +160,7 @@ namespace MPF.CLI
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <mediatype> <system> <drivepath> <speed> </path/to/output.cue/iso>");
+            Console.WriteLine("MPF.CLI <mediatype> <system> <drivepath> <speed> </path/to/output.cue/iso> [custom-params]");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
@@ -161,6 +168,9 @@ namespace MPF.CLI
             Console.WriteLine("-lm, --listmedia        List supported media types");
             Console.WriteLine("-ls, --listsystems      List supported system types");
             Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
+            Console.WriteLine();
+            Console.WriteLine("Custom parameters, if supplied, will fully replace the default parameters for the dumping");
+            Console.WriteLine("program defined in the configuration. All parameters need to be supplied if doing this.");
             Console.WriteLine();
         }
     }
