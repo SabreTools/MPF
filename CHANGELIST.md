@@ -20,6 +20,7 @@
 - Add CLI information to README
 - Save default config values for CLI
 - Allow custom parameters for CLI
+- Load options before anything else
 
 ### 3.2.0 (2024-06-20)
 

@@ -13,6 +13,21 @@ namespace MPF.CLI
     {
         public static void Main(string[] args)
         {
+            // Load options from the config file
+            var options = OptionsLoader.LoadFromConfig();
+            if (options.FirstRun)
+            {
+                // Application paths
+                options.AaruPath = "FILL ME IN";
+                options.DiscImageCreatorPath = "FILL ME IN";
+                options.RedumperPath = "FILL ME IN";
+                options.InternalProgram = InternalProgram.NONE;
+
+                // Reset first run
+                options.FirstRun = false;
+                OptionsLoader.SaveToConfig(options, saveDefault: true);
+            }
+
             // Try processing the standalone arguments
             bool? standaloneProcessed = OptionsLoader.ProcessStandaloneArguments(args);
             if (standaloneProcessed != false)
@@ -35,21 +50,6 @@ namespace MPF.CLI
             {
                 DisplayHelp(error);
                 return;
-            }
-
-            // Load options from the config file
-            var options = OptionsLoader.LoadFromConfig();
-            if (options.FirstRun)
-            {
-                // Application paths
-                options.AaruPath = "FILL ME IN";
-                options.DiscImageCreatorPath = "FILL ME IN";
-                options.RedumperPath = "FILL ME IN";
-                options.InternalProgram = InternalProgram.NONE;
-
-                // Reset first run
-                options.FirstRun = false;
-                OptionsLoader.SaveToConfig(options, saveDefault: true);
             }
 
             // Validate the internal program
