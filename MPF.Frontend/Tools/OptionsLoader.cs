@@ -437,6 +437,7 @@ namespace MPF.Frontend.Tools
             var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
+            reader.Dispose();
             return new Options(settings);
         }
 
@@ -463,6 +464,10 @@ namespace MPF.Frontend.Tools
                     property.SetValue(options, val, null);
                 }
             }
+
+            // Handle a very strange edge case
+            if (!File.Exists(ConfigurationPath))
+                File.Create(ConfigurationPath).Dispose();
 
             var serializer = JsonSerializer.Create();
             var sw = new StreamWriter(ConfigurationPath) { AutoFlush = true };
