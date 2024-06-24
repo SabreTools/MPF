@@ -429,7 +429,7 @@ namespace MPF.Frontend.Tools
         {
             if (!File.Exists(ConfigurationPath))
             {
-                _ = File.Create(ConfigurationPath);
+                File.Create(ConfigurationPath).Dispose();
                 return new Options();
             }
 
