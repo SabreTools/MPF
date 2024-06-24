@@ -25,6 +25,7 @@
 - Try to make config safer for CLI
 - Blindly assume the path exists
 - Add CLI status output on runtime
+- Ensure tracks are assigned in Aaru
 
 ### 3.2.0 (2024-06-20)
 
