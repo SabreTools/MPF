@@ -13,6 +13,7 @@
 - Update README with new build matricies
 - Remove empty gitmodules
 - Purple
+- Separate themes into own namespace and files
 
 ### 3.2.0 (2024-06-20)
 
