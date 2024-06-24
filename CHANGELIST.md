@@ -24,6 +24,7 @@
 - Dispose of stream when creating config
 - Try to make config safer for CLI
 - Blindly assume the path exists
+- Add CLI status output on runtime
 
 ### 3.2.0 (2024-06-20)
 
