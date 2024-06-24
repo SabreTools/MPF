@@ -399,14 +399,16 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.EnableDarkMode)
                 theme = new DarkModeTheme();
             else if (MainViewModel.Options.EnablePurpMode)
-                theme = new PurpModeTheme();
+                theme = new CustomTheme("111111", "9A5EC0");
+            else if (CustomTheme.IsHexColor(MainViewModel.Options.CustomBackgroundColor) && CustomTheme.IsHexColor(MainViewModel.Options.CustomTextColor))
+                theme = new CustomTheme(MainViewModel.Options.CustomBackgroundColor, MainViewModel.Options.CustomTextColor);
             else
                 theme = new LightModeTheme();
 
             theme.Apply();
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 

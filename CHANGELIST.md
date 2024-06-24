@@ -15,6 +15,7 @@
 - Purple
 - Separate themes into own namespace and files
 - Seal all theme classes
+- Custom theme colors
 
 ### 3.2.0 (2024-06-20)
 

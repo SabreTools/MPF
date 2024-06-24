@@ -93,6 +93,24 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Custom color setting
+        /// </summary>
+        public string? CustomBackgroundColor
+        {
+            get { return GetStringSetting(Settings, "CustomBackgroundColor", null); }
+            set { Settings["CustomBackgroundColor"] = value; }
+        }
+
+        /// <summary>
+        /// Custom color setting
+        /// </summary>
+        public string? CustomTextColor
+        {
+            get { return GetStringSetting(Settings, "CustomTextColor", null); }
+            set { Settings["CustomTextColor"] = value; }
+        }
+
+        /// <summary>
         /// Check for updates on startup
         /// </summary>
         public bool CheckForUpdatesOnStartup
