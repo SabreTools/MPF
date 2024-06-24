@@ -6,7 +6,7 @@ namespace MPF.UI.Themes
     /// <summary>
     /// Default light-mode theme
     /// </summary>
-    public class LightModeTheme : Theme
+    public sealed class LightModeTheme : Theme
     {
         public LightModeTheme()
         {

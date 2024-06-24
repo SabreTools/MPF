@@ -5,7 +5,7 @@ namespace MPF.UI.Themes
     /// <summary>
     /// Default dark-mode theme
     /// </summary>
-    public class DarkModeTheme : Theme
+    public sealed class DarkModeTheme : Theme
     {
         public DarkModeTheme()
         {

@@ -5,7 +5,7 @@ namespace MPF.UI.Themes
     /// <summary>
     /// Default purple-mode theme
     /// </summary>
-    public class PurpModeTheme : Theme
+    public sealed class PurpModeTheme : Theme
     {
         public PurpModeTheme()
         {
