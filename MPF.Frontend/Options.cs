@@ -84,6 +84,15 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Enable purple mode for UI elements
+        /// </summary>
+        public bool EnablePurpMode
+        {
+            get { return GetBooleanSetting(Settings, "EnablePurpMode", false); }
+            set { Settings["EnablePurpMode"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Check for updates on startup
         /// </summary>
         public bool CheckForUpdatesOnStartup

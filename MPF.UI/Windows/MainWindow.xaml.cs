@@ -397,6 +397,8 @@ namespace MPF.UI.Windows
             Theme theme;
             if (MainViewModel.Options.EnableDarkMode)
                 theme = new DarkModeTheme();
+            else if (MainViewModel.Options.EnablePurpMode)
+                theme = new PurpModeTheme();
             else
                 theme = new LightModeTheme();
 

@@ -12,6 +12,7 @@
 - Enable last runtime by default
 - Update README with new build matricies
 - Remove empty gitmodules
+- Purple
 
 ### 3.2.0 (2024-06-20)
 
