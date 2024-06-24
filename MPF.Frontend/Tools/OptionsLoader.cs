@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -442,8 +443,27 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfig(Options options)
+        public static void SaveToConfig(Options options, bool saveDefault = false)
         {
+            // If default values should be saved as well
+            if (saveDefault)
+            {
+                PropertyInfo[] properties = typeof(Options).GetProperties();
+                foreach (var property in properties)
+                {
+                    // Skip dictionary properties
+                    if (property.Name == "Item")
+                        continue;
+
+                    // Skip non-option properties
+                    if (property.Name == "Settings" || property.Name == "HasRedumpLogin")
+                        continue;
+
+                    var val = property.GetValue(options, null);
+                    property.SetValue(options, val, null);
+                }
+            }
+
             var serializer = JsonSerializer.Create();
             var sw = new StreamWriter(ConfigurationPath) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };

@@ -48,7 +48,7 @@ namespace MPF.CLI
 
                 // Reset first run
                 options.FirstRun = false;
-                OptionsLoader.SaveToConfig(options);
+                OptionsLoader.SaveToConfig(options, saveDefault: true);
             }
 
             // Validate the internal program
