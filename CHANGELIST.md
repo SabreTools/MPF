@@ -15,6 +15,12 @@
 - Purple
 - Separate themes into own namespace and files
 - Seal all theme classes
+- Add preliminary MPF.CLI
+- Add CLI build status to README
+- Add CLI information to README
+- Save default config values for CLI
+- Allow custom parameters for CLI
+- Load options before anything else
 - Custom theme colors
 
 ### 3.2.0 (2024-06-20)

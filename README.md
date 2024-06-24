@@ -4,6 +4,7 @@ Redumper/Aaru/DiscImageCreator UI in C#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/MPF)
 [![UI Build](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_ui.yml)
+[![CLI Build](https://github.com/SabreTools/MPF/actions/workflows/build_cli.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_cli.yml)
 [![Check Build](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml/badge.svg)](https://github.com/SabreTools/MPF/actions/workflows/build_check.yml)
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you as a contributor to this project. If you have any suggestions, issues, bugs, or crashes, please look at the [Issues](https://github.com/SabreTools/MPF/issues) page first to see if it has been reported before and try out the latest AppVeyor WIP build below to see if it has already been addressed. If it hasn't, please open an issue that's as descriptive as you can be. Help me make this a better program for everyone :)
@@ -14,11 +15,11 @@ For the most recent stable build, download the latest release here: [Releases Pa
 
 For the latest WIP build here: [Rolling Release](https://github.com/SabreTools/MPF/releases/tag/rolling)
 
-## Media Preservation Frontend UI (MPF)
+## Media Preservation Frontend UI (MPF.UI)
 
 MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
-### Support Limitations
+### UI Support Limitations
 
 The main UI has some known limitations that are documented in code and in some prior support tickets:
 
@@ -32,13 +33,29 @@ The main UI has some known limitations that are documented in code and in some p
   - Consider using a third-party scanning tool, such as Protection ID, if this is not sufficient for your needs
   - See [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
 
+## Media Preservation Frontend CLI (MPF.CLI)
+
+MPF.CLI is a commandline-only program that allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the `config.json` file.
+
+### CLI Support Limitations
+
+The main CLI has some known limitations that are documented in code and in some prior support tickets:
+
+- No programs are bundled by default
+  - This is the result of the extremely varied builds that are allowed
+- For those who require broader archive/installer compatibility for protection scanning (Windows-only), please use the x86 builds as there are some specific scanning libraries that only work with that build
+  - This is actively being worked on as part of [Binary Object Scanner](https://github.com/SabreTools/BinaryObjectScanner)
+  - Please consider contributing if you have experience in dealing with multiple archive and installer types
+  - Consider using a third-party scanning tool, such as Protection ID, if this is not sufficient for your needs
+  - See [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
+
 ## Media Preservation Frontend Checker (MPF.Check)
 
 MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
 
 ## System Requirements
 
-Both MPF UI and MPF.Check have the same system requirements for running, with the exception that MPF UI is Windows-only.
+MPF.UI, MPF.CLI, and MPF.Check have the same system requirements for running, with the exception that MPF.UI is Windows-only.
 
 - [Supported OS versions for .NET 8](https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md)
   - Requires [.NET 8.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) if built without bundled runtime
@@ -49,10 +66,16 @@ Ensure that your operating system and runtimes are as up-to-date as possible, si
 
 To build for .NET 8.0, ensure that the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
-**MPF UI (Windows only):**
+**MPF.UI (Windows only):**
 
 ```bash
 dotnet build MPF/MPF.csproj --framework net8.0-windows --runtime [win-x86|win-x64]
+```
+
+**MPF.CLI (Windows, OSX, Linux):**
+
+```bash
+dotnet build MPF.CLI/MPF.CLI.csproj --framework net8.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
 ```
 
 **MPF.Check (Windows, OSX, Linux):**
@@ -65,7 +88,7 @@ Choose one of `win-x86`, `win-x64`, `win-arm64`, `linux-x64`, `linux-arm64`, `os
 
 ### Build Scripts
 
-Windows users may run `publish-win.ps1` and Linux users may run `publish-nix.sh` to perform a full release build. Both scripts will build and package all variants of MPF UI and MPF.Check with commandline switches to control what is included.
+Windows users may run `publish-win.ps1` and Linux users may run `publish-nix.sh` to perform a full release build. Both scripts will build and package all variants of MPF.UI, MPF.CLI, and MPF.Check with commandline switches to control what is included.
 
 - `publish-win.ps1` requires [7-zip commandline](https://www.7-zip.org/download.html) and [Git for Windows](https://git-scm.com/downloads) to be installed and in `PATH`
 - `publish-nix.sh` requires `zip` and `git` to be installed and in `PATH`
