@@ -17,6 +17,7 @@
 - Seal all theme classes
 - Add preliminary MPF.CLI
 - Add CLI build status to README
+- Add CLI information to README
 
 ### 3.2.0 (2024-06-20)
 
