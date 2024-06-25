@@ -38,7 +38,7 @@ namespace MPF.CLI
             }
 
             // Check for the minimum number of arguments
-            if (args.Length < 5)
+            if (args.Length < 4)
             {
                 DisplayHelp("Not enough arguments have been provided, exiting...");
                 return;
@@ -131,8 +131,8 @@ namespace MPF.CLI
             string? paramStr = env.GetFullParameters(speed);
 
             // Process custom parameters
-            if (args.Length > 5)
-                paramStr = string.Join(" ", args.Skip(5).ToArray());
+            if (args.Length > 4)
+                paramStr = string.Join(" ", args.Skip(4).ToArray());
             
             if (string.IsNullOrEmpty(paramStr))
             {

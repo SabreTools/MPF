@@ -28,6 +28,7 @@
 - Ensure tracks are assigned in Aaru
 - Custom theme colors
 - Use speed for CLI from configuration
+- Fix minimum number of args checks
 
 ### 3.2.0 (2024-06-20)
 
