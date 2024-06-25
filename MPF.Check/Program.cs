@@ -3,6 +3,7 @@ using System.IO;
 using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
+using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
@@ -30,7 +31,7 @@ namespace MPF.Check
             }
 
             // Loop through and process options
-            (var options, var seedInfo, var path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+            (var options, var seedInfo, var path, int startIndex) = LoadFromArguments(args, startIndex: 2);
             if (options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");
@@ -105,12 +106,160 @@ namespace MPF.Check
             Console.WriteLine();
 
             Console.WriteLine("Check Options:");
-            var supportedArguments = OptionsLoader.PrintSupportedArguments();
-            foreach (string argument in supportedArguments)
-            {
-                Console.WriteLine(argument);
-            }
+            Console.WriteLine("-u, --use <program>            Dumping program output type [REQUIRED]");
+            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password");
+            Console.WriteLine("-a, --pull-all                 Pull all information from Redump (requires --credentials)");
+            Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
+            Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("-g, --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)");
+            Console.WriteLine("-l, --load-seed <path>         Load a seed submission JSON for user information");
+            Console.WriteLine("-x, --suffix                   Enable adding filename suffix");
+            Console.WriteLine("-j, --json                     Enable submission JSON output");
+            Console.WriteLine("-z, --zip                      Enable log file compression");
+            Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Load the current set of options from application arguments
+        /// </summary>
+        private static (Frontend.Options, SubmissionInfo?, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
+        {
+            // Create the output values with defaults
+            var options = new Frontend.Options()
+            {
+                RedumpUsername = null,
+                RedumpPassword = null,
+                InternalProgram = InternalProgram.NONE,
+                AddFilenameSuffix = false,
+                OutputSubmissionJSON = false,
+                CompressLogFiles = false,
+                DeleteUnnecessaryFiles = false,
+            };
+
+            // Create the submission info to return, if necessary
+            SubmissionInfo? info = null;
+            string? parsedPath = null;
+
+            // These values require multiple parts to be active
+            bool scan = false, hideDriveLetters = false;
+
+            // If we have no arguments, just return
+            if (args == null || args.Length == 0)
+                return (options, null, null, 0);
+
+            // If we have an invalid start index, just return
+            if (startIndex < 0 || startIndex >= args.Length)
+                return (options, null, null, startIndex);
+
+            // Loop through the arguments and parse out values
+            for (; startIndex < args.Length; startIndex++)
+            {
+                // Use specific program
+                if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
+                {
+                    string internalProgram = args[startIndex].Split('=')[1];
+                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                }
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
+                {
+                    string internalProgram = args[startIndex + 1];
+                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    startIndex++;
+                }
+
+                // Redump login
+                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
+                {
+                    string[] credentials = args[startIndex].Split('=')[1].Split(';');
+                    options.RedumpUsername = credentials[0];
+                    options.RedumpPassword = credentials[1];
+                }
+                else if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
+                {
+                    options.RedumpUsername = args[startIndex + 1];
+                    options.RedumpPassword = args[startIndex + 2];
+                    startIndex += 2;
+                }
+
+                // Pull all information (requires Redump login)
+                else if (args[startIndex].Equals("-a") || args[startIndex].Equals("--pull-all"))
+                {
+                    options.PullAllInformation = true;
+                }
+
+                // Use a device path for physical checks
+                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
+                {
+                    parsedPath = args[startIndex].Split('=')[1];
+                }
+                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
+                {
+                    parsedPath = args[startIndex + 1];
+                    startIndex++;
+                }
+
+                // Scan for protection (requires device path)
+                else if (args[startIndex].Equals("-s") || args[startIndex].Equals("--scan"))
+                {
+                    scan = true;
+                }
+
+                // Hide drive letters from scan output (requires --protect-file)
+                else if (args[startIndex].Equals("-g") || args[startIndex].Equals("--hide-drive-letters"))
+                {
+                    hideDriveLetters = true;
+                }
+
+                // Include seed info file
+                else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
+                {
+                    string seedInfo = args[startIndex].Split('=')[1];
+                    info = Builder.CreateFromFile(seedInfo);
+                }
+                else if (args[startIndex] == "-l" || args[startIndex] == "--load-seed")
+                {
+                    string seedInfo = args[startIndex + 1];
+                    info = Builder.CreateFromFile(seedInfo);
+                    startIndex++;
+                }
+
+                // Add filename suffix
+                else if (args[startIndex].Equals("-x") || args[startIndex].Equals("--suffix"))
+                {
+                    options.AddFilenameSuffix = true;
+                }
+
+                // Output submission JSON
+                else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
+                {
+                    options.OutputSubmissionJSON = true;
+                }
+
+                // Compress log and extraneous files
+                else if (args[startIndex].Equals("-z") || args[startIndex].Equals("--zip"))
+                {
+                    options.CompressLogFiles = true;
+                }
+
+                // Delete unnecessary files files
+                else if (args[startIndex].Equals("-d") || args[startIndex].Equals("--delete"))
+                {
+                    options.DeleteUnnecessaryFiles = true;
+                }
+
+                // Default, we fall out
+                else
+                {
+                    break;
+                }
+            }
+
+            // Now deal with the complex options
+            options.ScanForProtection = scan && !string.IsNullOrEmpty(parsedPath);
+            options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(parsedPath);
+
+            return (options, info, parsedPath, startIndex);
         }
     }
 }

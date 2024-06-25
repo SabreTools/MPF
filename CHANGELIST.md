@@ -30,6 +30,7 @@
 - Use speed for CLI from configuration
 - Fix minimum number of args checks
 - Move GetDefaultSpeedForMediaType to common location
+- Move some Check-specific methods
 
 ### 3.2.0 (2024-06-20)
 
