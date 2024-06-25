@@ -104,26 +104,7 @@ namespace MPF.CLI
             string filepath = args[3].Trim('"');
 
             // Get the speed from the options
-            int speed = mediaType switch
-            {
-                // CD dump speed
-                MediaType.CDROM => options.PreferredDumpSpeedCD,
-                MediaType.GDROM => options.PreferredDumpSpeedCD,
-
-                // DVD dump speed
-                MediaType.DVD => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoGameCubeGameDisc => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoWiiOpticalDisc => options.PreferredDumpSpeedDVD,
-
-                // HD-DVD dump speed
-                MediaType.HDDVD => options.PreferredDumpSpeedHDDVD,
-
-                // BD dump speed
-                MediaType.BluRay => options.PreferredDumpSpeedBD,
-
-                // Default
-                _ => options.PreferredDumpSpeedCD,
-            };
+            int speed = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
 
             // Now populate an environment
             var drive = Drive.Create(null, path);

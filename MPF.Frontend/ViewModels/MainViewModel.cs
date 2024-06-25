@@ -1969,26 +1969,7 @@ namespace MPF.Frontend.ViewModels
             VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds.Select(ds => ds.ToString()).ToArray())}");
 
             // Set the selected speed
-            int speed = (CurrentMediaType) switch
-            {
-                // CD dump speed
-                MediaType.CDROM => Options.PreferredDumpSpeedCD,
-                MediaType.GDROM => Options.PreferredDumpSpeedCD,
-
-                // DVD dump speed
-                MediaType.DVD => Options.PreferredDumpSpeedDVD,
-                MediaType.NintendoGameCubeGameDisc => Options.PreferredDumpSpeedDVD,
-                MediaType.NintendoWiiOpticalDisc => Options.PreferredDumpSpeedDVD,
-
-                // HD-DVD dump speed
-                MediaType.HDDVD => Options.PreferredDumpSpeedHDDVD,
-
-                // BD dump speed
-                MediaType.BluRay => Options.PreferredDumpSpeedBD,
-
-                // Default
-                _ => Options.PreferredDumpSpeedCD,
-            };
+            int speed = FrontendTool.GetDefaultSpeedForMediaType(CurrentMediaType, Options);
 
             VerboseLogLn($"Setting drive speed to: {speed}");
             this.DriveSpeed = speed;

@@ -12,6 +12,33 @@ namespace MPF.Frontend.Tools
         #region Information Extraction
 
         /// <summary>
+        /// Get the default speed for a given media type from the supplied options
+        /// </summary>
+        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, Options options)
+        {
+            return mediaType switch
+            {
+                // CD dump speed
+                MediaType.CDROM => options.PreferredDumpSpeedCD,
+                MediaType.GDROM => options.PreferredDumpSpeedCD,
+
+                // DVD dump speed
+                MediaType.DVD => options.PreferredDumpSpeedDVD,
+                MediaType.NintendoGameCubeGameDisc => options.PreferredDumpSpeedDVD,
+                MediaType.NintendoWiiOpticalDisc => options.PreferredDumpSpeedDVD,
+
+                // HD-DVD dump speed
+                MediaType.HDDVD => options.PreferredDumpSpeedHDDVD,
+
+                // BD dump speed
+                MediaType.BluRay => options.PreferredDumpSpeedBD,
+
+                // Default
+                _ => options.PreferredDumpSpeedCD,
+            };
+        }
+
+        /// <summary>
         /// Get the current system from the drive volume label
         /// </summary>
         /// <returns>The system based on volume label, null if none detected</returns>
