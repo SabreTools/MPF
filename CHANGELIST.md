@@ -31,6 +31,7 @@
 - Fix minimum number of args checks
 - Move GetDefaultSpeedForMediaType to common location
 - Move some Check-specific methods
+- Add some custom CLI parameters
 
 ### 3.2.0 (2024-06-20)
 

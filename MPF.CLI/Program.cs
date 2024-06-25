@@ -99,22 +99,21 @@ namespace MPF.CLI
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
 
+            // Process any custom parameters
+            (string? devicePath, string? customParams, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
+
             // Get the explicit output options
-            string path = args[2].Trim('"');
-            string filepath = args[3].Trim('"');
+            string filepath = args[startIndex].Trim('"');
 
             // Get the speed from the options
             int speed = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
 
-            // Now populate an environment
-            var drive = Drive.Create(null, path);
+            // Populate an environment
+            var drive = Drive.Create(null, devicePath ?? string.Empty);
             var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, options.InternalProgram, parameters: null);
-            string? paramStr = env.GetFullParameters(speed);
 
-            // Process custom parameters
-            if (args.Length > 4)
-                paramStr = string.Join(" ", args.Skip(4).ToArray());
-            
+            // Process the parameters
+            string? paramStr = customParams ?? env.GetFullParameters(speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 DisplayHelp("No valid environment could be created, exiting...");
@@ -161,7 +160,7 @@ namespace MPF.CLI
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <mediatype> <system> <drivepath> </path/to/output.cue/iso> [custom-params]");
+            Console.WriteLine("MPF.CLI <mediatype> <system> [options] </path/to/output.cue/iso>");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
@@ -170,9 +169,80 @@ namespace MPF.CLI
             Console.WriteLine("-ls, --listsystems      List supported system types");
             Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
             Console.WriteLine();
-            Console.WriteLine("Custom parameters, if supplied, will fully replace the default parameters for the dumping");
+
+            Console.WriteLine("CLI Options:");
+            Console.WriteLine("-u, --use <program>            Override default dumping program");
+            Console.WriteLine("-c, --custom \"<params>\"      Custom parameters to use");
+            Console.WriteLine("-p, --path <drivepath>         Physical drive path if not defined in custom parameters");
+            Console.WriteLine();
+
+            Console.WriteLine("Custom parameters, if used, will fully replace the default parameters for the dumping");
             Console.WriteLine("program defined in the configuration. All parameters need to be supplied if doing this.");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Load the current set of options from application arguments
+        /// </summary>
+        private static (string? devicePath, string? customParams, int nextIndex) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
+        {
+            // Create return values
+            string? parsedPath = null, customParams = null;
+
+            // If we have no arguments, just return
+            if (args == null || args.Length == 0)
+                return (parsedPath, customParams, 0);
+
+            // If we have an invalid start index, just return
+            if (startIndex < 0 || startIndex >= args.Length)
+                return (parsedPath, customParams, startIndex);
+
+            // Loop through the arguments and parse out values
+            for (; startIndex < args.Length; startIndex++)
+            {
+                // Use specific program
+                if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
+                {
+                    string internalProgram = args[startIndex].Split('=')[1];
+                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                }
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
+                {
+                    string internalProgram = args[startIndex + 1];
+                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    startIndex++;
+                }
+
+                // Use a custom parameters
+                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--custom="))
+                {
+                    customParams = args[startIndex].Split('=')[1].Trim('"');
+                }
+                else if (args[startIndex] == "-c" || args[startIndex] == "--custom")
+                {
+                    customParams = args[startIndex + 1].Trim('"');
+                    startIndex++;
+                }
+
+                // Use a device path
+                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
+                {
+                    parsedPath = args[startIndex].Split('=')[1].Trim('"');
+                }
+                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
+                {
+                    parsedPath = args[startIndex + 1].Trim('"');
+                    startIndex++;
+                }
+
+                // Default, we fall out
+                else
+                {
+                    break;
+                }
+            }
+
+            return (parsedPath, customParams, startIndex);
         }
     }
 }
