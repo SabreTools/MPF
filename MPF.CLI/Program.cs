@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -100,20 +99,24 @@ namespace MPF.CLI
                 Console.WriteLine(message);
 
             // Process any custom parameters
-            (string? devicePath, string? customParams, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
+            (CommandOptions opts, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
 
-            // Get the explicit output options
-            string filepath = args[startIndex].Trim('"');
+            // Ensure we have the values we need
+            if (opts.CustomParams == null && (opts.DevicePath == null || opts.DevicePath == null))
+            {
+                DisplayHelp("Both a device path and file path need to be supplied, exiting...");
+                return;
+            }
 
             // Get the speed from the options
-            int speed = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
+            int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
 
             // Populate an environment
-            var drive = Drive.Create(null, devicePath ?? string.Empty);
-            var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, options.InternalProgram, parameters: null);
+            var drive = Drive.Create(null, opts.DevicePath ?? string.Empty);
+            var env = new DumpEnvironment(options, opts.FilePath, drive, knownSystem, mediaType, options.InternalProgram, parameters: null);
 
             // Process the parameters
-            string? paramStr = customParams ?? env.GetFullParameters(speed);
+            string? paramStr = opts.CustomParams ?? env.GetFullParameters(speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 DisplayHelp("No valid environment could be created, exiting...");
@@ -160,7 +163,7 @@ namespace MPF.CLI
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <mediatype> <system> [options] </path/to/output.cue/iso>");
+            Console.WriteLine("MPF.CLI <mediatype> <system> [options]");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
@@ -172,8 +175,10 @@ namespace MPF.CLI
 
             Console.WriteLine("CLI Options:");
             Console.WriteLine("-u, --use <program>            Override default dumping program");
+            Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
+            Console.WriteLine("-f, --file \"<filepath>\"      Output file path (Required if no custom parameters set)");
+            Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
             Console.WriteLine("-c, --custom \"<params>\"      Custom parameters to use");
-            Console.WriteLine("-p, --path <drivepath>         Physical drive path if not defined in custom parameters");
             Console.WriteLine();
 
             Console.WriteLine("Custom parameters, if used, will fully replace the default parameters for the dumping");
@@ -184,18 +189,18 @@ namespace MPF.CLI
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static (string? devicePath, string? customParams, int nextIndex) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
+        private static (CommandOptions opts, int nextIndex) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
         {
             // Create return values
-            string? parsedPath = null, customParams = null;
+            var opts = new CommandOptions();
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
-                return (parsedPath, customParams, 0);
+                return (opts, 0);
 
             // If we have an invalid start index, just return
             if (startIndex < 0 || startIndex >= args.Length)
-                return (parsedPath, customParams, startIndex);
+                return (opts, startIndex);
 
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
@@ -213,25 +218,53 @@ namespace MPF.CLI
                     startIndex++;
                 }
 
-                // Use a custom parameters
-                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--custom="))
+                // Use a device path
+                else if (args[startIndex].StartsWith("-d=") || args[startIndex].StartsWith("--device="))
                 {
-                    customParams = args[startIndex].Split('=')[1].Trim('"');
+                    opts.DevicePath = args[startIndex].Split('=')[1].Trim('"');
                 }
-                else if (args[startIndex] == "-c" || args[startIndex] == "--custom")
+                else if (args[startIndex] == "-d" || args[startIndex] == "--device")
                 {
-                    customParams = args[startIndex + 1].Trim('"');
+                    opts.DevicePath = args[startIndex + 1].Trim('"');
                     startIndex++;
                 }
 
-                // Use a device path
-                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
+                // Use a file path
+                else if (args[startIndex].StartsWith("-f=") || args[startIndex].StartsWith("--file="))
                 {
-                    parsedPath = args[startIndex].Split('=')[1].Trim('"');
+                    opts.FilePath = args[startIndex].Split('=')[1].Trim('"');
                 }
-                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
+                else if (args[startIndex] == "-f" || args[startIndex] == "--file")
                 {
-                    parsedPath = args[startIndex + 1].Trim('"');
+                    opts.FilePath = args[startIndex + 1].Trim('"');
+                    startIndex++;
+                }
+
+                // Set an override speed
+                else if (args[startIndex].StartsWith("-s=") || args[startIndex].StartsWith("--speed="))
+                {
+                    if (!int.TryParse(args[startIndex].Split('=')[1].Trim('"'), out int speed))
+                        speed = -1;
+
+                    opts.DriveSpeed = speed;
+                }
+                else if (args[startIndex] == "-s" || args[startIndex] == "--speed")
+                {
+                    if (!int.TryParse(args[startIndex + 1].Trim('"'), out int speed))
+                        speed = -1;
+
+                    opts.DriveSpeed = speed;
+                    startIndex++;
+                }
+
+                // Use a custom parameters
+                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--custom="))
+                {
+                    opts.CustomParams = args[startIndex].Split('=')[1].Trim('"');
+                }
+                else if (args[startIndex] == "-c" || args[startIndex] == "--custom")
+                {
+                    opts.CustomParams = args[startIndex + 1].Trim('"');
                     startIndex++;
                 }
 
@@ -242,7 +275,18 @@ namespace MPF.CLI
                 }
             }
 
-            return (parsedPath, customParams, startIndex);
+            return (opts, startIndex);
+        }
+
+        private class CommandOptions
+        {
+            public string? DevicePath { get; set; } = null;
+
+            public string? FilePath { get; set; } = null;
+
+            public int? DriveSpeed { get; set; } = null;
+
+            public string? CustomParams { get; set; } = null;
         }
     }
 }

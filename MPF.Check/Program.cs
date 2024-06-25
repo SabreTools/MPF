@@ -31,8 +31,8 @@ namespace MPF.Check
             }
 
             // Loop through and process options
-            (var options, var seedInfo, var path, int startIndex) = LoadFromArguments(args, startIndex: 2);
-            if (options.InternalProgram == InternalProgram.NONE)
+            (CommandOptions opts, int startIndex) = LoadFromArguments(args, startIndex: 2);
+            if (opts.Options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");
                 return;
@@ -46,9 +46,9 @@ namespace MPF.Check
 
             // Validate the supplied credentials
 #if NETFRAMEWORK
-            (bool? _, string? message) = RedumpWebClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
+            (bool? _, string? message) = RedumpWebClient.ValidateCredentials(opts.Options.RedumpUsername ?? string.Empty, opts.Options.RedumpPassword ?? string.Empty);
 #else
-            (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
+            (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(opts.Options.RedumpUsername ?? string.Empty, opts.Options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
@@ -68,10 +68,10 @@ namespace MPF.Check
 
                 // Now populate an environment
                 Drive? drive = null;
-                if (!string.IsNullOrEmpty(path))
-                    drive = Drive.Create(null, path!);
+                if (!string.IsNullOrEmpty(opts.DevicePath))
+                    drive = Drive.Create(null, opts.DevicePath!);
 
-                var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
+                var env = new DumpEnvironment(opts.Options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
 #if NET40
@@ -123,10 +123,13 @@ namespace MPF.Check
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static (Frontend.Options, SubmissionInfo?, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
+        private static (CommandOptions, int) LoadFromArguments(string[] args, int startIndex = 0)
         {
+            // Create return values
+            var opts = new CommandOptions();
+
             // Create the output values with defaults
-            var options = new Frontend.Options()
+            opts.Options = new Frontend.Options()
             {
                 RedumpUsername = null,
                 RedumpPassword = null,
@@ -137,20 +140,16 @@ namespace MPF.Check
                 DeleteUnnecessaryFiles = false,
             };
 
-            // Create the submission info to return, if necessary
-            SubmissionInfo? info = null;
-            string? parsedPath = null;
-
             // These values require multiple parts to be active
             bool scan = false, hideDriveLetters = false;
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
-                return (options, null, null, 0);
+                return (opts, 0);
 
             // If we have an invalid start index, just return
             if (startIndex < 0 || startIndex >= args.Length)
-                return (options, null, null, startIndex);
+                return (opts, startIndex);
 
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
@@ -159,12 +158,12 @@ namespace MPF.Check
                 if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
                     string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    opts.Options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
                 }
                 else if (args[startIndex] == "-u" || args[startIndex] == "--use")
                 {
                     string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    opts.Options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
                     startIndex++;
                 }
 
@@ -172,30 +171,30 @@ namespace MPF.Check
                 else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
                 {
                     string[] credentials = args[startIndex].Split('=')[1].Split(';');
-                    options.RedumpUsername = credentials[0];
-                    options.RedumpPassword = credentials[1];
+                    opts.Options.RedumpUsername = credentials[0];
+                    opts.Options.RedumpPassword = credentials[1];
                 }
                 else if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
                 {
-                    options.RedumpUsername = args[startIndex + 1];
-                    options.RedumpPassword = args[startIndex + 2];
+                    opts.Options.RedumpUsername = args[startIndex + 1];
+                    opts.Options.RedumpPassword = args[startIndex + 2];
                     startIndex += 2;
                 }
 
                 // Pull all information (requires Redump login)
                 else if (args[startIndex].Equals("-a") || args[startIndex].Equals("--pull-all"))
                 {
-                    options.PullAllInformation = true;
+                    opts.Options.PullAllInformation = true;
                 }
 
                 // Use a device path for physical checks
                 else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
                 {
-                    parsedPath = args[startIndex].Split('=')[1];
+                    opts.DevicePath = args[startIndex].Split('=')[1];
                 }
                 else if (args[startIndex] == "-p" || args[startIndex] == "--path")
                 {
-                    parsedPath = args[startIndex + 1];
+                    opts.DevicePath = args[startIndex + 1];
                     startIndex++;
                 }
 
@@ -215,37 +214,37 @@ namespace MPF.Check
                 else if (args[startIndex].StartsWith("-l=") || args[startIndex].StartsWith("--load-seed="))
                 {
                     string seedInfo = args[startIndex].Split('=')[1];
-                    info = Builder.CreateFromFile(seedInfo);
+                    opts.Seed = Builder.CreateFromFile(seedInfo);
                 }
                 else if (args[startIndex] == "-l" || args[startIndex] == "--load-seed")
                 {
                     string seedInfo = args[startIndex + 1];
-                    info = Builder.CreateFromFile(seedInfo);
+                    opts.Seed = Builder.CreateFromFile(seedInfo);
                     startIndex++;
                 }
 
                 // Add filename suffix
                 else if (args[startIndex].Equals("-x") || args[startIndex].Equals("--suffix"))
                 {
-                    options.AddFilenameSuffix = true;
+                    opts.Options.AddFilenameSuffix = true;
                 }
 
                 // Output submission JSON
                 else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
                 {
-                    options.OutputSubmissionJSON = true;
+                    opts.Options.OutputSubmissionJSON = true;
                 }
 
                 // Compress log and extraneous files
                 else if (args[startIndex].Equals("-z") || args[startIndex].Equals("--zip"))
                 {
-                    options.CompressLogFiles = true;
+                    opts.Options.CompressLogFiles = true;
                 }
 
                 // Delete unnecessary files files
                 else if (args[startIndex].Equals("-d") || args[startIndex].Equals("--delete"))
                 {
-                    options.DeleteUnnecessaryFiles = true;
+                    opts.Options.DeleteUnnecessaryFiles = true;
                 }
 
                 // Default, we fall out
@@ -256,10 +255,19 @@ namespace MPF.Check
             }
 
             // Now deal with the complex options
-            options.ScanForProtection = scan && !string.IsNullOrEmpty(parsedPath);
-            options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(parsedPath);
+            opts.Options.ScanForProtection = scan && !string.IsNullOrEmpty(opts.DevicePath);
+            opts.Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
 
-            return (options, info, parsedPath, startIndex);
+            return (opts, startIndex);
+        }
+
+        private class CommandOptions
+        {
+            public Frontend.Options Options { get; set; } = new Frontend.Options();
+
+            public SubmissionInfo? Seed { get; set; } = null;
+
+            public string? DevicePath { get; set; } = null;
         }
     }
 }

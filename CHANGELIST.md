@@ -32,6 +32,7 @@
 - Move GetDefaultSpeedForMediaType to common location
 - Move some Check-specific methods
 - Add some custom CLI parameters
+- Try out custom options classes
 
 ### 3.2.0 (2024-06-20)
 

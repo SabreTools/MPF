@@ -119,7 +119,7 @@ namespace MPF.Frontend
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
         public DumpEnvironment(Frontend.Options options,
-            string outputPath,
+            string ?outputPath,
             Drive? drive,
             RedumpSystem? system,
             MediaType? type,
@@ -200,7 +200,8 @@ namespace MPF.Frontend
                 _executionContext.System = _system;
                 _executionContext.Type = _type;
 
-                // Set the drive, if not already set
+                // Set some parameters, if not already set
+                OutputPath ??= _executionContext.OutputPath!;
                 _drive ??= Drive.Create(InternalDriveType.Optical, _executionContext.InputPath!);
             }
 
