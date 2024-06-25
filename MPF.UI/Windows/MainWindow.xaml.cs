@@ -399,14 +399,65 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.EnableDarkMode)
                 theme = new DarkModeTheme();
             else if (MainViewModel.Options.EnablePurpMode)
-                theme = new PurpModeTheme();
+                theme = new CustomTheme("111111", "9A5EC0");
+            else if (IsHexColor(MainViewModel.Options.CustomBackgroundColor) && IsHexColor(MainViewModel.Options.CustomTextColor))
+                theme = new CustomTheme(MainViewModel.Options.CustomBackgroundColor, MainViewModel.Options.CustomTextColor);
             else
                 theme = new LightModeTheme();
 
             theme.Apply();
         }
 
-#endregion
+        /// <summary>
+        /// Check whether a string represents a valid hex color
+        /// </summary>
+        public static bool IsHexColor(string? color)
+        {
+            if (string.IsNullOrWhiteSpace(color))
+                return false;
+
+            if (color!.Length == 7 && color[0] == '#')
+                color = color.Substring(1);
+
+            if (color.Length != 6)
+                return false;
+
+            for (int i = 0; i < color.Length; i++)
+            {
+                switch (color[i])
+                {
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case 'A':
+                    case 'B':
+                    case 'C':
+                    case 'D':
+                    case 'E':
+                    case 'F':
+                    case 'a':
+                    case 'b':
+                    case 'c':
+                    case 'd':
+                    case 'e':
+                    case 'f':
+                        continue;
+                    default:
+                        break;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
 
         #region Event Handlers
 

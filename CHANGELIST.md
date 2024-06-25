@@ -26,6 +26,7 @@
 - Blindly assume the path exists
 - Add CLI status output on runtime
 - Ensure tracks are assigned in Aaru
+- Custom theme colors
 
 ### 3.2.0 (2024-06-20)
 
