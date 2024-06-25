@@ -181,8 +181,8 @@ namespace MPF.CLI
             Console.WriteLine("-c, --custom \"<params>\"      Custom parameters to use");
             Console.WriteLine();
 
-            Console.WriteLine("Custom parameters, if used, will fully replace the default parameters for the dumping");
-            Console.WriteLine("program defined in the configuration. All parameters need to be supplied if doing this.");
+            Console.WriteLine("Custom parameters, if used, will fully replace the default parameters.");
+            Console.WriteLine("All parameters need to be supplied if doing this.");
             Console.WriteLine();
         }
 

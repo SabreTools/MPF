@@ -33,6 +33,7 @@
 - Move some Check-specific methods
 - Add some custom CLI parameters
 - Try out custom options classes
+- Simplify custom parameters warning
 
 ### 3.2.0 (2024-06-20)
 
