@@ -101,10 +101,29 @@ namespace MPF.CLI
 
             // Get the explicit output options
             string path = args[2].Trim('"');
-            string speedStr = args[3].Trim('"');
-            if (!int.TryParse(speedStr, out int speed))
-                speed = 8; // Reasonable default for most media types
-            string filepath = args[4].Trim('"');
+            string filepath = args[3].Trim('"');
+
+            // Get the speed from the options
+            int speed = mediaType switch
+            {
+                // CD dump speed
+                MediaType.CDROM => options.PreferredDumpSpeedCD,
+                MediaType.GDROM => options.PreferredDumpSpeedCD,
+
+                // DVD dump speed
+                MediaType.DVD => options.PreferredDumpSpeedDVD,
+                MediaType.NintendoGameCubeGameDisc => options.PreferredDumpSpeedDVD,
+                MediaType.NintendoWiiOpticalDisc => options.PreferredDumpSpeedDVD,
+
+                // HD-DVD dump speed
+                MediaType.HDDVD => options.PreferredDumpSpeedHDDVD,
+
+                // BD dump speed
+                MediaType.BluRay => options.PreferredDumpSpeedBD,
+
+                // Default
+                _ => options.PreferredDumpSpeedCD,
+            };
 
             // Now populate an environment
             var drive = Drive.Create(null, path);
@@ -161,7 +180,7 @@ namespace MPF.CLI
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <mediatype> <system> <drivepath> <speed> </path/to/output.cue/iso> [custom-params]");
+            Console.WriteLine("MPF.CLI <mediatype> <system> <drivepath> </path/to/output.cue/iso> [custom-params]");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
