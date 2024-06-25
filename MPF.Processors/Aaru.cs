@@ -480,6 +480,7 @@ namespace MPF.Processors
 
                     // Add the track to the file
                     cueTracks.Add(cueTrack);
+                    cueFile.Tracks = [.. cueTracks];
 
                     // Add the file to the cuesheet
                     cueFiles.Add(cueFile);

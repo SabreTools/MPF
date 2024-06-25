@@ -1074,10 +1074,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 6)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1106,10 +1104,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1128,10 +1124,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     break;
 
@@ -1139,10 +1133,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1161,10 +1153,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 6)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1193,10 +1183,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1215,10 +1203,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 3)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1231,21 +1217,16 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
-
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
                     break;
 
                 case CommandStrings.Eject:
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     break;
 
@@ -1253,10 +1234,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 3)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1269,10 +1248,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1318,10 +1295,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     break;
 
@@ -1329,10 +1304,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1351,10 +1324,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     break;
 
@@ -1362,10 +1333,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     break;
 
@@ -1384,10 +1353,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1423,10 +1390,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;
@@ -1447,10 +1412,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Count < 4)
                         return false;
 
-                    if (!IsValidDriveLetter(parts[1]))
-                        return false;
-                    else
-                        DrivePath = parts[1];
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
 
                     if (IsFlagSupported(parts[2]))
                         return false;

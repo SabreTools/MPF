@@ -316,14 +316,6 @@ namespace MPF.ExecutionContexts
         }
 
         /// <summary>
-        /// Returns whether a string is a valid drive letter
-        /// </summary>
-        /// <param name="parameter">String value to check</param>
-        /// <returns>True if it's a valid drive letter, false otherwise</W>
-        protected static bool IsValidDriveLetter(string parameter)
-            => Regex.IsMatch(parameter, @"^[A-Z]:?\\?$");
-
-        /// <summary>
         /// Returns whether a string is a valid bool
         /// </summary>
         /// <param name="parameter">String value to check</param>

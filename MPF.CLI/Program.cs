@@ -123,6 +123,7 @@ namespace MPF.CLI
             env.SetExecutionContext(paramStr);
 
             // Invoke the dumping program
+            Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
 #if NET40
             var dumpResult = env.Run(resultProgress);
 #else
