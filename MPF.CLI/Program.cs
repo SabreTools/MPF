@@ -176,9 +176,9 @@ namespace MPF.CLI
             Console.WriteLine("CLI Options:");
             Console.WriteLine("-u, --use <program>            Override default dumping program");
             Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
-            Console.WriteLine("-f, --file \"<filepath>\"      Output file path (Required if no custom parameters set)");
+            Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
             Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
-            Console.WriteLine("-c, --custom \"<params>\"      Custom parameters to use");
+            Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
             Console.WriteLine();
 
             Console.WriteLine("Custom parameters, if used, will fully replace the default parameters.");

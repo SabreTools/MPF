@@ -34,6 +34,7 @@
 - Add some custom CLI parameters
 - Try out custom options classes
 - Simplify custom parameters warning
+- Fix CLI help text alignment
 
 ### 3.2.0 (2024-06-20)
 
