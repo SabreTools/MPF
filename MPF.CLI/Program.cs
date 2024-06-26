@@ -189,7 +189,7 @@ namespace MPF.CLI
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static (CommandOptions opts, int nextIndex) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
+        private static (CommandOptions, int) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
         {
             // Create return values
             var opts = new CommandOptions();
