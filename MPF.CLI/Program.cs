@@ -278,14 +278,31 @@ namespace MPF.CLI
             return (opts, startIndex);
         }
 
+        /// <summary>
+        /// Represents commandline options
+        /// </summary>
         private class CommandOptions
         {
+            /// <summary>
+            /// Path to the device to dump
+            /// </summary>
+            /// <remarks>Required if custom parameters are not set</remarks>
             public string? DevicePath { get; set; } = null;
 
+            /// <summary>
+            /// Path to the output file
+            /// </summary>
+            /// <remarks>Required if custom parameters are not set</remarks>
             public string? FilePath { get; set; } = null;
 
+            /// <summary>
+            /// Override drive speed
+            /// </summary>
             public int? DriveSpeed { get; set; } = null;
 
+            /// <summary>
+            /// Custom parameters for dumping
+            /// </summary>
             public string? CustomParams { get; set; } = null;
         }
     }

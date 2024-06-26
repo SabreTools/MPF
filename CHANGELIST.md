@@ -35,6 +35,7 @@
 - Try out custom options classes
 - Simplify custom parameters warning
 - Fix CLI help text alignment
+- Bring Check and CLI in parity with param processing
 
 ### 3.2.0 (2024-06-20)
 
