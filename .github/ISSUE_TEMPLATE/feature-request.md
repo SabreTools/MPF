@@ -10,7 +10,7 @@ assignees: mnadareski
 **Before You Submit**
 
 - Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the feature already exists.
-- Is it copy protection related? If so, report the issue [here](hhttps://github.com/SabreTools/BinaryObjectScanner/issues) instead.
+- Is it copy protection related? If so, report the issue [here](https://github.com/SabreTools/BinaryObjectScanner/issues) instead.
 - Check [previous issues](https://github.com/SabreTools/MPF/issues) to see if any of those are related to what you're about to ask for.
 
 If none of those apply, then continue...
