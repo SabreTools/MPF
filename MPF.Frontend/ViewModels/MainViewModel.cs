@@ -1820,8 +1820,11 @@ namespace MPF.Frontend.ViewModels
             if (MediaTypes != null)
             {
                 MediaType? mediaType = _environment.GetMediaType();
-                int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
-                this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
+                if (mediaType != null)
+                {
+                    int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
+                    this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
+                }
             }
 
             // Reenable change handling
