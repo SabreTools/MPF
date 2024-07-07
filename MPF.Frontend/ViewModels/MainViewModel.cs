@@ -740,7 +740,10 @@ namespace MPF.Frontend.ViewModels
         {
             VerboseLogLn($"Changed dumping program to: {((InternalProgram?)this.CurrentProgram).LongName()}");
             EnsureDiscInformation();
+            // New output name depends on new environment
             GetOutputNames(false);
+            // New environment depends on new output name
+            EnsureDiscInformation();
         }
 
         /// <summary>

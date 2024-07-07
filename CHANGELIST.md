@@ -38,6 +38,7 @@
 - Bring Check and CLI in parity with param processing
 - Remove now-unncessary names
 - Don't set MediaType if parameters ambiguous
+- Fix parameters after extension change
 
 ### 3.2.0 (2024-06-20)
 
