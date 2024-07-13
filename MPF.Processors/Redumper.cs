@@ -408,6 +408,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.EXEDateBuildDate = ps2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps2Version ?? string.Empty;
+                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Serial);
                     }
 
                     break;
