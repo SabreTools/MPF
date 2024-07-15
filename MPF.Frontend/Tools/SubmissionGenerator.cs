@@ -833,7 +833,7 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
-                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) || string.IsNullOrEmpty(ps2Exe))
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) || !string.IsNullOrEmpty(ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
