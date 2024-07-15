@@ -838,7 +838,7 @@ namespace MPF.Frontend.Tools
 
                     if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
                     {
-                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
+                        if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || !string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
 
                         info.CommonDiscInfo.Region ??= ps2Region;
