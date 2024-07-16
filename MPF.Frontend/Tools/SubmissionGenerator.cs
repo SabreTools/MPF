@@ -698,7 +698,7 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) || !string.IsNullOrEmpty(kp2Exe))
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && !string.IsNullOrEmpty(kp2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
@@ -812,7 +812,7 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), psx: true);
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) || !string.IsNullOrEmpty(psxExe))
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && !string.IsNullOrEmpty(psxExe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(psxExe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var psxSerial, out Region? psxRegion, out var psxDate) == true)
@@ -833,7 +833,7 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) || !string.IsNullOrEmpty(ps2Exe))
+                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && !string.IsNullOrEmpty(ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
 
                     if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
