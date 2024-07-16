@@ -20,7 +20,7 @@ namespace MPF.Test.Frontend.Tools
         [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
         public void NormalizeOutputPathsTest(string? outputPath, string? expectedPath)
         {
-            if (!string.IsNullOrWhiteSpace(expectedPath))
+            if (!string.IsNullOrEmpty(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
 
             string actualPath = FrontendTool.NormalizeOutputPaths(outputPath, true);

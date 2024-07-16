@@ -40,6 +40,7 @@
 - Don't set MediaType if parameters ambiguous
 - Fix parameters after extension change
 - Fix logic for deducing region from PlayStation ISN (John Veness)
+- Fix broken test logic
 
 ### 3.2.0 (2024-06-20)
 
