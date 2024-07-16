@@ -353,26 +353,6 @@ namespace MPF.Processors
         #region Region Extraction
 
         /// <summary>
-        /// Determine the region based on the XGD serial character
-        /// </summary>
-        /// <param name="region">Character denoting the region</param>
-        /// <returns>Region, if possible</returns>
-        public static Region? GetXGDRegion(char? region)
-        {
-            return region switch
-            {
-                'W' => (Region?)Region.World,
-                'A' => (Region?)Region.UnitedStatesOfAmerica,
-                'J' => (Region?)Region.JapanAsia,
-                'E' => (Region?)Region.Europe,
-                'K' => (Region?)Region.USAJapan,
-                'L' => (Region?)Region.USAEurope,
-                'H' => (Region?)Region.JapanEurope,
-                _ => null,
-            };
-        }
-
-        /// <summary>
         /// Determine the region based on the PlayStation serial code
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
@@ -455,6 +435,26 @@ namespace MPF.Processors
                 return Region.UnitedStatesOfAmerica;
 
             return null;
+        }
+
+        /// <summary>
+        /// Determine the region based on the XGD serial character
+        /// </summary>
+        /// <param name="region">Character denoting the region</param>
+        /// <returns>Region, if possible</returns>
+        public static Region? GetXGDRegion(char? region)
+        {
+            return region switch
+            {
+                'W' => (Region?)Region.World,
+                'A' => (Region?)Region.UnitedStatesOfAmerica,
+                'J' => (Region?)Region.JapanAsia,
+                'E' => (Region?)Region.Europe,
+                'K' => (Region?)Region.USAJapan,
+                'L' => (Region?)Region.USAEurope,
+                'H' => (Region?)Region.JapanEurope,
+                _ => null,
+            };
         }
 
         #endregion
