@@ -124,7 +124,7 @@ namespace MPF.Check
             Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --credentials)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
-            Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)");
+            Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --scan)");
             Console.WriteLine("-l, --load-seed <path>         Load a seed submission JSON for user information");
             Console.WriteLine("-x, --suffix                   Enable adding filename suffix");
             Console.WriteLine("-j, --json                     Enable submission JSON output");
@@ -206,7 +206,7 @@ namespace MPF.Check
                     scan = true;
                 }
 
-                // Hide drive letters from scan output (requires --protect-file)
+                // Hide drive letters from scan output (requires --scan)
                 else if (args[startIndex].Equals("--hide-drive-letters"))
                 {
                     hideDriveLetters = true;
