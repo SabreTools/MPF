@@ -498,7 +498,7 @@ namespace MPF.Frontend
             var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
-            resultProgress?.Report(ResultEventArgs.Success("Writing information to !submissionInfo.txt..."));
+            resultProgress?.Report(ResultEventArgs.Success("Writing submission information file..."));
             (bool txtSuccess, string txtResult) = WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
             if (txtSuccess)
                 resultProgress?.Report(ResultEventArgs.Success(txtResult));
@@ -510,7 +510,7 @@ namespace MPF.Frontend
             {
                 if (_options.ScanForProtection)
                 {
-                    resultProgress?.Report(ResultEventArgs.Success("Writing protection to !protectionInfo.txt..."));
+                    resultProgress?.Report(ResultEventArgs.Success("Writing protection information file..."));
                     bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
@@ -522,7 +522,7 @@ namespace MPF.Frontend
             // Write the JSON output, if required
             if (_options.OutputSubmissionJSON)
             {
-                resultProgress?.Report(ResultEventArgs.Success($"Writing information to !submissionInfo.json{(_options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
+                resultProgress?.Report(ResultEventArgs.Success($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
                 bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
