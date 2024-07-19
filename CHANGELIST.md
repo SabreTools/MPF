@@ -43,6 +43,7 @@
 - Fix broken test logic
 - Remove RedumpLib tests
 - Change to generic wording in report (JohnVeness)
+- Add include artifacts flag for check, sanitize options
 
 ### 3.2.0 (2024-06-20)
 

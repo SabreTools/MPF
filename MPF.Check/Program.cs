@@ -21,6 +21,7 @@ namespace MPF.Check
                 InternalProgram = InternalProgram.NONE,
                 AddFilenameSuffix = false,
                 OutputSubmissionJSON = false,
+                IncludeArtifacts = false,
                 CompressLogFiles = false,
                 DeleteUnnecessaryFiles = false,
             };
@@ -120,13 +121,14 @@ namespace MPF.Check
             Console.WriteLine("Check Options:");
             Console.WriteLine("-u, --use <program>            Dumping program output type [REQUIRED]");
             Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password");
-            Console.WriteLine("-a, --pull-all                 Pull all information from Redump (requires --credentials)");
+            Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --credentials)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
-            Console.WriteLine("-g, --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)");
+            Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --protect-file)");
             Console.WriteLine("-l, --load-seed <path>         Load a seed submission JSON for user information");
             Console.WriteLine("-x, --suffix                   Enable adding filename suffix");
             Console.WriteLine("-j, --json                     Enable submission JSON output");
+            Console.WriteLine("    --include-artifacts        Include artifacts in JSON (requires --json)");
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine();
@@ -182,7 +184,7 @@ namespace MPF.Check
                 }
 
                 // Pull all information (requires Redump login)
-                else if (args[startIndex].Equals("-a") || args[startIndex].Equals("--pull-all"))
+                else if (args[startIndex].Equals("--pull-all"))
                 {
                     options.PullAllInformation = true;
                 }
@@ -205,7 +207,7 @@ namespace MPF.Check
                 }
 
                 // Hide drive letters from scan output (requires --protect-file)
-                else if (args[startIndex].Equals("-g") || args[startIndex].Equals("--hide-drive-letters"))
+                else if (args[startIndex].Equals("--hide-drive-letters"))
                 {
                     hideDriveLetters = true;
                 }
@@ -233,6 +235,12 @@ namespace MPF.Check
                 else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
                 {
                     options.OutputSubmissionJSON = true;
+                }
+
+                // Output submission JSON
+                else if (args[startIndex].Equals("--include-artifacts"))
+                {
+                    options.IncludeArtifacts = true;
                 }
 
                 // Compress log and extraneous files
