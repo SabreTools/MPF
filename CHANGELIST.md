@@ -44,6 +44,7 @@
 - Remove RedumpLib tests
 - Change to generic wording in report (JohnVeness)
 - Add include artifacts flag for check, sanitize options
+- Remove old --protect-file mentions (JohnVeness)
 
 ### 3.2.0 (2024-06-20)
 
