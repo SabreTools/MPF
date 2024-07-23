@@ -88,11 +88,11 @@ namespace MPF.Check
 
                 // Finally, attempt to do the output dance
 #if NET40
-                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
+                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, null, opts.Seed);
                 resultTask.Wait();
                 var result = resultTask.Result;
 #else
-                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
+                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, null, opts.Seed).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
                 Console.WriteLine(result.Message);
             }
