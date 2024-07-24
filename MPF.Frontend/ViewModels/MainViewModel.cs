@@ -2099,11 +2099,7 @@ namespace MPF.Frontend.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-#if NET40
-                ResultEventArgs result = _environment.Run(resultProgress);
-#else
                 ResultEventArgs result = await _environment.Run(resultProgress);
-#endif
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())

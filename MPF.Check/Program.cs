@@ -1,5 +1,9 @@
 ﻿using System;
 using System.IO;
+#if NET40
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -58,11 +62,7 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
-#if NETFRAMEWORK
-            (bool? _, string? message) = RedumpWebClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
-#else
-            (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
+            (bool? _, string? message) = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
 
@@ -87,13 +87,7 @@ namespace MPF.Check
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
-#if NET40
-                var resultTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
-                resultTask.Wait();
-                var result = resultTask.Result;
-#else
-                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
+                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
         }

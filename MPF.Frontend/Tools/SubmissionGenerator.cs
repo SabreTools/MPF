@@ -147,11 +147,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-#if NET40
-        public static bool FillFromRedump(Frontend.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
-#else
         public async static Task<bool> FillFromRedump(Frontend.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
-#endif
         {
             // If no username is provided
             if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
@@ -163,13 +159,8 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [];
 
             // Login to Redump
-#if NETFRAMEWORK
-            using var wc = new RedumpWebClient();
-            bool? loggedIn = wc.Login(options.RedumpUsername!, options.RedumpPassword!);
-#else
-            using var wc = new RedumpHttpClient();
-            bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
-#endif
+            var wc = new RedumpClient();
+            bool? loggedIn = await wc.Login(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
             if (loggedIn == null)
             {
                 resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump"));
@@ -221,13 +212,7 @@ namespace MPF.Frontend.Tools
                     continue;
                 }
 
-#if NET40
-                var validateTask = Validator.ValidateSingleTrack(wc, info, sha1);
-                validateTask.Wait();
-                (bool singleFound, var foundIds, string? result) = validateTask.Result;
-#else
                 (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
-#endif
                 if (singleFound)
                     resultProgress?.Report(ResultEventArgs.Success(result));
                 else

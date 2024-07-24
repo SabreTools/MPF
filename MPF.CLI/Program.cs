@@ -1,5 +1,9 @@
 ﻿using System;
 using System.IO;
+#if NET40
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
@@ -90,11 +94,7 @@ namespace MPF.CLI
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
-#if NETFRAMEWORK
-            (bool? _, string? message) = RedumpWebClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
-#else
-            (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
+            (bool? _, string? message) = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
 
@@ -126,11 +126,7 @@ namespace MPF.CLI
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
-#if NET40
-            var dumpResult = env.Run(resultProgress);
-#else
             var dumpResult = env.Run(resultProgress).GetAwaiter().GetResult();
-#endif
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return;

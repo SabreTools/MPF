@@ -4,6 +4,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+#if NET40
+using System.Threading;
+#endif
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;
@@ -119,7 +122,7 @@ namespace MPF.Frontend
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
         public DumpEnvironment(Frontend.Options options,
-            string ?outputPath,
+            string? outputPath,
             Drive? drive,
             RedumpSystem? system,
             MediaType? type,
@@ -382,11 +385,7 @@ namespace MPF.Frontend
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
-#if NET40
-        public ResultEventArgs Run(IProgress<ResultEventArgs>? progress = null)
-#else
         public async Task<ResultEventArgs> Run(IProgress<ResultEventArgs>? progress = null)
-#endif
         {
             // If we don't have parameters
             if (_executionContext == null)
@@ -405,8 +404,7 @@ namespace MPF.Frontend
                 Directory.CreateDirectory(directoryName);
 
 #if NET40
-            var executeTask = Task.Factory.StartNew(() => _executionContext.ExecuteInternalProgram());
-            executeTask.Wait();
+            await Task.Factory.StartNew(() => { _executionContext.ExecuteInternalProgram(); return true; });
 #else
             await Task.Run(_executionContext.ExecuteInternalProgram);
 #endif
