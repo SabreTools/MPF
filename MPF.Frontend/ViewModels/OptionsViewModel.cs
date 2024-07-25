@@ -121,19 +121,9 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Test Redump login credentials
         /// </summary>
-#if NET40
-        public static Task<(bool?, string?)> TestRedumpLogin(string username, string password)
-#else
         public static async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
-#endif
         {
-#if NET40
-            return Task.Factory.StartNew(() => RedumpWebClient.ValidateCredentials(username, password));
-#elif NETFRAMEWORK
-            return await Task.Run(() => RedumpWebClient.ValidateCredentials(username, password));
-#else
-            return await RedumpHttpClient.ValidateCredentials(username, password);
-#endif
+            return await RedumpClient.ValidateCredentials(username, password);
         }
 
         /// <summary>

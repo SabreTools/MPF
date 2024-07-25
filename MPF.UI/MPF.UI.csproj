@@ -1,130 +1,130 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <!-- Assembly Properties -->
-    <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
-    <OutputType>WinExe</OutputType>
-    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
-    <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-    <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-    <VersionPrefix>3.2.0</VersionPrefix>
+    <PropertyGroup>
+        <!-- Assembly Properties -->
+        <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows</TargetFrameworks>
+        <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+        <OutputType>WinExe</OutputType>
+        <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+        <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWPF>true</UseWPF>
+        <VersionPrefix>3.2.0</VersionPrefix>
 
-    <!-- Package Properties -->
-    <AssemblyName>MPF</AssemblyName>
-    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Description>Frontend for various dumping programs</Description>
-    <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
-    <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>
+        <!-- Package Properties -->
+        <AssemblyName>MPF</AssemblyName>
+        <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+        <Description>Frontend for various dumping programs</Description>
+        <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
+        <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
 
-  <!-- Special handling for Aero2 on non-Framework .NET -->
-  <PropertyGroup Condition="$(TargetFramework.StartsWith(`net4`))">
-    <ReferenceWpfAeroTheme>true</ReferenceWpfAeroTheme>
-    <ReferenceWpfAero2Theme>false</ReferenceWpfAero2Theme>
-    <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
-    <ReferenceWpfClassicTheme>false</ReferenceWpfClassicTheme>
-    <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
-    <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
-    <ReferenceWpfAeroTheme>false</ReferenceWpfAeroTheme>
-    <ReferenceWpfAero2Theme>true</ReferenceWpfAero2Theme>
-    <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
-    <ReferenceWpfClassicTheme>false</ReferenceWpfClassicTheme>
-    <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
-    <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
-  </PropertyGroup>
+    <!-- Special handling for Aero2 on non-Framework .NET -->
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+        <ReferenceWpfAeroTheme>true</ReferenceWpfAeroTheme>
+        <ReferenceWpfAero2Theme>false</ReferenceWpfAero2Theme>
+        <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
+        <ReferenceWpfClassicTheme>false</ReferenceWpfClassicTheme>
+        <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
+        <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
+    </PropertyGroup>
+    <PropertyGroup
+        Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+        <ReferenceWpfAeroTheme>false</ReferenceWpfAeroTheme>
+        <ReferenceWpfAero2Theme>true</ReferenceWpfAero2Theme>
+        <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
+        <ReferenceWpfClassicTheme>false</ReferenceWpfClassicTheme>
+        <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
+        <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="MPF.Test" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\Icon.ico" />
-    <Resource Include="Images\ring-code-guide-1-layer.png" />
-    <Resource Include="Images\ring-code-guide-2-layer.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
-  </ItemGroup>
-
-  <!-- Support for old .NET versions -->
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
-    <Reference Include="PresentationBuildTasks" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationBuildTasks.dll" />
-    <Reference Include="PresentationCore" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" />
-    <Reference Include="PresentationFramework" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationFramework.dll" />
-    <Reference Include="WindowsBase" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" />
-  </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
-    <Reference Include="PresentationFramework.Aero" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.13" GeneratePathProperty="true">
-      <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="SabreTools.RedumpLib" Version="1.3.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="$(PkgBinaryObjectScanner)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="UserControls\UserInput.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Windows\DiscInformationWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Windows\RingCodeGuideWindow.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-  </ItemGroup>
-
-  <!-- Special handling for Aero2 on non-Framework .NET -->
-  <Target Name="SelectWpfThemeAssembly" AfterTargets="ResolveAssemblyReferences" Condition="'$(ReferenceWpfAeroTheme)' == 'true' OR '$(ReferenceWpfAero2Theme)' == 'true' OR '$(ReferenceWpfAeroLiteTheme)' == 'true' OR '$(ReferenceWpfClassicTheme)' == 'true' OR '$(ReferenceWpfLunaTheme)' == 'true' OR '$(ReferenceWpfRoyaleTheme)' == 'true'">
     <ItemGroup>
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Aero'">
-        <Aliases Condition="'$(WpfAeroThemeAliases)'!=''">$(WpfAeroThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Aero2'">
-        <Aliases Condition="'$(WpfAero2ThemeAliases)'!=''">$(WpfAero2ThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.AeroLite'">
-        <Aliases Condition="'$(WpfAeroLiteThemeAliases)'!=''">$(WpfAeroLiteThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Classic'">
-        <Aliases Condition="'$(WpfClassicThemeAliases)'!=''">$(WpfClassicThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Luna'">
-        <Aliases Condition="'$(WpfLunaThemeAliases)'!=''">$(WpfLunaThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Royale'">
-        <Aliases Condition="'$(WpfRoyaleThemeAliases)'!=''">$(WpfRoyaleThemeAliases)</Aliases>
-      </_WpfThemeAssemblies>
-
-      <ReferencePath Remove="@(_WpfThemeAssemblies)" />
-      <ReferencePath Include="@(_WpfThemeAssemblies)" Condition="('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero' AND'$(ReferenceWpfAeroTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero2' AND '$(ReferenceWpfAero2Theme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.AeroLite' AND '$(ReferenceWpfAeroLiteTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Classic' AND '$(ReferenceWpfClassicTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Luna' AND '$(ReferenceWpfLunaTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Royale' AND '$(ReferenceWpfRoyaleTheme)'=='true')" />
+        <InternalsVisibleTo Include="MPF.Test" />
     </ItemGroup>
-  </Target>
 
+    <ItemGroup>
+        <Resource Include="Images\Icon.ico" />
+        <Resource Include="Images\ring-code-guide-1-layer.png" />
+        <Resource Include="Images\ring-code-guide-2-layer.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
+    </ItemGroup>
+
+    <!-- Support for old .NET versions -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith(`net3`))">
+        <Reference Include="PresentationBuildTasks" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationBuildTasks.dll" />
+        <Reference Include="PresentationCore" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationCore.dll" />
+        <Reference Include="PresentationFramework" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\PresentationFramework.dll" />
+        <Reference Include="WindowsBase" HintPath="$(ProgramFiles)\Reference Assemblies\Microsoft\Framework\v3.0\WindowsBase.dll" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
+        <Reference Include="PresentationFramework.Aero" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.13" GeneratePathProperty="true">
+            <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="$(PkgBinaryObjectScanner)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Page Update="UserControls\UserInput.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="Windows\DiscInformationWindow.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+        <Page Update="Windows\RingCodeGuideWindow.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+        </Page>
+    </ItemGroup>
+
+    <!-- Special handling for Aero2 on non-Framework .NET -->
+    <Target Name="SelectWpfThemeAssembly" AfterTargets="ResolveAssemblyReferences" Condition="'$(ReferenceWpfAeroTheme)' == 'true' OR '$(ReferenceWpfAero2Theme)' == 'true' OR '$(ReferenceWpfAeroLiteTheme)' == 'true' OR '$(ReferenceWpfClassicTheme)' == 'true' OR '$(ReferenceWpfLunaTheme)' == 'true' OR '$(ReferenceWpfRoyaleTheme)' == 'true'">
+        <ItemGroup>
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Aero'">
+                <Aliases Condition="'$(WpfAeroThemeAliases)'!=''">$(WpfAeroThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Aero2'">
+                <Aliases Condition="'$(WpfAero2ThemeAliases)'!=''">$(WpfAero2ThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.AeroLite'">
+                <Aliases Condition="'$(WpfAeroLiteThemeAliases)'!=''">$(WpfAeroLiteThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Classic'">
+                <Aliases Condition="'$(WpfClassicThemeAliases)'!=''">$(WpfClassicThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Luna'">
+                <Aliases Condition="'$(WpfLunaThemeAliases)'!=''">$(WpfLunaThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <_WpfThemeAssemblies Include="@(ReferencePath)" Condition="'%(ReferencePath.NuGetPackageId)'=='Microsoft.WindowsDesktop.App.Ref' AND '%(ReferencePath.FileName)'=='PresentationFramework.Royale'">
+                <Aliases Condition="'$(WpfRoyaleThemeAliases)'!=''">$(WpfRoyaleThemeAliases)</Aliases>
+            </_WpfThemeAssemblies>
+
+            <ReferencePath Remove="@(_WpfThemeAssemblies)" />
+            <ReferencePath Include="@(_WpfThemeAssemblies)" Condition="('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero' AND'$(ReferenceWpfAeroTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Aero2' AND '$(ReferenceWpfAero2Theme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.AeroLite' AND '$(ReferenceWpfAeroLiteTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Classic' AND '$(ReferenceWpfClassicTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Luna' AND '$(ReferenceWpfLunaTheme)'=='true') OR ('%(_WpfThemeAssemblies.FileName)'=='PresentationFramework.Royale' AND '$(ReferenceWpfRoyaleTheme)'=='true')" />
+        </ItemGroup>
+    </Target>
 
 </Project>
