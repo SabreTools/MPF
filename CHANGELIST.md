@@ -46,6 +46,7 @@
 - Add include artifacts flag for check, sanitize options
 - Remove old --protect-file mentions (JohnVeness)
 - Update RedumpLib to 1.4.1
+- Enable loading seed JSON (Deterous)
 
 ### 3.2.0 (2024-06-20)
 
