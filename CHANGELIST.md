@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.2.1 (2024-08-05)
 
 - Add nuget packing for processors and contexts
 - Address build warnings for packages
