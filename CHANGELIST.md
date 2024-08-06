@@ -3,6 +3,7 @@
 - Clean up some Check options, add IRD option
 - Add Check flags for protection scan extras
 - Add comments around default options object
+- Fix usings ordering in ItemHelper
 
 ### 3.2.1 (2024-08-05)
 
