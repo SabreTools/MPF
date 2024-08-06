@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Clean up some Check options, add IRD option
+- Add Check flags for protection scan extras
 
 ### 3.2.1 (2024-08-05)
 

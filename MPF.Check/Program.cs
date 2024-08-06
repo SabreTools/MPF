@@ -32,9 +32,9 @@ namespace MPF.Check
                 DeleteUnnecessaryFiles = false,
                 CreateIRDAfterDumping = false,
 
-                // ScanArchivesForProtection = false,
-                // ScanPackersForProtection = false,
-                // IncludeDebugProtectionInformation = false,
+                ScanArchivesForProtection = true,
+                ScanPackersForProtection = false,
+                IncludeDebugProtectionInformation = false,
                 HideDriveLetters = false,
 
                 RedumpUsername = null,
@@ -132,6 +132,9 @@ namespace MPF.Check
             Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --credentials)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("    --disable-archives         Disable scanning archives (requires --scan)");
+            Console.WriteLine("    --enable-packers           Enable scanning for packers (requires --scan)");
+            Console.WriteLine("    --enable-debug             Enable debug protection information (requires --scan)");
             Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --scan)");
             Console.WriteLine("-x, --suffix                   Enable adding filename suffix");
             Console.WriteLine("-j, --json                     Enable submission JSON output");
@@ -150,7 +153,11 @@ namespace MPF.Check
             var opts = new CommandOptions();
 
             // These values require multiple parts to be active
-            bool scan = false, hideDriveLetters = false;
+            bool scan = false,
+                enableArchives = true,
+                enablePackers = false,
+                enableDebug = false,
+                hideDriveLetters = false;
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
@@ -238,6 +245,24 @@ namespace MPF.Check
                     scan = true;
                 }
 
+                // Disable scanning archives (requires --scan)
+                else if (args[startIndex].Equals("--disable-archives"))
+                {
+                    enableArchives = false;
+                }
+
+                // Enable scanning for packers (requires --scan)
+                else if (args[startIndex].Equals("--enable-packers"))
+                {
+                    enablePackers = true;
+                }
+
+                // Enable debug protection information (requires --scan)
+                else if (args[startIndex].Equals("--enable-debug"))
+                {
+                    enableDebug = true;
+                }
+
                 // Hide drive letters from scan output (requires --scan)
                 else if (args[startIndex].Equals("--hide-drive-letters"))
                 {
@@ -283,6 +308,9 @@ namespace MPF.Check
 
             // Now deal with the complex options
             options.ScanForProtection = scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.ScanPackersForProtection = enablePackers && scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(opts.DevicePath);
             options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
 
             return (opts, startIndex);
