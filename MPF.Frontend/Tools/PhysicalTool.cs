@@ -26,7 +26,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't get exe name
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // Get the two paths that we will need to check
@@ -85,7 +85,7 @@ namespace MPF.Frontend.Tools
                 return false;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return false;
 
             // Get the executable name
@@ -135,7 +135,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // Get the SYSTEM.CNF path to check
@@ -162,7 +162,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // Attempt to use PS3_DISC.SFB
@@ -218,7 +218,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // Attempt to use PS3_DISC.SFB
@@ -276,7 +276,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // Attempt to read from /PS3_UPDATE/PS3UPDAT.PUP
@@ -318,7 +318,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
@@ -356,7 +356,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
@@ -440,7 +440,7 @@ namespace MPF.Frontend.Tools
                 return null;
 
             // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive.Name))
+            if (!Directory.Exists(drive!.Name))
                 return null;
 
             // If we can't find param.json, we don't have a PlayStation 5 disc

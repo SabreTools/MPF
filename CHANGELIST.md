@@ -5,6 +5,7 @@
 - Add comments around default options object
 - Fix usings ordering in ItemHelper
 - Add physical drive extensions to new tool
+- Fix build for older .NET
 
 ### 3.2.1 (2024-08-05)
 
