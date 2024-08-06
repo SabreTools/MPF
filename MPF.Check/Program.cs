@@ -20,8 +20,10 @@ namespace MPF.Check
             // Create a default options object
             var options = new Frontend.Options()
             {
+                // Internal Program
                 InternalProgram = InternalProgram.NONE,
 
+                // Extra Dumping Options
                 ScanForProtection = false,
                 AddPlaceholders = true,
                 PullAllInformation = false,
@@ -32,11 +34,13 @@ namespace MPF.Check
                 DeleteUnnecessaryFiles = false,
                 CreateIRDAfterDumping = false,
 
+                // Protection Scanning Options
                 ScanArchivesForProtection = true,
                 ScanPackersForProtection = false,
                 IncludeDebugProtectionInformation = false,
                 HideDriveLetters = false,
 
+                // Redump Login Information
                 RedumpUsername = null,
                 RedumpPassword = null,
             };

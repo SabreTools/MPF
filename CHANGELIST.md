@@ -2,6 +2,7 @@
 
 - Clean up some Check options, add IRD option
 - Add Check flags for protection scan extras
+- Add comments around default options object
 
 ### 3.2.1 (2024-08-05)
 
