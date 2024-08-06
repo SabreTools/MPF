@@ -681,12 +681,12 @@ namespace MPF.Frontend.Tools
                 case RedumpSystem.KonamiPython2:
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
 
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && !string.IsNullOrEmpty(kp2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
 
-                    if (drive?.GetPlayStationExecutableInfo(out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
+                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
                     {
                         if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
@@ -696,7 +696,7 @@ namespace MPF.Frontend.Tools
                     }
 
                     if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = drive?.GetPlayStation2Version() ?? string.Empty;
+                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation2Version(drive) ?? string.Empty;
 
                     break;
 
@@ -795,12 +795,12 @@ namespace MPF.Frontend.Tools
                 case RedumpSystem.SonyPlayStation:
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName(), psx: true);
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive), psx: true);
 
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && !string.IsNullOrEmpty(psxExe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(psxExe);
 
-                    if (drive?.GetPlayStationExecutableInfo(out var psxSerial, out Region? psxRegion, out var psxDate) == true)
+                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var psxSerial, out Region? psxRegion, out var psxDate) == true)
                     {
                         if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
@@ -816,12 +816,12 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", drive?.GetPlayStationExecutableName());
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
 
                     if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && !string.IsNullOrEmpty(ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
 
-                    if (drive?.GetPlayStationExecutableInfo(out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
+                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
                     {
                         if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
@@ -831,7 +831,7 @@ namespace MPF.Frontend.Tools
                     }
 
                     if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = drive?.GetPlayStation2Version() ?? string.Empty;
+                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation2Version(drive) ?? string.Empty;
 
                     break;
 
@@ -840,14 +840,14 @@ namespace MPF.Frontend.Tools
                     info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps3Serial) || string.IsNullOrEmpty(ps3Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation3Serial() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation3Serial(drive) ?? string.Empty;
 
                     if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = drive?.GetPlayStation3Version() ?? string.Empty;
+                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation3Version(drive) ?? string.Empty;
 
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.Patches, out string? ps3Firmware) || string.IsNullOrEmpty(ps3Firmware))
                     {
-                        string? firmwareVersion = drive?.GetPlayStation3FirmwareVersion();
+                        string? firmwareVersion = PhysicalTool.GetPlayStation3FirmwareVersion(drive);
                         if (firmwareVersion != null)
                             info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
                     }
@@ -856,19 +856,19 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.SonyPlayStation4:
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps4Serial) || string.IsNullOrEmpty(ps4Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation4Serial() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation4Serial(drive) ?? string.Empty;
 
                     if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = drive?.GetPlayStation4Version() ?? string.Empty;
+                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation4Version(drive) ?? string.Empty;
 
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
                     if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps5Serial) || string.IsNullOrEmpty(ps5Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = drive?.GetPlayStation5Serial() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation5Serial(drive) ?? string.Empty;
 
                     if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = drive?.GetPlayStation5Version() ?? string.Empty;
+                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation5Version(drive) ?? string.Empty;
 
                     break;
 

@@ -4,6 +4,7 @@
 - Add Check flags for protection scan extras
 - Add comments around default options object
 - Fix usings ordering in ItemHelper
+- Add physical drive extensions to new tool
 
 ### 3.2.1 (2024-08-05)
 
