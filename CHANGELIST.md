@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Clean up some Check options, add IRD option
+
 ### 3.2.1 (2024-08-05)
 
 - Add nuget packing for processors and contexts
