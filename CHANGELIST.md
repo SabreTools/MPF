@@ -6,6 +6,7 @@
 - Fix usings ordering in ItemHelper
 - Add physical drive extensions to new tool
 - Fix build for older .NET
+- Move two extensions to a better location
 
 ### 3.2.1 (2024-08-05)
 

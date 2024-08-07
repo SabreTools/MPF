@@ -183,5 +183,39 @@ namespace MPF.Frontend
         }
 
         #endregion
+
+        #region Functionality Support
+
+        /// <summary>
+        /// Get if a system requires an anti-modchip scan
+        /// </summary>
+        public static bool SupportsAntiModchipScans(this RedumpSystem? system)
+        {
+            return system switch
+            {
+                RedumpSystem.SonyPlayStation => true,
+                _ => false,
+            };
+        }
+
+        /// <summary>
+        /// Get if a system requires a copy protection scan
+        /// </summary>
+        public static bool SupportsCopyProtectionScans(this RedumpSystem? system)
+        {
+            return system switch
+            {
+                RedumpSystem.AppleMacintosh => true,
+                RedumpSystem.EnhancedCD => true,
+                RedumpSystem.IBMPCcompatible => true,
+                RedumpSystem.PalmOS => true,
+                RedumpSystem.PocketPC => true,
+                RedumpSystem.RainbowDisc => true,
+                RedumpSystem.SonyElectronicBook => true,
+                _ => false,
+            };
+        }
+
+        #endregion
     }
 }

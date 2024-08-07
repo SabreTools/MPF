@@ -107,7 +107,7 @@ namespace MPF.Frontend.Tools
             ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, combinedBase);
 
             // Run anti-modchip check, if necessary
-            if (drive != null && SupportsAntiModchipScans(system) && info.CopyProtection!.AntiModchip == YesNo.NULL)
+            if (drive != null && system.SupportsAntiModchipScans() && info.CopyProtection!.AntiModchip == YesNo.NULL)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
                 info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
@@ -115,7 +115,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Run copy protection, if possible or necessary
-            if (SupportsCopyProtectionScans(system))
+            if (system.SupportsCopyProtectionScans())
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
                 var (protectionString, fullProtections) = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
@@ -883,36 +883,6 @@ namespace MPF.Frontend.Tools
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Helper to determine if a system requires an anti-modchip scan
-        /// </summary>
-        private static bool SupportsAntiModchipScans(RedumpSystem? system)
-        {
-            return system switch
-            {
-                RedumpSystem.SonyPlayStation => true,
-                _ => false,
-            };
-        }
-
-        /// <summary>
-        /// Helper to determine if a system requires a copy protection scan
-        /// </summary>
-        private static bool SupportsCopyProtectionScans(RedumpSystem? system)
-        {
-            return system switch
-            {
-                RedumpSystem.AppleMacintosh => true,
-                RedumpSystem.EnhancedCD => true,
-                RedumpSystem.IBMPCcompatible => true,
-                RedumpSystem.PalmOS => true,
-                RedumpSystem.PocketPC => true,
-                RedumpSystem.RainbowDisc => true,
-                RedumpSystem.SonyElectronicBook => true,
-                _ => false,
-            };
         }
 
         #endregion
