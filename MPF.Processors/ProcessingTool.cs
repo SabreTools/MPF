@@ -1180,7 +1180,7 @@ namespace MPF.Processors
                     startLBA[i] = (1913760 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
                     endLBA[i] = (1913760 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
                 }
-                else if (xgdType ==3 && startPSN >= (2133520 + 0x030000))
+                else if (xgdType == 3 && startPSN >= (2133520 + 0x030000))
                 {
                     // Layer 1 of XGD3
                     startLBA[i] = (2133520 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
