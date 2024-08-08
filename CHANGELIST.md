@@ -8,6 +8,7 @@
 - Fix build for older .NET
 - Move two extensions to a better location
 - Fix XGD3 SS ranges
+- Fix config location in OptionsLoader
 
 ### 3.2.1 (2024-08-05)
 

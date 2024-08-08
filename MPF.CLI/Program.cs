@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 #if NET40
-using System.Threading;
 using System.Threading.Tasks;
 #endif
 using BinaryObjectScanner;

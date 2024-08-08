@@ -9,7 +9,14 @@ namespace MPF.Frontend.Tools
 {
     public static class OptionsLoader
     {
-        private const string ConfigurationPath = "config.json";
+        /// <summary>
+        /// Full path to the configuration file used by the program
+        /// </summary>
+#if NET20 || NET35 || NET40 || NET452
+        private static string ConfigurationPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.json");
+#else
+        private static string ConfigurationPath => Path.Combine(AppContext.BaseDirectory, "config.json");
+#endif
 
         #region Arguments
 
