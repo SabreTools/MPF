@@ -15,10 +15,10 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override string? InputPath => DrivePath;
+        public override string? InputPath => DrivePath?.Trim('"');
 
         /// <inheritdoc/>
-        public override string? OutputPath => Filename;
+        public override string? OutputPath => Filename?.Trim('"');
 
         /// <inheritdoc/>
         /// <inheritdoc/>
@@ -419,9 +419,16 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (DrivePath != null)
-                    parameters.Add(DrivePath);
+                {
+                    if (DrivePath.Contains(' '))
+                        parameters.Add($"\"{DrivePath}\"");
+                    else
+                        parameters.Add(DrivePath);
+                }
                 else
+                {
                     return null;
+                }
             }
 
             // Filename

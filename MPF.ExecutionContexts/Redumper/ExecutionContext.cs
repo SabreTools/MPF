@@ -15,10 +15,13 @@ namespace MPF.ExecutionContexts.Redumper
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override string? InputPath => DriveValue;
+        public override string? InputPath => DriveValue?.Trim('"');
 
         /// <inheritdoc/>
-        public override string? OutputPath => Path.Combine(ImagePathValue?.Trim('"') ?? string.Empty, ImageNameValue?.Trim('"') ?? string.Empty) + GetDefaultExtension(this.Type);
+        public override string? OutputPath => Path.Combine(
+                ImagePathValue?.Trim('"') ?? string.Empty,
+                ImageNameValue?.Trim('"') ?? string.Empty)
+            + GetDefaultExtension(this.Type);
 
         /// <inheritdoc/>
         public override int? Speed => SpeedValue;
@@ -264,7 +267,12 @@ namespace MPF.ExecutionContexts.Redumper
             if (this[FlagStrings.Drive] == true)
             {
                 if (DriveValue != null)
-                    parameters.Add($"{FlagStrings.Drive}={DriveValue}");
+                {
+                    if (DriveValue.Contains(' '))
+                        parameters.Add($"{FlagStrings.Drive}=\"{DriveValue}\"");
+                    else
+                        parameters.Add($"{FlagStrings.Drive}={DriveValue}");
+                }
             }
 
             // Speed

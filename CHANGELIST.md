@@ -11,6 +11,7 @@
 - Fix config location in OptionsLoader
 - Fix some CLI issues
 - Add more verbose requirement to CLI help
+- Quote input paths if needed
 
 ### 3.2.1 (2024-08-05)
 

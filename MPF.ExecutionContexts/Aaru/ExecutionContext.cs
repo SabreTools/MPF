@@ -14,10 +14,10 @@ namespace MPF.ExecutionContexts.Aaru
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override string? InputPath => InputValue;
+        public override string? InputPath => InputValue?.Trim('"');
 
         /// <inheritdoc/>
-        public override string? OutputPath => OutputValue;
+        public override string? OutputPath => OutputValue?.Trim('"');
 
         /// <inheritdoc/>
         public override int? Speed
@@ -1082,7 +1082,11 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
-                    parameters.Add(InputValue!.TrimEnd('\\'));
+                    if (InputValue.Contains(' '))
+                        parameters.Add($"\"{InputValue!.TrimEnd('\\')}\"");
+                    else
+                        parameters.Add(InputValue!.TrimEnd('\\'));
+
                     break;
 
                 // Two input values
