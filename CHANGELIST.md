@@ -10,6 +10,7 @@
 - Fix XGD3 SS ranges
 - Fix config location in OptionsLoader
 - Fix some CLI issues
+- Add more verbose requirement to CLI help
 
 ### 3.2.1 (2024-08-05)
 

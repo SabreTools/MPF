@@ -171,6 +171,7 @@ namespace MPF.CLI
 
             Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
             Console.WriteLine("All dumping parameters need to be supplied if doing this.");
+            Console.WriteLine("Otherwise, both a drive path and output file path are required.");
             Console.WriteLine();
         }
 
