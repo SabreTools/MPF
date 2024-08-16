@@ -39,13 +39,6 @@ namespace MPF.CLI
                 return;
             }
 
-            // Check for the minimum number of arguments
-            if (args.Length < 4)
-            {
-                DisplayHelp("Not enough arguments have been provided, exiting...");
-                return;
-            }
-
             // Try processing the common arguments
             (bool success, MediaType mediaType, RedumpSystem? knownSystem, var error) = OptionsLoader.ProcessCommonArguments(args);
             if (!success)
@@ -54,6 +47,14 @@ namespace MPF.CLI
                 return;
             }
 
+            // Validate the supplied credentials
+            (bool? _, string? message) = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
+            if (!string.IsNullOrEmpty(message))
+                Console.WriteLine(message);
+
+            // Process any custom parameters
+            (CommandOptions opts, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
+            
             // Validate the internal program
             switch (options.InternalProgram)
             {
@@ -86,22 +87,8 @@ namespace MPF.CLI
                     break;
             }
 
-            // Make new Progress objects
-            var resultProgress = new Progress<ResultEventArgs>();
-            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-            var protectionProgress = new Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-
-            // Validate the supplied credentials
-            (bool? _, string? message) = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
-            if (!string.IsNullOrEmpty(message))
-                Console.WriteLine(message);
-
-            // Process any custom parameters
-            (CommandOptions opts, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
-
             // Ensure we have the values we need
-            if (opts.CustomParams == null && (opts.DevicePath == null || opts.DevicePath == null))
+            if (opts.CustomParams == null && (opts.DevicePath == null || opts.FilePath == null))
             {
                 DisplayHelp("Both a device path and file path need to be supplied, exiting...");
                 return;
@@ -122,6 +109,12 @@ namespace MPF.CLI
                 return;
             }
             env.SetExecutionContext(paramStr);
+
+            // Make new Progress objects
+            var resultProgress = new Progress<ResultEventArgs>();
+            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
+            var protectionProgress = new Progress<ProtectionProgress>();
+            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
@@ -176,8 +169,8 @@ namespace MPF.CLI
             Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
             Console.WriteLine();
 
-            Console.WriteLine("Custom parameters, if used, will fully replace the default parameters.");
-            Console.WriteLine("All parameters need to be supplied if doing this.");
+            Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
+            Console.WriteLine("All dumping parameters need to be supplied if doing this.");
             Console.WriteLine();
         }
 
