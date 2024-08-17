@@ -99,7 +99,13 @@ namespace MPF.CLI
 
             // Populate an environment
             var drive = Drive.Create(null, opts.DevicePath ?? string.Empty);
-            var env = new DumpEnvironment(options, opts.FilePath, drive, knownSystem, mediaType, options.InternalProgram, parameters: null);
+            var env = new DumpEnvironment(options,
+                opts.FilePath,
+                drive,
+                knownSystem,
+                mediaType,
+                options.InternalProgram,
+                parameters: null);
 
             // Process the parameters
             string? paramStr = opts.CustomParams ?? env.GetFullParameters(speed);
@@ -128,6 +134,19 @@ namespace MPF.CLI
             {
                 Console.WriteLine("Execution not recognized as dumping command, skipping processing...");
                 return;
+            }
+
+            // If we have a mounted path, replace the environment
+            if (opts.MountedPath != null && Directory.Exists(opts.MountedPath))
+            {
+                drive = Drive.Create(null, opts.MountedPath);
+                env = new DumpEnvironment(options,
+                    opts.FilePath,
+                    drive,
+                    knownSystem,
+                    mediaType,
+                    internalProgram: null,
+                    parameters: null);
             }
 
             // Finally, attempt to do the output dance
@@ -164,6 +183,7 @@ namespace MPF.CLI
             Console.WriteLine("CLI Options:");
             Console.WriteLine("-u, --use <program>            Override default dumping program");
             Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
+            Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
             Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
             Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
             Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
@@ -172,6 +192,10 @@ namespace MPF.CLI
             Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
             Console.WriteLine("All dumping parameters need to be supplied if doing this.");
             Console.WriteLine("Otherwise, both a drive path and output file path are required.");
+            Console.WriteLine();
+
+            Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
+            Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
         }
 
@@ -215,6 +239,17 @@ namespace MPF.CLI
                 else if (args[startIndex] == "-d" || args[startIndex] == "--device")
                 {
                     opts.DevicePath = args[startIndex + 1].Trim('"');
+                    startIndex++;
+                }
+
+                // Use a mounted path for physical checks
+                else if (args[startIndex].StartsWith("-m=") || args[startIndex].StartsWith("--mounted="))
+                {
+                    opts.MountedPath = args[startIndex].Split('=')[1];
+                }
+                else if (args[startIndex] == "-m" || args[startIndex] == "--mounted")
+                {
+                    opts.MountedPath = args[startIndex + 1];
                     startIndex++;
                 }
 
@@ -277,6 +312,12 @@ namespace MPF.CLI
             /// </summary>
             /// <remarks>Required if custom parameters are not set</remarks>
             public string? DevicePath { get; set; } = null;
+
+            /// <summary>
+            /// Path to the mounted filesystem to check
+            /// </summary>
+            /// <remarks>Should only be used when the device path is not readable</remarks>
+            public string? MountedPath { get; set; } = null;
 
             /// <summary>
             /// Path to the output file
