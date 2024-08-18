@@ -284,7 +284,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        /// <remarks>Determining the PSX/PS2 executable name is the last use of drive in this method</remarks>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             var outputDirectory = Path.GetDirectoryName(basePath);

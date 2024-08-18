@@ -14,6 +14,7 @@
 - Quote input paths if needed
 - Allow separate mounted path for Linux
 - Fix cleaning XGD3 SS
+- Prepare Redumper for XGD support
 
 ### 3.2.1 (2024-08-05)
 

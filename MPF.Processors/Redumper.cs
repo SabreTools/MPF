@@ -338,11 +338,35 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    // TODO: Support DMI and additional file information when generated
+                    string xmidString = ProcessingTool.GetXGD1XMID($"{basePath}.manufacturer");
+                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                    if (xmid != null)
+                    {
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                        if (!redumpCompat)
+                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
+
+                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                    }
+
+                    // TODO: Support SS and additional file information when generated
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    // TODO: Support DMI and additional file information when generated
+                    string xemidString = ProcessingTool.GetXGD23XeMID($"{basePath}.manufacturer");
+                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                    if (xemid != null)
+                    {
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                        if (!redumpCompat)
+                            info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
+
+                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                    }
+
+                    // TODO: Support SS and additional file information when generated
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
