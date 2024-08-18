@@ -15,6 +15,7 @@
 - Allow separate mounted path for Linux
 - Fix cleaning XGD3 SS
 - Prepare Redumper for XGD support
+- Hash DMI and PFI files for XGD in Redumper
 
 ### 3.2.1 (2024-08-05)
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SabreTools.Hashing;
 using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -350,7 +351,12 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                     }
 
-                    // TODO: Support SS and additional file information when generated
+                    if (HashTool.GetStandardHashes($"{basePath}.manufacturer", out _, out string? dmi1Crc, out _, out _))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc ?? string.Empty;
+                    if (HashTool.GetStandardHashes($"{basePath}.physical", out _, out string? pfi1Crc, out _, out _))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc ?? string.Empty;
+
+                    // TODO: Support SS information when generated
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
@@ -366,7 +372,12 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
 
-                    // TODO: Support SS and additional file information when generated
+                    if (HashTool.GetStandardHashes($"{basePath}.manufacturer", out _, out string? dmi23Crc, out _, out _))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc ?? string.Empty;
+                    if (HashTool.GetStandardHashes($"{basePath}.physical", out _, out string? pfi23Crc, out _, out _))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc ?? string.Empty;
+
+                    // TODO: Support SS information when generated
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
@@ -1159,11 +1170,11 @@ namespace MPF.Processors
 
                     if (line.StartsWith("anti-modchip:"))
                     {
-                       // Valid but skip
+                        // Valid but skip
                     }
                     else if (line.StartsWith("EXE:"))
                     {
-                       // Valid but skip
+                        // Valid but skip
                     }
                     else if (line.StartsWith("EXE date:"))
                     {
@@ -1171,11 +1182,11 @@ namespace MPF.Processors
                     }
                     else if (line.StartsWith("libcrypt:"))
                     {
-                       // Valid but skip
+                        // Valid but skip
                     }
                     else if (line.StartsWith("region:"))
                     {
-                       // Valid but skip
+                        // Valid but skip
                     }
                     else if (line.StartsWith("serial:"))
                     {
