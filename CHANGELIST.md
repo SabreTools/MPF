@@ -13,6 +13,7 @@
 - Add more verbose requirement to CLI help
 - Quote input paths if needed
 - Allow separate mounted path for Linux
+- Fix cleaning XGD3 SS
 
 ### 3.2.1 (2024-08-05)
 

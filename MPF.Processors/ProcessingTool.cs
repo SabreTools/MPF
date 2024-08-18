@@ -1073,7 +1073,7 @@ namespace MPF.Processors
 
                 case 3:
                     // Determine if XGD3 SS.bin is SSv1 (Kreon) or SSv2 (0800)
-                    bool ssv2 = ss.Skip(32).Take(72).All(x => x == 0);
+                    bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
 
                     if (ssv2)
                     {
