@@ -21,6 +21,7 @@
 - Make GD-ROM LD code nicer to read
 - Rename 2 XGD helper methods
 - Add bus encryption enabled method
+- Move BEE method to better location
 
 ### 3.2.1 (2024-08-05)
 

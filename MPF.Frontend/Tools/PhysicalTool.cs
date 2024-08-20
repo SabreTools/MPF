@@ -15,6 +15,56 @@ namespace MPF.Frontend.Tools
         #region Information Extraction
 
         /// <summary>
+        /// Get if the Bus Encryption Enabled (BEE) flag is set in a path
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Bus encryption enabled status if possible, false otherwise</returns>
+        public static bool GetBusEncryptionEnabled(Drive? drive)
+        {
+            // If there's no drive path, we can't get BEE flag
+            if (string.IsNullOrEmpty(drive?.Name))
+                return false;
+
+            // If the folder no longer exists, we can't get exe name
+            if (!Directory.Exists(drive!.Name))
+                return false;
+
+            // Get the two possible file paths
+#if NET20 || NET35
+            string content000 = Path.Combine(Path.Combine(drive.Name, "AACS"), "Content000.cer");
+            string content001 = Path.Combine(Path.Combine(drive.Name, "AACS"), "Content001.cer");
+#else
+            string content000 = Path.Combine(drive.Name, "AACS", "Content000.cer");
+            string content001 = Path.Combine(drive.Name, "AACS", "Content001.cer");
+#endif
+
+            try
+            {
+                // Check the required files
+                if (File.Exists(content000) && new FileInfo(content000).Length > 1)
+                {
+                    using var fs = File.OpenRead(content000);
+                    _ = fs.ReadByte(); // Skip the first byte
+                    return fs.ReadByte() > 127;
+                }
+                else if (File.Exists(content001) && new FileInfo(content001).Length > 1)
+                {
+                    using var fs = File.OpenRead(content001);
+                    _ = fs.ReadByte(); // Skip the first byte
+                    return fs.ReadByte() > 127;
+                }
+
+                // False if neither file fits the criteria
+                return false;
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Get the EXE name from a PlayStation disc, if possible
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>

@@ -129,54 +129,6 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get if the Bus Encryption Enabled (BEE) flag is set in a path
-        /// </summary>
-        /// <param name="path">Path to scan for bus encryption enabled</param>
-        /// <returns>Bus encryption enabled status if possible, false otherwise</returns>
-        public static bool GetBusEncryptionEnabled(string? path)
-        {
-            // If there is no valid path
-            if (string.IsNullOrEmpty(path))
-                return false;
-            else if (!Directory.Exists(path))
-                return false;
-
-            // Get the two possible file paths
-#if NET20 || NET35
-            string content000 = Path.Combine(Path.Combine(path, "AACS"), "Content000.cer");
-            string content001 = Path.Combine(Path.Combine(path, "AACS"), "Content001.cer");
-#else
-            string content000 = Path.Combine(path, "AACS", "Content000.cer");
-            string content001 = Path.Combine(path, "AACS", "Content001.cer");
-#endif
-
-            try
-            {
-                // Check the required files
-                if (File.Exists(content000) && new FileInfo(content000).Length > 1)
-                {
-                    using var fs = File.OpenRead(content000);
-                    _ = fs.ReadByte(); // Skip the first byte
-                    return fs.ReadByte() > 127;
-                }
-                else if (File.Exists(content001) && new FileInfo(content001).Length > 1)
-                {
-                    using var fs = File.OpenRead(content001);
-                    _ = fs.ReadByte(); // Skip the first byte
-                    return fs.ReadByte() > 127;
-                }
-
-                // False if neither file fits the criteria
-                return false;
-            }
-            catch
-            {
-                // We don't care what the error is right now
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Get the existence of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
         /// <param name="path">Path to scan for anti-modchip strings</param>
