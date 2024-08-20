@@ -381,7 +381,11 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    // TODO: Support header information and GD-ROM info when generated
+                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var triforceBuildDate, out var triforceSerial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = triforceSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = triforceBuildDate ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                    // TODO: Support region setting from parsed value
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
@@ -392,19 +396,35 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    // TODO: Support header information and GD-ROM info when generated
+                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var chihiroBuildDate, out var chihiroSerial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = chihiroSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = chihiroBuildDate ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                    // TODO: Support region setting from parsed value
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    // TODO: Support header information and GD-ROM info when generated
+                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var dcBuildDate, out var dcSerial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = dcSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = dcBuildDate ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                    // TODO: Support region setting from parsed value
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    // TODO: Support header information and GD-ROM info when generated
+                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var naomiBuildDate, out var naomiSerial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = naomiSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = naomiBuildDate ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                    // TODO: Support region setting from parsed value
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    // TODO: Support header information and GD-ROM info when generated
+                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var naomi2BuildDate, out var naomi2Serial, out _) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = naomi2Serial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = naomi2BuildDate ?? string.Empty;
+                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                    // TODO: Support region setting from parsed value
                     break;
 
                 case RedumpSystem.SegaSaturn:
@@ -832,7 +852,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if error counts could be retrieved, false otherwise</returns>
-        public static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
+        private static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
         {
             // Set the default values for error counts
             redumpErrors = -1; c2Errors = -1;
@@ -876,6 +896,100 @@ namespace MPF.Processors
             {
                 // We don't care what the exception is right now
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the header from a GD-ROM LD area, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private static string? GetGDROMHeader(string log, out string? buildDate, out string? serial, out string? region)
+        {
+            // Set the default values
+            buildDate = null; serial = null; region = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                // Fast forward to the MCD line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("DC [") == false) ;
+                if (sr.EndOfStream)
+                    return null;
+
+                string? line, headerString = string.Empty;
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line == null)
+                        break;
+
+                    if (line.StartsWith("build date:"))
+                    {
+                        buildDate = line.Substring("build date: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+                        serial = line.Substring("serial: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("region:"))
+                    {
+                        region = line.Substring("region: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("regions:"))
+                    {
+                        region = line.Substring("regions: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("header:"))
+                    {
+                        line = sr.ReadLine()?.TrimStart();
+                        while (line?.StartsWith("00") == true)
+                        {
+                            headerString += line + "\n";
+                            line = sr.ReadLine()?.Trim();
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return headerString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a GD-ROM LD area, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the GD-ROM header</param>
+        /// <returns>Version on successful extraction of info, null otherwise</returns>
+        private static string? GetGDROMVersion(string? segaHeader)
+        {
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrEmpty(segaHeader))
+                return null;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader!.Split('\n');
+                string versionLine = header[4].Substring(58);
+                return versionLine.Substring(10, 6).TrimStart('V', 'v');
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
             }
         }
 
@@ -1579,38 +1693,6 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Get the write offset from the input file, if possible
-        /// </summary>
-        /// <param name="log">Log file location</param>
-        /// <returns>Sample write offset if possible, null on error</returns>
-        private static string? GetWriteOffset(string log)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
-                return null;
-
-            try
-            {
-                // If we find the disc write offset line, return the offset
-                using var sr = File.OpenText(log);
-                while (!sr.EndOfStream)
-                {
-                    string? line = sr.ReadLine()?.TrimStart();
-                    if (line?.StartsWith("disc write offset") == true)
-                        return line.Substring("disc write offset: ".Length).Trim();
-                }
-
-                // We couldn't detect it then
-                return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get the version. if possible
         /// </summary>
         /// <param name="log">Log file location</param>
@@ -1705,6 +1787,38 @@ namespace MPF.Processors
                 // We don't care what the exception is right now
                 volLabels = [];
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string? GetWriteOffset(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                // If we find the disc write offset line, return the offset
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
+                {
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("disc write offset") == true)
+                        return line.Substring("disc write offset: ".Length).Trim();
+                }
+
+                // We couldn't detect it then
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
             }
         }
 

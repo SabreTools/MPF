@@ -16,6 +16,7 @@
 - Fix cleaning XGD3 SS
 - Prepare Redumper for XGD support
 - Hash DMI and PFI files for XGD in Redumper
+- Support GD-ROM info for Redumper
 
 ### 3.2.1 (2024-08-05)
 
