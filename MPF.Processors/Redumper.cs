@@ -339,7 +339,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    string xmidString = ProcessingTool.GetXGD1XMID($"{basePath}.manufacturer");
+                    string xmidString = ProcessingTool.GetXMID($"{basePath}.manufacturer");
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
                     {
@@ -360,7 +360,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    string xemidString = ProcessingTool.GetXGD23XeMID($"{basePath}.manufacturer");
+                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.manufacturer");
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
                     {

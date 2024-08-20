@@ -816,7 +816,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>String representation of the XGD1 DMI information, empty string on error</returns>
-        public static string GetXGD1XMID(string dmi)
+        public static string GetXMID(string dmi)
         {
             if (!File.Exists(dmi))
                 return string.Empty;
@@ -838,7 +838,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>String representation of the XGD2/3 DMI information, empty string on error</returns>
-        public static string GetXGD23XeMID(string dmi)
+        public static string GetXeMID(string dmi)
         {
             if (!File.Exists(dmi))
                 return string.Empty;

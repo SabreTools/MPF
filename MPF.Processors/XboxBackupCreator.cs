@@ -132,7 +132,7 @@ namespace MPF.Processors
                         case RedumpSystem.MicrosoftXbox:
 
                             // Parse DMI.bin
-                            string xmidString = ProcessingTool.GetXGD1XMID($"{baseDir}DMI.bin");
+                            string xmidString = ProcessingTool.GetXMID($"{baseDir}DMI.bin");
                             var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                             if (xmid != null)
                             {
@@ -156,7 +156,7 @@ namespace MPF.Processors
                             //string? mediaID = GetMediaID(logPath);
 
                             // Parse DMI.bin
-                            string xemidString = ProcessingTool.GetXGD23XeMID($"{baseDir}DMI.bin");
+                            string xemidString = ProcessingTool.GetXeMID($"{baseDir}DMI.bin");
                             var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                             if (xemid != null)
                             {

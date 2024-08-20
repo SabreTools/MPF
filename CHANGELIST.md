@@ -19,6 +19,7 @@
 - Support GD-ROM info for Redumper
 - Futureproof GD-ROM LD in Redumper
 - Make GD-ROM LD code nicer to read
+- Rename 2 XGD helper methods
 
 ### 3.2.1 (2024-08-05)
 
