@@ -174,7 +174,7 @@ namespace MPF.Frontend.Tools
 
             // Setup the checks
             bool allFound = true;
-            List<int[]> foundIdSets = []; 
+            List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
             resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
@@ -238,7 +238,7 @@ namespace MPF.Frontend.Tools
                         fullyMatchedIDs = [.. set];
                         continue;
                     }
-                    
+
                     // Try to intersect with all known IDs
                     fullyMatchedIDs = fullyMatchedIDs.Intersect(set).ToList();
                     if (!fullyMatchedIDs.Any())
@@ -624,6 +624,17 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.BDVideo:
+                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    bool bee = PhysicalTool.GetBusEncryptionEnabled(drive);
+                    if (bee && string.IsNullOrEmpty(info.CopyProtection!.Protection))
+                        info.CopyProtection.Protection = "Bus encryption enabled flag set";
+                    else if (bee)
+                        info.CopyProtection!.Protection += "\nBus encryption enabled flag set";
+                    else
+                        info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    break;
+
                 case RedumpSystem.DVDVideo:
                 case RedumpSystem.HDDVDVideo:
                     info.CommonDiscInfo!.Category ??= DiscCategory.Video;

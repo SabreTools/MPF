@@ -22,6 +22,7 @@
 - Rename 2 XGD helper methods
 - Add bus encryption enabled method
 - Move BEE method to better location
+- Use new BEE method in code
 
 ### 3.2.1 (2024-08-05)
 
