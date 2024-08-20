@@ -381,11 +381,14 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var triforceBuildDate, out var triforceSerial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = triforceSerial ?? string.Empty;
-                    info.CommonDiscInfo.EXEDateBuildDate = triforceBuildDate ?? string.Empty;
-                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
-                    // TODO: Support region setting from parsed value
+                    if (Type == MediaType.CDROM)
+                    {
+                        info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var gdBuildDate, out var gdSerial, out _) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = gdBuildDate ?? string.Empty;
+                        info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        // TODO: Support region setting from parsed value
+                    }
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
@@ -396,35 +399,47 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var chihiroBuildDate, out var chihiroSerial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = chihiroSerial ?? string.Empty;
-                    info.CommonDiscInfo.EXEDateBuildDate = chihiroBuildDate ?? string.Empty;
-                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
-                    // TODO: Support region setting from parsed value
+                    if (Type == MediaType.CDROM)
+                    {
+                        info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var gdBuildDate, out var gdSerial, out _) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = gdBuildDate ?? string.Empty;
+                        info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        // TODO: Support region setting from parsed value
+                    }
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var dcBuildDate, out var dcSerial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = dcSerial ?? string.Empty;
-                    info.CommonDiscInfo.EXEDateBuildDate = dcBuildDate ?? string.Empty;
-                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
-                    // TODO: Support region setting from parsed value
+                    if (Type == MediaType.CDROM)
+                    {
+                        info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var gdBuildDate, out var gdSerial, out _) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = gdBuildDate ?? string.Empty;
+                        info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        // TODO: Support region setting from parsed value
+                    }
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var naomiBuildDate, out var naomiSerial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = naomiSerial ?? string.Empty;
-                    info.CommonDiscInfo.EXEDateBuildDate = naomiBuildDate ?? string.Empty;
-                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
-                    // TODO: Support region setting from parsed value
+                    if (Type == MediaType.CDROM)
+                    {
+                        info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var gdBuildDate, out var gdSerial, out _) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = gdBuildDate ?? string.Empty;
+                        info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        // TODO: Support region setting from parsed value
+                    }
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var naomi2BuildDate, out var naomi2Serial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = naomi2Serial ?? string.Empty;
-                    info.CommonDiscInfo.EXEDateBuildDate = naomi2BuildDate ?? string.Empty;
-                    info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
-                    // TODO: Support region setting from parsed value
+                    if (Type == MediaType.CDROM)
+                    {
+                        info.Extras!.Header = GetGDROMHeader($"{basePath}.log", out var gdBuildDate, out var gdSerial, out _) ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = gdBuildDate ?? string.Empty;
+                        info.VersionAndEditions!.Version = GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        // TODO: Support region setting from parsed value
+                    }
                     break;
 
                 case RedumpSystem.SegaSaturn:
