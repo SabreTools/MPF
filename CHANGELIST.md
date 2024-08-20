@@ -20,6 +20,7 @@
 - Futureproof GD-ROM LD in Redumper
 - Make GD-ROM LD code nicer to read
 - Rename 2 XGD helper methods
+- Add bus encryption enabled method
 
 ### 3.2.1 (2024-08-05)
 
