@@ -26,6 +26,7 @@
 - Include serial for UMD
 - Remove GD-ROM version fallback method
 - Preemptively update Redumper Saturn support
+- Move MSXC parsing to PhysicalTool
 
 ### 3.2.1 (2024-08-05)
 

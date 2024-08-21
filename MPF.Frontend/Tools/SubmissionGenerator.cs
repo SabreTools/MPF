@@ -728,29 +728,11 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    if (drive?.Name != null)
-                    {
-                        string xboxOneMsxcPath = Path.Combine(drive.Name, "MSXC");
-                        if (drive != null && Directory.Exists(xboxOneMsxcPath))
-                        {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-                                Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
-                        }
-                    }
-
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    if (drive?.Name != null)
-                    {
-                        string xboxSeriesXMsxcPath = Path.Combine(drive.Name, "MSXC");
-                        if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
-                        {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = string.Join("\n",
-                                Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName).ToArray());
-                        }
-                    }
-
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:

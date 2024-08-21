@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -524,6 +525,39 @@ namespace MPF.Frontend.Tools
             catch
             {
                 // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get all filenames for Xbox One and Xbox Series X
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Filenames if possible, null on error</returns>
+        public static string? GetXboxFilenames(Drive? drive)
+        {
+            // If there's no drive path, we can't get BEE flag
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get exe name
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // Get the MSXC directory path
+            string msxc = Path.Combine(drive.Name, "MSXC");
+            if (!Directory.Exists(msxc))
+                return null;
+
+            try
+            {
+                var files = Directory.GetFiles(msxc, "*", SearchOption.TopDirectoryOnly);
+                var filenames = files.Select(Path.GetFileName).ToArray();
+                return string.Join("\n", filenames);
+            }
+            catch
+            {
+                // We don't care what the error is right now
                 return null;
             }
         }
