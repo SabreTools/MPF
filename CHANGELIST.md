@@ -24,6 +24,7 @@
 - Move BEE method to better location
 - Use new BEE method in code
 - Include serial for UMD
+- Remove GD-ROM version fallback method
 
 ### 3.2.1 (2024-08-05)
 

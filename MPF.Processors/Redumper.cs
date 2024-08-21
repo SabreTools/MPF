@@ -391,7 +391,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
-                        info.VersionAndEditions!.Version = version ?? GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
                     }
                     break;
 
@@ -413,7 +413,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
-                        info.VersionAndEditions!.Version = version ?? GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
                     }
                     break;
 
@@ -428,7 +428,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
-                        info.VersionAndEditions!.Version = version ?? GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
                     }
                     break;
 
@@ -443,7 +443,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
-                        info.VersionAndEditions!.Version = version ?? GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
                     }
                     break;
 
@@ -458,7 +458,7 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
-                        info.VersionAndEditions!.Version = version ?? GetGDROMVersion(info.Extras.Header) ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
                     }
                     break;
 
@@ -1003,31 +1003,6 @@ namespace MPF.Processors
             catch
             {
                 // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the build info from a GD-ROM LD area, if possible
-        /// </summary>
-        /// <<param name="segaHeader">String representing a formatter variant of the GD-ROM header</param>
-        /// <returns>Version on successful extraction of info, null otherwise</returns>
-        private static string? GetGDROMVersion(string? segaHeader)
-        {
-            // If the input header is null, we can't do a thing
-            if (string.IsNullOrEmpty(segaHeader))
-                return null;
-
-            // Now read it in cutting it into lines for easier parsing
-            try
-            {
-                string[] header = segaHeader!.Split('\n');
-                string versionLine = header[4].Substring(58);
-                return versionLine.Substring(10, 6).TrimStart('V', 'v');
-            }
-            catch
-            {
-                // We don't care what the error is
                 return null;
             }
         }
