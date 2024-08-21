@@ -29,6 +29,7 @@
 - Move MSXC parsing to PhysicalTool
 - Fix minor inconsistencies
 - Create some PlayStation helper methods
+- Remove redundant drive calls
 
 ### 3.2.1 (2024-08-05)
 

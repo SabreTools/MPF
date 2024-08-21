@@ -690,11 +690,12 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.KonamiPython2:
+                    string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
-                    string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
                     info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
@@ -779,11 +780,12 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.SonyPlayStation:
+                    string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive), psx: true);
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
-                    string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
                     info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
@@ -794,12 +796,12 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo!.LanguageSelection ??= [];
+                    string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
+                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
-                    string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
                     info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
