@@ -543,7 +543,7 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.Extras!.BCA ??= (addPlaceholders ? RequiredValue : string.Empty);
+                    info.Extras!.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
@@ -574,7 +574,7 @@ namespace MPF.Frontend.Tools
                     }
 
                     info.Extras!.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
-                    info.Extras.BCA = info.Extras.BCA ?? (addPlaceholders ? RequiredValue : string.Empty);
+                    info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     break;
 
