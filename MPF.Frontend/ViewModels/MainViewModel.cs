@@ -1917,7 +1917,7 @@ namespace MPF.Frontend.ViewModels
                 {
                     case RedumpSystem.SonyPlayStation:
                     case RedumpSystem.SonyPlayStation2:
-                        PhysicalTool.GetPlayStationExecutableInfo(drive, out string? serial, out _, out _);
+                        string? serial = PhysicalTool.GetPlayStationSerial(drive);
                         volumeLabel = serial ?? "track";
                         break;
 

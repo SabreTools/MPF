@@ -694,21 +694,14 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? kp2Exe) && !string.IsNullOrEmpty(kp2Exe))
-                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
+                    string? kp2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
-                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var kp2Serial, out Region? kp2Region, out var kp2Date) == true)
-                    {
-                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
+                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
+                        info.CommonDiscInfo!.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
 
-                        info.CommonDiscInfo.Region ??= kp2Region;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= kp2Date;
-                    }
-
-                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation2Version(drive) ?? string.Empty;
-
+                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
@@ -790,17 +783,12 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive), psx: true);
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? psxExe) && !string.IsNullOrEmpty(psxExe))
-                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(psxExe);
+                    string? ps1Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
-                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var psxSerial, out Region? psxRegion, out var psxDate) == true)
-                    {
-                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
-
-                        info.CommonDiscInfo.Region ??= psxRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= psxDate;
-                    }
+                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
+                        info.CommonDiscInfo!.Region = ProcessingTool.GetPlayStationRegion(ps1Exe);
 
                     break;
 
@@ -811,58 +799,33 @@ namespace MPF.Frontend.Tools
                     if (isDiscImageCreator)
                         info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", PhysicalTool.GetPlayStationExecutableName(drive));
 
-                    if (info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps2Exe) && !string.IsNullOrEmpty(ps2Exe))
+                    string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+
+                    if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
 
-                    if (PhysicalTool.GetPlayStationExecutableInfo(drive, out var ps2Serial, out Region? ps2Region, out var ps2Date) == true)
-                    {
-                        if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? value) || string.IsNullOrEmpty(value))
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
-
-                        info.CommonDiscInfo.Region ??= ps2Region;
-                        info.CommonDiscInfo.EXEDateBuildDate ??= ps2Date;
-                    }
-
-                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation2Version(drive) ?? string.Empty;
-
+                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
                     info.Extras!.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
-                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps3Serial) || string.IsNullOrEmpty(ps3Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation3Serial(drive) ?? string.Empty;
-
-                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation3Version(drive) ?? string.Empty;
-
-                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.Patches, out string? ps3Firmware) || string.IsNullOrEmpty(ps3Firmware))
-                    {
-                        string? firmwareVersion = PhysicalTool.GetPlayStation3FirmwareVersion(drive);
-                        if (firmwareVersion != null)
-                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {firmwareVersion}";
-                    }
-
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
+                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
+                    SetCommentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps4Serial) || string.IsNullOrEmpty(ps4Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation4Serial(drive) ?? string.Empty;
-
-                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation4Version(drive) ?? string.Empty;
-
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
+                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    if (!info.CommonDiscInfo!.CommentsSpecialFields!.TryGetValue(SiteCode.InternalSerialName, out string? ps5Serial) || string.IsNullOrEmpty(ps5Serial))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = PhysicalTool.GetPlayStation5Serial(drive) ?? string.Empty;
-
-                    if (string.IsNullOrEmpty(info.VersionAndEditions!.Version))
-                        info.VersionAndEditions!.Version = PhysicalTool.GetPlayStation5Version(drive) ?? string.Empty;
-
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
+                    SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
                     break;
 
                 case RedumpSystem.TomyKissSite:
@@ -876,6 +839,63 @@ namespace MPF.Frontend.Tools
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Get a preformatted string for the PS3 firmware version, if possible
+        /// </summary>
+        private static string? FormatPlayStation3FirmwareVersion(Drive? drive)
+        {
+            string? firmwareVersion = PhysicalTool.GetPlayStation3FirmwareVersion(drive);
+            if (string.IsNullOrEmpty(firmwareVersion))
+                return string.Empty;
+
+            return $"PS3 Firmware {firmwareVersion}";
+        }
+
+        /// <summary>
+        /// Determine if a comment field exists based on key
+        /// </summary>
+        private static bool CommentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
+        {
+            // Ensure the comments fields exist
+            if (info.CommonDiscInfo!.CommentsSpecialFields == null)
+                info.CommonDiscInfo.CommentsSpecialFields = [];
+
+            // Check if the field exists
+            if (!info.CommonDiscInfo.CommentsSpecialFields.TryGetValue(key, out value))
+                return false;
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            // The value is valid
+            return true;
+        }
+
+        /// <summary>
+        /// Set a comment field if it doesn't already have a value
+        /// </summary>
+        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        {
+            // If the field has a valid value, skip
+            if (CommentFieldExists(info, key, out _))
+                return;
+
+            // Set the value
+            info.CommonDiscInfo!.CommentsSpecialFields![key] = valueFunc(drive) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Set the version if it doesn't already have a value
+        /// </summary>
+        private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
+        {
+            // If the version already exists, skip
+            if (!string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+                return;
+
+            // Set the version
+            info.VersionAndEditions.Version = valueFunc(drive) ?? string.Empty;
         }
 
         #endregion

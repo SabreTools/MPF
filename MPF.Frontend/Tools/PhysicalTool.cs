@@ -5,15 +5,58 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MPF.Processors;
 using SabreTools.IO;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
 {
     public static class PhysicalTool
     {
-        #region Information Extraction
+        #region Generic
+
+        /// <summary>s
+        /// Get the last modified date for a file from a physical disc, if possible
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <param name="filePath">Relative file path</param>
+        /// <returns>Output last modified date in "yyyy-mm-dd" format if possible, null on error</returns>
+        public static string? GetFileDate(Drive? drive, string? filePath, bool fixTwoDigitYear = false)
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // If the executable name is invalid, we can't do this part
+            if (string.IsNullOrEmpty(filePath))
+                return null;
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drive.Name, filePath);
+            if (!File.Exists(exePath))
+                return null;
+
+            // Get the last modified time
+            var fi = new FileInfo(exePath);
+            var lastModified = fi.LastWriteTimeUtc;
+            int year = lastModified.Year;
+            int month = lastModified.Month;
+            int day = lastModified.Day;
+
+            // Fix the Y2K timestamp issue, if required
+            if (fixTwoDigitYear)
+                year = year >= 1900 && year < 1920 ? 2000 + year % 100 : year;
+
+            // Format and return the string
+            var dt = new DateTime(year, month, day);
+            return dt.ToString("yyyy-MM-dd");
+        }
+
+        #endregion
+
+        #region BD-Video
 
         /// <summary>
         /// Get if the Bus Encryption Enabled (BEE) flag is set in a path
@@ -64,6 +107,10 @@ namespace MPF.Frontend.Tools
                 return false;
             }
         }
+
+        #endregion
+
+        #region PlayStation
 
         /// <summary>
         /// Get the EXE name from a PlayStation disc, if possible
@@ -120,58 +167,31 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Get the EXE date from a PlayStation disc, if possible
+        /// Get the serial from a PlayStation disc, if possible
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
-        /// <param name="serial">Internal disc serial, if possible</param>
-        /// <param name="region">Output region, if possible</param>
-        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
-        /// <returns>True if information could be determined, false otherwise</returns>
-        public static bool GetPlayStationExecutableInfo(Drive? drive, out string? serial, out Region? region, out string? date)
+        /// <returns>Serial on success, null otherwise</returns>
+        public static string? GetPlayStationSerial(Drive? drive)
         {
-            serial = null; region = null; date = null;
-
-            // If there's no drive path, we can't do this part
-            if (string.IsNullOrEmpty(drive?.Name))
-                return false;
-
-            // If the folder no longer exists, we can't do this part
-            if (!Directory.Exists(drive!.Name))
-                return false;
-
-            // Get the executable name
+            // Try to get the executable name
             string? exeName = GetPlayStationExecutableName(drive);
+            if (string.IsNullOrEmpty(exeName))
+                return null;
 
-            // If no executable found, we can't do this part
-            if (exeName == null)
-                return false;
+            // Handle generic PSX.EXE
+            if (exeName == "PSX.EXE")
+                return null;
 
             // EXE name may have a trailing `;` after
             // EXE name should always be in all caps
-            exeName = exeName
+            exeName = exeName!
                 .Split(';')[0]
                 .ToUpperInvariant();
 
             // Serial is most of the EXE name normalized
-            serial = exeName
+            return exeName
                 .Replace('_', '-')
                 .Replace(".", string.Empty);
-
-            // Get the region, if possible
-            region = ProcessingTool.GetPlayStationRegion(exeName);
-
-            // Now that we have the EXE name, try to get the fileinfo for it
-            string exePath = Path.Combine(drive.Name, exeName);
-            if (!File.Exists(exePath))
-                return false;
-
-            // Fix the Y2K timestamp issue
-            var fi = new FileInfo(exePath);
-            var dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
-                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
-            date = dt.ToString("yyyy-MM-dd");
-
-            return true;
         }
 
         /// <summary>
@@ -528,6 +548,10 @@ namespace MPF.Frontend.Tools
                 return null;
             }
         }
+
+        #endregion
+
+        #region Xbox
 
         /// <summary>
         /// Get all filenames for Xbox One and Xbox Series X

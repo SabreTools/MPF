@@ -28,6 +28,7 @@
 - Preemptively update Redumper Saturn support
 - Move MSXC parsing to PhysicalTool
 - Fix minor inconsistencies
+- Create some PlayStation helper methods
 
 ### 3.2.1 (2024-08-05)
 
