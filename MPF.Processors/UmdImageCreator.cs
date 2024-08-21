@@ -103,15 +103,22 @@ namespace MPF.Processors
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    if (GetUMDAuxInfo(basePath + "_disc.txt", out var title, out DiscCategory? umdcat, out var umdversion, out var umdlayer, out long umdsize))
+                    if (GetUMDAuxInfo(basePath + "_disc.txt",
+                        out var title,
+                        out DiscCategory? category,
+                        out string? serial,
+                        out var version,
+                        out var layer,
+                        out long size))
                     {
                         info.CommonDiscInfo!.Title = title ?? string.Empty;
-                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
-                        info.VersionAndEditions!.Version = umdversion ?? string.Empty;
-                        info.SizeAndChecksums!.Size = umdsize;
+                        info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.VersionAndEditions!.Version = version ?? string.Empty;
+                        info.SizeAndChecksums!.Size = size;
 
-                        if (!string.IsNullOrEmpty(umdlayer))
-                            info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
+                        if (!string.IsNullOrEmpty(layer))
+                            info.SizeAndChecksums.Layerbreak = Int64.Parse(layer ?? "-1");
                     }
 
                     break;
@@ -188,9 +195,17 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetUMDAuxInfo(string disc, out string? title, out DiscCategory? umdcat, out string? umdversion, out string? umdlayer, out long umdsize)
+        private static bool GetUMDAuxInfo(string disc,
+            out string? title,
+            out DiscCategory? category,
+            out string? serial,
+            out string? version,
+            out string? layer,
+            out long size)
         {
-            title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
+            title = null; serial = null; version = null; layer = null;
+            category = null;
+            size = -1;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -207,20 +222,26 @@ namespace MPF.Processors
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
-                        title = line.Substring("TITLE: ".Length);
-                    else if (line.StartsWith("DISC_VERSION") && umdversion == null)
-                        umdversion = line.Split(' ')[1];
+                        title = line.Split(' ')[1];
+                    else if (line.StartsWith("DISC_ID") && version == null)
+                        serial = line.Split(' ')[1];
+                    else if (line.StartsWith("DISC_VERSION") && version == null)
+                        version = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
-                        umdcat = ProcessingTool.GetUMDCategory(line.Split(' ')[1]);
+                        category = ProcessingTool.GetUMDCategory(line.Split(' ')[1]);
                     else if (line.StartsWith("L0 length"))
-                        umdlayer = line.Split(' ')[2];
+                        layer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))
-                        umdsize = Int64.Parse(line.Split(' ')[1]);
+                        size = Int64.Parse(line.Split(' ')[1]);
                 }
 
+                // If we have a serial, format it
+                if (!string.IsNullOrEmpty(serial) && serial!.Length > 4)
+                    serial = serial.Substring(0, 4) + "-" + serial.Substring(4);
+
                 // If the L0 length is the size of the full disc, there's no layerbreak
-                if (Int64.TryParse(umdlayer, out long umdlayerValue) && umdlayerValue * 2048 == umdsize)
-                    umdlayer = null;
+                if (Int64.TryParse(layer, out long umdlayerValue) && umdlayerValue * 2048 == size)
+                    layer = null;
 
                 return true;
             }
