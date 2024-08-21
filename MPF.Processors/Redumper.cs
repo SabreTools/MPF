@@ -463,20 +463,15 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaSaturn:
-                    info.Extras!.Header = GetSaturnHeader($"{basePath}.log") ?? string.Empty;
-
-                    // Take only the first 16 lines for Saturn
-                    if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
-
-                    if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var saturnBuildDate))
-                    {
-                        // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                        info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
-                        info.CommonDiscInfo.EXEDateBuildDate = saturnBuildDate ?? string.Empty;
-                    }
-
+                    info.Extras!.Header = GetSaturnHeader($"{basePath}.log",
+                        out string? saturnBuildDate,
+                        out string? saturnSerial,
+                        out _,
+                        out string? saturnVersion) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = saturnBuildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+                    info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -1487,9 +1482,9 @@ namespace MPF.Processors
         /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
         /// TODO: Remove when Redumper gets native reading support
-        private static bool GetSaturnBuildInfo(string? segaHeader, out string? serial, out string? version, out string? date)
+        private static bool GetSaturnBuildInfo(string? segaHeader, out string? buildDate, out string? serial, out string? version)
         {
-            serial = null; version = null; date = null;
+            buildDate = null; serial = null; version = null;
 
             // If the input header is null, we can't do a thing
             if (string.IsNullOrEmpty(segaHeader))
@@ -1503,8 +1498,8 @@ namespace MPF.Processors
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
-                date = dateLine.Substring(0, 8);
-                date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
+                buildDate = dateLine.Substring(0, 8);
+                buildDate = $"{buildDate[0]}{buildDate[1]}{buildDate[2]}{buildDate[3]}-{buildDate[4]}{buildDate[5]}-{buildDate[6]}{buildDate[7]}";
                 return true;
             }
             catch
@@ -1519,8 +1514,11 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string? GetSaturnHeader(string log)
+        private static string? GetSaturnHeader(string log, out string? buildDate, out string? serial, out string? region, out string? version)
         {
+            // Set the default values
+            buildDate = null; serial = null; region = null; version = null;
+
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
                 return null;
@@ -1537,7 +1535,30 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line?.StartsWith("header:") == true)
+                    if (line == null)
+                        break;
+
+                    if (line.StartsWith("build date:"))
+                    {
+                        buildDate = line.Substring("build date: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+                        serial = line.Substring("serial: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("region:"))
+                    {
+                        region = line.Substring("region: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("regions:"))
+                    {
+                        region = line.Substring("regions: ".Length).Trim();
+                    }
+                    else if (line.StartsWith("version:"))
+                    {
+                        version = line.Substring("version: ".Length).Trim();
+                    }
+                    else if (line?.StartsWith("header:") == true)
                     {
                         line = sr.ReadLine()?.TrimStart();
                         while (line?.StartsWith("00") == true)
@@ -1552,7 +1573,18 @@ namespace MPF.Processors
                     }
                 }
 
-                return headerString.TrimEnd('\n');
+                // Trim the header
+                headerString = headerString.TrimEnd('\n');
+
+                // Fallback if any info could not be found
+                if (GetSaturnBuildInfo(headerString, out string? buildDateP, out string? serialP, out string? versionP))
+                {
+                    buildDate ??= buildDateP;
+                    serial ??= serialP;
+                    version ??= versionP;
+                }
+
+                return headerString;
             }
             catch
             {

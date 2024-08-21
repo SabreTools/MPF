@@ -25,6 +25,7 @@
 - Use new BEE method in code
 - Include serial for UMD
 - Remove GD-ROM version fallback method
+- Preemptively update Redumper Saturn support
 
 ### 3.2.1 (2024-08-05)
 
