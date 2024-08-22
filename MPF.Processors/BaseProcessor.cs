@@ -75,7 +75,7 @@ namespace MPF.Processors
             foreach (var outputFile in outputFiles)
             {
                 // Skip non-artifact files
-                if (!outputFile.IsArtifact)
+                if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
                     continue;
 
                 // Skip non-existent files
@@ -91,13 +91,13 @@ namespace MPF.Processors
                     {
                         byte[] data = File.ReadAllBytes(filename);
                         string str = Convert.ToBase64String(data);
-                        info.Artifacts!.Add(filename, str);
+                        info.Artifacts!.Add(outputFile.ArtifactKey, str);
                     }
                     else
                     {
                         string? data = ProcessingTool.GetFullFile(filename);
                         string str = ProcessingTool.GetBase64(data) ?? string.Empty;
-                        info.Artifacts!.Add(filename, str);
+                        info.Artifacts!.Add(outputFile.ArtifactKey, str);
                     }
 
                     break;

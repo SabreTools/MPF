@@ -51,6 +51,11 @@ namespace MPF.Processors
         public string[] Filenames { get; private set; }
 
         /// <summary>
+        /// Key used when creating an artifact
+        /// </summary>
+        public string? ArtifactKey { get; private set;}
+
+        /// <summary>
         /// Indicates if the file is required
         /// </summary>
         public bool IsRequired
@@ -132,12 +137,25 @@ namespace MPF.Processors
         /// </summary>
         private readonly OutputFileFlags _flags;
 
+        // TODO: Add validation that a key exists if the artifact flag is present
+
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
         public OutputFile(string filename, OutputFileFlags flags)
         {
             Filenames = [filename];
+            ArtifactKey = null;
+            _flags = flags;
+        }
+
+        /// <summary>
+        /// Create an OutputFile with a single filename
+        /// </summary>
+        public OutputFile(string filename, OutputFileFlags flags, string artifactKey)
+        {
+            Filenames = [filename];
+            ArtifactKey = artifactKey;
             _flags = flags;
         }
 
@@ -147,6 +165,17 @@ namespace MPF.Processors
         public OutputFile(string[] filenames, OutputFileFlags flags)
         {
             Filenames = filenames;
+            ArtifactKey = null;
+            _flags = flags;
+        }
+
+        /// <summary>
+        /// Create an OutputFile with set of filenames
+        /// </summary>
+        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
+        {
+            Filenames = filenames;
+            ArtifactKey = artifactKey;
             _flags = flags;
         }
 

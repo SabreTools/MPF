@@ -38,6 +38,7 @@
 - Replace GetLogFilePaths with common code
 - Move GetLogFilePaths to better location
 - Replace GenerateArtifacts with common code
+- Define new ArtifactKey field
 
 ### 3.2.1 (2024-08-05)
 
