@@ -40,6 +40,7 @@
 - Replace GenerateArtifacts with common code
 - Define new ArtifactKey field
 - Add artifact keys for all relevant files
+- Make GenerateArtifacts return a dictionary
 
 ### 3.2.1 (2024-08-05)
 

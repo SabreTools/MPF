@@ -53,60 +53,6 @@ namespace MPF.Processors
         public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck);
 
         /// <summary>
-        /// Generate artifacts and add to the SubmissionInfo
-        /// </summary>
-        /// <param name="info">Base submission info to fill in specifics for</param>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        public void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return;
-
-            // Ensure the artifacts dictionary exists
-            info.Artifacts ??= [];
-
-            // Only try to create artifacts for files that exist
-            foreach (var outputFile in outputFiles)
-            {
-                // Skip non-artifact files
-                if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
-                    continue;
-
-                // Skip non-existent files
-                foreach (string filename in outputFile.Filenames)
-                {
-                    string outputFilePath = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(outputFilePath))
-                        continue;
-
-                    // Get binary artifacts as a byte array
-                    if (outputFile.IsBinaryArtifact)
-                    {
-                        byte[] data = File.ReadAllBytes(filename);
-                        string str = Convert.ToBase64String(data);
-                        info.Artifacts!.Add(outputFile.ArtifactKey, str);
-                    }
-                    else
-                    {
-                        string? data = ProcessingTool.GetFullFile(filename);
-                        string str = ProcessingTool.GetBase64(data) ?? string.Empty;
-                        info.Artifacts!.Add(outputFile.ArtifactKey, str);
-                    }
-
-                    break;
-                }
-            }
-
-            return;
-        }
-
-        /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
@@ -281,6 +227,60 @@ namespace MPF.Processors
 
             // Finally, let the parameters say if all files exist
             return CheckAllOutputFilesExist(basePath, preCheck);
+        }
+
+        /// <summary>
+        /// Generate artifacts and return them as a dictionary
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
+        public Dictionary<string, string> GenerateArtifacts(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return [];
+
+            // Create the artifacts dictionary
+            var artifacts = new Dictionary<string, string>();
+
+            // Only try to create artifacts for files that exist
+            foreach (var outputFile in outputFiles)
+            {
+                // Skip non-artifact files
+                if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
+                    continue;
+
+                // Skip non-existent files
+                foreach (string filename in outputFile.Filenames)
+                {
+                    string outputFilePath = Path.Combine(baseDirectory, filename);
+                    if (!File.Exists(outputFilePath))
+                        continue;
+
+                    // Get binary artifacts as a byte array
+                    if (outputFile.IsBinaryArtifact)
+                    {
+                        byte[] data = File.ReadAllBytes(filename);
+                        string str = Convert.ToBase64String(data);
+                        artifacts.Add(outputFile.ArtifactKey, str);
+                    }
+                    else
+                    {
+                        string? data = ProcessingTool.GetFullFile(filename);
+                        string str = ProcessingTool.GetBase64(data) ?? string.Empty;
+                        artifacts.Add(outputFile.ArtifactKey, str);
+                    }
+
+                    break;
+                }
+            }
+
+            return artifacts;
         }
 
         /// <summary>
