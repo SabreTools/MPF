@@ -256,24 +256,31 @@ namespace MPF.Processors
                         new($"{baseFilename}.aaruf", OutputFileFlags.Required),
                         new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cicm"),
                         new($"{baseFilename}.error.log", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "error_log"),
                         new($"{baseFilename}.ibg", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "ibg"),
                         new($"{baseFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "mhddlog"),
                         new($"{baseFilename}.resume.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "resume"),
                         new($"{baseFilename}.sub.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub_log"),
                     ];
 
                 case MediaType.DVD:
@@ -283,21 +290,27 @@ namespace MPF.Processors
                         new($"{baseFilename}.aaruf", OutputFileFlags.Required),
                         new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cicm"),
                         new($"{baseFilename}.error.log", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "error_log"),
                         new($"{baseFilename}.ibg", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "ibg"),
                         new($"{baseFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "mhddlog"),
                         new($"{baseFilename}.resume.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "resume"),
                     ];
             }
 

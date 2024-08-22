@@ -492,37 +492,47 @@ namespace MPF.Processors
                 case MediaType.CDROM:
                     List<OutputFile> cdrom = [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "asus"),
                         new($"{baseFilename}.atip", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "atip"),
                         new($"{baseFilename}.cdtext", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cdtext"),
                         new($"{baseFilename}.cue", OutputFileFlags.Required),
                         new($"{baseFilename}.fulltoc", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "fulltoc"),
                         new($"{baseFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new($"{baseFilename}.pma", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "pma"),
                         new([$"{baseFilename}.scram", $"{baseFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
                         new($"{baseFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "state"),
                         new($"{baseFilename}.subcode", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "subcode"),
                         new($"{baseFilename}.toc", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "toc"),
                     ];
 
                     // Include .hash and .skeleton for all files in cuesheet
                     var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{baseFilename}.cue");
                     if (cueSheet?.Files != null)
                     {
+                        int trackId = 1;
                         foreach (CueFile? file in cueSheet.Files)
                         {
                             string? trackName = Path.GetFileNameWithoutExtension(file?.FileName);
@@ -530,17 +540,22 @@ namespace MPF.Processors
                                 continue;
 
                             cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
-                                | OutputFileFlags.Zippable));
+                                | OutputFileFlags.Zippable,
+                                $"hash_{trackId}"));
                             cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
-                                | OutputFileFlags.Zippable));
+                                | OutputFileFlags.Zippable,
+                                $"skeleton_{trackId}"));
+                            trackId++;
                         }
                     }
                     else
                     {
                         cdrom.Add(new($"{baseFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable));
+                            | OutputFileFlags.Zippable,
+                            "hash"));
                         cdrom.Add(new($"{baseFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable));
+                            | OutputFileFlags.Zippable,
+                            "skeleton"));
                     }
 
                     return cdrom;
@@ -548,53 +563,71 @@ namespace MPF.Processors
                 case MediaType.DVD:
                     return [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "asus"),
                         new($"{baseFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "hash"),
                         new($"{baseFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new([$"{baseFilename}.manufacturer", $"{baseFilename}.1.manufacturer"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "manufacturer_1"),
                         new($"{baseFilename}.2.manufacturer", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "manufacturer_2"),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_0"),
                         new($"{baseFilename}.1.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_1"),
                         new($"{baseFilename}.2.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_2"),
                         new($"{baseFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "skeleton"),
                         new($"{baseFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "state"),
                     ];
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
                 case MediaType.BluRay:
                     return [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "asus"),
                         new($"{baseFilename}.hash", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "hash"),
                         new($"{baseFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_0"),
                         new($"{baseFilename}.1.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_1"),
                         new($"{baseFilename}.2.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "physical_2"),
                         new($"{baseFilename}.skeleton", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "skeleton"),
                         new($"{baseFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "state"),
                     ];
             }
 

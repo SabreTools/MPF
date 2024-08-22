@@ -39,6 +39,7 @@
 - Move GetLogFilePaths to better location
 - Replace GenerateArtifacts with common code
 - Define new ArtifactKey field
+- Add artifact keys for all relevant files
 
 ### 3.2.1 (2024-08-05)
 

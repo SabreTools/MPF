@@ -85,7 +85,6 @@ namespace MPF.Processors
                     if (!File.Exists(outputFilePath))
                         continue;
 
-                    // TODO: Determine a better way of getting the artifact key
                     // Get binary artifacts as a byte array
                     if (outputFile.IsBinaryArtifact)
                     {

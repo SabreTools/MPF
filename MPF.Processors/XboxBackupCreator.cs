@@ -203,23 +203,29 @@ namespace MPF.Processors
                 case MediaType.DVD:
                     return [
                         new($"{baseFilename}.dvd", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "dvd"),
                         new($"{baseFilename}.iso", OutputFileFlags.Required),
                         
                         new("DMI.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "dmi"),
                         new("Log.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "log"),
                         new("PFI.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "pfi"),
                         new("RawSS.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "raw_ss"),
                         new("SS.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "ss"),
                     ];
             }
 

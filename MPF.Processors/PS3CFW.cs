@@ -115,10 +115,12 @@ namespace MPF.Processors
                         new($"{baseFilename}.iso", OutputFileFlags.Required),
                         new($"{baseFilename}.getkey.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "getkey_log"),
                         new($"{baseFilename}.disc.pic", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc_pic"),
                     ];
             }
 

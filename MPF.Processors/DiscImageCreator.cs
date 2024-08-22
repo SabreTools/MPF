@@ -655,71 +655,92 @@ namespace MPF.Processors
             {
                 case MediaType.CDROM:
                     return [
-                        new($"{baseFilename}.c2", OutputFileFlags.Zippable), // Doesn't output on Linux
+                        new($"{baseFilename}.c2", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "c2"), // Doesn't output on Linux
                         new($"{baseFilename}.ccd", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "ccd"),
                         // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.cue", OutputFileFlags.Required),
                         new($"{baseFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable),
                         new($"{baseFilename}.img", OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
                         new([$"{baseFilename}.img_EdcEcc.txt", $"{baseFilename}.img_EccEdc.txt"], System.IsAudio()
                             ? OutputFileFlags.Artifact | OutputFileFlags.Zippable
-                            : OutputFileFlags.Required | OutputFileFlags.Artifact | OutputFileFlags.Zippable),
+                            : OutputFileFlags.Required | OutputFileFlags.Artifact | OutputFileFlags.Zippable,
+                            "img_edcecc"),
                         new([$"{baseFilename}.scm", $"{baseFilename}.scmtmp"], System.IsAudio()
                             ? OutputFileFlags.Deleteable
                             : OutputFileFlags.Required | OutputFileFlags.Deleteable),
                         new([$"{baseFilename}.sub", $"{baseFilename}.subtmp"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub"),
                         new($"{baseFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "toc"),
 
                         new($"{baseFilename}_c2Error.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable), // Doesn't output on Linux
+                            | OutputFileFlags.Zippable,
+                            "c2_error"), // Doesn't output on Linux
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                         new($"{baseFilename}_drive.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "drive"),
                         new($"{baseFilename}_img.cue", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "img_cue"),
                         new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_error"),
                         new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_info"),
                         new([$"{baseFilename}_sub.txt", $"{baseFilename}_subReadable.txt"], OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub_readable"),
                         new($"{baseFilename}_subError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub_error"),
                         new($"{baseFilename}_subInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub_info"),
                         new($"{baseFilename}_subIntention.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "sub_intention"),
                         new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "suppl_dat"),
                         new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "vol_desc"),
 
                         new([$"{baseFilename} (Track 0).sub", $"{baseFilename} (Track 00).sub"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "track00_sub"),
                         new([$"{baseFilename} (Track 1)(-LBA).sub", $"{baseFilename} (Track 01)(-LBA).sub"], OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "track1_lba_sub"),
                         new($"{baseFilename} (Track AA).sub", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "track_aa_sub"),
                     ];
 
                 // TODO: Confirm GD-ROM HD area outputs
@@ -727,30 +748,37 @@ namespace MPF.Processors
                     return [
                         // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable),
                         new($"{baseFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "toc"),
 
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                         new($"{baseFilename}_drive.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "drive"),
                         new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_error"),
                         new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_info"),
                         new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "suppl_dat"),
                         new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "vol_desc"),
                     ];
 
                 case MediaType.DVD:
@@ -761,43 +789,55 @@ namespace MPF.Processors
                     return [
                         // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable),
                         new($"{baseFilename}.raw", OutputFileFlags.None),
                         new($"{baseFilename}.toc", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "toc"),
 
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_CSSKey.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "css_key"),
                         new($"{baseFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                         new($"{baseFilename}_drive.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "drive"),
                         new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_error"),
                         new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_info"),
                         new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "suppl_dat"),
                         new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "vol_desc"),
 
                         // TODO: Figure out when these are required
                         new($"{baseFilename}_DMI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "dmi"),
                         new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "pfi"),
                         new($"{baseFilename}_PIC.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "pic"),
                         new($"{baseFilename}_SS.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "ss"),
                     ];
 
                 case MediaType.FloppyDisk:
@@ -806,14 +846,15 @@ namespace MPF.Processors
                     return [
                         // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable),
 
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                     ];
             }
 

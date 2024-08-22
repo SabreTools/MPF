@@ -126,18 +126,23 @@ namespace MPF.Processors
 
                         new($"{baseFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                         new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_error"),
                         new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "main_info"),
                         new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "pfi"),
                         new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "vol_desc"),
                     ];
             }
 

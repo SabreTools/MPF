@@ -113,12 +113,14 @@ namespace MPF.Processors
                     return [
                         new($"{baseFilename}.bca", OutputFileFlags.Required
                             | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "bca"),
                         new($"{baseFilename}.iso", OutputFileFlags.Required),
 
                         new($"{baseFilename}-dumpinfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable),
+                            | OutputFileFlags.Zippable,
+                            "dumpinfo"),
                     ];
             }
 
