@@ -26,6 +26,11 @@ namespace MPF.Processors
             string baseFilename = Path.GetFileName(basePath);
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return (false, ["Media and system combination not supported for CleanRip"]);
+
             var missingFiles = new List<string>();
             switch (Type)
             {

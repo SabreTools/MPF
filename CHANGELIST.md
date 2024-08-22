@@ -34,6 +34,7 @@
 - Create currently-unused helper class
 - Make helper class more robust
 - Add unused GetOutputFiles method
+- Hook up GetOutputFiles in debug way
 
 ### 3.2.1 (2024-08-05)
 

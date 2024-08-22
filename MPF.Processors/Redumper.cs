@@ -27,6 +27,11 @@ namespace MPF.Processors
             string baseFilename = Path.GetFileName(basePath);
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return (false, ["Media and system combination not supported for Redumper"]);
+
             var missingFiles = new List<string>();
 
             switch (Type)
@@ -528,19 +533,6 @@ namespace MPF.Processors
 
                     break;
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<string> GetDeleteableFilePaths(string basePath)
-        {
-            var deleteableFiles = new List<string>();
-
-            if (File.Exists($"{basePath}.scram"))
-                deleteableFiles.Add($"{basePath}.scram");
-            if (File.Exists($"{basePath}.scrap"))
-                deleteableFiles.Add($"{basePath}.scrap");
-
-            return deleteableFiles;
         }
 
         /// <inheritdoc/>

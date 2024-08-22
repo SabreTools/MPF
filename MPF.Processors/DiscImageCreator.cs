@@ -74,6 +74,11 @@ namespace MPF.Processors
             string baseFilename = Path.GetFileName(basePath);
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return (false, ["Media and system combination not supported for DiscImageCreator"]);
+
             var missingFiles = new List<string>();
             switch (Type)
             {
@@ -698,57 +703,6 @@ namespace MPF.Processors
 
                     break;
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<string> GetDeleteableFilePaths(string basePath)
-        {
-            var deleteableFiles = new List<string>();
-            switch (Type)
-            {
-                // TODO: Handle (Pregap) files -- need examples
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                    if (File.Exists($"{basePath}.img"))
-                        deleteableFiles.Add($"{basePath}.img");
-                    if (File.Exists($"{basePath} (Track 0).img"))
-                        deleteableFiles.Add($"{basePath} (Track 0).img");
-                    if (File.Exists($"{basePath} (Track 00).img"))
-                        deleteableFiles.Add($"{basePath} (Track 00).img");
-                    if (File.Exists($"{basePath} (Track 1)(-LBA).img"))
-                        deleteableFiles.Add($"{basePath} (Track 1)(-LBA).img");
-                    if (File.Exists($"{basePath} (Track 01)(-LBA).img"))
-                        deleteableFiles.Add($"{basePath} (Track 01)(-LBA).img");
-                    if (File.Exists($"{basePath} (Track AA).img"))
-                        deleteableFiles.Add($"{basePath} (Track AA).img");
-
-                    if (File.Exists($"{basePath}.scm"))
-                        deleteableFiles.Add($"{basePath}.scm");
-                    if (File.Exists($"{basePath} (Track 0).scm"))
-                        deleteableFiles.Add($"{basePath} (Track 0).scm");
-                    if (File.Exists($"{basePath} (Track 00).scm"))
-                        deleteableFiles.Add($"{basePath} (Track 00).scm");
-                    if (File.Exists($"{basePath} (Track 1)(-LBA).scm"))
-                        deleteableFiles.Add($"{basePath} (Track 1)(-LBA).scm");
-                    if (File.Exists($"{basePath} (Track 01)(-LBA).scm"))
-                        deleteableFiles.Add($"{basePath} (Track 01)(-LBA).scm");
-                    if (File.Exists($"{basePath} (Track AA).scm"))
-                        deleteableFiles.Add($"{basePath} (Track AA).scm");
-
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (File.Exists($"{basePath}.raw"))
-                        deleteableFiles.Add($"{basePath}.raw");
-
-                    break;
-            }
-
-            return deleteableFiles;
         }
 
         /// <inheritdoc/>
