@@ -37,6 +37,7 @@
 - Hook up GetOutputFiles in debug way
 - Replace GetLogFilePaths with common code
 - Move GetLogFilePaths to better location
+- Replace GenerateArtifacts with common code
 
 ### 3.2.1 (2024-08-05)
 

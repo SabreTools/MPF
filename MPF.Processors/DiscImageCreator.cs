@@ -236,63 +236,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            //if (File.Exists($"{basePath}.c2"))
-            //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.c2")) ?? string.Empty;
-            if (File.Exists($"{basePath}_c2Error.txt"))
-                info.Artifacts["c2Error"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_c2Error.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}.ccd"))
-                info.Artifacts["ccd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.ccd")) ?? string.Empty;
-            if (File.Exists($"{basePath}_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                info.Artifacts["cmd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_cmd.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_CSSKey.txt"))
-                info.Artifacts["csskey"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_CSSKey.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
-            if (File.Exists($"{basePath}.dat"))
-                info.Artifacts["dat"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.dat")) ?? string.Empty;
-            if (File.Exists($"{basePath}_disc.txt"))
-                info.Artifacts["disc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
-            //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_DMI.bin")))
-            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"))) ?? string.Empty;
-            if (File.Exists($"{basePath}_drive.txt"))
-                info.Artifacts["drive"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_img.cue"))
-                info.Artifacts["img_cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_img.cue")) ?? string.Empty;
-            if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                info.Artifacts["img_EdcEcc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.img_EdcEcc.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                info.Artifacts["img_EdcEcc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.img_EccEdc.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_mainError.txt"))
-                info.Artifacts["mainError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_PFI.bin"))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_PIC.bin"))
-            //    info.Artifacts["pic"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PIC.bin")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_SS.bin"))
-            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_SS.bin")) ?? string.Empty;
-            if (File.Exists($"{basePath}.sub"))
-                info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.sub")) ?? string.Empty;
-            if (File.Exists($"{basePath}_subError.txt"))
-                info.Artifacts["subError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subError.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_subInfo.txt"))
-                info.Artifacts["subInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subInfo.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_subIntention.txt"))
-                info.Artifacts["subIntention"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subIntention.txt")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_sub.txt"))
-            //    info.Artifacts["subReadable"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_sub.txt")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_subReadable.txt"))
-            //    info.Artifacts["subReadable"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_subReadable.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_volDesc.txt"))
-                info.Artifacts["volDesc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             var outputDirectory = Path.GetDirectoryName(basePath);

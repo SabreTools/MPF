@@ -89,25 +89,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            if (File.Exists(basePath + ".cicm.xml"))
-                info.Artifacts["cicm"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
-            if (File.Exists(basePath + ".ibg"))
-                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
-            if (File.Exists(basePath + ".log"))
-                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".log")) ?? string.Empty;
-            if (File.Exists(basePath + ".mhddlog.bin"))
-                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
-            if (File.Exists(basePath + ".resume.xml"))
-                info.Artifacts["resume"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
-            if (File.Exists(basePath + ".sub.log"))
-                info.Artifacts["sub_log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".sub.log")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // TODO: Fill in submission info specifics for Aaru

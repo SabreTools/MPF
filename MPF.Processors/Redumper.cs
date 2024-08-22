@@ -145,57 +145,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            if (File.Exists($"{basePath}.asus"))
-                info.Artifacts["asus"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.asus")) ?? string.Empty;
-            if (File.Exists($"{basePath}.atip"))
-                info.Artifacts["atip"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.atip")) ?? string.Empty;
-            if (File.Exists($"{basePath}.cdtext"))
-                info.Artifacts["cdtext"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cdtext")) ?? string.Empty;
-            if (File.Exists($"{basePath}.cue"))
-                info.Artifacts["cue"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.cue")) ?? string.Empty;
-            if (File.Exists($"{basePath}.fulltoc"))
-                info.Artifacts["fulltoc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.fulltoc")) ?? string.Empty;
-            if (File.Exists($"{basePath}.hash"))
-                info.Artifacts["hash"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.hash")) ?? string.Empty;
-            // TODO: "{basePath} (Track X).hash" (get from cuesheet)
-            if (File.Exists($"{basePath}.log"))
-                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.log")) ?? string.Empty;
-            if (File.Exists($"{basePath}.manufacturer"))
-                info.Artifacts["manufacturer"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.manufacturer")) ?? string.Empty;
-            if (File.Exists($"{basePath}.1.manufacturer"))
-                info.Artifacts["manufacturer1"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.1.manufacturer")) ?? string.Empty;
-            if (File.Exists($"{basePath}.2.manufacturer"))
-                info.Artifacts["manufacturer2"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.2.manufacturer")) ?? string.Empty;
-            if (File.Exists($"{basePath}.physical"))
-                info.Artifacts["physical"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.physical")) ?? string.Empty;
-            if (File.Exists($"{basePath}.0.physical"))
-                info.Artifacts["physical0"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.0.physical")) ?? string.Empty;
-            if (File.Exists($"{basePath}.1.physical"))
-                info.Artifacts["physical1"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.1.physical")) ?? string.Empty;
-            if (File.Exists($"{basePath}.2.physical"))
-                info.Artifacts["physical2"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.2.physical")) ?? string.Empty;
-            if (File.Exists($"{basePath}.pma"))
-                info.Artifacts["pma"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.pma")) ?? string.Empty;
-            // if (File.Exists($"{basePath}.skeleton"))
-            //     info.Artifacts["skeleton"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.skeleton")) ?? string.Empty;
-            // // Also: "{basePath} (Track X).skeleton" (get from cuesheet)
-            // if (File.Exists($"{basePath}.scram"))
-            //     info.Artifacts["scram"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.scram")) ?? string.Empty;
-            // if (File.Exists($"{basePath}.scrap"))
-            //     info.Artifacts["scrap"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.scrap")) ?? string.Empty;
-            if (File.Exists($"{basePath}.state"))
-                info.Artifacts["state"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.state")) ?? string.Empty;
-            if (File.Exists($"{basePath}.subcode"))
-                info.Artifacts["subcode"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.subcode")) ?? string.Empty;
-            if (File.Exists($"{basePath}.toc"))
-                info.Artifacts["toc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.toc")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

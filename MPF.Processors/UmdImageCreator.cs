@@ -58,25 +58,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            if (File.Exists($"{basePath}_disc.txt"))
-                info.Artifacts["disc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_disc.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_drive.txt"))
-                info.Artifacts["drive"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_drive.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_mainError.txt"))
-                info.Artifacts["mainError"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainError.txt")) ?? string.Empty;
-            if (File.Exists($"{basePath}_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_mainInfo.txt")) ?? string.Empty;
-            //if (File.Exists($"{basePath}_PFI.bin"))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin")) ?? string.Empty;
-            if (File.Exists($"{basePath}_volDesc.txt"))
-                info.Artifacts["volDesc"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}_volDesc.txt")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

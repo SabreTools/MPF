@@ -49,19 +49,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            string? getKeyBasePath = GetCFWBasePath(basePath);
-
-            if (File.Exists(getKeyBasePath + ".disc.pic"))
-                info.Artifacts["discpic"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(getKeyBasePath + ".disc.pic", binary: true)) ?? string.Empty;
-            if (File.Exists(getKeyBasePath + ".getkey.log"))
-                info.Artifacts["getkeylog"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(getKeyBasePath + ".getkey.log")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

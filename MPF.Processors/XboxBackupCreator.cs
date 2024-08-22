@@ -66,29 +66,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
-            string? logPath = GetLogName(baseDir);
-
-            if (File.Exists(logPath))
-                info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(logPath!)) ?? string.Empty;
-            if (File.Exists($"{basePath}.dvd"))
-                info.Artifacts["dvd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
-            //if (File.Exists(Path.Combine(baseDirectory, "DMI.bin"))
-            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "DMI.bin")) ?? string.Empty;
-            // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes
-            //if (File.Exists(Path.Combine(baseDirectory, "PFI.bin"))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "PFI.bin")) ?? string.Empty;
-            //if (File.Exists(Path.Combine(baseDirectory, "SS.bin"))
-            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "SS.bin")) ?? string.Empty;
-            //if (File.Exists(Path.Combine(baseDirectory, "RawSS.bin"))
-            //    info.Artifacts["rawss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "RawSS.bin")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

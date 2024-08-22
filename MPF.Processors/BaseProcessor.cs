@@ -55,9 +55,57 @@ namespace MPF.Processors
         /// <summary>
         /// Generate artifacts and add to the SubmissionInfo
         /// </summary>
-        /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
+        /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        public abstract void GenerateArtifacts(SubmissionInfo submissionInfo, string basePath);
+        public void GenerateArtifacts(SubmissionInfo info, string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return;
+
+            // Ensure the artifacts dictionary exists
+            info.Artifacts ??= [];
+
+            // Only try to create artifacts for files that exist
+            foreach (var outputFile in outputFiles)
+            {
+                // Skip non-artifact files
+                if (!outputFile.IsArtifact)
+                    continue;
+
+                // Skip non-existent files
+                foreach (string filename in outputFile.Filenames)
+                {
+                    string outputFilePath = Path.Combine(baseDirectory, filename);
+                    if (!File.Exists(outputFilePath))
+                        continue;
+
+                    // TODO: Determine a better way of getting the artifact key
+                    // Get binary artifacts as a byte array
+                    if (outputFile.IsBinaryArtifact)
+                    {
+                        byte[] data = File.ReadAllBytes(filename);
+                        string str = Convert.ToBase64String(data);
+                        info.Artifacts!.Add(filename, str);
+                    }
+                    else
+                    {
+                        string? data = ProcessingTool.GetFullFile(filename);
+                        string str = ProcessingTool.GetBase64(data) ?? string.Empty;
+                        info.Artifacts!.Add(filename, str);
+                    }
+
+                    break;
+                }
+            }
+
+            return;
+        }
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files

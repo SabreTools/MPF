@@ -56,17 +56,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateArtifacts(SubmissionInfo info, string basePath)
-        {
-            info.Artifacts ??= [];
-
-            if (File.Exists(basePath + ".bca"))
-                info.Artifacts["bca"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
-            if (File.Exists(basePath + "-dumpinfo.txt"))
-                info.Artifacts["dumpinfo"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
