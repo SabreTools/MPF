@@ -24,7 +24,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
             switch (Type)
@@ -154,6 +154,35 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.UMD:
+                    return [
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

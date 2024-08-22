@@ -23,7 +23,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
             switch (Type)
@@ -90,7 +90,7 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // Get base directory
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             // Get log filename
             string? logPath = GetLogName(baseDirectory);
@@ -217,7 +217,7 @@ namespace MPF.Processors
         public override List<string> GetLogFilePaths(string basePath)
         {
             // Get base directory
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var logFiles = new List<string>();
             switch (Type)
@@ -241,6 +241,37 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.DVD:
+                    return [
+                        new($"{baseFilename}.dvd", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        
+                        new("DMI.bin", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new("Log.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new("PFI.bin", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new("RawSS.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new("SS.bin", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

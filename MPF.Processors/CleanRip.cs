@@ -24,7 +24,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
             switch (Type)
@@ -117,15 +117,38 @@ namespace MPF.Processors
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (File.Exists($"{basePath}-dumpinfo.txt"))
-                        logFiles.Add($"{basePath}-dumpinfo.txt");
                     if (File.Exists($"{basePath}.bca"))
                         logFiles.Add($"{basePath}.bca");
+                    if (File.Exists($"{basePath}-dumpinfo.txt"))
+                        logFiles.Add($"{basePath}-dumpinfo.txt");
 
                     break;
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.DVD: // Only added here to help users; not strictly correct
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    return [
+                        new($"{baseFilename}.bca", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+
+                        new($"{baseFilename}-dumpinfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

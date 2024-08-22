@@ -74,6 +74,13 @@ namespace MPF.Processors
         /// <returns>List of all log file paths, empty otherwise</returns>
         public abstract List<string> GetLogFilePaths(string basePath);
 
+        /// <summary>
+        /// Generate a list of all output files generated
+        /// </summary>
+        /// <param name="baseFilename">Base filename to use for checking</param>
+        /// <returns>List of all output files, empty otherwise</returns>
+        public abstract List<OutputFile> GetOutputFiles(string baseFilename);
+
         #endregion
 
         #region Virtual Methods

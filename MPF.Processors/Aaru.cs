@@ -32,7 +32,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
             switch (Type)
@@ -304,6 +304,64 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.CDROM:
+                    return [
+                        new($"{baseFilename}.aaruf", OutputFileFlags.Required),
+                        new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.error.log", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.ibg", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.resume.xml", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.sub.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    return [
+                        new($"{baseFilename}.aaruf", OutputFileFlags.Required),
+                        new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.error.log", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.ibg", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.resume.xml", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

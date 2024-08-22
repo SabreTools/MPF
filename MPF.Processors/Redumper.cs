@@ -25,7 +25,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
 
@@ -649,6 +649,123 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.CDROM:
+                    List<OutputFile> cdrom = [
+                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.atip", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.cdtext", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.cue", OutputFileFlags.Required),
+                        new($"{baseFilename}.fulltoc", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.pma", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.scram", $"{baseFilename}.scrap"], OutputFileFlags.Required
+                            | OutputFileFlags.Deleteable),
+                        new($"{baseFilename}.state", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.subcode", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.toc", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                    // Include .hash and .skeleton for all files in cuesheet
+                    var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{baseFilename}.cue");
+                    if (cueSheet?.Files != null)
+                    {
+                        foreach (CueFile? file in cueSheet.Files)
+                        {
+                            string? trackName = Path.GetFileNameWithoutExtension(file?.FileName);
+                            if (trackName == null)
+                                continue;
+
+                            cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
+                                | OutputFileFlags.Zippable));
+                            cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
+                                | OutputFileFlags.Zippable));
+                        }
+                    }
+                    else
+                    {
+                        cdrom.Add(new($"{baseFilename}.hash", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable));
+                        cdrom.Add(new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable));
+                    }
+
+                    return cdrom;
+
+                case MediaType.DVD:
+                    return [
+                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.hash", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.manufacturer", $"{baseFilename}.1.manufacturer"], OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.2.manufacturer", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.1.physical", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.2.physical", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.state", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                case MediaType.HDDVD: // TODO: Confirm that this information outputs
+                case MediaType.BluRay:
+                    return [
+                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.hash", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.1.physical", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.2.physical", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.state", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

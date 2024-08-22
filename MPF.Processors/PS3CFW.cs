@@ -23,7 +23,7 @@ namespace MPF.Processors
         {
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
 
@@ -134,6 +134,26 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.BluRay:
+                    return [
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{baseFilename}.getkey.log", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.disc.pic", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion

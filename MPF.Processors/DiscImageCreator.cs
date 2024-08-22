@@ -72,7 +72,7 @@ namespace MPF.Processors
 
             // Get the base filename and directory from the base path
             string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             var missingFiles = new List<string>();
             switch (Type)
@@ -875,6 +875,178 @@ namespace MPF.Processors
             }
 
             return logFiles;
+        }
+
+        /// <inheritdoc/>
+        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        {
+            switch (Type)
+            {
+                case MediaType.CDROM:
+                    return [
+                        new($"{baseFilename}.c2", OutputFileFlags.Zippable), // Doesn't output on Linux
+                        new($"{baseFilename}.ccd", OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        // TODO: Figure out how to get the command path generically?
+                        new($"{baseFilename}.cue", OutputFileFlags.Required),
+                        new($"{baseFilename}.dat", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.img", OutputFileFlags.Required
+                            | OutputFileFlags.Deleteable),
+                        new([$"{baseFilename}.img_EdcEcc.txt", $"{baseFilename}.img_EccEdc.txt"], System.IsAudio()
+                            ? OutputFileFlags.Artifact | OutputFileFlags.Zippable
+                            : OutputFileFlags.Required | OutputFileFlags.Artifact | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.scm", $"{baseFilename}.scmtmp"], System.IsAudio()
+                            ? OutputFileFlags.Deleteable
+                            : OutputFileFlags.Required | OutputFileFlags.Deleteable),
+                        new([$"{baseFilename}.sub", $"{baseFilename}.subtmp"], OutputFileFlags.Required
+                            | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.toc", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+
+                        new($"{baseFilename}_c2Error.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable), // Doesn't output on Linux
+                        new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_drive.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_img.cue", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename}_sub.txt", $"{baseFilename}_subReadable.txt"], OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_subError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_subInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_subIntention.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+
+                        new([$"{baseFilename} (Track 0).sub", $"{baseFilename} (Track 00).sub"], OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new([$"{baseFilename} (Track 1)(-LBA).sub", $"{baseFilename} (Track 01)(-LBA).sub"], OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename} (Track AA).sub", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                // TODO: Confirm GD-ROM HD area outputs
+                case MediaType.GDROM:
+                    return [
+                        // TODO: Figure out how to get the command path generically?
+                        new($"{baseFilename}.dat", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.toc", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+
+                        new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_drive.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    return [
+                        // TODO: Figure out how to get the command path generically?
+                        new($"{baseFilename}.dat", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.raw", OutputFileFlags.None),
+                        new($"{baseFilename}.toc", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+
+                        new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_CSSKey.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_drive.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+
+                        // TODO: Figure out when these are required
+                        new($"{baseFilename}_DMI.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_PIC.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_SS.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable),
+                    ];
+
+                case MediaType.FloppyDisk:
+                case MediaType.HardDisk:
+                    // TODO: Determine what outputs come out from a HDD, SD, etc.
+                    return [
+                        // TODO: Figure out how to get the command path generically?
+                        new($"{baseFilename}.dat", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+
+                        new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable),
+                    ];
+            }
+
+            return [];
         }
 
         #endregion
