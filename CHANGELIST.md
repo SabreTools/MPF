@@ -31,6 +31,7 @@
 - Create some PlayStation helper methods
 - Remove redundant drive calls
 - Start preparing for better output file checks
+- Create currently-unused helper class
 
 ### 3.2.1 (2024-08-05)
 
