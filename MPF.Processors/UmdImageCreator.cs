@@ -135,33 +135,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override List<string> GetLogFilePaths(string basePath)
-        {
-            var logFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.UMD:
-                    if (File.Exists($"{basePath}_disc.txt"))
-                        logFiles.Add($"{basePath}_disc.txt");
-                    if (File.Exists($"{basePath}_drive.txt"))
-                        logFiles.Add($"{basePath}_drive.txt");
-                    if (File.Exists($"{basePath}_mainError.txt"))
-                        logFiles.Add($"{basePath}_mainError.txt");
-                    if (File.Exists($"{basePath}_mainInfo.txt"))
-                        logFiles.Add($"{basePath}_mainInfo.txt");
-                    if (File.Exists($"{basePath}_volDesc.txt"))
-                        logFiles.Add($"{basePath}_volDesc.txt");
-
-                    if (File.Exists($"{basePath}_PFI.bin"))
-                        logFiles.Add($"{basePath}_PFI.bin");
-
-                    break;
-            }
-
-            return logFiles;
-        }
-
-        /// <inheritdoc/>
         public override List<OutputFile> GetOutputFiles(string baseFilename)
         {
             switch (Type)

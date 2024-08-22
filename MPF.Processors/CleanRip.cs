@@ -114,26 +114,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override List<string> GetLogFilePaths(string basePath)
-        {
-            var logFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.DVD: // Only added here to help users; not strictly correct
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (File.Exists($"{basePath}.bca"))
-                        logFiles.Add($"{basePath}.bca");
-                    if (File.Exists($"{basePath}-dumpinfo.txt"))
-                        logFiles.Add($"{basePath}-dumpinfo.txt");
-
-                    break;
-            }
-
-            return logFiles;
-        }
-
-        /// <inheritdoc/>
         public override List<OutputFile> GetOutputFiles(string baseFilename)
         {
             switch (Type)

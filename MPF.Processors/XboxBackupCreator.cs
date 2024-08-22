@@ -219,36 +219,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override List<string> GetLogFilePaths(string basePath)
-        {
-            // Get base directory
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            var logFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.DVD:
-                    string? logPath = GetLogName(baseDirectory);
-                    if (!string.IsNullOrEmpty(logPath))
-                        logFiles.Add(logPath!);
-                    if (File.Exists($"{basePath}.dvd"))
-                        logFiles.Add($"{basePath}.dvd");
-                    if (File.Exists(Path.Combine(baseDirectory, "DMI.bin")))
-                        logFiles.Add(Path.Combine(baseDirectory, "DMI.bin"));
-                    if (File.Exists(Path.Combine(baseDirectory, "PFI.bin")))
-                        logFiles.Add(Path.Combine(baseDirectory, "PFI.bin"));
-                    if (File.Exists(Path.Combine(baseDirectory, "SS.bin")))
-                        logFiles.Add(Path.Combine(baseDirectory, "SS.bin"));
-                    if (File.Exists(Path.Combine(baseDirectory, "RawSS.bin")))
-                        logFiles.Add(Path.Combine(baseDirectory, "RawSS.bin"));
-
-                    break;
-            }
-
-            return logFiles;
-        }
-
-        /// <inheritdoc/>
         public override List<OutputFile> GetOutputFiles(string baseFilename)
         {
             switch (Type)

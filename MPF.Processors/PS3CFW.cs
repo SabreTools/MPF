@@ -119,29 +119,6 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override List<string> GetLogFilePaths(string basePath)
-        {
-            var logFiles = new List<string>();
-            string? getKeyBasePath = GetCFWBasePath(basePath);
-
-            if (System != RedumpSystem.SonyPlayStation3)
-                return logFiles;
-
-            switch (Type)
-            {
-                case MediaType.BluRay:
-                    if (File.Exists($"{getKeyBasePath}.getkey.log"))
-                        logFiles.Add($"{getKeyBasePath}.getkey.log");
-                    if (File.Exists($"{getKeyBasePath}.disc.pic"))
-                        logFiles.Add($"{getKeyBasePath}.disc.pic");
-
-                    break;
-            }
-
-            return logFiles;
-        }
-
-        /// <inheritdoc/>
         public override List<OutputFile> GetOutputFiles(string baseFilename)
         {
             switch (Type)

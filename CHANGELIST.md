@@ -35,6 +35,7 @@
 - Make helper class more robust
 - Add unused GetOutputFiles method
 - Hook up GetOutputFiles in debug way
+- Replace GetLogFilePaths with common code
 
 ### 3.2.1 (2024-08-05)
 
