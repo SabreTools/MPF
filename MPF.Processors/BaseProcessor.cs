@@ -67,45 +67,7 @@ namespace MPF.Processors
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, bool redumpCompat);
 
-        /// <summary>
-        /// Generate a list of all log files generated
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all log file paths, empty otherwise</returns>
-        public List<string> GetLogFilePaths(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var logFiles = new List<string>();
-            foreach (var outputFile in outputFiles)
-            {
-                // Skip unzippable files
-                if (!outputFile.IsZippable)
-                    continue;
-
-                // Skip non-existent files
-                foreach (string filename in outputFile.Filenames)
-                {
-                    string outputFilePath = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(outputFilePath))
-                        continue;
-
-                    logFiles.Add(outputFilePath);
-                }
-            }
-
-            return logFiles;
-        }
-
-        /// <summary>
+        // <summary>
         /// Generate a list of all output files generated
         /// </summary>
         /// <param name="baseFilename">Base filename to use for checking</param>
@@ -313,6 +275,44 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Generate a list of all log files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        public List<string> GetLogFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var logFiles = new List<string>();
+            foreach (var outputFile in outputFiles)
+            {
+                // Skip unzippable files
+                if (!outputFile.IsZippable)
+                    continue;
+
+                // Skip non-existent files
+                foreach (string filename in outputFile.Filenames)
+                {
+                    string outputFilePath = Path.Combine(baseDirectory, filename);
+                    if (!File.Exists(outputFilePath))
+                        continue;
+
+                    logFiles.Add(outputFilePath);
+                }
+            }
+
+            return logFiles;
+        }
+
+        //// <summary>
         /// Get the hex contents of the PIC file
         /// </summary>
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
