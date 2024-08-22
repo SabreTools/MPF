@@ -21,6 +21,10 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath);
+
             var missingFiles = new List<string>();
 
             if (Type != MediaType.BluRay || System != RedumpSystem.SonyPlayStation3)

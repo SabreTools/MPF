@@ -21,26 +21,33 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath);
+
             var missingFiles = new List<string>();
             switch (Type)
             {
                 case MediaType.DVD:
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
-                        string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
-                        string? logPath = GetLogName(baseDir);
+                        string? logPath = GetLogName(baseDirectory);
                         if (string.IsNullOrEmpty(logPath))
-                            missingFiles.Add($"{baseDir}Log.txt");
-                        if (!File.Exists($"{baseDir}DMI.bin"))
-                            missingFiles.Add($"{baseDir}DMI.bin");
-                        if (!File.Exists($"{baseDir}PFI.bin"))
-                            missingFiles.Add($"{baseDir}PFI.bin");
-                        if (!File.Exists($"{baseDir}SS.bin"))
-                            missingFiles.Add($"{baseDir}SS.bin");
+                            missingFiles.Add(Path.Combine(baseDirectory, "Log.txt"));
+                        if (!File.Exists(Path.Combine(baseDirectory, "DMI.bin")))
+                            missingFiles.Add(Path.Combine(baseDirectory, "DMI.bin"));
+                        if (!File.Exists(Path.Combine(baseDirectory, "PFI.bin")))
+                            missingFiles.Add(Path.Combine(baseDirectory, "PFI.bin"));
+                        if (!File.Exists(Path.Combine(baseDirectory, "SS.bin")))
+                            missingFiles.Add(Path.Combine(baseDirectory, "SS.bin"));
 
                         // Not required from XBC
                         //if (!File.Exists($"{basePath}.dvd"))
                         //    missingFiles.Add($"{basePath}.dvd");
+                    }
+                    else
+                    {
+
                     }
 
                     break;
@@ -65,15 +72,15 @@ namespace MPF.Processors
                 info.Artifacts["log"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile(logPath!)) ?? string.Empty;
             if (File.Exists($"{basePath}.dvd"))
                 info.Artifacts["dvd"] = ProcessingTool.GetBase64(ProcessingTool.GetFullFile($"{basePath}.dvd")) ?? string.Empty;
-            //if (File.Exists($"{baseDir}DMI.bin"))
-            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}DMI.bin")) ?? string.Empty;
+            //if (File.Exists(Path.Combine(baseDirectory, "DMI.bin"))
+            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "DMI.bin")) ?? string.Empty;
             // TODO: Include PFI artifact only if the hash doesn't match known PFI hashes
-            //if (File.Exists($"{baseDir}PFI.bin"))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}PFI.bin")) ?? string.Empty;
-            //if (File.Exists($"{baseDir}SS.bin"))
-            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}SS.bin")) ?? string.Empty;
-            //if (File.Exists($"{baseDir}RawSS.bin"))
-            //    info.Artifacts["rawss"] = Convert.ToBase64String(File.ReadAllBytes($"{baseDir}RawSS.bin")) ?? string.Empty;
+            //if (File.Exists(Path.Combine(baseDirectory, "PFI.bin"))
+            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "PFI.bin")) ?? string.Empty;
+            //if (File.Exists(Path.Combine(baseDirectory, "SS.bin"))
+            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "SS.bin")) ?? string.Empty;
+            //if (File.Exists(Path.Combine(baseDirectory, "RawSS.bin"))
+            //    info.Artifacts["rawss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(baseDirectory, "RawSS.bin")) ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -83,10 +90,10 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // Get base directory
-            string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
+            string baseDirectory = Path.GetDirectoryName(basePath);
 
             // Get log filename
-            string? logPath = GetLogName(baseDir);
+            string? logPath = GetLogName(baseDirectory);
             if (string.IsNullOrEmpty(logPath))
                 return;
 
@@ -132,7 +139,7 @@ namespace MPF.Processors
                         case RedumpSystem.MicrosoftXbox:
 
                             // Parse DMI.bin
-                            string xmidString = ProcessingTool.GetXMID($"{baseDir}DMI.bin");
+                            string xmidString = ProcessingTool.GetXMID(Path.Combine(baseDirectory, "DMI.bin"));
                             var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                             if (xmid != null)
                             {
@@ -156,7 +163,7 @@ namespace MPF.Processors
                             //string? mediaID = GetMediaID(logPath);
 
                             // Parse DMI.bin
-                            string xemidString = ProcessingTool.GetXeMID($"{baseDir}DMI.bin");
+                            string xemidString = ProcessingTool.GetXeMID(Path.Combine(baseDirectory, "DMI.bin"));
                             var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                             if (xemid != null)
                             {
@@ -171,11 +178,16 @@ namespace MPF.Processors
                             break;
                     }
 
+                    // Get the output file paths
+                    string dmiPath = Path.Combine(baseDirectory, "DMI.bin");
+                    string pfiPath = Path.Combine(baseDirectory, "PFI.bin");
+                    string ssPath = Path.Combine(baseDirectory, "SS.bin");
+
                     // Deal with SS.bin
-                    if (File.Exists($"{baseDir}SS.bin"))
+                    if (File.Exists(ssPath))
                     {
                         // Save security sector ranges
-                        string? ranges = ProcessingTool.GetSSRanges($"{baseDir}SS.bin");
+                        string? ranges = ProcessingTool.GetSSRanges(ssPath);
                         if (!string.IsNullOrEmpty(ranges))
                             info.Extras!.SecuritySectorRanges = ranges;
 
@@ -183,19 +195,19 @@ namespace MPF.Processors
                         //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = 
 
                         // Recreate RawSS.bin
-                        RecreateSS(logPath!, $"{baseDir}SS.bin", $"{baseDir}RawSS.bin");
+                        RecreateSS(logPath!, ssPath, Path.Combine(baseDirectory, "RawSS.bin"));
 
                         // Run ss_sector_range to get repeatable SS hash
-                        ProcessingTool.CleanSS($"{baseDir}SS.bin", $"{baseDir}SS.bin");
+                        ProcessingTool.CleanSS(ssPath, ssPath);
                     }
 
                     // DMI/PFI/SS CRC32 hashes
-                    if (File.Exists($"{baseDir}DMI.bin"))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash($"{baseDir}DMI.bin", HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
-                    if (File.Exists($"{baseDir}PFI.bin"))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash($"{baseDir}PFI.bin", HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
-                    if (File.Exists($"{baseDir}SS.bin"))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash($"{baseDir}SS.bin", HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                    if (File.Exists(dmiPath))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                    if (File.Exists(pfiPath))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                    if (File.Exists(ssPath))
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
 
                     break;
             }
@@ -204,24 +216,26 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
+            // Get base directory
+            string baseDirectory = Path.GetDirectoryName(basePath);
+
             var logFiles = new List<string>();
-            string baseDir = Path.GetDirectoryName(basePath) + Path.DirectorySeparatorChar;
             switch (Type)
             {
                 case MediaType.DVD:
-                    string? logPath = GetLogName(baseDir);
+                    string? logPath = GetLogName(baseDirectory);
                     if (!string.IsNullOrEmpty(logPath))
                         logFiles.Add(logPath!);
                     if (File.Exists($"{basePath}.dvd"))
                         logFiles.Add($"{basePath}.dvd");
-                    if (File.Exists($"{baseDir}DMI.bin"))
-                        logFiles.Add($"{baseDir}DMI.bin");
-                    if (File.Exists($"{baseDir}PFI.bin"))
-                        logFiles.Add($"{baseDir}PFI.bin");
-                    if (File.Exists($"{baseDir}SS.bin"))
-                        logFiles.Add($"{baseDir}SS.bin");
-                    if (File.Exists($"{baseDir}RawSS.bin"))
-                        logFiles.Add($"{baseDir}RawSS.bin");
+                    if (File.Exists(Path.Combine(baseDirectory, "DMI.bin")))
+                        logFiles.Add(Path.Combine(baseDirectory, "DMI.bin"));
+                    if (File.Exists(Path.Combine(baseDirectory, "PFI.bin")))
+                        logFiles.Add(Path.Combine(baseDirectory, "PFI.bin"));
+                    if (File.Exists(Path.Combine(baseDirectory, "SS.bin")))
+                        logFiles.Add(Path.Combine(baseDirectory, "SS.bin"));
+                    if (File.Exists(Path.Combine(baseDirectory, "RawSS.bin")))
+                        logFiles.Add(Path.Combine(baseDirectory, "RawSS.bin"));
 
                     break;
             }
@@ -240,8 +254,8 @@ namespace MPF.Processors
         /// <returns>Log path if found, null otherwise</returns>
         private static string? GetLogName(string baseDir)
         {
-            if (IsSuccessfulLog($"{baseDir}Log.txt"))
-                return $"{baseDir}Log.txt";
+            if (IsSuccessfulLog(Path.Combine(baseDir, "Log.txt")))
+                return Path.Combine(baseDir, "Log.txt");
 
             // Search for a renamed log file (assume there is only one)
             string[] files = Directory.GetFiles(baseDir, "*.txt", SearchOption.TopDirectoryOnly);
