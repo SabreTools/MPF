@@ -259,7 +259,7 @@ namespace MPF.Processors
         /// <param name="outputDirectory">Directory that the existing files live in</param>
         /// <param name="delete">Indicates if the files should be deleted after adding</param>
         /// <returns>True if all files were added successfully, false otherwise</returns>
-        private bool AddToArchive(ZipArchive archive, List<string> files, string? outputDirectory, bool delete)
+        private static bool AddToArchive(ZipArchive archive, List<string> files, string? outputDirectory, bool delete)
         {
             // An empty list means success
             if (files.Count == 0)
@@ -267,7 +267,7 @@ namespace MPF.Processors
 
             // Loop through and add all files
             bool allAdded = true;
-            for (string file in files)
+            foreach (string file in files)
             {
                 allAdded &= AddToArchive(archive, files, outputDirectory, delete);
             }
@@ -283,7 +283,7 @@ namespace MPF.Processors
         /// <param name="outputDirectory">Directory that the existing file lives in</param>
         /// <param name="delete">Indicates if the file should be deleted after adding</param>
         /// <returns>True if the file was added successfully, false otherwise</returns>
-        private bool AddToArchive(ZipArchive archive, string file, string? outputDirectory, bool delete)
+        private static bool AddToArchive(ZipArchive archive, string file, string? outputDirectory, bool delete)
         {
             // Check if the file exists
             if (!File.Exists(file))

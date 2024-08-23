@@ -45,6 +45,7 @@
 - Fix up some file path methods
 - Fix broken build
 - Rearrange some BaseProcessor methods
+- Fix new AddToArchive methods
 
 ### 3.2.1 (2024-08-05)
 
