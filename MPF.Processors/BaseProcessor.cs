@@ -470,10 +470,10 @@ namespace MPF.Processors
             filenameSuffix = string.IsNullOrEmpty(filenameSuffix) ? string.Empty : $"_{filenameSuffix}";
 
             // Define the output filenames
-            string submissionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt"
-            string submissionInfoJson = $"{submissionInfoBase}{filenameSuffix}.json"
-            string submissionInfoJsonGz = $"{submissionInfoBase}{filenameSuffix}.json.gz"
-            string protectionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt"
+            string submissionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt";
+            string submissionInfoJson = $"{submissionInfoBase}{filenameSuffix}.json";
+            string submissionInfoJsonGz = $"{submissionInfoBase}{filenameSuffix}.json.gz";
+            string protectionInfoTxt = $"{protectionInfoBase}{filenameSuffix}.txt";
 
             // Add output directories, if required
             if (!string.IsNullOrEmpty(outputDirectory))

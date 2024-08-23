@@ -43,6 +43,7 @@
 - Make GenerateArtifacts return a dictionary
 - Split new output file methods
 - Fix up some file path methods
+- Fix broken build
 
 ### 3.2.1 (2024-08-05)
 
