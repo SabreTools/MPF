@@ -49,6 +49,7 @@
 - Fix recursive issue in AddToArchive
 - Add unused passable func to OutputFile
 - Pass in new func for OutputFile
+- Use new func in Redumper
 
 ### 3.2.1 (2024-08-05)
 
