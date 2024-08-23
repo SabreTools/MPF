@@ -47,6 +47,7 @@
 - Rearrange some BaseProcessor methods
 - Fix new AddToArchive methods
 - Fix recursive issue in AddToArchive
+- Add unused passable func to OutputFile
 
 ### 3.2.1 (2024-08-05)
 

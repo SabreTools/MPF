@@ -53,7 +53,7 @@ namespace MPF.Processors
         /// <summary>
         /// Key used when creating an artifact
         /// </summary>
-        public string? ArtifactKey { get; private set;}
+        public string? ArtifactKey { get; private set; }
 
         /// <summary>
         /// Indicates if the file is required
@@ -137,6 +137,11 @@ namespace MPF.Processors
         /// </summary>
         private readonly OutputFileFlags _flags;
 
+        /// <summary>
+        /// Optional func for determining if a file exists
+        /// </summary>
+        private readonly Func<string, bool>? _existsFunc;
+
         // TODO: Add validation that a key exists if the artifact flag is present
 
         /// <summary>
@@ -194,8 +199,16 @@ namespace MPF.Processors
                 try
                 {
                     string possiblePath = Path.Combine(baseDirectory, filename);
-                    if (File.Exists(possiblePath))
-                        return true;
+                    if (_existsFunc != null)
+                    {
+                        if (_existsFunc(possiblePath))
+                            return true;
+                    }
+                    else
+                    {
+                        if (File.Exists(possiblePath))
+                            return true;
+                    }
                 }
                 catch { }
             }
