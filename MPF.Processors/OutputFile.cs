@@ -147,41 +147,39 @@ namespace MPF.Processors
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        public OutputFile(string filename, OutputFileFlags flags)
+        public OutputFile(string filename, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
+            : this([filename], flags, existsFunc)
         {
-            Filenames = [filename];
-            ArtifactKey = null;
-            _flags = flags;
         }
 
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        public OutputFile(string filename, OutputFileFlags flags, string artifactKey)
+        public OutputFile(string filename, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
+            : this([filename], flags, artifactKey, existsFunc)
         {
-            Filenames = [filename];
-            ArtifactKey = artifactKey;
-            _flags = flags;
         }
 
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        public OutputFile(string[] filenames, OutputFileFlags flags)
+        public OutputFile(string[] filenames, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
         {
             Filenames = filenames;
             ArtifactKey = null;
             _flags = flags;
+            _existsFunc = existsFunc;
         }
 
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
+        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
         {
             Filenames = filenames;
             ArtifactKey = artifactKey;
             _flags = flags;
+            _existsFunc = existsFunc;
         }
 
         /// <summary>
