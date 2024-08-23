@@ -41,6 +41,7 @@
 - Define new ArtifactKey field
 - Add artifact keys for all relevant files
 - Make GenerateArtifacts return a dictionary
+- Split new output file methods
 
 ### 3.2.1 (2024-08-05)
 

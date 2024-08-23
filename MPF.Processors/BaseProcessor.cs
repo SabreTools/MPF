@@ -96,7 +96,7 @@ namespace MPF.Processors
             string archiveName = combinedBase + "_logs.zip";
 
             // Get the list of log files from the parameters object
-            var files = GetLogFilePaths(combinedBase);
+            var files = GetZippableFilePaths(combinedBase);
 
             // Add on generated log files if they exist
             var mpfFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
@@ -284,7 +284,24 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Generate a list of all deleteable files generated
+        /// Generate a list of all deleteable filenames
+        /// </summary>
+        /// <param name="baseFilename">Base filename to use for generation</param>
+        /// <returns>List of all deleteable filenames, empty otherwise</returns>
+        public List<string> GetDeleteableFilenames(string baseFilename)
+        {
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return [];
+
+            // Filter down to deleteable files
+            var deleteableFiles = outputFiles.Where(of => of.IsDeleteable);
+            return deleteableFiles.SelectMany(of => of.Filenames).ToList();
+        }
+
+        /// <summary>
+        /// Generate a list of all deleteable file paths
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
@@ -294,72 +311,92 @@ namespace MPF.Processors
             string baseFilename = Path.GetFileName(basePath);
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
+            // Get the list of deleteable files
+            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
+            if (deleteableFilenames.Count == 0)
                 return [];
 
             // Return only files that exist
             var deleteableFiles = new List<string>();
-            foreach (var outputFile in outputFiles)
+            foreach (var filename in deleteableFilenames)
             {
-                // Skip undeleteable files
-                if (!outputFile.IsDeleteable)
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
                     continue;
 
-                // Skip non-existent files
-                foreach (string filename in outputFile.Filenames)
-                {
-                    string outputFilePath = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(outputFilePath))
-                        continue;
-
-                    deleteableFiles.Add(outputFilePath);
-                }
+                deleteableFiles.Add(outputFilePath);
             }
 
             return deleteableFiles;
         }
 
         /// <summary>
-        /// Generate a list of all log files generated
+        /// Generate a list of all required filenames
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all log file paths, empty otherwise</returns>
-        public List<string> GetLogFilePaths(string basePath)
+        /// <param name="baseFilename">Base filename to use for generation</param>
+        /// <returns>List of all required filenames, empty otherwise</returns>
+        public List<string> GetRequiredFilenames(string baseFilename)
         {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
             // Get the list of output files
             var outputFiles = GetOutputFiles(baseFilename);
             if (outputFiles.Count == 0)
                 return [];
 
-            // Return only files that exist
-            var logFiles = new List<string>();
-            foreach (var outputFile in outputFiles)
-            {
-                // Skip unzippable files
-                if (!outputFile.IsZippable)
-                    continue;
-
-                // Skip non-existent files
-                foreach (string filename in outputFile.Filenames)
-                {
-                    string outputFilePath = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(outputFilePath))
-                        continue;
-
-                    logFiles.Add(outputFilePath);
-                }
-            }
-
-            return logFiles;
+            // Filter down to required files
+            var requiredFiles = outputFiles.Where(of => of.IsRequired);
+            return requiredFiles.SelectMany(of => of.Filenames).ToList();
         }
 
-        //// <summary>
+        /// <summary>
+        /// Generate a list of all zippable filenames
+        /// </summary>
+        /// <param name="baseFilename">Base filename to use for generation</param>
+        /// <returns>List of all zippable filenames, empty otherwise</returns>
+        public List<string> GetZippableFilenames(string baseFilename)
+        {
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return [];
+
+            // Filter down to deleteable files
+            var deleteableFiles = outputFiles.Where(of => of.IsZippable);
+            return deleteableFiles.SelectMany(of => of.Filenames).ToList();
+        }
+
+        /// <summary>
+        /// Generate a list of all zippable file paths
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all zippable file paths, empty otherwise</returns>
+        public List<string> GetZippableFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of zippable files
+            var zippableFilenames = GetZippableFilenames(baseFilename);
+            if (zippableFilenames.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var zippableFiles = new List<string>();
+            foreach (var filename in zippableFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                zippableFiles.Add(outputFilePath);
+            }
+
+            return zippableFiles;
+        }
+
+        /// <summary>
         /// Get the hex contents of the PIC file
         /// </summary>
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
