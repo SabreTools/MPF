@@ -51,6 +51,7 @@
 - Pass in new func for OutputFile
 - Use new func in Redumper
 - Add runtime error for improperly created artifacts
+- Minor tweaks to existing code
 
 ### 3.2.1 (2024-08-05)
 

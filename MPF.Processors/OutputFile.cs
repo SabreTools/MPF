@@ -1,5 +1,9 @@
 using System;
 using System.IO;
+#if NET452_OR_GREATER || NETCOREAPP
+using System.IO.Compression;
+using System.Linq;
+#endif
 
 namespace MPF.Processors
 {
@@ -168,9 +172,11 @@ namespace MPF.Processors
             _flags = flags;
             _existsFunc = existsFunc;
 
-            // Ensure artifacts have a key
+            // Validate the inputs
+            if (filenames.Length == 0)
+                throw new ArgumentException($"{nameof(filenames)} must contain at least one value");
             if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
-                throw new InvalidDataException($"{flags} should not contain the Artifact or Binary flag");
+                throw new ArgumentException($"{nameof(flags)} should not contain the Artifact or Binary flag");
         }
 
         /// <summary>
@@ -183,9 +189,11 @@ namespace MPF.Processors
             _flags = flags;
             _existsFunc = existsFunc;
 
-            // Ensure artifacts have a key
+            // Validate the inputs
+            if (filenames.Length == 0)
+                throw new ArgumentException($"{nameof(filenames)} must contain at least one value");
             if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
-                throw new InvalidDataException($"{flags} should not contain the Artifact or Binary flag");
+                throw new ArgumentException($"{nameof(flags)} should not contain the Artifact or Binary flag");
         }
 
         /// <summary>
@@ -219,5 +227,35 @@ namespace MPF.Processors
 
             return false;
         }
+
+#if NET452_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// Indicates if an output file exists in an archive
+        /// </summary>
+        /// <param name="archive">Zip archive to check in</param>
+        public bool Exists(ZipArchive archive)
+        {
+            foreach (string filename in Filenames)
+            {
+                // Check for invalid filenames
+                if (string.IsNullOrEmpty(filename))
+                    continue;
+
+                try
+                {
+                    // Existence function can't be used, so those files are skipped
+                    if (_existsFunc != null)
+                        return false;
+
+                    // Check all entries on filename alone
+                    if (archive.Entries.Any(e => e.Name == filename))
+                        return true;
+                }
+                catch { }
+            }
+
+            return false;
+        }
+#endif
     }
 }

@@ -877,8 +877,8 @@ namespace MPF.Processors
                 return (null, null);
 
             // Generate the matching regex based on the base path
-            string basePathFileName = Path.GetFileName(basePath);
-            var cmdFilenameRegex = new Regex(Regex.Escape(basePathFileName) + @"_(\d{8})T\d{6}\.txt");
+            string baseFilename = Path.GetFileName(basePath);
+            var cmdFilenameRegex = new Regex(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt");
 
             // Find the first match for the command file
             var parentDirectory = Path.GetDirectoryName(basePath);
