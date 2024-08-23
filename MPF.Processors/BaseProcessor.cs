@@ -69,7 +69,7 @@ namespace MPF.Processors
 
         #endregion
 
-        #region Shared Methods
+        #region Output Files
 
         /// <summary>
         /// Compress log files to save space
@@ -84,7 +84,6 @@ namespace MPF.Processors
 #if NET20 || NET35 || NET40
             return (false, "Log compression is not available for this framework version");
 #else
-
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
             string combinedBase;
@@ -93,16 +92,15 @@ namespace MPF.Processors
             else
                 combinedBase = Path.Combine(outputDirectory, outputFilename);
 
-            string archiveName = combinedBase + "_logs.zip";
+            // Generate the archive filename
+            string archiveName = $"{combinedBase}_logs.zip";
 
-            // Get the list of log files from the parameters object
-            var files = GetZippableFilePaths(combinedBase);
+            // Get the lists of zippable files
+            var zippableFiles = GetZippableFilePaths(combinedBase);
+            var generatedFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
 
-            // Add on generated log files if they exist
-            var mpfFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
-            files.AddRange(mpfFiles);
-
-            if (!files.Any())
+            // Don't create an archive if there are no paths
+            if (!zippableFiles.Any() && !generatedFiles.Any())
                 return (true, "No files to compress!");
 
             // If the file already exists, we want to delete the old one
@@ -121,33 +119,9 @@ namespace MPF.Processors
             try
             {
                 zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
-                foreach (string file in files)
-                {
-                    if (string.IsNullOrEmpty(outputDirectory))
-                    {
-                        zf.CreateEntryFromFile(file, file, CompressionLevel.Optimal);
-                    }
-                    else
-                    {
-                        string entryName = file[outputDirectory!.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
-                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
-#else
-                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
-#endif
-                    }
-
-                    // If the file is MPF-specific, don't delete
-                    if (mpfFiles.Contains(file))
-                        continue;
-
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch { }
-                }
+                _ = AddToArchive(zf, zippableFiles, outputDirectory, true);
+                _ = AddToArchive(zf, generatedFiles, outputDirectory, false);
 
                 return (true, "Compression complete!");
             }
@@ -186,23 +160,16 @@ namespace MPF.Processors
                 return (true, "No files to delete!");
 
             // Attempt to delete all of the files
-            try
+            foreach (string file in files)
             {
-                foreach (string file in files)
+                try
                 {
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch { }
+                    File.Delete(file);
                 }
+                catch { }
+            }
 
-                return (true, "Deletion complete!");
-            }
-            catch (Exception ex)
-            {
-                return (false, $"Deletion could not complete: {ex}");
-            }
+            return (true, "Deletion complete!");
         }
 
         /// <summary>
@@ -283,12 +250,83 @@ namespace MPF.Processors
             return artifacts;
         }
 
+#if NET452_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// Try to add a set of files to an existing archive
+        /// </summary>
+        /// <param name="archive">Archive to add the file to</param>
+        /// <param name="files">Full path to a set of existing files</param>
+        /// <param name="outputDirectory">Directory that the existing files live in</param>
+        /// <param name="delete">Indicates if the files should be deleted after adding</param>
+        /// <returns>True if all files were added successfully, false otherwise</returns>
+        private bool AddToArchive(ZipArchive archive, List<string> files, string? outputDirectory, bool delete)
+        {
+            // An empty list means success
+            if (files.Count == 0)
+                return true;
+
+            // Loop through and add all files
+            bool allAdded = true;
+            for (string file in files)
+            {
+                allAdded &= AddToArchive(archive, files, outputDirectory, delete);
+            }
+
+            return allAdded;
+        }
+
+        /// <summary>
+        /// Try to add a file to an existing archive
+        /// </summary>
+        /// <param name="archive">Archive to add the file to</param>
+        /// <param name="file">Full path to an existing file</param>
+        /// <param name="outputDirectory">Directory that the existing file lives in</param>
+        /// <param name="delete">Indicates if the file should be deleted after adding</param>
+        /// <returns>True if the file was added successfully, false otherwise</returns>
+        private bool AddToArchive(ZipArchive archive, string file, string? outputDirectory, bool delete)
+        {
+            // Check if the file exists
+            if (!File.Exists(file))
+                return false;
+
+            // Get the entry name from the file
+            string entryName = file;
+            if (!string.IsNullOrEmpty(outputDirectory))
+                entryName = entryName.Substring(outputDirectory!.Length);
+
+            // Ensure the entry is formatted correctly
+            entryName = entryName.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            // Create and add the entry
+            try
+            {
+#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
+                archive.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+#else
+                archive.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
+#endif
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Try to delete the file if requested
+            if (delete)
+            {
+                try { File.Delete(file); } catch { }
+            }
+
+            return true;
+        }
+#endif
+
         /// <summary>
         /// Generate a list of all deleteable filenames
         /// </summary>
         /// <param name="baseFilename">Base filename to use for generation</param>
         /// <returns>List of all deleteable filenames, empty otherwise</returns>
-        public List<string> GetDeleteableFilenames(string baseFilename)
+        private List<string> GetDeleteableFilenames(string baseFilename)
         {
             // Get the list of output files
             var outputFiles = GetOutputFiles(baseFilename);
@@ -298,6 +336,91 @@ namespace MPF.Processors
             // Filter down to deleteable files
             var deleteableFiles = outputFiles.Where(of => of.IsDeleteable);
             return deleteableFiles.SelectMany(of => of.Filenames).ToList();
+        }
+
+        /// <summary>
+        /// Generate a list of all deleteable file paths
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all deleteable file paths, empty otherwise</returns>
+        private List<string> GetDeleteableFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of deleteable files
+            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
+            if (deleteableFilenames.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var deleteableFiles = new List<string>();
+            foreach (var filename in deleteableFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                deleteableFiles.Add(outputFilePath);
+            }
+
+            return deleteableFiles;
+        }
+
+        /// <summary>
+        /// Generate a list of all MPF-generated filenames
+        /// </summary>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <returns>List of all MPF-generated filenames, empty otherwise</returns>
+        private static List<string> GetGeneratedFilenames(string? filenameSuffix)
+        {
+            // Set the base file path names
+            const string submissionInfoBase = "!submissionInfo";
+            const string protectionInfoBase = "!protectionInfo";
+
+            // Ensure the filename suffix is formatted correctly
+            filenameSuffix = string.IsNullOrEmpty(filenameSuffix) ? string.Empty : $"_{filenameSuffix}";
+
+            // Define the output filenames
+            return [
+                $"{protectionInfoBase}{filenameSuffix}.txt",
+                $"{submissionInfoBase}{filenameSuffix}.json",
+                $"{submissionInfoBase}{filenameSuffix}.json.gz",
+                $"{submissionInfoBase}{filenameSuffix}.txt",
+            ];
+        }
+
+        /// <summary>
+        /// Generate a list of all MPF-specific log files generated
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
+        {
+            // Get the list of generated files
+            var generatedFilenames = GetGeneratedFilenames(filenameSuffix);
+            if (generatedFilenames.Count == 0)
+                return [];
+
+            // Ensure the output directory
+            outputDirectory ??= string.Empty;
+
+            // Return only files that exist
+            var generatedFiles = new List<string>();
+            foreach (var filename in generatedFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(outputDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                generatedFiles.Add(outputFilePath);
+            }
+
+            return generatedFiles;
         }
 
         /// <summary>
@@ -322,7 +445,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="baseFilename">Base filename to use for generation</param>
         /// <returns>List of all zippable filenames, empty otherwise</returns>
-        public List<string> GetZippableFilenames(string baseFilename)
+        private List<string> GetZippableFilenames(string baseFilename)
         {
             // Get the list of output files
             var outputFiles = GetOutputFiles(baseFilename);
@@ -333,6 +456,41 @@ namespace MPF.Processors
             var deleteableFiles = outputFiles.Where(of => of.IsZippable);
             return deleteableFiles.SelectMany(of => of.Filenames).ToList();
         }
+
+        /// <summary>
+        /// Generate a list of all zippable file paths
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all zippable file paths, empty otherwise</returns>
+        private List<string> GetZippableFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of zippable files
+            var zippableFilenames = GetZippableFilenames(baseFilename);
+            if (zippableFilenames.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var zippableFiles = new List<string>();
+            foreach (var filename in zippableFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                zippableFiles.Add(outputFilePath);
+            }
+
+            return zippableFiles;
+        }
+
+        #endregion
+
+        #region Shared Methods
 
         /// <summary>
         /// Get the hex contents of the PIC file
@@ -419,113 +577,6 @@ namespace MPF.Processors
                 // We don't care what the error is
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Generate a list of all deleteable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all deleteable file paths, empty otherwise</returns>
-        private List<string> GetDeleteableFilePaths(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of deleteable files
-            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
-            if (deleteableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var deleteableFiles = new List<string>();
-            foreach (var filename in deleteableFilenames)
-            {
-                // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
-                    continue;
-
-                deleteableFiles.Add(outputFilePath);
-            }
-
-            return deleteableFiles;
-        }
-
-        /// <summary>
-        /// Generate a list of all MPF-specific log files generated
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
-        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <returns>List of all log file paths, empty otherwise</returns>
-        private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
-        {
-            var generatedFilePaths = new List<string>();
-
-            // Set the base file path names
-            const string submissionInfoBase = "!submissionInfo";
-            const string protectionInfoBase = "!protectionInfo";
-
-            // Ensure the filename suffix is formatted correctly
-            filenameSuffix = string.IsNullOrEmpty(filenameSuffix) ? string.Empty : $"_{filenameSuffix}";
-
-            // Define the output filenames
-            string submissionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt";
-            string submissionInfoJson = $"{submissionInfoBase}{filenameSuffix}.json";
-            string submissionInfoJsonGz = $"{submissionInfoBase}{filenameSuffix}.json.gz";
-            string protectionInfoTxt = $"{protectionInfoBase}{filenameSuffix}.txt";
-
-            // Add output directories, if required
-            if (!string.IsNullOrEmpty(outputDirectory))
-            {
-                submissionInfoTxt = Path.Combine(outputDirectory, submissionInfoTxt);
-                submissionInfoJson = Path.Combine(outputDirectory, submissionInfoJson);
-                submissionInfoJsonGz = Path.Combine(outputDirectory, submissionInfoJsonGz);
-                protectionInfoTxt = Path.Combine(outputDirectory, protectionInfoTxt);
-            }
-
-            // Add only files that exist
-            if (File.Exists(submissionInfoTxt))
-                generatedFilePaths.Add(submissionInfoTxt);
-            if (File.Exists(submissionInfoJson))
-                generatedFilePaths.Add(submissionInfoJson);
-            if (File.Exists(submissionInfoJsonGz))
-                generatedFilePaths.Add(submissionInfoJsonGz);
-            if (File.Exists(protectionInfoTxt))
-                generatedFilePaths.Add(protectionInfoTxt);
-
-            return generatedFilePaths;
-        }
-
-        /// <summary>
-        /// Generate a list of all zippable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all zippable file paths, empty otherwise</returns>
-        private List<string> GetZippableFilePaths(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of zippable files
-            var zippableFilenames = GetZippableFilenames(baseFilename);
-            if (zippableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var zippableFiles = new List<string>();
-            foreach (var filename in zippableFilenames)
-            {
-                // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
-                    continue;
-
-                zippableFiles.Add(outputFilePath);
-            }
-
-            return zippableFiles;
         }
 
         #endregion
