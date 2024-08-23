@@ -301,37 +301,6 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Generate a list of all deleteable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all deleteable file paths, empty otherwise</returns>
-        public List<string> GetDeleteableFilePaths(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of deleteable files
-            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
-            if (deleteableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var deleteableFiles = new List<string>();
-            foreach (var filename in deleteableFilenames)
-            {
-                // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
-                    continue;
-
-                deleteableFiles.Add(outputFilePath);
-            }
-
-            return deleteableFiles;
-        }
-
-        /// <summary>
         /// Generate a list of all required filenames
         /// </summary>
         /// <param name="baseFilename">Base filename to use for generation</param>
@@ -363,37 +332,6 @@ namespace MPF.Processors
             // Filter down to deleteable files
             var deleteableFiles = outputFiles.Where(of => of.IsZippable);
             return deleteableFiles.SelectMany(of => of.Filenames).ToList();
-        }
-
-        /// <summary>
-        /// Generate a list of all zippable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all zippable file paths, empty otherwise</returns>
-        public List<string> GetZippableFilePaths(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of zippable files
-            var zippableFilenames = GetZippableFilenames(baseFilename);
-            if (zippableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var zippableFiles = new List<string>();
-            foreach (var filename in zippableFilenames)
-            {
-                // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
-                    continue;
-
-                zippableFiles.Add(outputFilePath);
-            }
-
-            return zippableFiles;
         }
 
         /// <summary>
@@ -484,6 +422,37 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Generate a list of all deleteable file paths
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all deleteable file paths, empty otherwise</returns>
+        private List<string> GetDeleteableFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of deleteable files
+            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
+            if (deleteableFilenames.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var deleteableFiles = new List<string>();
+            foreach (var filename in deleteableFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                deleteableFiles.Add(outputFilePath);
+            }
+
+            return deleteableFiles;
+        }
+
+        /// <summary>
         /// Generate a list of all MPF-specific log files generated
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
@@ -491,54 +460,72 @@ namespace MPF.Processors
         /// <returns>List of all log file paths, empty otherwise</returns>
         private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
         {
-            var files = new List<string>();
+            var generatedFilePaths = new List<string>();
 
-            if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+            // Set the base file path names
+            const string submissionInfoBase = "!submissionInfo";
+            const string protectionInfoBase = "!protectionInfo";
+
+            // Ensure the filename suffix is formatted correctly
+            filenameSuffix = string.IsNullOrEmpty(filenameSuffix) ? string.Empty : $"_{filenameSuffix}";
+
+            // Define the output filenames
+            string submissionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt"
+            string submissionInfoJson = $"{submissionInfoBase}{filenameSuffix}.json"
+            string submissionInfoJsonGz = $"{submissionInfoBase}{filenameSuffix}.json.gz"
+            string protectionInfoTxt = $"{submissionInfoBase}{filenameSuffix}.txt"
+
+            // Add output directories, if required
+            if (!string.IsNullOrEmpty(outputDirectory))
             {
-                if (File.Exists("!submissionInfo.txt"))
-                    files.Add("!submissionInfo.txt");
-                if (File.Exists("!submissionInfo.json"))
-                    files.Add("!submissionInfo.json");
-                if (File.Exists("!submissionInfo.json.gz"))
-                    files.Add("!submissionInfo.json.gz");
-                if (File.Exists("!protectionInfo.txt"))
-                    files.Add("!protectionInfo.txt");
-            }
-            else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-            {
-                if (File.Exists($"!submissionInfo_{filenameSuffix}.txt"))
-                    files.Add($"!submissionInfo_{filenameSuffix}.txt");
-                if (File.Exists($"!submissionInfo_{filenameSuffix}.json"))
-                    files.Add($"!submissionInfo_{filenameSuffix}.json");
-                if (File.Exists($"!submissionInfo_{filenameSuffix}.json.gz"))
-                    files.Add($"!submissionInfo_{filenameSuffix}.json.gz");
-                if (File.Exists($"!protectionInfo_{filenameSuffix}.txt"))
-                    files.Add($"!protectionInfo_{filenameSuffix}.txt");
-            }
-            else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-            {
-                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
-                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
-                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
-                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
-                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
-                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
-                if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
-                    files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
-            }
-            else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-            {
-                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt")))
-                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt"));
-                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json")))
-                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json"));
-                if (File.Exists(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz")))
-                    files.Add(Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz"));
-                if (File.Exists(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt")))
-                    files.Add(Path.Combine(outputDirectory, $"!protectionInfo_{filenameSuffix}.txt"));
+                submissionInfoTxt = Path.Combine(outputDirectory, submissionInfoTxt);
+                submissionInfoJson = Path.Combine(outputDirectory, submissionInfoJson);
+                submissionInfoJsonGz = Path.Combine(outputDirectory, submissionInfoJsonGz);
+                protectionInfoTxt = Path.Combine(outputDirectory, protectionInfoTxt);
             }
 
-            return files;
+            // Add only files that exist
+            if (File.Exists(submissionInfoTxt))
+                generatedFilePaths.Add(submissionInfoTxt);
+            if (File.Exists(submissionInfoJson))
+                generatedFilePaths.Add(submissionInfoJson);
+            if (File.Exists(submissionInfoJsonGz))
+                generatedFilePaths.Add(submissionInfoJsonGz);
+            if (File.Exists(protectionInfoTxt))
+                generatedFilePaths.Add(protectionInfoTxt);
+
+            return generatedFilePaths;
+        }
+
+        /// <summary>
+        /// Generate a list of all zippable file paths
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all zippable file paths, empty otherwise</returns>
+        private List<string> GetZippableFilePaths(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of zippable files
+            var zippableFilenames = GetZippableFilenames(baseFilename);
+            if (zippableFilenames.Count == 0)
+                return [];
+
+            // Return only files that exist
+            var zippableFiles = new List<string>();
+            foreach (var filename in zippableFilenames)
+            {
+                // Skip non-existent files
+                string outputFilePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(outputFilePath))
+                    continue;
+
+                zippableFiles.Add(outputFilePath);
+            }
+
+            return zippableFiles;
         }
 
         #endregion
