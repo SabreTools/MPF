@@ -269,7 +269,7 @@ namespace MPF.Processors
             bool allAdded = true;
             foreach (string file in files)
             {
-                allAdded &= AddToArchive(archive, files, outputDirectory, delete);
+                allAdded &= AddToArchive(archive, file, outputDirectory, delete);
             }
 
             return allAdded;
