@@ -142,8 +142,6 @@ namespace MPF.Processors
         /// </summary>
         private readonly Func<string, bool>? _existsFunc;
 
-        // TODO: Add validation that a key exists if the artifact flag is present
-
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
@@ -169,6 +167,10 @@ namespace MPF.Processors
             ArtifactKey = null;
             _flags = flags;
             _existsFunc = existsFunc;
+
+            // Ensure artifacts have a key
+            if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
+                throw new InvalidDataException($"{flags} should not contain the Artifact or Binary flag");
         }
 
         /// <summary>
@@ -180,6 +182,10 @@ namespace MPF.Processors
             ArtifactKey = artifactKey;
             _flags = flags;
             _existsFunc = existsFunc;
+
+            // Ensure artifacts have a key
+            if (IsArtifact && string.IsNullOrEmpty(ArtifactKey))
+                throw new InvalidDataException($"{flags} should not contain the Artifact or Binary flag");
         }
 
         /// <summary>
