@@ -57,6 +57,7 @@
 - Use simplified CheckAllOutputFilesExist
 - Create and use RegexOutputFile
 - Add archive override for RegexOutputFile
+- Less confusing implmentation of DatfileExists
 
 ### 3.2.1 (2024-08-05)
 

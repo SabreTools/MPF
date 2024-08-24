@@ -386,7 +386,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "log"),
                         new($"{baseFilename}.log", OutputFileFlags.Required,
-                            (s) => GetDatfile(s) != null),
+                            DatfileExists),
                         new($"{baseFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
@@ -515,6 +515,17 @@ namespace MPF.Processors
 
             return [];
         }
+
+        #endregion
+
+        #region Private Extra Methods
+
+        /// <summary>
+        /// Get if the datfile exists in the log
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        private static bool DatfileExists(string log)
+            => GetDatfile(log) != null;
 
         #endregion
 
