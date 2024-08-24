@@ -469,9 +469,21 @@ namespace MPF.Processors
                         new($"{baseFilename}.2.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_2"),
+                        new($"{baseFilename}.security", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "security"), // TODO: Required for Xbox and X360
                         new($"{baseFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
+                        new($"{baseFilename}.ss", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "ss"),
+                        new($"{baseFilename}.ssv1", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "ssv1"),
+                        new($"{baseFilename}.ssv2", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "ssv2"),
                         new($"{baseFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
