@@ -53,6 +53,7 @@
 - Add runtime error for improperly created artifacts
 - Minor tweaks to existing code
 - Add new, unused CheckAllOutputFilesExist variant
+- Rename new method to CheckRequiredFiles
 
 ### 3.2.1 (2024-08-05)
 
