@@ -139,12 +139,12 @@ namespace MPF.Processors
         /// <summary>
         /// Represents attributes about the current file
         /// </summary>
-        private readonly OutputFileFlags _flags;
+        protected readonly OutputFileFlags _flags;
 
         /// <summary>
         /// Optional func for determining if a file exists
         /// </summary>
-        private readonly Func<string, bool>? _existsFunc;
+        protected readonly Func<string, bool>? _existsFunc;
 
         /// <summary>
         /// Create an OutputFile with a single filename
@@ -200,7 +200,7 @@ namespace MPF.Processors
         /// Indicates if an output file exists in a base directory
         /// </summary>
         /// <param name="baseDirectory">Base directory to check in</param>
-        public bool Exists(string baseDirectory)
+        public virtual bool Exists(string baseDirectory)
         {
             foreach (string filename in Filenames)
             {

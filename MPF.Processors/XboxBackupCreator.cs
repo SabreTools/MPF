@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -164,7 +165,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
-                        new("Log.txt", OutputFileFlags.Required
+                        new RegexOutputFile("[lL]og.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),

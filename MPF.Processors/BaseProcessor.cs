@@ -45,15 +45,6 @@ namespace MPF.Processors
         #region Abstract Methods
 
         /// <summary>
-        /// Validate if all required output files exist
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public virtual (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-            => CheckRequiredFiles(basePath);
-
-        /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
@@ -179,9 +170,8 @@ namespace MPF.Processors
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
-        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)
+        public (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -194,7 +184,7 @@ namespace MPF.Processors
                 basePath = Path.Combine(outputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return CheckAllOutputFilesExist(basePath, preCheck);
+            return CheckRequiredFiles(basePath);
         }
 
         /// <summary>

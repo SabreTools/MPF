@@ -8,6 +8,52 @@ using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
+/*
+If there are no external programs, such as error checking, etc., DIC outputs
+a slightly different set of files. This reduced set needs to be documented in
+order for special use cases, such as self-built versions of DIC or removed
+helper programs, can be detected to the best of our ability. Below is the list
+of files that are generated in that case:
+
+    .bin
+    .c2
+    .ccd
+    .cue
+    .img/.imgtmp
+    .scm/.scmtmp
+    .sub/.subtmp
+    _cmd.txt (formerly)
+    _img.cue
+
+This list needs to be translated into the minimum viable set of information
+such that things like error checking can be passed back as a flag, or some
+similar method.
+
+Here are some notes about the various output files and what they represent:
+- bin           - Final split output disc image (CD/GD only)
+- c2            - Represents each byte per sector as one bit; 0 means no error, 1 means error
+- c2Error       - Human-readable version of `c2`; only errors are printed
+- ccd           - CloneCD control file referencing the `img` file
+- cmd           - Represents the commandline that was run
+- cue           - CDRWIN cuesheet referencing the `bin` file(s)
+- dat           - Logiqx datfile referencing the `bin` file(s)
+- disc          - Disc metadata and information
+- drive         - Drive metadata and information
+- img           - CloneCD output disc image (CD/GD only)
+- img.cue       - CDRWIN cuesheet referencing the `img` file
+- img_EdcEcc    - ECC check output as run on the `img` file
+- iso           - Final output disc image (DVD/BD only)
+- mainError     - Read, drive, or system errors
+- mainInfo      - ISOBuster-formatted sector information
+- scm           - Scrambled disc image
+- sub           - Binary subchannel data as read from the disc
+- subError      - Subchannel read errors
+- subInfo       - Subchannel informational messages
+- subIntention  - Subchannel intentional error information
+- subReadable   - Human-readable version of `sub`
+- toc           - Binary representation of the table of contents
+- volDesc       - Volume descriptor information
+*/
 namespace MPF.Processors
 {
     /// <summary>
@@ -19,70 +65,6 @@ namespace MPF.Processors
         public DiscImageCreator(RedumpSystem? system, MediaType? type) : base(system, type) { }
 
         #region BaseProcessor Implementations
-
-        /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            /*
-            If there are no external programs, such as error checking, etc., DIC outputs
-            a slightly different set of files. This reduced set needs to be documented in
-            order for special use cases, such as self-built versions of DIC or removed
-            helper programs, can be detected to the best of our ability. Below is the list
-            of files that are generated in that case:
-
-                .bin
-                .c2
-                .ccd
-                .cue
-                .img/.imgtmp
-                .scm/.scmtmp
-                .sub/.subtmp
-                _cmd.txt (formerly)
-                _img.cue
-
-            This list needs to be translated into the minimum viable set of information
-            such that things like error checking can be passed back as a flag, or some
-            similar method.
-
-            Here are some notes about the various output files and what they represent:
-            - bin           - Final split output disc image (CD/GD only)
-            - c2            - Represents each byte per sector as one bit; 0 means no error, 1 means error
-            - c2Error       - Human-readable version of `c2`; only errors are printed
-            - ccd           - CloneCD control file referencing the `img` file
-            - cmd           - Represents the commandline that was run
-            - cue           - CDRWIN cuesheet referencing the `bin` file(s)
-            - dat           - Logiqx datfile referencing the `bin` file(s)
-            - disc          - Disc metadata and information
-            - drive         - Drive metadata and information
-            - img           - CloneCD output disc image (CD/GD only)
-            - img.cue       - CDRWIN cuesheet referencing the `img` file
-            - img_EdcEcc    - ECC check output as run on the `img` file
-            - iso           - Final output disc image (DVD/BD only)
-            - mainError     - Read, drive, or system errors
-            - mainInfo      - ISOBuster-formatted sector information
-            - scm           - Scrambled disc image
-            - sub           - Binary subchannel data as read from the disc
-            - subError      - Subchannel read errors
-            - subInfo       - Subchannel informational messages
-            - subIntention  - Subchannel intentional error information
-            - subReadable   - Human-readable version of `sub`
-            - toc           - Binary representation of the table of contents
-            - volDesc       - Volume descriptor information
-            */
-
-            // Use the base check first
-            (bool allFound, List<string> missingFiles) = base.CheckAllOutputFilesExist(basePath, preCheck);
-
-            // Check for the command file
-            (string? commandPath, _) = GetCommandFilePathAndVersion(basePath);
-            if (commandPath == null)
-            {
-                allFound = false;
-                missingFiles.Add($"{basePath}_cmd.txt");
-            }
-
-            return (allFound, missingFiles);
-        }
 
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
@@ -511,7 +493,6 @@ namespace MPF.Processors
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ccd"),
-                        // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.cue", OutputFileFlags.Required),
                         new($"{baseFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
@@ -535,6 +516,10 @@ namespace MPF.Processors
                         new($"{baseFilename}_c2Error.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "c2_error"), // Doesn't output on Linux
+                        new RegexOutputFile(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cmd"),
@@ -595,13 +580,16 @@ namespace MPF.Processors
                 // TODO: Confirm GD-ROM HD area outputs
                 case MediaType.GDROM:
                     return [
-                        // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
                         new($"{baseFilename}.toc", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "toc"),
 
+                        new RegexOutputFile(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cmd"),
@@ -636,7 +624,6 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
-                        // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
                         new($"{baseFilename}.raw", OutputFileFlags.None),
@@ -644,6 +631,10 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "toc"),
 
+                        new RegexOutputFile(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cmd"),
@@ -693,10 +684,13 @@ namespace MPF.Processors
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
                     return [
-                        // TODO: Figure out how to get the command path generically?
                         new($"{baseFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
 
+                        new RegexOutputFile(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
                         new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cmd"),

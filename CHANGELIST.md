@@ -55,6 +55,7 @@
 - Add new, unused CheckAllOutputFilesExist variant
 - Rename new method to CheckRequiredFiles
 - Use simplified CheckAllOutputFilesExist
+- Create and use RegexOutputFile
 
 ### 3.2.1 (2024-08-05)
 

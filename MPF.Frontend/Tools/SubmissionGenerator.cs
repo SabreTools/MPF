@@ -57,7 +57,7 @@ namespace MPF.Frontend.Tools
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = processor.FoundAllFiles(outputDirectory, outputFilename, false);
+            (bool foundFiles, List<string> missingFiles) = processor.FoundAllFiles(outputDirectory, outputFilename);
             if (!foundFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));

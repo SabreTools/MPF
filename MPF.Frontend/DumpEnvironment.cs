@@ -158,21 +158,21 @@ namespace MPF.Frontend
             if (programFound == null && _internalProgram != InternalProgram.Aaru)
             {
                 var processor = new Processors.Aaru(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (foundOtherFiles)
                     programFound = InternalProgram.Aaru;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
                 var processor = new Processors.DiscImageCreator(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (foundOtherFiles)
                     programFound = InternalProgram.DiscImageCreator;
             }
             if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
                 var processor = new Processors.Redumper(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename, true);
+                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (foundOtherFiles)
                     programFound = InternalProgram.Redumper;
             }
@@ -294,13 +294,13 @@ namespace MPF.Frontend
             };
         }
 
-        /// <inheritdoc cref="BaseProcessor.FoundAllFiles(string?, string, bool)"/>
-        public bool FoundAllFiles(string? outputDirectory, string outputFilename, bool preCheck)
+        /// <inheritdoc cref="BaseProcessor.FoundAllFiles(string?, string)"/>
+        public bool FoundAllFiles(string? outputDirectory, string outputFilename)
         {
             if (_processor == null)
                 return false;
 
-            return _processor.FoundAllFiles(outputDirectory, outputFilename, preCheck).Item1;
+            return _processor.FoundAllFiles(outputDirectory, outputFilename).Item1;
         }
 
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
@@ -437,7 +437,7 @@ namespace MPF.Frontend
             var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = _processor.FoundAllFiles(outputDirectory, outputFilename, false);
+            (bool foundFiles, List<string> missingFiles) = _processor.FoundAllFiles(outputDirectory, outputFilename);
             if (!foundFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
