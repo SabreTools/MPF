@@ -70,169 +70,18 @@ namespace MPF.Processors
             - volDesc       - Volume descriptor information
             */
 
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+            // Use the base check first
+            (bool allFound, List<string> missingFiles) = base.CheckAllOutputFilesExist(basePath, preCheck);
 
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for DiscImageCreator"]);
-
-            var missingFiles = new List<string>();
-            switch (Type)
+            // Check for the command file
+            (string? commandPath, _) = GetCommandFilePathAndVersion(basePath);
+            if (commandPath == null)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                    if (!File.Exists($"{basePath}.cue"))
-                        missingFiles.Add($"{basePath}.cue");
-                    if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
-                        missingFiles.Add($"{basePath}.img");
-
-                    // Audio-only discs don't output these files
-                    if (!System.IsAudio())
-                    {
-                        if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
-                            missingFiles.Add($"{basePath}.scm");
-                    }
-
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        // GD-ROM and GD-R don't output this for the HD area
-                        if (Type != MediaType.GDROM)
-                        {
-                            if (!File.Exists($"{basePath}.ccd"))
-                                missingFiles.Add($"{basePath}.ccd");
-                        }
-
-                        if (!File.Exists($"{basePath}.dat"))
-                            missingFiles.Add($"{basePath}.dat");
-                        if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
-                            missingFiles.Add($"{basePath}.sub");
-                        if (!File.Exists($"{basePath}_disc.txt"))
-                            missingFiles.Add($"{basePath}_disc.txt");
-                        if (!File.Exists($"{basePath}_drive.txt"))
-                            missingFiles.Add($"{basePath}_drive.txt");
-                        if (!File.Exists($"{basePath}_img.cue"))
-                            missingFiles.Add($"{basePath}_img.cue");
-                        if (!File.Exists($"{basePath}_mainError.txt"))
-                            missingFiles.Add($"{basePath}_mainError.txt");
-                        if (!File.Exists($"{basePath}_mainInfo.txt"))
-                            missingFiles.Add($"{basePath}_mainInfo.txt");
-                        if (!File.Exists($"{basePath}_subError.txt"))
-                            missingFiles.Add($"{basePath}_subError.txt");
-                        if (!File.Exists($"{basePath}_subInfo.txt"))
-                            missingFiles.Add($"{basePath}_subInfo.txt");
-                        if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
-                            missingFiles.Add($"{basePath}_subReadable.txt");
-                        if (!File.Exists($"{basePath}_volDesc.txt"))
-                            missingFiles.Add($"{basePath}_volDesc.txt");
-
-                        // Audio-only discs don't output these files
-                        if (!System.IsAudio())
-                        {
-                            if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
-                                missingFiles.Add($"{basePath}.img_EdcEcc.txt");
-                        }
-                    }
-
-                    // Removed or inconsistent files
-                    //{
-                    //    // Doesn't output on Linux
-                    //    if (!File.Exists($"{basePath}.c2"))
-                    //        missingFiles.Add($"{basePath}.c2");
-
-                    //    // Doesn't output on Linux
-                    //    if (!File.Exists($"{basePath}_c2Error.txt"))
-                    //        missingFiles.Add($"{basePath}_c2Error.txt");
-
-                    //    // Replaced by timestamp-named file
-                    //    if (!File.Exists($"{basePath}_cmd.txt"))
-                    //        missingFiles.Add($"{basePath}_cmd.txt");
-
-                    //    // Not guaranteed output
-                    //    if (!File.Exists($"{basePath}_subIntention.txt"))
-                    //        missingFiles.Add($"{basePath}_subIntention.txt");
-
-                    //    // Not guaranteed output
-                    //    if (File.Exists($"{basePath}_suppl.dat"))
-                    //        missingFiles.Add($"{basePath}_suppl.dat");
-
-                    //    // Not guaranteed output (at least PCE)
-                    //    if (!File.Exists($"{basePath}.toc"))
-                    //        missingFiles.Add($"{basePath}.toc");
-                    //}
-
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}.dat"))
-                            missingFiles.Add($"{basePath}.dat");
-                        if (!File.Exists($"{basePath}_disc.txt"))
-                            missingFiles.Add($"{basePath}_disc.txt");
-                        if (!File.Exists($"{basePath}_drive.txt"))
-                            missingFiles.Add($"{basePath}_drive.txt");
-                        if (!File.Exists($"{basePath}_mainError.txt"))
-                            missingFiles.Add($"{basePath}_mainError.txt");
-                        if (!File.Exists($"{basePath}_mainInfo.txt"))
-                            missingFiles.Add($"{basePath}_mainInfo.txt");
-                        if (!File.Exists($"{basePath}_volDesc.txt"))
-                            missingFiles.Add($"{basePath}_volDesc.txt");
-                    }
-
-                    // Removed or inconsistent files
-                    //{
-                    //    // Replaced by timestamp-named file
-                    //    if (!File.Exists($"{basePath}_cmd.txt"))
-                    //        missingFiles.Add($"{basePath}_cmd.txt");
-
-                    //    // Not guaranteed output
-                    //    if (File.Exists($"{basePath}_CSSKey.txt"))
-                    //        missingFiles.Add($"{basePath}_CSSKey.txt");
-
-                    //    // Only output for some parameters
-                    //    if (File.Exists($"{basePath}.raw"))
-                    //        missingFiles.Add($"{basePath}.raw");
-
-                    //    // Not guaranteed output
-                    //    if (File.Exists($"{basePath}_suppl.dat"))
-                    //        missingFiles.Add($"{basePath}_suppl.dat");
-                    //}
-
-                    break;
-
-                case MediaType.FloppyDisk:
-                case MediaType.HardDisk:
-                    // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}.dat"))
-                            missingFiles.Add($"{basePath}.dat");
-                        if (!File.Exists($"{basePath}_disc.txt"))
-                            missingFiles.Add($"{basePath}_disc.txt");
-                    }
-
-                    // Removed or inconsistent files
-                    //{
-                    //    // Replaced by timestamp-named file
-                    //    if (!File.Exists($"{basePath}_cmd.txt"))
-                    //        missingFiles.Add($"{basePath}_cmd.txt");
-                    //}
-
-                    break;
-
-                default:
-                    missingFiles.Add("Media and system combination not supported for DiscImageCreator");
-                    break;
+                allFound = false;
+                missingFiles.Add($"{basePath}_cmd.txt");
             }
 
-            return (!missingFiles.Any(), missingFiles);
+            return (allFound, missingFiles);
         }
 
         /// <inheritdoc/>

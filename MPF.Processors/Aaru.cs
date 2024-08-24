@@ -28,67 +28,6 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for Aaru"]);
-
-            var missingFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.CDROM:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}.cicm.xml"))
-                            missingFiles.Add($"{basePath}.cicm.xml");
-                        if (!File.Exists($"{basePath}.ibg"))
-                            missingFiles.Add($"{basePath}.ibg");
-                        if (!File.Exists($"{basePath}.log"))
-                            missingFiles.Add($"{basePath}.log");
-                        if (!File.Exists($"{basePath}.mhddlog.bin"))
-                            missingFiles.Add($"{basePath}.mhddlog.bin");
-                        if (!File.Exists($"{basePath}.resume.xml"))
-                            missingFiles.Add($"{basePath}.resume.xml");
-                        if (!File.Exists($"{basePath}.sub.log"))
-                            missingFiles.Add($"{basePath}.sub.log");
-                    }
-
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}.cicm.xml"))
-                            missingFiles.Add($"{basePath}.cicm.xml");
-                        if (!File.Exists($"{basePath}.ibg"))
-                            missingFiles.Add($"{basePath}.ibg");
-                        if (!File.Exists($"{basePath}.log"))
-                            missingFiles.Add($"{basePath}.log");
-                        if (!File.Exists($"{basePath}.mhddlog.bin"))
-                            missingFiles.Add($"{basePath}.mhddlog.bin");
-                        if (!File.Exists($"{basePath}.resume.xml"))
-                            missingFiles.Add($"{basePath}.resume.xml");
-                    }
-
-                    break;
-
-                default:
-                    missingFiles.Add("Media and system combination not supported for Aaru");
-                    break;
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // TODO: Fill in submission info specifics for Aaru

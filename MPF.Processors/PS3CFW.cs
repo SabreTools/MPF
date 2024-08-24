@@ -19,36 +19,6 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for PS3 CFW"]);
-
-            var missingFiles = new List<string>();
-
-            if (Type != MediaType.BluRay || System != RedumpSystem.SonyPlayStation3)
-            {
-                missingFiles.Add("Media and system combination not supported for PS3 CFW");
-            }
-            else
-            {
-                string? getKeyBasePath = GetCFWBasePath(basePath);
-                if (!File.Exists($"{getKeyBasePath}.getkey.log"))
-                    missingFiles.Add($"{getKeyBasePath}.getkey.log");
-                if (!File.Exists($"{getKeyBasePath}.disc.pic"))
-                    missingFiles.Add($"{getKeyBasePath}.disc.pic");
-            }
-
-            return (missingFiles.Count == 0, missingFiles);
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

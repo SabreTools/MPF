@@ -54,6 +54,7 @@
 - Minor tweaks to existing code
 - Add new, unused CheckAllOutputFilesExist variant
 - Rename new method to CheckRequiredFiles
+- Use simplified CheckAllOutputFilesExist
 
 ### 3.2.1 (2024-08-05)
 

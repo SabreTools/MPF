@@ -20,42 +20,6 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for CleanRip"]);
-
-            var missingFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.DVD: // Only added here to help users; not strictly correct
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}-dumpinfo.txt"))
-                            missingFiles.Add($"{basePath}-dumpinfo.txt");
-                        if (!File.Exists($"{basePath}.bca"))
-                            missingFiles.Add($"{basePath}.bca");
-                    }
-
-                    break;
-
-                default:
-                    missingFiles.Add("Media and system combination not supported for CleanRip");
-                    break;
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

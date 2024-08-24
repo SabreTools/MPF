@@ -20,44 +20,6 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for UmdImageCreator"]);
-
-            var missingFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.UMD:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        if (!File.Exists($"{basePath}_disc.txt"))
-                            missingFiles.Add($"{basePath}_disc.txt");
-                        if (!File.Exists($"{basePath}_mainError.txt"))
-                            missingFiles.Add($"{basePath}_mainError.txt");
-                        if (!File.Exists($"{basePath}_mainInfo.txt"))
-                            missingFiles.Add($"{basePath}_mainInfo.txt");
-                        if (!File.Exists($"{basePath}_volDesc.txt"))
-                            missingFiles.Add($"{basePath}_volDesc.txt");
-                    }
-
-                    break;
-
-                default:
-                    missingFiles.Add("Media and system combination not supported for UmdImageCreator");
-                    break;
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

@@ -19,53 +19,6 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported for XboxBackupCreator"]);
-
-            var missingFiles = new List<string>();
-            switch (Type)
-            {
-                case MediaType.DVD:
-                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
-                    {
-                        string? logPath = GetLogName(baseDirectory);
-                        if (string.IsNullOrEmpty(logPath))
-                            missingFiles.Add(Path.Combine(baseDirectory, "Log.txt"));
-                        if (!File.Exists(Path.Combine(baseDirectory, "DMI.bin")))
-                            missingFiles.Add(Path.Combine(baseDirectory, "DMI.bin"));
-                        if (!File.Exists(Path.Combine(baseDirectory, "PFI.bin")))
-                            missingFiles.Add(Path.Combine(baseDirectory, "PFI.bin"));
-                        if (!File.Exists(Path.Combine(baseDirectory, "SS.bin")))
-                            missingFiles.Add(Path.Combine(baseDirectory, "SS.bin"));
-
-                        // Not required from XBC
-                        //if (!File.Exists($"{basePath}.dvd"))
-                        //    missingFiles.Add($"{basePath}.dvd");
-                    }
-                    else
-                    {
-
-                    }
-
-                    break;
-
-                default:
-                    missingFiles.Add("Media and system combination not supported for XboxBackupCreator");
-                    break;
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
