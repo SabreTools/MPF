@@ -233,8 +233,12 @@ namespace MPF.Processors
         /// Indicates if an output file exists in an archive
         /// </summary>
         /// <param name="archive">Zip archive to check in</param>
-        public bool Exists(ZipArchive archive)
+        public bool Exists(ZipArchive? archive)
         {
+            // If the archive is invalid
+            if (archive == null)
+                return false;
+
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames

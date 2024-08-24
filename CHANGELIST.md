@@ -52,6 +52,7 @@
 - Use new func in Redumper
 - Add runtime error for improperly created artifacts
 - Minor tweaks to existing code
+- Add new, unused CheckAllOutputFilesExist variant
 
 ### 3.2.1 (2024-08-05)
 
