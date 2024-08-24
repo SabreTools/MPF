@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
@@ -11,7 +10,7 @@ namespace MPF.Processors
     /// <summary>
     /// Represents a single output file with a Regex-matched name
     /// </summary>
-    public class RegexOutputFile : OutputFile
+    internal class RegexOutputFile : OutputFile
     {
         /// <summary>
         /// Create an OutputFile with a single filename

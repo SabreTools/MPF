@@ -57,7 +57,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="baseFilename">Base filename to use for checking</param>
         /// <returns>List of all output files, empty otherwise</returns>
-        public abstract List<OutputFile> GetOutputFiles(string baseFilename);
+        internal abstract List<OutputFile> GetOutputFiles(string baseFilename);
 
         #endregion
 

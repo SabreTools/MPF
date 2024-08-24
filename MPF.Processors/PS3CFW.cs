@@ -76,7 +76,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override List<OutputFile> GetOutputFiles(string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string baseFilename)
         {
             switch (Type)
             {

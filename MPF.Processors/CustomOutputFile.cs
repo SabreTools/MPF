@@ -3,14 +3,13 @@ using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
 #endif
-using System.Linq;
 
 namespace MPF.Processors
 {
     /// <summary>
     /// Represents a single output file with custom detection rules
     /// </summary>
-    public class CustomOutputFile : OutputFile
+    internal class CustomOutputFile : OutputFile
     {
         /// <summary>
         /// Optional func for determining if a file exists
