@@ -675,8 +675,9 @@ namespace MPF.Processors
                         new($"{baseFilename}_PIC.bin", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pic"),
-                        new($"{baseFilename}_SS.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
+                        new($"{baseFilename}_SS.bin", System.IsXGD()
+                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "ss"),
                     ];
 

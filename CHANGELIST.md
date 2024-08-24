@@ -62,6 +62,7 @@
 - Add future XGD output files
 - Add and use CustomOutputFile
 - Fix access permissions of output file classes
+- Handle XGD required files
 
 ### 3.2.1 (2024-08-05)
 
