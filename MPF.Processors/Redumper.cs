@@ -451,7 +451,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "log"),
                         new($"{baseFilename}.log", OutputFileFlags.Required,
-                            (s) => GetDatfile(s) != null),
+                            DatfileExists),
                         new([$"{baseFilename}.manufacturer", $"{baseFilename}.1.manufacturer"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -492,7 +492,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "log"),
                         new($"{baseFilename}.log", OutputFileFlags.Required,
-                            (s) => GetDatfile(s) != null),
+                            DatfileExists),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
