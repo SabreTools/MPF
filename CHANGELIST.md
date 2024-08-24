@@ -60,6 +60,7 @@
 - Less confusing implmentation of DatfileExists
 - Forgot the other locations
 - Add future XGD output files
+- Add and use CustomOutputFile
 
 ### 3.2.1 (2024-08-05)
 

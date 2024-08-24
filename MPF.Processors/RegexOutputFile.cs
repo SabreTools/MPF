@@ -16,36 +16,32 @@ namespace MPF.Processors
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        /// <remarks><paramref name="existFunc">is unused in this constructor</remarks>
-        public RegexOutputFile(string filename, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
-            : base([filename], flags, existsFunc: null)
+        public RegexOutputFile(string filename, OutputFileFlags flags)
+            : base([filename], flags)
         {
         }
 
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        /// <remarks><paramref name="existFunc">is unused in this constructor</remarks>
-        public RegexOutputFile(string filename, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
-            : base([filename], flags, artifactKey, existsFunc: null)
+        public RegexOutputFile(string filename, OutputFileFlags flags, string artifactKey)
+            : base([filename], flags, artifactKey)
         {
         }
 
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        /// <remarks><paramref name="existFunc">is unused in this constructor</remarks>
-        public RegexOutputFile(string[] filenames, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
-            : base(filenames, flags, existsFunc: null)
+        public RegexOutputFile(string[] filenames, OutputFileFlags flags)
+            : base(filenames, flags)
         {
         }
 
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        /// <remarks><paramref name="existFunc">is unused in this constructor</remarks>
-        public RegexOutputFile(string[] filenames, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
-            : base(filenames, flags, artifactKey, existsFunc: null)
+        public RegexOutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
+            : base(filenames, flags, artifactKey)
         {
         }
 
@@ -62,7 +58,6 @@ namespace MPF.Processors
 
             return false;
         }
-
 
 #if NET452_OR_GREATER || NETCOREAPP
         /// <summary>

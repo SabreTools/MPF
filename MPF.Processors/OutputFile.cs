@@ -142,35 +142,29 @@ namespace MPF.Processors
         protected readonly OutputFileFlags _flags;
 
         /// <summary>
-        /// Optional func for determining if a file exists
-        /// </summary>
-        protected readonly Func<string, bool>? _existsFunc;
-
-        /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        public OutputFile(string filename, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
-            : this([filename], flags, existsFunc)
+        public OutputFile(string filename, OutputFileFlags flags)
+            : this([filename], flags)
         {
         }
 
         /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
-        public OutputFile(string filename, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
-            : this([filename], flags, artifactKey, existsFunc)
+        public OutputFile(string filename, OutputFileFlags flags, string artifactKey)
+            : this([filename], flags, artifactKey)
         {
         }
 
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        public OutputFile(string[] filenames, OutputFileFlags flags, Func<string, bool>? existsFunc = null)
+        public OutputFile(string[] filenames, OutputFileFlags flags)
         {
             Filenames = filenames;
             ArtifactKey = null;
             _flags = flags;
-            _existsFunc = existsFunc;
 
             // Validate the inputs
             if (filenames.Length == 0)
@@ -182,12 +176,11 @@ namespace MPF.Processors
         /// <summary>
         /// Create an OutputFile with set of filenames
         /// </summary>
-        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey, Func<string, bool>? existsFunc = null)
+        public OutputFile(string[] filenames, OutputFileFlags flags, string artifactKey)
         {
             Filenames = filenames;
             ArtifactKey = artifactKey;
             _flags = flags;
-            _existsFunc = existsFunc;
 
             // Validate the inputs
             if (filenames.Length == 0)
@@ -211,16 +204,8 @@ namespace MPF.Processors
                 try
                 {
                     string possiblePath = Path.Combine(baseDirectory, filename);
-                    if (_existsFunc != null)
-                    {
-                        if (_existsFunc(possiblePath))
-                            return true;
-                    }
-                    else
-                    {
-                        if (File.Exists(possiblePath))
-                            return true;
-                    }
+                    if (File.Exists(possiblePath))
+                        return true;
                 }
                 catch { }
             }
@@ -247,10 +232,6 @@ namespace MPF.Processors
 
                 try
                 {
-                    // Existence function can't be used, so those files are skipped
-                    if (_existsFunc != null)
-                        return false;
-
                     // Check all entries on filename alone
                     if (archive.Entries.Any(e => e.Name == filename))
                         return true;
