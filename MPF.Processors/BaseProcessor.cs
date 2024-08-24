@@ -53,78 +53,6 @@ namespace MPF.Processors
         public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck);
 
         /// <summary>
-        /// Validate if all required output files exist
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public (bool, List<string>) CheckAllOutputFilesExist(string basePath)
-        {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported"]);
-
-            // Check for the log file
-            bool logArchiveExists = false;
-#if NET452_OR_GREATER || NETCOREAPP
-            ZipArchive? logArchive = null;
-#endif
-            if (File.Exists($"{basePath}_logs.zip"))
-            {
-                logArchiveExists = true;
-#if NET452_OR_GREATER || NETCOREAPP
-                try
-                {
-                    // Try to open the archive
-                    logArchive = ZipFile.OpenRead($"{basePath}_logs.zip");
-                }
-                catch
-                {
-                    logArchiveExists = false;
-                }
-#endif
-            }
-
-            // Get a list of all missing required files
-            var missingFiles = new List<string>();
-            foreach (var outputFile in outputFiles)
-            {
-                // Only check required files
-                if (!outputFile.IsRequired)
-                    continue;
-
-                // Use the built-in existence function
-                if (outputFile.Exists(baseDirectory))
-                    continue;
-
-                // If the log archive doesn't exist
-                if (!logArchiveExists)
-                {
-                    missingFiles.Add(outputFile.Filenames[0]);
-                    continue;
-                }
-
-#if NET20 || NET35 || NET40
-                // Assume the zipfile has the file in it
-                continue;
-#else
-                // Check the log archive
-                if (outputFile.Exists(logArchive))
-                    continue;
-
-                // Add the file to the missing list
-                missingFiles.Add(outputFile.Filenames[0]);
-#endif
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
@@ -322,6 +250,78 @@ namespace MPF.Processors
             return artifacts;
         }
 
+        /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+        protected (bool, List<string>) CheckRequiredFiles(string basePath)
+        {
+            // Get the base filename and directory from the base path
+            string baseFilename = Path.GetFileName(basePath);
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseFilename);
+            if (outputFiles.Count == 0)
+                return (false, ["Media and system combination not supported"]);
+
+            // Check for the log file
+            bool logArchiveExists = false;
+#if NET452_OR_GREATER || NETCOREAPP
+            ZipArchive? logArchive = null;
+#endif
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                logArchiveExists = true;
+#if NET452_OR_GREATER || NETCOREAPP
+                try
+                {
+                    // Try to open the archive
+                    logArchive = ZipFile.OpenRead($"{basePath}_logs.zip");
+                }
+                catch
+                {
+                    logArchiveExists = false;
+                }
+#endif
+            }
+
+            // Get a list of all missing required files
+            var missingFiles = new List<string>();
+            foreach (var outputFile in outputFiles)
+            {
+                // Only check required files
+                if (!outputFile.IsRequired)
+                    continue;
+
+                // Use the built-in existence function
+                if (outputFile.Exists(baseDirectory))
+                    continue;
+
+                // If the log archive doesn't exist
+                if (!logArchiveExists)
+                {
+                    missingFiles.Add(outputFile.Filenames[0]);
+                    continue;
+                }
+
+#if NET20 || NET35 || NET40
+                // Assume the zipfile has the file in it
+                continue;
+#else
+                // Check the log archive
+                if (outputFile.Exists(logArchive))
+                    continue;
+
+                // Add the file to the missing list
+                missingFiles.Add(outputFile.Filenames[0]);
+#endif
+            }
+
+            return (!missingFiles.Any(), missingFiles);
+        }
+
 #if NET452_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Try to add a set of files to an existing archive
@@ -493,23 +493,6 @@ namespace MPF.Processors
             }
 
             return generatedFiles;
-        }
-
-        /// <summary>
-        /// Generate a list of all required filenames
-        /// </summary>
-        /// <param name="baseFilename">Base filename to use for generation</param>
-        /// <returns>List of all required filenames, empty otherwise</returns>
-        public List<string> GetRequiredFilenames(string baseFilename)
-        {
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
-            if (outputFiles.Count == 0)
-                return [];
-
-            // Filter down to required files
-            var requiredFiles = outputFiles.Where(of => of.IsRequired);
-            return requiredFiles.SelectMany(of => of.Filenames).ToList();
         }
 
         /// <summary>
