@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+#if NET452_OR_GREATER || NETCOREAPP
+using System.IO.Compression;
+#endif
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -59,5 +62,29 @@ namespace MPF.Processors
 
             return false;
         }
+
+
+#if NET452_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// Indicates if an output file exists in an archive
+        /// </summary>
+        /// <param name="archive">Zip archive to check in</param>
+        public override bool Exists(ZipArchive? archive)
+        {
+            // If the archive is invalid
+            if (archive == null)
+                return false;
+
+            // Get list of all files in archive
+            var archiveFiles = archive.Entries.Select(e => e.Name).ToList();
+            foreach (string file in archiveFiles)
+            {
+                if (Filenames.Any(pattern => Regex.IsMatch(file, pattern)))
+                    return true;
+            }
+
+            return false;
+        }
+#endif
     }
 }

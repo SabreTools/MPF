@@ -56,6 +56,7 @@
 - Rename new method to CheckRequiredFiles
 - Use simplified CheckAllOutputFilesExist
 - Create and use RegexOutputFile
+- Add archive override for RegexOutputFile
 
 ### 3.2.1 (2024-08-05)
 
