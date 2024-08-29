@@ -47,6 +47,12 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override bool Exists(string baseDirectory)
         {
+            // If the base directory is invalid
+            if (string.IsNullOrEmpty(baseDirectory))
+                return false;
+            if (!Directory.Exists(baseDirectory))
+                return false;
+
             // Get list of all files in directory
             var directoryFiles = Directory.GetFiles(baseDirectory);
             foreach (string file in directoryFiles)

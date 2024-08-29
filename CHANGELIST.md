@@ -63,6 +63,7 @@
 - Add and use CustomOutputFile
 - Fix access permissions of output file classes
 - Handle XGD required files
+- Forgot to assume directories don't exist
 
 ### 3.2.1 (2024-08-05)
 
