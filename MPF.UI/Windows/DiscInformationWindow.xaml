@@ -237,7 +237,7 @@
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)ActivisionID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)BandaiID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bandai ID"
+                                    <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bethesda ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)BethesdaID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)CDProjektID], Mode=TwoWay}"/>
