@@ -65,7 +65,8 @@
 - Handle XGD required files
 - Forgot to assume directories don't exist
 - Fix typo in publisher identifiers
-- Ensure manufacturer files starting from 0 are zipped in redumper DVD … (TurnedToast)
+- Ensure manufacturer files starting from 0 are zipped in redumper DVD (TurnedToast)
+- Add _drive.txt file to GetOutputFiles for UmdImageCreator (TurnedToast)
 
 ### 3.2.1 (2024-08-05)
 
