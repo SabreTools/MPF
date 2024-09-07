@@ -452,8 +452,11 @@ namespace MPF.Processors
                             "log"),
                         new CustomOutputFile($"{baseFilename}.log", OutputFileFlags.Required,
                             DatfileExists),
-                        new([$"{baseFilename}.manufacturer", $"{baseFilename}.1.manufacturer"], OutputFileFlags.Required
+                        new([$"{baseFilename}.manufacturer", $"{baseFilename}.0.manufacturer"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "manufacturer_0"),
+                        new($"{baseFilename}.1.manufacturer", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "manufacturer_1"),
                         new($"{baseFilename}.2.manufacturer", OutputFileFlags.Binary
