@@ -90,6 +90,10 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "disc"),
+                        new($"{baseFilename}_drive.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "disc"),
                         new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
