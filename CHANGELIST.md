@@ -65,6 +65,7 @@
 - Handle XGD required files
 - Forgot to assume directories don't exist
 - Fix typo in publisher identifiers
+- Ensure manufacturer files starting from 0 are zipped in redumper DVD … (TurnedToast)
 
 ### 3.2.1 (2024-08-05)
 
