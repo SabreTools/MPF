@@ -459,9 +459,6 @@ namespace MPF.Processors
                         new($"{baseFilename}.1.manufacturer", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "manufacturer_1"),
-                        new($"{baseFilename}.2.manufacturer", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "manufacturer_2"),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -469,9 +466,6 @@ namespace MPF.Processors
                         new($"{baseFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
-                        new($"{baseFilename}.2.physical", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "physical_2"),
                         new($"{baseFilename}.security", System.IsXGD()
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
@@ -519,6 +513,9 @@ namespace MPF.Processors
                         new($"{baseFilename}.2.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_2"),
+                        new($"{baseFilename}.3.physical", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "physical_3"),
                         new($"{baseFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
