@@ -572,7 +572,7 @@ namespace MPF.Processors
                         new([$"{baseFilename} (Track 1)(-LBA).sub", $"{baseFilename} (Track 01)(-LBA).sub"], OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "track1_lba_sub"),
-                        new($"{baseFilename} (Track AA).sub", OutputFileFlags.Binary
+                        new([$"{baseFilename} (Track AA).sub", $"{baseFilename} (Lead-out)(Track AA).sub"], OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "track_aa_sub"),
                     ];

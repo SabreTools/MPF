@@ -204,6 +204,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.DisableBeep,
                     FlagStrings.DVDReread,
                     FlagStrings.ForceUnitAccess,
+                    FlagStrings.Range,
                     FlagStrings.UseAnchorVolumeDescriptorPointer,
                 ],
 
@@ -232,6 +233,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SeventyFour,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.TryReadingPregap,
                     FlagStrings.VideoNow,
                     FlagStrings.VideoNowColor,
                     FlagStrings.VideoNowXP,
@@ -340,6 +342,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SeventyFour,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.TryReadingPregap,
                     FlagStrings.VideoNow,
                     FlagStrings.VideoNowColor,
                     FlagStrings.VideoNowXP,
@@ -850,6 +853,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.Tages] == true)
                     parameters.Add(FlagStrings.Tages);
+            }
+
+            // Try Reading Pregap
+            if (IsFlagSupported(FlagStrings.TryReadingPregap))
+            {
+                if (this[FlagStrings.TryReadingPregap] == true)
+                    parameters.Add(FlagStrings.TryReadingPregap);
             }
 
             // Use Anchor Volume Descriptor Pointer
