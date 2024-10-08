@@ -4,6 +4,7 @@
 - Update BinaryObjectScanner to 3.1.14
 - Fix SafeDisc filtering (TheRogueArchivist)
 - Update to DIC 20241001
+- Include all DIC write offsets
 
 ### 3.2.2 (2024-09-24)
 

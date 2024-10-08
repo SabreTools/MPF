@@ -1887,15 +1887,36 @@ namespace MPF.Processors
 
             try
             {
-                // Fast forward to the offsets
+                // Get a list for all found offsets
+                var offsets = new List<string>();
+
+                // Loop over all possible offsets
                 using var sr = File.OpenText(disc);
-                while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
-                sr.ReadLine(); // Combined Offset
-                sr.ReadLine(); // Drive Offset
-                sr.ReadLine(); // Separator line
+
+                while (!sr.EndOfStream)
+                {
+                    // Fast forward to the offsets
+                    while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
+                    if (sr.EndOfStream)
+                        break;
+                    
+                    sr.ReadLine(); // Combined Offset
+                    sr.ReadLine(); // Drive Offset
+                    sr.ReadLine(); // Separator line
+
+                    // Now that we're at the offsets, attempt to get the sample offset
+                    string offset = sr.ReadLine()?.Split(' ')?.LastOrDefault() ?? string.Empty;
+                    offsets.Add(offset);
+                }
+
+                // Deduplicate the offsets
+                offsets = offsets
+                    .Where(string.IsNullOrEmpty)
+                    .Distinct()
+                    .ToList();
 
                 // Now that we're at the offsets, attempt to get the sample offset
-                return sr.ReadLine()?.Split(' ')?.LastOrDefault();
+                return string.Join(", ", [.. offsets]);
             }
             catch
             {
