@@ -25,7 +25,6 @@ What version are you using?
 **Build**
 What runtime version are you using?
 
-- [ ] .NET 6.0 running on (Operating System)
 - [ ] .NET 8.0 running on (Operating System)
 
 **Describe the issue**

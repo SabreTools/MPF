@@ -7,6 +7,7 @@
 - Include all DIC write offsets
 - Fix faulty offset dedupe logic
 - Change multiple offset delimiter
+- Make .NET 8 the default in issue reports
 
 ### 3.2.2 (2024-09-24)
 
