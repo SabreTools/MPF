@@ -1911,7 +1911,7 @@ namespace MPF.Processors
 
                 // Deduplicate the offsets
                 offsets = offsets
-                    .Where(string.IsNullOrEmpty)
+                    .Where(s => !string.IsNullOrEmpty(s))
                     .Distinct()
                     .ToList();
 
