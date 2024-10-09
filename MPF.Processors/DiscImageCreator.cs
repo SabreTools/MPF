@@ -1916,7 +1916,7 @@ namespace MPF.Processors
                     .ToList();
 
                 // Now that we're at the offsets, attempt to get the sample offset
-                return string.Join(", ", [.. offsets]);
+                return string.Join("; ", [.. offsets]);
             }
             catch
             {

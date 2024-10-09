@@ -6,6 +6,7 @@
 - Update to DIC 20241001
 - Include all DIC write offsets
 - Fix faulty offset dedupe logic
+- Change multiple offset delimiter
 
 ### 3.2.2 (2024-09-24)
 
