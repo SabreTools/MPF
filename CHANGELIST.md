@@ -9,6 +9,7 @@
 - Change multiple offset delimiter
 - Make .NET 8 the default in issue reports
 - Remove ReadLine in list commands
+- Sum track errors in Redumper
 
 ### 3.2.2 (2024-09-24)
 

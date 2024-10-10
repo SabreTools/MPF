@@ -777,15 +777,16 @@ namespace MPF.Processors
         /// <returns>True if error counts could be retrieved, false otherwise</returns>
         private static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
         {
-            // Set the default values for error counts
-            redumpErrors = -1; c2Errors = -1;
-
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
+            {
+                redumpErrors = -1; c2Errors = -1;
                 return false;
+            }
 
             try
             {
+                redumpErrors = 0; c2Errors = 0;
                 using var sr = File.OpenText(log);
 
                 // Find the error counts
@@ -799,7 +800,9 @@ namespace MPF.Processors
                     if (line.StartsWith("C2:"))
                     {
                         string[] parts = line.Split(' ');
-                        if (!long.TryParse(parts[1], out c2Errors))
+                        if (long.TryParse(parts[1], out long c2TrackErrors))
+                            c2Errors += c2TrackErrors;
+                        else
                             c2Errors = -1;
                     }
 
@@ -807,17 +810,24 @@ namespace MPF.Processors
                     else if (line.StartsWith("REDUMP.ORG errors:"))
                     {
                         string[] parts = line!.Split(' ');
-                        if (!long.TryParse(parts[2], out redumpErrors))
+                        if (long.TryParse(parts[2], out long redumpTrackErrors))
+                            redumpErrors += redumpTrackErrors;
+                        else
                             redumpErrors = -1;
                     }
+
+                    // If either value is -1, exit the loop
+                    if (c2Errors == -1 || redumpErrors == -1)
+                        break;
                 }
 
-                // If the Redump error count is -1, then an issue occurred
-                return redumpErrors != -1;
+                // If either error count is -1, then an issue occurred
+                return c2Errors != -1 && redumpErrors != -1;
             }
             catch
             {
                 // We don't care what the exception is right now
+                redumpErrors = -1; c2Errors = -1;
                 return false;
             }
         }
