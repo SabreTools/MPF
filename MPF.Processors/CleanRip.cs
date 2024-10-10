@@ -174,7 +174,9 @@ namespace MPF.Processors
                 if (hex == null)
                     return null;
 
-                return Regex.Replace(hex, ".{32}", "$0\n");
+                // First separate into lines then into blocks of 4 hex digits
+                string bca = Regex.Replace(hex, ".{32}", "$0\n");
+                return Regex.Replace(bca, "[0-9a-fA-F]{4}", "$0 ");
             }
             catch
             {
