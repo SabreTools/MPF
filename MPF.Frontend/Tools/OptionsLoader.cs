@@ -28,7 +28,7 @@ namespace MPF.Frontend.Tools
         {
             // Help options
             if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
-                return false;
+                return null;
 
             // List options
             if (args[0] == "-lc" || args[0] == "--listcodes")
@@ -38,7 +38,7 @@ namespace MPF.Frontend.Tools
                 {
                     Console.WriteLine(siteCode);
                 }
-                Console.ReadLine();
+
                 return true;
             }
             else if (args[0] == "-lm" || args[0] == "--listmedia")
@@ -48,7 +48,7 @@ namespace MPF.Frontend.Tools
                 {
                     Console.WriteLine(mediaType);
                 }
-                Console.ReadLine();
+
                 return true;
             }
             else if (args[0] == "-lp" || args[0] == "--listprograms")
@@ -58,7 +58,7 @@ namespace MPF.Frontend.Tools
                 {
                     Console.WriteLine(program);
                 }
-                Console.ReadLine();
+
                 return true;
             }
             else if (args[0] == "-ls" || args[0] == "--listsystems")
@@ -68,7 +68,7 @@ namespace MPF.Frontend.Tools
                 {
                     Console.WriteLine(system);
                 }
-                Console.ReadLine();
+
                 return true;
             }
 
