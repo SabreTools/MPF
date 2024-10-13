@@ -887,7 +887,7 @@ namespace MPF.Processors
                         while (line?.StartsWith("00") == true)
                         {
                             headerString += line + "\n";
-                            line = sr.ReadLine()?.Trim();
+                            line = sr.ReadLine()?.TrimStart();
                         }
                     }
                     else
@@ -1467,7 +1467,7 @@ namespace MPF.Processors
                         while (line?.StartsWith("00") == true)
                         {
                             headerString += line + "\n";
-                            line = sr.ReadLine()?.Trim();
+                            line = sr.ReadLine()?.TrimStart();
                         }
                     }
                     else

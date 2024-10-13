@@ -12,6 +12,7 @@
 - Sum track errors in Redumper
 - Format CleanRip BCA wtih 2-byte blocks
 - Update Redumper to build 416
+- Fix trimming of header output
 
 ### 3.2.2 (2024-09-24)
 
