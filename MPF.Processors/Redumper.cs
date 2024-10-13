@@ -865,6 +865,10 @@ namespace MPF.Processors
                     {
                         buildDate = line.Substring("build date: ".Length).Trim();
                     }
+                    else if (line.StartsWith("version:"))
+                    {
+                        version = line.Substring("version: ".Length).Trim();
+                    }
                     else if (line.StartsWith("serial:"))
                     {
                         serial = line.Substring("serial: ".Length).Trim();
@@ -876,10 +880,6 @@ namespace MPF.Processors
                     else if (line.StartsWith("regions:"))
                     {
                         region = line.Substring("regions: ".Length).Trim();
-                    }
-                    else if (line.StartsWith("version:"))
-                    {
-                        version = line.Substring("version: ".Length).Trim();
                     }
                     else if (line.StartsWith("header:"))
                     {
@@ -1445,6 +1445,10 @@ namespace MPF.Processors
                     {
                         buildDate = line.Substring("build date: ".Length).Trim();
                     }
+                    else if (line.StartsWith("version:"))
+                    {
+                        version = line.Substring("version: ".Length).Trim();
+                    }
                     else if (line.StartsWith("serial:"))
                     {
                         serial = line.Substring("serial: ".Length).Trim();
@@ -1456,10 +1460,6 @@ namespace MPF.Processors
                     else if (line.StartsWith("regions:"))
                     {
                         region = line.Substring("regions: ".Length).Trim();
-                    }
-                    else if (line.StartsWith("version:"))
-                    {
-                        version = line.Substring("version: ".Length).Trim();
                     }
                     else if (line?.StartsWith("header:") == true)
                     {

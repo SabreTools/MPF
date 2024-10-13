@@ -328,12 +328,15 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(info.Extras.Header))
                             info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
-                        if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
+                        if (GetGDROMBuildInfo(info.Extras.Header,
+                            out var serial,
+                            out var version,
+                            out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.VersionAndEditions!.Version = version ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
                     }
 
@@ -364,12 +367,15 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(info.Extras.Header))
                             info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
-                        if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
+                        if (GetGDROMBuildInfo(info.Extras.Header,
+                            out var serial,
+                            out var version,
+                            out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.VersionAndEditions!.Version = version ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
                     }
 
@@ -384,12 +390,15 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(info.Extras.Header))
                             info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
-                        if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
+                        if (GetGDROMBuildInfo(info.Extras.Header,
+                            out var serial,
+                            out var version,
+                            out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.VersionAndEditions!.Version = version ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
                     }
 
@@ -404,12 +413,15 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(info.Extras.Header))
                             info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
-                        if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
+                        if (GetGDROMBuildInfo(info.Extras.Header,
+                            out var serial,
+                            out var version,
+                            out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.VersionAndEditions!.Version = version ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
                     }
 
@@ -424,12 +436,15 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(info.Extras.Header))
                             info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
 
-                        if (GetGDROMBuildInfo(info.Extras.Header, out var gdSerial, out var gdVersion, out var gdDate))
+                        if (GetGDROMBuildInfo(info.Extras.Header,
+                            out var serial,
+                            out var version,
+                            out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions!.Version = gdVersion ?? string.Empty;
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.VersionAndEditions!.Version = version ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
                     }
 
@@ -1899,7 +1914,7 @@ namespace MPF.Processors
                     while (sr.ReadLine()?.Trim()?.StartsWith("========== Offset") == false) ;
                     if (sr.EndOfStream)
                         break;
-                    
+
                     sr.ReadLine(); // Combined Offset
                     sr.ReadLine(); // Drive Offset
                     sr.ReadLine(); // Separator line
