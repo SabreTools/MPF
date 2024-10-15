@@ -410,6 +410,9 @@ namespace MPF.Processors
                     var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{baseFilename}.cue");
                     if (cueSheet?.Files != null)
                     {
+                        // Get the base directory to ensure we get the full track path
+                        string baseDirectory = Path.GetDirectoryName(baseFilename) ?? string.Empty;
+
                         int trackId = 1;
                         foreach (CueFile? file in cueSheet.Files)
                         {
@@ -417,10 +420,10 @@ namespace MPF.Processors
                             if (trackName == null)
                                 continue;
 
-                            cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
+                            cdrom.Add(new(Path.Combine(baseDirectory, $"{trackName}.hash"), OutputFileFlags.Binary
                                 | OutputFileFlags.Zippable,
                                 $"hash_{trackId}"));
-                            cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
+                            cdrom.Add(new(Path.Combine(baseDirectory, $"{trackName}.skeleton"), OutputFileFlags.Binary
                                 | OutputFileFlags.Zippable,
                                 $"skeleton_{trackId}"));
                             trackId++;

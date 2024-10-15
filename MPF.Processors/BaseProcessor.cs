@@ -320,11 +320,10 @@ namespace MPF.Processors
         private (bool, List<string>) CheckRequiredFiles(string basePath)
         {
             // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
+            var outputFiles = GetOutputFiles(basePath);
             if (outputFiles.Count == 0)
                 return (false, ["Media and system combination not supported"]);
 
@@ -408,12 +407,8 @@ namespace MPF.Processors
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
         private List<string> GetDeleteableFilePaths(string basePath)
         {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
             // Get the list of deleteable files
-            var deleteableFilenames = GetDeleteableFilenames(baseFilename);
+            var deleteableFilenames = GetDeleteableFilenames(basePath);
             if (deleteableFilenames.Count == 0)
                 return [];
 
@@ -422,11 +417,10 @@ namespace MPF.Processors
             foreach (var filename in deleteableFilenames)
             {
                 // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
+                if (!File.Exists(filename))
                     continue;
 
-                deleteableFiles.Add(outputFilePath);
+                deleteableFiles.Add(filename);
             }
 
             return deleteableFiles;
@@ -498,9 +492,9 @@ namespace MPF.Processors
             if (outputFiles.Count == 0)
                 return [];
 
-            // Filter down to deleteable files
-            var deleteableFiles = outputFiles.Where(of => of.IsZippable);
-            return deleteableFiles.SelectMany(of => of.Filenames).ToList();
+            // Filter down to zippable files
+            var zippableFiles = outputFiles.Where(of => of.IsZippable);
+            return zippableFiles.SelectMany(of => of.Filenames).ToList();
         }
 
         /// <summary>
@@ -510,12 +504,8 @@ namespace MPF.Processors
         /// <returns>List of all zippable file paths, empty otherwise</returns>
         private List<string> GetZippableFilePaths(string basePath)
         {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
             // Get the list of zippable files
-            var zippableFilenames = GetZippableFilenames(baseFilename);
+            var zippableFilenames = GetZippableFilenames(basePath);
             if (zippableFilenames.Count == 0)
                 return [];
 
@@ -524,11 +514,10 @@ namespace MPF.Processors
             foreach (var filename in zippableFilenames)
             {
                 // Skip non-existent files
-                string outputFilePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(outputFilePath))
+                if (!File.Exists(filename))
                     continue;
 
-                zippableFiles.Add(outputFilePath);
+                zippableFiles.Add(filename);
             }
 
             return zippableFiles;
