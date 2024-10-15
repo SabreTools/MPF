@@ -385,7 +385,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile($"{baseFilename}.log", OutputFileFlags.Required,
+                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
                         new($"{baseFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -450,7 +450,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile($"{baseFilename}.log", OutputFileFlags.Required,
+                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
                         new([$"{baseFilename}.manufacturer", $"{baseFilename}.0.manufacturer"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
@@ -501,7 +501,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile($"{baseFilename}.log", OutputFileFlags.Required,
+                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
