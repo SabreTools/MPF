@@ -195,6 +195,10 @@ namespace MPF.Processors
         /// <param name="baseDirectory">Base directory to check in</param>
         public virtual bool Exists(string baseDirectory)
         {
+            // Ensure the directory exists
+            if (!Directory.Exists(baseDirectory))
+                return false;
+            
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames

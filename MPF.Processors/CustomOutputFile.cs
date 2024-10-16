@@ -55,6 +55,10 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override bool Exists(string baseDirectory)
         {
+            // Ensure the directory exists
+            if (!Directory.Exists(baseDirectory))
+                return false;
+            
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames

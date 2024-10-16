@@ -20,6 +20,7 @@
 - Ensure Regex directories are unescaped
 - Add separate field for Regex; assorted cleanup
 - Reduce cleverness in output file code
+- No directory means no files
 
 ### 3.2.2 (2024-09-24)
 

@@ -174,7 +174,7 @@ namespace MPF.Processors
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
         public (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename)
         {
-            // First, sanitized the output filename to strip off any potential extension
+            // Sanitize the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Then get the base path for all checking
