@@ -55,9 +55,9 @@ namespace MPF.Processors
         // <summary>
         /// Generate a list of all output files generated
         /// </summary>
-        /// <param name="baseFilename">Base filename to use for checking</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all output files, empty otherwise</returns>
-        internal abstract List<OutputFile> GetOutputFiles(string baseFilename);
+        internal abstract List<OutputFile> GetOutputFiles(string basePath);
 
         #endregion
 

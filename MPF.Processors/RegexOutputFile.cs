@@ -13,6 +13,11 @@ namespace MPF.Processors
     internal class RegexOutputFile : OutputFile
     {
         /// <summary>
+        /// Base directory for directory searches
+        /// </summary>
+        public string BaseDirectory { get; set; } = string.Empty;
+
+        /// <summary>
         /// Create an OutputFile with a single filename
         /// </summary>
         public RegexOutputFile(string filename, OutputFileFlags flags)
@@ -47,11 +52,8 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override bool Exists()
         {
-            // Get the base directory for the first path
-            string baseDirectory = Path.GetDirectoryName(Regex.Unescape(Filenames[0])) ?? string.Empty;
-
             // Get list of all files in directory
-            var directoryFiles = Directory.GetFiles(baseDirectory);
+            var directoryFiles = Directory.GetFiles(BaseDirectory);
             foreach (string file in directoryFiles)
             {
                 if (Filenames.Any(pattern => Regex.IsMatch(file, pattern)))

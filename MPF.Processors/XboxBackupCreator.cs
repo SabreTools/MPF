@@ -150,33 +150,36 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string basePath)
         {
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
             switch (Type)
             {
                 case MediaType.DVD:
                     return [
-                        new($"{baseFilename}.dvd", OutputFileFlags.Artifact
+                        new($"{basePath}.dvd", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "dvd"),
-                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{basePath}.iso", OutputFileFlags.Required),
                         
-                        new("DMI.bin", OutputFileFlags.Required
+                        new(Path.Combine(baseDirectory, "DMI.bin"), OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
                         new RegexOutputFile("[lL]og.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
-                            "log"),
-                        new("PFI.bin", OutputFileFlags.Required
+                            "log")
+                            { BaseDirectory = baseDirectory },
+                        new(Path.Combine(baseDirectory, "PFI.bin"), OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pfi"),
-                        new("RawSS.bin", OutputFileFlags.Binary
+                        new(Path.Combine(baseDirectory, "RawSS.bin"), OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "raw_ss"),
-                        new("SS.bin", OutputFileFlags.Required
+                        new(Path.Combine(baseDirectory, "SS.bin"), OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ss"),
