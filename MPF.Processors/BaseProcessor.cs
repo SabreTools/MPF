@@ -194,12 +194,8 @@ namespace MPF.Processors
         /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
         public Dictionary<string, string> GenerateArtifacts(string basePath)
         {
-            // Get the base filename and directory from the base path
-            string baseFilename = Path.GetFileName(basePath);
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
+            var outputFiles = GetOutputFiles(basePath);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -216,8 +212,7 @@ namespace MPF.Processors
                 // Skip non-existent files
                 foreach (string filename in outputFile.Filenames)
                 {
-                    string outputFilePath = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(outputFilePath))
+                    if (!File.Exists(filename))
                         continue;
 
                     // Get binary artifacts as a byte array
@@ -319,9 +314,6 @@ namespace MPF.Processors
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
         private (bool, List<string>) CheckRequiredFiles(string basePath)
         {
-            // Get the base filename and directory from the base path
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
             // Get the list of output files
             var outputFiles = GetOutputFiles(basePath);
             if (outputFiles.Count == 0)
@@ -357,7 +349,7 @@ namespace MPF.Processors
                     continue;
 
                 // Use the built-in existence function
-                if (outputFile.Exists(baseDirectory))
+                if (outputFile.Exists())
                     continue;
 
                 // If the log archive doesn't exist
@@ -386,12 +378,12 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all deleteable filenames
         /// </summary>
-        /// <param name="baseFilename">Base filename to use for generation</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all deleteable filenames, empty otherwise</returns>
-        private List<string> GetDeleteableFilenames(string baseFilename)
+        private List<string> GetDeleteableFilenames(string basePath)
         {
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
+            var outputFiles = GetOutputFiles(basePath);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -483,12 +475,12 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all zippable filenames
         /// </summary>
-        /// <param name="baseFilename">Base filename to use for generation</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>List of all zippable filenames, empty otherwise</returns>
-        private List<string> GetZippableFilenames(string baseFilename)
+        private List<string> GetZippableFilenames(string basePath)
         {
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseFilename);
+            var outputFiles = GetOutputFiles(basePath);
             if (outputFiles.Count == 0)
                 return [];
 

@@ -16,6 +16,7 @@
 - Use fake filename for Redumper DAT
 - Ensure that the full base path is being used
 - Ensure consistency in output file path checking
+- Use new output file logic in processors
 
 ### 3.2.2 (2024-09-24)
 
