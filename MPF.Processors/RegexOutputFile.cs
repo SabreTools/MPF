@@ -48,7 +48,7 @@ namespace MPF.Processors
         public override bool Exists()
         {
             // Get the base directory for the first path
-            string baseDirectory = Path.GetDirectoryName(Filenames[0]) ?? string.Empty;
+            string baseDirectory = Path.GetDirectoryName(Regex.Unescape(Filenames[0])) ?? string.Empty;
 
             // Get list of all files in directory
             var directoryFiles = Directory.GetFiles(baseDirectory);
