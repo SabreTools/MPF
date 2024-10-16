@@ -15,6 +15,7 @@
 - Fix trimming of header output
 - Use fake filename for Redumper DAT
 - Ensure that the full base path is being used
+- Ensure consistency in output file path checking
 
 ### 3.2.2 (2024-09-24)
 

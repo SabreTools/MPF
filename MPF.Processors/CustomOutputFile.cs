@@ -52,18 +52,9 @@ namespace MPF.Processors
             _existsFunc = existsFunc;
         }
 
-        /// <summary>
-        /// Indicates if an output file exists in a base directory
-        /// </summary>
-        /// <param name="baseDirectory">Base directory to check in</param>
-        public override bool Exists(string baseDirectory)
+        /// <inheritdoc/>
+        public override bool Exists()
         {
-            // If the base directory is invalid
-            if (string.IsNullOrEmpty(baseDirectory))
-                return false;
-            if (!Directory.Exists(baseDirectory))
-                return false;
-
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames
@@ -72,8 +63,7 @@ namespace MPF.Processors
 
                 try
                 {
-                    string possiblePath = Path.Combine(baseDirectory, filename);
-                    if (_existsFunc(possiblePath))
+                    if (_existsFunc(filename))
                         return true;
                 }
                 catch { }

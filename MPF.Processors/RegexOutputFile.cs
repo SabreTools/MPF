@@ -45,13 +45,10 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override bool Exists(string baseDirectory)
+        public override bool Exists()
         {
-            // If the base directory is invalid
-            if (string.IsNullOrEmpty(baseDirectory))
-                return false;
-            if (!Directory.Exists(baseDirectory))
-                return false;
+            // Get the base directory for the first path
+            string baseDirectory = Path.GetDirectoryName(Filenames[0]) ?? string.Empty;
 
             // Get list of all files in directory
             var directoryFiles = Directory.GetFiles(baseDirectory);
