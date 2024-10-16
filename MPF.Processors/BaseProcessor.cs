@@ -55,9 +55,10 @@ namespace MPF.Processors
         // <summary>
         /// Generate a list of all output files generated
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="baseDirectory">Base filename and path to use for checking</param>
+        /// <param name="baseFilename">Base filename and path to use for checking</param>
         /// <returns>List of all output files, empty otherwise</returns>
-        internal abstract List<OutputFile> GetOutputFiles(string basePath);
+        internal abstract List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename);
 
         #endregion
 
@@ -194,8 +195,12 @@ namespace MPF.Processors
         /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
         public Dictionary<string, string> GenerateArtifacts(string basePath)
         {
+            // Split the base path for matching
+            string? baseDirectory = Path.GetDirectoryName(basePath);
+            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
+
             // Get the list of output files
-            var outputFiles = GetOutputFiles(basePath);
+            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -212,19 +217,20 @@ namespace MPF.Processors
                 // Skip non-existent files
                 foreach (string filename in outputFile.Filenames)
                 {
-                    if (!File.Exists(filename))
+                    string possibleFile = Path.Combine(baseDirectory ?? string.Empty, filename);
+                    if (!File.Exists(possibleFile))
                         continue;
 
                     // Get binary artifacts as a byte array
                     if (outputFile.IsBinaryArtifact)
                     {
-                        byte[] data = File.ReadAllBytes(filename);
+                        byte[] data = File.ReadAllBytes(possibleFile);
                         string str = Convert.ToBase64String(data);
                         artifacts.Add(outputFile.ArtifactKey, str);
                     }
                     else
                     {
-                        string? data = ProcessingTool.GetFullFile(filename);
+                        string? data = ProcessingTool.GetFullFile(possibleFile);
                         string str = ProcessingTool.GetBase64(data) ?? string.Empty;
                         artifacts.Add(outputFile.ArtifactKey, str);
                     }
@@ -314,8 +320,12 @@ namespace MPF.Processors
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
         private (bool, List<string>) CheckRequiredFiles(string basePath)
         {
+            // Split the base path for matching
+            string? baseDirectory = Path.GetDirectoryName(basePath);
+            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
+
             // Get the list of output files
-            var outputFiles = GetOutputFiles(basePath);
+            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
             if (outputFiles.Count == 0)
                 return (false, ["Media and system combination not supported"]);
 
@@ -349,7 +359,7 @@ namespace MPF.Processors
                     continue;
 
                 // Use the built-in existence function
-                if (outputFile.Exists())
+                if (outputFile.Exists(baseDirectory ?? string.Empty))
                     continue;
 
                 // If the log archive doesn't exist
@@ -372,7 +382,7 @@ namespace MPF.Processors
 #endif
             }
 
-            return (!missingFiles.Any(), missingFiles);
+            return (missingFiles.Count == 0, missingFiles);
         }
 
         /// <summary>
@@ -382,8 +392,12 @@ namespace MPF.Processors
         /// <returns>List of all deleteable filenames, empty otherwise</returns>
         private List<string> GetDeleteableFilenames(string basePath)
         {
+            // Split the base path for matching
+            string? baseDirectory = Path.GetDirectoryName(basePath);
+            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
+
             // Get the list of output files
-            var outputFiles = GetOutputFiles(basePath);
+            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -399,6 +413,9 @@ namespace MPF.Processors
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
         private List<string> GetDeleteableFilePaths(string basePath)
         {
+            // Split the base path for matching
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
             // Get the list of deleteable files
             var deleteableFilenames = GetDeleteableFilenames(basePath);
             if (deleteableFilenames.Count == 0)
@@ -409,10 +426,11 @@ namespace MPF.Processors
             foreach (var filename in deleteableFilenames)
             {
                 // Skip non-existent files
-                if (!File.Exists(filename))
+                string possiblePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(possiblePath))
                     continue;
 
-                deleteableFiles.Add(filename);
+                deleteableFiles.Add(possiblePath);
             }
 
             return deleteableFiles;
@@ -444,10 +462,10 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all MPF-specific log files generated
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="basePath">Base directory to use for checking</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
-        private static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
+        private static List<string> GetGeneratedFilePaths(string? baseDirectory, string? filenameSuffix)
         {
             // Get the list of generated files
             var generatedFilenames = GetGeneratedFilenames(filenameSuffix);
@@ -455,18 +473,18 @@ namespace MPF.Processors
                 return [];
 
             // Ensure the output directory
-            outputDirectory ??= string.Empty;
+            baseDirectory ??= string.Empty;
 
             // Return only files that exist
             var generatedFiles = new List<string>();
             foreach (var filename in generatedFilenames)
             {
                 // Skip non-existent files
-                string outputFilePath = Path.Combine(outputDirectory, filename);
-                if (!File.Exists(outputFilePath))
+                string possiblePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(possiblePath))
                     continue;
 
-                generatedFiles.Add(outputFilePath);
+                generatedFiles.Add(possiblePath);
             }
 
             return generatedFiles;
@@ -479,8 +497,12 @@ namespace MPF.Processors
         /// <returns>List of all zippable filenames, empty otherwise</returns>
         private List<string> GetZippableFilenames(string basePath)
         {
+            // Split the base path for matching
+            string? baseDirectory = Path.GetDirectoryName(basePath);
+            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
+
             // Get the list of output files
-            var outputFiles = GetOutputFiles(basePath);
+            var outputFiles = GetOutputFiles(baseDirectory, basePath);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -496,6 +518,9 @@ namespace MPF.Processors
         /// <returns>List of all zippable file paths, empty otherwise</returns>
         private List<string> GetZippableFilePaths(string basePath)
         {
+            // Split the base path for matching
+            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+
             // Get the list of zippable files
             var zippableFilenames = GetZippableFilenames(basePath);
             if (zippableFilenames.Count == 0)
@@ -506,10 +531,11 @@ namespace MPF.Processors
             foreach (var filename in zippableFilenames)
             {
                 // Skip non-existent files
-                if (!File.Exists(filename))
+                string possiblePath = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(possiblePath))
                     continue;
 
-                zippableFiles.Add(filename);
+                zippableFiles.Add(possiblePath);
             }
 
             return zippableFiles;

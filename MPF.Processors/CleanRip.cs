@@ -66,7 +66,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string basePath)
+        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
         {
             switch (Type)
             {
@@ -74,13 +74,13 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
-                        new($"{basePath}.bca", OutputFileFlags.Required
+                        new($"{baseFilename}.bca", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "bca"),
-                        new($"{basePath}.iso", OutputFileFlags.Required),
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
 
-                        new($"{basePath}-dumpinfo.txt", OutputFileFlags.Required
+                        new($"{baseFilename}-dumpinfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "dumpinfo"),

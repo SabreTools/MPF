@@ -53,7 +53,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override bool Exists()
+        public override bool Exists(string baseDirectory)
         {
             foreach (string filename in Filenames)
             {
@@ -63,7 +63,8 @@ namespace MPF.Processors
 
                 try
                 {
-                    if (_existsFunc(filename))
+                    string possibleFile = Path.Combine(baseDirectory, filename);
+                    if (_existsFunc(possibleFile))
                         return true;
                 }
                 catch { }

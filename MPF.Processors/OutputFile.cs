@@ -192,7 +192,8 @@ namespace MPF.Processors
         /// <summary>
         /// Indicates if an output file exists in a base directory
         /// </summary>
-        public virtual bool Exists()
+        /// <param name="baseDirectory">Base directory to check in</param>
+        public virtual bool Exists(string baseDirectory)
         {
             foreach (string filename in Filenames)
             {
@@ -202,7 +203,8 @@ namespace MPF.Processors
 
                 try
                 {
-                    if (File.Exists(filename))
+                    string possibleFile = Path.Combine(baseDirectory, filename);
+                    if (File.Exists(possibleFile))
                         return true;
                 }
                 catch { }

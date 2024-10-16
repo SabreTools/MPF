@@ -76,18 +76,18 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string basePath)
+        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
         {
             switch (Type)
             {
                 case MediaType.BluRay:
                     return [
-                        new($"{basePath}.iso", OutputFileFlags.Required),
-                        new($"{basePath}.getkey.log", OutputFileFlags.Required
+                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{baseFilename}.getkey.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new($"{basePath}.disc.pic", OutputFileFlags.Required
+                        new($"{baseFilename}.disc.pic", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
