@@ -67,7 +67,7 @@
         </PackageReference>
         <PackageReference Include="LibIRD" Version="0.9.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.1" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.4" />
     </ItemGroup>
 
 </Project>

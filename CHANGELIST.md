@@ -21,6 +21,7 @@
 - Add separate field for Regex; assorted cleanup
 - Reduce cleverness in output file code
 - No directory means no files
+- Update RedumpLib to 1.4.4
 
 ### 3.2.2 (2024-09-24)
 

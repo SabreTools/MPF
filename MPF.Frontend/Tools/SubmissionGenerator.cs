@@ -212,17 +212,19 @@ namespace MPF.Frontend.Tools
                     continue;
                 }
 
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateSingleTrack(wc, info, sha1);
-                if (singleFound)
-                    resultProgress?.Report(ResultEventArgs.Success(result));
+                var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
+                if (foundIds != null && foundIds.Count == 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for {sha1}"));
+                else if (foundIds != null && foundIds.Count != 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for {sha1}"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure(result));
+                    resultProgress?.Report(ResultEventArgs.Failure($"No matches found for {sha1}"));
 
                 // Add the found IDs to the map
                 foundIdSets.Add(foundIds?.ToArray() ?? []);
 
                 // Ensure that all tracks are found
-                allFound &= singleFound;
+                allFound &= (foundIds != null && foundIds.Count == 1);
             }
 
             // If all tracks were found, check if there are any fully-matched IDs
@@ -249,23 +251,20 @@ namespace MPF.Frontend.Tools
             // If we don't have any matches but we have a universal hash
             if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
-#if NET40
-                var validateTask = Validator.ValidateUniversalHash(wc, info);
-                validateTask.Wait();
-                (bool singleFound, var foundIds, string? result) = validateTask.Result;
-#else
-                (bool singleFound, var foundIds, string? result) = await Validator.ValidateUniversalHash(wc, info);
-#endif
-                if (singleFound)
-                    resultProgress?.Report(ResultEventArgs.Success(result));
+                string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
+                var foundIds = await Validator.ValidateUniversalHash(wc, info);
+                if (foundIds != null && foundIds.Count == 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for universal hash {sha1}"));
+                else if (foundIds != null && foundIds.Count != 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure(result));
+                    resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
 
                 // Ensure that the hash is found
-                allFound = singleFound;
+                allFound = (foundIds != null && foundIds.Count == 1);
 
                 // If we found a match, then the disc is a match
-                if (singleFound && foundIds != null)
+                if ((foundIds != null && foundIds.Count == 1) && foundIds != null)
                     fullyMatchedIDs = foundIds;
                 else
                     fullyMatchedIDs = [];

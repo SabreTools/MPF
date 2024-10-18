@@ -40,6 +40,10 @@
         <None Include="App.config" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
+    </ItemGroup>
+
     <!-- Support for old .NET versions -->
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
         <PackageReference Include="MinAsyncBridge" Version="0.12.4" />
@@ -48,14 +52,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.14" GeneratePathProperty="true">
             <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.1" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.4" />
     </ItemGroup>
 
     <ItemGroup>

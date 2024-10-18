@@ -77,7 +77,14 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
-            (bool? _, string? message) = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
+            bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
+            string message = validated switch
+            {
+                true => "Redump username and password accepted!",
+                false => "Redump username and password denied!",
+                null => "An error occurred validating your credentials!",
+            };
+
             if (!string.IsNullOrEmpty(message))
                 Console.WriteLine(message);
 

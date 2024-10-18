@@ -486,7 +486,7 @@ namespace MPF.Frontend
 
             // Format the information for the text output
             resultProgress?.Report(ResultEventArgs.Success("Formatting information..."));
-            (var formattedValues, var formatResult) = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility);
+            var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility, out string? formatResult);
             if (formattedValues == null)
                 resultProgress?.Report(ResultEventArgs.Failure(formatResult));
             else
