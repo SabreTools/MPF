@@ -22,6 +22,7 @@
 - Reduce cleverness in output file code
 - No directory means no files
 - Update RedumpLib to 1.4.4
+- Use rolling release, not AppVeyor, in issue templates
 
 ### 3.2.2 (2024-09-24)
 
