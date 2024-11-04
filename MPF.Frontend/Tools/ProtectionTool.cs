@@ -17,17 +17,17 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        public static async Task<(string?, ProtectionDictionary?)> GetCopyProtection(Drive? drive,
+        public static async Task<ProtectionDictionary?> GetCopyProtection(Drive? drive,
             Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
             if (options.ScanForProtection && drive?.Name != null)
             {
                 (var protection, _) = await RunProtectionScanOnPath(drive.Name, options, progress);
-                return (FormatProtections(protection), protection);
+                return protection;
             }
 
-            return ("(CHECK WITH PROTECTIONID)", null);
+            return null;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(ProtectionDictionary?, string?)> RunProtectionScanOnPath(string path,
+        public static async Task<(ProtectionDictionary, string?)> RunProtectionScanOnPath(string path,
             Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
@@ -63,7 +63,7 @@ namespace MPF.Frontend.Tools
 
                 // If nothing was returned, return
                 if (found == null || found.Count == 0)
-                    return (null, null);
+                    return ([], null);
 
                 // Filter out any empty protections
                 found.ClearEmptyKeys();
@@ -73,7 +73,7 @@ namespace MPF.Frontend.Tools
             }
             catch (Exception ex)
             {
-                return (null, ex.ToString());
+                return ([], ex.ToString());
             }
         }
 
@@ -85,7 +85,9 @@ namespace MPF.Frontend.Tools
         public static string? FormatProtections(ProtectionDictionary? protections)
         {
             // If the filtered list is empty in some way, return
-            if (protections == null || !protections.Any())
+            if (protections == null)
+                return "(CHECK WITH PROTECTIONID)";
+            else if (protections.Count == 0)
                 return "None found [OMIT FROM SUBMISSION]";
 
             // Get an ordered list of distinct found protections

@@ -79,23 +79,36 @@ namespace MPF.Frontend.Tools
         /// Process common arguments for all functionality
         /// </summary>
         /// <returns>True if all arguments pass, false otherwise</returns>
-        public static (bool, MediaType, RedumpSystem?, string?) ProcessCommonArguments(string[] args)
+        public static bool ProcessCommonArguments(string[] args, out MediaType mediaType, out RedumpSystem? system, out string? message)
         {
             // All other use requires at least 3 arguments
             if (args.Length < 3)
-                return (false, MediaType.NONE, null, "Invalid number of arguments");
+            {
+                mediaType = MediaType.NONE;
+                system = null;
+                message = "Invalid number of arguments";
+                return false;
+            }
 
             // Check the MediaType
-            var mediaType = ToMediaType(args[0].Trim('"'));
+            mediaType = ToMediaType(args[0].Trim('"'));
             if (mediaType == MediaType.NONE)
-                return (false, MediaType.NONE, null, $"{args[0]} is not a recognized media type");
+            {
+                system = null;
+                message = $"{args[0]} is not a recognized media type";
+                return false;
+            }
 
             // Check the RedumpSystem
-            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
-            if (knownSystem == null)
-                return (false, MediaType.NONE, null, $"{args[1]} is not a recognized system");
+            system = Extensions.ToRedumpSystem(args[1].Trim('"'));
+            if (system == null)
+            {
+                message = $"{args[1]} is not a recognized system";
+                return false;
+            }
 
-            return (true, mediaType, knownSystem, null);
+            message = null;
+            return true;
         }
 
         /// <summary>

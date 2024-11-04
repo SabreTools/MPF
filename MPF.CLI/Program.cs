@@ -40,7 +40,7 @@ namespace MPF.CLI
             }
 
             // Try processing the common arguments
-            (bool success, MediaType mediaType, RedumpSystem? knownSystem, var error) = OptionsLoader.ProcessCommonArguments(args);
+            bool success = OptionsLoader.ProcessCommonArguments(args, out MediaType mediaType, out RedumpSystem? knownSystem, out var error);
             if (!success)
             {
                 DisplayHelp(error);

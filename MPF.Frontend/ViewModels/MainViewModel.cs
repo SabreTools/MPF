@@ -773,15 +773,13 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Check for available updates
         /// </summary>
-        public (bool, string, string?) CheckForUpdates()
+        public void CheckForUpdates(out bool different, out string message, out string? url)
         {
-            (bool different, string message, var url) = FrontendTool.CheckForNewVersion();
+            FrontendTool.CheckForNewVersion(out different, out message, out url);
 
             SecretLogLn(message);
             if (url == null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
-
-            return (different, message, url);
         }
 
         /// <summary>

@@ -237,7 +237,7 @@ namespace MPF.UI.Windows
         /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
         public void CheckForUpdates(bool showIfSame)
         {
-            (bool different, string message, var url) = MainViewModel.CheckForUpdates();
+            MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
 
             // If we have a new version, put it in the clipboard
             if (different && !string.IsNullOrEmpty(url))

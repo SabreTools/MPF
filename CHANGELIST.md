@@ -32,6 +32,7 @@
 - Reduce call complexity for login result
 - Use new ProtectionDictionary type
 - Replace user info func with ProcessUserInfoDelegate
+- Reduce tupling even more
 
 ### 3.2.2 (2024-09-24)
 

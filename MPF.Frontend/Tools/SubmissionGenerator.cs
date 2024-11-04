@@ -118,7 +118,8 @@ namespace MPF.Frontend.Tools
             if (system.SupportsCopyProtectionScans())
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
-                var (protectionString, protections) = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
+                var protections = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
+                var protectionString = ProtectionTool.FormatProtections(protections);
 
                 info.CopyProtection!.Protection += protectionString;
                 info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);

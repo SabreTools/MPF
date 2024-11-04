@@ -496,7 +496,7 @@ namespace MPF.Frontend
 
             // Write the text output
             resultProgress?.Report(ResultEventArgs.Success("Writing submission information file..."));
-            (bool txtSuccess, string txtResult) = WriteOutputData(outputDirectory, filenameSuffix, formattedValues);
+            bool txtSuccess = WriteOutputData(outputDirectory, filenameSuffix, formattedValues, out string txtResult);
             if (txtSuccess)
                 resultProgress?.Report(ResultEventArgs.Success(txtResult));
             else
@@ -567,11 +567,11 @@ namespace MPF.Frontend
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && _type == MediaType.BluRay)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
-                (bool deleteSuccess, string deleteResult) = await WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
+                bool deleteSuccess = await WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
                 if (deleteSuccess)
-                    resultProgress?.Report(ResultEventArgs.Success(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Success("IRD created!"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
+                    resultProgress?.Report(ResultEventArgs.Failure("Failed to create IRD"));
             }
 
             resultProgress?.Report(ResultEventArgs.Success("Submission information process complete!"));
@@ -639,11 +639,14 @@ namespace MPF.Frontend
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="lines">Preformatted list of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
-        private static (bool, string) WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines)
+        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines, out string status)
         {
             // Check to see if the inputs are valid
             if (lines == null)
-                return (false, "No formatted data found to write!");
+            {
+                status = "No formatted data found to write!";
+                return false;
+            }
 
             // Now write out to a generic file
             try
@@ -667,10 +670,12 @@ namespace MPF.Frontend
             }
             catch (Exception ex)
             {
-                return (false, $"Writing could not complete: {ex}");
+                status = $"Writing could not complete: {ex}";
+                return false;
             }
 
-            return (true, "Writing complete!");
+            status = "Writing complete!";
+            return true;
         }
 
         // MOVE TO REDUMPLIB
@@ -799,7 +804,12 @@ namespace MPF.Frontend
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>True on success, false on error</returns>
-        private static async Task<(bool, string)> WriteIRD(string isoPath, string? discKeyString, string? discIDString, string? picString, long? layerbreak, string? crc32)
+        private static async Task<bool> WriteIRD(string isoPath,
+            string? discKeyString,
+            string? discIDString,
+            string? picString,
+            long? layerbreak,
+            string? crc32)
         {
             try
             {
@@ -809,7 +819,7 @@ namespace MPF.Frontend
                 // Parse disc key from submission info (Required)
                 byte[]? discKey = ProcessingTool.ParseHexKey(discKeyString);
                 if (discKey == null)
-                    return (false, "Failed to create IRD: No key provided");
+                    return false;
 
                 // Parse Disc ID from submission info (Optional)
                 byte[]? discID = ProcessingTool.ParseDiscID(discIDString);
@@ -838,12 +848,12 @@ namespace MPF.Frontend
                 // Write IRD to file
                 ird.Write(irdPath);
 
-                return (true, "IRD created!");
+                return true;
             }
             catch (Exception)
             {
                 // We don't care what the error is
-                return (false, "Failed to create IRD");
+                return false;
             }
         }
 
