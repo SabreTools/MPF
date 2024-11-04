@@ -1832,9 +1832,9 @@ namespace MPF.Frontend.ViewModels
         /// Scan and show copy protection for the current disc
         /// </summary>
 #if NET40
-        public (string?, string?) ScanAndShowProtection()
+        public string? ScanAndShowProtection()
 #else
-        public async Task<(string?, string?)> ScanAndShowProtection()
+        public async Task<string?> ScanAndShowProtection()
 #endif
         {
             // Determine current environment, just in case
@@ -1842,7 +1842,10 @@ namespace MPF.Frontend.ViewModels
 
             // If we don't have a valid drive
             if (this.CurrentDrive?.Name == null)
-                return (null, "No valid drive found!");
+            {
+                ErrorLogLn("No valid drive found!");
+                return null;
+            }
 
             VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Name}");
 
@@ -1855,35 +1858,32 @@ namespace MPF.Frontend.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
+
+            try
+            {
 #if NET40
-            var protectionTask = ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
-            protectionTask.Wait();
-            var (protections, error) = protectionTask.Result;
+                var protectionTask = ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+                protectionTask.Wait();
+                var protections = protectionTask.Result;
 #else
-            var (protections, error) = await ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
+                var protections = await ProtectionTool.RunProtectionScanOnPath(this.CurrentDrive.Name, this.Options, progress);
 #endif
-            var output = ProtectionTool.FormatProtections(protections);
-
-            // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
-            //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
-            //{
-            //    ((ExecutionContexts.DiscImageCreator.ExecutionContext)Env.ExecutionContext)[ExecutionContexts.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
-            //    if (this.Options.VerboseLogging)
-            //        this.Logger.VerboseLogLn($"SmartE detected, removing {ExecutionContexts.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
-            //}
-
-            if (string.IsNullOrEmpty(error))
+                var output = ProtectionTool.FormatProtections(protections);
                 LogLn($"Detected the following protections in {this.CurrentDrive.Name}:\r\n\r\n{output}");
-            else
-                ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
-            this.Status = tempContent;
-            this.StartStopButtonEnabled = ShouldEnableDumpingButton();
-            this.MediaScanButtonEnabled = true;
-            this.UpdateVolumeLabelEnabled = true;
-            this.CopyProtectScanButtonEnabled = true;
+                this.Status = tempContent;
+                this.StartStopButtonEnabled = ShouldEnableDumpingButton();
+                this.MediaScanButtonEnabled = true;
+                this.UpdateVolumeLabelEnabled = true;
+                this.CopyProtectScanButtonEnabled = true;
 
-            return (output, error);
+                return output;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{ex}");
+                return null;
+            }
         }
 
         /// <summary>

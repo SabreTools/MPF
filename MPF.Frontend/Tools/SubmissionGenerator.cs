@@ -118,12 +118,23 @@ namespace MPF.Frontend.Tools
             if (system.SupportsCopyProtectionScans())
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
-                var protections = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
-                var protectionString = ProtectionTool.FormatProtections(protections);
 
-                info.CopyProtection!.Protection += protectionString;
-                info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);
-                resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
+                ProtectionDictionary? protections = null;
+                try
+                {
+                    if (options.ScanForProtection && drive?.Name != null)
+                        protections = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+
+                    var protectionString = ProtectionTool.FormatProtections(protections);
+
+                    info.CopyProtection!.Protection += protectionString;
+                    info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);
+                    resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
+                }
+                catch (Exception ex)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure(ex.ToString()));
+                }
             }
 
             // Set fields that may have automatic filling otherwise

@@ -337,7 +337,8 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            checkDumpWindow.Closed += delegate {
+            checkDumpWindow.Closed += delegate
+            {
                 // Unhide Main window after Check window has been closed
                 this.Show();
                 this.Activate();
@@ -362,7 +363,8 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            createIRDWindow.Closed += delegate {
+            createIRDWindow.Closed += delegate
+            {
                 // Unhide Main window after Create IRD window has been closed
                 this.Show();
                 this.Activate();
@@ -540,14 +542,14 @@ namespace MPF.UI.Windows
 #endif
         {
 #if NET40
-            var (output, error) = MainViewModel.ScanAndShowProtection();
+            var output = MainViewModel.ScanAndShowProtection();
 #else
-            var (output, error) = await MainViewModel.ScanAndShowProtection();
+            var output = await MainViewModel.ScanAndShowProtection();
 #endif
 
             if (!MainViewModel.LogPanelExpanded)
             {
-                if (!string.IsNullOrEmpty(output) && string.IsNullOrEmpty(error))
+                if (!string.IsNullOrEmpty(output))
                     CustomMessageBox.Show(this, output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     CustomMessageBox.Show(this, "An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);

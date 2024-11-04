@@ -33,6 +33,7 @@
 - Use new ProtectionDictionary type
 - Replace user info func with ProcessUserInfoDelegate
 - Reduce tupling even more
+- Remove tupling from everything except CLI programs
 
 ### 3.2.2 (2024-09-24)
 

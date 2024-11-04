@@ -11,70 +11,43 @@ namespace MPF.Frontend.Tools
     public static class ProtectionTool
     {
         /// <summary>
-        /// Get the current detected copy protection(s), if possible
-        /// </summary>
-        /// <param name="drive">Drive object representing the current drive</param>
-        /// <param name="options">Options object that determines what to scan</param>
-        /// <param name="progress">Optional progress callback</param>
-        /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        public static async Task<ProtectionDictionary?> GetCopyProtection(Drive? drive,
-            Frontend.Options options,
-            IProgress<ProtectionProgress>? progress = null)
-        {
-            if (options.ScanForProtection && drive?.Name != null)
-            {
-                (var protection, _) = await RunProtectionScanOnPath(drive.Name, options, progress);
-                return protection;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(ProtectionDictionary, string?)> RunProtectionScanOnPath(string path,
+        public static async Task<ProtectionDictionary> RunProtectionScanOnPath(string path,
             Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
-            try
-            {
 #if NET40
-                var found = await Task.Factory.StartNew(() =>
+            var found = await Task.Factory.StartNew(() =>
 #else
-                var found = await Task.Run(() =>
+            var found = await Task.Run(() =>
 #endif
-                {
-                    var scanner = new Scanner(
-                        options.ScanArchivesForProtection,
-                        scanContents: true, // Hardcoded value to avoid issues
-                        scanGameEngines: false, // Hardcoded value to avoid issues
-                        options.ScanPackersForProtection,
-                        scanPaths: true, // Hardcoded value to avoid issues
-                        options.IncludeDebugProtectionInformation,
-                        progress);
-
-                    return scanner.GetProtections(path);
-                });
-
-                // If nothing was returned, return
-                if (found == null || found.Count == 0)
-                    return ([], null);
-
-                // Filter out any empty protections
-                found.ClearEmptyKeys();
-
-                // Return the filtered set of protections
-                return (found, null);
-            }
-            catch (Exception ex)
             {
-                return ([], ex.ToString());
-            }
+                var scanner = new Scanner(
+                    options.ScanArchivesForProtection,
+                    scanContents: true, // Hardcoded value to avoid issues
+                    scanGameEngines: false, // Hardcoded value to avoid issues
+                    options.ScanPackersForProtection,
+                    scanPaths: true, // Hardcoded value to avoid issues
+                    options.IncludeDebugProtectionInformation,
+                    progress);
+
+                return scanner.GetProtections(path);
+            });
+
+            // If nothing was returned, return
+            if (found == null || found.Count == 0)
+                return [];
+
+            // Filter out any empty protections
+            found.ClearEmptyKeys();
+
+            // Return the filtered set of protections
+            return found;
         }
 
         /// <summary>

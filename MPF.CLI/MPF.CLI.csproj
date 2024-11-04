@@ -41,10 +41,16 @@
     </ItemGroup>
 
     <!-- Support for old .NET versions -->
+    <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`))">
+        <PackageReference Include="MinValueTupleBridge" Version="0.2.1" />
+    </ItemGroup>
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
         <PackageReference Include="MinAsyncBridge" Version="0.12.4" />
         <PackageReference Include="MinTasksExtensionsBridge" Version="0.3.4" />
         <PackageReference Include="MinThreadingBridge" Version="0.11.4" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
+      <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
 
     <ItemGroup>
