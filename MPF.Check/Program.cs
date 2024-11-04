@@ -63,7 +63,8 @@ namespace MPF.Check
             }
 
             // Loop through and process options
-            (CommandOptions opts, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
+            int startIndex = 2;
+            CommandOptions opts = LoadFromArguments(args, options, ref startIndex);
             if (options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");
@@ -158,7 +159,7 @@ namespace MPF.Check
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static (CommandOptions, int) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
+        private static CommandOptions LoadFromArguments(string[] args, Frontend.Options options, ref int startIndex)
         {
             // Create return values
             var opts = new CommandOptions();
@@ -172,11 +173,14 @@ namespace MPF.Check
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
-                return (opts, 0);
+            {
+                startIndex = 0;
+                return opts;
+            }
 
             // If we have an invalid start index, just return
             if (startIndex < 0 || startIndex >= args.Length)
-                return (opts, startIndex);
+                return opts;
 
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
@@ -324,7 +328,7 @@ namespace MPF.Check
             options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(opts.DevicePath);
             options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
 
-            return (opts, startIndex);
+            return opts;
         }
 
         /// <summary>

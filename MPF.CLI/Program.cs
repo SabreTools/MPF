@@ -60,7 +60,8 @@ namespace MPF.CLI
                 Console.WriteLine(message);
 
             // Process any custom parameters
-            (CommandOptions opts, int startIndex) = LoadFromArguments(args, options, startIndex: 2);
+            int startIndex = 2;
+            CommandOptions opts = LoadFromArguments(args, options, ref startIndex);
             
             // Validate the internal program
             switch (options.InternalProgram)
@@ -209,18 +210,21 @@ namespace MPF.CLI
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static (CommandOptions, int) LoadFromArguments(string[] args, Frontend.Options options, int startIndex = 0)
+        private static CommandOptions LoadFromArguments(string[] args, Frontend.Options options, ref int startIndex)
         {
             // Create return values
             var opts = new CommandOptions();
 
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
-                return (opts, 0);
+            {
+                startIndex = 0;
+                return opts;
+            }
 
             // If we have an invalid start index, just return
             if (startIndex < 0 || startIndex >= args.Length)
-                return (opts, startIndex);
+                return opts;
 
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
@@ -306,7 +310,7 @@ namespace MPF.CLI
                 }
             }
 
-            return (opts, startIndex);
+            return opts;
         }
 
         /// <summary>
