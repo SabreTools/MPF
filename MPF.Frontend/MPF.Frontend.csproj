@@ -49,9 +49,6 @@
         <PackageReference Include="MinTasksExtensionsBridge" Version="0.3.4" />
         <PackageReference Include="MinThreadingBridge" Version="0.11.4" />
     </ItemGroup>
-    <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
-        <PackageReference Include="IndexRange" Version="1.0.3" />
-    </ItemGroup>
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net452`))">
         <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     </ItemGroup>

@@ -24,6 +24,7 @@
 - Update RedumpLib to 1.4.4
 - Use rolling release, not AppVeyor, in issue templates
 - Update BinaryObjectScanner to 3.1.15
+- Remove unused IndexRange library
 
 ### 3.2.2 (2024-09-24)
 

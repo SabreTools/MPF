@@ -54,9 +54,6 @@
     <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`))">
       <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     </ItemGroup>
-    <ItemGroup Condition="$(TargetFramework.StartsWith(`net4`)) AND !$(TargetFramework.StartsWith(`net40`))">
-        <PackageReference Include="IndexRange" Version="1.0.3" />
-    </ItemGroup>
     <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
         <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
