@@ -143,19 +143,19 @@ namespace MPF.Frontend
         /// <summary>
         /// Get the current media type from drive letter
         /// </summary>
-        /// <param name="system"></param>
-        /// <returns></returns>
-        public (MediaType?, string?) GetMediaType(RedumpSystem? system)
+        /// <param name="system">Currently selected system</param>
+        /// <returns>The detected media type, if possible</returns>
+        public MediaType? GetMediaType(RedumpSystem? system)
         {
             // Take care of the non-optical stuff first
             switch (InternalDriveType)
             {
                 case Frontend.InternalDriveType.Floppy:
-                    return (MediaType.FloppyDisk, null);
+                    return MediaType.FloppyDisk;
                 case Frontend.InternalDriveType.HardDisk:
-                    return (MediaType.HardDisk, null);
+                    return MediaType.HardDisk;
                 case Frontend.InternalDriveType.Removable:
-                    return (MediaType.FlashDrive, null);
+                    return MediaType.FlashDrive;
             }
 
             // Some systems should default to certain media types
@@ -168,18 +168,18 @@ namespace MPF.Frontend
                 case RedumpSystem.SegaSaturn:
                 case RedumpSystem.SonyPlayStation:
                 case RedumpSystem.VideoCD:
-                    return (MediaType.CDROM, null);
+                    return MediaType.CDROM;
 
                 // DVD
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
                 case RedumpSystem.MicrosoftXbox:
                 case RedumpSystem.MicrosoftXbox360:
-                    return (MediaType.DVD, null);
+                    return MediaType.DVD;
 
                 // HD-DVD
                 case RedumpSystem.HDDVDVideo:
-                    return (MediaType.HDDVD, null);
+                    return MediaType.HDDVD;
 
                 // Blu-ray
                 case RedumpSystem.BDVideo:
@@ -188,34 +188,34 @@ namespace MPF.Frontend
                 case RedumpSystem.SonyPlayStation3:
                 case RedumpSystem.SonyPlayStation4:
                 case RedumpSystem.SonyPlayStation5:
-                    return (MediaType.BluRay, null);
+                    return MediaType.BluRay;
 
                 // GameCube
                 case RedumpSystem.NintendoGameCube:
-                    return (MediaType.NintendoGameCubeGameDisc, null);
+                    return MediaType.NintendoGameCubeGameDisc;
 
                 // Wii
                 case RedumpSystem.NintendoWii:
-                    return (MediaType.NintendoWiiOpticalDisc, null);
+                    return MediaType.NintendoWiiOpticalDisc;
 
                 // WiiU
                 case RedumpSystem.NintendoWiiU:
-                    return (MediaType.NintendoWiiUOpticalDisc, null);
+                    return MediaType.NintendoWiiUOpticalDisc;
 
                 // PSP
                 case RedumpSystem.SonyPlayStationPortable:
-                    return (MediaType.UMD, null);
+                    return MediaType.UMD;
             }
 
             // Handle optical media by size and filesystem
             if (TotalSize >= 0 && TotalSize <= 800_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))
-                return (MediaType.CDROM, null);
+                return MediaType.CDROM;
             else if (TotalSize > 800_000_000 && TotalSize <= 8_540_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))
-                return (MediaType.DVD, null);
+                return MediaType.DVD;
             else if (TotalSize > 8_540_000_000)
-                return (MediaType.BluRay, null);
+                return MediaType.BluRay;
 
-            return (null, "Could not determine media type!");
+            return null;
         }
 
         /// <summary>

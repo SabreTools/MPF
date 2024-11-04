@@ -1189,16 +1189,12 @@ namespace MPF.Frontend.ViewModels
             else if (this.CurrentDrive.MarkedActive)
             {
                 VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Name} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
-                (MediaType? detectedMediaType, var errorMessage) = this.CurrentDrive.GetMediaType(this.CurrentSystem);
-
-                // If we got an error message, post it to the log
-                if (errorMessage != null)
-                    VerboseLogLn($"Message from detecting media type: {errorMessage}");
+                MediaType? detectedMediaType = this.CurrentDrive.GetMediaType(this.CurrentSystem);
 
                 // If we got either an error or no media, default to the current System default
                 if (detectedMediaType == null)
                 {
-                    VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
+                    VerboseLogLn($"Could not detect media type, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
                 }
                 else

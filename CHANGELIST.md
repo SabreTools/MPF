@@ -28,6 +28,7 @@
 - Remove unnecessary System.ValueTuple usage
 - Remove old .NET version of ValueTuple where possible
 - Remove unused CompilerServices.Unsafe library
+- Simplify GetMediaType return
 
 ### 3.2.2 (2024-09-24)
 
