@@ -26,6 +26,7 @@
 - Update BinaryObjectScanner to 3.1.15
 - Remove unused IndexRange library
 - Remove unnecessary System.ValueTuple usage
+- Remove old .NET version of ValueTuple where possible
 
 ### 3.2.2 (2024-09-24)
 
