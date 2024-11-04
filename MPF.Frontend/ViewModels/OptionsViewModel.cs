@@ -119,19 +119,16 @@ namespace MPF.Frontend.ViewModels
         #region UI Commands
 
         /// <summary>
-        /// Test Redump login credentials
+        /// Get the human-readable result for a Redump login result
         /// </summary>
-        public static async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
+        public static string GetRedumpLoginResult(bool? success)
         {
-            bool? validated = await RedumpClient.ValidateCredentials(username, password);
-            string message = validated switch
+            return success switch
             {
                 true => "Redump username and password accepted!",
                 false => "Redump username and password denied!",
                 null => "An error occurred validating your credentials!",
             };
-
-            return (validated, message);
         }
 
         /// <summary>

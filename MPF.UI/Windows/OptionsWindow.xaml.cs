@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
+using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -201,10 +202,11 @@ namespace MPF.UI.Windows
         private async Task ValidateRedumpCredentials()
         {
 #if NET35
-            (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(_RedumpUsernameTextBox!.Text, _RedumpPasswordBox!.Password);
+            bool? success = await RedumpClient.ValidateCredentials(_RedumpUsernameTextBox!.Text, _RedumpPasswordBox!.Password);
 #else
-            (bool? success, string? message) = await OptionsViewModel.TestRedumpLogin(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
 #endif
+            string message = OptionsViewModel.GetRedumpLoginResult(success);
 
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);

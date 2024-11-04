@@ -29,6 +29,7 @@
 - Remove old .NET version of ValueTuple where possible
 - Remove unused CompilerServices.Unsafe library
 - Simplify GetMediaType return
+- Reduce call complexity for login result
 
 ### 3.2.2 (2024-09-24)
 
