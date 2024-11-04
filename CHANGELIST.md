@@ -30,6 +30,7 @@
 - Remove unused CompilerServices.Unsafe library
 - Simplify GetMediaType return
 - Reduce call complexity for login result
+- Use new ProtectionDictionary type
 
 ### 3.2.2 (2024-09-24)
 

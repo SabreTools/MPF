@@ -6,8 +6,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 
-#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-
 namespace MPF.Frontend.Tools
 {
     public static class ProtectionTool
@@ -19,7 +17,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        public static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive,
+        public static async Task<(string?, ProtectionDictionary?)> GetCopyProtection(Drive? drive,
             Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
@@ -39,7 +37,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path,
+        public static async Task<(ProtectionDictionary?, string?)> RunProtectionScanOnPath(string path,
             Frontend.Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
@@ -47,20 +45,9 @@ namespace MPF.Frontend.Tools
             {
 #if NET40
                 var found = await Task.Factory.StartNew(() =>
-                {
-                    var scanner = new Scanner(
-                        options.ScanArchivesForProtection,
-                        scanContents: true, // Hardcoded value to avoid issues
-                        scanGameEngines: false, // Hardcoded value to avoid issues
-                        options.ScanPackersForProtection,
-                        scanPaths: true, // Hardcoded value to avoid issues
-                        options.IncludeDebugProtectionInformation,
-                        progress);
-
-                    return scanner.GetProtections(path);
-                });
 #else
                 var found = await Task.Run(() =>
+#endif
                 {
                     var scanner = new Scanner(
                         options.ScanArchivesForProtection,
@@ -73,29 +60,16 @@ namespace MPF.Frontend.Tools
 
                     return scanner.GetProtections(path);
                 });
-#endif
 
                 // If nothing was returned, return
-#if NET20 || NET35
                 if (found == null || found.Count == 0)
-#else
-                if (found == null || found.IsEmpty)
-#endif
                     return (null, null);
 
                 // Filter out any empty protections
-                var filteredProtections = found
-#if NET20 || NET35
-                    .Where(kvp => kvp.Value != null && kvp.Value.Count > 0)
-#else
-                    .Where(kvp => kvp.Value != null && !kvp.Value.IsEmpty)
-#endif
-                    .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value.OrderBy(s => s).ToList());
+                found.ClearEmptyKeys();
 
                 // Return the filtered set of protections
-                return (filteredProtections, null);
+                return (found, null);
             }
             catch (Exception ex)
             {
@@ -108,7 +82,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
         /// <returns>Detected protections, if any</returns>
-        public static string? FormatProtections(Dictionary<string, List<string>>? protections)
+        public static string? FormatProtections(ProtectionDictionary? protections)
         {
             // If the filtered list is empty in some way, return
             if (protections == null || !protections.Any())
@@ -390,7 +364,7 @@ namespace MPF.Frontend.Tools
                         .Where(p => p != "SafeDisc 2+")
                         .Where(p => p != "SafeDisc 3+ (DVD)");
                 }
-                
+
                 // Only SafeDisc Lite is found.
                 else if (foundProtections.Any(p => p == "SafeDisc Lite"))
                 {

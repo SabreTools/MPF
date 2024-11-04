@@ -118,10 +118,10 @@ namespace MPF.Frontend.Tools
             if (system.SupportsCopyProtectionScans())
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
-                var (protectionString, fullProtections) = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
+                var (protectionString, protections) = await ProtectionTool.GetCopyProtection(drive, options, protectionProgress);
 
                 info.CopyProtection!.Protection += protectionString;
-                info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? [];
+                info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);
                 resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
             }
 
@@ -897,6 +897,27 @@ namespace MPF.Frontend.Tools
 
             // Set the version
             info.VersionAndEditions.Version = valueFunc(drive) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Reformat a protection dictionary for submission info
+        /// </summary>
+        /// <param name="oldDict">ProtectionDictionary to format</param>
+        /// <returns>Reformatted dictionary on success, empty on error</returns>
+        private static Dictionary<string, List<string>?> ReformatProtectionDictionary(ProtectionDictionary? oldDict)
+        {
+            // Null or empty protections return empty
+            if (oldDict == null || oldDict.Count == 0)
+                return [];
+
+            // Reformat each set into a List
+            var newDict = new Dictionary<string, List<string>?>();
+            foreach (string key in oldDict.Keys)
+            {
+                newDict[key] = [.. oldDict[key]];
+            }
+
+            return newDict;
         }
 
         #endregion
