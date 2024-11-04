@@ -158,22 +158,22 @@ namespace MPF.Frontend
             if (programFound == null && _internalProgram != InternalProgram.Aaru)
             {
                 var processor = new Processors.Aaru(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
-                if (foundOtherFiles)
+                var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+                if (missingFiles.Count == 0)
                     programFound = InternalProgram.Aaru;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
                 var processor = new Processors.DiscImageCreator(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
-                if (foundOtherFiles)
+                var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+                if (missingFiles.Count == 0)
                     programFound = InternalProgram.DiscImageCreator;
             }
             if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
                 var processor = new Processors.Redumper(_system, _type);
-                (bool foundOtherFiles, _) = processor.FoundAllFiles(outputDirectory, outputFilename);
-                if (foundOtherFiles)
+                var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+                if (missingFiles.Count == 0)
                     programFound = InternalProgram.Redumper;
             }
 
@@ -300,7 +300,7 @@ namespace MPF.Frontend
             if (_processor == null)
                 return false;
 
-            return _processor.FoundAllFiles(outputDirectory, outputFilename).Item1;
+            return _processor.FoundAllFiles(outputDirectory, outputFilename).Count == 0;
         }
 
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
@@ -437,8 +437,8 @@ namespace MPF.Frontend
             var outputFilename = Path.GetFileName(OutputPath);
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = _processor.FoundAllFiles(outputDirectory, outputFilename);
-            if (!foundFiles)
+            List<string> missingFiles = _processor.FoundAllFiles(outputDirectory, outputFilename);
+            if (missingFiles.Count > 0)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
                 return ResultEventArgs.Failure("Error! Please check output directory as dump may be incomplete!");
@@ -532,22 +532,36 @@ namespace MPF.Frontend
             if (_options.CompressLogFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = _processor?.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename) ?? (false, "No processor provided!");
-                if (compressSuccess)
-                    resultProgress?.Report(ResultEventArgs.Success(compressResult));
+                if (_processor == null)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure("No processor provided!"));
+                }
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure(compressResult));
+                {
+                    bool compressSuccess = _processor.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, out string compressResult);
+                    if (compressSuccess)
+                        resultProgress?.Report(ResultEventArgs.Success(compressResult));
+                    else
+                        resultProgress?.Report(ResultEventArgs.Failure(compressResult));
+                }
             }
 
             // Delete unnecessary files, if required
             if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
-                (bool deleteSuccess, string deleteResult) = _processor?.DeleteUnnecessaryFiles(outputDirectory, outputFilename) ?? (false, "No processor provided!");
-                if (deleteSuccess)
-                    resultProgress?.Report(ResultEventArgs.Success(deleteResult));
+                if (_processor == null)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure("No processor provided!"));
+                }
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
+                {
+                    bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
+                    if (deleteSuccess)
+                        resultProgress?.Report(ResultEventArgs.Success(deleteResult));
+                    else
+                        resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
+                }
             }
 
             // Create PS3 IRD, if required

@@ -57,8 +57,8 @@ namespace MPF.Frontend.Tools
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = processor.FoundAllFiles(outputDirectory, outputFilename);
-            if (!foundFiles)
+            List<string> missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+            if (missingFiles.Count > 0)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
                 resultProgress?.Report(ResultEventArgs.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));

@@ -75,7 +75,7 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // Get the dumping program and version
-            var (dicCmd, dicVersion) = GetCommandFilePathAndVersion(basePath);
+            var dicVersion = GetCommandFilePathAndVersion(basePath, out var dicCmd);
             info.DumpingInfo!.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {dicVersion ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
@@ -728,12 +728,13 @@ namespace MPF.Processors
         /// Get the command file path and extract the version from it
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>Tuple of file path and version as strings, both null on error</returns>
-        private static (string?, string?) GetCommandFilePathAndVersion(string basePath)
+        /// <returns>The version as a string, both null on error</returns>
+        private static string? GetCommandFilePathAndVersion(string basePath, out string? commandPath)
         {
             // If we have an invalid base path, we can do nothing
+            commandPath = null;
             if (string.IsNullOrEmpty(basePath))
-                return (null, null);
+                return null;
 
             // Generate the matching regex based on the base path
             string baseFilename = Path.GetFileName(basePath);
@@ -742,17 +743,16 @@ namespace MPF.Processors
             // Find the first match for the command file
             var parentDirectory = Path.GetDirectoryName(basePath);
             if (string.IsNullOrEmpty(parentDirectory))
-                return (null, null);
+                return null;
 
             var currentFiles = Directory.GetFiles(parentDirectory);
-            var commandPath = currentFiles.FirstOrDefault(f => cmdFilenameRegex.IsMatch(f));
-            if (string.IsNullOrEmpty(commandPath))
-                return (null, null);
+            commandPath = currentFiles.FirstOrDefault(f => cmdFilenameRegex.IsMatch(f));
+            if (string.IsNullOrEmpty(value: commandPath))
+                return null;
 
             // Extract the version string
             var match = cmdFilenameRegex.Match(commandPath);
-            string version = match.Groups[1].Value;
-            return (commandPath, version);
+            return match.Groups[1].Value;
         }
 
         #endregion

@@ -332,7 +332,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if it's a valid byte, false otherwise</returns>
         protected static bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
         {
-            (string value, long _) = ExtractFactorFromValue(parameter);
+            string value = ExtractFactorFromValue(parameter, out _);
             if (!sbyte.TryParse(value, out sbyte temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
@@ -352,7 +352,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if it's a valid Int16, false otherwise</returns>
         protected static bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
         {
-            (string value, long _) = ExtractFactorFromValue(parameter);
+            string value = ExtractFactorFromValue(parameter, out _);
             if (!short.TryParse(value, out short temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
@@ -372,7 +372,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if it's a valid Int32, false otherwise</returns>
         protected static bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
         {
-            (string value, long _) = ExtractFactorFromValue(parameter);
+            string value = ExtractFactorFromValue(parameter, out _);
             if (!int.TryParse(value, out int temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
@@ -392,7 +392,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if it's a valid Int64, false otherwise</returns>
         protected static bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
         {
-            (string value, long _) = ExtractFactorFromValue(parameter);
+            string value = ExtractFactorFromValue(parameter, out _);
             if (!long.TryParse(value, out long temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
@@ -568,7 +568,7 @@ namespace MPF.ExecutionContexts
                 this[longFlagString] = true;
                 i++;
 
-                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (sbyte.TryParse(value, out sbyte sByteValue))
                     return (sbyte)(sByteValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -588,7 +588,7 @@ namespace MPF.ExecutionContexts
                 string valuePart = commandParts[1];
 
                 this[longFlagString] = true;
-                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (sbyte.TryParse(value, out sbyte sByteValue))
                     return (sbyte)(sByteValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -655,7 +655,7 @@ namespace MPF.ExecutionContexts
 
                 this[longFlagString] = true;
                 i++;
-                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (short.TryParse(value, out short shortValue))
                     return (short)(shortValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -675,7 +675,7 @@ namespace MPF.ExecutionContexts
                 string valuePart = commandParts[1];
 
                 this[longFlagString] = true;
-                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (short.TryParse(value, out short shortValue))
                     return (short)(shortValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -742,7 +742,7 @@ namespace MPF.ExecutionContexts
 
                 this[longFlagString] = true;
                 i++;
-                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (int.TryParse(value, out int intValue))
                     return (int)(intValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -762,7 +762,7 @@ namespace MPF.ExecutionContexts
                 string valuePart = commandParts[1];
 
                 this[longFlagString] = true;
-                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (int.TryParse(value, out int intValue))
                     return (int)(intValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -829,7 +829,7 @@ namespace MPF.ExecutionContexts
 
                 this[longFlagString] = true;
                 i++;
-                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (long.TryParse(value, out long longValue))
                     return (long)(longValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -849,7 +849,7 @@ namespace MPF.ExecutionContexts
                 string valuePart = commandParts[1];
 
                 this[longFlagString] = true;
-                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (long.TryParse(value, out long longValue))
                     return (long)(longValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -990,7 +990,7 @@ namespace MPF.ExecutionContexts
                 this[longFlagString] = true;
                 i++;
 
-                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (byte.TryParse(value, out byte byteValue))
                     return (byte)(byteValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -1010,7 +1010,7 @@ namespace MPF.ExecutionContexts
                 string valuePart = commandParts[1];
 
                 this[longFlagString] = true;
-                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (byte.TryParse(value, out byte byteValue))
                     return (byte)(byteValue * factor);
                 string hexValue = RemoveHexIdentifier(value);
@@ -1027,10 +1027,10 @@ namespace MPF.ExecutionContexts
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>
         /// <returns>Trimmed value and multiplication factor</returns>
-        private static (string trimmed, long factor) ExtractFactorFromValue(string value)
+        private static string ExtractFactorFromValue(string value, out long factor)
         {
             value = value.Trim('"');
-            long factor = 1;
+            factor = 1;
 
             // Characters
             if (value.EndsWith("c", StringComparison.Ordinal))
@@ -1081,7 +1081,7 @@ namespace MPF.ExecutionContexts
                 value = value.TrimEnd('G');
             }
 
-            return (value, factor);
+            return value;
         }
 
         /// <summary>

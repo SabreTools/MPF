@@ -72,10 +72,11 @@ namespace MPF.Processors
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public (bool, string) CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename)
+        public bool CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, out string status)
         {
 #if NET20 || NET35 || NET40
-            return (false, "Log compression is not available for this framework version");
+            status = "Log compression is not available for this framework version";
+            return false;
 #else
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -94,7 +95,10 @@ namespace MPF.Processors
 
             // Don't create an archive if there are no paths
             if (!zippableFiles.Any() && !generatedFiles.Any())
-                return (true, "No files to compress!");
+            {
+                status = "No files to compress!";
+                return true;
+            }
 
             // If the file already exists, we want to delete the old one
             try
@@ -104,7 +108,8 @@ namespace MPF.Processors
             }
             catch
             {
-                return (false, "Could not delete old archive!");
+                status = "Could not delete old archive!";
+                return false;
             }
 
             // Add the log files to the archive and delete the uncompressed file after
@@ -116,11 +121,13 @@ namespace MPF.Processors
                 _ = AddToArchive(zf, zippableFiles, outputDirectory, true);
                 _ = AddToArchive(zf, generatedFiles, outputDirectory, false);
 
-                return (true, "Compression complete!");
+                status = "Compression complete!";
+                return true;
             }
             catch (Exception ex)
             {
-                return (false, $"Compression could not complete: {ex}");
+                status = $"Compression could not complete: {ex}";
+                return false;
             }
             finally
             {
@@ -136,7 +143,7 @@ namespace MPF.Processors
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public (bool, string) DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename)
+        public bool DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, out string status)
         {
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -150,7 +157,10 @@ namespace MPF.Processors
             var files = GetDeleteableFilePaths(combinedBase);
 
             if (!files.Any())
-                return (true, "No files to delete!");
+            {
+                status = "No files to delete!";
+                return true;
+            }
 
             // Attempt to delete all of the files
             foreach (string file in files)
@@ -162,7 +172,8 @@ namespace MPF.Processors
                 catch { }
             }
 
-            return (true, "Deletion complete!");
+            status = "Deletion complete!";
+            return true;
         }
 
         /// <summary>
@@ -171,8 +182,8 @@ namespace MPF.Processors
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename)
+        /// <returns>A list representing missing files, empty if none</returns>
+        public List<string> FoundAllFiles(string? outputDirectory, string outputFilename)
         {
             // Sanitize the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -317,8 +328,8 @@ namespace MPF.Processors
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        private (bool, List<string>) CheckRequiredFiles(string basePath)
+        /// <returns>A list representing missing files, empty if none</returns>
+        private List<string> CheckRequiredFiles(string basePath)
         {
             // Split the base path for matching
             string? baseDirectory = Path.GetDirectoryName(basePath);
@@ -327,7 +338,7 @@ namespace MPF.Processors
             // Get the list of output files
             var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
             if (outputFiles.Count == 0)
-                return (false, ["Media and system combination not supported"]);
+                return ["Media and system combination not supported"];
 
             // Check for the log file
             bool logArchiveExists = false;
@@ -382,7 +393,7 @@ namespace MPF.Processors
 #endif
             }
 
-            return (missingFiles.Count == 0, missingFiles);
+            return missingFiles;
         }
 
         /// <summary>

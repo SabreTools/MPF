@@ -25,6 +25,7 @@
 - Use rolling release, not AppVeyor, in issue templates
 - Update BinaryObjectScanner to 3.1.15
 - Remove unused IndexRange library
+- Remove unnecessary System.ValueTuple usage
 
 ### 3.2.2 (2024-09-24)
 
