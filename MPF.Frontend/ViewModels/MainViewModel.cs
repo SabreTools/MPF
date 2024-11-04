@@ -68,7 +68,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Function to process user information
         /// </summary>
-        private Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? _processUserInfo;
+        private ProcessUserInfoDelegate? _processUserInfo;
 
         #endregion
 
@@ -566,7 +566,7 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
+            ProcessUserInfoDelegate processUserInfo)
         {
             // Set the callbacks
             _logger = loggerAction;

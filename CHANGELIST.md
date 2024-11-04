@@ -31,6 +31,7 @@
 - Simplify GetMediaType return
 - Reduce call complexity for login result
 - Use new ProtectionDictionary type
+- Replace user info func with ProcessUserInfoDelegate
 
 ### 3.2.2 (2024-09-24)
 

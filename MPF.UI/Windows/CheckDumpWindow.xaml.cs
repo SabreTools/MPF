@@ -181,7 +181,7 @@ namespace MPF.UI.Windows
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public (bool?, SubmissionInfo?) ShowDiscInformationWindow(SubmissionInfo? submissionInfo)
+        public bool? ShowDiscInformationWindow(ref SubmissionInfo? submissionInfo)
         {
             var discInformationWindow = new DiscInformationWindow(CheckDumpViewModel.Options, submissionInfo)
             {
@@ -199,7 +199,7 @@ namespace MPF.UI.Windows
             if (result == true)
                 submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
 
-            return (result, submissionInfo!);
+            return result;
         }
 
         #endregion

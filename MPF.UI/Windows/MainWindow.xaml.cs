@@ -287,8 +287,8 @@ namespace MPF.UI.Windows
         public void ShowDebugDiscInfoWindow()
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
-            var result = ShowDiscInformationWindow(submissionInfo);
-            Formatter.ProcessSpecialFields(result.Item2);
+            _ = ShowDiscInformationWindow(ref submissionInfo);
+            Formatter.ProcessSpecialFields(submissionInfo);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace MPF.UI.Windows
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public (bool?, SubmissionInfo?) ShowDiscInformationWindow(SubmissionInfo? submissionInfo)
+        public bool? ShowDiscInformationWindow(ref SubmissionInfo? submissionInfo)
         {
             if (MainViewModel.Options.ShowDiscEjectReminder)
                 CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -317,7 +317,7 @@ namespace MPF.UI.Windows
             if (result == true)
                 submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
 
-            return (result, submissionInfo!);
+            return result;
         }
 
         /// <summary>

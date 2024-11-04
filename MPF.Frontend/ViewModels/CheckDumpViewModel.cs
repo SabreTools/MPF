@@ -445,7 +445,7 @@ namespace MPF.Frontend.ViewModels
         /// Performs MPF.Check functionality
         /// </summary>
         /// <returns>An error message if failed, otherwise string.Empty/null</returns>
-        public async Task<string?> CheckDump(Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
+        public async Task<string?> CheckDump(ProcessUserInfoDelegate processUserInfo)
         {
             if (string.IsNullOrEmpty(InputPath))
                 return "Invalid Input path";
