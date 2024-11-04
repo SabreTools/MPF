@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
     <PropertyGroup>
         <!-- Assembly Properties -->
@@ -37,8 +37,7 @@
         <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
         <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
     </PropertyGroup>
-    <PropertyGroup
-        Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
         <ReferenceWpfAeroTheme>false</ReferenceWpfAeroTheme>
         <ReferenceWpfAero2Theme>true</ReferenceWpfAero2Theme>
         <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
@@ -73,7 +72,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.14" GeneratePathProperty="true">
+        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.15" GeneratePathProperty="true">
             <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="SabreTools.RedumpLib" Version="1.4.4" />
