@@ -513,7 +513,7 @@ namespace MPF.Processors
             string baseFilename = Path.GetFileNameWithoutExtension(basePath);
 
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, basePath);
+            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
             if (outputFiles.Count == 0)
                 return [];
 
