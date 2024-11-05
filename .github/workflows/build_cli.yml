@@ -31,7 +31,7 @@ jobs:
     - name: Archive build
       run: |
         cd ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
-        zip -r ${{ GITHUB_WORKSPACE }}/${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ./
+        zip -r ${{ github.workspace }}/${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ./
         
     - name: Upload build
       uses: actions/upload-artifact@v4
