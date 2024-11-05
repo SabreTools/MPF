@@ -41,6 +41,7 @@
 - Ensure debug symbols are stripped
 - Fix missed GetOutputFiles invocation
 - Reduce null use in BaseProcessor
+- Force rebuild of rolling
 
 ### 3.2.2 (2024-09-24)
 
