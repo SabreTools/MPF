@@ -36,6 +36,7 @@
 - Remove tupling from everything except CLI programs
 - Remove last instances of ValueTuple usage
 - Update BinaryObjectScanner to 3.1.16
+- Attempt to reduce nesting in GHA builds
 
 ### 3.2.2 (2024-09-24)
 

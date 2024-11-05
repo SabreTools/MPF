@@ -43,7 +43,9 @@ jobs:
         mv redumper-2024.10.12_build416-win64/bin/redumper.exe MPF.UI/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
 
     - name: Archive build
-      run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+      run: |
+        cd ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+        zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ./
         
     - name: Upload build
       uses: actions/upload-artifact@v4

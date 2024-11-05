@@ -29,7 +29,9 @@ jobs:
       run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c Debug --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
         
     - name: Archive build
-      run: zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+      run: |
+        cd ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+        zip -r ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ./
         
     - name: Upload build
       uses: actions/upload-artifact@v4
