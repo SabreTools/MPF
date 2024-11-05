@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf }} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
+      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf == 'Release' && 'Release -p:DebugType=None -p:DebugSymbols=false' || 'Debug'}} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
         
     - name: Archive build
       run: |
