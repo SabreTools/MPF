@@ -13,6 +13,7 @@ jobs:
         project: [MPF.Check]
         runtime: [win-x86, win-x64, win-arm64, linux-x64, linux-arm64, osx-x64, osx-arm64]
         framework: [net8.0] #[net20, net35, net40, net452, net472, net48, netcoreapp3.1, net5.0, net6.0, net7.0, net8.0]
+        conf: [Debug] #[Release, Debug]
 
     steps:
     - uses: actions/checkout@v4
@@ -26,24 +27,24 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c Debug --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
+      run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj -f ${{ matrix.framework }} -r ${{ matrix.runtime }} -c ${{ matrix.conf }} --self-contained true --version-suffix ${{ github.sha }} ${{ (startsWith(matrix.framework, 'net5') || startsWith(matrix.framework, 'net6') || startsWith(matrix.framework, 'net7') || startsWith(matrix.framework, 'net8')) && '-p:PublishSingleFile=true' || ''}}
         
     - name: Archive build
       run: |
-        cd ${{ matrix.project }}/bin/Debug/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
-        zip -r ${{ github.workspace }}/${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip ./
+        cd ${{ matrix.project }}/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/
+        zip -r ${{ github.workspace }}/${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip ./
         
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug
-        path: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip
+        name: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}
+        path: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_debug.zip
+        artifacts: ${{ matrix.project }}_${{ matrix.framework }}_${{ matrix.runtime }}_${{ matrix.conf }}.zip
         body: 'Last built commit: ${{ github.sha }}'
         name: 'Rolling Release'
         prerelease: True

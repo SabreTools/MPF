@@ -37,6 +37,7 @@
 - Remove last instances of ValueTuple usage
 - Update BinaryObjectScanner to 3.1.16
 - Attempt to reduce nesting in GHA builds
+- Add conf to build matrix
 
 ### 3.2.2 (2024-09-24)
 
