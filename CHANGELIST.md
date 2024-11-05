@@ -40,6 +40,7 @@
 - Add conf to build matrix
 - Ensure debug symbols are stripped
 - Fix missed GetOutputFiles invocation
+- Reduce null use in BaseProcessor
 
 ### 3.2.2 (2024-09-24)
 
