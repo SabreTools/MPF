@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.2.3 (2024-11-06)
 
 - Update to DIC 20240901
 - Update BinaryObjectScanner to 3.1.14
