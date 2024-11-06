@@ -18,11 +18,14 @@ namespace MPF.ExecutionContexts.Redumper
         public const string RefineNew = "refinenew"; // Temporary command, to be removed later
         public const string Verify = "verify";
         public const string DVDKey = "dvdkey";
+        public const string Eject = "eject";
         public const string DVDIsoKey = "dvdisokey";
         public const string Protection = "protection";
         public const string Split = "split";
         public const string Hash = "hash";
         public const string Info = "info";
         public const string Skeleton = "skeleton";
+        public const string Debug = "debug";
+        public const string FixMSF = "fixmsf";
     }
 }

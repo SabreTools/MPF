@@ -10,6 +10,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string HelpShort = "-h";
         public const string Version = "--version";
         public const string Verbose = "--verbose";
+        public const string AutoEject = "--auto-eject";
         public const string Debug = "--debug";
         public const string Drive = "--drive";
         public const string Speed = "--speed";

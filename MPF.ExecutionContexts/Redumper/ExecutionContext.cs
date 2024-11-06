@@ -181,6 +181,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.HelpShort,
                     FlagStrings.Version,
                     FlagStrings.Verbose,
+                    FlagStrings.AutoEject,
                     FlagStrings.Debug,
                     FlagStrings.Drive,
                     FlagStrings.Speed,
@@ -258,6 +259,10 @@ namespace MPF.ExecutionContexts.Redumper
             // Verbose
             if (this[FlagStrings.Verbose] == true)
                 parameters.Add(FlagStrings.Verbose);
+
+            // Auto Eject
+            if (this[FlagStrings.AutoEject] == true)
+                parameters.Add(FlagStrings.AutoEject);
 
             // Debug
             if (this[FlagStrings.Debug] == true)
@@ -683,12 +688,15 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.RefineNew: // Temporary command, to be removed later
                     case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
+                    case CommandStrings.Eject:
                     case CommandStrings.DVDIsoKey:
                     case CommandStrings.Protection:
                     case CommandStrings.Split:
                     case CommandStrings.Hash:
                     case CommandStrings.Info:
                     case CommandStrings.Skeleton:
+                    case CommandStrings.Debug:
+                    //case CommandStrings.FixMSF:
                         ModeValues.Add(part);
                         break;
 

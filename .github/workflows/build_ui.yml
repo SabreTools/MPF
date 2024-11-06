@@ -38,10 +38,10 @@ jobs:
 
     - name: Bundle Redumper
       run: |
-        wget https://github.com/superg/redumper/releases/download/build_416/redumper-2024.10.12_build416-win64.zip
-        unzip redumper-2024.10.12_build416-win64.zip
+        wget https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip
+        unzip redumper-2024.11.03_build438-win64.zip
         mkdir -p MPF.UI/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper
-        mv redumper-2024.10.12_build416-win64/bin/redumper.exe MPF.UI/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
+        mv redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/${{ matrix.conf }}/${{ matrix.framework }}/${{ matrix.runtime }}/publish/Programs/Redumper/
 
     - name: Archive build
       run: |

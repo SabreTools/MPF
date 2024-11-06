@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Update Redumper to build 438
+
 ### 3.2.3 (2024-11-06)
 
 - Update to DIC 20240901
