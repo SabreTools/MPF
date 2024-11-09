@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Update Redumper to build 438
+- Fix fully matching when multiple matches found
 
 ### 3.2.3 (2024-11-06)
 
