@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;

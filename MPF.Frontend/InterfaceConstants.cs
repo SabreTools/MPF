@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend
@@ -17,34 +16,34 @@ namespace MPF.Frontend
         /// <summary>
         /// Set of accepted speeds for CD and GD media
         /// </summary>
-        public static IList<int> CD => _speedValues.Where(s => s <= 72).ToList();
+        public static List<int> CD => _speedValues.FindAll(s => s <= 72);
 
         /// <summary>
         /// Set of accepted speeds for DVD media
         /// </summary>
-        public static IList<int> DVD => _speedValues.Where(s => s <= 24).ToList();
+        public static List<int> DVD => _speedValues.FindAll(s => s <= 24);
 
         /// <summary>
         /// Set of accepted speeds for HD-DVD media
         /// </summary>
-        public static IList<int> HDDVD => _speedValues.Where(s => s <= 24).ToList();
+        public static List<int> HDDVD => _speedValues.FindAll(s => s <= 24);
 
         /// <summary>
         /// Set of accepted speeds for BD media
         /// </summary>
-        public static IList<int> BD => _speedValues.Where(s => s <= 16).ToList();
+        public static List<int> BD => _speedValues.FindAll(s => s <= 16);
 
         /// <summary>
         /// Set of accepted speeds for all other media
         /// </summary>
-        public static IList<int> Unknown => _speedValues.Where(s => s <= 1).ToList();
+        public static List<int> Unknown => _speedValues.FindAll(s => s <= 1);
 
         /// <summary>
         /// Get list of all drive speeds for a given MediaType
         /// </summary>
         /// <param name="type">MediaType? that represents the current item</param>
         /// <returns>Read-only list of drive speeds</returns>
-        public static IList<int> GetSpeedsForMediaType(MediaType? type)
+        public static List<int> GetSpeedsForMediaType(MediaType? type)
         {
             return type switch
             {

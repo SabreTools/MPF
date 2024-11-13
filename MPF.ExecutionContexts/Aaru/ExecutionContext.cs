@@ -1082,7 +1082,7 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
-                    if (InputValue.Contains(' '))
+                    if (InputValue!.Contains(" "))
                         parameters.Add($"\"{InputValue!.TrimEnd('\\')}\"");
                     else
                         parameters.Add(InputValue!.TrimEnd('\\'));

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
@@ -27,12 +27,14 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available disc categories
         /// </summary>
-        public List<Element<DiscCategory>> Categories { get; private set; } = Element<DiscCategory>.GenerateElements().ToList();
+        public List<Element<DiscCategory>> Categories { get; private set; }
+            = [.. Element<DiscCategory>.GenerateElements()];
 
         /// <summary>
         /// List of available regions
         /// </summary>
-        public List<Element<Region>> Regions { get; private set; } = Element<Region>.GenerateElements().ToList();
+        public List<Element<Region>> Regions { get; private set; }
+            = [.. Element<Region>.GenerateElements()];
 
         /// <summary>
         /// List of Redump-supported Regions
@@ -123,7 +125,8 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<Element<Language>> Languages { get; private set; } = Element<Language>.GenerateElements().ToList();
+        public List<Element<Language>> Languages { get; private set; }
+            = [.. Element<Language>.GenerateElements()];
 
         /// <summary>
         /// List of Redump-supported Languages
@@ -183,7 +186,8 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<Element<LanguageSelection>> LanguageSelections { get; private set; } = Element<LanguageSelection>.GenerateElements().ToList();
+        public List<Element<LanguageSelection>> LanguageSelections { get; private set; }
+            = [.. Element<LanguageSelection>.GenerateElements()];
 
         #endregion
 
@@ -205,9 +209,9 @@ namespace MPF.Frontend.ViewModels
         public void Load()
         {
             if (SubmissionInfo.CommonDiscInfo?.Languages != null)
-                Languages.ForEach(l => l.IsChecked = SubmissionInfo.CommonDiscInfo.Languages.Contains(l));
+                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.Languages, l) > -1);
             if (SubmissionInfo.CommonDiscInfo?.LanguageSelection != null)
-                LanguageSelections.ForEach(ls => ls.IsChecked = SubmissionInfo.CommonDiscInfo.LanguageSelection.Contains(ls));
+                LanguageSelections.ForEach(ls => ls.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.LanguageSelection, ls) > -1);
         }
 
         /// <summary>
@@ -218,10 +222,10 @@ namespace MPF.Frontend.ViewModels
         {
             if (SubmissionInfo.CommonDiscInfo == null)
                 SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
-            SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
-            if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
+            SubmissionInfo.CommonDiscInfo.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
+            if (SubmissionInfo.CommonDiscInfo.Languages.Length == 0)
                 SubmissionInfo.CommonDiscInfo.Languages = [null];
-            SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
+            SubmissionInfo.CommonDiscInfo.LanguageSelection = [.. LanguageSelections.FindAll(ls => ls.IsChecked).ConvertAll(ls => ls?.Value)];
             SubmissionInfo.CommonDiscInfo.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.CommonDiscInfo.Title, SubmissionInfo.CommonDiscInfo.Languages);
         }
 
@@ -230,7 +234,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void SetRedumpLanguages()
         {
-            this.Languages = RedumpLanguages.Select(l => new Element<Language>(l)).ToList();
+            Languages = RedumpLanguages.ConvertAll(l => new Element<Language>(l));
         }
 
         /// <summary>
@@ -238,7 +242,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void SetRedumpRegions()
         {
-            this.Regions = RedumpRegions.Select(r => new Element<Region>(r)).ToList();
+            Regions = RedumpRegions.ConvertAll(r => new Element<Region>(r));
         }
 
         #endregion

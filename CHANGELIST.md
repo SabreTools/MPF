@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Update Redumper to build 438
+- Be smarter about Linq usage
 
 ### 3.2.3 (2024-11-06)
 

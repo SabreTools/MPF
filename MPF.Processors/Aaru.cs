@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
@@ -732,13 +731,13 @@ namespace MPF.Processors
 
             // Now generate the byte array data
             var pvdData = new List<byte>();
-            pvdData.AddRange(new string(' ', 13).ToCharArray().Select(c => (byte)c));
+            pvdData.AddRange(Array.ConvertAll(new string(' ', 13).ToCharArray(), c => (byte)c));
             pvdData.AddRange(GeneratePVDDateTimeBytes(creation));
             pvdData.AddRange(GeneratePVDDateTimeBytes(modification));
             pvdData.AddRange(GeneratePVDDateTimeBytes(expiration));
             pvdData.AddRange(GeneratePVDDateTimeBytes(effective));
             pvdData.Add(0x01);
-            pvdData.AddRange(new string((char)0, 14).ToCharArray().Select(c => (byte)c));
+            pvdData.AddRange(Array.ConvertAll(new string((char)0, 14).ToCharArray(), c => (byte)c));
 
             // Return the filled array
             return [.. pvdData];
@@ -780,7 +779,7 @@ namespace MPF.Processors
             }
 
             // Get and return the byte array
-            List<byte> dateTimeList = dateTimeString.ToCharArray().Select(c => (byte)c).ToList();
+            List<byte> dateTimeList = [.. Array.ConvertAll(dateTimeString.ToCharArray(), c => (byte)c)];
             dateTimeList.Add(timeZoneNumber);
             return [.. dateTimeList];
         }
@@ -798,11 +797,11 @@ namespace MPF.Processors
                 return null;
 
             string pvdLine = $"{row} : ";
-            pvdLine += BitConverter.ToString(bytes.Take(8).ToArray()).Replace("-", " ");
+            pvdLine += BitConverter.ToString(bytes, 0, 8).Replace("-", " ");
             pvdLine += "  ";
-            pvdLine += BitConverter.ToString(bytes.Skip(8).Take(8).ToArray()).Replace("-", " ");
+            pvdLine += BitConverter.ToString(bytes, 8, 8).Replace("-", " ");
             pvdLine += "   ";
-            pvdLine += Encoding.ASCII.GetString([.. bytes]).Replace((char)0, '.').Replace('?', '.');
+            pvdLine += Encoding.ASCII.GetString(bytes).Replace((char)0, '.').Replace('?', '.');
             pvdLine += "\n";
 
             return pvdLine;
@@ -986,7 +985,7 @@ namespace MPF.Processors
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If there's no hardware information, skip
-                if (opticalDisc.DumpHardwareArray == null || !opticalDisc.DumpHardwareArray.Any())
+                if (opticalDisc.DumpHardwareArray == null || opticalDisc.DumpHardwareArray.Length == 0)
                     continue;
 
                 foreach (DumpHardwareType hardware in opticalDisc.DumpHardwareArray)

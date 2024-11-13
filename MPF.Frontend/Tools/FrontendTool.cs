@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using SabreTools.RedumpLib.Data;
@@ -115,7 +114,7 @@ namespace MPF.Frontend.Tools
             }
 
             // If we didn't already try English, try it now
-            if (!languages.Contains(Language.English))
+            if (!Array.Exists(languages, l => l == Language.English))
                 return NormalizeDiscTitle(title, Language.English);
 
             // If all fails, then the title didn't need normalization
@@ -143,7 +142,7 @@ namespace MPF.Frontend.Tools
                 language = Language.English;
 
             // Get the title split into parts
-            string[] splitTitle = title!.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            string[] splitTitle = Array.FindAll(title!.Split(' '), s => !string.IsNullOrEmpty(s));
 
             // If we only have one part, we can't do anything
             if (splitTitle.Length <= 1)

@@ -159,7 +159,9 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public async static Task<bool> FillFromRedump(Frontend.Options options, SubmissionInfo info, IProgress<ResultEventArgs>? resultProgress = null)
+        public async static Task<bool> FillFromRedump(Frontend.Options options,
+            SubmissionInfo info,
+            IProgress<ResultEventArgs>? resultProgress = null)
         {
             // If no username is provided
             if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
@@ -240,28 +242,28 @@ namespace MPF.Frontend.Tools
             }
 
             // If all tracks were found, check if there are any fully-matched IDs
-            List<int>? fullyMatchedIDs = null;
+            HashSet<int>? fullyMatchedIdsSet = null;
             if (allFound)
             {
-                fullyMatchedIDs = null;
+                fullyMatchedIdsSet = null;
                 foreach (var set in foundIdSets)
                 {
                     // First track is always all IDs
-                    if (fullyMatchedIDs == null)
+                    if (fullyMatchedIdsSet == null)
                     {
-                        fullyMatchedIDs = [.. set];
+                        fullyMatchedIdsSet = [.. set];
                         continue;
                     }
 
                     // Try to intersect with all known IDs
-                    fullyMatchedIDs = fullyMatchedIDs.Intersect(set).ToList();
-                    if (!fullyMatchedIDs.Any())
+                    fullyMatchedIdsSet.IntersectWith(set);
+                    if (fullyMatchedIdsSet.Count == 0)
                         break;
                 }
             }
 
             // If we don't have any matches but we have a universal hash
-            if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+            if (info.PartiallyMatchedIDs.Count == 0 && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
@@ -276,50 +278,56 @@ namespace MPF.Frontend.Tools
                 allFound = (foundIds != null && foundIds.Count == 1);
 
                 // If we found a match, then the disc is a match
-                if ((foundIds != null && foundIds.Count == 1) && foundIds != null)
-                    fullyMatchedIDs = foundIds;
+                if (foundIds != null && foundIds.Count == 1)
+                    fullyMatchedIdsSet = [.. foundIds];
                 else
-                    fullyMatchedIDs = [];
+                    fullyMatchedIdsSet = [];
             }
 
-            // Make sure we only have unique IDs
-            info.PartiallyMatchedIDs = [.. info.PartiallyMatchedIDs.Distinct().OrderBy(id => id)];
+            // Get a list version of the fully matched IDs
+            List<int> fullyMatchedIdsList = fullyMatchedIdsSet != null ? [.. fullyMatchedIdsSet] : [];
 
-            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
-                ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs.Select(i => i.ToString()).ToArray())
+            // Make sure we only have unique IDs
+            var partiallyMatchedIds = new HashSet<int>();
+            partiallyMatchedIds.IntersectWith(info.PartiallyMatchedIDs);
+            info.PartiallyMatchedIDs = [.. partiallyMatchedIds];
+            info.PartiallyMatchedIDs.Sort();
+
+            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList != null && fullyMatchedIdsList.Count > 0
+                ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
                 : "No matches found")));
 
             // Exit early if one failed or there are no matched IDs
-            if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
+            if (!allFound || fullyMatchedIdsList == null || fullyMatchedIdsList.Count == 0)
                 return false;
 
             // Find the first matched ID where the track count matches, we can grab a bunch of info from it
-            int totalMatchedIDsCount = fullyMatchedIDs.Count;
+            int totalMatchedIDsCount = fullyMatchedIdsList.Count;
             for (int i = 0; i < totalMatchedIDsCount; i++)
             {
                 // Skip if the track count doesn't match
 #if NET40
-                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount);
+                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIdsList[i], trackCount);
                 validateTask.Wait();
                 if (!validateTask.Result)
 #else
-                if (!await Validator.ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
+                if (!await Validator.ValidateTrackCount(wc, fullyMatchedIdsList[i], trackCount))
 #endif
                     continue;
 
                 // Fill in the fields from the existing ID
-                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
 #if NET40
-                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation));
+                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation));
                 fillTask.Wait();
                 _ = fillTask.Result;
 #else
-                _ = await Builder.FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
+                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
 #endif
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current
-                info.FullyMatchedID = fullyMatchedIDs[i];
+                info.FullyMatchedID = fullyMatchedIdsList[i];
                 break;
             }
 
@@ -450,7 +458,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Ensure that no labels are empty
-            volLabels = volLabels.Where(l => !string.IsNullOrEmpty(l?.Trim())).ToList();
+            volLabels = volLabels.FindAll(l => !string.IsNullOrEmpty(l?.Trim()));
 
             // Print each label separated by a comma and a space
             if (volLabels.Count == 0)

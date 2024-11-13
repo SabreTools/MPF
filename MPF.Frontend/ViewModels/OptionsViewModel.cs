@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
 using MPF.Frontend.ComboBoxItems;
-using SabreTools.RedumpLib.Web;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
 
@@ -65,7 +62,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
+        public static List<RedumpSystemComboBoxItem> Systems => [.. RedumpSystemComboBoxItem.GenerateElements()];
 
         #endregion
 
@@ -93,7 +90,7 @@ namespace MPF.Frontend.ViewModels
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
-            return internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+            return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
         }
 
         /// <summary>
@@ -102,7 +99,7 @@ namespace MPF.Frontend.ViewModels
         private static List<Element<RedumperReadMethod>> PopulateRedumperReadMethods()
         {
             var readMethods = new List<RedumperReadMethod> { RedumperReadMethod.NONE, RedumperReadMethod.D8, RedumperReadMethod.BE, RedumperReadMethod.BE_CDDA };
-            return readMethods.Select(rm => new Element<RedumperReadMethod>(rm)).ToList();
+            return readMethods.ConvertAll(rm => new Element<RedumperReadMethod>(rm));
         }
 
         /// <summary>
@@ -111,7 +108,7 @@ namespace MPF.Frontend.ViewModels
         private static List<Element<RedumperSectorOrder>> PopulateRedumperSectorOrders()
         {
             var sectorOrders = new List<RedumperSectorOrder> { RedumperSectorOrder.NONE, RedumperSectorOrder.DATA_C2_SUB, RedumperSectorOrder.DATA_SUB_C2, RedumperSectorOrder.DATA_SUB, RedumperSectorOrder.DATA_C2 };
-            return sectorOrders.Select(so => new Element<RedumperSectorOrder>(so)).ToList();
+            return sectorOrders.ConvertAll(so => new Element<RedumperSectorOrder>(so));
         }
 
         #endregion

@@ -326,7 +326,7 @@ namespace MPF.Processors
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                         if (GetGDROMBuildInfo(info.Extras.Header,
                             out var serial,
@@ -347,7 +347,7 @@ namespace MPF.Processors
 
                     // Take only the last 16 lines for Sega CD
                     if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16).ToArray());
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                     if (GetSegaCDBuildInfo(info.Extras.Header, out var scdSerial, out var fixedDate))
                     {
@@ -365,7 +365,7 @@ namespace MPF.Processors
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                         if (GetGDROMBuildInfo(info.Extras.Header,
                             out var serial,
@@ -388,7 +388,7 @@ namespace MPF.Processors
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                         if (GetGDROMBuildInfo(info.Extras.Header,
                             out var serial,
@@ -411,7 +411,7 @@ namespace MPF.Processors
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                         if (GetGDROMBuildInfo(info.Extras.Header,
                             out var serial,
@@ -434,7 +434,7 @@ namespace MPF.Processors
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                         if (GetGDROMBuildInfo(info.Extras.Header,
                             out var serial,
@@ -455,7 +455,7 @@ namespace MPF.Processors
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16).ToArray());
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n'), 0, 16);
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
@@ -746,7 +746,7 @@ namespace MPF.Processors
                 return null;
 
             var currentFiles = Directory.GetFiles(parentDirectory);
-            commandPath = currentFiles.FirstOrDefault(f => cmdFilenameRegex.IsMatch(f));
+            commandPath = Array.Find(currentFiles, f => cmdFilenameRegex.IsMatch(f));
             if (string.IsNullOrEmpty(value: commandPath))
                 return null;
 
@@ -882,8 +882,8 @@ namespace MPF.Processors
                 }
 
                 // Create the output string
-                if (discTypeOrBookTypeSet.Any())
-                    discTypeOrBookType = string.Join(", ", [.. discTypeOrBookTypeSet.OrderBy(s => s)]);
+                if (discTypeOrBookTypeSet.Count > 0)
+                    discTypeOrBookType = string.Join(", ", [.. discTypeOrBookTypeSet]);
 
                 return true;
             }
@@ -1181,7 +1181,7 @@ namespace MPF.Processors
                     else if (xgd && line.StartsWith("LayerBreak"))
                     {
                         // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
-                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        string[] split = Array.FindAll(line.Split(' '), s => !string.IsNullOrEmpty(s));
                         return split[1];
                     }
 
@@ -1189,7 +1189,7 @@ namespace MPF.Processors
                     else if (!xgd && line.StartsWith("LayerZeroSector"))
                     {
                         // LayerZeroSector: <size> (<hex>)
-                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        string[] split = Array.FindAll(line.Split(' '), s => !string.IsNullOrEmpty(s));
                         return split[1];
                     }
 
@@ -1920,13 +1920,14 @@ namespace MPF.Processors
                     sr.ReadLine(); // Separator line
 
                     // Now that we're at the offsets, attempt to get the sample offset
-                    string offset = sr.ReadLine()?.Split(' ')?.LastOrDefault() ?? string.Empty;
+                    var offsetLine = sr.ReadLine()?.Split(' ');
+                    string offset = offsetLine != null ? offsetLine[offsetLine.Length - 1] : string.Empty;
                     offsets.Add(offset);
                 }
 
                 // Deduplicate the offsets
                 offsets = offsets
-                    .Where(s => !string.IsNullOrEmpty(s))
+                    .FindAll(s => !string.IsNullOrEmpty(s))
                     .Distinct()
                     .ToList();
 
@@ -1963,9 +1964,9 @@ namespace MPF.Processors
             if (roms == null || roms.Length == 0)
                 return false;
 
-            dmihash = roms.FirstOrDefault(r => r.Name?.EndsWith("DMI.bin") == true)?.CRC?.ToUpperInvariant();
-            pfihash = roms.FirstOrDefault(r => r.Name?.EndsWith("PFI.bin") == true)?.CRC?.ToUpperInvariant();
-            sshash = roms.FirstOrDefault(r => r.Name?.EndsWith("SS.bin") == true)?.CRC?.ToUpperInvariant();
+            dmihash = Array.Find(roms, r => r.Name?.EndsWith("DMI.bin") == true)?.CRC?.ToUpperInvariant();
+            pfihash = Array.Find(roms, r => r.Name?.EndsWith("PFI.bin") == true)?.CRC?.ToUpperInvariant();
+            sshash = Array.Find(roms, r => r.Name?.EndsWith("SS.bin") == true)?.CRC?.ToUpperInvariant();
 
             return true;
         }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.Models.CueSheets;
@@ -996,7 +995,7 @@ namespace MPF.Processors
                     else if (line.StartsWith("data "))
                     {
                         // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
-                        string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                        string[] split = Array.FindAll(line.Split(' '), s => !string.IsNullOrEmpty(s));
                         layerbreak1 ??= split[7].TrimEnd(',');
                     }
 

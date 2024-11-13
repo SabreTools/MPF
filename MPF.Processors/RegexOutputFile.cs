@@ -1,8 +1,9 @@
+using System;
 using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
-#endif
 using System.Linq;
+#endif
 using System.Text.RegularExpressions;
 
 namespace MPF.Processors
@@ -55,7 +56,7 @@ namespace MPF.Processors
             var directoryFiles = Directory.GetFiles(baseDirectory);
             foreach (string file in directoryFiles)
             {
-                if (Filenames.Any(pattern => Regex.IsMatch(file, pattern)))
+                if (Array.FindIndex(Filenames, pattern => Regex.IsMatch(file, pattern)) > -1)
                     return true;
             }
 

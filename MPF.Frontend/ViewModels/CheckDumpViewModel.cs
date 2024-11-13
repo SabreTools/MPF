@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
@@ -260,7 +259,7 @@ namespace MPF.Frontend.ViewModels
             CancelButtonEnabled = true;
 
             MediaTypes = [];
-            Systems = RedumpSystemComboBoxItem.GenerateElements().ToList();
+            Systems = [.. RedumpSystemComboBoxItem.GenerateElements()];
             InternalPrograms = [];
 
             PopulateMediaType();
@@ -296,7 +295,7 @@ namespace MPF.Frontend.ViewModels
         public void ChangeSystem()
         {
             PopulateMediaType();
-            this.CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
+            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
         }
 
         /// <summary>
@@ -304,7 +303,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ChangeMediaType()
         {
-            this.CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
+            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
         }
 
         /// <summary>
@@ -312,7 +311,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ChangeDumpingProgram()
         {
-            this.CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
+            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
         }
 
         /// <summary>
@@ -320,7 +319,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ChangeInputPath()
         {
-            this.CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
+            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
         }
 
         #endregion
@@ -368,20 +367,20 @@ namespace MPF.Frontend.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
-            if (this.CurrentSystem != null)
+            if (CurrentSystem != null)
             {
-                var mediaTypeValues = this.CurrentSystem.MediaTypes();
-                int index = mediaTypeValues.FindIndex(m => m == this.CurrentMediaType);
+                var mediaTypeValues = CurrentSystem.MediaTypes();
+                int index = mediaTypeValues.FindIndex(m => m == CurrentMediaType);
 
-                MediaTypes = mediaTypeValues.Select(m => new Element<MediaType>(m ?? MediaType.NONE)).ToList();
-                this.MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
-                this.CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
+                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<MediaType>(m ?? MediaType.NONE));
+                MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
+                CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
             }
             else
             {
-                this.MediaTypeComboBoxEnabled = false;
-                this.MediaTypes = null;
-                this.CurrentMediaType = null;
+                MediaTypeComboBoxEnabled = false;
+                MediaTypes = null;
+                CurrentMediaType = null;
             }
 
             // Reenable event handlers, if necessary
@@ -398,15 +397,15 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Get the current internal program
-            InternalProgram internalProgram = this.Options.InternalProgram;
+            InternalProgram internalProgram = Options.InternalProgram;
 
             // Create a static list of supported Check programs, not everything
             var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.Aaru, InternalProgram.DiscImageCreator, InternalProgram.CleanRip, InternalProgram.PS3CFW, InternalProgram.UmdImageCreator, InternalProgram.XboxBackupCreator };
-            InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+            InternalPrograms = internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
 
             // Select the current default dumping program
             int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-            this.CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
+            CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
 
             // Reenable event handlers, if necessary
             if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
@@ -418,7 +417,7 @@ namespace MPF.Frontend.ViewModels
 
         private bool ShouldEnableCheckDumpButton()
         {
-            return this.CurrentSystem != null && this.CurrentMediaType != null && !string.IsNullOrEmpty(this.InputPath);
+            return CurrentSystem != null && CurrentMediaType != null && !string.IsNullOrEmpty(InputPath);
         }
 
         /// <summary>
@@ -450,7 +449,7 @@ namespace MPF.Frontend.ViewModels
             if (string.IsNullOrEmpty(InputPath))
                 return "Invalid Input path";
 
-            if (!File.Exists(this.InputPath!.Trim('"')))
+            if (!File.Exists(InputPath!.Trim('"')))
                 return "Input Path is not a valid file";
 
             // Disable UI while Check is running
@@ -459,7 +458,7 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Populate an environment
-            var env = new DumpEnvironment(Options, Path.GetFullPath(this.InputPath.Trim('"')), null, this.CurrentSystem, this.CurrentMediaType, this.CurrentProgram, parameters: null);
+            var env = new DumpEnvironment(Options, Path.GetFullPath(InputPath.Trim('"')), null, CurrentSystem, CurrentMediaType, CurrentProgram, parameters: null);
 
             // Make new Progress objects
             var resultProgress = new Progress<ResultEventArgs>();
