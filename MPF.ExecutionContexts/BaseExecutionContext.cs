@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts
@@ -288,6 +289,24 @@ namespace MPF.ExecutionContexts
         #endregion
 
         #region Parameter Parsing
+
+        /// <summary>
+        /// Split a parameters string into a list while taking quotes into account
+        /// </summary>
+        /// <see href="https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes"/>
+        protected static List<string> SplitParameterString(string parameters)
+        {
+            // Ensure the parameter string is trimmed
+            parameters = parameters.Trim();
+
+            // Split the string using Regex
+            var matches = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
+
+            // Get just the values from the matches
+            var matchArr = new Match[matches.Count];
+            matches.CopyTo(matchArr, 0);
+            return [.. Array.ConvertAll(matchArr, m => m.Value)];
+        }
 
         /// <summary>
         /// Returns whether or not the selected item exists

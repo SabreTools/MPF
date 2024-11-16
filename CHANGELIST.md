@@ -4,6 +4,7 @@
 - Be smarter about Linq usage
 - Add .NET 9 to target frameworks
 - Be smarter about some data types
+- Consolidate parameter string splitting
 
 ### 3.2.3 (2024-11-06)
 
