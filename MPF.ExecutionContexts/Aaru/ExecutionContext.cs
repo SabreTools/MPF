@@ -1292,7 +1292,7 @@ namespace MPF.ExecutionContexts.Aaru
             for (start = 0; start < parts.Count; start++)
             {
                 // Keep a count of keys to determine if we should break out to command handling or not
-                int keyCount = Keys.Count();
+                int keyCount = Keys.Count;
 
                 // Debug
                 ProcessBooleanParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, ref start, true);
@@ -1311,7 +1311,7 @@ namespace MPF.ExecutionContexts.Aaru
                 ProcessBooleanParameter(parts, FlagStrings.HelpShortAlt, FlagStrings.HelpLong, ref start, true);
 
                 // If we didn't add any new flags, break out since we might be at command handling
-                if (keyCount == Keys.Count())
+                if (keyCount == Keys.Count)
                     break;
             }
 
@@ -1339,7 +1339,7 @@ namespace MPF.ExecutionContexts.Aaru
                 string? stringValue = null;
 
                 // Keep a count of keys to determine if we should break out to filename handling or not
-                int keyCount = Keys.Count();
+                int keyCount = Keys.Count;
 
                 #region Boolean flags
 
@@ -1706,7 +1706,7 @@ namespace MPF.ExecutionContexts.Aaru
                 #endregion
 
                 // If we didn't add any new flags, break out since we might be at filename handling
-                if (keyCount == Keys.Count())
+                if (keyCount == Keys.Count)
                     break;
             }
 

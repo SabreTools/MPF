@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 #if NET462_OR_GREATER || NETCOREAPP
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
@@ -137,8 +136,13 @@ namespace MPF.Frontend
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = [.. drives.OrderBy(i => i == null ? "\0" : i.Name)];
-            return drives;
+            drives.Sort((d1, d2) =>
+            {
+                string d1Name = d1?.Name == null ? "\0" : d1.Name;
+                string d2Name = d2?.Name == null ? "\0" : d2.Name;
+                return d1Name.CompareTo(d2Name);
+            });
+            return [.. drives];
         }
 
         /// <summary>

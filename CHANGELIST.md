@@ -3,6 +3,7 @@
 - Update Redumper to build 438
 - Be smarter about Linq usage
 - Add .NET 9 to target frameworks
+- Be smarter about some data types
 
 ### 3.2.3 (2024-11-06)
 

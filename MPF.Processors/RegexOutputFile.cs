@@ -78,7 +78,7 @@ namespace MPF.Processors
             var archiveFiles = archive.Entries.Select(e => e.Name).ToList();
             foreach (string file in archiveFiles)
             {
-                if (Filenames.Any(pattern => Regex.IsMatch(file, pattern)))
+                if (Array.Exists(Filenames, pattern => Regex.IsMatch(file, pattern)))
                     return true;
             }
 

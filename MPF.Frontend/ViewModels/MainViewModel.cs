@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.IO;
+using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ViewModels
@@ -708,10 +708,9 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Create a static list of supported programs, not everything
-            InternalPrograms = Enum.GetValues(typeof(InternalProgram))
-                .Cast<InternalProgram>()
-                .Where(ip => InternalProgramExists(ip))
-                .Select(ip => new Element<InternalProgram>(ip)).ToList();
+            var ipArr = (InternalProgram[])Enum.GetValues(typeof(InternalProgram));
+            ipArr = Array.FindAll(ipArr, ip => InternalProgramExists(ip));
+            InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
 
             // Get the current internal program
             InternalProgram internalProgram = Options.InternalProgram;
@@ -1556,11 +1555,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "$SystemUpdate"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "$SystemUpdate")).Any()
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "$SystemUpdate")).Any()
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "$SystemUpdate")).Length > 0
                     && drive.TotalSize <= 500_000_000)
                 {
                     return RedumpSystem.MicrosoftXbox360;
@@ -1712,21 +1707,13 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "AUDIO_TS"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "AUDIO_TS")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "AUDIO_TS")).Any())
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "AUDIO_TS")).Length > 0)
                 {
                     return RedumpSystem.DVDAudio;
                 }
 
                 else if (Directory.Exists(Path.Combine(drive.Name, "VIDEO_TS"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "VIDEO_TS")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "VIDEO_TS")).Any())
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "VIDEO_TS")).Length > 0)
                 {
                     return RedumpSystem.DVDVideo;
                 }
@@ -1737,11 +1724,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "HVDVD_TS"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "HVDVD_TS")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "HVDVD_TS")).Any())
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "HVDVD_TS")).Length > 0)
                 {
                     return RedumpSystem.HDDVDVideo;
                 }
@@ -1752,11 +1735,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "PHOTO_CD"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "PHOTO_CD")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "PHOTO_CD")).Any())
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "PHOTO_CD")).Length > 0)
                 {
                     return RedumpSystem.PhotoCD;
                 }
@@ -1767,11 +1746,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "VCD"))
-#if NET20 || NET35
-                    && Directory.GetFiles(Path.Combine(drive.Name, "drive.VCD")).Any())
-#else
-                    && Directory.EnumerateFiles(Path.Combine(drive.Name, "VCD")).Any())
-#endif
+                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "VCD")).Length > 0)
                 {
                     return RedumpSystem.VideoCD;
                 }

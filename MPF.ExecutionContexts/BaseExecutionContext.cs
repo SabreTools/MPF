@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts
@@ -20,7 +19,7 @@ namespace MPF.ExecutionContexts
         /// Set of flags to pass to the executable
         /// </summary>
         protected Dictionary<string, bool?> flags = [];
-        protected internal IEnumerable<string> Keys => flags.Keys;
+        protected internal List<string> Keys => [.. flags.Keys];
 
         /// <summary>
         /// Safe access to currently set flags

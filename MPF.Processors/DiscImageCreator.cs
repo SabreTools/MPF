@@ -1316,7 +1316,7 @@ namespace MPF.Processors
                 }
 
                 // If we have all Session 1, we can just skip out
-                if (trackSessionMapping.All(kvp => kvp.Value == "1"))
+                if (trackSessionMapping.Values.All(v => v == "1"))
                     return null;
 
                 // Seek to the multisession data
