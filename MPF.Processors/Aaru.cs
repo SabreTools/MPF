@@ -618,7 +618,7 @@ namespace MPF.Processors
 
                     // Build each row in consecutive order
                     string pvd = string.Empty;
-#if NET20 || NET35 || NET40
+#if NET20 || NET35 || NET40 || NET452
                     byte[] pvdLine = new byte[16];
                     Array.Copy(pvdData, 0, pvdLine, 0, 16);
                     pvd += GenerateSectorOutputLine("0320", pvdLine);

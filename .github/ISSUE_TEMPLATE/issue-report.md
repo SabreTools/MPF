@@ -25,7 +25,7 @@ What version are you using?
 **Build**
 What runtime version are you using?
 
-- [ ] .NET 8.0 running on (Operating System)
+- [ ] .NET 9.0 running on (Operating System)
 
 **Describe the issue**
 A clear and concise description of what the bug is.

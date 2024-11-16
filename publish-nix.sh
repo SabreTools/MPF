@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This batch file assumes the following:
-# - .NET 8.0 (or newer) SDK is installed and in PATH
+# - .NET 9.0 (or newer) SDK is installed and in PATH
 # - zip is installed and in PATH
 # - Git is installed and in PATH
 # - The relevant commandline programs are already downloaded
@@ -51,21 +51,21 @@ echo "  No archive (-a)                       $NO_ARCHIVE"
 echo " "
 
 # Create the build matrix arrays
-UI_FRAMEWORKS=("net8.0-windows")
+UI_FRAMEWORKS=("net9.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
-CHECK_FRAMEWORKS=("net8.0")
+CHECK_FRAMEWORKS=("net9.0")
 CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Use expanded framework lists, if requested
 if [ $USE_ALL = true ]; then
-    UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows")
-    CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0")
+    UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows" "net9.0-windows")
+    CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0")
 fi
 
 # Create the filter arrays
-SINGLE_FILE_CAPABLE=("net5.0" "net5.0-windows" "net6.0" "net6.0-windows" "net7.0" "net7.0-windows" "net8.0" "net8.0-windows")
-VALID_APPLE_FRAMEWORKS=("net6.0" "net7.0" "net8.0")
-VALID_CROSS_PLATFORM_FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0")
+SINGLE_FILE_CAPABLE=("net5.0" "net5.0-windows" "net6.0" "net6.0-windows" "net7.0" "net7.0-windows" "net8.0" "net8.0-windows" "net9.0" "net9.0-windows")
+VALID_APPLE_FRAMEWORKS=("net6.0" "net7.0" "net8.0" "net9.0")
+VALID_CROSS_PLATFORM_FRAMEWORKS=("netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0")
 VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Only build if requested

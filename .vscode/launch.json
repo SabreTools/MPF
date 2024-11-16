@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MPF.Check/bin/Debug/net8.0/MPF.Check.dll",
+            "program": "${workspaceFolder}/MPF.Check/bin/Debug/net9.0/MPF.Check.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MPF.Check",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
