@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 #if NET462_OR_GREATER || NETCOREAPP
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
@@ -136,8 +136,13 @@ namespace MPF.Frontend
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = [.. drives.OrderBy(i => i == null ? "\0" : i.Name)];
-            return drives;
+            drives.Sort((d1, d2) =>
+            {
+                string d1Name = d1?.Name == null ? "\0" : d1.Name;
+                string d2Name = d2?.Name == null ? "\0" : d2.Name;
+                return d1Name.CompareTo(d2Name);
+            });
+            return [.. drives];
         }
 
         /// <summary>
@@ -223,7 +228,7 @@ namespace MPF.Frontend
         /// </summary>
         public void RefreshDrive()
         {
-            var driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == Name);
+            var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == Name);
             PopulateFromDriveInfo(driveInfo);
         }
 
@@ -252,20 +257,18 @@ namespace MPF.Frontend
             // TODO: Reduce reliance on `DriveInfo`
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
-            // Create an output drive list
-            var drives = new List<Drive>();
+            // Create an output drive array
+            Drive[] drives = [];
 
             // Get all standard supported drive types
             try
             {
-                drives = DriveInfo.GetDrives()
-                    .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                    .Select(d => Create(ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
-                    .ToList();
+                var filteredDrives = Array.FindAll(DriveInfo.GetDrives(), d => desiredDriveTypes.Contains(d.DriveType));
+                drives = Array.ConvertAll(filteredDrives, d => Create(ToInternalDriveType(d.DriveType), d.Name) ?? new Drive());
             }
             catch
             {
-                return drives;
+                return [.. drives];
             }
 
             // Find and update all floppy drives
@@ -282,7 +285,11 @@ namespace MPF.Frontend
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
-                        drives.ForEach(d => { if (d?.Name != null && d.Name[0] == devId) { d.InternalDriveType = Frontend.InternalDriveType.Floppy; } });
+                        Array.ForEach(drives, d =>
+                        {
+                            if (d?.Name != null && d.Name[0] == devId)
+                                d.InternalDriveType = Frontend.InternalDriveType.Floppy;
+                        });
                     }
                 }
             }
@@ -292,7 +299,7 @@ namespace MPF.Frontend
             }
 #endif
 
-            return drives;
+            return [.. drives];
         }
 
         /// <summary>

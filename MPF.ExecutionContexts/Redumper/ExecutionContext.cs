@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Redumper
@@ -273,7 +271,7 @@ namespace MPF.ExecutionContexts.Redumper
             {
                 if (DriveValue != null)
                 {
-                    if (DriveValue.Contains(' '))
+                    if (DriveValue.Contains(" "))
                         parameters.Add($"{FlagStrings.Drive}=\"{DriveValue}\"");
                     else
                         parameters.Add($"{FlagStrings.Drive}={DriveValue}");
@@ -656,12 +654,7 @@ namespace MPF.ExecutionContexts.Redumper
                 return false;
 
             // Now split the string into parts for easier validation
-            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters!.Trim();
-            List<string> parts = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
-                .Cast<Match>()
-                .Select(m => m.Value)
-                .ToList();
+            List<string> parts = SplitParameterString(parameters!);
 
             // Setup the modes
             ModeValues = [];

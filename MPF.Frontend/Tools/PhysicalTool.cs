@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -576,7 +575,7 @@ namespace MPF.Frontend.Tools
             try
             {
                 var files = Directory.GetFiles(msxc, "*", SearchOption.TopDirectoryOnly);
-                var filenames = files.Select(Path.GetFileName).ToArray();
+                var filenames = Array.ConvertAll(files, Path.GetFileName);
                 return string.Join("\n", filenames);
             }
             catch

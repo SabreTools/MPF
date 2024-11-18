@@ -2,11 +2,12 @@
 
     <PropertyGroup>
         <!-- Assembly Properties -->
-        <TargetFrameworks>net20;net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net20;net35;net40;net452;net462;net472;net48;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
         <OutputType>Exe</OutputType>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <LangVersion>latest</LangVersion>
+        <NoWarn>NU1902;NU1903</NoWarn>
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -29,11 +30,11 @@
     <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`))">
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64</RuntimeIdentifiers>
     </PropertyGroup>
-    <PropertyGroup Condition="$(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`))">
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`)) OR $(TargetFramework.StartsWith(`net9`))">
         <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
     </PropertyGroup>
     <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith(`osx-arm`))">
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -44,18 +45,11 @@
         <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
     </ItemGroup>
 
-    <!-- Support for old .NET versions -->
-    <ItemGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))">
-        <PackageReference Include="MinAsyncBridge" Version="0.12.4" />
-        <PackageReference Include="MinTasksExtensionsBridge" Version="0.3.4" />
-        <PackageReference Include="MinThreadingBridge" Version="0.11.4" />
-    </ItemGroup>
-
     <ItemGroup>
-        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.1.16" GeneratePathProperty="true">
+        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.2.2" GeneratePathProperty="true">
             <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.4.4" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.5.2" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MPF.Frontend.ComboBoxItems
 {
@@ -42,9 +41,8 @@ namespace MPF.Frontend.ComboBoxItems
         /// <returns></returns>
         public static IEnumerable<Element<T>> GenerateElements()
         {
-            return Enum.GetValues(typeof(T))
-                .OfType<T>()
-                .Select(e => new Element<T>(e));
+            var enumArr = (T[])Enum.GetValues(typeof(T));
+            return Array.ConvertAll(enumArr, e => new Element<T>(e));
         }
 
         /// <inheritdoc/>

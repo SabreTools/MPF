@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Aaru
@@ -1082,7 +1080,7 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
-                    if (InputValue.Contains(' '))
+                    if (InputValue!.Contains(" "))
                         parameters.Add($"\"{InputValue!.TrimEnd('\\')}\"");
                     else
                         parameters.Add(InputValue!.TrimEnd('\\'));
@@ -1280,19 +1278,14 @@ namespace MPF.ExecutionContexts.Aaru
                 return false;
 
             // Now split the string into parts for easier validation
-            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters!.Trim();
-            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+", RegexOptions.Compiled)
-                .Cast<Match>()
-                .Select(m => m.Value)
-                .ToList();
+            List<string> parts = SplitParameterString(parameters!);
 
             // Search for pre-command flags first
             int start = 0;
             for (start = 0; start < parts.Count; start++)
             {
                 // Keep a count of keys to determine if we should break out to command handling or not
-                int keyCount = Keys.Count();
+                int keyCount = Keys.Count;
 
                 // Debug
                 ProcessBooleanParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, ref start, true);
@@ -1311,7 +1304,7 @@ namespace MPF.ExecutionContexts.Aaru
                 ProcessBooleanParameter(parts, FlagStrings.HelpShortAlt, FlagStrings.HelpLong, ref start, true);
 
                 // If we didn't add any new flags, break out since we might be at command handling
-                if (keyCount == Keys.Count())
+                if (keyCount == Keys.Count)
                     break;
             }
 
@@ -1339,7 +1332,7 @@ namespace MPF.ExecutionContexts.Aaru
                 string? stringValue = null;
 
                 // Keep a count of keys to determine if we should break out to filename handling or not
-                int keyCount = Keys.Count();
+                int keyCount = Keys.Count;
 
                 #region Boolean flags
 
@@ -1706,7 +1699,7 @@ namespace MPF.ExecutionContexts.Aaru
                 #endregion
 
                 // If we didn't add any new flags, break out since we might be at filename handling
-                if (keyCount == Keys.Count())
+                if (keyCount == Keys.Count)
                     break;
             }
 

@@ -275,7 +275,7 @@ namespace MPF.Processors
                 if (bytes == null)
                     return default;
 
-#if NET20 || NET35 || NET40
+#if NET20 || NET35 || NET40 || NET452
                 byte[] rev = new byte[0x04];
                 Array.Copy(bytes, offset, rev, 0, 0x04);
 #else

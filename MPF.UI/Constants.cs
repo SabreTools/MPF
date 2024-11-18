@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Media;
 using static MPF.Frontend.InterfaceConstants;
 
@@ -34,7 +33,7 @@ namespace MPF.UI
         /// <summary>
         /// Create a DoubleCollection out of a list of integer values
         /// </summary>
-        private static DoubleCollection GetDoubleCollectionFromIntList(IList<int> list)
-            => new(list.Select(i => Convert.ToDouble(i)).ToList());
+        private static DoubleCollection GetDoubleCollectionFromIntList(List<int> list)
+            => [.. list.ConvertAll(i => Convert.ToDouble(i))];
     }
 }

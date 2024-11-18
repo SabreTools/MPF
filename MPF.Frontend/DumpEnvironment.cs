@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
 #if NET40
 using System.Threading;
@@ -503,7 +502,7 @@ namespace MPF.Frontend
                 resultProgress?.Report(ResultEventArgs.Failure(txtResult));
 
             // Write the copy protection output
-            if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Any())
+            if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Count > 0)
             {
                 if (_options.ScanForProtection)
                 {
@@ -755,7 +754,7 @@ namespace MPF.Frontend
         private static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
             // Check to see if the inputs are valid
-            if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
+            if (info?.CopyProtection?.FullProtections == null || info.CopyProtection.FullProtections.Count == 0)
                 return true;
 
             // Now write out to a generic file
@@ -773,7 +772,9 @@ namespace MPF.Frontend
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
 
-                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys.OrderBy(k => k)];
+                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys];
+                sortedKeys.Sort();
+
                 foreach (string key in sortedKeys)
                 {
                     string scanPath = key;

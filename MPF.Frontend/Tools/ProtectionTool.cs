@@ -409,7 +409,7 @@ namespace MPF.Frontend.Tools
             if (foundProtections.Any(p => p == "XCP") && foundProtections.Any(p => p.StartsWith("XCP") && p.Length > "XCP".Length))
                 foundProtections = foundProtections.Where(p => p != "XCP");
 
-            return string.Join(", ", foundProtections.ToArray());
+            return string.Join(", ", [.. foundProtections]);
         }
     }
 }

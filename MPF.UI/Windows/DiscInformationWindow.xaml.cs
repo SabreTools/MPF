@@ -301,7 +301,7 @@ namespace MPF.UI.Windows
             if (submissionInfo.PartiallyMatchedIDs == null)
                 _PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else
-                _PartiallyMatchedIDs!.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
+                _PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
                 _HashData!.Visibility = Visibility.Collapsed;
             if (submissionInfo.SizeAndChecksums?.Size == null || submissionInfo.SizeAndChecksums.Size == 0)
@@ -374,7 +374,7 @@ namespace MPF.UI.Windows
             if (submissionInfo.PartiallyMatchedIDs == null)
                 PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
             else
-                PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs.Select(i => i.ToString()).ToArray());
+                PartiallyMatchedIDs.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
                 HashData!.Visibility = Visibility.Collapsed;
             if (submissionInfo.SizeAndChecksums?.Size == null)

@@ -52,10 +52,10 @@ namespace MPF.Frontend.ComboBoxItems
         /// <returns></returns>
         public static IEnumerable<RedumpSystemComboBoxItem> GenerateElements()
         {
-            var knownSystems = Enum.GetValues(typeof(RedumpSystem))
-                .OfType<RedumpSystem?>()
-                .Where(s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE)
-                .ToList();
+            var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
+            var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);
+            var knownSystems = Array.FindAll(nullableArr,
+                s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE);
 
             Dictionary<SystemCategory, List<RedumpSystem?>> mapping = knownSystems
                 .GroupBy(s => s.GetCategory())

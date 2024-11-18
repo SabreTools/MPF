@@ -94,7 +94,7 @@ namespace MPF.Processors
             var generatedFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
 
             // Don't create an archive if there are no paths
-            if (!zippableFiles.Any() && !generatedFiles.Any())
+            if (zippableFiles.Count == 0 && generatedFiles.Count == 0)
             {
                 status = "No files to compress!";
                 return true;
@@ -156,7 +156,7 @@ namespace MPF.Processors
             // Get the list of deleteable files from the parameters object
             var files = GetDeleteableFilePaths(combinedBase);
 
-            if (!files.Any())
+            if (files.Count == 0)
             {
                 status = "No files to delete!";
                 return true;
@@ -413,7 +413,7 @@ namespace MPF.Processors
                 return [];
 
             // Filter down to deleteable files
-            var deleteableFiles = outputFiles.Where(of => of.IsDeleteable);
+            var deleteableFiles = outputFiles.FindAll(of => of.IsDeleteable);
             return deleteableFiles.SelectMany(of => of.Filenames).ToList();
         }
 
@@ -518,7 +518,7 @@ namespace MPF.Processors
                 return [];
 
             // Filter down to zippable files
-            var zippableFiles = outputFiles.Where(of => of.IsZippable);
+            var zippableFiles = outputFiles.FindAll(of => of.IsZippable);
             return zippableFiles.SelectMany(of => of.Filenames).ToList();
         }
 

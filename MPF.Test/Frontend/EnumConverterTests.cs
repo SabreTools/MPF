@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using MPF.Frontend;
 using Xunit;
 
@@ -47,7 +46,7 @@ namespace MPF.Test.Frontend
             var testData = new List<object?[]>() { new object?[] { null, true } };
             foreach (DriveType driveType in Enum.GetValues(typeof(DriveType)))
             {
-                if (_mappableDriveTypes.Contains(driveType))
+                if (Array.IndexOf(_mappableDriveTypes, driveType) > -1)
                     testData.Add([driveType, false]);
                 else
                     testData.Add([driveType, true]);
