@@ -7,6 +7,7 @@
 - Consolidate parameter string splitting
 - Fix fully matching when multiple matches found
 - Remove usages of `this.` in more places
+- Add `skeleton` to Redumper CD by default
 
 ### 3.2.3 (2024-11-06)
 
