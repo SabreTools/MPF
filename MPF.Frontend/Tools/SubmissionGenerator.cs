@@ -238,7 +238,7 @@ namespace MPF.Frontend.Tools
                 foundIdSets.Add(foundIds?.ToArray() ?? []);
 
                 // Ensure that all tracks are found
-                allFound &= (foundIds != null && foundIds.Count == 1);
+                allFound &= (foundIds != null && foundIds.Count >= 1);
             }
 
             // If all tracks were found, check if there are any fully-matched IDs
