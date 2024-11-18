@@ -36,53 +36,53 @@ namespace MPF.UI.Themes
             var foregroundBrush = new SolidColorBrush { Color = Color.FromArgb(0xff, foregroundR, foregroundG, foregroundB) };
 
             // Handle application-wide resources
-            this.ActiveBorderBrush = foregroundBrush;
-            this.ControlBrush = backgroundBrush;
-            this.ControlTextBrush = foregroundBrush;
-            this.GrayTextBrush = foregroundBrush;
-            this.WindowBrush = backgroundBrush;
-            this.WindowTextBrush = foregroundBrush;
+            ActiveBorderBrush = foregroundBrush;
+            ControlBrush = backgroundBrush;
+            ControlTextBrush = foregroundBrush;
+            GrayTextBrush = foregroundBrush;
+            WindowBrush = backgroundBrush;
+            WindowTextBrush = foregroundBrush;
 
             // Handle Button-specific resources
-            this.Button_Disabled_Background = backgroundBrush;
-            this.Button_MouseOver_Background = backgroundBrush;
-            this.Button_Pressed_Background = backgroundBrush;
-            this.Button_Static_Background = backgroundBrush;
+            Button_Disabled_Background = backgroundBrush;
+            Button_MouseOver_Background = backgroundBrush;
+            Button_Pressed_Background = backgroundBrush;
+            Button_Static_Background = backgroundBrush;
 
             // Handle ComboBox-specific resources
-            this.ComboBox_Disabled_Background = backgroundBrush;
-            this.ComboBox_Disabled_Editable_Background = backgroundBrush;
-            this.ComboBox_Disabled_Editable_Button_Background = backgroundBrush;
-            this.ComboBox_MouseOver_Background = backgroundBrush;
-            this.ComboBox_MouseOver_Editable_Background = backgroundBrush;
-            this.ComboBox_MouseOver_Editable_Button_Background = backgroundBrush;
-            this.ComboBox_Pressed_Background = backgroundBrush;
-            this.ComboBox_Pressed_Editable_Background = backgroundBrush;
-            this.ComboBox_Pressed_Editable_Button_Background = backgroundBrush;
-            this.ComboBox_Static_Background = backgroundBrush;
-            this.ComboBox_Static_Editable_Background = backgroundBrush;
-            this.ComboBox_Static_Editable_Button_Background = backgroundBrush;
+            ComboBox_Disabled_Background = backgroundBrush;
+            ComboBox_Disabled_Editable_Background = backgroundBrush;
+            ComboBox_Disabled_Editable_Button_Background = backgroundBrush;
+            ComboBox_MouseOver_Background = backgroundBrush;
+            ComboBox_MouseOver_Editable_Background = backgroundBrush;
+            ComboBox_MouseOver_Editable_Button_Background = backgroundBrush;
+            ComboBox_Pressed_Background = backgroundBrush;
+            ComboBox_Pressed_Editable_Background = backgroundBrush;
+            ComboBox_Pressed_Editable_Button_Background = backgroundBrush;
+            ComboBox_Static_Background = backgroundBrush;
+            ComboBox_Static_Editable_Background = backgroundBrush;
+            ComboBox_Static_Editable_Button_Background = backgroundBrush;
 
             // Handle CustomMessageBox-specific resources
-            this.CustomMessageBox_Static_Background = backgroundBrush;
+            CustomMessageBox_Static_Background = backgroundBrush;
 
             // Handle MenuItem-specific resources
-            this.MenuItem_SubMenu_Background = backgroundBrush;
-            this.MenuItem_SubMenu_Border = Brushes.DarkGray;
+            MenuItem_SubMenu_Background = backgroundBrush;
+            MenuItem_SubMenu_Border = Brushes.DarkGray;
 
             // Handle ProgressBar-specific resources
-            this.ProgressBar_Background = backgroundBrush;
+            ProgressBar_Background = backgroundBrush;
 
             // Handle ScrollViewer-specific resources
-            this.ScrollViewer_ScrollBar_Background = backgroundBrush;
+            ScrollViewer_ScrollBar_Background = backgroundBrush;
 
             // Handle TabItem-specific resources
-            this.TabItem_Selected_Background = backgroundBrush;
-            this.TabItem_Static_Background = backgroundBrush;
-            this.TabItem_Static_Border = Brushes.DarkGray;
+            TabItem_Selected_Background = backgroundBrush;
+            TabItem_Static_Background = backgroundBrush;
+            TabItem_Static_Border = Brushes.DarkGray;
 
             // Handle TextBox-specific resources
-            this.TextBox_Static_Background = backgroundBrush;
+            TextBox_Static_Background = backgroundBrush;
         }
     }
 }

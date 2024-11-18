@@ -205,53 +205,53 @@ namespace MPF.UI
         public void Apply()
         {
             // Handle application-wide resources
-            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = this.ActiveBorderBrush;
-            Application.Current.Resources[SystemColors.ControlBrushKey] = this.ControlBrush;
-            Application.Current.Resources[SystemColors.ControlTextBrushKey] = this.ControlTextBrush;
-            Application.Current.Resources[SystemColors.GrayTextBrushKey] = this.GrayTextBrush;
-            Application.Current.Resources[SystemColors.WindowBrushKey] = this.WindowBrush;
-            Application.Current.Resources[SystemColors.WindowTextBrushKey] = this.WindowTextBrush;
+            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = ActiveBorderBrush;
+            Application.Current.Resources[SystemColors.ControlBrushKey] = ControlBrush;
+            Application.Current.Resources[SystemColors.ControlTextBrushKey] = ControlTextBrush;
+            Application.Current.Resources[SystemColors.GrayTextBrushKey] = GrayTextBrush;
+            Application.Current.Resources[SystemColors.WindowBrushKey] = WindowBrush;
+            Application.Current.Resources[SystemColors.WindowTextBrushKey] = WindowTextBrush;
 
             // Handle Button-specific resources
-            Application.Current.Resources["Button.Disabled.Background"] = this.Button_Disabled_Background;
-            Application.Current.Resources["Button.MouseOver.Background"] = this.Button_MouseOver_Background;
-            Application.Current.Resources["Button.Pressed.Background"] = this.Button_Pressed_Background;
-            Application.Current.Resources["Button.Static.Background"] = this.Button_Static_Background;
+            Application.Current.Resources["Button.Disabled.Background"] = Button_Disabled_Background;
+            Application.Current.Resources["Button.MouseOver.Background"] = Button_MouseOver_Background;
+            Application.Current.Resources["Button.Pressed.Background"] = Button_Pressed_Background;
+            Application.Current.Resources["Button.Static.Background"] = Button_Static_Background;
 
             // Handle ComboBox-specific resources
-            Application.Current.Resources["ComboBox.Disabled.Background"] = this.ComboBox_Disabled_Background;
-            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = this.ComboBox_Disabled_Editable_Background;
-            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = this.ComboBox_Disabled_Editable_Button_Background;
-            Application.Current.Resources["ComboBox.MouseOver.Background"] = this.ComboBox_MouseOver_Background;
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = this.ComboBox_MouseOver_Editable_Background;
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = this.ComboBox_MouseOver_Editable_Button_Background;
-            Application.Current.Resources["ComboBox.Pressed.Background"] = this.ComboBox_Pressed_Background;
-            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = this.ComboBox_Pressed_Editable_Background;
-            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = this.ComboBox_Pressed_Editable_Button_Background;
-            Application.Current.Resources["ComboBox.Static.Background"] = this.ComboBox_Static_Background;
-            Application.Current.Resources["ComboBox.Static.Editable.Background"] = this.ComboBox_Static_Editable_Background;
-            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = this.ComboBox_Static_Editable_Button_Background;
+            Application.Current.Resources["ComboBox.Disabled.Background"] = ComboBox_Disabled_Background;
+            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = ComboBox_Disabled_Editable_Background;
+            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = ComboBox_Disabled_Editable_Button_Background;
+            Application.Current.Resources["ComboBox.MouseOver.Background"] = ComboBox_MouseOver_Background;
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = ComboBox_MouseOver_Editable_Background;
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = ComboBox_MouseOver_Editable_Button_Background;
+            Application.Current.Resources["ComboBox.Pressed.Background"] = ComboBox_Pressed_Background;
+            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = ComboBox_Pressed_Editable_Background;
+            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = ComboBox_Pressed_Editable_Button_Background;
+            Application.Current.Resources["ComboBox.Static.Background"] = ComboBox_Static_Background;
+            Application.Current.Resources["ComboBox.Static.Editable.Background"] = ComboBox_Static_Editable_Background;
+            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = ComboBox_Static_Editable_Button_Background;
 
             // Handle CustomMessageBox-specific resources
-            Application.Current.Resources["CustomMessageBox.Static.Background"] = this.CustomMessageBox_Static_Background;
+            Application.Current.Resources["CustomMessageBox.Static.Background"] = CustomMessageBox_Static_Background;
 
             // Handle MenuItem-specific resources
-            Application.Current.Resources["MenuItem.SubMenu.Background"] = this.MenuItem_SubMenu_Background;
-            Application.Current.Resources["MenuItem.SubMenu.Border"] = this.MenuItem_SubMenu_Border;
+            Application.Current.Resources["MenuItem.SubMenu.Background"] = MenuItem_SubMenu_Background;
+            Application.Current.Resources["MenuItem.SubMenu.Border"] = MenuItem_SubMenu_Border;
 
             // Handle ProgressBar-specific resources
-            Application.Current.Resources["ProgressBar.Background"] = this.ProgressBar_Background;
+            Application.Current.Resources["ProgressBar.Background"] = ProgressBar_Background;
 
             // Handle ScrollViewer-specific resources
-            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = this.ScrollViewer_ScrollBar_Background;
+            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = ScrollViewer_ScrollBar_Background;
 
             // Handle TabItem-specific resources
-            Application.Current.Resources["TabItem.Selected.Background"] = this.TabItem_Selected_Background;
-            Application.Current.Resources["TabItem.Static.Background"] = this.TabItem_Static_Background;
-            Application.Current.Resources["TabItem.Static.Border"] = this.TabItem_Static_Border;
+            Application.Current.Resources["TabItem.Selected.Background"] = TabItem_Selected_Background;
+            Application.Current.Resources["TabItem.Static.Background"] = TabItem_Static_Background;
+            Application.Current.Resources["TabItem.Static.Border"] = TabItem_Static_Border;
 
             // Handle TextBox-specific resources
-            Application.Current.Resources["TextBox.Static.Background"] = this.TextBox_Static_Background;
+            Application.Current.Resources["TextBox.Static.Background"] = TextBox_Static_Background;
         }
     }
 }
