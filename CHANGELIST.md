@@ -10,6 +10,7 @@
 - Add `skeleton` to Redumper CD by default
 - Add unused "Generic" processor
 - Add Track 0/00/A/AA to Generic
+- Add IMA extension for floppy disks
 
 ### 3.2.3 (2024-11-06)
 
