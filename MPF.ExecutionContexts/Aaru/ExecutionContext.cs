@@ -114,7 +114,12 @@ namespace MPF.ExecutionContexts.Aaru
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
+        public ExecutionContext(RedumpSystem? system,
+            MediaType? type,
+            string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -1191,7 +1196,10 @@ namespace MPF.ExecutionContexts.Aaru
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
+        protected override void SetDefaultParameters(string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options)
         {
             BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
@@ -1205,8 +1213,8 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = this.System.MediaTypes();
-            if (!validTypes.Contains(this.Type))
+            var validTypes = RedumpSystem.MediaTypes();
+            if (!validTypes.Contains(MediaType))
                 return;
 
             // Set retry count
@@ -1229,40 +1237,40 @@ namespace MPF.ExecutionContexts.Aaru
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type
-            switch (this.Type)
+            switch (MediaType)
             {
-                case MediaType.CDROM:
+                case SabreTools.RedumpLib.Data.MediaType.CDROM:
                     // Currently no defaults set
                     break;
-                case MediaType.DVD:
+                case SabreTools.RedumpLib.Data.MediaType.DVD:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
-                case MediaType.GDROM:
+                case SabreTools.RedumpLib.Data.MediaType.GDROM:
                     // Currently no defaults set
                     break;
-                case MediaType.HDDVD:
+                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
-                case MediaType.BluRay:
+                case SabreTools.RedumpLib.Data.MediaType.BluRay:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
 
                 // Special Formats
-                case MediaType.NintendoGameCubeGameDisc:
+                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                     // Currently no defaults set
                     break;
-                case MediaType.NintendoWiiOpticalDisc:
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                     // Currently no defaults set
                     break;
 
                 // Non-optical
-                case MediaType.FloppyDisk:
+                case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
                     // Currently no defaults set
                     break;
             }

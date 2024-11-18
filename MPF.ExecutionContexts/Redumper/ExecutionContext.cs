@@ -19,7 +19,7 @@ namespace MPF.ExecutionContexts.Redumper
         public override string? OutputPath => Path.Combine(
                 ImagePathValue?.Trim('"') ?? string.Empty,
                 ImageNameValue?.Trim('"') ?? string.Empty)
-            + GetDefaultExtension(this.Type);
+            + GetDefaultExtension(MediaType);
 
         /// <inheritdoc/>
         public override int? Speed => SpeedValue;
@@ -159,7 +159,12 @@ namespace MPF.ExecutionContexts.Redumper
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
+        public ExecutionContext(RedumpSystem? system,
+            MediaType? type,
+            string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options)
             : base(system, type, drivePath, filename, driveSpeed, options)
         {
         }
@@ -501,14 +506,14 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            return this.BaseCommand == CommandStrings.NONE
-                || this.BaseCommand?.Contains(CommandStrings.CD) == true
-                || this.BaseCommand?.Contains(CommandStrings.DVD) == true
-                || this.BaseCommand?.Contains(CommandStrings.BluRay) == true
-                || this.BaseCommand?.Contains(CommandStrings.SACD) == true
-                || this.BaseCommand?.Contains(CommandStrings.New) == true
-                || this.BaseCommand?.Contains(CommandStrings.Dump) == true
-                || this.BaseCommand?.Contains(CommandStrings.DumpNew) == true;
+            return BaseCommand == CommandStrings.NONE
+                || BaseCommand?.Contains(CommandStrings.CD) == true
+                || BaseCommand?.Contains(CommandStrings.DVD) == true
+                || BaseCommand?.Contains(CommandStrings.BluRay) == true
+                || BaseCommand?.Contains(CommandStrings.SACD) == true
+                || BaseCommand?.Contains(CommandStrings.New) == true
+                || BaseCommand?.Contains(CommandStrings.Dump) == true
+                || BaseCommand?.Contains(CommandStrings.DumpNew) == true;
         }
 
         /// <inheritdoc/>
@@ -548,34 +553,37 @@ namespace MPF.ExecutionContexts.Redumper
         }
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
+        protected override void SetDefaultParameters(string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options)
         {
             // If we don't have a CD, DVD, HD-DVD, or BD, we can't dump using redumper
-            if (this.Type != MediaType.CDROM
-                && this.Type != MediaType.DVD
-                && this.Type != MediaType.HDDVD
-                && this.Type != MediaType.BluRay)
+            if (MediaType != SabreTools.RedumpLib.Data.MediaType.CDROM
+                && MediaType != SabreTools.RedumpLib.Data.MediaType.DVD
+                && MediaType != SabreTools.RedumpLib.Data.MediaType.HDDVD
+                && MediaType != SabreTools.RedumpLib.Data.MediaType.BluRay)
             {
                 return;
             }
 
             BaseCommand = CommandStrings.NONE;
-            switch (this.Type)
+            switch (MediaType)
             {
-                case MediaType.CDROM:
-                    ModeValues = this.System switch
+                case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                    ModeValues = RedumpSystem switch
                     {
-                        RedumpSystem.SuperAudioCD => [CommandStrings.SACD],
+                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.SACD],
                         _ => [CommandStrings.CD],
                     };
                     break;
-                case MediaType.DVD:
+                case SabreTools.RedumpLib.Data.MediaType.DVD:
                     ModeValues = [CommandStrings.DVD];
                     break;
-                case MediaType.HDDVD: // TODO: Keep in sync if another command string shows up
+                case SabreTools.RedumpLib.Data.MediaType.HDDVD: // TODO: Keep in sync if another command string shows up
                     ModeValues = [CommandStrings.DVD];
                     break;
-                case MediaType.BluRay:
+                case SabreTools.RedumpLib.Data.MediaType.BluRay:
                     ModeValues = [CommandStrings.BluRay];
                     break;
                 default:
@@ -899,8 +907,8 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             // If the image name was not set, set it with a default value
-            if (string.IsNullOrEmpty(this.ImageNameValue))
-                this.ImageNameValue = "track";
+            if (string.IsNullOrEmpty(ImageNameValue))
+                ImageNameValue = "track";
 
             return true;
         }

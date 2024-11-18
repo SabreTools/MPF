@@ -671,7 +671,7 @@ namespace MPF.Frontend
         /// <param name="settings"></param>
         public Options(Dictionary<string, string?>? settings = null)
         {
-            this.Settings = settings ?? [];
+            Settings = settings ?? [];
         }
 
         /// <summary>
@@ -688,8 +688,8 @@ namespace MPF.Frontend
         /// </summary>
         public string? this[string key]
         {
-            get => this.Settings[key];
-            set => this.Settings[key] = value;
+            get => Settings[key];
+            set => Settings[key] = value;
         }
 
         #region Helpers

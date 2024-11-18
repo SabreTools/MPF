@@ -82,12 +82,12 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Currently represented system
         /// </summary>
-        public RedumpSystem? System { get; set; }
+        public RedumpSystem? RedumpSystem { get; set; }
 
         /// <summary>
         /// Currently represented media type
         /// </summary>
-        public MediaType? Type { get; set; }
+        public MediaType? MediaType { get; set; }
 
         #endregion
 
@@ -111,10 +111,15 @@ namespace MPF.ExecutionContexts
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Dictionary object containing all settings that may be used for setting parameters</param>
-        public BaseExecutionContext(RedumpSystem? system, MediaType? type, string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options)
+        public BaseExecutionContext(RedumpSystem? system,
+            MediaType? type,
+            string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options)
         {
-            this.System = system;
-            this.Type = type;
+            RedumpSystem = system;
+            MediaType = type;
             SetDefaultParameters(drivePath, filename, driveSpeed, options);
         }
 
@@ -169,7 +174,10 @@ namespace MPF.ExecutionContexts
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Dictionary containing all settings that may be used for setting parameters</param>
-        protected abstract void SetDefaultParameters(string? drivePath, string filename, int? driveSpeed, Dictionary<string, string?> options);
+        protected abstract void SetDefaultParameters(string? drivePath,
+            string filename,
+            int? driveSpeed,
+            Dictionary<string, string?> options);
 
         /// <summary>
         /// Scan a possible parameter string and populate whatever possible
@@ -326,9 +334,9 @@ namespace MPF.ExecutionContexts
         {
             if (CommandSupport == null)
                 return false;
-            if (this.BaseCommand == null)
+            if (BaseCommand == null)
                 return false;
-            if (!CommandSupport.TryGetValue(this.BaseCommand, out var supported))
+            if (!CommandSupport.TryGetValue(BaseCommand, out var supported))
                 return false;
             return supported.Contains(flag);
         }

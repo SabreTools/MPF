@@ -199,8 +199,8 @@ namespace MPF.Frontend
             // Set system, type, and drive
             if (_executionContext != null)
             {
-                _executionContext.System = _system;
-                _executionContext.Type = _type;
+                _executionContext.RedumpSystem = _system;
+                _executionContext.MediaType = _type;
 
                 // Set some parameters, if not already set
                 OutputPath ??= _executionContext.OutputPath!;
