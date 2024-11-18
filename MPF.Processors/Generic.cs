@@ -134,8 +134,14 @@ namespace MPF.Processors
             // Multi-file outputs
             else if (File.Exists($"{basePath} (Track 1).bin"))
             {
-                // Hash all found tracks
                 var roms = new List<Rom>();
+
+                // Try Track 0
+                var track0rom = GetRom($"{basePath} (Track 0).bin");
+                if (track0rom != null)
+                    roms.Add(track0rom);
+
+                // Hash all found tracks
                 for (int i = 1; i < 10; i++)
                 {
                     // Get the rom for the track
@@ -147,14 +153,25 @@ namespace MPF.Processors
                     roms.Add(rom);
                 }
 
+                // Try Track A
+                var trackArom = GetRom($"{basePath} (Track A).bin");
+                if (trackArom != null)
+                    roms.Add(trackArom);
+
                 // Create and return if there are any tracks
                 if (roms.Count > 0)
                     return GetDatafile(basePath, roms);
             }
             else if (File.Exists($"{basePath} (Track 01).bin"))
             {
-                // Hash all found tracks
                 var roms = new List<Rom>();
+
+                // Try Track 00
+                var track00rom = GetRom($"{basePath} (Track 00).bin");
+                if (track00rom != null)
+                    roms.Add(track00rom);
+
+                // Hash all found tracks
                 for (int i = 1; i < 100; i++)
                 {
                     // Get the rom for the track
@@ -165,6 +182,11 @@ namespace MPF.Processors
                     // Add the track to the output
                     roms.Add(rom);
                 }
+
+                // Try Track AA
+                var trackAArom = GetRom($"{basePath} (Track AA).bin");
+                if (trackAArom != null)
+                    roms.Add(trackAArom);
 
                 // Create and return if there are any tracks
                 if (roms.Count > 0)
