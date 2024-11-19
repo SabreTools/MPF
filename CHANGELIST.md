@@ -12,6 +12,7 @@
 - Add Track 0/00/A/AA to Generic
 - Add IMA extension for floppy disks
 - Remove usages of `this.` from themes
+- Fix PIC parser
 
 ### 3.2.3 (2024-11-06)
 
