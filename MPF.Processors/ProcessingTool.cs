@@ -745,7 +745,7 @@ namespace MPF.Processors
             if (string.IsNullOrEmpty(inputPIC))
                 return null;
 
-            string cleanPIC = inputPIC!.Trim().Replace("\n", string.Empty);
+            string cleanPIC = inputPIC!.Trim().Replace("\n", string.Empty).Replace("\r", string.Empty);
 
             if (cleanPIC.Length < 230)
                 return null;
