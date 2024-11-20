@@ -13,6 +13,7 @@
 - Add IMA extension for floppy disks
 - Remove usages of `this.` from themes
 - Fix PIC parser
+- Use expanded version of split regex
 
 ### 3.2.3 (2024-11-06)
 
