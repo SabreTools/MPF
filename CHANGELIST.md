@@ -19,6 +19,7 @@
 - Remove usages of `this.` from UI code
 - Reduce unnecessary use of IEnumerable
 - Use List in protection formatting
+- Don't preemptively sort protections
 
 ### 3.2.3 (2024-11-06)
 

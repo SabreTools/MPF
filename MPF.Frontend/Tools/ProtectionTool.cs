@@ -67,7 +67,6 @@ namespace MPF.Frontend.Tools
             var protectionValues = protections
                 .SelectMany(kvp => kvp.Value)
                 .Distinct()
-                .OrderBy(p => p)
                 .ToList();
 
             // Sanitize and join protections for writing
@@ -151,7 +150,6 @@ namespace MPF.Frontend.Tools
             {
                 foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file"));
                 foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
-                foundProtections.Sort();
             }
 
             // ActiveMARK
@@ -422,6 +420,8 @@ namespace MPF.Frontend.Tools
                 foundProtections = foundProtections.FindAll(p => p != "XCP");
             }
 
+            // Sort and return the protections
+            foundProtections.Sort();
             return string.Join(", ", [.. foundProtections]);
         }
     }
