@@ -15,6 +15,7 @@
 - Fix PIC parser
 - Use expanded version of split regex
 - Update packages for bugfixes
+- Fix minor efficiency issues
 
 ### 3.2.3 (2024-11-06)
 

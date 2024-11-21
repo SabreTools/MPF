@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
@@ -395,7 +394,7 @@ namespace MPF.UI.Windows
                 AntiModchip.Visibility = Visibility.Collapsed;
             if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
                 DiscOffset.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys?.Contains(SiteCode.DMIHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.DMIHash) != true)
                 DMIHash.Visibility = Visibility.Collapsed;
             if (submissionInfo.EDC?.EDC == null)
                 EDC.Visibility = Visibility.Collapsed;

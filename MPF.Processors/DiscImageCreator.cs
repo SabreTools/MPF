@@ -1302,6 +1302,7 @@ namespace MPF.Processors
                 var trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$", RegexOptions.Compiled);
 
                 // Read in the track session data
+                bool allFirstSession = true;
                 var trackSessionMapping = new Dictionary<string, string>();
                 while ((line = sr.ReadLine())?.StartsWith("========== OpCode") == false)
                 {
@@ -1312,11 +1313,15 @@ namespace MPF.Processors
                     if (!match.Success)
                         continue;
 
+                    // Flag if there are additional sections
+                    if (match.Groups[1].Value != "1")
+                        allFirstSession = false;
+
                     trackSessionMapping[match.Groups[2].Value] = match.Groups[1].Value;
                 }
 
                 // If we have all Session 1, we can just skip out
-                if (trackSessionMapping.Values.All(v => v == "1"))
+                if (allFirstSession)
                     return null;
 
                 // Seek to the multisession data
