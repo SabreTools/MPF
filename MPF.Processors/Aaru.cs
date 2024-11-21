@@ -617,31 +617,16 @@ namespace MPF.Processors
                         continue;
 
                     // Build each row in consecutive order
-                    string pvd = string.Empty;
-#if NET20 || NET35 || NET40 || NET452
-                    byte[] pvdLine = new byte[16];
-                    Array.Copy(pvdData, 0, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0320", pvdLine);
-                    Array.Copy(pvdData, 16, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0330", pvdLine);
-                    Array.Copy(pvdData, 32, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0340", pvdLine);
-                    Array.Copy(pvdData, 48, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0350", pvdLine);
-                    Array.Copy(pvdData, 64, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0360", pvdLine);
-                    Array.Copy(pvdData, 80, pvdLine, 0, 16);
-                    pvd += GenerateSectorOutputLine("0370", pvdLine);
-#else
-                    pvd += GenerateSectorOutputLine("0320", new ReadOnlySpan<byte>(pvdData, 0, 16).ToArray());
-                    pvd += GenerateSectorOutputLine("0330", new ReadOnlySpan<byte>(pvdData, 16, 16).ToArray());
-                    pvd += GenerateSectorOutputLine("0340", new ReadOnlySpan<byte>(pvdData, 32, 16).ToArray());
-                    pvd += GenerateSectorOutputLine("0350", new ReadOnlySpan<byte>(pvdData, 48, 16).ToArray());
-                    pvd += GenerateSectorOutputLine("0360", new ReadOnlySpan<byte>(pvdData, 64, 16).ToArray());
-                    pvd += GenerateSectorOutputLine("0370", new ReadOnlySpan<byte>(pvdData, 80, 16).ToArray());
-#endif
+                    var pvd = new StringBuilder();
 
-                    return pvd;
+                    pvd.AppendLine(GenerateSectorOutputLine("0320", pvdData, 0 * 16));
+                    pvd.AppendLine(GenerateSectorOutputLine("0330", pvdData, 1 * 16));
+                    pvd.AppendLine(GenerateSectorOutputLine("0340", pvdData, 2 * 16));
+                    pvd.AppendLine(GenerateSectorOutputLine("0350", pvdData, 3 * 16));
+                    pvd.AppendLine(GenerateSectorOutputLine("0360", pvdData, 4 * 16));
+                    pvd.AppendLine(GenerateSectorOutputLine("0370", pvdData, 5 * 16));
+
+                    return pvd.ToString();
                 }
             }
 
@@ -789,22 +774,26 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="row">Row ID for outputting</param>
         /// <param name="bytes">Bytes representing the data to write</param>
+        /// <param name="offset">Offset into the byte array</param>
+        /// <param name="length">Length of the byte array</param>
         /// <returns>Formatted string representing the sector line</returns>
-        private static string? GenerateSectorOutputLine(string row, byte[] bytes)
+        private static string? GenerateSectorOutputLine(string row, byte[] bytes, int offset)
         {
             // If the data isn't correct, return null
-            if (bytes == null || bytes.Length != 16)
+            if (bytes == null || offset < 0 || offset >= bytes.Length || bytes.Length - offset < 16)
                 return null;
 
-            string pvdLine = $"{row} : ";
-            pvdLine += BitConverter.ToString(bytes, 0, 8).Replace("-", " ");
-            pvdLine += "  ";
-            pvdLine += BitConverter.ToString(bytes, 8, 8).Replace("-", " ");
-            pvdLine += "   ";
-            pvdLine += Encoding.ASCII.GetString(bytes).Replace((char)0, '.').Replace('?', '.');
-            pvdLine += "\n";
+            var pvdLine = new StringBuilder();
 
-            return pvdLine;
+            pvdLine.Append($"{row} : ");
+
+            pvdLine.Append(BitConverter.ToString(bytes, offset + 0, 8).Replace("-", " "));
+            pvdLine.Append("  ");
+            pvdLine.Append(BitConverter.ToString(bytes, offset + 8, 8).Replace("-", " "));
+            pvdLine.Append("   ");
+            pvdLine.Append(Encoding.ASCII.GetString(bytes, offset, 16).Replace((char)0, '.').Replace('?', '.'));
+
+            return pvdLine.ToString();
         }
 
         /// <summary>

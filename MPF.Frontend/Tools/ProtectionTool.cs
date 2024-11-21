@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
+using SabreTools.IO.Extensions;
 
 namespace MPF.Frontend.Tools
 {
@@ -90,37 +91,14 @@ namespace MPF.Frontend.Tools
 
 #if NET40
             return await Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
-                    foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
-                    {
-                        try
-                        {
-                            byte[] fileContent = File.ReadAllBytes(file);
-                            var protection = antiModchip.CheckContents(file, fileContent, false);
-                            if (!string.IsNullOrEmpty(protection))
-                                return true;
-                        }
-                        catch { }
-                    }
-                }
-                catch { }
-
-                return false;
-            });
 #else
             return await Task.Run(() =>
+#endif
             {
                 try
                 {
                     var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
-#if NET20 || NET35
-                    foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
-#else
-                    foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
-#endif
+                    foreach (string file in IOExtensions.SafeGetFiles(path!, "*", SearchOption.AllDirectories))
                     {
                         try
                         {
@@ -136,7 +114,6 @@ namespace MPF.Frontend.Tools
 
                 return false;
             });
-#endif
         }
 
         /// <summary>

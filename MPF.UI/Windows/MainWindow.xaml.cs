@@ -1,5 +1,8 @@
 using System;
 using System.IO;
+#if NET40
+using System.Threading.Tasks;
+#endif
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend.ViewModels;
@@ -25,41 +28,41 @@ namespace MPF.UI.Windows
 
         #region Top Menu Bar
 
-        private MenuItem? _AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
-        private MenuItem? _AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
-        private MenuItem? _CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
-        private MenuItem? _DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
-        private MenuItem? _CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
-        private MenuItem? _CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
-        private MenuItem? _OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
+        private MenuItem? AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
+        private MenuItem? AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
+        private MenuItem? CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
+        private MenuItem? DebugViewMenuItem => ItemHelper.FindChild<MenuItem>(this, "DebugViewMenuItem");
+        private MenuItem? CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
+        private MenuItem? CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
+        private MenuItem? OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
 
         #endregion
 
         #region Settings
 
-        private ComboBox? _DriveLetterComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveLetterComboBox");
-        private ComboBox? _DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
-        private ComboBox? _DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
-        private CheckBox? _EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
-        private ComboBox? _MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
-        private Button? _OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
-        private TextBox? _OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
-        private ComboBox? _SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
+        private ComboBox? DriveLetterComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveLetterComboBox");
+        private ComboBox? DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
+        private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
+        private CheckBox? EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
+        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
+        private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
+        private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
+        private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
 
         #region Controls
 
-        private Button? _CopyProtectScanButton => ItemHelper.FindChild<Button>(this, "CopyProtectScanButton");
-        private Button? _MediaScanButton => ItemHelper.FindChild<Button>(this, "MediaScanButton");
-        private Button? _StartStopButton => ItemHelper.FindChild<Button>(this, "StartStopButton");
-        private Button? _UpdateVolumeLabel => ItemHelper.FindChild<Button>(this, "UpdateVolumeLabel");
+        private Button? CopyProtectScanButton => ItemHelper.FindChild<Button>(this, "CopyProtectScanButton");
+        private Button? MediaScanButton => ItemHelper.FindChild<Button>(this, "MediaScanButton");
+        private Button? StartStopButton => ItemHelper.FindChild<Button>(this, "StartStopButton");
+        private Button? UpdateVolumeLabel => ItemHelper.FindChild<Button>(this, "UpdateVolumeLabel");
 
         #endregion
 
         #region Status
 
-        private LogOutput? _LogOutput => ItemHelper.FindChild<LogOutput>(this, "LogOutput");
+        private LogOutput? LogOutput => ItemHelper.FindChild<LogOutput>(this, "LogOutput");
 
         #endregion
 
@@ -102,17 +105,9 @@ namespace MPF.UI.Windows
 
             // Display the debug option in the menu, if necessary
             if (MainViewModel.Options.ShowDebugViewMenuItem)
-#if NET35
-                _DebugViewMenuItem!.Visibility = Visibility.Visible;
-#else
-                DebugViewMenuItem.Visibility = Visibility.Visible;
-#endif
+                DebugViewMenuItem!.Visibility = Visibility.Visible;
 
-#if NET35
-            MainViewModel.Init(_LogOutput!.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
-#else
-            MainViewModel.Init(LogOutput.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
-#endif
+            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -137,62 +132,31 @@ namespace MPF.UI.Windows
         public void AddEventHandlers()
         {
             // Menu Bar Click
-#if NET35
-            _AboutMenuItem!.Click += AboutClick;
-            _AppExitMenuItem!.Click += AppExitClick;
-            _CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
-            _DebugViewMenuItem!.Click += DebugViewClick;
-            _CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
-            _CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
-            _OptionsMenuItem!.Click += OptionsMenuItemClick;
-#else
-            AboutMenuItem.Click += AboutClick;
-            AppExitMenuItem.Click += AppExitClick;
-            CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
-            DebugViewMenuItem.Click += DebugViewClick;
-            CheckDumpMenuItem.Click += CheckDumpMenuItemClick;
-            CreateIRDMenuItem.Click += CreateIRDMenuItemClick;
-            OptionsMenuItem.Click += OptionsMenuItemClick;
-#endif
+            AboutMenuItem!.Click += AboutClick;
+            AppExitMenuItem!.Click += AppExitClick;
+            CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
+            DebugViewMenuItem!.Click += DebugViewClick;
+            CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
+            CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
+            OptionsMenuItem!.Click += OptionsMenuItemClick;
 
             // User Area Click
-#if NET35
-            _CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
-            _EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
-            _MediaScanButton!.Click += MediaScanButtonClick;
-            _UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
-            _OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
-            _StartStopButton!.Click += StartStopButtonClick;
-#else
-            CopyProtectScanButton.Click += CopyProtectScanButtonClick;
-            EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
-            MediaScanButton.Click += MediaScanButtonClick;
-            UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
-            OutputPathBrowseButton.Click += OutputPathBrowseButtonClick;
-            StartStopButton.Click += StartStopButtonClick;
-#endif
+            CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
+            EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
+            MediaScanButton!.Click += MediaScanButtonClick;
+            UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
+            OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
+            StartStopButton!.Click += StartStopButtonClick;
 
             // User Area SelectionChanged
-#if NET35
-            _SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            _MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            _DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            _DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            _DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-#else
-            SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-#endif
+            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
 
             // User Area TextChanged
-#if NET35
-            _OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
-#else
-            OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
-#endif
+            OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
         }
 
         /// <summary>
@@ -535,17 +499,9 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
-#if NET40
-        public void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
-#else
         public async void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
-#endif
         {
-#if NET40
-            var output = MainViewModel.ScanAndShowProtection();
-#else
             var output = await MainViewModel.ScanAndShowProtection();
-#endif
 
             if (!MainViewModel.LogPanelExpanded)
             {

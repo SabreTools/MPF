@@ -158,13 +158,8 @@ namespace MPF.CLI
             }
 
             // Finally, attempt to do the output dance
-#if NET40
-            var verifyTask = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress);
-            verifyTask.Wait();
-            var verifyResult = verifyTask.Result;
-#else
-            var verifyResult = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
-#endif
+            var verifyResult = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress)
+                .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
         }
 

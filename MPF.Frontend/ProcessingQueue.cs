@@ -32,11 +32,7 @@ namespace MPF.Frontend
 
         public ProcessingQueue(Action<T> customProcessing)
         {
-#if NET20 || NET35
-            _internalQueue = new Queue<T>();
-#else
-            _internalQueue = new ConcurrentQueue<T>();
-#endif
+            _internalQueue = [];
             _customProcessing = customProcessing;
             _tokenSource = new CancellationTokenSource();
 #if NET20 || NET35
@@ -72,11 +68,7 @@ namespace MPF.Frontend
             while (true)
             {
                 // Nothing in the queue means we get to idle
-#if NET20 || NET35
                 if (_internalQueue.Count == 0)
-#else
-                if (_internalQueue.IsEmpty)
-#endif
                 {
                     if (_tokenSource.IsCancellationRequested)
                         break;

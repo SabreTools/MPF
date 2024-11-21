@@ -35,10 +35,10 @@ namespace MPF.UI.UserControls
 
 #if NET35
 
-        private Button? _ClearButton => ItemHelper.FindChild<Button>(this, "ClearButton");
-        private RichTextBox? _Output => ItemHelper.FindChild<RichTextBox>(this, "Output");
-        private ScrollViewer? _OutputViewer => ItemHelper.FindChild<ScrollViewer>(this, "OutputViewer");
-        private Button? _SaveButton => ItemHelper.FindChild<Button>(this, "SaveButton");
+        private Button? ClearButton => ItemHelper.FindChild<Button>(this, "ClearButton");
+        private RichTextBox? Output => ItemHelper.FindChild<RichTextBox>(this, "Output");
+        private ScrollViewer? OutputViewer => ItemHelper.FindChild<ScrollViewer>(this, "OutputViewer");
+        private Button? SaveButton => ItemHelper.FindChild<Button>(this, "SaveButton");
 
 #endif
 
@@ -60,24 +60,13 @@ namespace MPF.UI.UserControls
             LogQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
 
             // Add handlers
-#if NET35
-            _OutputViewer!.SizeChanged += OutputViewerSizeChanged;
-            _Output!.TextChanged += OnTextChanged;
-            _ClearButton!.Click += OnClearButton;
-            _SaveButton!.Click += OnSaveButton;
-#else
-            OutputViewer.SizeChanged += OutputViewerSizeChanged;
-            Output.TextChanged += OnTextChanged;
-            ClearButton.Click += OnClearButton;
-            SaveButton.Click += OnSaveButton;
-#endif
+            OutputViewer!.SizeChanged += OutputViewerSizeChanged;
+            Output!.TextChanged += OnTextChanged;
+            ClearButton!.Click += OnClearButton;
+            SaveButton!.Click += OnSaveButton;
 
             // Update the internal state
-#if NET35
-            _Output.Document = Document;
-#else
             Output.Document = Document;
-#endif
         }
 
         #region Logging
@@ -214,11 +203,7 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Scroll the current view to the bottom
         /// </summary>
-#if NET35
-        public void ScrollToBottom() => _OutputViewer!.ScrollToBottom();
-#else
-        public void ScrollToBottom() => OutputViewer.ScrollToBottom();
-#endif
+        public void ScrollToBottom() => OutputViewer!.ScrollToBottom();
 
         #endregion
 

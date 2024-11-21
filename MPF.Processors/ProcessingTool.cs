@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using SabreTools.IO.Extensions;
 using SabreTools.Models.Logiqx;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
@@ -270,20 +271,13 @@ namespace MPF.Processors
             if (di?.Units == null || di.Units.Length <= 1)
                 return false;
 
+            // Wrap big-endian reading
             static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
             {
                 if (bytes == null)
                     return default;
 
-#if NET20 || NET35 || NET40 || NET452
-                byte[] rev = new byte[0x04];
-                Array.Copy(bytes, offset, rev, 0, 0x04);
-#else
-                var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
-                byte[] rev = span.ToArray();
-#endif
-                Array.Reverse(rev);
-                return BitConverter.ToInt32(rev, 0);
+                return bytes.ReadInt32BigEndian(ref offset);
             }
 
             // Layerbreak 1 (2+ layers)

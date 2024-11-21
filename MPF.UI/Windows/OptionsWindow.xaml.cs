@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+#if NET40
+using System.Threading;
+#endif
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,15 +28,15 @@ namespace MPF.UI.Windows
 
 #if NET35
 
-        private System.Windows.Controls.Button? _AaruPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AaruPathButton");
-        private System.Windows.Controls.Button? _AcceptButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AcceptButton");
-        private System.Windows.Controls.Button? _CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
-        private System.Windows.Controls.Button? _DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
-        private System.Windows.Controls.Button? _DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
-        private System.Windows.Controls.Button? _RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
-        private System.Windows.Controls.Button? _RedumpLoginTestButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumpLoginTestButton");
-        private PasswordBox? _RedumpPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpPasswordBox");
-        private System.Windows.Controls.TextBox? _RedumpUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpUsernameTextBox");
+        private System.Windows.Controls.Button? AaruPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AaruPathButton");
+        private System.Windows.Controls.Button? AcceptButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "AcceptButton");
+        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
+        private System.Windows.Controls.Button? DefaultOutputPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DefaultOutputPathButton");
+        private System.Windows.Controls.Button? DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
+        private System.Windows.Controls.Button? RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
+        private System.Windows.Controls.Button? RedumpLoginTestButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumpLoginTestButton");
+        private PasswordBox? RedumpPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpPasswordBox");
+        private System.Windows.Controls.TextBox? RedumpUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpUsernameTextBox");
 
 #endif
 
@@ -64,34 +67,18 @@ namespace MPF.UI.Windows
             DataContext = new OptionsViewModel(options);
 
             // Set initial value for binding
-#if NET35
-            _RedumpPasswordBox!.Password = options.RedumpPassword;
-#else
-            RedumpPasswordBox.Password = options.RedumpPassword;
-#endif
+            RedumpPasswordBox!.Password = options.RedumpPassword;
 
             // Add handlers
-#if NET35
-            _AaruPathButton!.Click += BrowseForPathClick;
-            _DiscImageCreatorPathButton!.Click += BrowseForPathClick;
-            _RedumperPathButton!.Click += BrowseForPathClick;
-            _DefaultOutputPathButton!.Click += BrowseForPathClick;
+            AaruPathButton!.Click += BrowseForPathClick;
+            DiscImageCreatorPathButton!.Click += BrowseForPathClick;
+            RedumperPathButton!.Click += BrowseForPathClick;
+            DefaultOutputPathButton!.Click += BrowseForPathClick;
 
-            _AcceptButton!.Click += OnAcceptClick;
-            _CancelButton!.Click += OnCancelClick;
-            _RedumpPasswordBox!.PasswordChanged += OnPasswordChanged;
-            _RedumpLoginTestButton!.Click += OnRedumpTestClick;
-#else
-            AaruPathButton.Click += BrowseForPathClick;
-            DiscImageCreatorPathButton.Click += BrowseForPathClick;
-            RedumperPathButton.Click += BrowseForPathClick;
-            DefaultOutputPathButton.Click += BrowseForPathClick;
-
-            AcceptButton.Click += OnAcceptClick;
-            CancelButton.Click += OnCancelClick;
-            RedumpPasswordBox.PasswordChanged += OnPasswordChanged;
-            RedumpLoginTestButton.Click += OnRedumpTestClick;
-#endif
+            AcceptButton!.Click += OnAcceptClick;
+            CancelButton!.Click += OnCancelClick;
+            RedumpPasswordBox!.PasswordChanged += OnPasswordChanged;
+            RedumpLoginTestButton!.Click += OnRedumpTestClick;
         }
 
         /// <summary>
@@ -199,13 +186,9 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
-        private async Task ValidateRedumpCredentials()
+        private async Task<bool?> ValidateRedumpCredentials()
         {
-#if NET35
-            bool? success = await RedumpClient.ValidateCredentials(_RedumpUsernameTextBox!.Text, _RedumpPasswordBox!.Password);
-#else
-            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
-#endif
+            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Password);
             string message = OptionsViewModel.GetRedumpLoginResult(success);
 
             if (success == true)
@@ -214,6 +197,8 @@ namespace MPF.UI.Windows
                 CustomMessageBox.Show(this, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        
+            return success;
         }
 
         #endregion
@@ -260,26 +245,15 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnPasswordChanged(object sender, EventArgs e)
         {
-#if NET35
-            OptionsViewModel.Options.RedumpPassword = _RedumpPasswordBox!.Password;
-#else
-            OptionsViewModel.Options.RedumpPassword = RedumpPasswordBox.Password;
-#endif
+            OptionsViewModel.Options.RedumpPassword = RedumpPasswordBox!.Password;
         }
 
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
-#if NET40
-        private void OnRedumpTestClick(object sender, EventArgs e)
-        {
-            var validateTask = ValidateRedumpCredentials();
-            validateTask.Wait();
-        }
-#else
-        private async void OnRedumpTestClick(object sender, EventArgs e) => await ValidateRedumpCredentials();
-#endif
+        private async void OnRedumpTestClick(object sender, EventArgs e)
+            => await ValidateRedumpCredentials();
 
-#endregion
+        #endregion
     }
 }

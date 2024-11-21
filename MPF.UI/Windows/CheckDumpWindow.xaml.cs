@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+#if NET40
+using System.Threading.Tasks;
+#endif
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend.ViewModels;
@@ -25,18 +28,18 @@ namespace MPF.UI.Windows
 
         #region Settings
 
-        private ComboBox? _DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
-        private Button? _InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
-        private TextBox? _InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
-        private ComboBox? _MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
-        private ComboBox? _SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
+        private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
+        private Button? InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
+        private TextBox? InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
+        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
+        private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
 
         #region Controls
 
-        private System.Windows.Controls.Button? _CheckDumpButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CheckDumpButton");
-        private System.Windows.Controls.Button? _CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
+        private System.Windows.Controls.Button? CheckDumpButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CheckDumpButton");
+        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
 
         #endregion
         
@@ -80,38 +83,19 @@ namespace MPF.UI.Windows
         public void AddEventHandlers()
         {
             // Main buttons
-#if NET35
-            _CheckDumpButton!.Click += OnCheckDumpClick;
-            _CancelButton!.Click += OnCancelClick;
-#else
-            CheckDumpButton.Click += OnCheckDumpClick;
-            CancelButton.Click += OnCancelClick;
-#endif
+            CheckDumpButton!.Click += OnCheckDumpClick;
+            CancelButton!.Click += OnCancelClick;
 
             // User Area Click
-#if NET35
-            _InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-#else
-            InputPathBrowseButton.Click += InputPathBrowseButtonClick;
-#endif
+            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
 
             // User Area SelectionChanged
-#if NET35
-            _SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            _MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            _DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-#else
-            SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-#endif
+            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
 
             // User Area TextChanged
-#if NET35
-            _InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-#else
-            InputPathTextBox.TextChanged += InputPathTextBoxTextChanged;
-#endif
+            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
         }
 
         /// <summary>
@@ -209,17 +193,9 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for CheckDumpButton Click event
         /// </summary>
-#if NET40
-        private void OnCheckDumpClick(object sender, EventArgs e)
-        {
-            var checkTask = CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
-            checkTask.Wait();
-            string? errorMessage = checkTask.Result;
-#else
         private async void OnCheckDumpClick(object sender, EventArgs e)
         {
             string? errorMessage = await CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
-#endif
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);

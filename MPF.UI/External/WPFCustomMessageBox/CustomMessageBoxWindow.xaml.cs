@@ -32,19 +32,11 @@ namespace WPFCustomMessageBox
         {
             get
             {
-#if NET35
-                return _TextBlock_Message!.Text;
-#else
-                return TextBlock_Message.Text;
-#endif
+                return TextBlock_Message!.Text;
             }
             set
             {
-#if NET35
-                _TextBlock_Message!.Text = value;
-#else
-                TextBlock_Message.Text = value;
-#endif
+                TextBlock_Message!.Text = value;
             }
         }
 
@@ -52,19 +44,11 @@ namespace WPFCustomMessageBox
         {
             get
             {
-#if NET35
-                return _Label_Ok!.Content.ToString();
-#else
-                return Label_Ok.Content.ToString();
-#endif
+                return Label_Ok!.Content.ToString();
             }
             set
             {
-#if NET35
-                _Label_Ok!.Content = value.TryAddKeyboardAccellerator();
-#else
-                Label_Ok.Content = value.TryAddKeyboardAccellerator();
-#endif
+                Label_Ok!.Content = value.TryAddKeyboardAccellerator();
             }
         }
 
@@ -72,19 +56,11 @@ namespace WPFCustomMessageBox
         {
             get
             {
-#if NET35
-                return _Label_Cancel!.Content.ToString();
-#else
-                return Label_Cancel.Content.ToString();
-#endif
+                return Label_Cancel!.Content.ToString();
             }
             set
             {
-#if NET35
-                _Label_Cancel!.Content = value.TryAddKeyboardAccellerator();
-#else
-                Label_Cancel.Content = value.TryAddKeyboardAccellerator();
-#endif
+                Label_Cancel!.Content = value.TryAddKeyboardAccellerator();
             }
         }
 
@@ -92,19 +68,11 @@ namespace WPFCustomMessageBox
         {
             get
             {
-#if NET35
-                return _Label_Yes!.Content.ToString();
-#else
-                return Label_Yes.Content.ToString();
-#endif
+                return Label_Yes!.Content.ToString();
             }
             set
             {
-#if NET35
-                _Label_Yes!.Content = value.TryAddKeyboardAccellerator();
-#else
-                Label_Yes.Content = value.TryAddKeyboardAccellerator();
-#endif
+                Label_Yes!.Content = value.TryAddKeyboardAccellerator();
             }
         }
 
@@ -112,19 +80,11 @@ namespace WPFCustomMessageBox
         {
             get
             {
-#if NET35
-                return _Label_No!.Content.ToString();
-#else
-                return Label_No.Content.ToString();
-#endif
+                return Label_No!.Content.ToString();
             }
             set
             {
-#if NET35
-                _Label_No!.Content = value.TryAddKeyboardAccellerator();
-#else
-                Label_No.Content = value.TryAddKeyboardAccellerator();
-#endif
+                Label_No!.Content = value.TryAddKeyboardAccellerator();
             }
         }
 
@@ -132,16 +92,16 @@ namespace WPFCustomMessageBox
 
 #if NET35
 
-        private Button? _Button_Cancel => ItemHelper.FindChild<Button>(this, "Button_Cancel");
-        private Button? _Button_No => ItemHelper.FindChild<Button>(this, "Button_No");
-        private Button? _Button_OK => ItemHelper.FindChild<Button>(this, "Button_OK");
-        private Button? _Button_Yes => ItemHelper.FindChild<Button>(this, "Button_Yes");
+        private Button? Button_Cancel => ItemHelper.FindChild<Button>(this, "Button_Cancel");
+        private Button? Button_No => ItemHelper.FindChild<Button>(this, "Button_No");
+        private Button? Button_OK => ItemHelper.FindChild<Button>(this, "Button_OK");
+        private Button? Button_Yes => ItemHelper.FindChild<Button>(this, "Button_Yes");
         private System.Windows.Controls.Image? _Image_MessageBox => ItemHelper.FindChild<System.Windows.Controls.Image>(this, "Image_MessageBox");
-        private Label? _Label_Cancel => ItemHelper.FindChild<Label>(this, "Label_Cancel");
-        private Label? _Label_No => ItemHelper.FindChild<Label>(this, "Label_No");
-        private Label? _Label_Ok => ItemHelper.FindChild<Label>(this, "Label_Ok");
-        private Label? _Label_Yes => ItemHelper.FindChild<Label>(this, "Label_Yes");
-        private TextBlock? _TextBlock_Message => ItemHelper.FindChild<TextBlock>(this, "TextBlock_Message");
+        private Label? Label_Cancel => ItemHelper.FindChild<Label>(this, "Label_Cancel");
+        private Label? Label_No => ItemHelper.FindChild<Label>(this, "Label_No");
+        private Label? Label_Ok => ItemHelper.FindChild<Label>(this, "Label_Ok");
+        private Label? Label_Yes => ItemHelper.FindChild<Label>(this, "Label_Yes");
+        private TextBlock? TextBlock_Message => ItemHelper.FindChild<TextBlock>(this, "TextBlock_Message");
 
 #endif
 
@@ -185,11 +145,7 @@ namespace WPFCustomMessageBox
             if (image.HasValue)
                 DisplayImage(image.Value);
             else
-#if NET35
-                _Image_MessageBox!.Visibility = Visibility.Collapsed;
-#else
-                Image_MessageBox.Visibility = Visibility.Collapsed;
-#endif
+                Image_MessageBox!.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -206,75 +162,39 @@ namespace WPFCustomMessageBox
             {
                 case MessageBoxButton.OKCancel:
                     // Hide all but OK, Cancel
-#if NET35
-                    _Button_OK!.Visibility = Visibility.Visible;
-                    _Button_OK.Focus();
-                    _Button_Cancel!.Visibility = Visibility.Visible;
-
-                    _Button_Yes!.Visibility = Visibility.Collapsed;
-                    _Button_No!.Visibility = Visibility.Collapsed;
-#else
-                    Button_OK.Visibility = Visibility.Visible;
+                    Button_OK!.Visibility = Visibility.Visible;
                     Button_OK.Focus();
-                    Button_Cancel.Visibility = Visibility.Visible;
+                    Button_Cancel!.Visibility = Visibility.Visible;
 
-                    Button_Yes.Visibility = Visibility.Collapsed;
-                    Button_No.Visibility = Visibility.Collapsed;
-#endif
+                    Button_Yes!.Visibility = Visibility.Collapsed;
+                    Button_No!.Visibility = Visibility.Collapsed;
                     break;
                 case MessageBoxButton.YesNo:
                     // Hide all but Yes, No
-#if NET35
-                    _Button_Yes!.Visibility = Visibility.Visible;
-                    _Button_Yes.Focus();
-                    _Button_No!.Visibility = Visibility.Visible;
-
-                    _Button_OK!.Visibility = Visibility.Collapsed;
-                    _Button_Cancel!.Visibility = Visibility.Collapsed;
-#else
-                    Button_Yes.Visibility = Visibility.Visible;
+                    Button_Yes!.Visibility = Visibility.Visible;
                     Button_Yes.Focus();
-                    Button_No.Visibility = Visibility.Visible;
+                    Button_No!.Visibility = Visibility.Visible;
 
-                    Button_OK.Visibility = Visibility.Collapsed;
-                    Button_Cancel.Visibility = Visibility.Collapsed;
-#endif
+                    Button_OK!.Visibility = Visibility.Collapsed;
+                    Button_Cancel!.Visibility = Visibility.Collapsed;
                     break;
                 case MessageBoxButton.YesNoCancel:
                     // Hide only OK
-#if NET35
-                    _Button_Yes!.Visibility = Visibility.Visible;
-                    _Button_Yes.Focus();
-                    _Button_No!.Visibility = Visibility.Visible;
-                    _Button_Cancel!.Visibility = Visibility.Visible;
-
-                    _Button_OK!.Visibility = Visibility.Collapsed;
-#else
-                    Button_Yes.Visibility = Visibility.Visible;
+                    Button_Yes!.Visibility = Visibility.Visible;
                     Button_Yes.Focus();
-                    Button_No.Visibility = Visibility.Visible;
-                    Button_Cancel.Visibility = Visibility.Visible;
+                    Button_No!.Visibility = Visibility.Visible;
+                    Button_Cancel!.Visibility = Visibility.Visible;
 
-                    Button_OK.Visibility = Visibility.Collapsed;
-#endif
+                    Button_OK!.Visibility = Visibility.Collapsed;
                     break;
                 default:
                     // Hide all but OK
-#if NET35
-                    _Button_OK!.Visibility = Visibility.Visible;
-                    _Button_OK.Focus();
-
-                    _Button_Yes!.Visibility = Visibility.Collapsed;
-                    _Button_No!.Visibility = Visibility.Collapsed;
-                    _Button_Cancel!.Visibility = Visibility.Collapsed;
-#else
-                    Button_OK.Visibility = Visibility.Visible;
+                    Button_OK!.Visibility = Visibility.Visible;
                     Button_OK.Focus();
 
-                    Button_Yes.Visibility = Visibility.Collapsed;
-                    Button_No.Visibility = Visibility.Collapsed;
-                    Button_Cancel.Visibility = Visibility.Collapsed;
-#endif
+                    Button_Yes!.Visibility = Visibility.Collapsed;
+                    Button_No!.Visibility = Visibility.Collapsed;
+                    Button_Cancel!.Visibility = Visibility.Collapsed;
                     break;
             }
         }
@@ -302,13 +222,8 @@ namespace WPFCustomMessageBox
                     break;
             }
 
-#if NET35
-            _Image_MessageBox!.Source = icon.ToImageSource();
-            _Image_MessageBox.Visibility = Visibility.Visible;
-#else
-            Image_MessageBox.Source = icon.ToImageSource();
+            Image_MessageBox!.Source = icon.ToImageSource();
             Image_MessageBox.Visibility = Visibility.Visible;
-#endif
         }
 
         private void Button_OK_Click(object sender, RoutedEventArgs e)

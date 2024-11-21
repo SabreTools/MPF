@@ -85,11 +85,7 @@ namespace MPF.Frontend.Tools
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
-#if NET40
-                _ = FillFromRedump(options, info, resultProgress);
-#else
                 _ = await FillFromRedump(options, info, resultProgress);
-#endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
             if (!string.IsNullOrEmpty(info.SizeAndChecksums?.CRC32))
@@ -306,24 +302,12 @@ namespace MPF.Frontend.Tools
             for (int i = 0; i < totalMatchedIDsCount; i++)
             {
                 // Skip if the track count doesn't match
-#if NET40
-                var validateTask = Validator.ValidateTrackCount(wc, fullyMatchedIdsList[i], trackCount);
-                validateTask.Wait();
-                if (!validateTask.Result)
-#else
                 if (!await Validator.ValidateTrackCount(wc, fullyMatchedIdsList[i], trackCount))
-#endif
                     continue;
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
-#if NET40
-                var fillTask = Task.Factory.StartNew(() => Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation));
-                fillTask.Wait();
-                _ = fillTask.Result;
-#else
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
-#endif
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current

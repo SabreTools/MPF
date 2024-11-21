@@ -1807,11 +1807,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-#if NET40
-        public string? ScanAndShowProtection()
-#else
         public async Task<string?> ScanAndShowProtection()
-#endif
         {
             // Determine current environment, just in case
             _environment ??= DetermineEnvironment();
@@ -1837,13 +1833,7 @@ namespace MPF.Frontend.ViewModels
 
             try
             {
-#if NET40
-                var protectionTask = ProtectionTool.RunProtectionScanOnPath(CurrentDrive.Name, Options, progress);
-                protectionTask.Wait();
-                var protections = protectionTask.Result;
-#else
                 var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.Name, Options, progress);
-#endif
                 var output = ProtectionTool.FormatProtections(protections);
                 LogLn($"Detected the following protections in {CurrentDrive.Name}:\r\n\r\n{output}");
 

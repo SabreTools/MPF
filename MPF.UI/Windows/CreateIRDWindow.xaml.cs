@@ -24,34 +24,34 @@ namespace MPF.UI.Windows
 
         #region Settings
 
-        private Button? _InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
-        private TextBox? _InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
+        private Button? InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
+        private TextBox? InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
 
-        private Button? _LogPathBrowseButton => ItemHelper.FindChild<Button>(this, "LogPathBrowseButton");
-        private TextBox? _LogPathTextBox => ItemHelper.FindChild<TextBox>(this, "LogPathTextBox");
-        private Button? _KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
-        private TextBox? _KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
-        private TextBox? _KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
-        private TextBox? _DiscIDTextBox => ItemHelper.FindChild<TextBox>(this, "DiscIDTextBox");
-        private Button? _PICPathBrowseButton => ItemHelper.FindChild<Button>(this, "PICPathBrowseButton");
-        private TextBox? _PICPathTextBox => ItemHelper.FindChild<TextBox>(this, "PICPathTextBox");
-        private TextBox? _PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
-        private TextBox? _LayerbreakTextBox => ItemHelper.FindChild<TextBox>(this, "LayerbreakTextBox");
+        private Button? LogPathBrowseButton => ItemHelper.FindChild<Button>(this, "LogPathBrowseButton");
+        private TextBox? LogPathTextBox => ItemHelper.FindChild<TextBox>(this, "LogPathTextBox");
+        private Button? KeyPathBrowseButton => ItemHelper.FindChild<Button>(this, "KeyPathBrowseButton");
+        private TextBox? KeyPathTextBox => ItemHelper.FindChild<TextBox>(this, "KeyPathTextBox");
+        private TextBox? KeyTextBox => ItemHelper.FindChild<TextBox>(this, "KeyTextBox");
+        private TextBox? DiscIDTextBox => ItemHelper.FindChild<TextBox>(this, "DiscIDTextBox");
+        private Button? PICPathBrowseButton => ItemHelper.FindChild<Button>(this, "PICPathBrowseButton");
+        private TextBox? PICPathTextBox => ItemHelper.FindChild<TextBox>(this, "PICPathTextBox");
+        private TextBox? PICTextBox => ItemHelper.FindChild<TextBox>(this, "PICTextBox");
+        private TextBox? LayerbreakTextBox => ItemHelper.FindChild<TextBox>(this, "LayerbreakTextBox");
 
         #endregion
 
         #region Controls
 
-        private System.Windows.Controls.Button? _CreateIRDButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CreateIRDButton");
-        private System.Windows.Controls.Button? _CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
+        private System.Windows.Controls.Button? CreateIRDButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CreateIRDButton");
+        private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
 
         #endregion
 
         #region Expanders
 
-        private Expander? _KeyExpander => ItemHelper.FindChild<Expander>(this, "KeyExpander");
-        private Expander? _DiscIDExpander => ItemHelper.FindChild<Expander>(this, "DiscIDExpander");
-        private Expander? _PICExpander => ItemHelper.FindChild<Expander>(this, "PICExpander");
+        private Expander? KeyExpander => ItemHelper.FindChild<Expander>(this, "KeyExpander");
+        private Expander? DiscIDExpander => ItemHelper.FindChild<Expander>(this, "DiscIDExpander");
+        private Expander? PICExpander => ItemHelper.FindChild<Expander>(this, "PICExpander");
 
         #endregion
 
@@ -95,47 +95,24 @@ namespace MPF.UI.Windows
         public void AddEventHandlers()
         {
             // Main buttons
-#if NET35
-            _CreateIRDButton!.Click += OnCreateIRDClick;
-            _CancelButton!.Click += OnCancelClick;
-#else
-            CreateIRDButton.Click += OnCreateIRDClick;
-            CancelButton.Click += OnCancelClick;
-#endif
+            CreateIRDButton!.Click += OnCreateIRDClick;
+            CancelButton!.Click += OnCancelClick;
 
             // User Area Click
-#if NET35
-            _InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
-            _LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
-            _KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
-            _PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
-#else
-            InputPathBrowseButton.Click += InputPathBrowseButtonClick;
-            LogPathBrowseButton.Click += LogPathBrowseButtonClick;
-            KeyPathBrowseButton.Click += KeyPathBrowseButtonClick;
-            PICPathBrowseButton.Click += PICPathBrowseButtonClick;
-#endif
+            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
+            LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
+            KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
+            PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
 
             // User Area TextChanged
-#if NET35
-            _InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
-            _LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
-            _KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
-            _KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
-            _DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
-            _PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
-            _PICTextBox!.TextChanged += PICTextBoxTextChanged;
-            _LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
-#else
-            InputPathTextBox.TextChanged += InputPathTextBoxTextChanged;
-            LogPathTextBox.TextChanged += LogPathTextBoxTextChanged;
-            KeyPathTextBox.TextChanged += KeyPathTextBoxTextChanged;
-            KeyTextBox.TextChanged += KeyTextBoxTextChanged;
-            DiscIDTextBox.TextChanged += DiscIDTextBoxTextChanged;
-            PICPathTextBox.TextChanged += PICPathTextBoxTextChanged;
-            PICTextBox.TextChanged += PICTextBoxTextChanged;
-            LayerbreakTextBox.TextChanged += LayerbreakTextBoxTextChanged;
-#endif
+            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
+            LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
+            KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
+            KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
+            DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
+            PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
+            PICTextBox!.TextChanged += PICTextBoxTextChanged;
+            LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
         }
 
         /// <summary>
@@ -330,15 +307,10 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnCreateIRDClick(object sender, EventArgs e)
         {
-#if NET35
-            if (_KeyExpander != null) _KeyExpander.IsExpanded = false;
-            if (_DiscIDExpander != null) _DiscIDExpander.IsExpanded = false;
-            if (_PICExpander != null) _PICExpander.IsExpanded = false;
-#else
-            KeyExpander.IsExpanded = false;
-            DiscIDExpander.IsExpanded = false;
-            PICExpander.IsExpanded = false;
-#endif
+            if (KeyExpander != null) KeyExpander.IsExpanded = false;
+            if (DiscIDExpander != null) DiscIDExpander.IsExpanded = false;
+            if (PICExpander != null) PICExpander.IsExpanded = false;
+
             string tempStatus = CreateIRDViewModel.CreateIRDStatus;
             bool[] enabledFields = CreateIRDViewModel.DisableUIFields();
             CreateIRDViewModel.CreateIRDStatus = "Creating IRD... Please Wait";
