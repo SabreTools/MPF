@@ -310,7 +310,7 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            discInformationWindow.Closed += delegate { this.Activate(); };
+            discInformationWindow.Closed += delegate { Activate(); };
             bool? result = discInformationWindow.ShowDialog();
 
             // Copy back the submission info changes, if necessary
@@ -326,7 +326,7 @@ namespace MPF.UI.Windows
         public void ShowCheckDumpWindow()
         {
             // Hide MainWindow while Check GUI is open
-            this.Hide();
+            Hide();
 
             var checkDumpWindow = new CheckDumpWindow(this)
             {
@@ -340,8 +340,8 @@ namespace MPF.UI.Windows
             checkDumpWindow.Closed += delegate
             {
                 // Unhide Main window after Check window has been closed
-                this.Show();
-                this.Activate();
+                Show();
+                Activate();
             };
             checkDumpWindow.Show();
         }
@@ -352,7 +352,7 @@ namespace MPF.UI.Windows
         public void ShowCreateIRDWindow()
         {
             // Hide MainWindow while Create IRD UI is open
-            this.Hide();
+            Hide();
 
             var createIRDWindow = new CreateIRDWindow(this)
             {
@@ -366,8 +366,8 @@ namespace MPF.UI.Windows
             createIRDWindow.Closed += delegate
             {
                 // Unhide Main window after Create IRD window has been closed
-                this.Show();
-                this.Activate();
+                Show();
+                Activate();
             };
             createIRDWindow.Show();
         }
@@ -387,7 +387,7 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            optionsWindow.Closed += delegate { this.Activate(); };
+            optionsWindow.Closed += delegate { Activate(); };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }

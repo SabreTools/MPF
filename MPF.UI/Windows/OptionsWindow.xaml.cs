@@ -102,7 +102,7 @@ namespace MPF.UI.Windows
             base.OnContentRendered(e);
 
             // Set the window title
-            OptionsViewModel.Title = this.Title;
+            OptionsViewModel.Title = Title;
         }
 
         #region UI Commands

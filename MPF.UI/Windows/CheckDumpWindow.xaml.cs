@@ -192,7 +192,7 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            discInformationWindow.Closed += delegate { this.Activate(); };
+            discInformationWindow.Closed += delegate { Activate(); };
             bool? result = discInformationWindow.ShowDialog();
 
             // Copy back the submission info changes, if necessary

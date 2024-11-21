@@ -14,7 +14,7 @@ namespace MPF.UI.Windows
         {
             try
             {
-                this.DialogResult = false;
+                DialogResult = false;
             }
             catch { }
             
@@ -26,7 +26,7 @@ namespace MPF.UI.Windows
         /// </summary>
         public void MinimizeButtonClick(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            WindowState = WindowState.Minimized;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace MPF.UI.Windows
         public void TitleMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
+                DragMove();
         }
 
         #endregion

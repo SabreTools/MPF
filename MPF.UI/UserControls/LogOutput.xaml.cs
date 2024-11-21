@@ -107,8 +107,8 @@ namespace MPF.UI.UserControls
 
             public LogLine(string text, LogLevel logLevel)
             {
-                this.Text = text;
-                this.LogLevel = logLevel;
+                Text = text;
+                LogLevel = logLevel;
             }
 
             /// <summary>
@@ -117,7 +117,7 @@ namespace MPF.UI.UserControls
             /// <returns>Brush representing the color</returns>
             public Brush GetForegroundColor()
             {
-                return this.LogLevel switch
+                return LogLevel switch
                 {
                     LogLevel.SECRET => Brushes.Blue,
                     LogLevel.ERROR => Brushes.Red,
@@ -132,7 +132,7 @@ namespace MPF.UI.UserControls
             /// <returns>Run object based on internal values</returns>
             public Run GenerateRun()
             {
-                return new Run { Text = this.Text, Foreground = GetForegroundColor() };
+                return new Run { Text = Text, Foreground = GetForegroundColor() };
             }
         }
 
