@@ -39,10 +39,10 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements associated with the data enum type
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Element<T>> GenerateElements()
+        public static List<Element<T>> GenerateElements()
         {
             var enumArr = (T[])Enum.GetValues(typeof(T));
-            return Array.ConvertAll(enumArr, e => new Element<T>(e));
+            return [.. Array.ConvertAll(enumArr, e => new Element<T>(e))];
         }
 
         /// <inheritdoc/>

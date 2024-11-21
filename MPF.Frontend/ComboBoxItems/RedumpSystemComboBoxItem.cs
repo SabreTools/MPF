@@ -50,7 +50,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<RedumpSystemComboBoxItem> GenerateElements()
+        public static List<RedumpSystemComboBoxItem> GenerateElements()
         {
             var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
             var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);

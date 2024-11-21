@@ -556,7 +556,7 @@ namespace MPF.Frontend.ViewModels
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
             MediaTypes = [];
-            Systems = [.. RedumpSystemComboBoxItem.GenerateElements()];
+            Systems = RedumpSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
         }
 

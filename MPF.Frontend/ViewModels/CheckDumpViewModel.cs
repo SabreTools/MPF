@@ -259,7 +259,7 @@ namespace MPF.Frontend.ViewModels
             CancelButtonEnabled = true;
 
             MediaTypes = [];
-            Systems = [.. RedumpSystemComboBoxItem.GenerateElements()];
+            Systems = RedumpSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
 
             PopulateMediaType();

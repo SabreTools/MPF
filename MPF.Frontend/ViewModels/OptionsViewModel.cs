@@ -62,7 +62,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public static List<RedumpSystemComboBoxItem> Systems => [.. RedumpSystemComboBoxItem.GenerateElements()];
+        public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements();
 
         #endregion
 

@@ -28,13 +28,13 @@ namespace MPF.Frontend.ViewModels
         /// List of available disc categories
         /// </summary>
         public List<Element<DiscCategory>> Categories { get; private set; }
-            = [.. Element<DiscCategory>.GenerateElements()];
+            = Element<DiscCategory>.GenerateElements();
 
         /// <summary>
         /// List of available regions
         /// </summary>
         public List<Element<Region>> Regions { get; private set; }
-            = [.. Element<Region>.GenerateElements()];
+            = Element<Region>.GenerateElements();
 
         /// <summary>
         /// List of Redump-supported Regions
@@ -126,7 +126,7 @@ namespace MPF.Frontend.ViewModels
         /// List of available languages
         /// </summary>
         public List<Element<Language>> Languages { get; private set; }
-            = [.. Element<Language>.GenerateElements()];
+            = Element<Language>.GenerateElements();
 
         /// <summary>
         /// List of Redump-supported Languages
@@ -187,7 +187,7 @@ namespace MPF.Frontend.ViewModels
         /// List of available languages
         /// </summary>
         public List<Element<LanguageSelection>> LanguageSelections { get; private set; }
-            = [.. Element<LanguageSelection>.GenerateElements()];
+            = Element<LanguageSelection>.GenerateElements();
 
         #endregion
 

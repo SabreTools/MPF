@@ -17,6 +17,7 @@
 - Update packages for bugfixes
 - Fix minor efficiency issues
 - Remove usages of `this.` from UI code
+- Reduce unnecessary use of IEnumerable
 
 ### 3.2.3 (2024-11-06)
 
