@@ -18,6 +18,7 @@
 - Fix minor efficiency issues
 - Remove usages of `this.` from UI code
 - Reduce unnecessary use of IEnumerable
+- Use List in protection formatting
 
 ### 3.2.3 (2024-11-06)
 
