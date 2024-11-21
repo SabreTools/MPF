@@ -14,6 +14,7 @@
 - Remove usages of `this.` from themes
 - Fix PIC parser
 - Use expanded version of split regex
+- Update packages for bugfixes
 
 ### 3.2.3 (2024-11-06)
 
