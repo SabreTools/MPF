@@ -6,7 +6,6 @@ using System.IO.Compression;
 #endif
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors

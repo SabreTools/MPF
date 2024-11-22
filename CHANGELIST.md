@@ -23,6 +23,7 @@
 - Remove unncessary .NET Framework 4.0 gating
 - Improve parameters for default output path
 - Replace some uses of Regex.Replace
+- Clean up usings after last commit
 
 ### 3.2.3 (2024-11-06)
 
