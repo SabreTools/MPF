@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -919,7 +921,13 @@ namespace MPF.Processors
             if (!GetXGDType(ss, out int xgdType))
                 return false;
 
+#if NET20
+            var checkArr = new byte[72];
+            Array.Copy(ss, 32, checkArr, 0, 72);
+            if (xgdType == 3 && Array.TrueForAll(checkArr, x => x == 0))
+#else
             if (xgdType == 3 && ss.Skip(32).Take(72).All(x => x == 0))
+#endif
             {
                 // Check for a cleaned SSv2
 
@@ -1071,7 +1079,13 @@ namespace MPF.Processors
 
                 case 3:
                     // Determine if XGD3 SS.bin is SSv1 (Kreon) or SSv2 (0800)
+#if NET20
+                    var checkArr = new byte[72];
+                    Array.Copy(ss, 32, checkArr, 0, 72);
+                    bool ssv2 = !Array.TrueForAll(checkArr, x => x == 0);
+#else
                     bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
+#endif
 
                     if (ssv2)
                     {

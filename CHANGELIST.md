@@ -24,6 +24,7 @@
 - Improve parameters for default output path
 - Replace some uses of Regex.Replace
 - Clean up usings after last commit
+- Version gate remaining Linq statements
 
 ### 3.2.3 (2024-11-06)
 

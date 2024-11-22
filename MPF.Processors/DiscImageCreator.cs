@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using System.Text.RegularExpressions;
 using psxt001z;
 using SabreTools.Models.Logiqx;
@@ -1931,10 +1933,23 @@ namespace MPF.Processors
                 }
 
                 // Deduplicate the offsets
+#if NET20
+                var temp = new List<string>();
+                foreach (var offset in offsets)
+                {
+                    if (offset == null || offset.Length == 0)
+                        continue;
+                    if (!temp.Contains(offset))
+                        temp.Add(offset);
+                }
+
+                offsets = temp;
+#else
                 offsets = offsets
                     .FindAll(s => !string.IsNullOrEmpty(s))
                     .Distinct()
                     .ToList();
+#endif
 
                 // Now that we're at the offsets, attempt to get the sample offset
                 return string.Join("; ", [.. offsets]);

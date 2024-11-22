@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
@@ -64,11 +66,26 @@ namespace MPF.Frontend.Tools
             else if (protections.Count == 0)
                 return "None found [OMIT FROM SUBMISSION]";
 
-            // Get an ordered list of distinct found protections
+            // Get a list of distinct found protections
+#if NET20
+            var protectionValues = new List<string>();
+            foreach (var value in protections.Values)
+            {
+                if (value.Count == 0)
+                    continue;
+                
+                foreach (var prot in value)
+                {
+                    if (!protectionValues.Contains(prot))
+                        protectionValues.Add(prot);
+                }
+            }
+#else
             var protectionValues = protections
                 .SelectMany(kvp => kvp.Value)
                 .Distinct()
                 .ToList();
+#endif
 
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(protectionValues);

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
@@ -416,7 +418,13 @@ namespace MPF.Frontend.Tools
             }
 
             // If only one label, don't mention fs
+#if NET20
+            string[] keyArr = new string[labels.Count];
+            labels.Keys.CopyTo(keyArr, 0);
+            string firstLabel = keyArr[0];
+#else
             string firstLabel = labels.First().Key;
+#endif
             if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
             {
                 // Ignore common volume labels

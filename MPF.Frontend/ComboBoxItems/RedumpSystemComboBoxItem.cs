@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ComboBoxItems
@@ -57,6 +59,19 @@ namespace MPF.Frontend.ComboBoxItems
             var knownSystems = Array.FindAll(nullableArr,
                 s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE);
 
+#if NET20
+            // The resulting dictionary does not have ordered value lists
+            var mapping = new Dictionary<SystemCategory, List<RedumpSystem?>>();
+            foreach (var knownSystem in knownSystems)
+            {
+                var category = knownSystem.GetCategory();
+                if (!mapping.ContainsKey(category))
+                    mapping[category] = [];
+
+                mapping[category].Add(knownSystem);
+            }
+#else
+            // The resulting dictionary has ordered value lists
             Dictionary<SystemCategory, List<RedumpSystem?>> mapping = knownSystems
                 .GroupBy(s => s.GetCategory())
                 .ToDictionary(
@@ -65,6 +80,7 @@ namespace MPF.Frontend.ComboBoxItems
                         .OrderBy(s => s.LongName())
                         .ToList()
                 );
+#endif
 
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {

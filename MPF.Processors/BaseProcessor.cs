@@ -4,7 +4,9 @@ using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
 #endif
+#if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
+#endif
 using System.Text;
 using SabreTools.RedumpLib.Data;
 
@@ -414,7 +416,17 @@ namespace MPF.Processors
 
             // Filter down to deleteable files
             var deleteableFiles = outputFiles.FindAll(of => of.IsDeleteable);
+#if NET20
+            var deleteableFilenames = new List<string>();
+            foreach (var deleteableFile in deleteableFiles)
+            {
+                deleteableFilenames.AddRange(deleteableFile.Filenames);
+            }
+            
+            return deleteableFilenames;
+#else
             return deleteableFiles.SelectMany(of => of.Filenames).ToList();
+#endif
         }
 
         /// <summary>
@@ -519,7 +531,17 @@ namespace MPF.Processors
 
             // Filter down to zippable files
             var zippableFiles = outputFiles.FindAll(of => of.IsZippable);
+#if NET20
+            var zippableFilenames = new List<string>();
+            foreach (var zippableFile in zippableFiles)
+            {
+                zippableFilenames.AddRange(zippableFile.Filenames);
+            }
+            
+            return zippableFilenames;
+#else
             return zippableFiles.SelectMany(of => of.Filenames).ToList();
+#endif
         }
 
         /// <summary>
@@ -664,7 +686,7 @@ namespace MPF.Processors
                 sb.Append(line);
                 sb.Append('\n');
             }
-            
+
             return sb.ToString();
         }
 
