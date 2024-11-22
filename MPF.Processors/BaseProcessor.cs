@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 #endif
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
@@ -579,8 +580,7 @@ namespace MPF.Processors
                     hex = hex.Substring(0, trimLength);
 
                 // TODO: Check for non-zero values in discarded PIC
-
-                return Regex.Replace(hex, ".{32}", "$0\n", RegexOptions.Compiled);
+                return SplitString(hex, 32);
             }
             catch
             {
@@ -641,6 +641,32 @@ namespace MPF.Processors
                 // We don't care what the error is
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Split a string with newlines every <paramref name="count"/> characters
+        /// </summary>
+        protected static string SplitString(string? str, int count, bool trim = false)
+        {
+            // Ignore invalid inputs
+            if (str == null)
+                return string.Empty;
+            if (count < 1)
+                return str;
+
+            // Build the output string
+            var sb = new StringBuilder();
+            for (int i = 0; i < str.Length; i += count)
+            {
+                string line = str.Substring(i, count);
+                if (trim)
+                    line = line.Trim();
+
+                sb.Append(line);
+                sb.Append('\n');
+            }
+            
+            return sb.ToString();
         }
 
         #endregion

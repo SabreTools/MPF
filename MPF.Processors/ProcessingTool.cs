@@ -32,14 +32,18 @@ namespace MPF.Processors
                 return null;
 
             // Convert ASCII to byte via lookup table
-            int[] hexLookup = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F];
+            int[] hexLookup =
+            [
+                0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                0x08, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
+            ];
             byte[] byteArray = new byte[hexString.Length / 2];
             for (int i = 0; i < hexString.Length; i += 2)
             {
                 // Convert next two chars to ASCII value relative to '0'
-                int a = Char.ToUpper(hexString[i]) - '0';
-                int b = Char.ToUpper(hexString[i + 1]) - '0';
+                int a = Char.ToUpperInvariant(hexString[i]) - '0';
+                int b = Char.ToUpperInvariant(hexString[i + 1]) - '0';
 
                 // Ensure hex string only has '0' through '9' and 'A' through 'F' (case insensitive)
                 if ((a < 0 || b < 0 || a > 22 || b > 22) || (a > 10 && a < 17) || (b > 10 && b < 17))

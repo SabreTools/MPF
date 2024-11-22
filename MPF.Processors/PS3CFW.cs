@@ -68,10 +68,7 @@ namespace MPF.Processors
                 if (id != null)
                     info.Extras!.DiscID = id.ToUpperInvariant().Substring(0, 24) + "XXXXXXXX";
                 if (string.IsNullOrEmpty(info.Extras!.PIC) && !string.IsNullOrEmpty(pic))
-                {
-                    pic = Regex.Replace(pic, ".{32}", "$0\n");
-                    info.Extras.PIC = pic;
-                }
+                    info.Extras.PIC = SplitString(pic, 32);
             }
         }
 
