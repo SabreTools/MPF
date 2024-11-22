@@ -21,6 +21,7 @@
 - Use List in protection formatting
 - Don't preemptively sort protections
 - Remove unncessary .NET Framework 4.0 gating
+- Improve parameters for default output path
 
 ### 3.2.3 (2024-11-06)
 
