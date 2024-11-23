@@ -25,6 +25,7 @@
 - Replace some uses of Regex.Replace
 - Clean up usings after last commit
 - Version gate remaining Linq statements
+- Cleanup CleanSS check
 
 ### 3.2.3 (2024-11-06)
 

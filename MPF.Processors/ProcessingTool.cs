@@ -924,9 +924,9 @@ namespace MPF.Processors
 #if NET20
             var checkArr = new byte[72];
             Array.Copy(ss, 32, checkArr, 0, 72);
-            if (xgdType == 3 && Array.TrueForAll(checkArr, x => x == 0))
+            if (xgdType == 3 && Array.Exists(checkArr, x => x != 0))
 #else
-            if (xgdType == 3 && ss.Skip(32).Take(72).All(x => x == 0))
+            if (xgdType == 3 && ss.Skip(32).Take(72).Any(x => x != 0))
 #endif
             {
                 // Check for a cleaned SSv2
@@ -1082,7 +1082,7 @@ namespace MPF.Processors
 #if NET20
                     var checkArr = new byte[72];
                     Array.Copy(ss, 32, checkArr, 0, 72);
-                    bool ssv2 = !Array.TrueForAll(checkArr, x => x == 0);
+                    bool ssv2 = Array.Exists(checkArr, x => x != 0);
 #else
                     bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
 #endif
