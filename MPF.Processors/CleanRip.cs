@@ -177,7 +177,7 @@ namespace MPF.Processors
                 var bca = new StringBuilder();
                 for (int i = 0; i < hex.Length; i++)
                 {
-                    bca.Append(input[i]);
+                    bca.Append(hex[i]);
                     if ((i + 1) % 32 == 0)
                         bca.AppendLine();
                     else if ((i + 1) % 4 == 0)
