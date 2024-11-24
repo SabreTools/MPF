@@ -603,8 +603,15 @@ namespace MPF.Processors
                     return false;
 
                 using var outputStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write);
+
+                // Skip the header
                 inputStream.Seek(headerLength, SeekOrigin.Begin);
-                inputStream.CopyTo(outputStream);
+
+                // inputStream.CopyTo(outputStream);
+                byte[] buffer = new byte[4096];
+                int count;
+                while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
+                    outputStream.Write(buffer, 0, count);
 
                 return true;
             }
