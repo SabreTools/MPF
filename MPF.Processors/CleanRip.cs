@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -174,7 +174,7 @@ namespace MPF.Processors
                     return null;
 
                 // Separate into blocks of 4 hex digits and newlines
-                bca = new StringBuilder();
+                var bca = new StringBuilder();
                 for (int i = 0; i < hex.Length; i++)
                 {
                     bca.Append(input[i]);
