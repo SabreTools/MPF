@@ -199,9 +199,9 @@ namespace MPF.Processors
                     if (HashTool.GetStandardHashes($"{basePath}.ss", out _, out string? ss1Crc, out _, out _))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc ?? string.Empty;
 
-                    string? ranges = ProcessingTool.GetSSRanges($"{basePath}.ss");
-                    if (!string.IsNullOrEmpty(ranges))
-                        info.Extras!.SecuritySectorRanges = ranges;
+                    string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                    if (!string.IsNullOrEmpty(ranges1))
+                        info.Extras!.SecuritySectorRanges = ranges1;
 
                     break;
 
@@ -233,9 +233,9 @@ namespace MPF.Processors
                     if (HashTool.GetStandardHashes($"{basePath}.ss", out _, out string? ss23Crc, out _, out _))
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc ?? string.Empty;
 
-                    string? ranges = ProcessingTool.GetSSRanges($"{basePath}.ss");
-                    if (!string.IsNullOrEmpty(ranges))
-                        info.Extras!.SecuritySectorRanges = ranges;
+                    string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                    if (!string.IsNullOrEmpty(ranges23))
+                        info.Extras!.SecuritySectorRanges = ranges23;
 
                     break;
 
