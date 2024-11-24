@@ -26,6 +26,7 @@
 - Clean up usings after last commit
 - Version gate remaining Linq statements
 - Cleanup CleanSS check
+- Fix PS3 firmware version being omitted
 
 ### 3.2.3 (2024-11-06)
 

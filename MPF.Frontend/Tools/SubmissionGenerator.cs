@@ -828,7 +828,7 @@ namespace MPF.Frontend.Tools
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
-                    SetCommentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
+                    SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
@@ -896,6 +896,38 @@ namespace MPF.Frontend.Tools
 
             // Set the value
             info.CommonDiscInfo!.CommentsSpecialFields![key] = valueFunc(drive) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Determine if a content field exists based on key
+        /// </summary>
+        private static bool ContentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
+        {
+            // Ensure the contents fields exist
+            if (info.CommonDiscInfo!.ContentsSpecialFields == null)
+                info.CommonDiscInfo.ContentsSpecialFields = [];
+
+            // Check if the field exists
+            if (!info.CommonDiscInfo.ContentsSpecialFields.TryGetValue(key, out value))
+                return false;
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            // The value is valid
+            return true;
+        }
+
+        /// <summary>
+        /// Set a content field if it doesn't already have a value
+        /// </summary>
+        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        {
+            // If the field has a valid value, skip
+            if (ContentFieldExists(info, key, out _))
+                return;
+
+            // Set the value
+            info.CommonDiscInfo!.ContentsSpecialFields![key] = valueFunc(drive) ?? string.Empty;
         }
 
         /// <summary>
