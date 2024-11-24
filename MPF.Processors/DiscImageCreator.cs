@@ -259,7 +259,8 @@ namespace MPF.Processors
 
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd1SS, out var xgd1SSVer))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                            // We no longer care about SS Version from DIC
+                            //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
@@ -270,7 +271,8 @@ namespace MPF.Processors
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                            // We no longer care about SS Version from DIC
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
@@ -303,7 +305,8 @@ namespace MPF.Processors
 
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd23SS, out var xgd23SSVer))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                            // We no longer care about SS Version from DIC
+                            //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
@@ -314,7 +317,8 @@ namespace MPF.Processors
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                            // We no longer care about SS Version from DIC
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }

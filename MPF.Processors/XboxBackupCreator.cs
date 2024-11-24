@@ -125,9 +125,6 @@ namespace MPF.Processors
                         if (!string.IsNullOrEmpty(ranges))
                             info.Extras!.SecuritySectorRanges = ranges;
 
-                        // TODO: Determine SS version?
-                        //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = 
-
                         // Recreate RawSS.bin
                         RecreateSS(logPath!, ssPath, Path.Combine(baseDirectory, "RawSS.bin"));
 
