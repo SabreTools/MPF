@@ -27,6 +27,7 @@
 - Version gate remaining Linq statements
 - Cleanup CleanSS check
 - Fix PS3 firmware version being omitted
+- Don't add trailing spaces to BCA output
 
 ### 3.2.3 (2024-11-06)
 

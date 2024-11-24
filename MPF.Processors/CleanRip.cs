@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
 using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
@@ -173,9 +173,18 @@ namespace MPF.Processors
                 if (hex == null)
                     return null;
 
-                // Separate into blocks of 4 hex digits and then lines
-                string bca = Regex.Replace(hex, "[0-9a-fA-F]{4}", "$0 ");
-                return SplitString(bca, 36, trim: true);
+                // Separate into blocks of 4 hex digits and newlines
+                var bca = new StringBuilder();
+                for (int i = 0; i < hex.Length; i++)
+                {
+                    bca.Append(hex[i]);
+                    if ((i + 1) % 32 == 0)
+                        bca.AppendLine();
+                    else if ((i + 1) % 4 == 0)
+                        bca.Append(' ');
+                }
+
+                return bca.ToString();
             }
             catch
             {
