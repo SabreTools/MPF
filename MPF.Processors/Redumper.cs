@@ -605,13 +605,14 @@ namespace MPF.Processors
                 using var outputStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write);
                 inputStream.Seek(headerLength, SeekOrigin.Begin);
                 inputStream.CopyTo(outputStream);
+
+                return true;
             }
             catch
             {
                 // We don't care what the exception is right now
                 return false;
             }
-
         }
 
         #endregion
