@@ -596,11 +596,12 @@ namespace MPF.Processors
             
             try
             {
+                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
+                
                 // If the header length is not valid, don't copy
-                if (headerLength < 1 || headerLength >= FileInfo(inputFilename).Length)
+                if (headerLength < 1 || headerLength >= inputStream.Length)
                     return false;
 
-                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
                 using var outputStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write);
                 inputStream.Seek(headerLength, SeekOrigin.Begin);
                 inputStream.CopyTo(outputStream);
