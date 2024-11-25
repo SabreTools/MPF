@@ -172,7 +172,15 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    string xmidString = ProcessingTool.GetXMID($"{basePath}.manufacturer");
+                    // If .dmi / .pfi / .ss don't already exist, create them
+                    if (!File.Exists($"{basePath}.dmi"))
+                        RemoveHeader($"{basePath}.manufacturer", $"{basePath}.dmi");
+                    if (!File.Exists($"{basePath}.pfi"))
+                        RemoveHeader($"{basePath}.physical", $"{basePath}.pfi");
+                    if (!File.Exists($"{basePath}.ss"))
+                        ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
+
+                    string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi");
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
                     {
@@ -184,16 +192,32 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                     }
 
-                    if (HashTool.GetStandardHashes($"{basePath}.manufacturer", out _, out string? dmi1Crc, out _, out _))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.physical", out _, out string? pfi1Crc, out _, out _))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc ?? string.Empty;
+                    string? dmi1Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                    if (dmi1Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc.ToUpperInvariant();
+                    string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                    if (pfi1Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
+                    string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                    if (ss1Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc.ToUpperInvariant();
 
-                    // TODO: Support SS information when generated
+                    string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                    if (!string.IsNullOrEmpty(ranges1))
+                        info.Extras!.SecuritySectorRanges = ranges1;
+
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.manufacturer");
+                    // If .dmi / .pfi / .ss don't already exist, create them
+                    if (!File.Exists($"{basePath}.dmi"))
+                        RemoveHeader($"{basePath}.manufacturer", $"{basePath}.dmi");
+                    if (!File.Exists($"{basePath}.pfi"))
+                        RemoveHeader($"{basePath}.physical", $"{basePath}.pfi");
+                    if (!File.Exists($"{basePath}.ss"))
+                        ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
+                    
+                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi");
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
                     {
@@ -205,12 +229,20 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
 
-                    if (HashTool.GetStandardHashes($"{basePath}.manufacturer", out _, out string? dmi23Crc, out _, out _))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.physical", out _, out string? pfi23Crc, out _, out _))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc ?? string.Empty;
+                    string? dmi23Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                    if (dmi23Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc.ToUpperInvariant();
+                    string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                    if (pfi23Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
+                    string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                    if (ss23Crc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc.ToUpperInvariant();
 
-                    // TODO: Support SS information when generated
+                    string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                    if (!string.IsNullOrEmpty(ranges23))
+                        info.Extras!.SecuritySectorRanges = ranges23;
+
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
@@ -449,6 +481,9 @@ namespace MPF.Processors
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
+                        new($"{baseFilename}.dmi", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "dmi"),
                         new($"{baseFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"),
@@ -465,6 +500,9 @@ namespace MPF.Processors
                         new($"{baseFilename}.1.manufacturer", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "manufacturer_1"),
+                        new($"{baseFilename}.pfi", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "pfi"),
                         new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -545,6 +583,52 @@ namespace MPF.Processors
         /// <param name="log">Log file location</param>
         private static bool DatfileExists(string log)
             => GetDatfile(log) != null;
+
+        /// <summary>
+        /// Copies a file with the header removed
+        /// </summary>
+        /// <param name="inputFilename">Filename of file to copy from</param>
+        /// <param name="outputFilename">Filename of file to copy to</param>
+        /// <param name="headerLength">Length of header to remove</param>
+        private static bool RemoveHeader(string inputFilename, string outputFilename, int headerLength = 4)
+        {
+            // If the file doesn't exist, we can't copy
+            if (!File.Exists(inputFilename))
+                return false;
+            
+            // If the output file already exists, don't overwrite
+            if (File.Exists(outputFilename))
+                return false;
+            
+            try
+            {
+                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
+                
+                // If the header length is not valid, don't copy
+                if (headerLength < 1 || headerLength >= inputStream.Length)
+                    return false;
+
+                using var outputStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write);
+
+                // Skip the header
+                inputStream.Seek(headerLength, SeekOrigin.Begin);
+
+                // inputStream.CopyTo(outputStream);
+                byte[] buffer = new byte[4096];
+                int count;
+                while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    outputStream.Write(buffer, 0, count);
+                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
+            }
+        }
 
         #endregion
 
