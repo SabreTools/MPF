@@ -11,7 +11,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.2.3</VersionPrefix>
+        <VersionPrefix>3.2.4</VersionPrefix>
 
         <!-- Package Properties -->
         <Title>MPF Check</Title>

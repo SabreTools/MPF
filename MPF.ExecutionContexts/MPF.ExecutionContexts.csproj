@@ -9,7 +9,7 @@
         <Nullable>enable</Nullable>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.2.3</VersionPrefix>
+        <VersionPrefix>3.2.4</VersionPrefix>
         <WarningsNotAsErrors>NU5104</WarningsNotAsErrors>
 
         <!-- Package Properties -->
