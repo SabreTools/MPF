@@ -192,11 +192,14 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
                     }
 
-                    if (HashTool.GetStandardHashes($"{basePath}.dmi", out _, out string? dmi1Crc, out _, out _))
+                    string? dmi1Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                    if (dmi1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc?.ToUpperInvariant() ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.pfi", out _, out string? pfi1Crc, out _, out _))
+                    string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                    if (pfi1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc?.ToUpperInvariant() ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.ss", out _, out string? ss1Crc, out _, out _))
+                    string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                    if (ss1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc?.ToUpperInvariant() ?? string.Empty;
 
                     string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
@@ -226,11 +229,14 @@ namespace MPF.Processors
                         info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
 
-                    if (HashTool.GetStandardHashes($"{basePath}.dmi", out _, out string? dmi23Crc, out _, out _))
+                    string? dmi23Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                    if (dmi23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc?.ToUpperInvariant() ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.pfi", out _, out string? pfi23Crc, out _, out _))
+                    string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                    if (pfi23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc?.ToUpperInvariant() ?? string.Empty;
-                    if (HashTool.GetStandardHashes($"{basePath}.ss", out _, out string? ss23Crc, out _, out _))
+                    string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                    if (ss23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc?.ToUpperInvariant() ?? string.Empty;
 
                     string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
@@ -611,7 +617,9 @@ namespace MPF.Processors
                 byte[] buffer = new byte[4096];
                 int count;
                 while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
+                {
                     outputStream.Write(buffer, 0, count);
+                }
 
                 return true;
             }
