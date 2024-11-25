@@ -194,13 +194,13 @@ namespace MPF.Processors
 
                     string? dmi1Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
                     if (dmi1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc.ToUpperInvariant();
                     string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
                     string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                     if (ss1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc.ToUpperInvariant();
 
                     string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
                     if (!string.IsNullOrEmpty(ranges1))
@@ -231,13 +231,13 @@ namespace MPF.Processors
 
                     string? dmi23Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
                     if (dmi23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc.ToUpperInvariant();
                     string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
                     string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                     if (ss23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc?.ToUpperInvariant() ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc.ToUpperInvariant();
 
                     string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
                     if (!string.IsNullOrEmpty(ranges23))
