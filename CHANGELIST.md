@@ -7,6 +7,7 @@
 - Add processor base implementation tests
 - Ensure SS.bin only required for DVD
 - Update tests to account for new file count
+- Add tests around some Aaru helpers
 
 ### 3.2.4 (2024-11-24)
 
