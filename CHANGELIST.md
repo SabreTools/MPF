@@ -9,6 +9,7 @@
 - Update tests to account for new file count
 - Add tests around some Aaru helpers
 - Add tests around CleanRip helpers
+- Fix CleanRip test access
 
 ### 3.2.4 (2024-11-24)
 

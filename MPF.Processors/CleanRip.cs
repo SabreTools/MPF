@@ -169,7 +169,7 @@ namespace MPF.Processors
         /// <param name="bcaPath">Path to the BCA file associated with the dump</param>
         /// <returns>BCA data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private static string? GetBCA(string bcaPath)
+        internal static string? GetBCA(string bcaPath)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(bcaPath))
@@ -210,7 +210,7 @@ namespace MPF.Processors
         /// <param name="name">Output internal name of the game</param>
         /// <param name="serial">Output internal serial of the game</param>
         /// <returns></returns>
-        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name, out string? serial)
+        internal static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name, out string? serial)
         {
             region = null; version = null; name = null; serial = null;
 
