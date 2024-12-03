@@ -4,6 +4,7 @@
 - Add skeleton test projects for individual libraries
 - Move existing tests to new projects
 - Add BaseProcessor tests
+- Add processor base implementation tests
 
 ### 3.2.4 (2024-11-24)
 

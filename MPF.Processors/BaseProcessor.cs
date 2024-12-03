@@ -191,10 +191,8 @@ namespace MPF.Processors
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Then get the base path for all checking
-            string basePath;
-            if (string.IsNullOrEmpty(outputDirectory))
-                basePath = outputFilename;
-            else
+            string basePath = outputFilename;
+            if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
@@ -208,6 +206,10 @@ namespace MPF.Processors
         /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
         public Dictionary<string, string> GenerateArtifacts(string basePath)
         {
+            // Handle invalid inputs
+            if (basePath.Length == 0)
+                return [];
+
             // Split the base path for matching
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
             string baseFilename = Path.GetFileNameWithoutExtension(basePath);
@@ -228,24 +230,24 @@ namespace MPF.Processors
                     continue;
 
                 // Skip non-existent files
-                foreach (string filename in outputFile.Filenames)
-                {
-                    string possibleFile = Path.Combine(baseDirectory, filename);
-                    if (!File.Exists(possibleFile))
-                        continue;
+                if (!outputFile.Exists(baseDirectory))
+                    continue;
 
+                // Skip non-existent files
+                foreach (var filePath in outputFile.GetPaths(baseDirectory))
+                {
                     // Get binary artifacts as a byte array
                     if (outputFile.IsBinaryArtifact)
                     {
-                        byte[] data = File.ReadAllBytes(possibleFile);
+                        byte[] data = File.ReadAllBytes(filePath);
                         string str = Convert.ToBase64String(data);
-                        artifacts.Add(outputFile.ArtifactKey, str);
+                        artifacts[outputFile.ArtifactKey] = str;
                     }
                     else
                     {
-                        string? data = ProcessingTool.GetFullFile(possibleFile);
+                        string? data = ProcessingTool.GetFullFile(filePath);
                         string str = ProcessingTool.GetBase64(data) ?? string.Empty;
-                        artifacts.Add(outputFile.ArtifactKey, str);
+                        artifacts[outputFile.ArtifactKey] = str;
                     }
 
                     break;
@@ -331,7 +333,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>A list representing missing files, empty if none</returns>
-        private List<string> CheckRequiredFiles(string basePath)
+        internal List<string> CheckRequiredFiles(string basePath)
         {
             // Split the base path for matching
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
@@ -399,11 +401,11 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Generate a list of all deleteable filenames
+        /// Generate a list of all deleteable file paths
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all deleteable filenames, empty otherwise</returns>
-        private List<string> GetDeleteableFilenames(string basePath)
+        /// <returns>List of all deleteable file paths, empty otherwise</returns>
+        internal List<string> GetDeleteableFilePaths(string basePath)
         {
             // Split the base path for matching
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
@@ -415,48 +417,18 @@ namespace MPF.Processors
                 return [];
 
             // Filter down to deleteable files
-            var deleteableFiles = outputFiles.FindAll(of => of.IsDeleteable);
-#if NET20
-            var deleteableFilenames = new List<string>();
-            foreach (var deleteableFile in deleteableFiles)
+            var deleteable = outputFiles.FindAll(of => of.IsDeleteable);
+
+            // Get all paths that exist
+            var deleteablePaths = new List<string>();
+            foreach (var file in deleteable)
             {
-                deleteableFilenames.AddRange(deleteableFile.Filenames);
+                var paths = file.GetPaths(baseDirectory);
+                paths = paths.FindAll(File.Exists);
+                deleteablePaths.AddRange(paths);
             }
             
-            return deleteableFilenames;
-#else
-            return deleteableFiles.SelectMany(of => of.Filenames).ToList();
-#endif
-        }
-
-        /// <summary>
-        /// Generate a list of all deleteable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all deleteable file paths, empty otherwise</returns>
-        private List<string> GetDeleteableFilePaths(string basePath)
-        {
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of deleteable files
-            var deleteableFilenames = GetDeleteableFilenames(basePath);
-            if (deleteableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var deleteableFiles = new List<string>();
-            foreach (var filename in deleteableFilenames)
-            {
-                // Skip non-existent files
-                string possiblePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(possiblePath))
-                    continue;
-
-                deleteableFiles.Add(possiblePath);
-            }
-
-            return deleteableFiles;
+            return deleteablePaths;
         }
 
         /// <summary>
@@ -514,11 +486,11 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Generate a list of all zippable filenames
+        /// Generate a list of all zippable file paths
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all zippable filenames, empty otherwise</returns>
-        private List<string> GetZippableFilenames(string basePath)
+        /// <returns>List of all zippable file paths, empty otherwise</returns>
+        internal List<string> GetZippableFilePaths(string basePath)
         {
             // Split the base path for matching
             string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
@@ -530,48 +502,18 @@ namespace MPF.Processors
                 return [];
 
             // Filter down to zippable files
-            var zippableFiles = outputFiles.FindAll(of => of.IsZippable);
-#if NET20
-            var zippableFilenames = new List<string>();
-            foreach (var zippableFile in zippableFiles)
+            var zippable = outputFiles.FindAll(of => of.IsZippable);
+
+            // Get all paths that exist
+            var zippablePaths = new List<string>();
+            foreach (var file in zippable)
             {
-                zippableFilenames.AddRange(zippableFile.Filenames);
+                var paths = file.GetPaths(baseDirectory);
+                paths = paths.FindAll(File.Exists);
+                zippablePaths.AddRange(paths);
             }
             
-            return zippableFilenames;
-#else
-            return zippableFiles.SelectMany(of => of.Filenames).ToList();
-#endif
-        }
-
-        /// <summary>
-        /// Generate a list of all zippable file paths
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all zippable file paths, empty otherwise</returns>
-        private List<string> GetZippableFilePaths(string basePath)
-        {
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-
-            // Get the list of zippable files
-            var zippableFilenames = GetZippableFilenames(basePath);
-            if (zippableFilenames.Count == 0)
-                return [];
-
-            // Return only files that exist
-            var zippableFiles = new List<string>();
-            foreach (var filename in zippableFilenames)
-            {
-                // Skip non-existent files
-                string possiblePath = Path.Combine(baseDirectory, filename);
-                if (!File.Exists(possiblePath))
-                    continue;
-
-                zippableFiles.Add(possiblePath);
-            }
-
-            return zippableFiles;
+            return zippablePaths;
         }
 
         #endregion

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
@@ -78,15 +79,29 @@ namespace MPF.Processors
         }
 
 #if NET452_OR_GREATER || NETCOREAPP
-        /// <summary>
-        /// Indicates if an output file exists in an archive
-        /// </summary>
-        /// <param name="archive">Zip archive to check in</param>
+        /// <inheritdoc/>
         public override bool Exists(ZipArchive? archive)
         {
             // Files aren't extracted so this check can't be done
             return false;
         }
 #endif
+
+        /// <inheritdoc/>
+        public override List<string> GetPaths(string baseDirectory)
+        {
+            List<string> paths = [];
+
+            foreach (string filename in Filenames)
+            {
+                string possibleFile = Path.Combine(baseDirectory, filename);
+                if (!_existsFunc(possibleFile))
+                    continue;
+
+                paths.Add(possibleFile);
+            }
+
+            return paths;
+        }
     }
 }

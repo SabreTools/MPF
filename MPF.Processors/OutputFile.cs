@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
@@ -198,7 +199,7 @@ namespace MPF.Processors
             // Ensure the directory exists
             if (!Directory.Exists(baseDirectory))
                 return false;
-            
+
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames
@@ -246,5 +247,25 @@ namespace MPF.Processors
             return false;
         }
 #endif
+
+        /// <summary>
+        /// Get all matching paths for the file
+        /// </summary>
+        /// <param name="baseDirectory">Base directory to check in</param>
+        public virtual List<string> GetPaths(string baseDirectory)
+        {
+            List<string> paths = [];
+
+            foreach (string filename in Filenames)
+            {
+                string possibleFile = Path.Combine(baseDirectory, filename);
+                if (!File.Exists(possibleFile))
+                    continue;
+
+                paths.Add(possibleFile);
+            }
+
+            return paths;
+        }
     }
 }
