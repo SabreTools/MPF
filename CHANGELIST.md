@@ -5,6 +5,7 @@
 - Move existing tests to new projects
 - Add BaseProcessor tests
 - Add processor base implementation tests
+- Ensure SS.bin only required for DVD
 
 ### 3.2.4 (2024-11-24)
 

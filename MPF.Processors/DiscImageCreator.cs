@@ -640,8 +640,6 @@ namespace MPF.Processors
                     ];
 
                 case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
@@ -700,6 +698,62 @@ namespace MPF.Processors
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "ss"),
+                    ];
+
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    return [
+                            new($"{baseFilename}.dat", OutputFileFlags.Required
+                            | OutputFileFlags.Zippable),
+                        new($"{baseFilename}.raw", OutputFileFlags.None),
+                        new($"{baseFilename}.toc", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "toc"),
+
+                        new RegexOutputFile(Regex.Escape(baseFilename) + @"_(\d{8})T\d{6}\.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
+                        new($"{baseFilename}_cmd.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "cmd"),
+                        new($"{baseFilename}_CSSKey.txt", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "css_key"),
+                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "disc"),
+                        new($"{baseFilename}_drive.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "drive"),
+                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "main_error"),
+                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "main_info"),
+                        new($"{baseFilename}_suppl.dat", OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "suppl_dat"),
+                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                            | OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
+                            "vol_desc"),
+
+                        // TODO: Figure out when these are required
+                        new($"{baseFilename}_DMI.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "dmi"),
+                        new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "pfi"),
+                        new($"{baseFilename}_PIC.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "pic"),
                     ];
 
                 case MediaType.FloppyDisk:
