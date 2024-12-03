@@ -252,7 +252,7 @@ namespace MPF.UI.Windows
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
             _ = ShowDiscInformationWindow(ref submissionInfo);
-            Formatter.ProcessSpecialFields(submissionInfo);
+            Formatter.ProcessSpecialFields(submissionInfo!);
         }
 
         /// <summary>

@@ -460,7 +460,7 @@ namespace MPF.Frontend
             if (seedInfo != null)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
-                Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
+                submissionInfo = Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress?.Report(ResultEventArgs.Success("Information injection complete!"));
             }
 
@@ -479,7 +479,7 @@ namespace MPF.Frontend
 
             // Process special fields for site codes
             resultProgress?.Report(ResultEventArgs.Success("Processing site codes..."));
-            Formatter.ProcessSpecialFields(submissionInfo);
+            Formatter.ProcessSpecialFields(submissionInfo!);
             resultProgress?.Report(ResultEventArgs.Success("Processing complete!"));
 
             // Format the information for the text output
@@ -636,9 +636,9 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <param name="lines">Preformatted list of lines to write out to the file</param>
+        /// <param name="lines">Preformatted string of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
-        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, List<string>? lines, out string status)
+        private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, string? lines, out string status)
         {
             // Check to see if the inputs are valid
             if (lines == null)
@@ -662,10 +662,7 @@ namespace MPF.Frontend
                     path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.txt");
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
-                foreach (string line in lines)
-                {
-                    sw.WriteLine(line);
-                }
+                sw.Write(lines);
             }
             catch (Exception ex)
             {
