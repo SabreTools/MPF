@@ -54,28 +54,6 @@ namespace MPF.Processors.Test
         }
 
         [Fact]
-        public void GetOutputFiles_HDDVD_Populated()
-        {
-            string? baseDirectory = null;
-            string baseFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.HDDVD);
-
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
-            Assert.Equal(16, actual.Count);
-        }
-
-        [Fact]
-        public void GetOutputFiles_BluRay_Populated()
-        {
-            string? baseDirectory = null;
-            string baseFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.BluRay);
-
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
-            Assert.Equal(16, actual.Count);
-        }
-
-        [Fact]
         public void GetOutputFiles_NintendoGameCubeGameDisc_Populated()
         {
             string? baseDirectory = null;
@@ -95,6 +73,28 @@ namespace MPF.Processors.Test
 
             var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
             Assert.Equal(16, actual.Count);
+        }
+
+        [Fact]
+        public void GetOutputFiles_HDDVD_Populated()
+        {
+            string? baseDirectory = null;
+            string baseFilename = "test";
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.HDDVD);
+
+            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            Assert.Equal(15, actual.Count);
+        }
+
+        [Fact]
+        public void GetOutputFiles_BluRay_Populated()
+        {
+            string? baseDirectory = null;
+            string baseFilename = "test";
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.BluRay);
+
+            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            Assert.Equal(15, actual.Count);
         }
 
         [Fact]

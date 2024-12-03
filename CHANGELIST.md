@@ -6,6 +6,7 @@
 - Add BaseProcessor tests
 - Add processor base implementation tests
 - Ensure SS.bin only required for DVD
+- Update tests to account for new file count
 
 ### 3.2.4 (2024-11-24)
 
