@@ -5,7 +5,7 @@ using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Frontend.Tools
+namespace MPF.Frontend.Test.Tools
 {
     public class InfoToolTests
     {

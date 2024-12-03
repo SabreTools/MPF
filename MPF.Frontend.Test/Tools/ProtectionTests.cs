@@ -4,7 +4,7 @@ using System.Linq;
 using MPF.Frontend.Tools;
 using Xunit;
 
-namespace MPF.Test.Frontend.Tools
+namespace MPF.Frontend.Test.Tools
 {
     public class ProtectionTests
     {

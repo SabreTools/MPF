@@ -1,7 +1,7 @@
 ﻿using MPF.Frontend;
 using Xunit;
 
-namespace MPF.Test.Frontend
+namespace MPF.Frontend.Test
 {
     public class ResultEventArgsTests
     {

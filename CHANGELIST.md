@@ -2,6 +2,7 @@
 
 - Update packages
 - Add skeleton test projects for individual libraries
+- Move existing tests to new projects
 
 ### 3.2.4 (2024-11-24)
 

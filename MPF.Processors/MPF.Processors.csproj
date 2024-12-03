@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="MPF.Test" />
+        <InternalsVisibleTo Include="MPF.Processors.Test" />
     </ItemGroup>
 
     <!-- Support for old .NET versions -->
