@@ -64,7 +64,7 @@ namespace MPF.Frontend.Test.Tools
 
             // Validate the lines
             Assert.Equal(3, splitComments.Length);
-            Assert.Equal(5, splitContents.Length);
+            Assert.Equal(4, splitContents.Length);
         }
 
         [Fact]

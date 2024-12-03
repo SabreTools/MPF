@@ -464,7 +464,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all MPF-generated filenames, empty otherwise</returns>
-        private static List<string> GetGeneratedFilenames(string? filenameSuffix)
+        internal static List<string> GetGeneratedFilenames(string? filenameSuffix)
         {
             // Set the base file path names
             const string submissionInfoBase = "!submissionInfo";
@@ -488,7 +488,7 @@ namespace MPF.Processors
         /// <param name="basePath">Base directory to use for checking</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
-        private static List<string> GetGeneratedFilePaths(string? baseDirectory, string? filenameSuffix)
+        internal static List<string> GetGeneratedFilePaths(string? baseDirectory, string? filenameSuffix)
         {
             // Get the list of generated files
             var generatedFilenames = GetGeneratedFilenames(filenameSuffix);
@@ -585,11 +585,15 @@ namespace MPF.Processors
         /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        protected static string? GetPIC(string picPath, int trimLength = -1)
+        internal static string? GetPIC(string picPath, int trimLength = -1)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
                 return null;
+
+            // If the trim length is 0, no data will be returned
+            if (trimLength == 0)
+                return string.Empty;
 
             try
             {
@@ -597,7 +601,7 @@ namespace MPF.Processors
                 if (hex == null)
                     return null;
 
-                if (trimLength > -1)
+                if (trimLength > -1 && trimLength < hex.Length)
                     hex = hex.Substring(0, trimLength);
 
                 // TODO: Check for non-zero values in discarded PIC
@@ -616,7 +620,7 @@ namespace MPF.Processors
         /// <param name="isoPath">Path to ISO file</param>
         /// <param name="pvd">Formatted PVD string, otherwise null</param>
         /// <returns>True if PVD was successfully parsed, otherwise false</returns>
-        protected static bool GetPVD(string isoPath, out string? pvd)
+        internal static bool GetPVD(string isoPath, out string? pvd)
         {
             pvd = null;
             try
@@ -667,19 +671,23 @@ namespace MPF.Processors
         /// <summary>
         /// Split a string with newlines every <paramref name="count"/> characters
         /// </summary>
-        protected static string SplitString(string? str, int count, bool trim = false)
+        internal static string SplitString(string? str, int count, bool trim = false)
         {
             // Ignore invalid inputs
-            if (str == null)
+            if (str == null || str.Length == 0)
                 return string.Empty;
-            if (count < 1)
-                return str;
+
+            // Handle non-modifying counts
+            if (count < 1 || count > str.Length)
+                return $"{str}\n";
 
             // Build the output string
             var sb = new StringBuilder();
             for (int i = 0; i < str.Length; i += count)
             {
-                string line = str.Substring(i, count);
+                int lineSize = Math.Min(count, str.Length - i);
+                string line = str.Substring(i, lineSize);
+
                 if (trim)
                     line = line.Trim();
 

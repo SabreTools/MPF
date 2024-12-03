@@ -10,6 +10,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="TestData\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="TestData\**">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\MPF.Processors\MPF.Processors.csproj" />
     </ItemGroup>
 
