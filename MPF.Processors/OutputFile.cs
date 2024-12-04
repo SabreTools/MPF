@@ -12,7 +12,7 @@ namespace MPF.Processors
     /// Represents attributes about an <see cref="OutputFile"/>
     /// </summary>
     [Flags]
-    internal enum OutputFileFlags : ushort
+    public enum OutputFileFlags : ushort
     {
         /// <summary>
         /// Default state
