@@ -122,10 +122,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-        private static string? GetPVD(string mainInfo)
+        internal static string? GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(mainInfo))
+            if (string.IsNullOrEmpty(mainInfo) || !File.Exists(mainInfo))
                 return null;
 
             try
@@ -138,7 +138,7 @@ namespace MPF.Processors
                 while (sr.ReadLine()?.StartsWith("0310") == false) ;
 
                 // Now that we're at the PVD, read each line in and concatenate
-                string pvd = "";
+                string pvd = string.Empty;
                 for (int i = 0; i < 6; i++)
                     pvd += sr.ReadLine() + "\n"; // 320-370
 
@@ -169,7 +169,7 @@ namespace MPF.Processors
             size = -1;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return false;
 
             try

@@ -821,7 +821,7 @@ namespace MPF.Processors
         private static CICMMetadataType? GenerateSidecar(string cicmSidecar)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cicmSidecar))
+            if (string.IsNullOrEmpty(cicmSidecar) || !File.Exists(cicmSidecar))
                 return null;
 
             // Open and read in the XML file
@@ -933,7 +933,7 @@ namespace MPF.Processors
         private static long GetErrorCount(string resume)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(resume))
+            if (string.IsNullOrEmpty(resume) || !File.Exists(resume))
                 return -1;
 
             // Get a total error count for after

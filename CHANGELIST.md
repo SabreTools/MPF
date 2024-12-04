@@ -12,6 +12,7 @@
 - Fix CleanRip test access
 - Add tests around XBC helpers
 - Fix failing XBC test
+- Perform better path emptiness checks
 
 ### 3.2.4 (2024-11-24)
 
