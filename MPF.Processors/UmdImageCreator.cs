@@ -156,7 +156,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetUMDAuxInfo(string disc,
+        internal static bool GetUMDAuxInfo(string disc,
             out string? title,
             out DiscCategory? category,
             out string? serial,
@@ -218,8 +218,8 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="volDesc">_volDesc.txt file location</param>
         /// <returns>Volume labels (by type), or null if none present</returns>
-        /// <remarks>This is a copy of the code from DiscImageCreator and has extrandous checks</remarks>
-        private static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
+        /// <remarks>This is a copy of the code from DiscImageCreator and has extraneous checks</remarks>
+        internal static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
         {
             // If the file doesn't exist, can't get the volume labels
             volLabels = [];

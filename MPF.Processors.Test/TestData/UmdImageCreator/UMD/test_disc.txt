@@ -1,1 +1,7 @@
-TEST DATA
+<< GetUMDAuxInfo >>
+TITLE title
+DISC_ID serial
+DISC_VERSION version
+pspUmdTypes GAME
+L0 length 12345
+FileSize: 12345
