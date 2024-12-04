@@ -1,1 +1,34 @@
-TEST DATA
+====================================================================
+Xbox Backup Creator v0.0 Build:0000 By Redline99
+====================================================================
+
+<< IsSuccessfulLog >>
+   Read completed in 00:00:00
+
+<< GetDrive >>
+========================================
+< --Security Sector Details -->
+Source Drive: SH-D162D
+----------------------------------------
+
+<< GetLayerbreak >>
+LayerBreak=1913776
+track.iso
+
+<< GetReadErrors >>
+Creating SplitVid backup image [E]
+...
+    Reading Game Partition
+Setting read speed to 1x
+    Unrecovered read error at Partition LBA: 0
+
+Creating Layer Break File
+    LayerBreak file saved as: "track.dvd"
+    A total of 65,536 sectors were zeroed out.
+    A total of 31 sectors with read errors were recovered.
+
+<< GetMediaID >>
+----------------------------------------
+Media ID
+A76B9983D170EFF8749A892BC-8B62A812
+---------------------------------------

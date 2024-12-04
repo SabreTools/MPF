@@ -190,10 +190,21 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="baseDir">Base directory to search in</param>
         /// <returns>Log path if found, null otherwise</returns>
-        private static string? GetLogName(string baseDir)
+        internal static string? GetLogName(string baseDir)
         {
+            // If the directory name is invalid
+            if (baseDir.Length == 0)
+                return null;
+
+            // If the directory doesn't exist
+            if (!Directory.Exists(baseDir))
+                return null;
+
+            // Check the known paths first
             if (IsSuccessfulLog(Path.Combine(baseDir, "Log.txt")))
                 return Path.Combine(baseDir, "Log.txt");
+            else if (IsSuccessfulLog(Path.Combine(baseDir, "log.txt")))
+                return Path.Combine(baseDir, "log.txt");
 
             // Search for a renamed log file (assume there is only one)
             string[] files = Directory.GetFiles(baseDir, "*.txt", SearchOption.TopDirectoryOnly);
@@ -213,7 +224,8 @@ namespace MPF.Processors
         /// <returns>True if successful log found, false otherwise</returns>
         private static bool IsSuccessfulLog(string log)
         {
-            if (!File.Exists(log))
+            // If the log path is invalid
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             // Successful Example:
@@ -253,8 +265,9 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Path to XBC log file</param>
         /// <returns>Version if possible, null on error</returns>
-        private static string? GetVersion(string? log)
+        internal static string? GetVersion(string? log)
         {
+            // If the log path is invalid
             if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
@@ -289,8 +302,9 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Path to XBC log file</param>
         /// <returns>Drive model if found, null otherwise</returns>
-        private static string? GetDrive(string? log)
+        internal static string? GetDrive(string? log)
         {
+            // If the log path is invalid
             if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
@@ -327,12 +341,12 @@ namespace MPF.Processors
         /// Get the Layerbreak value if possible
         /// </summary>
         /// <param name="dvd">Path to layerbreak file</param>
-        /// <param name="layerbreak">Layerbreak value if found</param>
+        /// <param name="layerbreak">Layerbreak value if found, -1 otherwise</param>
         /// <returns>True if successful, otherwise false</returns>
         /// <returns></returns>
-        private static bool GetLayerbreak(string? dvd, out long layerbreak)
+        internal static bool GetLayerbreak(string? dvd, out long layerbreak)
         {
-            layerbreak = 0;
+            layerbreak = -1;
 
             if (string.IsNullOrEmpty(dvd) || !File.Exists(dvd))
                 return false;
@@ -370,7 +384,7 @@ namespace MPF.Processors
         /// <param name="log">Path to XBC log file</param>
         /// <param name="readErrors">Read error count if found, -1 otherwise</param>
         /// <returns>True if sucessful, otherwise false</returns>
-        private bool GetReadErrors(string? log, out long readErrors)
+        internal bool GetReadErrors(string? log, out long readErrors)
         {
             readErrors = -1;
 
@@ -441,7 +455,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Path to XBC log file</param>
         /// <returns>Media ID if Log successfully parsed, null otherwise</returns>
-        private string? GetMediaID(string? log)
+        internal string? GetMediaID(string? log)
         {
             if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
