@@ -20,6 +20,12 @@ jobs:
         
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: Build library
+      run: dotnet build
+
+    - name: Run tests
+      run: dotnet test
       
     - name: Pack
       run: dotnet pack

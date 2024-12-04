@@ -15,6 +15,7 @@
 - Perform better path emptiness checks
 - Add tests around UIC helpers
 - Add tests around PS3 CFW helpers
+- Enable test running on package and PR
 
 ### 3.2.4 (2024-11-24)
 
