@@ -6,7 +6,6 @@ using Xunit;
 
 namespace MPF.Processors.Test
 {
-    // TODO: Add tests around remaining helper methods
     public class RedumperTests
     {
         #region GetOutputFiles
@@ -375,7 +374,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetGDROMHeader_Valid_Filled()
         {
-            string? expected = "0000 line1\n0010 line2\n0020 line3\n0030 line4\n0040 line5\n0050 line6\n0060 line7\n0070 line8\n0080 line9\n0090 line0\n00A0 lineA";
+            string? expected = "0000 TEST DATA\n0010 TEST DATA\n0020 TEST DATA\n0030 TEST DATA\n0040 TEST DATA\n0050 TEST DATA\n0060 TEST DATA\n0070 TEST DATA\n0080 TEST DATA\n0090 TEST DATA\n00A0 TEST DATA";
             string? expectedBuildDate = "date";
             string? expectedSerial = "serial";
             string? expectedRegion = "region";
@@ -524,7 +523,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetMultisessionInformation_Valid_Filled()
         {
-            string? expected = "Session 1: 0\nSession 2: 12345";
+            string? expected = "Session 1: 0-12344\nSession 2: 12345-23456";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetMultisessionInformation(log);
             Assert.Equal(expected, actual);
@@ -863,7 +862,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetSaturnHeader_Valid_Filled()
         {
-            string? expected = "0000 line1\n0010 line2\n0020 line3\n0030 line4\n0040 line5\n0050 line6\n0060 line7\n0070 line8\n0080 line9\n0090 line0\n00A0 lineA";
+            string? expected = "0000 TEST DATA\n0010 TEST DATA\n0020 TEST DATA\n0030 TEST DATA\n0040 TEST DATA\n0050 TEST DATA\n0060 TEST DATA\n0070 TEST DATA\n0080 TEST DATA\n0090 TEST DATA\n00A0 TEST DATA\n00B0 TEST DATA\n00C0 TEST DATA\n00D0 TEST DATA\n00E0 TEST DATA\n00F0 TEST DATA";
             string? expectedBuildDate = "date";
             string? expectedSerial = "serial";
             string? expectedRegion = "region";
@@ -949,7 +948,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetSegaCDHeader_Valid_Filled()
         {
-            string? expected = "0100 line1\n0110 line2\n0120 line3\n0130 line4\n0140 line5\n0150 line6\n0160 line7\n0170 line8\n0180 line9\n0190 line0\n01A0 lineA";
+            string? expected = "0100 TEST DATA\n0110 TEST DATA\n0120 TEST DATA\n0130 TEST DATA\n0140 TEST DATA\n0150 TEST DATA\n0160 TEST DATA\n0170 TEST DATA\n0180 TEST DATA\n0190 TEST DATA\n01A0 TEST DATA";
             string? expectedBuildDate = "date";
             string? expectedSerial = "serial";
             string? expectedRegion = "region";

@@ -35,17 +35,17 @@ DC [
     serial: serial
     region: region
     header:
-        0000 line1
-        0010 line2
-        0020 line3
-        0030 line4
-        0040 line5
-        0050 line6
-        0060 line7
-        0070 line8
-        0080 line9
-        0090 line0
-        00A0 lineA
+        0000 TEST DATA
+        0010 TEST DATA
+        0020 TEST DATA
+        0030 TEST DATA
+        0040 TEST DATA
+        0050 TEST DATA
+        0060 TEST DATA
+        0070 TEST DATA
+        0080 TEST DATA
+        0090 TEST DATA
+        00A0 TEST DATA
 
 << GetHardwareInfo >>
 drive path:
@@ -58,8 +58,8 @@ layer break (layer: 2): 34567
 
 << GetMultisessionInformation >>
 multisession:
-    session 1: 0
-    session 2: 12345
+    session 1: 0-12344
+    session 2: 12345-23456
 
 << GetPlayStationAntiModchipDetected >>
 << GetPlayStationInfo >>
@@ -99,17 +99,22 @@ SS [
     serial: serial
     region: region
     header:
-        0000 line1
-        0010 line2
-        0020 line3
-        0030 line4
-        0040 line5
-        0050 line6
-        0060 line7
-        0070 line8
-        0080 line9
-        0090 line0
-        00A0 lineA
+        0000 TEST DATA
+        0010 TEST DATA
+        0020 TEST DATA
+        0030 TEST DATA
+        0040 TEST DATA
+        0050 TEST DATA
+        0060 TEST DATA
+        0070 TEST DATA
+        0080 TEST DATA
+        0090 TEST DATA
+        00A0 TEST DATA
+        00B0 TEST DATA
+        00C0 TEST DATA
+        00D0 TEST DATA
+        00E0 TEST DATA
+        00F0 TEST DATA
 
 << GetSecuROMData >>
 SecuROM [
@@ -124,17 +129,17 @@ MCD [
     serial: serial
     region: region
     header:
-        0100 line1
-        0110 line2
-        0120 line3
-        0130 line4
-        0140 line5
-        0150 line6
-        0160 line7
-        0170 line8
-        0180 line9
-        0190 line0
-        01A0 lineA
+        0100 TEST DATA
+        0110 TEST DATA
+        0120 TEST DATA
+        0130 TEST DATA
+        0140 TEST DATA
+        0150 TEST DATA
+        0160 TEST DATA
+        0170 TEST DATA
+        0180 TEST DATA
+        0190 TEST DATA
+        01A0 TEST DATA
 
 << GetUniversalHash >>
 Universal Hash (SHA-1): da39a3ee5e6b4b0d3255bfef95601890afd80709

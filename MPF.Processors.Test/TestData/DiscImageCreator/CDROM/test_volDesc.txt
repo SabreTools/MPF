@@ -1,1 +1,3 @@
-TEST DATA
+<< GetVolumeLabels >>
+Primary Volume Descriptor Number: 0
+Volume Identifier: label

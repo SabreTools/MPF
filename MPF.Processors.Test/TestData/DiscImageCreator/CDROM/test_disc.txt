@@ -1,1 +1,60 @@
-TEST DATA
+<< GetDiscType >>
+DiscType: CD-ROM
+DiscTypeIdentifier: GD-ROM
+DiscTypeSpecific: DVD-ROM
+BookType: BD-ROM
+
+<< GetDVDProtection >>
+========== CopyrightInformation ==========
+CopyrightProtectionType: No
+RegionManagementInformation: 1 2 3 4 5 6 7 8
+========== ManufacturingInformation ==========
+
+<< GetLayerbreak >>
+LayerBreak: 23456 (L0 Video: 0, L0 Middle: 1, L0 Game: 2)
+LayerZeroSector: 12345 (0x3039)
+
+<< GetMultisessionInformation >>
+========== TOC
+Track 1, LBA 0 - 12345, Length 12346
+Track 2, LBA 12346 - 23457, Length 11111
+========== FULL TOC
+Session 1, XXX, Track 1
+Session 2, XXX, Track 2
+========== OpCode
+Lead-out length of 1st session: 0
+Lead-in length of 2nd session: 0
+Pregap length of 1st track of 2nd session: 1
+
+<< GetPlayStationAntiModchipDetected >>
+Detected anti-mod string
+
+<< GetPlayStation3Info >>
+PS3_DISC.SFB ==========
+TITLE_ID: serial
+PARAM.SFO ==========
+VERSION: version
+PS3UPDAT.PUP ==========
+version: firmwareVersion
+==========
+
+<< GetWriteOffset >>
+========== Offset
+Combined Offset
+Drive Offset
+Drive Offset
+Expected Offset: offset
+
+========== Offset
+Combined Offset
+Drive Offset
+Drive Offset
+Expected Offset: offset
+
+<< GetXGDAuxInfo >>
+Number of security sector ranges: 1
+Layer 0, startLBA-endLBA: 0-12345
+========== Unlock 2 state(wxripper) ==========
+<rom name="SS.bin" size="" crc="00000000" md5="" sha1="" />
+<rom name="PFI.bin" size="" crc="00000000" md5="" sha1="" />
+<rom name="DMI.bin" size="" crc="00000000" md5="" sha1="" />

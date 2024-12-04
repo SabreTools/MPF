@@ -1,1 +1,6 @@
-TEST DATA
+<< GetErrorCount >>
+Total errors: 12345
+Total warnings: 1
+
+<< GetPlayStationEDCStatus >>
+mode 2 form 2

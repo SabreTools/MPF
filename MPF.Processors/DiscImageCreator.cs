@@ -257,7 +257,7 @@ namespace MPF.Processors
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         }
 
-                        if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd1SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS, out _))
                         {
                             // We no longer care about SS Version from DIC
                             //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
@@ -303,7 +303,7 @@ namespace MPF.Processors
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         }
 
-                        if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out var xgd23SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS, out _))
                         {
                             // We no longer care about SS Version from DIC
                             //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
@@ -789,7 +789,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <returns>The version as a string, both null on error</returns>
-        private static string? GetCommandFilePathAndVersion(string basePath, out string? commandPath)
+        internal static string? GetCommandFilePathAndVersion(string basePath, out string? commandPath)
         {
             // If we have an invalid base path, we can do nothing
             commandPath = null;
@@ -822,14 +822,14 @@ namespace MPF.Processors
         /// <summary>
         /// Get the PSX/PS2/KP2 EXE Date from the log, if possible
         /// </summary>
-        /// <param name="log">Log file location</param>
+        /// <param name="volDesc">Log file location</param>
         /// <param name="serial">Internal serial</param>
         /// <param name="psx">True if PSX disc, false otherwise</param>
         /// <returns>EXE date if possible, null otherwise</returns>
-        public static string? GetPlayStationEXEDate(string log, string? exeName, bool psx = false)
+        public static string? GetPlayStationEXEDate(string volDesc, string? exeName, bool psx = false)
         {
             // If the file doesn't exist, we can't get the info
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(volDesc) || !File.Exists(volDesc))
                 return null;
 
             // If the EXE name is not valid, we can't get the info
@@ -839,7 +839,7 @@ namespace MPF.Processors
             try
             {
                 string? exeDate = null;
-                using var sr = File.OpenText(log);
+                using var sr = File.OpenText(volDesc);
                 var line = sr.ReadLine();
                 while (line != null)
                 {
@@ -889,15 +889,15 @@ namespace MPF.Processors
         /// <summary>
         /// Get reported disc type information, if possible
         /// </summary>
-        /// <param name="drive">_disc.txt file location</param>
+        /// <param name="disc">_disc.txt file location</param>
         /// <returns>True if disc type info was set, false otherwise</returns>
-        private static bool GetDiscType(string drive, out string? discTypeOrBookType)
+        internal static bool GetDiscType(string disc, out string? discTypeOrBookType)
         {
             // Set the default values
             discTypeOrBookType = null;
 
             // If the file doesn't exist, we can't get the info
-            if (!File.Exists(drive))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return false;
 
             try
@@ -905,7 +905,7 @@ namespace MPF.Processors
                 // Create a hashset to contain all of the found values
                 var discTypeOrBookTypeSet = new HashSet<string>();
 
-                using var sr = File.OpenText(drive);
+                using var sr = File.OpenText(disc);
                 var line = sr.ReadLine();
                 while (line != null)
                 {
@@ -962,20 +962,26 @@ namespace MPF.Processors
         /// <param name="disc">_disc.txt file location</param>
         /// <param name="includeAlways">Indicates whether region and protection type are always included</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-        private static string? GetDVDProtection(string cssKey, string disc, bool includeAlways)
+        internal static string? GetDVDProtection(string cssKey, string disc, bool includeAlways)
         {
-            // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(disc))
-                return null;
-
             // Setup all of the individual pieces
             string? region = null, rceProtection = null, copyrightProtectionSystemType = null, vobKeys = null, decryptedDiscKey = null;
 
-            // Get everything from _disc.txt first
-            using (var sr = File.OpenText(disc))
+            // If both files are missing
+            if ((string.IsNullOrEmpty(disc) || !File.Exists(disc))
+                && (string.IsNullOrEmpty(cssKey) || !File.Exists(cssKey)))
+            {
+                return null;
+            }
+
+            // Get everything from _disc.txt, if it exists
+            if (!string.IsNullOrEmpty(disc) && File.Exists(disc))
             {
                 try
                 {
+                    // Get everything from _disc.txt first
+                    using var sr = File.OpenText(disc);
+
                     // Fast forward to the copyright information
                     while (sr.ReadLine()?.Trim()?.StartsWith("========== CopyrightInformation ==========") == false) ;
 
@@ -997,8 +1003,8 @@ namespace MPF.Processors
                 catch { }
             }
 
-            // Get everything from _CSSKey.txt next, if it exists
-            if (File.Exists(cssKey))
+            // Get everything from _CSSKey.txt, if it exists
+            if (!string.IsNullOrEmpty(cssKey) && File.Exists(cssKey))
             {
                 try
                 {
@@ -1074,12 +1080,12 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt/.img_EccEdc.txt file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
-        private static long GetErrorCount(string edcecc)
+        internal static long GetErrorCount(string edcecc)
         {
             // TODO: Better usage of _mainInfo and _c2Error for uncorrectable errors
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(edcecc))
+            if (string.IsNullOrEmpty(edcecc) || !File.Exists(edcecc))
                 return -1;
 
             // Get a total error count for after
@@ -1104,15 +1110,13 @@ namespace MPF.Processors
                     else if (line.StartsWith("Total errors"))
                     {
                         totalErrors ??= 0;
-
-                        if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
+                        if (long.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
                             totalErrors += te;
                     }
                     else if (line.StartsWith("Total warnings"))
                     {
                         totalErrors ??= 0;
-
-                        if (Int64.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
+                        if (long.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
                             totalErrors += tw;
                     }
                 }
@@ -1123,7 +1127,7 @@ namespace MPF.Processors
             catch
             {
                 // We don't care what the exception is right now
-                return Int64.MaxValue;
+                return -1;
             }
         }
 
@@ -1132,7 +1136,7 @@ namespace MPF.Processors
         /// </summary>
         /// <<param name="segaHeader">String representing a formatter variant of the GD-ROM header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetGDROMBuildInfo(string? segaHeader, out string? serial, out string? version, out string? date)
+        internal static bool GetGDROMBuildInfo(string? segaHeader, out string? serial, out string? version, out string? date)
         {
             serial = null; version = null; date = null;
 
@@ -1149,6 +1153,7 @@ namespace MPF.Processors
                 serial = versionLine.Substring(0, 10).TrimEnd();
                 version = versionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
+                date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
             catch
@@ -1163,13 +1168,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="drive">_drive.txt file location</param>
         /// <returns>True if hardware info was set, false otherwise</returns>
-        private static bool GetHardwareInfo(string drive, out string? manufacturer, out string? model, out string? firmware)
+        internal static bool GetHardwareInfo(string drive, out string? manufacturer, out string? model, out string? firmware)
         {
             // Set the default values
             manufacturer = null; model = null; firmware = null;
 
             // If the file doesn't exist, we can't get the info
-            if (!File.Exists(drive))
+            if (string.IsNullOrEmpty(drive) || !File.Exists(drive))
                 return false;
 
             try
@@ -1216,10 +1221,10 @@ namespace MPF.Processors
         /// <param name="disc">_disc.txt file location</param>
         /// <param name="xgd">True if XGD layerbreak info should be used, false otherwise</param>
         /// <returns>Layerbreak if possible, null on error</returns>
-        private static string? GetLayerbreak(string disc, bool xgd)
+        internal static string? GetLayerbreak(string disc, bool xgd)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return null;
 
             try
@@ -1315,7 +1320,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Formatted multisession information, null on error</returns>
-        private static string? GetMultisessionInformation(string disc)
+        internal static string? GetMultisessionInformation(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -1345,11 +1350,7 @@ namespace MPF.Processors
                     trackLengthMapping[match.Groups[1].Value] = match.Groups[2].Value;
                 }
 
-                if (line == null)
-                    return null;
-
                 // Seek to the FULL TOC data
-                line = sr.ReadLine();
                 if (line == null)
                     return null;
 
@@ -1402,7 +1403,7 @@ namespace MPF.Processors
 
                 // Read the second session lead-in, if it exists
                 string? secondSessionLeadInLengthString = null;
-                while (line?.StartsWith("Lead-in length") == false)
+                if (line?.StartsWith("Lead-in length") == true)
                 {
                     secondSessionLeadInLengthString = line?.Substring("Lead-in length of 2nd session: ".Length);
                     line = sr.ReadLine()?.Trim();
@@ -1456,22 +1457,19 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-        private static bool? GetPlayStationAntiModchipDetected(string disc)
+        internal static bool? GetPlayStationAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return null;
 
             try
             {
                 // Check for either antimod string
                 using var sr = File.OpenText(disc);
-                var line = sr.ReadLine()?.Trim();
-                if (line == null)
-                    return null;
-
                 while (!sr.EndOfStream)
                 {
+                    var line = sr.ReadLine()?.Trim();
                     if (line == null)
                         return false;
 
@@ -1479,8 +1477,6 @@ namespace MPF.Processors
                         return true;
                     else if (line.StartsWith("No anti-mod string"))
                         return false;
-
-                    line = sr.ReadLine()?.Trim();
                 }
 
                 return false;
@@ -1497,25 +1493,22 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True if section found, null on error</returns>
-        private static bool GetPlayStation3Info(string disc, out string? serial, out string? version, out string? firmwareVersion)
+        internal static bool GetPlayStation3Info(string disc, out string? serial, out string? version, out string? firmwareVersion)
         {
             // Set the default values
             serial = null; version = null; firmwareVersion = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return false;
 
             try
             {
                 using var sr = File.OpenText(disc);
-                var line = sr.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
-
                 string section = string.Empty;
                 while (!sr.EndOfStream)
                 {
+                    var line = sr.ReadLine()?.Trim();
                     if (line == null)
                         return false;
 
@@ -1578,8 +1571,6 @@ namespace MPF.Processors
                     {
                         section = string.Empty;
                     }
-
-                    line = sr.ReadLine()?.Trim();
                 }
 
                 return true;
@@ -1596,10 +1587,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt file location</param>
         /// <returns>Status of PS1 EDC, if possible</returns>
-        private static bool? GetPlayStationEDCStatus(string edcecc)
+        internal static bool? GetPlayStationEDCStatus(string edcecc)
         {
             // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(edcecc))
+            if (string.IsNullOrEmpty(edcecc) || !File.Exists(edcecc))
                 return null;
 
             // First line of defense is the EdcEcc error file
@@ -1651,7 +1642,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Newline-delimited PVD if possible, null on error</returns>
-        private static string? GetPVD(string mainInfo)
+        internal static string? GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -1706,7 +1697,7 @@ namespace MPF.Processors
                 for (int i = 0; i < 6; i++)
                     pvd += sr.ReadLine() + "\n"; // 320-370
 
-                return pvd;
+                return pvd.TrimEnd('\n');
             }
             catch
             {
@@ -1720,7 +1711,7 @@ namespace MPF.Processors
         /// </summary>
         /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetSaturnBuildInfo(string? segaHeader, out string? serial, out string? version, out string? date)
+        internal static bool GetSaturnBuildInfo(string? segaHeader, out string? serial, out string? version, out string? date)
         {
             serial = null; version = null; date = null;
 
@@ -1753,7 +1744,7 @@ namespace MPF.Processors
         /// <<param name="segaHeader">String representing a formatter variant of the  Sega CD header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
         /// <remarks>Note that this works for MOST headers, except ones where the copyright stretches > 1 line</remarks>
-        private static bool GetSegaCDBuildInfo(string? segaHeader, out string? serial, out string? date)
+        internal static bool GetSegaCDBuildInfo(string? segaHeader, out string? serial, out string? date)
         {
             serial = null; date = null;
 
@@ -1810,10 +1801,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string? GetSegaHeader(string mainInfo)
+        internal static string? GetSegaHeader(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(mainInfo))
+            if (string.IsNullOrEmpty(mainInfo) || !File.Exists(mainInfo))
                 return null;
 
             try
@@ -1862,7 +1853,7 @@ namespace MPF.Processors
                 for (int i = 0; i < 32; i++)
                     header += sr.ReadLine() + "\n"; // 0000-01F0
 
-                return header;
+                return header.TrimEnd('\n');
             }
             catch
             {
@@ -1876,11 +1867,11 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="volDesc">_volDesc.txt file location</param>
         /// <returns>Volume labels (by type), or null if none present</returns>
-        private static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
+        internal static bool GetVolumeLabels(string volDesc, out Dictionary<string, List<string>> volLabels)
         {
             // If the file doesn't exist, can't get the volume labels
             volLabels = [];
-            if (!File.Exists(volDesc))
+            if (string.IsNullOrEmpty(volDesc) || !File.Exists(volDesc))
                 return false;
 
             try
@@ -1959,10 +1950,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Sample write offset if possible, null on error</returns>
-        private static string? GetWriteOffset(string disc)
+        internal static string? GetWriteOffset(string disc)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return null;
 
             try
@@ -1982,7 +1973,7 @@ namespace MPF.Processors
 
                     sr.ReadLine(); // Combined Offset
                     sr.ReadLine(); // Drive Offset
-                    sr.ReadLine(); // Separator line
+                    sr.ReadLine(); // Drive Offset
 
                     // Now that we're at the offsets, attempt to get the sample offset
                     var offsetLine = sr.ReadLine()?.Split(' ');
@@ -2028,7 +2019,7 @@ namespace MPF.Processors
         /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
         /// <remarks>Currently only the CRC32 values are returned for each, this may change in the future</remarks>
-        private static bool GetXGDAuxHashInfo(Datafile? suppl, out string? dmihash, out string? pfihash, out string? sshash)
+        internal static bool GetXGDAuxHashInfo(Datafile? suppl, out string? dmihash, out string? pfihash, out string? sshash)
         {
             // Assign values to all outputs first
             dmihash = null; pfihash = null; sshash = null;
@@ -2059,12 +2050,12 @@ namespace MPF.Processors
         /// <param name="ss">Extracted security sector data</param>
         /// <param name="ssver">Extracted security sector version</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXGDAuxInfo(string disc, out string? dmihash, out string? pfihash, out string? sshash, out string? ss, out string? ssver)
+        internal static bool GetXGDAuxInfo(string disc, out string? dmihash, out string? pfihash, out string? sshash, out string? ss, out string? ssver)
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
                 return false;
 
             // This flag is needed because recent versions of DIC include security data twice
@@ -2097,24 +2088,19 @@ namespace MPF.Processors
                         foundSecuritySectors = true;
 
                         var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
-
-                        line = sr.ReadLine()?.Trim();
-                        if (line == null)
-                            break;
-
                         while (!line.StartsWith("========== TotalLength ==========")
                             && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                         {
+                            line = sr.ReadLine()?.Trim();
+                            if (line == null)
+                                break;
+
                             // If we have a recognized line format, parse it
                             if (line.StartsWith("Layer "))
                             {
                                 var match = layerRegex.Match(line);
                                 ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
                             }
-
-                            line = sr.ReadLine()?.Trim();
-                            if (line == null)
-                                break;
                         }
 
                         if (line == null)
@@ -2136,85 +2122,7 @@ namespace MPF.Processors
                     }
                 }
 
-                return true;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get the XGD auxiliary security sector info from the outputted files, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <param name="ss">Extracted security sector data</param>
-        /// <param name="ssver">Extracted security sector version</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXGDAuxSSInfo(string disc, out string? ss, out string? ssver)
-        {
-            ss = null; ssver = null;
-
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-                return false;
-
-            // This flag is needed because recent versions of DIC include security data twice
-            bool foundSecuritySectors = false;
-
-            // SS version for all Kreon DIC dumps is v1
-            ssver = "01";
-
-            try
-            {
-                using var sr = File.OpenText(disc);
-                while (!sr.EndOfStream)
-                {
-                    var line = sr.ReadLine()?.Trim();
-                    if (line == null)
-                        break;
-
-                    // XGD version (1 = Xbox, 2 = Xbox360)
-                    /*
-                    if (line.StartsWith("Version of challenge table"))
-                    {
-                        xgdver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
-                    }
-                    */
-
-                    // Security Sector ranges
-                    else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
-                    {
-                        // Set the flag so we don't read duplicate data
-                        foundSecuritySectors = true;
-
-                        var layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)", RegexOptions.Compiled);
-
-                        line = sr.ReadLine()?.Trim();
-                        if (line == null)
-                            break;
-
-                        while (!line.StartsWith("========== TotalLength ==========")
-                            && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
-                        {
-                            // If we have a recognized line format, parse it
-                            if (line.StartsWith("Layer "))
-                            {
-                                var match = layerRegex.Match(line);
-                                ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
-                            }
-
-                            line = sr.ReadLine()?.Trim();
-                            if (line == null)
-                                break;
-                        }
-
-                        if (line == null)
-                            break;
-                    }
-                }
-
+                ss = ss?.TrimEnd('\n');
                 return true;
             }
             catch
