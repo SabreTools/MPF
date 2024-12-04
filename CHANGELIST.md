@@ -16,6 +16,7 @@
 - Add tests around UIC helpers
 - Add tests around PS3 CFW helpers
 - Enable test running on package and PR
+- Fix missing test data
 
 ### 3.2.4 (2024-11-24)
 
