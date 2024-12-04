@@ -375,7 +375,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetMediaID_Valid_Filled()
         {
-            string? expected = "A76B9983D170EFF8749A892BC-8B62A812";
+            string? expected = "8B62A812";
             string? log = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD", "log.txt");
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox360, MediaType.DVD);
             string? actual = processor.GetMediaID(log);

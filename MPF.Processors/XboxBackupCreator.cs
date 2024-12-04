@@ -479,7 +479,7 @@ namespace MPF.Processors
                     if (line?.StartsWith("Media ID") == true)
                     {
                         line = sr.ReadLine()?.Trim();
-                        return line?.Substring(25).Trim();
+                        return line?.Substring(26).Trim();
                     }
                 }
 
