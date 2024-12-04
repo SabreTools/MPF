@@ -104,9 +104,9 @@ namespace MPF.Processors
                     // Deal with the layerbreaks
                     if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
                     {
-                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? Int64.Parse(layerbreak1) : default;
-                        info.SizeAndChecksums!.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? Int64.Parse(layerbreak2) : default;
-                        info.SizeAndChecksums!.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? Int64.Parse(layerbreak3) : default;
+                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak1) ? long.Parse(layerbreak1) : default;
+                        info.SizeAndChecksums!.Layerbreak2 = !string.IsNullOrEmpty(layerbreak2) ? long.Parse(layerbreak2) : default;
+                        info.SizeAndChecksums!.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? long.Parse(layerbreak3) : default;
                     }
 
                     // Bluray-specific options

@@ -69,7 +69,7 @@ namespace MPF.Processors
                         info.SizeAndChecksums!.Size = size;
 
                         if (!string.IsNullOrEmpty(layer))
-                            info.SizeAndChecksums.Layerbreak = Int64.Parse(layer ?? "-1");
+                            info.SizeAndChecksums.Layerbreak = long.Parse(layer ?? "-1");
                     }
 
                     break;
@@ -193,7 +193,7 @@ namespace MPF.Processors
                     else if (line.StartsWith("L0 length"))
                         layer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))
-                        size = Int64.Parse(line.Split(' ')[1]);
+                        size = long.Parse(line.Split(' ')[1]);
                 }
 
                 // If we have a serial, format it
@@ -201,7 +201,7 @@ namespace MPF.Processors
                     serial = serial.Substring(0, 4) + "-" + serial.Substring(4);
 
                 // If the L0 length is the size of the full disc, there's no layerbreak
-                if (Int64.TryParse(layer, out long umdlayerValue) && umdlayerValue * 2048 == size)
+                if (long.TryParse(layer, out long umdlayerValue) && umdlayerValue * 2048 == size)
                     layer = null;
 
                 return true;
@@ -241,7 +241,7 @@ namespace MPF.Processors
                     // ISO9660 and extensions section
                     if (line.StartsWith("Volume Descriptor Type: "))
                     {
-                        Int32.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+                        int.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
                         volType = volTypeInt switch
                         {
                             // 0 => "Boot Record" // Should not not contain a Volume Identifier

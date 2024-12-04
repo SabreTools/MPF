@@ -159,7 +159,7 @@ namespace MPF.Processors
                     if (Type == MediaType.DVD)
                     {
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
-                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? long.Parse(layerbreak) : default;
                     }
                     else if (Type == MediaType.BluRay)
                     {
@@ -1889,7 +1889,7 @@ namespace MPF.Processors
                     // ISO9660 and extensions section
                     if (line.StartsWith("Volume Descriptor Type: "))
                     {
-                        Int32.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+                        int.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
                         volType = volTypeInt switch
                         {
                             // 0 => "Boot Record" // Should not not contain a Volume Identifier

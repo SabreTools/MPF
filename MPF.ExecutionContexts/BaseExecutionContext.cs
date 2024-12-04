@@ -797,7 +797,7 @@ namespace MPF.ExecutionContexts
                 return null;
             }
 
-            return Int32.MinValue;
+            return int.MinValue;
         }
 
         /// <summary>
@@ -884,7 +884,7 @@ namespace MPF.ExecutionContexts
                 return null;
             }
 
-            return Int64.MinValue;
+            return long.MinValue;
         }
 
         /// <summary>

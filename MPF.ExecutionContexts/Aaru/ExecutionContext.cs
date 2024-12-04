@@ -1548,7 +1548,7 @@ namespace MPF.ExecutionContexts.Aaru
 
                 // Length
                 longValue = ProcessInt64Parameter(parts, FlagStrings.LengthShort, FlagStrings.LengthLong, ref i);
-                if (longValue != null && longValue != Int64.MinValue)
+                if (longValue != null && longValue != long.MinValue)
                 {
                     LengthValue = longValue;
                 }
@@ -1563,7 +1563,7 @@ namespace MPF.ExecutionContexts.Aaru
                 longValue = ProcessInt64Parameter(parts, FlagStrings.StartShort, FlagStrings.StartLong, ref i);
                 if (longValue == null)
                     return false;
-                else if (longValue != Int64.MinValue)
+                else if (longValue != long.MinValue)
                     StartValue = longValue;
 
                 #endregion

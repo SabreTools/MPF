@@ -227,7 +227,7 @@ namespace MPF.Processors
 
             var rom = roms[0];
 
-            _ = Int64.TryParse(rom.Size, out size);
+            _ = long.TryParse(rom.Size, out size);
             crc32 = rom.CRC;
             md5 = rom.MD5;
             sha1 = rom.SHA1;
@@ -251,7 +251,7 @@ namespace MPF.Processors
             Match m = hashreg.Match(hashData);
             if (m.Success)
             {
-                _ = Int64.TryParse(m.Groups[1].Value, out size);
+                _ = long.TryParse(m.Groups[1].Value, out size);
                 crc32 = m.Groups[2].Value;
                 md5 = m.Groups[3].Value;
                 sha1 = m.Groups[4].Value;

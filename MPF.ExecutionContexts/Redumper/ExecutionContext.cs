@@ -748,12 +748,12 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Speed
                 intValue = ProcessInt32Parameter(parts, FlagStrings.Speed, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     SpeedValue = intValue;
 
                 // Retries
                 intValue = ProcessInt32Parameter(parts, FlagStrings.Retries, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     RetriesValue = intValue;
 
                 // Image Path
@@ -780,17 +780,17 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Drive Read Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DriveReadOffset, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     DriveReadOffsetValue = intValue;
 
                 // Drive C2 Shift
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DriveC2Shift, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     DriveC2ShiftValue = intValue;
 
                 // Drive Pregap Start
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DrivePregapStart, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     DrivePregapStartValue = intValue;
 
                 // Drive Read Method
@@ -812,7 +812,7 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Plextor Leadin Retries
                 intValue = ProcessInt32Parameter(parts, FlagStrings.PlextorLeadinRetries, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     PlextorLeadinRetriesValue = intValue;
 
                 // Asus Skip Leadout
@@ -824,12 +824,12 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Force Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.ForceOffset, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     ForceOffsetValue = intValue;
 
                 // Audio Silence Threshold
                 intValue = ProcessInt32Parameter(parts, FlagStrings.AudioSilenceThreshold, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     AudioSilenceThresholdValue = intValue;
 
                 // Correct Offset Shift
@@ -865,12 +865,12 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // LBA Start
                 intValue = ProcessInt32Parameter(parts, FlagStrings.LBAStart, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     LBAStartValue = intValue;
 
                 // LBA End
                 intValue = ProcessInt32Parameter(parts, FlagStrings.LBAEnd, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     LBAEndValue = intValue;
 
                 // Refine Subchannel
@@ -883,12 +883,12 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Dump Write Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpWriteOffset, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     DumpWriteOffsetValue = intValue;
 
                 // Dump Read Size
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
+                if (intValue != null && intValue != int.MinValue)
                     DumpReadSizeValue = intValue;
 
                 // Overread Leadout

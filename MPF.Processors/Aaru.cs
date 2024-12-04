@@ -122,7 +122,7 @@ namespace MPF.Processors
                     // If we have a dual-layer disc
                     else
                     {
-                        info.SizeAndChecksums!.Layerbreak = Int64.Parse(layerbreak);
+                        info.SizeAndChecksums!.Layerbreak = long.Parse(layerbreak);
                     }
 
                     // TODO: Investigate XGD disc outputs
@@ -973,7 +973,7 @@ namespace MPF.Processors
             catch
             {
                 // We don't care what the exception is right now
-                return Int64.MaxValue;
+                return long.MaxValue;
             }
         }
 

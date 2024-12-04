@@ -1103,17 +1103,17 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     if (!IsValidInt32(parts[4]))
                         return false;
                     else
-                        StartLBAValue = Int32.Parse(parts[4]);
+                        StartLBAValue = int.Parse(parts[4]);
 
                     if (!IsValidInt32(parts[5]))
                         return false;
                     else
-                        EndLBAValue = Int32.Parse(parts[5]);
+                        EndLBAValue = int.Parse(parts[5]);
 
                     index = 6;
                     break;
@@ -1133,7 +1133,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1162,7 +1162,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1182,17 +1182,17 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     if (!IsValidInt32(parts[4]))
                         return false;
                     else
-                        StartLBAValue = Int32.Parse(parts[4]);
+                        StartLBAValue = int.Parse(parts[4]);
 
                     if (!IsValidInt32(parts[5]))
                         return false;
                     else
-                        EndLBAValue = Int32.Parse(parts[5]);
+                        EndLBAValue = int.Parse(parts[5]);
 
                     index = 6;
                     break;
@@ -1212,7 +1212,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1277,7 +1277,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1333,7 +1333,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 16))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1382,7 +1382,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1419,7 +1419,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     index = 4;
                     break;
@@ -1441,11 +1441,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
-                        DriveSpeed = Int32.Parse(parts[3]);
+                        DriveSpeed = int.Parse(parts[3]);
 
                     for (int i = 4; i < parts.Count; i++)
                     {
-                        if (!Int64.TryParse(parts[i], out long temp))
+                        if (!long.TryParse(parts[i], out long temp))
                             return false;
                     }
 
@@ -1466,7 +1466,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Add Offset
                     intValue = ProcessInt32Parameter(parts, FlagStrings.AddOffset, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue)
+                    if (intValue != null && intValue != int.MinValue)
                         AddOffsetValue = intValue;
 
                     // AMSF
@@ -1505,7 +1505,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             }
                             else
                             {
-                                C2OpcodeValue[j] = Int32.Parse(parts[i + 1]);
+                                C2OpcodeValue[j] = int.Parse(parts[i + 1]);
                                 i++;
                             }
                         }
@@ -1525,7 +1525,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // DVD/HD-DVD/BD Reread
                     intValue = ProcessInt32Parameter(parts, FlagStrings.DVDReread, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue)
+                    if (intValue != null && intValue != int.MinValue)
                         DVDRereadValue = intValue;
 
                     // Extract MS-CAB
@@ -1533,17 +1533,17 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Fix
                     intValue = ProcessInt32Parameter(parts, FlagStrings.Fix, ref i);
-                    if (intValue != null && intValue != Int32.MinValue)
+                    if (intValue != null && intValue != int.MinValue)
                         FixValue = intValue;
 
                     // Force Unit Access
                     intValue = ProcessInt32Parameter(parts, FlagStrings.ForceUnitAccess, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         ForceUnitAccessValue = intValue;
 
                     // Multi-Sector Read
                     intValue = ProcessInt32Parameter(parts, FlagStrings.MultiSectorRead, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         MultiSectorReadValue = intValue;
 
                     // NoFixSubP
@@ -1563,7 +1563,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // NoSkipSS
                     intValue = ProcessInt32Parameter(parts, FlagStrings.NoSkipSS, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         NoSkipSecuritySectorValue = intValue;
 
                     // PadSector
@@ -1582,8 +1582,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
                                 return false;
 
-                            RangeStartLBAValue = Int32.Parse(parts[i + 1]);
-                            RangeEndLBAValue = Int32.Parse(parts[i + 2]);
+                            RangeStartLBAValue = int.Parse(parts[i + 1]);
+                            RangeEndLBAValue = int.Parse(parts[i + 2]);
                             i += 2;
                         }
 
@@ -1607,8 +1607,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
                                 return false;
 
-                            ReverseStartLBAValue = Int32.Parse(parts[i + 1]);
-                            ReverseEndLBAValue = Int32.Parse(parts[i + 2]);
+                            ReverseStartLBAValue = int.Parse(parts[i + 1]);
+                            ReverseEndLBAValue = int.Parse(parts[i + 2]);
                             i += 2;
                         }
 
@@ -1620,7 +1620,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // ScanFileProtect
                     intValue = ProcessInt32Parameter(parts, FlagStrings.ScanFileProtect, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         ScanFileProtectValue = intValue;
 
                     // ScanSectorProtect
@@ -1650,7 +1650,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             }
                             else
                             {
-                                SkipSectorValue[j] = Int32.Parse(parts[i + 1]);
+                                SkipSectorValue[j] = int.Parse(parts[i + 1]);
                                 i++;
                             }
                         }
@@ -1661,7 +1661,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // SubchannelReadLevel
                     intValue = ProcessInt32Parameter(parts, FlagStrings.SubchannelReadLevel, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0 && intValue <= 2)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0 && intValue <= 2)
                         SubchannelReadLevelValue = intValue;
 
                     // SeventyFour
@@ -1669,7 +1669,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // VideoNow
                     intValue = ProcessInt32Parameter(parts, FlagStrings.VideoNow, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         VideoNowValue = intValue;
 
                     // VideoNowColor
