@@ -154,9 +154,10 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetPVD_Valid_Filled()
         {
+            string? expected = "0320 TEST DATA\n0330 TEST DATA\n0340 TEST DATA\n0350 TEST DATA\n0360 TEST DATA\n0370 TEST DATA\n";
             string mainInfo = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test_mainInfo.txt");
             string? actual = UmdImageCreator.GetPVD(mainInfo);
-            Assert.NotNull(actual);
+            Assert.Equal(expected, actual);
         }
 
         #endregion

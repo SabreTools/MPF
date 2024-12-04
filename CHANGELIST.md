@@ -17,6 +17,7 @@
 - Add tests around PS3 CFW helpers
 - Enable test running on package and PR
 - Fix missing test data
+- Add tests around Redumper helpers
 
 ### 3.2.4 (2024-11-24)
 

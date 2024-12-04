@@ -216,7 +216,7 @@ namespace MPF.Processors
                         RemoveHeader($"{basePath}.physical", $"{basePath}.pfi");
                     if (!File.Exists($"{basePath}.ss"))
                         ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
-                    
+
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi");
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
@@ -595,15 +595,15 @@ namespace MPF.Processors
             // If the file doesn't exist, we can't copy
             if (!File.Exists(inputFilename))
                 return false;
-            
+
             // If the output file already exists, don't overwrite
             if (File.Exists(outputFilename))
                 return false;
-            
+
             try
             {
                 using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
-                
+
                 // If the header length is not valid, don't copy
                 if (headerLength < 1 || headerLength >= inputStream.Length)
                     return false;
@@ -639,15 +639,15 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Newline-delimited cuesheet if possible, null on error</returns>
-        private static string? GetCuesheet(string log)
+        internal static string? GetCuesheet(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
             {
-                // Fast forward to the dat line
+                // Fast forward to the cuesheet line
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("CUE [") == false) ;
                 if (sr.EndOfStream)
@@ -675,7 +675,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Newline-delimited datfile if possible, null on error</returns>
-        private static string? GetDatfile(string log)
+        internal static string? GetDatfile(string log)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
@@ -721,13 +721,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if disc type info was set, false otherwise</returns>
-        private static bool GetDiscType(string log, out string? discTypeOrBookType)
+        internal static bool GetDiscType(string log, out string? discTypeOrBookType)
         {
             // Set the default values
             discTypeOrBookType = null;
 
             // If the file doesn't exist, we can't get the info
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             try
@@ -765,10 +765,10 @@ namespace MPF.Processors
         /// <param name="log">Log file location</param>
         /// <param name="includeAlways">Indicates whether region and protection type are always included</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-        private static string? GetDVDProtection(string log, bool includeAlways)
+        internal static string? GetDVDProtection(string log, bool includeAlways)
         {
             // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             // Setup all of the individual pieces
@@ -814,7 +814,7 @@ namespace MPF.Processors
                                     else if (normalizedKey == "<error>")
                                         normalizedKey = "Error Retrieving Title Key";
 
-                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value.Replace(':', ' ')}\n";
+                                    vobKeys += $"{match.Groups[1].Value} Title Key: {normalizedKey}\n";
                                 }
                                 else
                                 {
@@ -865,10 +865,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if error counts could be retrieved, false otherwise</returns>
-        private static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
+        internal static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
             {
                 redumpErrors = -1; c2Errors = -1;
                 return false;
@@ -927,13 +927,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Header as a string if possible, null on error</returns>
-        private static string? GetGDROMHeader(string log, out string? buildDate, out string? serial, out string? region, out string? version)
+        internal static string? GetGDROMHeader(string log, out string? buildDate, out string? serial, out string? region, out string? version)
         {
             // Set the default values
             buildDate = null; serial = null; region = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1000,13 +1000,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if hardware info was set, false otherwise</returns>
-        private static bool GetHardwareInfo(string log, out string? manufacturer, out string? model, out string? firmware)
+        internal static bool GetHardwareInfo(string log, out string? manufacturer, out string? model, out string? firmware)
         {
             // Set the default values
             manufacturer = null; model = null; firmware = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             try
@@ -1048,13 +1048,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if any layerbreaks were found, false otherwise</returns>
-        private static bool GetLayerbreaks(string log, out string? layerbreak1, out string? layerbreak2, out string? layerbreak3)
+        internal static bool GetLayerbreaks(string log, out string? layerbreak1, out string? layerbreak2, out string? layerbreak3)
         {
             // Set the default values
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             try
@@ -1123,10 +1123,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Formatted multisession information, null on error</returns>
-        private static string? GetMultisessionInformation(string log)
+        internal static string? GetMultisessionInformation(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1175,28 +1175,28 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-        private static bool? GetPlayStationAntiModchipDetected(string log)
+        internal static bool? GetPlayStationAntiModchipDetected(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
             {
                 // Check for the anti-modchip strings
                 using var sr = File.OpenText(log);
-                var line = sr.ReadLine()?.Trim();
                 while (!sr.EndOfStream)
                 {
+                    var line = sr.ReadLine()?.Trim();
+
+                    // If we have a null line, just break
                     if (line == null)
-                        return false;
+                        break;
 
                     if (line.StartsWith("anti-modchip: no"))
                         return false;
                     else if (line.StartsWith("anti-modchip: yes"))
                         return true;
-
-                    line = sr.ReadLine()?.Trim();
                 }
 
                 return false;
@@ -1213,28 +1213,28 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Status of PS1 EDC, if possible</returns>
-        private static bool? GetPlayStationEDCStatus(string log)
+        internal static bool? GetPlayStationEDCStatus(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
             {
                 // Check for the EDC strings
                 using var sr = File.OpenText(log);
-                var line = sr.ReadLine()?.Trim();
                 while (!sr.EndOfStream)
                 {
+                    var line = sr.ReadLine()?.Trim();
+
+                    // If we have a null line, just break
                     if (line == null)
-                        return false;
+                        break;
 
                     if (line.Contains("EDC: no"))
                         return false;
                     else if (line.Contains("EDC: yes"))
                         return true;
-
-                    line = sr.ReadLine()?.Trim();
                 }
 
                 return false;
@@ -1251,13 +1251,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if section found, null on error</returns>
-        private static bool GetPlayStationInfo(string log, out string? exeDate, out string? serial, out string? version)
+        internal static bool GetPlayStationInfo(string log, out string? exeDate, out string? serial, out string? version)
         {
             // Set the default values
             exeDate = null; serial = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             try
@@ -1296,7 +1296,7 @@ namespace MPF.Processors
                     {
                         exeDate = line.Substring("EXE date: ".Length).Trim();
                     }
-                    else if (line.StartsWith("libcrypt:"))
+                    else if (line.StartsWith("libcrypt:") || line.StartsWith("MSF:"))
                     {
                         // Valid but skip
                     }
@@ -1332,10 +1332,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>PS1 LibCrypt data, if possible</returns>
-        private static string? GetPlayStationLibCryptData(string log)
+        internal static string? GetPlayStationLibCryptData(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1368,10 +1368,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Status of PS1 LibCrypt, if possible</returns>
-        private static bool? GetPlayStationLibCryptStatus(string log)
+        internal static bool? GetPlayStationLibCryptStatus(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1406,10 +1406,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Newline-delimited PVD if possible, null on error</returns>
-        private static string? GetPVD(string log)
+        internal static string? GetPVD(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1421,7 +1421,7 @@ namespace MPF.Processors
                     return null;
 
                 // Now that we're at the relevant entries, read each line in and concatenate
-                string? pvdString = "", line = sr.ReadLine();
+                string? pvdString = string.Empty, line = sr.ReadLine();
                 while (line?.StartsWith("03") == true)
                 {
                     pvdString += line + "\n";
@@ -1442,10 +1442,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Non-zero dta start if possible, null on error</returns>
-        private static string? GetRingNonZeroDataStart(string log)
+        internal static string? GetRingNonZeroDataStart(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1475,7 +1475,7 @@ namespace MPF.Processors
         /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
         /// TODO: Remove when Redumper gets native reading support
-        private static bool GetSaturnBuildInfo(string? segaHeader, out string? buildDate, out string? serial, out string? version)
+        internal static bool GetSaturnBuildInfo(string? segaHeader, out string? buildDate, out string? serial, out string? version)
         {
             buildDate = null; serial = null; version = null;
 
@@ -1507,13 +1507,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string? GetSaturnHeader(string log, out string? buildDate, out string? serial, out string? region, out string? version)
+        internal static string? GetSaturnHeader(string log, out string? buildDate, out string? serial, out string? region, out string? version)
         {
             // Set the default values
             buildDate = null; serial = null; region = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1587,14 +1587,14 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Get the header from a Saturn, if possible
+        /// Get the SecuROM data from the input file, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
-        /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string? GetSecuROMData(string log)
+        /// <returns>SecuROM data, if possible</returns>
+        internal static string? GetSecuROMData(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1635,13 +1635,13 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string? GetSegaCDHeader(string log, out string? buildDate, out string? serial, out string? region)
+        internal static string? GetSegaCDHeader(string log, out string? buildDate, out string? serial, out string? region)
         {
             // Set the default values
             buildDate = null; serial = null; region = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1704,10 +1704,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Universal hash if possible, null on error</returns>
-        private static string? GetUniversalHash(string log)
+        internal static string? GetUniversalHash(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try
@@ -1736,10 +1736,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Version if possible, null on error</returns>
-        private static string? GetVersion(string log)
+        internal static string? GetVersion(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             // Samples:
@@ -1780,11 +1780,11 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Volume labels (by type), or null if none present</returns>
-        private static bool GetVolumeLabels(string log, out Dictionary<string, List<string>> volLabels)
+        internal static bool GetVolumeLabels(string log, out Dictionary<string, List<string>> volLabels)
         {
             // If the file doesn't exist, can't get the volume labels
             volLabels = [];
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return false;
 
             try
@@ -1834,10 +1834,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Sample write offset if possible, null on error</returns>
-        private static string? GetWriteOffset(string log)
+        internal static string? GetWriteOffset(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(log))
+            if (string.IsNullOrEmpty(log) || !File.Exists(log))
                 return null;
 
             try

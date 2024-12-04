@@ -1,3 +1,7 @@
+DUMPING DATE (DateTime.Now)
+redumper v1980.01.01 build_00 [Jan 01 1980, 00:00:00]
+<< GetVersion (above) >>
+
 << GetCuesheet >>
 CUE [
     cuesheet
@@ -5,3 +9,138 @@ CUE [
 << GetDatfile >>
 dat:
     <rom name="INVALID" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />
+
+<< GetDiscType >>
+current profile: CD-ROM
+
+<< GetDVDProtection >>
+copyright:
+    protection system type: none
+    region management information: 1 2 3 4 5 6 7 8
+    disc key: No Key
+    title keys:
+        FILE: none
+
+<< GetErrorCount >>
+C2: 12345
+REDUMP.ORG errors: 12345
+
+C2: 1
+REDUMP.ORG errors: 2
+
+<< GetGDROMHeader >>
+DC [
+    build date: date
+    version: version
+    serial: serial
+    region: region
+    header:
+        0000 line1
+        0010 line2
+        0020 line3
+        0030 line4
+        0040 line5
+        0050 line6
+        0060 line7
+        0070 line8
+        0080 line9
+        0090 line0
+        00A0 lineA
+
+<< GetHardwareInfo >>
+drive path:
+    drive: manufacturer - model (revision level: revision, vendor specific: vendor)
+
+<< GetLayerbreaks >>
+layer break (layer: 0): 12345
+layer break (layer: 1): 23456
+layer break (layer: 2): 34567
+
+<< GetMultisessionInformation >>
+multisession:
+    session 1: 0
+    session 2: 12345
+
+<< GetPlayStationAntiModchipDetected >>
+<< GetPlayStationInfo >>
+<< GetPlayStationLibCryptData >>
+<< GetPlayStationLibCryptStatus >>
+PSX [
+    anti-modchip: yes
+    EXE: exe
+    EXE date: date
+    libcrypt: yes
+        MSF: 00
+        MSF: 01
+        MSF: 02
+    region: region
+    serial: serial
+    version: version
+
+<< GetPlayStationEDCStatus >>
+EDC: yes
+
+<< GetPVD >>
+PVD:
+0320 TEST DATA
+0330 TEST DATA
+0340 TEST DATA
+0350 TEST DATA
+0360 TEST DATA
+0370 TEST DATA
+
+<< GetRingNonZeroDataStart >>
+non-zero data sample range: [12345 23456]
+
+<< GetSaturnHeader >>
+SS [
+    build date: date
+    version: version
+    serial: serial
+    region: region
+    header:
+        0000 line1
+        0010 line2
+        0020 line3
+        0030 line4
+        0040 line5
+        0050 line6
+        0060 line7
+        0070 line8
+        0080 line9
+        0090 line0
+        00A0 lineA
+
+<< GetSecuROMData >>
+SecuROM [
+    version: 0
+    MSF: 00
+    MSF: 01
+    MSF: 02
+
+<< GetSegaCDHeader >>
+MCD [
+    build date: date
+    serial: serial
+    region: region
+    header:
+        0100 line1
+        0110 line2
+        0120 line3
+        0130 line4
+        0140 line5
+        0150 line6
+        0160 line7
+        0170 line8
+        0180 line9
+        0190 line0
+        01A0 lineA
+
+<< GetUniversalHash >>
+Universal Hash (SHA-1): da39a3ee5e6b4b0d3255bfef95601890afd80709
+
+<< GetVolumeLabels >>
+volume identifier: label
+
+<< GetWriteOffset >>
+disc write offset: offset
