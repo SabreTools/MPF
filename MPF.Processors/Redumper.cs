@@ -642,7 +642,9 @@ namespace MPF.Processors
         internal static string? GetCuesheet(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -727,7 +729,9 @@ namespace MPF.Processors
             discTypeOrBookType = null;
 
             // If the file doesn't exist, we can't get the info
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             try
@@ -768,7 +772,9 @@ namespace MPF.Processors
         internal static string? GetDVDProtection(string log, bool includeAlways)
         {
             // If one of the files doesn't exist, we can't get info from them
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             // Setup all of the individual pieces
@@ -867,12 +873,13 @@ namespace MPF.Processors
         /// <returns>True if error counts could be retrieved, false otherwise</returns>
         internal static bool GetErrorCount(string log, out long redumpErrors, out long c2Errors)
         {
+            redumpErrors = -1; c2Errors = -1;
+
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
-            {
-                redumpErrors = -1; c2Errors = -1;
+            if (string.IsNullOrEmpty(log))
                 return false;
-            }
+            if (!File.Exists(log))
+                return false;
 
             try
             {
@@ -933,7 +940,9 @@ namespace MPF.Processors
             buildDate = null; serial = null; region = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1006,7 +1015,9 @@ namespace MPF.Processors
             manufacturer = null; model = null; firmware = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             try
@@ -1054,7 +1065,9 @@ namespace MPF.Processors
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             try
@@ -1126,7 +1139,9 @@ namespace MPF.Processors
         internal static string? GetMultisessionInformation(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1178,7 +1193,9 @@ namespace MPF.Processors
         internal static bool? GetPlayStationAntiModchipDetected(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1216,7 +1233,9 @@ namespace MPF.Processors
         internal static bool? GetPlayStationEDCStatus(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1257,7 +1276,9 @@ namespace MPF.Processors
             exeDate = null; serial = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             try
@@ -1335,7 +1356,9 @@ namespace MPF.Processors
         internal static string? GetPlayStationLibCryptData(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1371,7 +1394,9 @@ namespace MPF.Processors
         internal static bool? GetPlayStationLibCryptStatus(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1409,7 +1434,9 @@ namespace MPF.Processors
         internal static string? GetPVD(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1445,7 +1472,9 @@ namespace MPF.Processors
         internal static string? GetRingNonZeroDataStart(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1513,7 +1542,9 @@ namespace MPF.Processors
             buildDate = null; serial = null; region = null; version = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1594,7 +1625,9 @@ namespace MPF.Processors
         internal static string? GetSecuROMData(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1641,7 +1674,9 @@ namespace MPF.Processors
             buildDate = null; serial = null; region = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1707,7 +1742,9 @@ namespace MPF.Processors
         internal static string? GetUniversalHash(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try
@@ -1739,7 +1776,9 @@ namespace MPF.Processors
         internal static string? GetVersion(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             // Samples:
@@ -1784,7 +1823,9 @@ namespace MPF.Processors
         {
             // If the file doesn't exist, can't get the volume labels
             volLabels = [];
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             try
@@ -1837,7 +1878,9 @@ namespace MPF.Processors
         internal static string? GetWriteOffset(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             try

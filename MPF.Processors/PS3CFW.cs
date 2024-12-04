@@ -105,7 +105,9 @@ namespace MPF.Processors
         internal static Datafile? GeneratePS3CFWDatafile(string iso)
         {
             // If the ISO file doesn't exist
-            if (string.IsNullOrEmpty(iso) || !File.Exists(iso))
+            if (string.IsNullOrEmpty(iso))
+                return null;
+            if (!File.Exists(iso))
                 return null;
 
             try
@@ -138,7 +140,9 @@ namespace MPF.Processors
         internal static string? GetCFWBasePath(string iso)
         {
             // If the ISO file doesn't exist
-            if (string.IsNullOrEmpty(iso) || !File.Exists(iso))
+            if (string.IsNullOrEmpty(iso))
+                return null;
+            if (!File.Exists(iso))
                 return null;
 
             try

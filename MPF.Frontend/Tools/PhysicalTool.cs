@@ -530,7 +530,9 @@ namespace MPF.Frontend.Tools
         private static JObject? GetPlayStation5ParamsJsonFromFile(string? filename)
         {
             // If the file doesn't exist
-            if (string.IsNullOrEmpty(filename) || !File.Exists(filename))
+            if (string.IsNullOrEmpty(filename))
+                return null;
+            if (!File.Exists(filename))
                 return null;
 
             // Let's try reading param.json to find the version in the unencrypted JSON

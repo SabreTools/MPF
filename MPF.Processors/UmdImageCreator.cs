@@ -125,7 +125,9 @@ namespace MPF.Processors
         internal static string? GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(mainInfo) || !File.Exists(mainInfo))
+            if (string.IsNullOrEmpty(mainInfo))
+                return null;
+            if (!File.Exists(mainInfo))
                 return null;
 
             try
@@ -169,7 +171,9 @@ namespace MPF.Processors
             size = -1;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return false;
+            if (!File.Exists(disc))
                 return false;
 
             try

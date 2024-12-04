@@ -821,7 +821,9 @@ namespace MPF.Processors
         private static CICMMetadataType? GenerateSidecar(string cicmSidecar)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(cicmSidecar) || !File.Exists(cicmSidecar))
+            if (string.IsNullOrEmpty(cicmSidecar))
+                return null;
+            if (!File.Exists(cicmSidecar))
                 return null;
 
             try
@@ -941,7 +943,9 @@ namespace MPF.Processors
         private static long GetErrorCount(string resume)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(resume) || !File.Exists(resume))
+            if (string.IsNullOrEmpty(resume))
+                return -1;
+            if (!File.Exists(resume))
                 return -1;
 
             // Get a total error count for after

@@ -20,44 +20,6 @@ namespace MPF.Processors
     /// </summary>
     public static class ProcessingTool
     {
-        #region Byte Arrays
-
-        /// <summary>
-        /// Converts a hex string into a byte array
-        /// </summary>
-        /// <param name="hex">Hex string</param>
-        /// <returns>Converted byte array, or null if invalid hex string</returns>
-        public static byte[]? HexStringToByteArray(string? hexString)
-        {
-            // Valid hex string must be an even number of characters
-            if (string.IsNullOrEmpty(hexString) || hexString!.Length % 2 == 1)
-                return null;
-
-            // Convert ASCII to byte via lookup table
-            int[] hexLookup =
-            [
-                0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                0x08, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F
-            ];
-            byte[] byteArray = new byte[hexString.Length / 2];
-            for (int i = 0; i < hexString.Length; i += 2)
-            {
-                // Convert next two chars to ASCII value relative to '0'
-                int a = Char.ToUpperInvariant(hexString[i]) - '0';
-                int b = Char.ToUpperInvariant(hexString[i + 1]) - '0';
-
-                // Ensure hex string only has '0' through '9' and 'A' through 'F' (case insensitive)
-                if ((a < 0 || b < 0 || a > 22 || b > 22) || (a > 10 && a < 17) || (b > 10 && b < 17))
-                    return null;
-                byteArray[i / 2] = (byte)(hexLookup[a] << 4 | hexLookup[b]);
-            }
-
-            return byteArray;
-        }
-
-        #endregion
-
         #region Information Extraction
 
         /// <summary>
@@ -115,11 +77,9 @@ namespace MPF.Processors
         /// <returns>Filled Datafile on success, null on error</returns>
         public static Datafile? GetDatafile(string? dat)
         {
-            // If there's no path, we can't read the file
+            // If the file doesn't exist, we can't read it
             if (string.IsNullOrEmpty(dat))
                 return null;
-
-            // If the file doesn't exist, we can't read it
             if (!File.Exists(dat))
                 return null;
 
@@ -179,9 +139,9 @@ namespace MPF.Processors
         public static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
         {
             if (string.IsNullOrEmpty(filename))
-                return fallback ? (DateTime?)DateTime.UtcNow : null;
-            else if (!File.Exists(filename))
-                return fallback ? (DateTime?)DateTime.UtcNow : null;
+                return fallback ? DateTime.UtcNow : null;
+            if (!File.Exists(filename))
+                return fallback ? DateTime.UtcNow : null;
 
             var fi = new FileInfo(filename);
             return fi.LastWriteTimeUtc;
@@ -196,6 +156,8 @@ namespace MPF.Processors
         public static string? GetFullFile(string filename, bool binary = false)
         {
             // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(filename))
+                return null;
             if (!File.Exists(filename))
                 return null;
 
@@ -321,7 +283,7 @@ namespace MPF.Processors
         public static string? GetPICIdentifier(DiscInformation? di)
         {
             // If we don't have valid disc information, we can't do anything
-            if (di?.Units == null || di.Units.Length <= 1)
+            if (di?.Units == null || di.Units.Length < 1)
                 return null;
 
             // We assume the identifier is consistent across all units
@@ -339,11 +301,11 @@ namespace MPF.Processors
         /// <returns>Category, if possible</returns>
         public static DiscCategory? GetUMDCategory(string? category)
         {
-            return category switch
+            return category?.ToLowerInvariant() switch
             {
-                "GAME" => DiscCategory.Games,
-                "VIDEO" => DiscCategory.Video,
-                "AUDIO" => DiscCategory.Audio,
+                "game" => DiscCategory.Games,
+                "video" => DiscCategory.Video,
+                "audio" => DiscCategory.Audio,
                 _ => null,
             };
         }
@@ -594,9 +556,9 @@ namespace MPF.Processors
                 if (string.IsNullOrEmpty(keyString) || string.IsNullOrEmpty(idString) || string.IsNullOrEmpty(picString) || picString!.Length < 230)
                     return false;
 
-                key = HexStringToByteArray(keyString);
-                id = HexStringToByteArray(idString);
-                pic = HexStringToByteArray(picString.Substring(0, 230));
+                key = keyString.FromHexString();
+                id = idString.FromHexString();
+                pic = picString.Substring(0, 230).FromHexString();
                 return true;
             }
             else
@@ -624,9 +586,7 @@ namespace MPF.Processors
             cleandiscID = cleandiscID.Substring(0, 24) + "00000001";
 
             // Convert to byte array, null if invalid hex string
-            byte[]? id = HexStringToByteArray(cleandiscID);
-
-            return id;
+            return cleandiscID.FromHexString();
         }
 
         /// <summary>
@@ -683,9 +643,7 @@ namespace MPF.Processors
                 return null;
 
             // Convert to byte array, null if invalid hex string
-            byte[]? key = HexStringToByteArray(cleanHexKey);
-
-            return key;
+            return cleanHexKey.FromHexString();
         }
 
         /// <summary>
@@ -751,9 +709,7 @@ namespace MPF.Processors
                 return null;
 
             // Convert to byte array, null if invalid hex string
-            byte[]? pic = HexStringToByteArray(cleanPIC.Substring(0, 230));
-
-            return pic;
+            return cleanPIC.Substring(0, 230).FromHexString();
         }
 
         /// <summary>
@@ -799,8 +755,7 @@ namespace MPF.Processors
             if (string.IsNullOrEmpty(inputCRC32))
                 return null;
 
-            byte[]? crc32 = HexStringToByteArray(inputCRC32);
-
+            byte[]? crc32 = inputCRC32.FromHexString();
             if (crc32 == null || crc32.Length != 4)
                 return null;
 
@@ -865,7 +820,10 @@ namespace MPF.Processors
         {
             xgdType = 0;
 
-            if (string.IsNullOrEmpty(ss) || !File.Exists(ss))
+            if (string.IsNullOrEmpty(ss))
+                return false;
+
+            if (!File.Exists(ss))
                 return false;
 
             using FileStream fs = File.OpenRead(ss);

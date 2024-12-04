@@ -829,7 +829,9 @@ namespace MPF.Processors
         public static string? GetPlayStationEXEDate(string volDesc, string? exeName, bool psx = false)
         {
             // If the file doesn't exist, we can't get the info
-            if (string.IsNullOrEmpty(volDesc) || !File.Exists(volDesc))
+            if (string.IsNullOrEmpty(volDesc))
+                return null;
+            if (!File.Exists(volDesc))
                 return null;
 
             // If the EXE name is not valid, we can't get the info
@@ -897,7 +899,9 @@ namespace MPF.Processors
             discTypeOrBookType = null;
 
             // If the file doesn't exist, we can't get the info
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return false;
+            if (!File.Exists(disc))
                 return false;
 
             try
@@ -1085,7 +1089,9 @@ namespace MPF.Processors
             // TODO: Better usage of _mainInfo and _c2Error for uncorrectable errors
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(edcecc) || !File.Exists(edcecc))
+            if (string.IsNullOrEmpty(edcecc))
+                return -1;
+            if (!File.Exists(edcecc))
                 return -1;
 
             // Get a total error count for after
@@ -1174,7 +1180,9 @@ namespace MPF.Processors
             manufacturer = null; model = null; firmware = null;
 
             // If the file doesn't exist, we can't get the info
-            if (string.IsNullOrEmpty(drive) || !File.Exists(drive))
+            if (string.IsNullOrEmpty(drive))
+                return false;
+            if (!File.Exists(drive))
                 return false;
 
             try
@@ -1224,7 +1232,9 @@ namespace MPF.Processors
         internal static string? GetLayerbreak(string disc, bool xgd)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return null;
+            if (!File.Exists(disc))
                 return null;
 
             try
@@ -1460,7 +1470,9 @@ namespace MPF.Processors
         internal static bool? GetPlayStationAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return null;
+            if (!File.Exists(disc))
                 return null;
 
             try
@@ -1499,7 +1511,9 @@ namespace MPF.Processors
             serial = null; version = null; firmwareVersion = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return false;
+            if (!File.Exists(disc))
                 return false;
 
             try
@@ -1590,7 +1604,9 @@ namespace MPF.Processors
         internal static bool? GetPlayStationEDCStatus(string edcecc)
         {
             // If one of the files doesn't exist, we can't get info from them
-            if (string.IsNullOrEmpty(edcecc) || !File.Exists(edcecc))
+            if (string.IsNullOrEmpty(edcecc))
+                return null;
+            if (!File.Exists(edcecc))
                 return null;
 
             // First line of defense is the EdcEcc error file
@@ -1804,7 +1820,9 @@ namespace MPF.Processors
         internal static string? GetSegaHeader(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(mainInfo) || !File.Exists(mainInfo))
+            if (string.IsNullOrEmpty(mainInfo))
+                return null;
+            if (!File.Exists(mainInfo))
                 return null;
 
             try
@@ -1871,7 +1889,9 @@ namespace MPF.Processors
         {
             // If the file doesn't exist, can't get the volume labels
             volLabels = [];
-            if (string.IsNullOrEmpty(volDesc) || !File.Exists(volDesc))
+            if (string.IsNullOrEmpty(volDesc))
+                return false;
+            if (!File.Exists(volDesc))
                 return false;
 
             try
@@ -1953,7 +1973,9 @@ namespace MPF.Processors
         internal static string? GetWriteOffset(string disc)
         {
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return null;
+            if (!File.Exists(disc))
                 return null;
 
             try
@@ -2055,7 +2077,9 @@ namespace MPF.Processors
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(disc) || !File.Exists(disc))
+            if (string.IsNullOrEmpty(disc))
+                return false;
+            if (!File.Exists(disc))
                 return false;
 
             // This flag is needed because recent versions of DIC include security data twice

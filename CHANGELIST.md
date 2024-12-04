@@ -22,6 +22,7 @@
 - Add tests around DIC helpers
 - Add safety around sidecar generation
 - Use recommended Min/Max/TryParse
+- Add tests around ProcessingTool
 
 ### 3.2.4 (2024-11-24)
 

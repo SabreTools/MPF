@@ -172,7 +172,9 @@ namespace MPF.Processors
         internal static string? GetBCA(string bcaPath)
         {
             // If the file doesn't exist, we can't get the info
-            if (string.IsNullOrEmpty(bcaPath) || !File.Exists(bcaPath))
+            if (string.IsNullOrEmpty(bcaPath))
+                return null;
+            if (!File.Exists(bcaPath))
                 return null;
 
             try
@@ -215,7 +217,9 @@ namespace MPF.Processors
             region = null; version = null; name = null; serial = null;
 
             // If the file doesn't exist, we can't get info from it
-            if (string.IsNullOrEmpty(dumpinfo) || !File.Exists(dumpinfo))
+            if (string.IsNullOrEmpty(dumpinfo))
+                return false;
+            if (!File.Exists(dumpinfo))
                 return false;
 
             try

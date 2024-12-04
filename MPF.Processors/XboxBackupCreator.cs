@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using SabreTools.Hashing;
+using SabreTools.IO.Extensions;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -225,7 +226,9 @@ namespace MPF.Processors
         private static bool IsSuccessfulLog(string log)
         {
             // If the log path is invalid
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
                 return false;
 
             // Successful Example:
@@ -268,7 +271,9 @@ namespace MPF.Processors
         internal static string? GetVersion(string? log)
         {
             // If the log path is invalid
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             // Sample:
@@ -305,7 +310,9 @@ namespace MPF.Processors
         internal static string? GetDrive(string? log)
         {
             // If the log path is invalid
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             // Example:
@@ -348,7 +355,10 @@ namespace MPF.Processors
         {
             layerbreak = -1;
 
-            if (string.IsNullOrEmpty(dvd) || !File.Exists(dvd))
+            if (string.IsNullOrEmpty(dvd))
+                return false;
+
+            if (!File.Exists(dvd))
                 return false;
 
             // Example:
@@ -388,7 +398,10 @@ namespace MPF.Processors
         {
             readErrors = -1;
 
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return false;
+
+            if (!File.Exists(log))
                 return false;
 
             // TODO: Logic when more than one dump is in the logs
@@ -457,7 +470,9 @@ namespace MPF.Processors
         /// <returns>Media ID if Log successfully parsed, null otherwise</returns>
         internal string? GetMediaID(string? log)
         {
-            if (string.IsNullOrEmpty(log) || !File.Exists(log))
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
                 return null;
 
             if (System == RedumpSystem.MicrosoftXbox)
@@ -588,7 +603,7 @@ namespace MPF.Processors
                             // Save useful angle responses
                             if (i >= 4 && i <= 7)
                             {
-                                byte[]? angles = ProcessingTool.HexStringToByteArray(line!.Substring(34, 10));
+                                byte[]? angles = line!.Substring(34, 10).FromHexString();
                                 if (angles == null || angles.Length != 5)
                                     return false;
                                 responses[i - 4] = angles!;

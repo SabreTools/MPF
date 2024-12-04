@@ -1,0 +1,6 @@
+<?xml version= "1.0" encoding= "utf-8"?>
+<datafile>
+    <game name= "game">
+        <rom name= "test" size= "12345" crc= "00000000" />
+    </game>
+</datafile>
