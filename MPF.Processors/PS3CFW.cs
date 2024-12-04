@@ -102,10 +102,10 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="iso">Path to ISO file</param>
         /// <returns></returns>
-        private static Datafile? GeneratePS3CFWDatafile(string iso)
+        internal static Datafile? GeneratePS3CFWDatafile(string iso)
         {
-            // If the ISO file doesn't exist, we can't get info from it
-            if (!File.Exists(iso))
+            // If the ISO file doesn't exist
+            if (string.IsNullOrEmpty(iso) || !File.Exists(iso))
                 return null;
 
             try
@@ -135,17 +135,27 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="iso">Path to ISO file</param>
         /// <returns>Base filename, null if not found</returns>
-        private string? GetCFWBasePath(string iso)
+        internal static string? GetCFWBasePath(string iso)
         {
-            string? dir = Path.GetDirectoryName(iso);
-            dir ??= ".";
-
-            string[] files = Directory.GetFiles(dir, "*.getkey.log");
-
-            if (files.Length != 1)
+            // If the ISO file doesn't exist
+            if (string.IsNullOrEmpty(iso) || !File.Exists(iso))
                 return null;
 
-            return files[0].Substring(0, files[0].Length - 11);
+            try
+            {
+                string dir = Path.GetDirectoryName(iso) ?? ".";
+                string[] files = Directory.GetFiles(dir, "*.getkey.log");
+
+                if (files.Length != 1)
+                    return null;
+
+                return files[0].Substring(0, files[0].Length - 11);
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
         }
 
         #endregion

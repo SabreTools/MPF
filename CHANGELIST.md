@@ -14,6 +14,7 @@
 - Fix failing XBC test
 - Perform better path emptiness checks
 - Add tests around UIC helpers
+- Add tests around PS3 CFW helpers
 
 ### 3.2.4 (2024-11-24)
 
