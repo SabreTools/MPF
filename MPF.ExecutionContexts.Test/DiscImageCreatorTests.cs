@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MPF.ExecutionContexts.DiscImageCreator;
+﻿using MPF.ExecutionContexts.DiscImageCreator;
 using Xunit;
 
 namespace MPF.ExecutionContexts.Test
@@ -34,26 +33,6 @@ namespace MPF.ExecutionContexts.Test
             var newParameters = executionContext.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
-        }
-
-        /// <summary>
-        /// Generate a HashSet of keys that are considered to be set
-        /// </summary>
-        /// <param name="executionContext">ExecutionContext object representing how to invoke the internal program</param>
-        /// <returns>HashSet representing the strings</returns>
-        private static HashSet<string> GenerateUsedKeys(ExecutionContext executionContext)
-        {
-            var usedKeys = new HashSet<string>();
-            if (executionContext?.Keys == null)
-                return usedKeys;
-
-            foreach (string key in executionContext.Keys)
-            {
-                if (executionContext[key] == true)
-                    usedKeys.Add(key);
-            }
-
-            return usedKeys;
         }
     }
 }

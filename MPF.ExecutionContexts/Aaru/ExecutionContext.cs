@@ -1286,11 +1286,11 @@ namespace MPF.ExecutionContexts.Aaru
                 return false;
 
             // Now split the string into parts for easier validation
-            List<string> parts = SplitParameterString(parameters!);
+            string[] parts = SplitParameterString(parameters!);
 
             // Search for pre-command flags first
             int start = 0;
-            for (start = 0; start < parts.Count; start++)
+            for (start = 0; start < parts.Length; start++)
             {
                 // Keep a count of keys to determine if we should break out to command handling or not
                 int keyCount = Keys.Count;
@@ -1330,7 +1330,7 @@ namespace MPF.ExecutionContexts.Aaru
 
             // Loop through all auxilary flags, if necessary
             int i = 0;
-            for (i = start; i < parts.Count; i++)
+            for (i = start; i < parts.Length; i++)
             {
                 // Flag read-out values
                 sbyte? byteValue = null;
@@ -1780,7 +1780,7 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // If we didn't reach the end for some reason, it failed
-            if (i != parts.Count)
+            if (i != parts.Length)
                 return false;
 
             return true;
@@ -1795,15 +1795,15 @@ namespace MPF.ExecutionContexts.Aaru
         /// </summary>
         /// <param name="baseCommand">Command string to normalize</param>
         /// <returns>Normalized command</returns>
-        private static string? NormalizeCommand(List<string> parts, ref int start)
+        private static string? NormalizeCommand(string[] parts, ref int start)
         {
             // Invalid start means invalid command
-            if (start < 0 || start >= parts.Count)
+            if (start < 0 || start >= parts.Length)
                 return null;
 
             string partOne = parts[start];
             string partTwo = string.Empty;
-            if (start + 1 < parts.Count)
+            if (start + 1 < parts.Length)
                 partTwo = parts[start + 1];
 
             var normalized = NormalizeCommand($"{partOne} {partTwo}".Trim());

@@ -1079,7 +1079,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return false;
 
             // Now split the string into parts for easier validation
-            List<string> parts = SplitParameterString(parameters!);
+            string[] parts = SplitParameterString(parameters!);
 
             // Determine what the commandline should look like given the first item
             BaseCommand = parts[0];
@@ -1089,7 +1089,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             switch (BaseCommand)
             {
                 case CommandStrings.Audio:
-                    if (parts.Count < 6)
+                    if (parts.Length < 6)
                         return false;
 
                     // Blindly assume the path exists
@@ -1119,7 +1119,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.BluRay:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1139,7 +1139,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Close:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1148,7 +1148,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.CompactDisc:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1168,7 +1168,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Data:
-                    if (parts.Count < 6)
+                    if (parts.Length < 6)
                         return false;
 
                     // Blindly assume the path exists
@@ -1198,7 +1198,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.DigitalVideoDisc:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1218,7 +1218,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Disk:
-                    if (parts.Count != 3)
+                    if (parts.Length != 3)
                         return false;
 
                     // Blindly assume the path exists
@@ -1232,7 +1232,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.DriveSpeed:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1240,7 +1240,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Eject:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1249,7 +1249,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Floppy:
-                    if (parts.Count != 3)
+                    if (parts.Length != 3)
                         return false;
 
                     // Blindly assume the path exists
@@ -1263,7 +1263,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.GDROM:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1283,7 +1283,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.MDS:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
@@ -1294,7 +1294,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Merge:
-                    if (parts.Count != 3)
+                    if (parts.Length != 3)
                         return false;
 
                     if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
@@ -1310,7 +1310,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Reset:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1319,7 +1319,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.SACD:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1339,7 +1339,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Start:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1348,7 +1348,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Stop:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     // Blindly assume the path exists
@@ -1357,7 +1357,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Sub:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
@@ -1368,7 +1368,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Swap:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1388,7 +1388,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Tape:
-                    if (parts.Count != 2)
+                    if (parts.Length != 2)
                         return false;
 
                     if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
@@ -1399,13 +1399,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Version:
-                    if (parts.Count != 1)
+                    if (parts.Length != 1)
                         return false;
 
                     break;
 
                 case CommandStrings.XBOX:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1427,7 +1427,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 case CommandStrings.XBOXSwap:
                 case CommandStrings.XGD2Swap:
                 case CommandStrings.XGD3Swap:
-                    if (parts.Count < 4)
+                    if (parts.Length < 4)
                         return false;
 
                     // Blindly assume the path exists
@@ -1443,7 +1443,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     else
                         DriveSpeed = int.Parse(parts[3]);
 
-                    for (int i = 4; i < parts.Count; i++)
+                    for (int i = 4; i < parts.Length; i++)
                     {
                         if (!long.TryParse(parts[i], out long temp))
                             return false;
@@ -1457,7 +1457,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             // Loop through all auxiliary flags, if necessary
             if (index > 0)
             {
-                for (int i = index; i < parts.Count; i++)
+                for (int i = index; i < parts.Length; i++)
                 {
                     // Flag read-out values
                     byte? byteValue = null;

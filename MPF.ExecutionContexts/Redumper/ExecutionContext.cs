@@ -662,14 +662,14 @@ namespace MPF.ExecutionContexts.Redumper
                 return false;
 
             // Now split the string into parts for easier validation
-            List<string> parts = SplitParameterString(parameters!);
+            string[] parts = SplitParameterString(parameters!);
 
             // Setup the modes
             ModeValues = [];
 
             // All modes should be cached separately
             int index = 0;
-            for (; index < parts.Count; index++)
+            for (; index < parts.Length; index++)
             {
                 // Flag to see if we have a flag
                 bool isFlag = false;
@@ -720,7 +720,7 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             // Loop through all auxiliary flags, if necessary
-            for (int i = index; i < parts.Count; i++)
+            for (int i = index; i < parts.Length; i++)
             {
                 // Flag read-out values
                 byte? byteValue = null;

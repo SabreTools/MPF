@@ -242,7 +242,7 @@ namespace MPF.ExecutionContexts
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        protected static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
+        internal static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
         {
             if (settings.ContainsKey(key))
             {
@@ -264,7 +264,7 @@ namespace MPF.ExecutionContexts
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        protected static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
+        internal static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
         {
             if (settings.ContainsKey(key))
             {
@@ -286,7 +286,7 @@ namespace MPF.ExecutionContexts
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        protected static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
+        internal static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
         {
             if (settings.ContainsKey(key))
                 return settings[key];
@@ -301,29 +301,28 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Split a parameters string into a list while taking quotes into account
         /// </summary>
-        /// <see href="https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes"/>
-        protected static List<string> SplitParameterString(string parameters)
+        internal static string[] SplitParameterString(string parameters)
         {
             // Ensure the parameter string is trimmed
             parameters = parameters.Trim();
 
             // Split the string using Regex
-            var matches = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
+            var matches = Regex.Matches(parameters, @"([a-zA-Z0-9\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
 
             // Get just the values from the matches
             var matchArr = new Match[matches.Count];
             matches.CopyTo(matchArr, 0);
-            return [.. Array.ConvertAll(matchArr, m => m.Value)];
+            return Array.ConvertAll(matchArr, m => m.Value);
         }
 
         /// <summary>
         /// Returns whether or not the selected item exists
         /// </summary>
-        /// <param name="parameters">List of parameters to check against</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
-        protected static bool DoesExist(List<string> parameters, int index)
-            => index < parameters.Count;
+        internal static bool DoesExist(string[] parts, int index)
+            => index >= 0 && index < parts.Length;
 
         /// <summary>
         /// Gets if the flag is supported by the current command
@@ -346,7 +345,7 @@ namespace MPF.ExecutionContexts
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a valid bool, false otherwise</returns>
-        protected static bool IsValidBool(string parameter)
+        internal static bool IsValidBool(string parameter)
             => bool.TryParse(parameter, out bool _);
 
         /// <summary>
@@ -356,14 +355,14 @@ namespace MPF.ExecutionContexts
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid byte, false otherwise</returns>
-        protected static bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
+        internal static bool IsValidInt8(string parameter, sbyte? lowerBound = null, sbyte? upperBound = null)
         {
             string value = ExtractFactorFromValue(parameter, out _);
             if (!sbyte.TryParse(value, out sbyte temp))
                 return false;
-            else if (lowerBound != -1 && temp < lowerBound)
+            else if (lowerBound != null && temp < lowerBound)
                 return false;
-            else if (upperBound != -1 && temp > upperBound)
+            else if (upperBound != null && temp > upperBound)
                 return false;
 
             return true;
@@ -376,14 +375,14 @@ namespace MPF.ExecutionContexts
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int16, false otherwise</returns>
-        protected static bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
+        internal static bool IsValidInt16(string parameter, short? lowerBound = null, short? upperBound = null)
         {
             string value = ExtractFactorFromValue(parameter, out _);
             if (!short.TryParse(value, out short temp))
                 return false;
-            else if (lowerBound != -1 && temp < lowerBound)
+            else if (lowerBound != null && temp < lowerBound)
                 return false;
-            else if (upperBound != -1 && temp > upperBound)
+            else if (upperBound != null && temp > upperBound)
                 return false;
 
             return true;
@@ -396,14 +395,14 @@ namespace MPF.ExecutionContexts
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int32, false otherwise</returns>
-        protected static bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
+        internal static bool IsValidInt32(string parameter, int? lowerBound = null, int? upperBound = null)
         {
             string value = ExtractFactorFromValue(parameter, out _);
             if (!int.TryParse(value, out int temp))
                 return false;
-            else if (lowerBound != -1 && temp < lowerBound)
+            else if (lowerBound != null && temp < lowerBound)
                 return false;
-            else if (upperBound != -1 && temp > upperBound)
+            else if (upperBound != null && temp > upperBound)
                 return false;
 
             return true;
@@ -416,14 +415,14 @@ namespace MPF.ExecutionContexts
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int64, false otherwise</returns>
-        protected static bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
+        internal static bool IsValidInt64(string parameter, long? lowerBound = null, long? upperBound = null)
         {
             string value = ExtractFactorFromValue(parameter, out _);
             if (!long.TryParse(value, out long temp))
                 return false;
-            else if (lowerBound != -1 && temp < lowerBound)
+            else if (lowerBound != null && temp < lowerBound)
                 return false;
-            else if (upperBound != -1 && temp > upperBound)
+            else if (upperBound != null && temp > upperBound)
                 return false;
 
             return true;
@@ -432,22 +431,22 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process a flag parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-        protected bool ProcessFlagParameter(List<string> parts, string flagString, ref int i)
+        protected bool ProcessFlagParameter(string[] parts, string flagString, ref int i)
             => ProcessFlagParameter(parts, null, flagString, ref i);
 
         /// <summary>
         /// Process a flag parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-        protected bool ProcessFlagParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i)
+        protected bool ProcessFlagParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i)
         {
             if (parts == null)
                 return false;
@@ -466,24 +465,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process a boolean parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-        protected bool ProcessBooleanParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected bool ProcessBooleanParameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessBooleanParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a boolean parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-        protected bool ProcessBooleanParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected bool ProcessBooleanParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return false;
@@ -541,24 +540,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process a sbyte parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
-        protected sbyte? ProcessInt8Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected sbyte? ProcessInt8Parameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessInt8Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an sbyte parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
-        protected sbyte? ProcessInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected sbyte? ProcessInt8Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -629,24 +628,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process an Int16 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
-        protected short? ProcessInt16Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected short? ProcessInt16Parameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessInt16Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int16 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
-        protected short? ProcessInt16Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected short? ProcessInt16Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -716,24 +715,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process an Int32 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
-        protected int? ProcessInt32Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected int? ProcessInt32Parameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessInt32Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int32 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
-        protected int? ProcessInt32Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected int? ProcessInt32Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -803,24 +802,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process an Int64 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-        protected long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected long? ProcessInt64Parameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessInt64Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int64 parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-        protected long? ProcessInt64Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected long? ProcessInt64Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -890,24 +889,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process an string parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
-        protected string? ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected string? ProcessStringParameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a string parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
-        protected string? ProcessStringParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected string? ProcessStringParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -963,24 +962,24 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Process a byte parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
-        protected byte? ProcessUInt8Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        protected byte? ProcessUInt8Parameter(string[] parts, string flagString, ref int i, bool missingAllowed = false)
             => ProcessUInt8Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a byte parameter
         /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="parts">Parts array to be referenced</param>
         /// <param name="shortFlagString">Short flag string, if available</param>
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
-        protected byte? ProcessUInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        protected byte? ProcessUInt8Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
             if (parts == null)
                 return null;
@@ -1053,7 +1052,7 @@ namespace MPF.ExecutionContexts
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>
         /// <returns>Trimmed value and multiplication factor</returns>
-        private static string ExtractFactorFromValue(string value, out long factor)
+        internal static string ExtractFactorFromValue(string value, out long factor)
         {
             value = value.Trim('"');
             factor = 1;
@@ -1115,7 +1114,7 @@ namespace MPF.ExecutionContexts
         /// </summary>
         /// <param name="value">String with removed leading 0x</param>
         /// <returns></returns>
-        private static string RemoveHexIdentifier(string value)
+        internal static string RemoveHexIdentifier(string value)
         {
             if (value.Length <= 2)
                 return value;
