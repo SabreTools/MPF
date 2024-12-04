@@ -824,25 +824,33 @@ namespace MPF.Processors
             if (string.IsNullOrEmpty(cicmSidecar) || !File.Exists(cicmSidecar))
                 return null;
 
-            // Open and read in the XML file
-            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            try
             {
-                CheckCharacters = false,
+                // Open and read in the XML file
+                XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+                {
+                    CheckCharacters = false,
 #if NET40_OR_GREATER || NETCOREAPP
-                DtdProcessing = DtdProcessing.Ignore,
+                    DtdProcessing = DtdProcessing.Ignore,
 #endif
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
+                    IgnoreComments = true,
+                    IgnoreWhitespace = true,
+                    ValidationFlags = XmlSchemaValidationFlags.None,
+                    ValidationType = ValidationType.None,
+                });
 
-            // If the reader is null for some reason, we can't do anything
-            if (xtr == null)
+                // If the reader is null for some reason, we can't do anything
+                if (xtr == null)
+                    return null;
+
+                var serializer = new XmlSerializer(typeof(CICMMetadataType));
+                return serializer.Deserialize(xtr) as CICMMetadataType;
+            }
+            catch
+            {
+                // Absorb the exception
                 return null;
-
-            var serializer = new XmlSerializer(typeof(CICMMetadataType));
-            return serializer.Deserialize(xtr) as CICMMetadataType;
+            }
         }
 
         /// <summary>

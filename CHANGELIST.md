@@ -20,6 +20,7 @@
 - Add tests around Redumper helpers
 - Add sanity check output file tests
 - Add tests around DIC helpers
+- Add safety around sidecar generation
 
 ### 3.2.4 (2024-11-24)
 
