@@ -105,6 +105,8 @@ namespace MPF.ExecutionContexts.Data
                     if (index + 1 >= parts.Length)
                     {
                         Value[i] = _required ? null : int.MinValue;
+                        Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
+                        Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
                         return !_required;
                     }
 
@@ -113,11 +115,15 @@ namespace MPF.ExecutionContexts.Data
                     {
                         index++;
                         Value[i] = value;
+                        Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
+                        Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
                         continue;
                     }
 
                     // Return value based on required flag
                     Value[i] = _required ? null : int.MinValue;
+                    Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
+                    Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
                     return !_required;
                 }
 

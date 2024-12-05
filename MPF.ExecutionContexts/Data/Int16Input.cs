@@ -95,6 +95,8 @@ namespace MPF.ExecutionContexts.Data
                 if (index + 1 >= parts.Length)
                 {
                     Value = _required ? null : short.MinValue;
+                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                     return !_required;
                 }
 
@@ -103,11 +105,15 @@ namespace MPF.ExecutionContexts.Data
                 {
                     index++;
                     Value = value;
+                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                     return true;
                 }
 
                 // Return value based on required flag
                 Value = _required ? null : short.MinValue;
+                Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                 return !_required;
             }
 
@@ -123,6 +129,8 @@ namespace MPF.ExecutionContexts.Data
                 if (string.IsNullOrEmpty(val))
                 {
                     Value = _required ? null : short.MinValue;
+                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                     return !_required;
                 }
 
@@ -130,17 +138,21 @@ namespace MPF.ExecutionContexts.Data
                 if (ParseValue(val, out short? value) && value != null)
                 {
                     Value = value;
+                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                     return true;
                 }
 
                 // Return value based on required flag
                 Value = _required ? null : short.MinValue;
+                Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
+                Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
                 return !_required;
             }
 
             return false;
         }
-        
+
         /// <summary>
         /// Parse a value from a string
         /// </summary>
