@@ -9,6 +9,20 @@ namespace MPF.ExecutionContexts.Data
     /// </summary>
     public class UInt64Input : Input<ulong?>
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates a minimum value (inclusive) for the flag
+        /// </summary>
+        public ulong? MinValue { get; set; } = null;
+
+        /// <summary>
+        /// Indicates a maximum value (inclusive) for the flag
+        /// </summary>
+        public ulong? MaxValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>

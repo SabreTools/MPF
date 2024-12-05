@@ -9,6 +9,20 @@ namespace MPF.ExecutionContexts.Data
     /// </summary>
     public class UInt16Input : Input<ushort?>
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates a minimum value (inclusive) for the flag
+        /// </summary>
+        public ushort? MinValue { get; set; } = null;
+
+        /// <summary>
+        /// Indicates a maximum value (inclusive) for the flag
+        /// </summary>
+        public ushort? MaxValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>

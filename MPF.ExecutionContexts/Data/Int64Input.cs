@@ -9,6 +9,20 @@ namespace MPF.ExecutionContexts.Data
     /// </summary>
     public class Int64Input : Input<long?>
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates a minimum value (inclusive) for the flag
+        /// </summary>
+        public long? MinValue { get; set; } = null;
+
+        /// <summary>
+        /// Indicates a maximum value (inclusive) for the flag
+        /// </summary>
+        public long? MaxValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>

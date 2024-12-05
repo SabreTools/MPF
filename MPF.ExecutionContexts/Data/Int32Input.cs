@@ -9,6 +9,20 @@ namespace MPF.ExecutionContexts.Data
     /// </summary>
     public class Int32Input : Input<int?>
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates a minimum value (inclusive) for the flag
+        /// </summary>
+        public int? MinValue { get; set; } = null;
+
+        /// <summary>
+        /// Indicates a maximum value (inclusive) for the flag
+        /// </summary>
+        public int? MaxValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>

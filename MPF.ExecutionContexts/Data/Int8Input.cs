@@ -9,6 +9,20 @@ namespace MPF.ExecutionContexts.Data
     /// </summary>
     public class Int8Input : Input<sbyte?>
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates a minimum value (inclusive) for the flag
+        /// </summary>
+        public sbyte? MinValue { get; set; } = null;
+
+        /// <summary>
+        /// Indicates a maximum value (inclusive) for the flag
+        /// </summary>
+        public sbyte? MaxValue { get; set; } = null;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>

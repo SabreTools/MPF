@@ -40,6 +40,7 @@
 - Add quotes option to string input
 - Replace Redumper flag values with input types
 - Add DIC parameters tests
+- Add unused min/max parameters for numeric inputs
 
 ### 3.2.4 (2024-11-24)
 
