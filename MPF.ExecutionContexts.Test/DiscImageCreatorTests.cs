@@ -1,4 +1,5 @@
-﻿using MPF.ExecutionContexts.DiscImageCreator;
+﻿using System.Collections.Generic;
+using MPF.ExecutionContexts.DiscImageCreator;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -34,6 +35,53 @@ namespace MPF.ExecutionContexts.Test
         public void ExtensionTest(MediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region Default Values
+
+        private static Dictionary<string, string?> AllOptions = new()
+        {
+            [SettingConstants.DVDRereadCount] = "1000",
+            [SettingConstants.MultiSectorRead] = "true",
+            [SettingConstants.MultiSectorReadValue] = "1000",
+            [SettingConstants.ParanoidMode] = "true",
+            [SettingConstants.QuietMode] = "true",
+            [SettingConstants.RereadCount] = "1000",
+            [SettingConstants.UseCMIFlag] = "true",
+        };
+
+        [Theory]
+        [InlineData(null, null, null, "filename.bin", null, null)]
+        [InlineData(RedumpSystem.AppleMacintosh, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /ns /sf /ss /s 2")]
+        [InlineData(RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /aj /c2 1000 /q /mr 1000")]
+        [InlineData(RedumpSystem.HasbroVideoNow, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
+        [InlineData(RedumpSystem.HasbroVideoNowColor, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
+        [InlineData(RedumpSystem.HasbroVideoNowJr, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
+        [InlineData(RedumpSystem.HasbroVideoNowXP, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /a 0 /c2 1000 /q /mr 1000")]
+        [InlineData(RedumpSystem.SonyPlayStation, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "cd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q /mr 1000 /nl /am")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000 /sf")]
+        [InlineData(RedumpSystem.MicrosoftXbox, MediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
+        [InlineData(RedumpSystem.MicrosoftXbox360, MediaType.DVD, "/dev/sr0", "filename.bin", 2, "xbox /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw")]
+        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /q /raw")]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, "/dev/sr0", "filename.bin", 2, "gd /dev/sr0 \"filename.bin\" 2 /c2 1000 /q")]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "dvd /dev/sr0 \"filename.bin\" 2 /c /q /rr 1000")]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q /rr 1000")]
+        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "bd /dev/sr0 \"filename.bin\" 2 /q")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "fd /dev/sr0 \"filename.bin\"")]
+        public void DefaultValueTest(RedumpSystem? system,
+            MediaType? type,
+            string? drivePath,
+            string filename,
+            int? driveSpeed,
+            string? expected)
+        {
+            var context = new ExecutionContext(system, type, drivePath, filename, driveSpeed, AllOptions);
+            string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
         }
 

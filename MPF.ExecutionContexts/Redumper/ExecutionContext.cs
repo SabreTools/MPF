@@ -251,15 +251,6 @@ namespace MPF.ExecutionContexts.Redumper
             int? driveSpeed,
             Dictionary<string, string?> options)
         {
-            // If we don't have a CD, DVD, HD-DVD, or BD, we can't dump using redumper
-            if (MediaType != SabreTools.RedumpLib.Data.MediaType.CDROM
-                && MediaType != SabreTools.RedumpLib.Data.MediaType.DVD
-                && MediaType != SabreTools.RedumpLib.Data.MediaType.HDDVD
-                && MediaType != SabreTools.RedumpLib.Data.MediaType.BluRay)
-            {
-                return;
-            }
-
             BaseCommand = CommandStrings.NONE;
             switch (MediaType)
             {
@@ -271,12 +262,15 @@ namespace MPF.ExecutionContexts.Redumper
                     };
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
+                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                     ModeValues = [CommandStrings.DVD];
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD: // TODO: Keep in sync if another command string shows up
                     ModeValues = [CommandStrings.DVD];
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
                     ModeValues = [CommandStrings.BluRay];
                     break;
                 default:
@@ -294,12 +288,12 @@ namespace MPF.ExecutionContexts.Redumper
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
             {
                 this[FlagStrings.Verbose] = true;
-                (_inputs[FlagStrings.Verbose] as BooleanInput)?.SetValue(true);
+                (_inputs[FlagStrings.Verbose] as FlagInput)?.SetValue(true);
             }
             if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
             {
                 this[FlagStrings.Debug] = true;
-                (_inputs[FlagStrings.Debug] as BooleanInput)?.SetValue(true);
+                (_inputs[FlagStrings.Debug] as FlagInput)?.SetValue(true);
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);

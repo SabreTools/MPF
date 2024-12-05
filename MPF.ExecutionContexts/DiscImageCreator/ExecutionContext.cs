@@ -1064,6 +1064,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                     this[FlagStrings.Raw] = true;
                     break;
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
+                    // Currently no defaults set
+                    break;
 
                 // Non-optical
                 case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
@@ -1739,6 +1742,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     return;
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                     BaseCommand = CommandStrings.DigitalVideoDisc;
+                    return;
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
+                    BaseCommand = CommandStrings.BluRay;
                     return;
                 case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
                     BaseCommand = CommandStrings.Floppy;

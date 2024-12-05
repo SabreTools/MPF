@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MPF.ExecutionContexts.Redumper;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -26,6 +27,44 @@ namespace MPF.ExecutionContexts.Test
 
         #endregion
     
+        #region Default Values
+
+        private static Dictionary<string, string?> AllOptions = new()
+        {
+            [SettingConstants.EnableDebug] = "true",
+            [SettingConstants.EnableLeadinRetry] = "true",
+            [SettingConstants.EnableVerbose] = "true",
+            [SettingConstants.LeadinRetryCount] = "1000",
+            [SettingConstants.ReadMethod] = "BE",
+            [SettingConstants.RereadCount] = "1000",
+            [SettingConstants.SectorOrder] = "DATA_C2_SUB",
+            [SettingConstants.UseGenericDriveType] = "true",
+        };
+
+        [Theory]
+        [InlineData(null, null, null, "filename.bin", null, "")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "cd skeleton --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.SuperAudioCD, MediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "sacd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "dvd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "dvd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "dvd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "dvd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "bd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "bd --verbose --debug --drive=/dev/sr0 --speed=1000 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB")]
+        public void DefaultValueTest(RedumpSystem? system,
+            MediaType? type,
+            string? drivePath,
+            string filename,
+            int? driveSpeed,
+            string? expected)
+        {
+            var context = new ExecutionContext(system, type, drivePath, filename, driveSpeed, AllOptions);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region CD
 
         [Theory]

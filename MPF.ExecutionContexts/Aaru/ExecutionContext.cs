@@ -684,7 +684,7 @@ namespace MPF.ExecutionContexts.Aaru
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
@@ -695,7 +695,7 @@ namespace MPF.ExecutionContexts.Aaru
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
@@ -703,7 +703,7 @@ namespace MPF.ExecutionContexts.Aaru
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
@@ -713,6 +713,9 @@ namespace MPF.ExecutionContexts.Aaru
                     // Currently no defaults set
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
+                    // Currently no defaults set
+                    break;
+                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
                     // Currently no defaults set
                     break;
 
