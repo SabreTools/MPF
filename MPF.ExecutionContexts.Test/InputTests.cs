@@ -1,441 +1,332 @@
+using MPF.ExecutionContexts.Data;
 using Xunit;
 
 namespace MPF.ExecutionContexts.Test
 {
     public class InputTests
     {
-        #region ProcessAsFlag
+        #region FlagInput
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.Boolean, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.Int8, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.UInt8, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.Int16, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.UInt16, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.Int32, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.UInt32, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.Int64, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.UInt64, "flag", new string[] { "flag" }, 0, false)]
-        [InlineData(InputType.String, "flag", new string[] { "flag" }, 0, false)]
         // Invalid parts
-        [InlineData(InputType.Flag, "flag", new string[0], 0, false)]
+        [InlineData("flag", new string[0], 0, false, false)]
         // Invalid index
-        [InlineData(InputType.Flag, "flag", new string[] { "flag" }, -1, false)]
-        [InlineData(InputType.Flag, "flag", new string[] { "flag" }, 1, false)]
+        [InlineData("flag", new string[] { "flag" }, -1, false, false)]
+        [InlineData("flag", new string[] { "flag" }, 1, false, false)]
         // Invalid name
-        [InlineData(InputType.Flag, "flag", new string[] { "" }, 0, false)]
-        [InlineData(InputType.Flag, "flag", new string[] { "flag2" }, 0, false)]
+        [InlineData("flag", new string[] { "" }, 0, false, false)]
+        [InlineData("flag", new string[] { "flag2" }, 0, false, false)]
         // Valid
-        [InlineData(InputType.Flag, "flag", new string[] { "flag" }, 0, true)]
-        public void ProcessAsFlagTest(InputType type, string name, string[] parts, int index, bool expected)
+        [InlineData("flag", new string[] { "flag" }, 0, true, true)]
+        public void FlagInputTest(string name, string[] parts, int index, bool success, bool expected)
         {
-            Input input = new Input(type, name);
-            bool actual = input.ProcessAsFlag(parts, ref index);
-            Assert.Equal(expected, actual);
+            FlagInput input = new FlagInput(name);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsBoolean
+        #region BooleanInput
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.Boolean, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", false, new string[] { "flag" }, 0, true)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, true)]
         // Valid name, invalid following
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", false, new string[] { "flag", "invalid" }, 0, true)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, true)]
         // Valid name, valid following
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag", "true" }, 0, true)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag", "false" }, 0, false)]
-        public void ProcessAsBooleanTest(InputType type, string name, bool required, string[] parts, int index, bool? expected)
+        [InlineData("flag", true, new string[] { "flag", "true" }, 0, true, true)]
+        [InlineData("flag", true, new string[] { "flag", "false" }, 0, true, false)]
+        public void BooleanInputTest(string name, bool required, string[] parts, int index, bool success, bool? expected)
         {
-            Input input = new Input(type, name, required);
-            bool? actual = input.ProcessAsBoolean(parts, ref index);
-            Assert.Equal(expected, actual);
+            BooleanInput input = new BooleanInput(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsInt8
+        #region Int8Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.Int8, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.Int8, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", false, new string[] { "flag" }, 0, sbyte.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, sbyte.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", false, new string[] { "flag", "invalid" }, 0, sbyte.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, sbyte.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag", "1" }, 0, (sbyte)1)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag", "-1" }, 0, (sbyte)-1)]
-        public void ProcessAsInt8Test(InputType type, string name, bool required, string[] parts, int index, sbyte? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (sbyte)1)]
+        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (sbyte)-1)]
+        public void Int8InputTest(string name, bool required, string[] parts, int index, bool success, sbyte? expected)
         {
-            Input input = new Input(type, name, required);
-            sbyte? actual = input.ProcessAsInt8(parts, ref index);
-            Assert.Equal(expected, actual);
+            Int8Input input = new Int8Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsUInt8
+        #region UInt8Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.UInt8, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", false, new string[] { "flag" }, 0, byte.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, byte.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", false, new string[] { "flag", "invalid" }, 0, byte.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, byte.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag", "1" }, 0, (byte)1)]
-        public void ProcessAsUInt8Test(InputType type, string name, bool required, string[] parts, int index, byte? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (byte)1)]
+        public void UInt8InputTest(string name, bool required, string[] parts, int index, bool success, byte? expected)
         {
-            Input input = new Input(type, name, required);
-            byte? actual = input.ProcessAsUInt8(parts, ref index);
-            Assert.Equal(expected, actual);
+            UInt8Input input = new UInt8Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsInt16
+        #region Int16Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.Int16, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.Int16, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", false, new string[] { "flag" }, 0, short.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, short.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", false, new string[] { "flag", "invalid" }, 0, short.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, short.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag", "1" }, 0, (short)1)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag", "-1" }, 0, (short)-1)]
-        public void ProcessAsInt16Test(InputType type, string name, bool required, string[] parts, int index, short? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (short)1)]
+        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (short)-1)]
+        public void Int16InputTest(string name, bool required, string[] parts, int index, bool success, short? expected)
         {
-            Input input = new Input(type, name, required);
-            short? actual = input.ProcessAsInt16(parts, ref index);
-            Assert.Equal(expected, actual);
+            Int16Input input = new Int16Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsUInt16
+        #region UInt16Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.UInt16, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", false, new string[] { "flag" }, 0, ushort.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, ushort.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", false, new string[] { "flag", "invalid" }, 0, ushort.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, ushort.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag", "1" }, 0, (ushort)1)]
-        public void ProcessAsUInt16Test(InputType type, string name, bool required, string[] parts, int index, ushort? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (ushort)1)]
+        public void UInt16InputTest(string name, bool required, string[] parts, int index, bool success, ushort? expected)
         {
-            Input input = new Input(type, name, required);
-            ushort? actual = input.ProcessAsUInt16(parts, ref index);
-            Assert.Equal(expected, actual);
+            UInt16Input input = new UInt16Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsInt32
+        #region Int32Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.Int32, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.Int32, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", false, new string[] { "flag" }, 0, int.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, int.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", false, new string[] { "flag", "invalid" }, 0, int.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, int.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag", "1" }, 0, (int)1)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag", "-1" }, 0, (int)-1)]
-        public void ProcessAsInt32Test(InputType type, string name, bool required, string[] parts, int index, int? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (int)1)]
+        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (int)-1)]
+        public void Int32InputTest(string name, bool required, string[] parts, int index, bool success, int? expected)
         {
-            Input input = new Input(type, name, required);
-            int? actual = input.ProcessAsInt32(parts, ref index);
-            Assert.Equal(expected, actual);
+            Int32Input input = new Int32Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsUInt32
+        #region UInt32Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.UInt32, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", false, new string[] { "flag" }, 0, uint.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, uint.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", false, new string[] { "flag", "invalid" }, 0, uint.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, uint.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag", "1" }, 0, (uint)1)]
-        public void ProcessAsUInt32Test(InputType type, string name, bool required, string[] parts, int index, uint? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (uint)1)]
+        public void UInt32InputTest(string name, bool required, string[] parts, int index, bool success, uint? expected)
         {
-            Input input = new Input(type, name, required);
-            uint? actual = input.ProcessAsUInt32(parts, ref index);
-            Assert.Equal(expected, actual);
+            UInt32Input input = new UInt32Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsInt64
+        #region Int64Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.Int64, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.Int64, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", false, new string[] { "flag" }, 0, long.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, long.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", false, new string[] { "flag", "invalid" }, 0, long.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, long.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag", "1" }, 0, (long)1)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag", "-1" }, 0, (long)-1)]
-        public void ProcessAsInt64Test(InputType type, string name, bool required, string[] parts, int index, long? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (long)1)]
+        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (long)-1)]
+        public void Int64InputTest(string name, bool required, string[] parts, int index, bool success, long? expected)
         {
-            Input input = new Input(type, name, required);
-            long? actual = input.ProcessAsInt64(parts, ref index);
-            Assert.Equal(expected, actual);
+            Int64Input input = new Int64Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsUInt64
+        #region UInt64Input
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.UInt64, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", false, new string[] { "flag" }, 0, ulong.MinValue)]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, ulong.MinValue)]
         // Valid name, invalid following
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag", "invalid" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", false, new string[] { "flag", "invalid" }, 0, ulong.MinValue)]
+        [InlineData("flag", true, new string[] { "flag", "invalid" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag", "invalid" }, 0, true, ulong.MinValue)]
         // Valid name, valid following
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag", "1" }, 0, (ulong)1)]
-        public void ProcessAsUInt64Test(InputType type, string name, bool required, string[] parts, int index, ulong? expected)
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (ulong)1)]
+        public void UInt64InputTest(string name, bool required, string[] parts, int index, bool success, ulong? expected)
         {
-            Input input = new Input(type, name, required);
-            ulong? actual = input.ProcessAsUInt64(parts, ref index);
-            Assert.Equal(expected, actual);
+            UInt64Input input = new UInt64Input(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
 
-        #region ProcessAsString
+        #region StringInput
 
         [Theory]
-        // Invalid type
-        [InlineData(InputType.None, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Flag, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Boolean, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt8, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt16, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt32, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.Int64, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.UInt64, "flag", true, new string[] { "flag" }, 0, null)]
         // Invalid parts
-        [InlineData(InputType.String, "flag", true, new string[0], 0, null)]
+        [InlineData("flag", true, new string[0], 0, false, null)]
         // Invalid index
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, -1, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 1, null)]
+        [InlineData("flag", true, new string[] { "flag" }, -1, false, null)]
+        [InlineData("flag", true, new string[] { "flag" }, 1, false, null)]
         // Invalid name
-        [InlineData(InputType.String, "flag", true, new string[] { "" }, 0, null)]
-        [InlineData(InputType.String, "flag", true, new string[] { "flag2" }, 0, null)]
+        [InlineData("flag", true, new string[] { "" }, 0, false, null)]
+        [InlineData("flag", true, new string[] { "flag2" }, 0, false, null)]
         // Valid name, no following
-        [InlineData(InputType.String, "flag", true, new string[] { "flag" }, 0, null)]
-        [InlineData(InputType.String, "flag", false, new string[] { "flag" }, 0, "")]
+        [InlineData("flag", true, new string[] { "flag" }, 0, false, null)]
+        [InlineData("flag", false, new string[] { "flag" }, 0, true, "")]
         // Valid name, following
-        [InlineData(InputType.String, "flag", true, new string[] { "flag", "value" }, 0, "value")]
-        public void ProcessAsString(InputType type, string name, bool required, string[] parts, int index, string? expected)
+        [InlineData("flag", true, new string[] { "flag", "value" }, 0, true, "value")]
+        public void StringInputTest(string name, bool required, string[] parts, int index, bool success, string? expected)
         {
-            Input input = new Input(type, name, required);
-            string? actual = input.ProcessAsString(parts, ref index);
-            Assert.Equal(expected, actual);
+            StringInput input = new StringInput(name, required);
+            bool actual = input.Process(parts, ref index);
+
+            Assert.Equal(success, actual);
+            Assert.Equal(expected, input.Value);
         }
 
         #endregion
