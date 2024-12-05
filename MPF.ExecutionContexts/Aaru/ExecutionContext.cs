@@ -981,7 +981,7 @@ namespace MPF.ExecutionContexts.Aaru
                 {
                     if (LengthValue >= 0)
                         parameters.Append($"{FlagStrings.LengthLong} {LengthValue} ");
-                    else if (LengthValue == -1 && BaseCommand == CommandStrings.ImageDecode)
+                    else if (LengthValue == -1 && BaseCommand == CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode)
                         parameters.Append($"{FlagStrings.LengthLong} all ");
                 }
             }
@@ -1198,7 +1198,7 @@ namespace MPF.ExecutionContexts.Aaru
                     if (InputValue!.Contains(" "))
                         parameters.Append($"\"{InputValue!.TrimEnd('\\')}\" ");
                     else
-                        parameters.Append(InputValue!.TrimEnd('\\'));
+                        parameters.Append($"{InputValue!.TrimEnd('\\')} ");
 
                     break;
 
@@ -1226,7 +1226,7 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
                         return null;
 
-                    parameters.Append(InputValue!.TrimEnd('\\'));
+                    parameters.Append($"{InputValue!.TrimEnd('\\')} ");
                     parameters.Append($"\"{OutputValue}\" ");
                     break;
 
@@ -1429,6 +1429,7 @@ namespace MPF.ExecutionContexts.Aaru
                 // Keep a count of keys to determine if we should break out to command handling or not
                 int keyCount = Keys.Count;
 
+                // Match all possible flags
                 foreach (var kvp in _preCommandInputs)
                 {
                     // If the value was not a match
@@ -1690,9 +1691,7 @@ namespace MPF.ExecutionContexts.Aaru
 
                 // Start -- Required value
                 longValue = ProcessInt64Parameter(parts, FlagStrings.StartShort, FlagStrings.StartLong, ref i);
-                if (longValue == null)
-                    return false;
-                else if (longValue != long.MinValue)
+                if (longValue != long.MinValue)
                     StartValue = longValue;
 
                 #endregion
@@ -2055,6 +2054,27 @@ namespace MPF.ExecutionContexts.Aaru
 
                         break;
 
+                    case CommandStrings.Configure:
+                        family = null;
+                        command = CommandStrings.Configure;
+                        break;
+                    case CommandStrings.Formats:
+                        family = null;
+                        command = CommandStrings.Formats;
+                        break;
+                    case CommandStrings.ListEncodings:
+                        family = null;
+                        command = CommandStrings.ListEncodings;
+                        break;
+                    case CommandStrings.ListNamespaces:
+                        family = null;
+                        command = CommandStrings.ListNamespaces;
+                        break;
+                    case CommandStrings.Remote:
+                        family = null;
+                        command = CommandStrings.Remote;
+                        break;
+
                     default:
                         family = null;
                         command = null;
@@ -2062,7 +2082,7 @@ namespace MPF.ExecutionContexts.Aaru
                 }
             }
 
-            // For standalone commands
+            // For standalone commands with no second input
             else
             {
                 family = null;
@@ -2072,7 +2092,6 @@ namespace MPF.ExecutionContexts.Aaru
                     CommandStrings.Formats => CommandStrings.Formats,
                     CommandStrings.ListEncodings => CommandStrings.ListEncodings,
                     CommandStrings.ListNamespaces => CommandStrings.ListNamespaces,
-                    CommandStrings.Remote => CommandStrings.Remote,
                     _ => null,
                 };
             }

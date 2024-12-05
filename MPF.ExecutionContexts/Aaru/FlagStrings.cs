@@ -5,6 +5,19 @@ namespace MPF.ExecutionContexts.Aaru
     /// </summary>
     public static class FlagStrings
     {
+        #region Precommand Flags
+
+        public const string DebugShort = "-d";
+        public const string DebugLong = "--debug";
+        public const string HelpShort = "-h";
+        public const string HelpShortAlt = "-?";
+        public const string HelpLong = "--help";
+        public const string VerboseShort = "-v";
+        public const string VerboseLong = "--verbose";
+        public const string VersionLong = "--version";
+
+        #endregion
+
         #region Boolean flags
 
         public const string Adler32Short = "-a";
@@ -15,8 +28,6 @@ namespace MPF.ExecutionContexts.Aaru
         public const string CRC32Short = "-c";
         public const string CRC32Long = "--crc32";
         public const string CRC64Long = "--crc64";
-        public const string DebugShort = "-d";
-        public const string DebugLong = "--debug";
         public const string DiskTagsShort = "-f";
         public const string DiskTagsLong = "--disk-tags";
         public const string DuplicatedSectorsShort = "-p";
@@ -36,9 +47,6 @@ namespace MPF.ExecutionContexts.Aaru
         public const string ForceShort = "-f";
         public const string ForceLong = "--force";
         public const string GenerateSubchannelsLong = "--generate-subchannels";
-        public const string HelpShort = "-h";
-        public const string HelpShortAlt = "-?";
-        public const string HelpLong = "--help";
         public const string LongFormatShort = "-l";
         public const string LongFormatLong = "--long-format";
         public const string LongSectorsShort = "-r";
@@ -76,13 +84,10 @@ namespace MPF.ExecutionContexts.Aaru
         public const string TrapDiscLong = "--trap-disc";
         public const string TrimLong = "--trim";
         public const string UseBufferedReadsLong = "--use-buffered-reads";
-        public const string VerboseShort = "-v";
-        public const string VerboseLong = "--verbose";
         public const string VerifyDiscShort = "-w";
         public const string VerifyDiscLong = "--verify-disc";
         public const string VerifySectorsShort = "-s";
         public const string VerifySectorsLong = "--verify-sectors";
-        public const string VersionLong = "--version";
         public const string WholeDiscShort = "-w";
         public const string WholeDiscLong = "--whole-disc";
 
