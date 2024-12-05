@@ -50,7 +50,7 @@ namespace MPF.ExecutionContexts.Data
                 builder.Append(" ");
 
             // Value
-            builder.Append(Value.ToString().ToLowerInvariant());
+            builder.Append(Value.ToString()?.ToLowerInvariant());
 
             return builder.ToString();
         }
