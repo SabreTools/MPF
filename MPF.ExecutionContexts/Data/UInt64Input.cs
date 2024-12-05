@@ -62,7 +62,7 @@ namespace MPF.ExecutionContexts.Data
             if (ulong.TryParse(baseVal, out value))
             {
                 index++;
-                Value = (ulong)(value * factor);
+                Value = (ulong)(value * (ulong)factor);
                 return true;
             }
 
@@ -71,7 +71,7 @@ namespace MPF.ExecutionContexts.Data
             if (ulong.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out value))
             {
                 index++;
-                Value = (ulong)(value * factor);
+                Value = (ulong)(value * (ulong)factor);
                 return true;
             }
 

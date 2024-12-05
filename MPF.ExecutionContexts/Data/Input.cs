@@ -15,6 +15,11 @@ namespace MPF.ExecutionContexts.Data
         public readonly string Name;
 
         /// <summary>
+        /// Indicates if a value has been set
+        /// </summary>
+        public abstract bool ValueSet { get; }
+
+        /// <summary>
         /// Verbose name for the input
         /// </summary>
         protected readonly string? _longName;
@@ -63,6 +68,18 @@ namespace MPF.ExecutionContexts.Data
             _longName = longName;
             _required = required;
         }
+
+        #endregion
+
+        #region Processors
+
+        /// <summary>
+        /// Process the current index, if possible
+        /// </summary>
+        /// <param name="parts">Parts array to be referenced</param>
+        /// <param name="index">Reference to the position in the parts</param>
+        /// <returns>True if a value could be determined, false otherwise</returns>
+        public abstract bool Process(string[] parts, ref int index);
 
         #endregion
 
@@ -171,6 +188,9 @@ namespace MPF.ExecutionContexts.Data
         /// </summary>
         public T? Value { get; protected set; }
 
+        /// <inheritdoc/>
+        public override bool ValueSet => Value != null;
+
         #endregion
 
         #region Constructors
@@ -190,18 +210,6 @@ namespace MPF.ExecutionContexts.Data
         /// <inheritdoc/>
         public Input(string shortName, string longName, bool required)
             : base(shortName, longName, required) { }
-
-        #endregion
-
-        #region Processors
-
-        /// <summary>
-        /// Process the current index, if possible
-        /// </summary>
-        /// <param name="parts">Parts array to be referenced</param>
-        /// <param name="index">Reference to the position in the parts</param>
-        /// <returns>True if a value could be determined, false otherwise</returns>
-        public abstract bool Process(string[] parts, ref int index);
 
         #endregion
     }
