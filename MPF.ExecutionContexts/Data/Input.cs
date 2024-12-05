@@ -92,15 +92,6 @@ namespace MPF.ExecutionContexts.Data
         #region Helpers
 
         /// <summary>
-        /// Returns whether or not the selected item exists
-        /// </summary>
-        /// <param name="parts">Parts array to be referenced</param>
-        /// <param name="index">Current index</param>
-        /// <returns>True if the next item exists, false otherwise</returns>
-        internal static bool DoesExist(string[] parts, int index)
-            => index >= 0 && index < parts.Length;
-
-        /// <summary>
         /// Get the trimmed value and multiplication factor from a value
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>

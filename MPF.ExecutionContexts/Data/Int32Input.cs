@@ -68,38 +68,79 @@ namespace MPF.ExecutionContexts.Data
         public override bool Process(string[] parts, ref int index)
         {
             // Check the parts array
-            if (parts.Length == 0)
-                return false;
-
-            // Check the index
             if (index < 0 || index >= parts.Length)
                 return false;
 
-            // Check the name
-            if (parts[index] != Name && (_longName != null && parts[index] != _longName))
-                return false;
-
-            // Ensure the value exists
-            if (!DoesExist(parts, index + 1))
+            // Check for space-separated
+            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
             {
+                // Ensure the value exists
+                if (index + 1 >= parts.Length)
+                {
+                    Value = _required ? null : int.MinValue;
+                    return !_required;
+                }
+
+                // If the next value is valid
+                if (ParseValue(parts[index + 1], out int? value) && value != null)
+                {
+                    index++;
+                    Value = value;
+                    return true;
+                }
+
+                // Return value based on required flag
                 Value = _required ? null : int.MinValue;
                 return !_required;
             }
 
-            // If the next value is valid
-            if (int.TryParse(parts[index + 1], out int value))
+            // Check for equal separated
+            if (parts[index].StartsWith($"{Name}=") || (_longName != null && parts[index].StartsWith($"{_longName}=")))
             {
-                index++;
-                Value = value;
+                // Split the string, using the first equal sign as the separator
+                string[] tempSplit = parts[index].Split('=');
+                string key = tempSplit[0];
+                string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1);
+
+                // Ensure the value exists
+                if (string.IsNullOrEmpty(val))
+                {
+                    Value = _required ? null : int.MinValue;
+                    return !_required;
+                }
+
+                // If the next value is valid
+                if (ParseValue(val, out int? value) && value != null)
+                {
+                    Value = value;
+                    return true;
+                }
+
+                // Return value based on required flag
+                Value = _required ? null : int.MinValue;
+                return !_required;
+            }
+
+            return false;
+        }
+        
+        /// <summary>
+        /// Parse a value from a string
+        /// </summary>
+        private static bool ParseValue(string str, out int? output)
+        {
+            // If the next value is valid
+            if (int.TryParse(str, out int value))
+            {
+                output = value;
                 return true;
             }
 
             // Try to process as a formatted string
-            string baseVal = ExtractFactorFromValue(parts[index + 1], out long factor);
+            string baseVal = ExtractFactorFromValue(str, out long factor);
             if (int.TryParse(baseVal, out value))
             {
-                index++;
-                Value = (int)(value * factor);
+                output = (int)(value * factor);
                 return true;
             }
 
@@ -107,14 +148,13 @@ namespace MPF.ExecutionContexts.Data
             string hexValue = RemoveHexIdentifier(baseVal);
             if (int.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out value))
             {
-                index++;
-                Value = (int)(value * factor);
+                output = (int)(value * factor);
                 return true;
             }
 
-            // Return value based on required flag
-            Value = _required ? null : int.MinValue;
-            return !_required;
+            // The value could not be parsed
+            output = null;
+            return false;
         }
     }
 }

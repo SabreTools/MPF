@@ -50,19 +50,17 @@ namespace MPF.ExecutionContexts.Data
         public override bool Process(string[] parts, ref int index)
         {
             // Check the parts array
-            if (parts.Length == 0)
-                return false;
-
-            // Check the index
             if (index < 0 || index >= parts.Length)
                 return false;
 
             // Check the name
-            if (parts[index] != Name && (_longName != null && parts[index] != _longName))
-                return false;
+            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
+            {
+                Value = true;
+                return true;
+            }
 
-            Value = true;
-            return true;
+            return false;
         }
     }
 }

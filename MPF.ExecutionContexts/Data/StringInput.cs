@@ -67,27 +67,44 @@ namespace MPF.ExecutionContexts.Data
         public override bool Process(string[] parts, ref int index)
         {
             // Check the parts array
-            if (parts.Length == 0)
-                return false;
-
-            // Check the index
             if (index < 0 || index >= parts.Length)
                 return false;
 
-            // Check the name
-            if (parts[index] != Name && (_longName != null && parts[index] != _longName))
-                return false;
-
-            // Ensure the value exists
-            if (!DoesExist(parts, index + 1))
+            // Check for space-separated
+            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
             {
-                Value = _required ? null : string.Empty;
-                return !_required;
+                // Ensure the value exists
+                if (index + 1 >= parts.Length)
+                {
+                    Value = _required ? null : string.Empty;
+                    return !_required;
+                }
+
+                index++;
+                Value = parts[index];
+                return true;
             }
 
-            index++;
-            Value = parts[index];
-            return true;
+            // Check for equal separated
+            if (parts[index].StartsWith($"{Name}=") || (_longName != null && parts[index].StartsWith($"{_longName}=")))
+            {
+                // Split the string, using the first equal sign as the separator
+                string[] tempSplit = parts[index].Split('=');
+                string key = tempSplit[0];
+                string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1);
+
+                // Ensure the value exists
+                if (string.IsNullOrEmpty(val))
+                {
+                    Value = _required ? null : string.Empty;
+                    return !_required;
+                }
+
+                Value = val;
+                return true;
+            }
+
+            return false;
         }
     }
 }

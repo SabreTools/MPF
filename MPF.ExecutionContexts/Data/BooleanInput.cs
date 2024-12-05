@@ -59,33 +59,58 @@ namespace MPF.ExecutionContexts.Data
         public override bool Process(string[] parts, ref int index)
         {
             // Check the parts array
-            if (parts.Length == 0)
-                return false;
-
-            // Check the index
             if (index < 0 || index >= parts.Length)
                 return false;
 
-            // Check the name
-            if (parts[index] != Name && (_longName != null && parts[index] != _longName))
-                return false;
-
-            // Ensure the value exists
-            if (!DoesExist(parts, index + 1))
+            // Check for space-separated
+            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
             {
-                Value = _required ? null : true;
-                return !_required;
+                // Ensure the value exists
+                if (index + 1 >= parts.Length)
+                {
+                    Value = _required ? null : true;
+                    return !_required;
+                }
+
+                // If the next value is valid
+                if (!bool.TryParse(parts[index + 1], out bool value))
+                {
+                    Value = _required ? null : true;
+                    return !_required;
+                }
+
+                index++;
+                Value = value;
+                return true;
             }
 
-            // If the next value is valid
-            if (!bool.TryParse(parts[index + 1], out bool value))
+            // Check for equal separated
+            if (parts[index].StartsWith($"{Name}=") || (_longName != null && parts[index].StartsWith($"{_longName}=")))
             {
-                Value = _required ? null : true;
-                return !_required;
+                // Split the string, using the first equal sign as the separator
+                string[] tempSplit = parts[index].Split('=');
+                string key = tempSplit[0];
+                string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1);
+
+                // Ensure the value exists
+                if (string.IsNullOrEmpty(val))
+                {
+                    Value = _required ? null : true;
+                    return !_required;
+                }
+
+                // If the next value is valid
+                if (!bool.TryParse(val, out bool value))
+                {
+                    Value = _required ? null : true;
+                    return !_required;
+                }
+
+                Value = value;
+                return true;
             }
 
-            index++;
-            return value;
+            return false;
         }
     }
 }
