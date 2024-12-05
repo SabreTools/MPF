@@ -24,6 +24,7 @@
 - Use recommended Min/Max/TryParse
 - Add tests around ProcessingTool
 - Add BaseExecutionContext tests
+- Add currently unused Input type
 
 ### 3.2.4 (2024-11-24)
 
