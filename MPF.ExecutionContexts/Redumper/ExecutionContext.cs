@@ -225,14 +225,13 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            return BaseCommand == CommandStrings.NONE
-                || BaseCommand?.Contains(CommandStrings.CD) == true
-                || BaseCommand?.Contains(CommandStrings.DVD) == true
-                || BaseCommand?.Contains(CommandStrings.BluRay) == true
-                || BaseCommand?.Contains(CommandStrings.SACD) == true
-                || BaseCommand?.Contains(CommandStrings.New) == true
-                || BaseCommand?.Contains(CommandStrings.Dump) == true
-                || BaseCommand?.Contains(CommandStrings.DumpNew) == true;
+            return ModeValues?.Contains(CommandStrings.CD) == true
+                || ModeValues?.Contains(CommandStrings.DVD) == true
+                || ModeValues?.Contains(CommandStrings.BluRay) == true
+                || ModeValues?.Contains(CommandStrings.SACD) == true
+                || ModeValues?.Contains(CommandStrings.New) == true
+                || ModeValues?.Contains(CommandStrings.Dump) == true
+                || ModeValues?.Contains(CommandStrings.DumpNew) == true;
         }
 
         /// <inheritdoc/>
