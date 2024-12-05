@@ -27,6 +27,7 @@
 - Add currently unused Input type
 - Split Input type into typed classes
 - Add flag for value being set
+- Add unused inputs to Aaru
 
 ### 3.2.4 (2024-11-24)
 

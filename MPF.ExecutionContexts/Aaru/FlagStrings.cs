@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using MPF.ExecutionContexts.Data;
+
 namespace MPF.ExecutionContexts.Aaru
 {
     /// <summary>
@@ -5,7 +8,115 @@ namespace MPF.ExecutionContexts.Aaru
     /// </summary>
     public static class FlagStrings
     {
-        // Boolean flags
+        /// <summary>
+        /// Get all available input types
+        /// </summary>
+        public static List<Input> GetInputs()
+        {
+            return [
+                // Boolean flags
+                new BooleanInput(Adler32Short, Adler32Long, required: false),
+                new BooleanInput(ClearLong, required: false),
+                new BooleanInput(ClearAllLong, required: false),
+                new BooleanInput(CRC16Long, required: false),
+                new BooleanInput(CRC32Short, CRC32Long, required: false),
+                new BooleanInput(CRC64Long, required: false),
+                new BooleanInput(DebugShort, DebugLong, required: false),
+                new BooleanInput(DiskTagsShort, DiskTagsLong, required: false),
+                new BooleanInput(DuplicatedSectorsShort, DuplicatedSectorsLong, required: false),
+                new BooleanInput(EjectLong, required: false),
+                new BooleanInput(ExtendedAttributesShort, ExtendedAttributesLong, required: false),
+                new BooleanInput(FilesystemsShort, FilesystemsLong, required: false),
+                new BooleanInput(FirstPregapLong, required: false),
+                new BooleanInput(FixOffsetLong, required: false),
+                new BooleanInput(FixSubchannelLong, required: false),
+                new BooleanInput(FixSubchannelCrcLong, required: false),
+                new BooleanInput(FixSubchannelPositionLong, required: false),
+                new BooleanInput(Fletcher16Long, required: false),
+                new BooleanInput(Fletcher32Long, required: false),
+                new BooleanInput(ForceShort, ForceLong, required: false),
+                new BooleanInput(GenerateSubchannelsLong, required: false),
+                new BooleanInput(HelpShort, HelpLong, required: false), // HelpShortAlt
+                new BooleanInput(LongFormatShort, LongFormatLong, required: false),
+                new BooleanInput(LongSectorsShort, LongSectorsLong, required: false),
+                new BooleanInput(MD5Short, MD5Long, required: false),
+                new BooleanInput(MetadataLong, required: false),
+                new BooleanInput(PartitionsShort, PartitionsLong, required: false),
+                new BooleanInput(PauseLong, required: false),
+                new BooleanInput(PersistentLong, required: false),
+                new BooleanInput(PrivateLong, required: false),
+                new BooleanInput(ResumeShort, ResumeLong, required: false),
+                new BooleanInput(RetrySubchannelLong, required: false),
+                new BooleanInput(SectorTagsShort, SectorTagsLong, required: false),
+                new BooleanInput(SeparatedTracksShort, SeparatedTracksLong, required: false),
+                new BooleanInput(SHA1Short, SHA1Long, required: false),
+                new BooleanInput(SHA256Long, required: false),
+                new BooleanInput(SHA384Long, required: false),
+                new BooleanInput(SHA512Long, required: false),
+                new BooleanInput(SkipCdiReadyHoleLong, required: false),
+                new BooleanInput(SpamSumShort, SpamSumLong, required: false),
+                new BooleanInput(StopOnErrorShort, StopOnErrorLong, required: false),
+                new BooleanInput(StoreEncryptedLong, required: false),
+                new BooleanInput(TapeShort, TapeLong, required: false),
+                new BooleanInput(TitleKeysLong, required: false),
+                new BooleanInput(TrapDiscShort, TrapDiscLong, required: false),
+                new BooleanInput(TrimLong, required: false),
+                new BooleanInput(UseBufferedReadsLong, required: false),
+                new BooleanInput(VerboseShort, VerboseLong, required: false),
+                new BooleanInput(VerifyDiscShort, VerifyDiscLong, required: false),
+                new BooleanInput(VerifySectorsShort, VerifySectorsLong, required: false),
+                new BooleanInput(VersionLong, required: false),
+                new BooleanInput(WholeDiscShort, WholeDiscLong, required: false),
+            
+                // Int8 flags
+                new Int8Input(SpeedLong),
+
+                // Int16 flags
+                new Int16Input(RetryPassesShort, RetryPassesLong),
+                new Int16Input(WidthShort, WidthLong),
+
+                // Int32 flags
+                new Int32Input(BlockSizeShort, BlockSizeLong),
+                new Int32Input(CountShort, CountLong),
+                new Int32Input(MaxBlocksLong),
+                new Int32Input(MediaLastSequenceLong),
+                new Int32Input(MediaSequenceLong),
+                new Int32Input(SkipShort, SkipLong),
+
+                // Int64 flags
+                new Int64Input(LengthShort, LengthLong),
+                new Int64Input(StartShort, StartLong),
+
+                // String flags
+                new StringInput(CommentsLong),
+                new StringInput(CreatorLong),
+                new StringInput(DriveManufacturerLong),
+                new StringInput(DriveModelLong),
+                new StringInput(DriveRevisionLong),
+                new StringInput(DriveSerialLong),
+                new StringInput(EncodingShort, EncodingLong),
+                new StringInput(FormatConvertShort, FormatConvertLong),
+                new StringInput(FormatDumpShort, FormatDumpLong),
+                new StringInput(GeometryShort, GeometryLong),
+                new StringInput(ImgBurnLogShort, ImgBurnLogLong),
+                new StringInput(MediaBarcodeLong),
+                new StringInput(MediaManufacturerLong),
+                new StringInput(MediaModelLong),
+                new StringInput(MediaPartNumberLong),
+                new StringInput(MediaSerialLong),
+                new StringInput(MediaTitleLong),
+                new StringInput(MHDDLogShort, MHDDLogLong),
+                new StringInput(NamespaceShort, NamespaceLong),
+                new StringInput(OptionsShort, OptionsLong),
+                new StringInput(OutputPrefixShort, OutputPrefixLong),
+                new StringInput(ResumeFileShort, ResumeFileLong),
+                new StringInput(SubchannelLong),
+                new StringInput(XMLSidecarShort, XMLSidecarLong),
+            ];
+        }
+
+        #region Boolean flags
+
         public const string Adler32Short = "-a";
         public const string Adler32Long = "--adler32";
         public const string ClearLong = "--clear";
@@ -85,16 +196,25 @@ namespace MPF.ExecutionContexts.Aaru
         public const string WholeDiscShort = "-w";
         public const string WholeDiscLong = "--whole-disc";
 
-        // Int8 flags
+        #endregion
+
+        #region Int8 flags
+
         public const string SpeedLong = "--speed";
 
-        // Int16 flags
+        #endregion
+
+        #region Int16 flags
+
         public const string RetryPassesShort = "-p";
         public const string RetryPassesLong = "--retry-passes";
         public const string WidthShort = "-w";
         public const string WidthLong = "--width";
 
-        // Int32 flags
+        #endregion
+
+        #region Int32 flags
+
         public const string BlockSizeShort = "-b";
         public const string BlockSizeLong = "--block-size";
         public const string CountShort = "-c";
@@ -105,13 +225,19 @@ namespace MPF.ExecutionContexts.Aaru
         public const string SkipShort = "-k";
         public const string SkipLong = "--skip";
 
-        // Int64 flags
+        #endregion
+
+        #region Int64 flags
+
         public const string LengthShort = "-l"; // or "all"
         public const string LengthLong = "--length"; // or "all"
         public const string StartShort = "-s";
         public const string StartLong = "--start";
 
-        // String flags
+        #endregion
+
+        #region String flags
+
         public const string CommentsLong = "--comments";
         public const string CreatorLong = "--creator";
         public const string DriveManufacturerLong = "--drive-manufacturer";
@@ -147,5 +273,7 @@ namespace MPF.ExecutionContexts.Aaru
         public const string SubchannelLong = "--subchannel";
         public const string XMLSidecarShort = "-x";
         public const string XMLSidecarLong = "--cicm-xml";
+
+        #endregion
     }
 }

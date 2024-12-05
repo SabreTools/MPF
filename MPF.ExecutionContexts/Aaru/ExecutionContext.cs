@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MPF.ExecutionContexts.Data;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Aaru
@@ -109,6 +110,11 @@ namespace MPF.ExecutionContexts.Aaru
         public string? XMLSidecarValue { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Set of inputs to use for this context
+        /// </summary>
+        private readonly List<Input> _inputs = FlagStrings.GetInputs();
 
         /// <inheritdoc/>
         public ExecutionContext(string? parameters) : base(parameters) { }
@@ -1134,7 +1140,8 @@ namespace MPF.ExecutionContexts.Aaru
         }
 
         /// <inheritdoc/>
-        public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+        public override string GetDefaultExtension(MediaType? mediaType)
+            => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
         public override MediaType? GetMediaType() => null;
@@ -1290,7 +1297,7 @@ namespace MPF.ExecutionContexts.Aaru
 
             // Search for pre-command flags first
             int start = 0;
-            for (start = 0; start < parts.Length; start++)
+            for (; start < parts.Length; start++)
             {
                 // Keep a count of keys to determine if we should break out to command handling or not
                 int keyCount = Keys.Count;
@@ -1333,11 +1340,11 @@ namespace MPF.ExecutionContexts.Aaru
             for (i = start; i < parts.Length; i++)
             {
                 // Flag read-out values
-                sbyte? byteValue = null;
-                short? shortValue = null;
-                int? intValue = null;
-                long? longValue = null;
-                string? stringValue = null;
+                sbyte? byteValue;
+                short? shortValue;
+                int? intValue;
+                long? longValue;
+                string? stringValue;
 
                 // Keep a count of keys to determine if we should break out to filename handling or not
                 int keyCount = Keys.Count;
