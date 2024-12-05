@@ -22,7 +22,11 @@ namespace MPF.ExecutionContexts.Aaru
         public override int? Speed
         {
             get { return SpeedValue; }
-            set { SpeedValue = (sbyte?)value; }
+            set
+            {
+                SpeedValue = (sbyte?)value;
+                (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte?)value);
+            }
         }
 
         #endregion
@@ -109,12 +113,121 @@ namespace MPF.ExecutionContexts.Aaru
 
         public string? XMLSidecarValue { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Set of all pre-command flags
+        /// </summary>
+        private readonly Dictionary<string, BooleanInput> _preCommandInputs = new()
+        {
+            [FlagStrings.DebugLong] = new BooleanInput(FlagStrings.DebugShort, FlagStrings.DebugLong, required: false),
+            [FlagStrings.HelpLong] = new BooleanInput(FlagStrings.HelpShort, FlagStrings.HelpLong, required: false),
+            [FlagStrings.HelpShortAlt] = new BooleanInput(FlagStrings.HelpShortAlt, FlagStrings.HelpLong, required: false),
+            [FlagStrings.VerboseLong] = new BooleanInput(FlagStrings.VerboseShort, FlagStrings.VerboseLong, required: false),
+            [FlagStrings.VersionLong] = new BooleanInput(FlagStrings.VersionLong, required: false),
+        };
 
         /// <summary>
-        /// Set of inputs to use for this context
+        /// Set of all command flags
         /// </summary>
-        private readonly List<Input> _inputs = FlagStrings.GetInputs();
+        private readonly Dictionary<string, Input> _inputs = new()
+        {
+            // Boolean flags
+            [FlagStrings.Adler32Long] = new BooleanInput(FlagStrings.Adler32Short, FlagStrings.Adler32Long, required: false),
+            [FlagStrings.ClearLong] = new BooleanInput(FlagStrings.ClearLong, required: false),
+            [FlagStrings.ClearAllLong] = new BooleanInput(FlagStrings.ClearAllLong, required: false),
+            [FlagStrings.CRC16Long] = new BooleanInput(FlagStrings.CRC16Long, required: false),
+            [FlagStrings.CRC32Long] = new BooleanInput(FlagStrings.CRC32Short, FlagStrings.CRC32Long, required: false),
+            [FlagStrings.CRC64Long] = new BooleanInput(FlagStrings.CRC64Long, required: false),
+            [FlagStrings.DiskTagsLong] = new BooleanInput(FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, required: false),
+            [FlagStrings.DuplicatedSectorsLong] = new BooleanInput(FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, required: false),
+            [FlagStrings.EjectLong] = new BooleanInput(FlagStrings.EjectLong, required: false),
+            [FlagStrings.ExtendedAttributesLong] = new BooleanInput(FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, required: false),
+            [FlagStrings.FilesystemsLong] = new BooleanInput(FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, required: false),
+            [FlagStrings.FirstPregapLong] = new BooleanInput(FlagStrings.FirstPregapLong, required: false),
+            [FlagStrings.FixOffsetLong] = new BooleanInput(FlagStrings.FixOffsetLong, required: false),
+            [FlagStrings.FixSubchannelLong] = new BooleanInput(FlagStrings.FixSubchannelLong, required: false),
+            [FlagStrings.FixSubchannelCrcLong] = new BooleanInput(FlagStrings.FixSubchannelCrcLong, required: false),
+            [FlagStrings.FixSubchannelPositionLong] = new BooleanInput(FlagStrings.FixSubchannelPositionLong, required: false),
+            [FlagStrings.Fletcher16Long] = new BooleanInput(FlagStrings.Fletcher16Long, required: false),
+            [FlagStrings.Fletcher32Long] = new BooleanInput(FlagStrings.Fletcher32Long, required: false),
+            [FlagStrings.ForceLong] = new BooleanInput(FlagStrings.ForceShort, FlagStrings.ForceLong, required: false),
+            [FlagStrings.GenerateSubchannelsLong] = new BooleanInput(FlagStrings.GenerateSubchannelsLong, required: false),
+            [FlagStrings.LongFormatLong] = new BooleanInput(FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, required: false),
+            [FlagStrings.LongSectorsLong] = new BooleanInput(FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, required: false),
+            [FlagStrings.MD5Long] = new BooleanInput(FlagStrings.MD5Short, FlagStrings.MD5Long, required: false),
+            [FlagStrings.MetadataLong] = new BooleanInput(FlagStrings.MetadataLong, required: false),
+            [FlagStrings.PartitionsLong] = new BooleanInput(FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, required: false),
+            [FlagStrings.PauseLong] = new BooleanInput(FlagStrings.PauseLong, required: false),
+            [FlagStrings.PersistentLong] = new BooleanInput(FlagStrings.PersistentLong, required: false),
+            [FlagStrings.PrivateLong] = new BooleanInput(FlagStrings.PrivateLong, required: false),
+            [FlagStrings.ResumeLong] = new BooleanInput(FlagStrings.ResumeShort, FlagStrings.ResumeLong, required: false),
+            [FlagStrings.RetrySubchannelLong] = new BooleanInput(FlagStrings.RetrySubchannelLong, required: false),
+            [FlagStrings.SectorTagsLong] = new BooleanInput(FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, required: false),
+            [FlagStrings.SeparatedTracksLong] = new BooleanInput(FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, required: false),
+            [FlagStrings.SHA1Long] = new BooleanInput(FlagStrings.SHA1Short, FlagStrings.SHA1Long, required: false),
+            [FlagStrings.SHA256Long] = new BooleanInput(FlagStrings.SHA256Long, required: false),
+            [FlagStrings.SHA384Long] = new BooleanInput(FlagStrings.SHA384Long, required: false),
+            [FlagStrings.SHA512Long] = new BooleanInput(FlagStrings.SHA512Long, required: false),
+            [FlagStrings.SkipCdiReadyHoleLong] = new BooleanInput(FlagStrings.SkipCdiReadyHoleLong, required: false),
+            [FlagStrings.SpamSumLong] = new BooleanInput(FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, required: false),
+            [FlagStrings.StopOnErrorLong] = new BooleanInput(FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, required: false),
+            [FlagStrings.StoreEncryptedLong] = new BooleanInput(FlagStrings.StoreEncryptedLong, required: false),
+            [FlagStrings.TapeLong] = new BooleanInput(FlagStrings.TapeShort, FlagStrings.TapeLong, required: false),
+            [FlagStrings.TitleKeysLong] = new BooleanInput(FlagStrings.TitleKeysLong, required: false),
+            [FlagStrings.TrapDiscLong] = new BooleanInput(FlagStrings.TrapDiscShort, FlagStrings.TrapDiscLong, required: false),
+            [FlagStrings.TrimLong] = new BooleanInput(FlagStrings.TrimLong, required: false),
+            [FlagStrings.UseBufferedReadsLong] = new BooleanInput(FlagStrings.UseBufferedReadsLong, required: false),
+            [FlagStrings.VerifyDiscLong] = new BooleanInput(FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, required: false),
+            [FlagStrings.VerifySectorsLong] = new BooleanInput(FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, required: false),
+            [FlagStrings.WholeDiscLong] = new BooleanInput(FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, required: false),
+
+            // Int8 flags
+            [FlagStrings.SpeedLong] = new Int8Input(FlagStrings.SpeedLong),
+
+            // Int16 flags
+            [FlagStrings.RetryPassesLong] = new Int16Input(FlagStrings.RetryPassesShort, FlagStrings.RetryPassesLong),
+            [FlagStrings.WidthLong] = new Int16Input(FlagStrings.WidthShort, FlagStrings.WidthLong),
+
+            // Int32 flags
+            [FlagStrings.BlockSizeLong] = new Int32Input(FlagStrings.BlockSizeShort, FlagStrings.BlockSizeLong),
+            [FlagStrings.CountLong] = new Int32Input(FlagStrings.CountShort, FlagStrings.CountLong),
+            [FlagStrings.MaxBlocksLong] = new Int32Input(FlagStrings.MaxBlocksLong),
+            [FlagStrings.MediaLastSequenceLong] = new Int32Input(FlagStrings.MediaLastSequenceLong),
+            [FlagStrings.MediaSequenceLong] = new Int32Input(FlagStrings.MediaSequenceLong),
+            [FlagStrings.SkipLong] = new Int32Input(FlagStrings.SkipShort, FlagStrings.SkipLong),
+
+            // Int64 flags
+            //[FlagStrings.LengthLong] = new Int64Input(FlagStrings.LengthShort, FlagStrings.LengthLong),
+            [FlagStrings.LengthLong] = new StringInput(FlagStrings.LengthShort, FlagStrings.LengthLong),
+            [FlagStrings.StartLong] = new Int64Input(FlagStrings.StartShort, FlagStrings.StartLong),
+
+            // String flags
+            [FlagStrings.CommentsLong] = new StringInput(FlagStrings.CommentsLong),
+            [FlagStrings.CreatorLong] = new StringInput(FlagStrings.CreatorLong),
+            [FlagStrings.DriveManufacturerLong] = new StringInput(FlagStrings.DriveManufacturerLong),
+            [FlagStrings.DriveModelLong] = new StringInput(FlagStrings.DriveModelLong),
+            [FlagStrings.DriveRevisionLong] = new StringInput(FlagStrings.DriveRevisionLong),
+            [FlagStrings.DriveSerialLong] = new StringInput(FlagStrings.DriveSerialLong),
+            [FlagStrings.EncodingLong] = new StringInput(FlagStrings.EncodingShort, FlagStrings.EncodingLong),
+            [FlagStrings.FormatConvertLong] = new StringInput(FlagStrings.FormatConvertShort, FlagStrings.FormatConvertLong),
+            [FlagStrings.FormatDumpLong] = new StringInput(FlagStrings.FormatDumpShort, FlagStrings.FormatDumpLong),
+            [FlagStrings.GeometryLong] = new StringInput(FlagStrings.GeometryShort, FlagStrings.GeometryLong),
+            [FlagStrings.ImgBurnLogLong] = new StringInput(FlagStrings.ImgBurnLogShort, FlagStrings.ImgBurnLogLong),
+            [FlagStrings.MediaBarcodeLong] = new StringInput(FlagStrings.MediaBarcodeLong),
+            [FlagStrings.MediaManufacturerLong] = new StringInput(FlagStrings.MediaManufacturerLong),
+            [FlagStrings.MediaModelLong] = new StringInput(FlagStrings.MediaModelLong),
+            [FlagStrings.MediaPartNumberLong] = new StringInput(FlagStrings.MediaPartNumberLong),
+            [FlagStrings.MediaSerialLong] = new StringInput(FlagStrings.MediaSerialLong),
+            [FlagStrings.MediaTitleLong] = new StringInput(FlagStrings.MediaTitleLong),
+            [FlagStrings.MHDDLogLong] = new StringInput(FlagStrings.MHDDLogShort, FlagStrings.MHDDLogLong),
+            [FlagStrings.NamespaceLong] = new StringInput(FlagStrings.NamespaceShort, FlagStrings.NamespaceLong),
+            [FlagStrings.OptionsLong] = new StringInput(FlagStrings.OptionsShort, FlagStrings.OptionsLong),
+            [FlagStrings.OutputPrefixLong] = new StringInput(FlagStrings.OutputPrefixShort, FlagStrings.OutputPrefixLong),
+            [FlagStrings.ResumeFileLong] = new StringInput(FlagStrings.ResumeFileShort, FlagStrings.ResumeFileLong),
+            [FlagStrings.SubchannelLong] = new StringInput(FlagStrings.SubchannelLong),
+            [FlagStrings.XMLSidecarLong] = new StringInput(FlagStrings.XMLSidecarShort, FlagStrings.XMLSidecarLong),
+        };
+
+        #endregion
 
         /// <inheritdoc/>
         public ExecutionContext(string? parameters) : base(parameters) { }
@@ -431,30 +544,20 @@ namespace MPF.ExecutionContexts.Aaru
 
             #region Pre-command flags
 
-            // Debug
-            if (this[FlagStrings.DebugLong] != null)
-                parameters.Add($"{FlagStrings.DebugLong} {this[FlagStrings.DebugLong]}");
+            foreach (var kvp in _preCommandInputs)
+            {
+                // If the value doesn't exist
+                string formatted = kvp.Value.Format(useEquals: false);
+                if (formatted.Length == 0)
+                    continue;
 
-            // Pause
-            if (this[FlagStrings.PauseLong] != null)
-                parameters.Add($"{FlagStrings.PauseLong} {this[FlagStrings.PauseLong]}");
-
-            // Verbose
-            if (this[FlagStrings.VerboseLong] != null)
-                parameters.Add($"{FlagStrings.VerboseLong} {this[FlagStrings.VerboseLong]}");
-
-            // Version
-            if (this[FlagStrings.VersionLong] != null)
-                parameters.Add($"{FlagStrings.VersionLong} {this[FlagStrings.VersionLong]}");
-
-            // Help
-            if (this[FlagStrings.HelpLong] != null)
-                parameters.Add($"{FlagStrings.HelpLong} {this[FlagStrings.HelpLong]}");
+                // Append the parameter
+                parameters.Add(formatted);
+            }
 
             #endregion
 
             BaseCommand ??= CommandStrings.NONE;
-
             if (!string.IsNullOrEmpty(BaseCommand))
                 parameters.Add(BaseCommand);
             else
@@ -1217,6 +1320,7 @@ namespace MPF.ExecutionContexts.Aaru
             {
                 this[FlagStrings.SpeedLong] = true;
                 SpeedValue = (sbyte?)driveSpeed;
+                (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte)driveSpeed);
             }
 
             // First check to see if the combination of system and MediaType is valid
@@ -1230,17 +1334,30 @@ namespace MPF.ExecutionContexts.Aaru
             {
                 this[FlagStrings.RetryPassesLong] = true;
                 RetryPassesValue = (short)rereadCount;
+                (_inputs[FlagStrings.RetryPassesLong] as Int16Input)?.SetValue((short)rereadCount);
             }
 
             // Set user-defined options
             if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
+            {
                 this[FlagStrings.DebugLong] = true;
+                _preCommandInputs[FlagStrings.DebugLong].SetValue(true);
+            }
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
+            {
                 this[FlagStrings.VerboseLong] = true;
+                _preCommandInputs[FlagStrings.VerboseLong].SetValue(true);
+            }
             if (GetBooleanSetting(options, SettingConstants.ForceDumping, SettingConstants.ForceDumpingDefault))
+            {
                 this[FlagStrings.ForceLong] = true;
+                (_inputs[FlagStrings.ForceLong] as BooleanInput)?.SetValue(true);
+            }
             if (GetBooleanSetting(options, SettingConstants.StripPersonalData, SettingConstants.StripPersonalDataDefault))
+            {
                 this[FlagStrings.PrivateLong] = true;
+                (_inputs[FlagStrings.PrivateLong] as BooleanInput)?.SetValue(true);
+            }
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type
@@ -1251,21 +1368,30 @@ namespace MPF.ExecutionContexts.Aaru
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.GDROM:
                     // Currently no defaults set
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                     this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(true);
                     this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
+                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
                     break;
 
                 // Special Formats
@@ -1302,21 +1428,16 @@ namespace MPF.ExecutionContexts.Aaru
                 // Keep a count of keys to determine if we should break out to command handling or not
                 int keyCount = Keys.Count;
 
-                // Debug
-                ProcessBooleanParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, ref start, true);
+                foreach (var kvp in _preCommandInputs)
+                {
+                    // If the value was not a match
+                    if (!kvp.Value.Process(parts, ref start))
+                        continue;
 
-                // Pause
-                ProcessBooleanParameter(parts, null, FlagStrings.PauseLong, ref start, true);
-
-                // Verbose
-                ProcessBooleanParameter(parts, FlagStrings.VerboseShort, FlagStrings.VerboseLong, ref start, true);
-
-                // Version
-                ProcessBooleanParameter(parts, null, FlagStrings.VersionLong, ref start, true);
-
-                // Help
-                ProcessBooleanParameter(parts, FlagStrings.HelpShort, FlagStrings.HelpLong, ref start, true);
-                ProcessBooleanParameter(parts, FlagStrings.HelpShortAlt, FlagStrings.HelpLong, ref start, true);
+                    // Set the flag
+                    this[kvp.Key] = true;
+                    break;
+                }
 
                 // If we didn't add any new flags, break out since we might be at command handling
                 if (keyCount == Keys.Count)

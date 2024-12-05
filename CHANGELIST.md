@@ -32,6 +32,7 @@
 - Handle issue with old .NET
 - Let inputs read equal-separated values
 - Fix some formatting issues with Input types
+- Replace Aaru pre-command flags
 
 ### 3.2.4 (2024-11-24)
 
