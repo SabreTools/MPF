@@ -39,6 +39,7 @@
 - Add Redumper parameters tests
 - Add quotes option to string input
 - Replace Redumper flag values with input types
+- Add DIC parameters tests
 
 ### 3.2.4 (2024-11-24)
 

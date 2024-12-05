@@ -533,11 +533,10 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             // BE Opcode
             if (IsFlagSupported(FlagStrings.BEOpcode))
             {
-                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] != true)
+                if (this[FlagStrings.BEOpcode] == true)
                 {
                     parameters.Append($"{FlagStrings.BEOpcode} ");
-                    if (BEOpcodeValue != null
-                        && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
+                    if (BEOpcodeValue != null)
                         parameters.Append($"{BEOpcodeValue} ");
                 }
             }
@@ -736,12 +735,16 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.Range] == true)
                 {
-                    if (RangeStartLBAValue == null || RangeEndLBAValue == null)
-                        return null;
-
                     parameters.Append($"{FlagStrings.Range} ");
-                    parameters.Append($"{RangeStartLBAValue} ");
-                    parameters.Append($"{RangeEndLBAValue} ");
+
+                    if (BaseCommand == CommandStrings.DigitalVideoDisc)
+                    {
+                        if (RangeStartLBAValue == null || RangeEndLBAValue == null)
+                            return null;
+
+                        parameters.Append($"{RangeStartLBAValue} ");
+                        parameters.Append($"{RangeEndLBAValue} ");
+                    }
                 }
             }
 
@@ -1218,7 +1221,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Disk:
-                    if (parts.Length != 3)
+                    if (parts.Length < 3)
                         return false;
 
                     // Blindly assume the path exists
@@ -1229,6 +1232,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     else
                         Filename = parts[2];
 
+                    index = 3;
                     break;
 
                 case CommandStrings.DriveSpeed:
@@ -1249,7 +1253,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     break;
 
                 case CommandStrings.Floppy:
-                    if (parts.Length != 3)
+                    if (parts.Length < 3)
                         return false;
 
                     // Blindly assume the path exists
@@ -1260,6 +1264,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     else
                         Filename = parts[2];
 
+                    index = 3;
                     break;
 
                 case CommandStrings.GDROM:
@@ -1286,7 +1291,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Length != 2)
                         return false;
 
-                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -1297,12 +1302,12 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Length != 3)
                         return false;
 
-                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
 
-                    if (IsFlagSupported(parts[2]) || !File.Exists(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         OptiarcFilename = parts[2];
@@ -1360,7 +1365,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Length != 2)
                         return false;
 
-                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -1391,7 +1396,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (parts.Length != 2)
                         return false;
 
-                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -1443,13 +1448,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     else
                         DriveSpeed = int.Parse(parts[3]);
 
-                    for (int i = 4; i < parts.Length; i++)
-                    {
-                        if (!long.TryParse(parts[i], out long temp))
-                            return false;
-                    }
-
+                    index = 4;
                     break;
+
                 default:
                     return false;
             }
@@ -1460,9 +1461,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 for (int i = index; i < parts.Length; i++)
                 {
                     // Flag read-out values
-                    byte? byteValue = null;
-                    int? intValue = null;
-                    string? stringValue = null;
+                    byte? byteValue;
+                    int? intValue;
+                    string? stringValue;
 
                     // Add Offset
                     intValue = ProcessInt32Parameter(parts, FlagStrings.AddOffset, ref i, missingAllowed: true);
@@ -1579,7 +1580,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         {
                             if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
                                 return false;
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: -1) || !IsValidInt32(parts[i + 2], lowerBound: -1))
                                 return false;
 
                             RangeStartLBAValue = int.Parse(parts[i + 1]);
@@ -1587,7 +1588,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             i += 2;
                         }
 
-                        this[FlagStrings.Reverse] = true;
+                        this[FlagStrings.Range] = true;
                     }
 
                     // Raw
@@ -1664,7 +1665,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (intValue != null && intValue != int.MinValue && intValue >= 0 && intValue <= 2)
                         SubchannelReadLevelValue = intValue;
 
-                    // SeventyFour
+                    // Tages
+                    ProcessFlagParameter(parts, FlagStrings.Tages, ref i);
+
+                    // TryReadingPregap
+                    ProcessFlagParameter(parts, FlagStrings.TryReadingPregap, ref i);
+
+                    // UseAnchorVolumeDescriptorPointer
                     ProcessFlagParameter(parts, FlagStrings.UseAnchorVolumeDescriptorPointer, ref i);
 
                     // VideoNow
