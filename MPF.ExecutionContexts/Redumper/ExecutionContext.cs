@@ -475,7 +475,7 @@ namespace MPF.ExecutionContexts.Redumper
             // Dump Read Size
             if (this[FlagStrings.DumpReadSize] == true)
             {
-                if (DumpReadSizeValue != null && DumpReadSizeValue > 0)
+                if (DumpReadSizeValue != null)
                     parameters.Append($"{FlagStrings.DumpReadSize}={DumpReadSizeValue} ");
             }
 
@@ -741,6 +741,9 @@ namespace MPF.ExecutionContexts.Redumper
                 // Verbose
                 ProcessFlagParameter(parts, FlagStrings.Verbose, ref i);
 
+                // Auto Eject
+                ProcessFlagParameter(parts, FlagStrings.AutoEject, ref i);
+
                 // Debug
                 ProcessFlagParameter(parts, FlagStrings.Debug, ref i);
 
@@ -856,7 +859,7 @@ namespace MPF.ExecutionContexts.Redumper
 
                 // Skip Fill
                 byteValue = ProcessUInt8Parameter(parts, FlagStrings.SkipFill, ref i);
-                if (byteValue != null && byteValue != Byte.MinValue)
+                if (byteValue != null)
                     SkipFillValue = byteValue;
 
                 // ISO9660 Trim
