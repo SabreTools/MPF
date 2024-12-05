@@ -103,12 +103,7 @@ namespace MPF.ExecutionContexts.Data
                 {
                     // Ensure the value exists
                     if (index + 1 >= parts.Length)
-                    {
-                        Value[i] = _required ? null : int.MinValue;
-                        Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
-                        Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
                         return !_required;
-                    }
 
                     // If the next value is valid
                     if (ParseValue(parts[index + 1], out int? value) && value != null)
@@ -121,9 +116,6 @@ namespace MPF.ExecutionContexts.Data
                     }
 
                     // Return value based on required flag
-                    Value[i] = _required ? null : int.MinValue;
-                    Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
-                    Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
                     return !_required;
                 }
 
