@@ -41,6 +41,7 @@
 - Replace Redumper flag values with input types
 - Add DIC parameters tests
 - Add unused min/max parameters for numeric inputs
+- Add Int32 array input type
 
 ### 3.2.4 (2024-11-24)
 
