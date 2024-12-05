@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.DiscImageCreator
@@ -393,12 +393,12 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         /// <inheritdoc/>
         public override string? GenerateParameters()
         {
-            var parameters = new List<string>();
+            var parameters = new StringBuilder();
 
             BaseCommand ??= CommandStrings.NONE;
 
             if (!string.IsNullOrEmpty(BaseCommand))
-                parameters.Add(BaseCommand);
+                parameters.Append($"{BaseCommand} ");
             else
                 return null;
 
@@ -427,9 +427,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (DrivePath != null)
                 {
                     if (DrivePath.Contains(" "))
-                        parameters.Add($"\"{DrivePath}\"");
+                        parameters.Append($"\"{DrivePath}\" ");
                     else
-                        parameters.Add(DrivePath);
+                        parameters.Append($"{DrivePath} ");
                 }
                 else
                 {
@@ -458,7 +458,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (Filename != null)
-                    parameters.Add("\"" + Filename.Trim('"') + "\"");
+                    parameters.Append($"\"{Filename.Trim('"')}\" ");
                 else
                     return null;
             }
@@ -467,7 +467,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (BaseCommand == CommandStrings.Merge)
             {
                 if (OptiarcFilename != null)
-                    parameters.Add("\"" + OptiarcFilename.Trim('"') + "\"");
+                    parameters.Append($"\"{OptiarcFilename.Trim('"')}\" ");
                 else
                     return null;
             }
@@ -487,7 +487,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (DriveSpeed != null)
-                    parameters.Add(DriveSpeed.ToString() ?? string.Empty);
+                    parameters.Append($"{DriveSpeed} ");
                 else
                     return null;
             }
@@ -498,8 +498,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (StartLBAValue != null && EndLBAValue != null)
                 {
-                    parameters.Add(StartLBAValue.ToString() ?? string.Empty);
-                    parameters.Add(EndLBAValue.ToString() ?? string.Empty);
+                    parameters.Append($"{StartLBAValue} ");
+                    parameters.Append($"{EndLBAValue} ");
                 }
                 else
                     return null;
@@ -510,9 +510,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.AddOffset] == true)
                 {
-                    parameters.Add(FlagStrings.AddOffset);
+                    parameters.Append($"{FlagStrings.AddOffset} ");
                     if (AddOffsetValue != null)
-                        parameters.Add(AddOffsetValue.ToString() ?? string.Empty);
+                        parameters.Append($"{AddOffsetValue} ");
                 }
             }
 
@@ -520,14 +520,14 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.AMSF))
             {
                 if (this[FlagStrings.AMSF] == true)
-                    parameters.Add(FlagStrings.AMSF);
+                    parameters.Append($"{FlagStrings.AMSF} ");
             }
 
             // Atari Jaguar CD
             if (IsFlagSupported(FlagStrings.AtariJaguar))
             {
                 if (this[FlagStrings.AtariJaguar] == true)
-                    parameters.Add(FlagStrings.AtariJaguar);
+                    parameters.Append($"{FlagStrings.AtariJaguar} ");
             }
 
             // BE Opcode
@@ -535,10 +535,10 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] != true)
                 {
-                    parameters.Add(FlagStrings.BEOpcode);
+                    parameters.Append($"{FlagStrings.BEOpcode} ");
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
-                        parameters.Add(BEOpcodeValue);
+                        parameters.Append($"{BEOpcodeValue} ");
                 }
             }
 
@@ -547,37 +547,37 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.C2Opcode] == true)
                 {
-                    parameters.Add(FlagStrings.C2Opcode);
+                    parameters.Append($"{FlagStrings.C2Opcode} ");
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
-                            parameters.Add(C2OpcodeValue[0].ToString() ?? string.Empty);
+                            parameters.Append($"{C2OpcodeValue[0]} ");
                         else
                             return null;
                     }
                     if (C2OpcodeValue[1] != null)
                     {
-                        parameters.Add(C2OpcodeValue[1].ToString() ?? string.Empty);
+                        parameters.Append($"{C2OpcodeValue[1]} ");
                     }
                     if (C2OpcodeValue[2] != null)
                     {
-                        parameters.Add(C2OpcodeValue[2].ToString() ?? string.Empty);
+                        parameters.Append($"{C2OpcodeValue[2]} ");
                     }
                     if (C2OpcodeValue[3] != null)
                     {
                         if (C2OpcodeValue[3] == 0)
                         {
-                            parameters.Add(C2OpcodeValue[3].ToString() ?? string.Empty);
+                            parameters.Append($"{C2OpcodeValue[3]} ");
                         }
                         else if (C2OpcodeValue[3] == 1)
                         {
-                            parameters.Add(C2OpcodeValue[3].ToString() ?? string.Empty);
+                            parameters.Append($"{C2OpcodeValue[3]} ");
                             if (C2OpcodeValue[4] != null && C2OpcodeValue[5] != null)
                             {
                                 if (C2OpcodeValue[4] > 0 && C2OpcodeValue[5] > 0)
                                 {
-                                    parameters.Add(C2OpcodeValue[4].ToString() ?? string.Empty);
-                                    parameters.Add(C2OpcodeValue[5].ToString() ?? string.Empty);
+                                    parameters.Append($"{C2OpcodeValue[4]} ");
+                                    parameters.Append($"{C2OpcodeValue[5]} ");
                                 }
                                 else
                                 {
@@ -597,28 +597,28 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.CopyrightManagementInformation))
             {
                 if (this[FlagStrings.CopyrightManagementInformation] == true)
-                    parameters.Add(FlagStrings.CopyrightManagementInformation);
+                    parameters.Append($"{FlagStrings.CopyrightManagementInformation} ");
             }
 
             // D8 Opcode
             if (IsFlagSupported(FlagStrings.D8Opcode))
             {
                 if (this[FlagStrings.D8Opcode] == true)
-                    parameters.Add(FlagStrings.D8Opcode);
+                    parameters.Append($"{FlagStrings.D8Opcode} ");
             }
 
             // DAT Expand
             if (IsFlagSupported(FlagStrings.DatExpand))
             {
                 if (this[FlagStrings.DatExpand] == true)
-                    parameters.Add(FlagStrings.DatExpand);
+                    parameters.Append($"{FlagStrings.DatExpand} ");
             }
 
             // Disable Beep
             if (IsFlagSupported(FlagStrings.DisableBeep))
             {
                 if (this[FlagStrings.DisableBeep] == true)
-                    parameters.Add(FlagStrings.DisableBeep);
+                    parameters.Append($"{FlagStrings.DisableBeep} ");
             }
 
             // DVD/HD-DVD/BD Reread
@@ -626,9 +626,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.DVDReread] == true)
                 {
-                    parameters.Add(FlagStrings.DVDReread);
+                    parameters.Append($"{FlagStrings.DVDReread} ");
                     if (DVDRereadValue != null)
-                        parameters.Add(DVDRereadValue.ToString() ?? string.Empty);
+                        parameters.Append($"{DVDRereadValue} ");
                 }
             }
 
@@ -636,7 +636,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.ExtractMicroSoftCabFile))
             {
                 if (this[FlagStrings.ExtractMicroSoftCabFile] == true)
-                    parameters.Add(FlagStrings.ExtractMicroSoftCabFile);
+                    parameters.Append($"{FlagStrings.ExtractMicroSoftCabFile} ");
             }
 
             // Fix
@@ -644,9 +644,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.Fix] == true)
                 {
-                    parameters.Add(FlagStrings.Fix);
+                    parameters.Append($"{FlagStrings.Fix} ");
                     if (FixValue != null)
-                        parameters.Add(FixValue.ToString() ?? string.Empty);
+                        parameters.Append($"{FixValue} ");
                     else
                         return null;
                 }
@@ -657,9 +657,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.ForceUnitAccess] == true)
                 {
-                    parameters.Add(FlagStrings.ForceUnitAccess);
+                    parameters.Append($"{FlagStrings.ForceUnitAccess} ");
                     if (ForceUnitAccessValue != null)
-                        parameters.Add(ForceUnitAccessValue.ToString() ?? string.Empty);
+                        parameters.Append($"{ForceUnitAccessValue} ");
                 }
             }
 
@@ -668,9 +668,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.MultiSectorRead] == true)
                 {
-                    parameters.Add(FlagStrings.MultiSectorRead);
+                    parameters.Append($"{FlagStrings.MultiSectorRead} ");
                     if (MultiSectorReadValue != null)
-                        parameters.Add(MultiSectorReadValue.ToString() ?? string.Empty);
+                        parameters.Append($"{MultiSectorReadValue} ");
                 }
             }
 
@@ -678,35 +678,35 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.NoFixSubP))
             {
                 if (this[FlagStrings.NoFixSubP] == true)
-                    parameters.Add(FlagStrings.NoFixSubP);
+                    parameters.Append($"{FlagStrings.NoFixSubP} ");
             }
 
             // Not fix SubQ
             if (IsFlagSupported(FlagStrings.NoFixSubQ))
             {
                 if (this[FlagStrings.NoFixSubQ] == true)
-                    parameters.Add(FlagStrings.NoFixSubQ);
+                    parameters.Append($"{FlagStrings.NoFixSubQ} ");
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
             if (IsFlagSupported(FlagStrings.NoFixSubQLibCrypt))
             {
                 if (this[FlagStrings.NoFixSubQLibCrypt] == true)
-                    parameters.Add(FlagStrings.NoFixSubQLibCrypt);
+                    parameters.Append($"{FlagStrings.NoFixSubQLibCrypt} ");
             }
 
             // Not fix SubQ (SecuROM)
             if (IsFlagSupported(FlagStrings.NoFixSubQSecuROM))
             {
                 if (this[FlagStrings.NoFixSubQSecuROM] == true)
-                    parameters.Add(FlagStrings.NoFixSubQSecuROM);
+                    parameters.Append($"{FlagStrings.NoFixSubQSecuROM} ");
             }
 
             // Not fix SubRtoW
             if (IsFlagSupported(FlagStrings.NoFixSubRtoW))
             {
                 if (this[FlagStrings.NoFixSubRtoW] == true)
-                    parameters.Add(FlagStrings.NoFixSubRtoW);
+                    parameters.Append($"{FlagStrings.NoFixSubRtoW} ");
             }
 
             // Not skip security sectors
@@ -714,9 +714,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.NoSkipSS] == true)
                 {
-                    parameters.Add(FlagStrings.NoSkipSS);
+                    parameters.Append($"{FlagStrings.NoSkipSS} ");
                     if (NoSkipSecuritySectorValue != null)
-                        parameters.Add(NoSkipSecuritySectorValue.ToString() ?? string.Empty);
+                        parameters.Append($"{NoSkipSecuritySectorValue} ");
                 }
             }
 
@@ -725,9 +725,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.PadSector] == true)
                 {
-                    parameters.Add(FlagStrings.PadSector);
+                    parameters.Append($"{FlagStrings.PadSector} ");
                     if (PadSectorValue != null)
-                        parameters.Add(PadSectorValue.ToString() ?? string.Empty);
+                        parameters.Append($"{PadSectorValue} ");
                 }
             }
 
@@ -739,9 +739,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (RangeStartLBAValue == null || RangeEndLBAValue == null)
                         return null;
 
-                    parameters.Add(FlagStrings.Range);
-                    parameters.Add(RangeStartLBAValue.ToString() ?? string.Empty);
-                    parameters.Add(RangeEndLBAValue.ToString() ?? string.Empty);
+                    parameters.Append($"{FlagStrings.Range} ");
+                    parameters.Append($"{RangeStartLBAValue} ");
+                    parameters.Append($"{RangeEndLBAValue} ");
                 }
             }
 
@@ -749,14 +749,14 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.Raw))
             {
                 if (this[FlagStrings.Raw] == true)
-                    parameters.Add(FlagStrings.Raw);
+                    parameters.Append($"{FlagStrings.Raw} ");
             }
 
             // Resume
             if (IsFlagSupported(FlagStrings.Resume))
             {
                 if (this[FlagStrings.Resume] == true)
-                    parameters.Add(FlagStrings.Resume);
+                    parameters.Append($"{FlagStrings.Resume} ");
             }
 
             // Reverse read
@@ -764,15 +764,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.Reverse] == true)
                 {
-                    parameters.Add(FlagStrings.Reverse);
+                    parameters.Append($"{FlagStrings.Reverse} ");
 
                     if (BaseCommand == CommandStrings.DigitalVideoDisc)
                     {
                         if (ReverseStartLBAValue == null || ReverseEndLBAValue == null)
                             return null;
 
-                        parameters.Add(ReverseStartLBAValue.ToString() ?? string.Empty);
-                        parameters.Add(ReverseEndLBAValue.ToString() ?? string.Empty);
+                        parameters.Append($"{ReverseStartLBAValue} ");
+                        parameters.Append($"{ReverseEndLBAValue} ");
                     }
                 }
             }
@@ -781,7 +781,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.ScanAntiMod))
             {
                 if (this[FlagStrings.ScanAntiMod] == true)
-                    parameters.Add(FlagStrings.ScanAntiMod);
+                    parameters.Append($"{FlagStrings.ScanAntiMod} ");
             }
 
             // Scan file to detect protect
@@ -789,11 +789,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.ScanFileProtect] == true)
                 {
-                    parameters.Add(FlagStrings.ScanFileProtect);
+                    parameters.Append($"{FlagStrings.ScanFileProtect} ");
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
-                            parameters.Add(ScanFileProtectValue.ToString() ?? string.Empty);
+                            parameters.Append($"{ScanFileProtectValue} ");
                         else
                             return null;
                     }
@@ -804,14 +804,14 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.ScanSectorProtect))
             {
                 if (this[FlagStrings.ScanSectorProtect] == true)
-                    parameters.Add(FlagStrings.ScanSectorProtect);
+                    parameters.Append($"{FlagStrings.ScanSectorProtect} ");
             }
 
             // Scan 74:00:00 (Saturn)
             if (IsFlagSupported(FlagStrings.SeventyFour))
             {
                 if (this[FlagStrings.SeventyFour] == true)
-                    parameters.Add(FlagStrings.SeventyFour);
+                    parameters.Append($"{FlagStrings.SeventyFour} ");
             }
 
             // Skip sectors
@@ -819,18 +819,18 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.SkipSector] == true)
                 {
-                    parameters.Add(FlagStrings.SkipSector);
+                    parameters.Append($"{FlagStrings.SkipSector} ");
                     if (SkipSectorValue[0] != null)
                     {
                         if (SkipSectorValue[0] > 0)
-                            parameters.Add(SkipSectorValue[0].ToString() ?? string.Empty);
+                            parameters.Append($"{SkipSectorValue[0]} ");
                         else
                             return null;
                     }
                     if (SkipSectorValue[1] != null)
                     {
                         if (SkipSectorValue[1] == 0)
-                            parameters.Add(SkipSectorValue[1].ToString() ?? string.Empty);
+                            parameters.Append($"{SkipSectorValue[1]} ");
                     }
                 }
             }
@@ -840,11 +840,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.SubchannelReadLevel] == true)
                 {
-                    parameters.Add(FlagStrings.SubchannelReadLevel);
+                    parameters.Append($"{FlagStrings.SubchannelReadLevel} ");
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
-                            parameters.Add(SubchannelReadLevelValue.ToString() ?? string.Empty);
+                            parameters.Append($"{SubchannelReadLevelValue} ");
                         else
                             return null;
                     }
@@ -855,21 +855,21 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.Tages))
             {
                 if (this[FlagStrings.Tages] == true)
-                    parameters.Add(FlagStrings.Tages);
+                    parameters.Append($"{FlagStrings.Tages} ");
             }
 
             // Try Reading Pregap
             if (IsFlagSupported(FlagStrings.TryReadingPregap))
             {
                 if (this[FlagStrings.TryReadingPregap] == true)
-                    parameters.Add(FlagStrings.TryReadingPregap);
+                    parameters.Append($"{FlagStrings.TryReadingPregap} ");
             }
 
             // Use Anchor Volume Descriptor Pointer
             if (IsFlagSupported(FlagStrings.UseAnchorVolumeDescriptorPointer))
             {
                 if (this[FlagStrings.UseAnchorVolumeDescriptorPointer] == true)
-                    parameters.Add(FlagStrings.UseAnchorVolumeDescriptorPointer);
+                    parameters.Append($"{FlagStrings.UseAnchorVolumeDescriptorPointer} ");
             }
 
             // VideoNow
@@ -877,11 +877,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.VideoNow] == true)
                 {
-                    parameters.Add(FlagStrings.VideoNow);
+                    parameters.Append($"{FlagStrings.VideoNow} ");
                     if (VideoNowValue != null)
                     {
                         if (VideoNowValue >= 0)
-                            parameters.Add(VideoNowValue.ToString() ?? string.Empty);
+                            parameters.Append($"{VideoNowValue} ");
                         else
                             return null;
                     }
@@ -892,17 +892,17 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (IsFlagSupported(FlagStrings.VideoNowColor))
             {
                 if (this[FlagStrings.VideoNowColor] == true)
-                    parameters.Add(FlagStrings.VideoNowColor);
+                    parameters.Append($"{FlagStrings.VideoNowColor} ");
             }
 
             // VideoNowXP
             if (IsFlagSupported(FlagStrings.VideoNowXP))
             {
                 if (this[FlagStrings.VideoNowXP] == true)
-                    parameters.Add(FlagStrings.VideoNowXP);
+                    parameters.Append($"{FlagStrings.VideoNowXP} ");
             }
 
-            return string.Join(" ", [.. parameters]);
+            return parameters.ToString().TrimEnd();
         }
 
         /// <inheritdoc/>

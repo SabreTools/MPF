@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts.Redumper
@@ -242,34 +243,36 @@ namespace MPF.ExecutionContexts.Redumper
         /// </remarks>
         public override string GenerateParameters()
         {
-            var parameters = new List<string>();
+            var parameters = new StringBuilder();
 
             ModeValues ??= [CommandStrings.NONE];
 
             // Modes
-            parameters.AddRange(ModeValues);
+            string modes = string.Join(" ", [.. ModeValues]);
+            if (modes.Length > 0)
+                parameters.Append($"{modes} ");
 
             #region General
 
             // Help
             if (this[FlagStrings.HelpLong] == true)
-                parameters.Add(FlagStrings.HelpLong);
+                parameters.Append($"{FlagStrings.HelpLong} ");
 
             // Version
             if (this[FlagStrings.Version] == true)
-                parameters.Add(FlagStrings.Version);
+                parameters.Append($"{FlagStrings.Version} ");
 
             // Verbose
             if (this[FlagStrings.Verbose] == true)
-                parameters.Add(FlagStrings.Verbose);
+                parameters.Append($"{FlagStrings.Verbose} ");
 
             // Auto Eject
             if (this[FlagStrings.AutoEject] == true)
-                parameters.Add(FlagStrings.AutoEject);
+                parameters.Append($"{FlagStrings.AutoEject} ");
 
             // Debug
             if (this[FlagStrings.Debug] == true)
-                parameters.Add(FlagStrings.Debug);
+                parameters.Append($"{FlagStrings.Debug} ");
 
             // Drive
             if (this[FlagStrings.Drive] == true)
@@ -277,9 +280,9 @@ namespace MPF.ExecutionContexts.Redumper
                 if (DriveValue != null)
                 {
                     if (DriveValue.Contains(" "))
-                        parameters.Add($"{FlagStrings.Drive}=\"{DriveValue}\"");
+                        parameters.Append($"{FlagStrings.Drive}=\"{DriveValue}\" ");
                     else
-                        parameters.Add($"{FlagStrings.Drive}={DriveValue}");
+                        parameters.Append($"{FlagStrings.Drive}={DriveValue} ");
                 }
             }
 
@@ -287,33 +290,33 @@ namespace MPF.ExecutionContexts.Redumper
             if (this[FlagStrings.Speed] == true)
             {
                 if (SpeedValue != null)
-                    parameters.Add($"{FlagStrings.Speed}={SpeedValue}");
+                    parameters.Append($"{FlagStrings.Speed}={SpeedValue} ");
             }
 
             // Retries
             if (this[FlagStrings.Retries] == true)
             {
                 if (RetriesValue != null)
-                    parameters.Add($"{FlagStrings.Retries}={RetriesValue}");
+                    parameters.Append($"{FlagStrings.Retries}={RetriesValue} ");
             }
 
             // Image Path
             if (this[FlagStrings.ImagePath] == true)
             {
                 if (ImagePathValue != null)
-                    parameters.Add($"{FlagStrings.ImagePath}={ImagePathValue}");
+                    parameters.Append($"{FlagStrings.ImagePath}={ImagePathValue} ");
             }
 
             // Image Name
             if (this[FlagStrings.ImageName] == true)
             {
                 if (ImageNameValue != null)
-                    parameters.Add($"{FlagStrings.ImageName}={ImageNameValue}");
+                    parameters.Append($"{FlagStrings.ImageName}={ImageNameValue} ");
             }
 
             // Overwrite
             if (this[FlagStrings.Overwrite] == true)
-                parameters.Add(FlagStrings.Overwrite);
+                parameters.Append($"{FlagStrings.Overwrite} ");
 
             #endregion
 
@@ -323,42 +326,42 @@ namespace MPF.ExecutionContexts.Redumper
             if (this[FlagStrings.DriveType] == true)
             {
                 if (DriveTypeValue != null)
-                    parameters.Add($"{FlagStrings.DriveType}={DriveTypeValue}");
+                    parameters.Append($"{FlagStrings.DriveType}={DriveTypeValue} ");
             }
 
             // Drive Read Offset
             if (this[FlagStrings.DriveReadOffset] == true)
             {
                 if (DriveReadOffsetValue != null)
-                    parameters.Add($"{FlagStrings.DriveReadOffset}={DriveReadOffsetValue}");
+                    parameters.Append($"{FlagStrings.DriveReadOffset}={DriveReadOffsetValue} ");
             }
 
             // Drive C2 Shift
             if (this[FlagStrings.DriveC2Shift] == true)
             {
                 if (DriveC2ShiftValue != null)
-                    parameters.Add($"{FlagStrings.DriveC2Shift}={DriveC2ShiftValue}");
+                    parameters.Append($"{FlagStrings.DriveC2Shift}={DriveC2ShiftValue} ");
             }
 
             // Drive Pregap Start
             if (this[FlagStrings.DrivePregapStart] == true)
             {
                 if (DrivePregapStartValue != null)
-                    parameters.Add($"{FlagStrings.DrivePregapStart}={DrivePregapStartValue}");
+                    parameters.Append($"{FlagStrings.DrivePregapStart}={DrivePregapStartValue} ");
             }
 
             // Drive Read Method
             if (this[FlagStrings.DriveReadMethod] == true)
             {
                 if (DriveReadMethodValue != null)
-                    parameters.Add($"{FlagStrings.DriveReadMethod}={DriveReadMethodValue}");
+                    parameters.Append($"{FlagStrings.DriveReadMethod}={DriveReadMethodValue} ");
             }
 
             // Drive Sector Order
             if (this[FlagStrings.DriveSectorOrder] == true)
             {
                 if (DriveSectorOrderValue != null)
-                    parameters.Add($"{FlagStrings.DriveSectorOrder}={DriveSectorOrderValue}");
+                    parameters.Append($"{FlagStrings.DriveSectorOrder}={DriveSectorOrderValue} ");
             }
 
             #endregion
@@ -367,18 +370,18 @@ namespace MPF.ExecutionContexts.Redumper
 
             // Plextor Leadin Skip
             if (this[FlagStrings.PlextorSkipLeadin] == true)
-                parameters.Add(FlagStrings.PlextorSkipLeadin);
+                parameters.Append($"{FlagStrings.PlextorSkipLeadin} ");
 
             // Plextor Leadin Retries
             if (this[FlagStrings.PlextorLeadinRetries] == true)
             {
                 if (PlextorLeadinRetriesValue != null)
-                    parameters.Add($"{FlagStrings.PlextorLeadinRetries}={PlextorLeadinRetriesValue}");
+                    parameters.Append($"{FlagStrings.PlextorLeadinRetries}={PlextorLeadinRetriesValue} ");
             }
 
             // Asus Skip Leadout
             if (this[FlagStrings.AsusSkipLeadout] == true)
-                parameters.Add(FlagStrings.AsusSkipLeadout);
+                parameters.Append($"{FlagStrings.AsusSkipLeadout} ");
 
             #endregion
 
@@ -388,23 +391,23 @@ namespace MPF.ExecutionContexts.Redumper
             if (this[FlagStrings.ForceOffset] == true)
             {
                 if (ForceOffsetValue != null)
-                    parameters.Add($"{FlagStrings.ForceOffset}={ForceOffsetValue}");
+                    parameters.Append($"{FlagStrings.ForceOffset}={ForceOffsetValue} ");
             }
 
             // Audio Silence Threshold
             if (this[FlagStrings.AudioSilenceThreshold] == true)
             {
                 if (AudioSilenceThresholdValue != null)
-                    parameters.Add($"{FlagStrings.AudioSilenceThreshold}={AudioSilenceThresholdValue}");
+                    parameters.Append($"{FlagStrings.AudioSilenceThreshold}={AudioSilenceThresholdValue} ");
             }
 
             // Correct Offset Shift
             if (this[FlagStrings.CorrectOffsetShift] == true)
-                parameters.Add(FlagStrings.CorrectOffsetShift);
+                parameters.Append($"{FlagStrings.CorrectOffsetShift} ");
 
             // Offset Shift Relocate
             if (this[FlagStrings.OffsetShiftRelocate] == true)
-                parameters.Add(FlagStrings.OffsetShiftRelocate);
+                parameters.Append($"{FlagStrings.OffsetShiftRelocate} ");
 
             #endregion
 
@@ -412,26 +415,26 @@ namespace MPF.ExecutionContexts.Redumper
 
             // Force Split
             if (this[FlagStrings.ForceSplit] == true)
-                parameters.Add(FlagStrings.ForceSplit);
+                parameters.Append($"{FlagStrings.ForceSplit} ");
 
             // Leave Unchanged
             if (this[FlagStrings.LeaveUnchanged] == true)
-                parameters.Add(FlagStrings.LeaveUnchanged);
+                parameters.Append($"{FlagStrings.LeaveUnchanged} ");
 
             // Force QTOC
             if (this[FlagStrings.ForceQTOC] == true)
-                parameters.Add(FlagStrings.ForceQTOC);
+                parameters.Append($"{FlagStrings.ForceQTOC} ");
 
             // Skip Fill
             if (this[FlagStrings.SkipFill] == true)
             {
                 if (SkipFillValue != null)
-                    parameters.Add($"{FlagStrings.SkipFill}={SkipFillValue:x}");
+                    parameters.Append($"{FlagStrings.SkipFill}={SkipFillValue:x} ");
             }
 
             // ISO9660 Trim
             if (this[FlagStrings.ISO9660Trim] == true)
-                parameters.Add(FlagStrings.ISO9660Trim);
+                parameters.Append($"{FlagStrings.ISO9660Trim} ");
 
             #endregion
 
@@ -441,60 +444,60 @@ namespace MPF.ExecutionContexts.Redumper
             if (this[FlagStrings.LBAStart] == true)
             {
                 if (LBAStartValue != null)
-                    parameters.Add($"{FlagStrings.LBAStart}={LBAStartValue}");
+                    parameters.Append($"{FlagStrings.LBAStart}={LBAStartValue} ");
             }
 
             // LBA End
             if (this[FlagStrings.LBAEnd] == true)
             {
                 if (LBAEndValue != null)
-                    parameters.Add($"{FlagStrings.LBAEnd}={LBAEndValue}");
+                    parameters.Append($"{FlagStrings.LBAEnd}={LBAEndValue} ");
             }
 
             // Refine Subchannel
             if (this[FlagStrings.RefineSubchannel] == true)
-                parameters.Add(FlagStrings.RefineSubchannel);
+                parameters.Append($"{FlagStrings.RefineSubchannel} ");
 
             // Skip
             if (this[FlagStrings.Skip] == true)
             {
                 if (!string.IsNullOrEmpty(SkipValue))
-                    parameters.Add($"{FlagStrings.Skip}={SkipValue}");
+                    parameters.Append($"{FlagStrings.Skip}={SkipValue} ");
             }
 
             // Dump Write Offset
             if (this[FlagStrings.DumpWriteOffset] == true)
             {
                 if (DumpWriteOffsetValue != null)
-                    parameters.Add($"{FlagStrings.DumpWriteOffset}={DumpWriteOffsetValue}");
+                    parameters.Append($"{FlagStrings.DumpWriteOffset}={DumpWriteOffsetValue} ");
             }
 
             // Dump Read Size
             if (this[FlagStrings.DumpReadSize] == true)
             {
                 if (DumpReadSizeValue != null && DumpReadSizeValue > 0)
-                    parameters.Add($"{FlagStrings.DumpReadSize}={DumpReadSizeValue}");
+                    parameters.Append($"{FlagStrings.DumpReadSize}={DumpReadSizeValue} ");
             }
 
             // Overread Leadout
             if (this[FlagStrings.OverreadLeadout] == true)
-                parameters.Add(FlagStrings.OverreadLeadout);
+                parameters.Append($"{FlagStrings.OverreadLeadout} ");
 
             // Force Unscrambled
             if (this[FlagStrings.ForceUnscrambled] == true)
-                parameters.Add(FlagStrings.ForceUnscrambled);
+                parameters.Append($"{FlagStrings.ForceUnscrambled} ");
 
             // Legacy Subs
             if (this[FlagStrings.LegacySubs] == true)
-                parameters.Add(FlagStrings.LegacySubs);
+                parameters.Append($"{FlagStrings.LegacySubs} ");
 
             // Disable CD Text
             if (this[FlagStrings.DisableCDText] == true)
-                parameters.Add(FlagStrings.DisableCDText);
+                parameters.Append($"{FlagStrings.DisableCDText} ");
 
             #endregion
 
-            return string.Join(" ", [.. parameters]);
+            return parameters.ToString().TrimEnd();
         }
 
         /// <inheritdoc/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using MPF.ExecutionContexts.Data;
 using SabreTools.RedumpLib.Data;
 
@@ -540,7 +541,7 @@ namespace MPF.ExecutionContexts.Aaru
         /// <inheritdoc/>
         public override string? GenerateParameters()
         {
-            var parameters = new List<string>();
+            var parameters = new StringBuilder();
 
             #region Pre-command flags
 
@@ -552,14 +553,14 @@ namespace MPF.ExecutionContexts.Aaru
                     continue;
 
                 // Append the parameter
-                parameters.Add(formatted);
+                parameters.Append($"{formatted} ");
             }
 
             #endregion
 
             BaseCommand ??= CommandStrings.NONE;
             if (!string.IsNullOrEmpty(BaseCommand))
-                parameters.Add(BaseCommand);
+                parameters.Append($"{BaseCommand} ");
             else
                 return null;
 
@@ -569,329 +570,329 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.Adler32Long))
             {
                 if (this[FlagStrings.Adler32Long] != null)
-                    parameters.Add($"{FlagStrings.Adler32Long} {this[FlagStrings.Adler32Long]}");
+                    parameters.Append($"{FlagStrings.Adler32Long} {this[FlagStrings.Adler32Long]} ");
             }
 
             // Clear
             if (IsFlagSupported(FlagStrings.ClearLong))
             {
                 if (this[FlagStrings.ClearLong] != null)
-                    parameters.Add($"{FlagStrings.ClearLong} {this[FlagStrings.ClearLong]}");
+                    parameters.Append($"{FlagStrings.ClearLong} {this[FlagStrings.ClearLong]} ");
             }
 
             // Clear All
             if (IsFlagSupported(FlagStrings.ClearAllLong))
             {
                 if (this[FlagStrings.ClearAllLong] != null)
-                    parameters.Add($"{FlagStrings.ClearAllLong} {this[FlagStrings.ClearAllLong]}");
+                    parameters.Append($"{FlagStrings.ClearAllLong} {this[FlagStrings.ClearAllLong]} ");
             }
 
             // CRC16
             if (IsFlagSupported(FlagStrings.CRC16Long))
             {
                 if (this[FlagStrings.CRC16Long] != null)
-                    parameters.Add($"{FlagStrings.CRC16Long} {this[FlagStrings.CRC16Long]}");
+                    parameters.Append($"{FlagStrings.CRC16Long} {this[FlagStrings.CRC16Long]} ");
             }
 
             // CRC32
             if (IsFlagSupported(FlagStrings.CRC32Long))
             {
                 if (this[FlagStrings.CRC32Long] != null)
-                    parameters.Add($"{FlagStrings.CRC32Long} {this[FlagStrings.CRC32Long]}");
+                    parameters.Append($"{FlagStrings.CRC32Long} {this[FlagStrings.CRC32Long]} ");
             }
 
             // CRC64
             if (IsFlagSupported(FlagStrings.CRC64Long))
             {
                 if (this[FlagStrings.CRC64Long] != null)
-                    parameters.Add($"{FlagStrings.CRC64Long} {this[FlagStrings.CRC64Long]}");
+                    parameters.Append($"{FlagStrings.CRC64Long} {this[FlagStrings.CRC64Long]} ");
             }
 
             // Disk Tags
             if (IsFlagSupported(FlagStrings.DiskTagsLong))
             {
                 if (this[FlagStrings.DiskTagsLong] != null)
-                    parameters.Add($"{FlagStrings.DiskTagsLong} {this[FlagStrings.DiskTagsLong]}");
+                    parameters.Append($"{FlagStrings.DiskTagsLong} {this[FlagStrings.DiskTagsLong]} ");
             }
 
             // Duplicated Sectors
             if (IsFlagSupported(FlagStrings.DuplicatedSectorsLong))
             {
                 if (this[FlagStrings.DuplicatedSectorsLong] != null)
-                    parameters.Add($"{FlagStrings.DuplicatedSectorsLong} {this[FlagStrings.DuplicatedSectorsLong]}");
+                    parameters.Append($"{FlagStrings.DuplicatedSectorsLong} {this[FlagStrings.DuplicatedSectorsLong]} ");
             }
 
             // Eject
             if (IsFlagSupported(FlagStrings.EjectLong))
             {
                 if (this[FlagStrings.EjectLong] != null)
-                    parameters.Add($"{FlagStrings.EjectLong} {this[FlagStrings.EjectLong]}");
+                    parameters.Append($"{FlagStrings.EjectLong} {this[FlagStrings.EjectLong]} ");
             }
 
             // Extended Attributes
             if (IsFlagSupported(FlagStrings.ExtendedAttributesLong))
             {
                 if (this[FlagStrings.ExtendedAttributesLong] != null)
-                    parameters.Add($"{FlagStrings.ExtendedAttributesLong} {this[FlagStrings.ExtendedAttributesLong]}");
+                    parameters.Append($"{FlagStrings.ExtendedAttributesLong} {this[FlagStrings.ExtendedAttributesLong]} ");
             }
 
             // Filesystems
             if (IsFlagSupported(FlagStrings.FilesystemsLong))
             {
                 if (this[FlagStrings.FilesystemsLong] != null)
-                    parameters.Add($"{FlagStrings.FilesystemsLong} {this[FlagStrings.FilesystemsLong]}");
+                    parameters.Append($"{FlagStrings.FilesystemsLong} {this[FlagStrings.FilesystemsLong]} ");
             }
 
             // First Pregap
             if (IsFlagSupported(FlagStrings.FirstPregapLong))
             {
                 if (this[FlagStrings.FirstPregapLong] != null)
-                    parameters.Add($"{FlagStrings.FirstPregapLong} {this[FlagStrings.FirstPregapLong]}");
+                    parameters.Append($"{FlagStrings.FirstPregapLong} {this[FlagStrings.FirstPregapLong]} ");
             }
 
             // Fix Offset
             if (IsFlagSupported(FlagStrings.FixOffsetLong))
             {
                 if (this[FlagStrings.FixOffsetLong] != null)
-                    parameters.Add($"{FlagStrings.FixOffsetLong} {this[FlagStrings.FixOffsetLong]}");
+                    parameters.Append($"{FlagStrings.FixOffsetLong} {this[FlagStrings.FixOffsetLong]} ");
             }
 
             // Fix Subchannel
             if (IsFlagSupported(FlagStrings.FixSubchannelLong))
             {
                 if (this[FlagStrings.FixSubchannelLong] != null)
-                    parameters.Add($"{FlagStrings.FixSubchannelLong} {this[FlagStrings.FixSubchannelLong]}");
+                    parameters.Append($"{FlagStrings.FixSubchannelLong} {this[FlagStrings.FixSubchannelLong]} ");
             }
 
             // Fix Subchannel CRC
             if (IsFlagSupported(FlagStrings.FixSubchannelCrcLong))
             {
                 if (this[FlagStrings.FixSubchannelCrcLong] != null)
-                    parameters.Add($"{FlagStrings.FixSubchannelCrcLong} {this[FlagStrings.FixSubchannelCrcLong]}");
+                    parameters.Append($"{FlagStrings.FixSubchannelCrcLong} {this[FlagStrings.FixSubchannelCrcLong]} ");
             }
 
             // Fix Subchannel Position
             if (IsFlagSupported(FlagStrings.FixSubchannelPositionLong))
             {
                 if (this[FlagStrings.FixSubchannelPositionLong] != null)
-                    parameters.Add($"{FlagStrings.FixSubchannelPositionLong} {this[FlagStrings.FixSubchannelPositionLong]}");
+                    parameters.Append($"{FlagStrings.FixSubchannelPositionLong} {this[FlagStrings.FixSubchannelPositionLong]} ");
             }
 
             // Fletcher-16
             if (IsFlagSupported(FlagStrings.Fletcher16Long))
             {
                 if (this[FlagStrings.Fletcher16Long] != null)
-                    parameters.Add($"{FlagStrings.Fletcher16Long} {this[FlagStrings.Fletcher16Long]}");
+                    parameters.Append($"{FlagStrings.Fletcher16Long} {this[FlagStrings.Fletcher16Long]} ");
             }
 
             // Fletcher-32
             if (IsFlagSupported(FlagStrings.Fletcher32Long))
             {
                 if (this[FlagStrings.Fletcher32Long] != null)
-                    parameters.Add($"{FlagStrings.Fletcher32Long} {this[FlagStrings.Fletcher32Long]}");
+                    parameters.Append($"{FlagStrings.Fletcher32Long} {this[FlagStrings.Fletcher32Long]} ");
             }
 
             // Force
             if (IsFlagSupported(FlagStrings.ForceLong))
             {
                 if (this[FlagStrings.ForceLong] != null)
-                    parameters.Add($"{FlagStrings.ForceLong} {this[FlagStrings.ForceLong]}");
+                    parameters.Append($"{FlagStrings.ForceLong} {this[FlagStrings.ForceLong]} ");
             }
 
             // Generate Subchannels
             if (IsFlagSupported(FlagStrings.GenerateSubchannelsLong))
             {
                 if (this[FlagStrings.GenerateSubchannelsLong] != null)
-                    parameters.Add($"{FlagStrings.GenerateSubchannelsLong} {this[FlagStrings.GenerateSubchannelsLong]}");
+                    parameters.Append($"{FlagStrings.GenerateSubchannelsLong} {this[FlagStrings.GenerateSubchannelsLong]} ");
             }
 
             // Long Format
             if (IsFlagSupported(FlagStrings.LongFormatLong))
             {
                 if (this[FlagStrings.LongFormatLong] != null)
-                    parameters.Add($"{FlagStrings.LongFormatLong} {this[FlagStrings.LongFormatLong]}");
+                    parameters.Append($"{FlagStrings.LongFormatLong} {this[FlagStrings.LongFormatLong]} ");
             }
 
             // Long Sectors
             if (IsFlagSupported(FlagStrings.LongSectorsLong))
             {
                 if (this[FlagStrings.LongSectorsLong] != null)
-                    parameters.Add($"{FlagStrings.LongSectorsLong} {this[FlagStrings.LongSectorsLong]}");
+                    parameters.Append($"{FlagStrings.LongSectorsLong} {this[FlagStrings.LongSectorsLong]} ");
             }
 
             // MD5
             if (IsFlagSupported(FlagStrings.MD5Long))
             {
                 if (this[FlagStrings.MD5Long] != null)
-                    parameters.Add($"{FlagStrings.MD5Long} {this[FlagStrings.MD5Long]}");
+                    parameters.Append($"{FlagStrings.MD5Long} {this[FlagStrings.MD5Long]} ");
             }
 
             // Metadata
             if (IsFlagSupported(FlagStrings.MetadataLong))
             {
                 if (this[FlagStrings.MetadataLong] != null)
-                    parameters.Add($"{FlagStrings.MetadataLong} {this[FlagStrings.MetadataLong]}");
+                    parameters.Append($"{FlagStrings.MetadataLong} {this[FlagStrings.MetadataLong]} ");
             }
 
             // Partitions
             if (IsFlagSupported(FlagStrings.PartitionsLong))
             {
                 if (this[FlagStrings.PartitionsLong] != null)
-                    parameters.Add($"{FlagStrings.PartitionsLong} {this[FlagStrings.PartitionsLong]}");
+                    parameters.Append($"{FlagStrings.PartitionsLong} {this[FlagStrings.PartitionsLong]} ");
             }
 
             // Persistent
             if (IsFlagSupported(FlagStrings.PersistentLong))
             {
                 if (this[FlagStrings.PersistentLong] != null)
-                    parameters.Add($"{FlagStrings.PersistentLong} {this[FlagStrings.PersistentLong]}");
+                    parameters.Append($"{FlagStrings.PersistentLong} {this[FlagStrings.PersistentLong]} ");
             }
 
             // Private
             if (IsFlagSupported(FlagStrings.PrivateLong))
             {
                 if (this[FlagStrings.PrivateLong] != null)
-                    parameters.Add($"{FlagStrings.PrivateLong} {this[FlagStrings.PrivateLong]}");
+                    parameters.Append($"{FlagStrings.PrivateLong} {this[FlagStrings.PrivateLong]} ");
             }
 
             // Resume
             if (IsFlagSupported(FlagStrings.ResumeLong))
             {
                 if (this[FlagStrings.ResumeLong] != null)
-                    parameters.Add($"{FlagStrings.ResumeLong} {this[FlagStrings.ResumeLong]}");
+                    parameters.Append($"{FlagStrings.ResumeLong} {this[FlagStrings.ResumeLong]} ");
             }
 
             // Retry Subchannel
             if (IsFlagSupported(FlagStrings.RetrySubchannelLong))
             {
                 if (this[FlagStrings.RetrySubchannelLong] != null)
-                    parameters.Add($"{FlagStrings.RetrySubchannelLong} {this[FlagStrings.RetrySubchannelLong]}");
+                    parameters.Append($"{FlagStrings.RetrySubchannelLong} {this[FlagStrings.RetrySubchannelLong]} ");
             }
 
             // Sector Tags
             if (IsFlagSupported(FlagStrings.SectorTagsLong))
             {
                 if (this[FlagStrings.SectorTagsLong] != null)
-                    parameters.Add($"{FlagStrings.SectorTagsLong} {this[FlagStrings.SectorTagsLong]}");
+                    parameters.Append($"{FlagStrings.SectorTagsLong} {this[FlagStrings.SectorTagsLong]} ");
             }
 
             // Separated Tracks
             if (IsFlagSupported(FlagStrings.SeparatedTracksLong))
             {
                 if (this[FlagStrings.SeparatedTracksLong] != null)
-                    parameters.Add($"{FlagStrings.SeparatedTracksLong} {this[FlagStrings.SeparatedTracksLong]}");
+                    parameters.Append($"{FlagStrings.SeparatedTracksLong} {this[FlagStrings.SeparatedTracksLong]} ");
             }
 
             // SHA-1
             if (IsFlagSupported(FlagStrings.SHA1Long))
             {
                 if (this[FlagStrings.SHA1Long] != null)
-                    parameters.Add($"{FlagStrings.SHA1Long} {this[FlagStrings.SHA1Long]}");
+                    parameters.Append($"{FlagStrings.SHA1Long} {this[FlagStrings.SHA1Long]} ");
             }
 
             // SHA-256
             if (IsFlagSupported(FlagStrings.SHA256Long))
             {
                 if (this[FlagStrings.SHA256Long] != null)
-                    parameters.Add($"{FlagStrings.SHA256Long} {this[FlagStrings.SHA256Long]}");
+                    parameters.Append($"{FlagStrings.SHA256Long} {this[FlagStrings.SHA256Long]} ");
             }
 
             // SHA-384
             if (IsFlagSupported(FlagStrings.SHA384Long))
             {
                 if (this[FlagStrings.SHA384Long] != null)
-                    parameters.Add($"{FlagStrings.SHA384Long} {this[FlagStrings.SHA384Long]}");
+                    parameters.Append($"{FlagStrings.SHA384Long} {this[FlagStrings.SHA384Long]} ");
             }
 
             // SHA-512
             if (IsFlagSupported(FlagStrings.SHA512Long))
             {
                 if (this[FlagStrings.SHA512Long] != null)
-                    parameters.Add($"{FlagStrings.SHA512Long} {this[FlagStrings.SHA512Long]}");
+                    parameters.Append($"{FlagStrings.SHA512Long} {this[FlagStrings.SHA512Long]} ");
             }
 
             // Skip CD-i Ready Hole
             if (IsFlagSupported(FlagStrings.SkipCdiReadyHoleLong))
             {
                 if (this[FlagStrings.SkipCdiReadyHoleLong] != null)
-                    parameters.Add($"{FlagStrings.SkipCdiReadyHoleLong} {this[FlagStrings.SkipCdiReadyHoleLong]}");
+                    parameters.Append($"{FlagStrings.SkipCdiReadyHoleLong} {this[FlagStrings.SkipCdiReadyHoleLong]} ");
             }
 
             // SpamSum
             if (IsFlagSupported(FlagStrings.SpamSumLong))
             {
                 if (this[FlagStrings.SpamSumLong] != null)
-                    parameters.Add($"{FlagStrings.SpamSumLong} {this[FlagStrings.SpamSumLong]}");
+                    parameters.Append($"{FlagStrings.SpamSumLong} {this[FlagStrings.SpamSumLong]} ");
             }
 
             // Stop on Error
             if (IsFlagSupported(FlagStrings.StopOnErrorLong))
             {
                 if (this[FlagStrings.StopOnErrorLong] != null)
-                    parameters.Add($"{FlagStrings.StopOnErrorLong} {this[FlagStrings.StopOnErrorLong]}");
+                    parameters.Append($"{FlagStrings.StopOnErrorLong} {this[FlagStrings.StopOnErrorLong]} ");
             }
 
             // Stop on Error
             if (IsFlagSupported(FlagStrings.StoreEncryptedLong))
             {
                 if (this[FlagStrings.StoreEncryptedLong] != null)
-                    parameters.Add($"{FlagStrings.StoreEncryptedLong} {this[FlagStrings.StoreEncryptedLong]}");
+                    parameters.Append($"{FlagStrings.StoreEncryptedLong} {this[FlagStrings.StoreEncryptedLong]} ");
             }
 
             // Tape
             if (IsFlagSupported(FlagStrings.TapeLong))
             {
                 if (this[FlagStrings.TapeLong] != null)
-                    parameters.Add($"{FlagStrings.TapeLong} {this[FlagStrings.TapeLong]}");
+                    parameters.Append($"{FlagStrings.TapeLong} {this[FlagStrings.TapeLong]} ");
             }
 
             // Title Keys
             if (IsFlagSupported(FlagStrings.TitleKeysLong))
             {
                 if (this[FlagStrings.TitleKeysLong] != null)
-                    parameters.Add($"{FlagStrings.TitleKeysLong} {this[FlagStrings.TitleKeysLong]}");
+                    parameters.Append($"{FlagStrings.TitleKeysLong} {this[FlagStrings.TitleKeysLong]} ");
             }
 
             // Trap Disc
             if (IsFlagSupported(FlagStrings.TrapDiscLong))
             {
                 if (this[FlagStrings.TrapDiscLong] != null)
-                    parameters.Add($"{FlagStrings.TrapDiscLong} {this[FlagStrings.TrapDiscLong]}");
+                    parameters.Append($"{FlagStrings.TrapDiscLong} {this[FlagStrings.TrapDiscLong]} ");
             }
 
             // Trim
             if (IsFlagSupported(FlagStrings.TrimLong))
             {
                 if (this[FlagStrings.TrimLong] != null)
-                    parameters.Add($"{FlagStrings.TrimLong} {this[FlagStrings.TrimLong]}");
+                    parameters.Append($"{FlagStrings.TrimLong} {this[FlagStrings.TrimLong]} ");
             }
 
             // Use Buffered Reads
             if (IsFlagSupported(FlagStrings.UseBufferedReadsLong))
             {
                 if (this[FlagStrings.UseBufferedReadsLong] != null)
-                    parameters.Add($"{FlagStrings.UseBufferedReadsLong} {this[FlagStrings.UseBufferedReadsLong]}");
+                    parameters.Append($"{FlagStrings.UseBufferedReadsLong} {this[FlagStrings.UseBufferedReadsLong]} ");
             }
 
             // Verify Disc
             if (IsFlagSupported(FlagStrings.VerifyDiscLong))
             {
                 if (this[FlagStrings.VerifyDiscLong] != null)
-                    parameters.Add($"{FlagStrings.VerifyDiscLong} {this[FlagStrings.VerifyDiscLong]}");
+                    parameters.Append($"{FlagStrings.VerifyDiscLong} {this[FlagStrings.VerifyDiscLong]} ");
             }
 
             // Verify Sectors
             if (IsFlagSupported(FlagStrings.VerifySectorsLong))
             {
                 if (this[FlagStrings.VerifySectorsLong] != null)
-                    parameters.Add($"{FlagStrings.VerifySectorsLong} {this[FlagStrings.VerifySectorsLong]}");
+                    parameters.Append($"{FlagStrings.VerifySectorsLong} {this[FlagStrings.VerifySectorsLong]} ");
             }
 
             // Whole Disc
             if (IsFlagSupported(FlagStrings.WholeDiscLong))
             {
                 if (this[FlagStrings.WholeDiscLong] != null)
-                    parameters.Add($"{FlagStrings.WholeDiscLong} {this[FlagStrings.WholeDiscLong]}");
+                    parameters.Append($"{FlagStrings.WholeDiscLong} {this[FlagStrings.WholeDiscLong]} ");
             }
 
             #endregion
@@ -902,7 +903,7 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.SpeedLong))
             {
                 if (this[FlagStrings.SpeedLong] == true && SpeedValue != null)
-                    parameters.Add($"{FlagStrings.SpeedLong} {SpeedValue}");
+                    parameters.Append($"{FlagStrings.SpeedLong} {SpeedValue} ");
             }
 
             #endregion
@@ -913,14 +914,14 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.RetryPassesLong))
             {
                 if (this[FlagStrings.RetryPassesLong] == true && RetryPassesValue != null)
-                    parameters.Add($"{FlagStrings.RetryPassesLong} {RetryPassesValue}");
+                    parameters.Append($"{FlagStrings.RetryPassesLong} {RetryPassesValue} ");
             }
 
             // Width
             if (IsFlagSupported(FlagStrings.WidthLong))
             {
                 if (this[FlagStrings.WidthLong] == true && WidthValue != null)
-                    parameters.Add($"{FlagStrings.WidthLong} {WidthValue}");
+                    parameters.Append($"{FlagStrings.WidthLong} {WidthValue} ");
             }
 
             #endregion
@@ -931,42 +932,42 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.BlockSizeLong))
             {
                 if (this[FlagStrings.BlockSizeLong] == true && BlockSizeValue != null)
-                    parameters.Add($"{FlagStrings.BlockSizeLong} {BlockSizeValue}");
+                    parameters.Append($"{FlagStrings.BlockSizeLong} {BlockSizeValue} ");
             }
 
             // Count
             if (IsFlagSupported(FlagStrings.CountLong))
             {
                 if (this[FlagStrings.CountLong] == true && CountValue != null)
-                    parameters.Add($"{FlagStrings.CountLong} {CountValue}");
+                    parameters.Append($"{FlagStrings.CountLong} {CountValue} ");
             }
 
             // Max Blocks
             if (IsFlagSupported(FlagStrings.MaxBlocksLong))
             {
                 if (this[FlagStrings.MaxBlocksLong] == true && MaxBlocksValue != null)
-                    parameters.Add($"{FlagStrings.MaxBlocksLong} {MaxBlocksValue}");
+                    parameters.Append($"{FlagStrings.MaxBlocksLong} {MaxBlocksValue} ");
             }
 
             // Media Last Sequence
             if (IsFlagSupported(FlagStrings.MediaLastSequenceLong))
             {
                 if (this[FlagStrings.MediaLastSequenceLong] == true && MediaLastSequenceValue != null)
-                    parameters.Add($"{FlagStrings.MediaLastSequenceLong} {MediaLastSequenceValue}");
+                    parameters.Append($"{FlagStrings.MediaLastSequenceLong} {MediaLastSequenceValue} ");
             }
 
             // Media Sequence
             if (IsFlagSupported(FlagStrings.MediaSequenceLong))
             {
                 if (this[FlagStrings.MediaSequenceLong] == true && MediaSequenceValue != null)
-                    parameters.Add($"{FlagStrings.MediaSequenceLong} {MediaSequenceValue}");
+                    parameters.Append($"{FlagStrings.MediaSequenceLong} {MediaSequenceValue} ");
             }
 
             // Skip
             if (IsFlagSupported(FlagStrings.SkipLong))
             {
                 if (this[FlagStrings.SkipLong] == true && SkipValue != null)
-                    parameters.Add($"{FlagStrings.SkipLong} {SkipValue}");
+                    parameters.Append($"{FlagStrings.SkipLong} {SkipValue} ");
             }
 
             #endregion
@@ -979,9 +980,9 @@ namespace MPF.ExecutionContexts.Aaru
                 if (this[FlagStrings.LengthLong] == true && LengthValue != null)
                 {
                     if (LengthValue >= 0)
-                        parameters.Add($"{FlagStrings.LengthLong} {LengthValue}");
+                        parameters.Append($"{FlagStrings.LengthLong} {LengthValue} ");
                     else if (LengthValue == -1 && BaseCommand == CommandStrings.ImageDecode)
-                        parameters.Add($"{FlagStrings.LengthLong} all");
+                        parameters.Append($"{FlagStrings.LengthLong} all ");
                 }
             }
 
@@ -989,7 +990,7 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.StartLong))
             {
                 if (this[FlagStrings.StartLong] == true && StartValue != null)
-                    parameters.Add($"{FlagStrings.StartLong} {StartValue}");
+                    parameters.Append($"{FlagStrings.StartLong} {StartValue} ");
             }
 
             #endregion
@@ -1000,168 +1001,168 @@ namespace MPF.ExecutionContexts.Aaru
             if (IsFlagSupported(FlagStrings.CommentsLong))
             {
                 if (this[FlagStrings.CommentsLong] == true && CommentsValue != null)
-                    parameters.Add($"{FlagStrings.CommentsLong} \"{CommentsValue}\"");
+                    parameters.Append($"{FlagStrings.CommentsLong} \"{CommentsValue}\" ");
             }
 
             // Creator
             if (IsFlagSupported(FlagStrings.CreatorLong))
             {
                 if (this[FlagStrings.CreatorLong] == true && CreatorValue != null)
-                    parameters.Add($"{FlagStrings.CreatorLong} \"{CreatorValue}\"");
+                    parameters.Append($"{FlagStrings.CreatorLong} \"{CreatorValue}\" ");
             }
 
             // Drive Manufacturer
             if (IsFlagSupported(FlagStrings.DriveManufacturerLong))
             {
                 if (this[FlagStrings.DriveManufacturerLong] == true && DriveManufacturerValue != null)
-                    parameters.Add($"{FlagStrings.DriveManufacturerLong} \"{DriveManufacturerValue}\"");
+                    parameters.Append($"{FlagStrings.DriveManufacturerLong} \"{DriveManufacturerValue}\" ");
             }
 
             // Drive Model
             if (IsFlagSupported(FlagStrings.DriveModelLong))
             {
                 if (this[FlagStrings.DriveModelLong] == true && DriveModelValue != null)
-                    parameters.Add($"{FlagStrings.DriveModelLong} \"{DriveModelValue}\"");
+                    parameters.Append($"{FlagStrings.DriveModelLong} \"{DriveModelValue}\" ");
             }
 
             // Drive Revision
             if (IsFlagSupported(FlagStrings.DriveRevisionLong))
             {
                 if (this[FlagStrings.DriveRevisionLong] == true && DriveRevisionValue != null)
-                    parameters.Add($"{FlagStrings.DriveRevisionLong} \"{DriveRevisionValue}\"");
+                    parameters.Append($"{FlagStrings.DriveRevisionLong} \"{DriveRevisionValue}\" ");
             }
 
             // Drive Serial
             if (IsFlagSupported(FlagStrings.DriveSerialLong))
             {
                 if (this[FlagStrings.DriveSerialLong] == true && DriveSerialValue != null)
-                    parameters.Add($"{FlagStrings.DriveSerialLong} \"{DriveSerialValue}\"");
+                    parameters.Append($"{FlagStrings.DriveSerialLong} \"{DriveSerialValue}\" ");
             }
 
             // Encoding
             if (IsFlagSupported(FlagStrings.EncodingLong))
             {
                 if (this[FlagStrings.EncodingLong] == true && EncodingValue != null)
-                    parameters.Add($"{FlagStrings.EncodingLong} \"{EncodingValue}\"");
+                    parameters.Append($"{FlagStrings.EncodingLong} \"{EncodingValue}\" ");
             }
 
             // Format (Convert)
             if (IsFlagSupported(FlagStrings.FormatConvertLong))
             {
                 if (this[FlagStrings.FormatConvertLong] == true && FormatConvertValue != null)
-                    parameters.Add($"{FlagStrings.FormatConvertLong} \"{FormatConvertValue}\"");
+                    parameters.Append($"{FlagStrings.FormatConvertLong} \"{FormatConvertValue}\" ");
             }
 
             // Format (Dump)
             if (IsFlagSupported(FlagStrings.FormatDumpLong))
             {
                 if (this[FlagStrings.FormatDumpLong] == true && FormatDumpValue != null)
-                    parameters.Add($"{FlagStrings.FormatDumpLong} \"{FormatDumpValue}\"");
+                    parameters.Append($"{FlagStrings.FormatDumpLong} \"{FormatDumpValue}\" ");
             }
 
             // Geometry
             if (IsFlagSupported(FlagStrings.GeometryLong))
             {
                 if (this[FlagStrings.GeometryLong] == true && GeometryValue != null)
-                    parameters.Add($"{FlagStrings.GeometryLong} \"{GeometryValue}\"");
+                    parameters.Append($"{FlagStrings.GeometryLong} \"{GeometryValue}\" ");
             }
 
             // ImgBurn Log
             if (IsFlagSupported(FlagStrings.ImgBurnLogLong))
             {
                 if (this[FlagStrings.ImgBurnLogLong] == true && ImgBurnLogValue != null)
-                    parameters.Add($"{FlagStrings.ImgBurnLogLong} \"{ImgBurnLogValue}\"");
+                    parameters.Append($"{FlagStrings.ImgBurnLogLong} \"{ImgBurnLogValue}\" ");
             }
 
             // Media Barcode
             if (IsFlagSupported(FlagStrings.MediaBarcodeLong))
             {
                 if (this[FlagStrings.MediaBarcodeLong] == true && MediaBarcodeValue != null)
-                    parameters.Add($"{FlagStrings.MediaBarcodeLong} \"{MediaBarcodeValue}\"");
+                    parameters.Append($"{FlagStrings.MediaBarcodeLong} \"{MediaBarcodeValue}\" ");
             }
 
             // Media Manufacturer
             if (IsFlagSupported(FlagStrings.MediaManufacturerLong))
             {
                 if (this[FlagStrings.MediaManufacturerLong] == true && MediaManufacturerValue != null)
-                    parameters.Add($"{FlagStrings.MediaManufacturerLong} \"{MediaManufacturerValue}\"");
+                    parameters.Append($"{FlagStrings.MediaManufacturerLong} \"{MediaManufacturerValue}\" ");
             }
 
             // Media Model
             if (IsFlagSupported(FlagStrings.MediaModelLong))
             {
                 if (this[FlagStrings.MediaModelLong] == true && MediaModelValue != null)
-                    parameters.Add($"{FlagStrings.MediaModelLong} \"{MediaModelValue}\"");
+                    parameters.Append($"{FlagStrings.MediaModelLong} \"{MediaModelValue}\" ");
             }
 
             // Media Part Number
             if (IsFlagSupported(FlagStrings.MediaPartNumberLong))
             {
                 if (this[FlagStrings.MediaPartNumberLong] == true && MediaPartNumberValue != null)
-                    parameters.Add($"{FlagStrings.MediaPartNumberLong} \"{MediaPartNumberValue}\"");
+                    parameters.Append($"{FlagStrings.MediaPartNumberLong} \"{MediaPartNumberValue}\" ");
             }
 
             // Media Serial
             if (IsFlagSupported(FlagStrings.MediaSerialLong))
             {
                 if (this[FlagStrings.MediaSerialLong] == true && MediaSerialValue != null)
-                    parameters.Add($"{FlagStrings.MediaSerialLong} \"{MediaSerialValue}\"");
+                    parameters.Append($"{FlagStrings.MediaSerialLong} \"{MediaSerialValue}\" ");
             }
 
             // Media Title
             if (IsFlagSupported(FlagStrings.MediaTitleLong))
             {
                 if (this[FlagStrings.MediaTitleLong] == true && MediaTitleValue != null)
-                    parameters.Add($"{FlagStrings.MediaTitleLong} \"{MediaTitleValue}\"");
+                    parameters.Append($"{FlagStrings.MediaTitleLong} \"{MediaTitleValue}\" ");
             }
 
             // MHDD Log
             if (IsFlagSupported(FlagStrings.MHDDLogLong))
             {
                 if (this[FlagStrings.MHDDLogLong] == true && MHDDLogValue != null)
-                    parameters.Add($"{FlagStrings.MHDDLogLong} \"{MHDDLogValue}\"");
+                    parameters.Append($"{FlagStrings.MHDDLogLong} \"{MHDDLogValue}\" ");
             }
 
             // Namespace
             if (IsFlagSupported(FlagStrings.NamespaceLong))
             {
                 if (this[FlagStrings.NamespaceLong] == true && NamespaceValue != null)
-                    parameters.Add($"{FlagStrings.NamespaceLong} \"{NamespaceValue}\"");
+                    parameters.Append($"{FlagStrings.NamespaceLong} \"{NamespaceValue}\" ");
             }
 
             // Options
             if (IsFlagSupported(FlagStrings.OptionsLong))
             {
                 if (this[FlagStrings.OptionsLong] == true && OptionsValue != null)
-                    parameters.Add($"{FlagStrings.OptionsLong} \"{OptionsValue}\"");
+                    parameters.Append($"{FlagStrings.OptionsLong} \"{OptionsValue}\" ");
             }
 
             // Output Prefix
             if (IsFlagSupported(FlagStrings.OutputPrefixLong))
             {
                 if (this[FlagStrings.OutputPrefixLong] == true && OutputPrefixValue != null)
-                    parameters.Add($"{FlagStrings.OutputPrefixLong} \"{OutputPrefixValue}\"");
+                    parameters.Append($"{FlagStrings.OutputPrefixLong} \"{OutputPrefixValue}\" ");
             }
 
             // Resume File
             if (IsFlagSupported(FlagStrings.ResumeFileLong))
             {
                 if (this[FlagStrings.ResumeFileLong] == true && ResumeFileValue != null)
-                    parameters.Add($"{FlagStrings.ResumeFileLong} \"{ResumeFileValue}\"");
+                    parameters.Append($"{FlagStrings.ResumeFileLong} \"{ResumeFileValue}\" ");
             }
 
             // Subchannel
             if (IsFlagSupported(FlagStrings.SubchannelLong))
             {
                 if (this[FlagStrings.SubchannelLong] == true && SubchannelValue != null)
-                    parameters.Add($"{FlagStrings.SubchannelLong} \"{SubchannelValue}\"");
+                    parameters.Append($"{FlagStrings.SubchannelLong} \"{SubchannelValue}\" ");
             }
 
             // XML Sidecar
             if (IsFlagSupported(FlagStrings.XMLSidecarLong))
             {
                 if (this[FlagStrings.XMLSidecarLong] == true && XMLSidecarValue != null)
-                    parameters.Add($"{FlagStrings.XMLSidecarLong} \"{XMLSidecarValue}\"");
+                    parameters.Append($"{FlagStrings.XMLSidecarLong} \"{XMLSidecarValue}\" ");
             }
 
             #endregion
@@ -1183,7 +1184,7 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
-                    parameters.Add($"\"{InputValue}\"");
+                    parameters.Append($"\"{InputValue}\" ");
                     break;
 
                 // Input value only (device path)
@@ -1195,9 +1196,9 @@ namespace MPF.ExecutionContexts.Aaru
                         return null;
 
                     if (InputValue!.Contains(" "))
-                        parameters.Add($"\"{InputValue!.TrimEnd('\\')}\"");
+                        parameters.Append($"\"{InputValue!.TrimEnd('\\')}\" ");
                     else
-                        parameters.Add(InputValue!.TrimEnd('\\'));
+                        parameters.Append(InputValue!.TrimEnd('\\'));
 
                     break;
 
@@ -1206,8 +1207,8 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(Input1Value) || string.IsNullOrEmpty(Input2Value))
                         return null;
 
-                    parameters.Add($"\"{Input1Value}\"");
-                    parameters.Add($"\"{Input2Value}\"");
+                    parameters.Append($"\"{Input1Value}\" ");
+                    parameters.Append($"\"{Input2Value}\" ");
                     break;
 
                 // Input and Output value (file path)
@@ -1216,8 +1217,8 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
                         return null;
 
-                    parameters.Add($"\"{InputValue}\"");
-                    parameters.Add($"\"{OutputValue}\"");
+                    parameters.Append($"\"{InputValue}\" ");
+                    parameters.Append($"\"{OutputValue}\" ");
                     break;
 
                 // Input and Output value (device path)
@@ -1225,8 +1226,8 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue) || string.IsNullOrEmpty(OutputValue))
                         return null;
 
-                    parameters.Add(InputValue!.TrimEnd('\\'));
-                    parameters.Add($"\"{OutputValue}\"");
+                    parameters.Append(InputValue!.TrimEnd('\\'));
+                    parameters.Append($"\"{OutputValue}\" ");
                     break;
 
                 // Remote host value only
@@ -1235,11 +1236,11 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(RemoteHostValue))
                         return null;
 
-                    parameters.Add($"\"{RemoteHostValue}\"");
+                    parameters.Append($"\"{RemoteHostValue}\" ");
                     break;
             }
 
-            return string.Join(" ", [.. parameters]);
+            return parameters.ToString().TrimEnd();
         }
 
         /// <inheritdoc/>

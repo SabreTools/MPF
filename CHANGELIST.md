@@ -33,6 +33,7 @@
 - Let inputs read equal-separated values
 - Fix some formatting issues with Input types
 - Replace Aaru pre-command flags
+- Use string builders where possible
 
 ### 3.2.4 (2024-11-24)
 
