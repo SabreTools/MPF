@@ -7,7 +7,17 @@ namespace MPF.ExecutionContexts.Data
     /// Represents a string flag with an optional trailing value
     /// </summary>
     public class StringInput : Input<string>
+
     {
+        #region Properties
+
+        /// <summary>
+        /// Indicates whether quotes are used in output or not
+        /// </summary>
+        public bool Quotes { get; set; } = false;
+
+        #endregion
+
         #region Constructors
 
         /// <inheritdoc/>
@@ -63,7 +73,10 @@ namespace MPF.ExecutionContexts.Data
                     builder.Append(" ");
 
                 // Value
-                builder.Append($"\"{Value}\"");
+                if (Quotes)
+                    builder.Append($"\"{Value}\"");
+                else
+                    builder.Append(Value);
             }
 
             return builder.ToString();
