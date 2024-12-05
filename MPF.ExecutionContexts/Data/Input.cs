@@ -15,19 +15,19 @@ namespace MPF.ExecutionContexts.Data
         public readonly string Name;
 
         /// <summary>
-        /// Indicates if a value has been set
+        /// Short name for the input
         /// </summary>
-        public abstract bool ValueSet { get; }
-
-        /// <summary>
-        /// Verbose name for the input
-        /// </summary>
-        protected readonly string? _longName;
+        protected readonly string? _shortName;
 
         /// <summary>
         /// Indicates if the value following is required or not
         /// </summary>
         protected readonly bool _required;
+
+        /// <summary>
+        /// Indicates if a value has been set
+        /// </summary>
+        public abstract bool ValueSet { get; }
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace MPF.ExecutionContexts.Data
         public Input(string name)
         {
             Name = name;
-            _longName = null;
+            _shortName = null;
             _required = true;
         }
 
@@ -46,7 +46,7 @@ namespace MPF.ExecutionContexts.Data
         public Input(string name, bool required)
         {
             Name = name;
-            _longName = null;
+            _shortName = null;
             _required = required;
         }
 
@@ -54,8 +54,8 @@ namespace MPF.ExecutionContexts.Data
         /// <param name="longName">Verbose flag name / value</param>
         public Input(string shortName, string longName)
         {
-            Name = shortName;
-            _longName = longName;
+            Name = longName;
+            _shortName = shortName;
             _required = true;
         }
 
@@ -64,14 +64,19 @@ namespace MPF.ExecutionContexts.Data
         /// <param name="required">Indicates if a following value is required</param>
         public Input(string shortName, string longName, bool required)
         {
-            Name = shortName;
-            _longName = longName;
+            Name = longName;
+            _shortName = shortName;
             _required = required;
         }
 
         #endregion
 
         #region Functionality
+
+        /// <summary>
+        /// Clear any accumulated value
+        /// </summary>
+        public abstract void ClearValue();
 
         /// <summary>
         /// Create a formatted representation of the input and possible value
@@ -207,6 +212,24 @@ namespace MPF.ExecutionContexts.Data
         /// <inheritdoc/>
         public Input(string shortName, string longName, bool required)
             : base(shortName, longName, required) { }
+
+        #endregion
+
+        #region Functionality
+
+        /// <inheritdoc/>
+        public override void ClearValue()
+        {
+            Value = default;
+        }
+
+        /// <summary>
+        /// Set a new value
+        /// </summary>
+        public void SetValue(T value)
+        {
+            Value = value;
+        }
 
         #endregion
     }

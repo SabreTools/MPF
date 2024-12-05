@@ -38,10 +38,7 @@ namespace MPF.ExecutionContexts.Data
             var builder = new StringBuilder();
 
             // Flag name
-            if (_longName != null)
-                builder.Append(_longName);
-            else
-                builder.Append(Name);
+            builder.Append(Name);
 
             return builder.ToString();
         }
@@ -54,7 +51,7 @@ namespace MPF.ExecutionContexts.Data
                 return false;
 
             // Check the name
-            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
+            if (parts[index] == Name || (_shortName != null && parts[index] == _shortName))
             {
                 Value = true;
                 return true;

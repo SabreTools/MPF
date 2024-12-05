@@ -31,6 +31,7 @@
 - Add self-formatting to Input types
 - Handle issue with old .NET
 - Let inputs read equal-separated values
+- Fix some formatting issues with Input types
 
 ### 3.2.4 (2024-11-24)
 

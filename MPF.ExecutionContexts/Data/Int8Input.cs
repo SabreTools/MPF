@@ -43,10 +43,7 @@ namespace MPF.ExecutionContexts.Data
             var builder = new StringBuilder();
 
             // Flag name
-            if (_longName != null)
-                builder.Append(_longName);
-            else
-                builder.Append(Name);
+            builder.Append(Name);
 
             // Only output separator and value if needed
             if (_required || (!_required && Value != sbyte.MinValue))
@@ -72,7 +69,7 @@ namespace MPF.ExecutionContexts.Data
                 return false;
 
             // Check for space-separated
-            if (parts[index] == Name || (_longName != null && parts[index] == _longName))
+            if (parts[index] == Name || (_shortName != null && parts[index] == _shortName))
             {
                 // Ensure the value exists
                 if (index + 1 >= parts.Length)
@@ -95,7 +92,7 @@ namespace MPF.ExecutionContexts.Data
             }
 
             // Check for equal separated
-            if (parts[index].StartsWith($"{Name}=") || (_longName != null && parts[index].StartsWith($"{_longName}=")))
+            if (parts[index].StartsWith($"{Name}=") || (_shortName != null && parts[index].StartsWith($"{_shortName}=")))
             {
                 // Split the string, using the first equal sign as the separator
                 string[] tempSplit = parts[index].Split('=');
