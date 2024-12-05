@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace MPF.ExecutionContexts.Data
 {
     /// <summary>
@@ -24,6 +26,25 @@ namespace MPF.ExecutionContexts.Data
             : base(shortName, longName, required) { }
 
         #endregion
+
+        /// <inheritdoc/>
+        public override string Format(bool useEquals)
+        {
+            // Do not output if there is no value
+            if (Value == false)
+                return string.Empty;
+
+            // Build the output format
+            var builder = new StringBuilder();
+
+            // Flag name
+            if (_longName != null)
+                builder.Append(_longName);
+            else
+                builder.Append(Name);
+
+            return builder.ToString();
+        }
 
         /// <inheritdoc/>
         public override bool Process(string[] parts, ref int index)

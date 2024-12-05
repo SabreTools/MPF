@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 
 namespace MPF.ExecutionContexts.Data
 {
@@ -26,6 +27,42 @@ namespace MPF.ExecutionContexts.Data
             : base(shortName, longName, required) { }
 
         #endregion
+
+        /// <inheritdoc/>
+        public override string Format(bool useEquals)
+        {
+            // Do not output if there is no value
+            if (Value == null)
+                return string.Empty;
+
+            // Do not output if required value is invalid
+            if (_required && Value == int.MinValue)
+                return string.Empty;
+
+            // Build the output format
+            var builder = new StringBuilder();
+
+            // Flag name
+            if (_longName != null)
+                builder.Append(_longName);
+            else
+                builder.Append(Name);
+
+            // Only output separator and value if needed
+            if (_required || (!_required && Value != int.MinValue))
+            {
+                // Separator
+                if (useEquals)
+                    builder.Append("=");
+                else
+                    builder.Append(" ");
+
+                // Value
+                builder.Append(Value.ToString());
+            }
+
+            return builder.ToString();
+        }
 
         /// <inheritdoc/>
         public override bool Process(string[] parts, ref int index)

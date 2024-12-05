@@ -71,7 +71,13 @@ namespace MPF.ExecutionContexts.Data
 
         #endregion
 
-        #region Processors
+        #region Functionality
+
+        /// <summary>
+        /// Create a formatted representation of the input and possible value
+        /// </summary>
+        /// <param name="useEquals">Use an equal sign as a separator on output</param>
+        public abstract string Format(bool useEquals);
 
         /// <summary>
         /// Process the current index, if possible
