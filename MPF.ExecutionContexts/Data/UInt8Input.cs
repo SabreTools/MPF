@@ -44,10 +44,6 @@ namespace MPF.ExecutionContexts.Data
             if (Value == null)
                 return string.Empty;
 
-            // Do not output if required value is invalid
-            if (_required && Value == byte.MinValue)
-                return string.Empty;
-
             // Build the output format
             var builder = new StringBuilder();
 

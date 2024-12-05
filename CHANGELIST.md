@@ -38,6 +38,7 @@
 - Replace Aaru flag values with input types
 - Add Redumper parameters tests
 - Add quotes option to string input
+- Replace Redumper flag values with input types
 
 ### 3.2.4 (2024-11-24)
 
