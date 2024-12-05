@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace MPF.ExecutionContexts.Data
@@ -24,6 +25,14 @@ namespace MPF.ExecutionContexts.Data
         /// <inheritdoc/>
         public StringInput(string shortName, string longName, bool required)
             : base(shortName, longName, required) { }
+
+        /// <inheritdoc/>
+        public StringInput(string[] names)
+            : base(names) { }
+
+        /// <inheritdoc/>
+        public StringInput(string[] names, bool required)
+            : base(names, required) { }
 
         #endregion
 
@@ -68,7 +77,8 @@ namespace MPF.ExecutionContexts.Data
                 return false;
 
             // Check for space-separated
-            if (parts[index] == Name || (_shortName != null && parts[index] == _shortName))
+            string part = parts[index];
+            if (part == Name || (_altNames.Length > 0 && Array.FindIndex(_altNames, n => n == part) > -1))
             {
                 // Ensure the value exists
                 if (index + 1 >= parts.Length)
@@ -83,10 +93,10 @@ namespace MPF.ExecutionContexts.Data
             }
 
             // Check for equal separated
-            if (parts[index].StartsWith($"{Name}=") || (_shortName != null && parts[index].StartsWith($"{_shortName}=")))
+            if (part.StartsWith($"{Name}=") || (_altNames.Length > 0 && Array.FindIndex(_altNames, n => part.StartsWith($"{n}=")) > -1))
             {
                 // Split the string, using the first equal sign as the separator
-                string[] tempSplit = parts[index].Split('=');
+                string[] tempSplit = part.Split('=');
                 string key = tempSplit[0];
                 string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1);
 

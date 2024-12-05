@@ -35,6 +35,7 @@
 - Replace Aaru pre-command flags
 - Use string builders where possible
 - Add Aaru parameters tests
+- Replace Aaru flag values with input types
 
 ### 3.2.4 (2024-11-24)
 

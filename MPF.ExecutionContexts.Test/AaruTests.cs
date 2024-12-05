@@ -292,7 +292,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("image decode --disk-tags true --length all --sector-tags true --start 0 filename.bin")]
         public void ImageDecodeTest(string parameters)
         {
-            string? expected = "image decode --disk-tags True --sector-tags True --length all --start 0 \"filename.bin\"";
+            string? expected = "image decode --disk-tags True --sector-tags True --length \"all\" --start 0 \"filename.bin\"";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -348,7 +348,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("image print --length 0 --long-sectors true --start 0 --width 0 filename.bin")]
         public void ImagePrintTest(string parameters)
         {
-            string? expected = "image print --long-sectors True --width 0 --length 0 --start 0 \"filename.bin\"";
+            string? expected = "image print --long-sectors True --width 0 --length \"0\" --start 0 \"filename.bin\"";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -431,7 +431,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("--debug true --help true --verbose true --version true formats")]
         public void PreCommandFlagsTest(string parameters)
         {
-            string? expected = "--debug true --help true --verbose true --version true formats";
+            string? expected = "--debug True --help True --verbose True --version True formats";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using MPF.ExecutionContexts.Data;
 using SabreTools.RedumpLib.Data;
@@ -22,10 +21,12 @@ namespace MPF.ExecutionContexts.Aaru
         /// <inheritdoc/>
         public override int? Speed
         {
-            get { return SpeedValue; }
+            get
+            {
+                return (_inputs[FlagStrings.SpeedLong] as Int8Input)?.Value;
+            }
             set
             {
-                SpeedValue = (sbyte?)value;
                 (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte?)value);
             }
         }
@@ -34,85 +35,15 @@ namespace MPF.ExecutionContexts.Aaru
 
         #region Flag Values
 
-        public int? BlockSizeValue { get; set; }
-
-        public string? CommentsValue { get; set; }
-
-        public string? CreatorValue { get; set; }
-
-        public int? CountValue { get; set; }
-
-        public string? DriveManufacturerValue { get; set; }
-
-        public string? DriveModelValue { get; set; }
-
-        public string? DriveRevisionValue { get; set; }
-
-        public string? DriveSerialValue { get; set; }
-
-        public string? EncodingValue { get; set; }
-
-        public string? FormatConvertValue { get; set; }
-
-        public string? FormatDumpValue { get; set; }
-
-        public string? GeometryValue { get; set; }
-
-        public string? ImgBurnLogValue { get; set; }
-
         public string? InputValue { get; set; }
 
         public string? Input1Value { get; set; }
 
         public string? Input2Value { get; set; }
 
-        public long? LengthValue { get; set; }
-
-        public int? MaxBlocksValue { get; set; }
-
-        public string? MediaBarcodeValue { get; set; }
-
-        public int? MediaLastSequenceValue { get; set; }
-
-        public string? MediaManufacturerValue { get; set; }
-
-        public string? MediaModelValue { get; set; }
-
-        public string? MediaPartNumberValue { get; set; }
-
-        public int? MediaSequenceValue { get; set; }
-
-        public string? MediaSerialValue { get; set; }
-
-        public string? MediaTitleValue { get; set; }
-
-        public string? MHDDLogValue { get; set; }
-
-        public string? NamespaceValue { get; set; }
-
-        public string? OptionsValue { get; set; }
-
         public string? OutputValue { get; set; }
 
-        public string? OutputPrefixValue { get; set; }
-
         public string? RemoteHostValue { get; set; }
-
-        public string? ResumeFileValue { get; set; }
-
-        public short? RetryPassesValue { get; set; }
-
-        public int? SkipValue { get; set; }
-
-        public sbyte? SpeedValue { get; set; }
-
-        public long? StartValue { get; set; }
-
-        public string? SubchannelValue { get; set; }
-
-        public short? WidthValue { get; set; }
-
-        public string? XMLSidecarValue { get; set; }
 
         /// <summary>
         /// Set of all pre-command flags
@@ -120,8 +51,7 @@ namespace MPF.ExecutionContexts.Aaru
         private readonly Dictionary<string, BooleanInput> _preCommandInputs = new()
         {
             [FlagStrings.DebugLong] = new BooleanInput(FlagStrings.DebugShort, FlagStrings.DebugLong, required: false),
-            [FlagStrings.HelpLong] = new BooleanInput(FlagStrings.HelpShort, FlagStrings.HelpLong, required: false),
-            [FlagStrings.HelpShortAlt] = new BooleanInput(FlagStrings.HelpShortAlt, FlagStrings.HelpLong, required: false),
+            [FlagStrings.HelpLong] = new BooleanInput([FlagStrings.HelpLong, FlagStrings.HelpShort, FlagStrings.HelpShortAlt], required: false),
             [FlagStrings.VerboseLong] = new BooleanInput(FlagStrings.VerboseShort, FlagStrings.VerboseLong, required: false),
             [FlagStrings.VersionLong] = new BooleanInput(FlagStrings.VersionLong, required: false),
         };
@@ -209,8 +139,7 @@ namespace MPF.ExecutionContexts.Aaru
             [FlagStrings.DriveRevisionLong] = new StringInput(FlagStrings.DriveRevisionLong),
             [FlagStrings.DriveSerialLong] = new StringInput(FlagStrings.DriveSerialLong),
             [FlagStrings.EncodingLong] = new StringInput(FlagStrings.EncodingShort, FlagStrings.EncodingLong),
-            [FlagStrings.FormatConvertLong] = new StringInput(FlagStrings.FormatConvertShort, FlagStrings.FormatConvertLong),
-            [FlagStrings.FormatDumpLong] = new StringInput(FlagStrings.FormatDumpShort, FlagStrings.FormatDumpLong),
+            [FlagStrings.FormatLong] = new StringInput([FlagStrings.FormatLong, FlagStrings.FormatConvertShort, FlagStrings.FormatDumpShort]),
             [FlagStrings.GeometryLong] = new StringInput(FlagStrings.GeometryShort, FlagStrings.GeometryLong),
             [FlagStrings.ImgBurnLogLong] = new StringInput(FlagStrings.ImgBurnLogShort, FlagStrings.ImgBurnLogLong),
             [FlagStrings.MediaBarcodeLong] = new StringInput(FlagStrings.MediaBarcodeLong),
@@ -371,7 +300,7 @@ namespace MPF.ExecutionContexts.Aaru
                     FlagStrings.FixSubchannelPositionLong,
                     FlagStrings.ForceLong,
                     FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatLong,
                     FlagStrings.FormatConvertShort,
                     FlagStrings.GenerateSubchannelsLong,
                     FlagStrings.GeometryLong,
@@ -464,7 +393,7 @@ namespace MPF.ExecutionContexts.Aaru
                     FlagStrings.FixSubchannelPositionLong,
                     FlagStrings.ForceLong,
                     FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatLong,
                     FlagStrings.FormatConvertShort,
                     FlagStrings.GenerateSubchannelsLong,
                     FlagStrings.MaxBlocksLong,
@@ -545,6 +474,7 @@ namespace MPF.ExecutionContexts.Aaru
 
             #region Pre-command flags
 
+            // Loop though and append all existing
             foreach (var kvp in _preCommandInputs)
             {
                 // If the value doesn't exist
@@ -564,608 +494,21 @@ namespace MPF.ExecutionContexts.Aaru
             else
                 return null;
 
-            #region Boolean flags
-
-            // Adler-32
-            if (IsFlagSupported(FlagStrings.Adler32Long))
-            {
-                if (this[FlagStrings.Adler32Long] != null)
-                    parameters.Append($"{FlagStrings.Adler32Long} {this[FlagStrings.Adler32Long]} ");
-            }
-
-            // Clear
-            if (IsFlagSupported(FlagStrings.ClearLong))
-            {
-                if (this[FlagStrings.ClearLong] != null)
-                    parameters.Append($"{FlagStrings.ClearLong} {this[FlagStrings.ClearLong]} ");
-            }
-
-            // Clear All
-            if (IsFlagSupported(FlagStrings.ClearAllLong))
-            {
-                if (this[FlagStrings.ClearAllLong] != null)
-                    parameters.Append($"{FlagStrings.ClearAllLong} {this[FlagStrings.ClearAllLong]} ");
-            }
-
-            // CRC16
-            if (IsFlagSupported(FlagStrings.CRC16Long))
-            {
-                if (this[FlagStrings.CRC16Long] != null)
-                    parameters.Append($"{FlagStrings.CRC16Long} {this[FlagStrings.CRC16Long]} ");
-            }
-
-            // CRC32
-            if (IsFlagSupported(FlagStrings.CRC32Long))
-            {
-                if (this[FlagStrings.CRC32Long] != null)
-                    parameters.Append($"{FlagStrings.CRC32Long} {this[FlagStrings.CRC32Long]} ");
-            }
-
-            // CRC64
-            if (IsFlagSupported(FlagStrings.CRC64Long))
-            {
-                if (this[FlagStrings.CRC64Long] != null)
-                    parameters.Append($"{FlagStrings.CRC64Long} {this[FlagStrings.CRC64Long]} ");
-            }
-
-            // Disk Tags
-            if (IsFlagSupported(FlagStrings.DiskTagsLong))
-            {
-                if (this[FlagStrings.DiskTagsLong] != null)
-                    parameters.Append($"{FlagStrings.DiskTagsLong} {this[FlagStrings.DiskTagsLong]} ");
-            }
-
-            // Duplicated Sectors
-            if (IsFlagSupported(FlagStrings.DuplicatedSectorsLong))
-            {
-                if (this[FlagStrings.DuplicatedSectorsLong] != null)
-                    parameters.Append($"{FlagStrings.DuplicatedSectorsLong} {this[FlagStrings.DuplicatedSectorsLong]} ");
-            }
-
-            // Eject
-            if (IsFlagSupported(FlagStrings.EjectLong))
-            {
-                if (this[FlagStrings.EjectLong] != null)
-                    parameters.Append($"{FlagStrings.EjectLong} {this[FlagStrings.EjectLong]} ");
-            }
-
-            // Extended Attributes
-            if (IsFlagSupported(FlagStrings.ExtendedAttributesLong))
-            {
-                if (this[FlagStrings.ExtendedAttributesLong] != null)
-                    parameters.Append($"{FlagStrings.ExtendedAttributesLong} {this[FlagStrings.ExtendedAttributesLong]} ");
-            }
-
-            // Filesystems
-            if (IsFlagSupported(FlagStrings.FilesystemsLong))
-            {
-                if (this[FlagStrings.FilesystemsLong] != null)
-                    parameters.Append($"{FlagStrings.FilesystemsLong} {this[FlagStrings.FilesystemsLong]} ");
-            }
-
-            // First Pregap
-            if (IsFlagSupported(FlagStrings.FirstPregapLong))
-            {
-                if (this[FlagStrings.FirstPregapLong] != null)
-                    parameters.Append($"{FlagStrings.FirstPregapLong} {this[FlagStrings.FirstPregapLong]} ");
-            }
-
-            // Fix Offset
-            if (IsFlagSupported(FlagStrings.FixOffsetLong))
-            {
-                if (this[FlagStrings.FixOffsetLong] != null)
-                    parameters.Append($"{FlagStrings.FixOffsetLong} {this[FlagStrings.FixOffsetLong]} ");
-            }
-
-            // Fix Subchannel
-            if (IsFlagSupported(FlagStrings.FixSubchannelLong))
-            {
-                if (this[FlagStrings.FixSubchannelLong] != null)
-                    parameters.Append($"{FlagStrings.FixSubchannelLong} {this[FlagStrings.FixSubchannelLong]} ");
-            }
-
-            // Fix Subchannel CRC
-            if (IsFlagSupported(FlagStrings.FixSubchannelCrcLong))
-            {
-                if (this[FlagStrings.FixSubchannelCrcLong] != null)
-                    parameters.Append($"{FlagStrings.FixSubchannelCrcLong} {this[FlagStrings.FixSubchannelCrcLong]} ");
-            }
-
-            // Fix Subchannel Position
-            if (IsFlagSupported(FlagStrings.FixSubchannelPositionLong))
-            {
-                if (this[FlagStrings.FixSubchannelPositionLong] != null)
-                    parameters.Append($"{FlagStrings.FixSubchannelPositionLong} {this[FlagStrings.FixSubchannelPositionLong]} ");
-            }
-
-            // Fletcher-16
-            if (IsFlagSupported(FlagStrings.Fletcher16Long))
-            {
-                if (this[FlagStrings.Fletcher16Long] != null)
-                    parameters.Append($"{FlagStrings.Fletcher16Long} {this[FlagStrings.Fletcher16Long]} ");
-            }
-
-            // Fletcher-32
-            if (IsFlagSupported(FlagStrings.Fletcher32Long))
-            {
-                if (this[FlagStrings.Fletcher32Long] != null)
-                    parameters.Append($"{FlagStrings.Fletcher32Long} {this[FlagStrings.Fletcher32Long]} ");
-            }
-
-            // Force
-            if (IsFlagSupported(FlagStrings.ForceLong))
-            {
-                if (this[FlagStrings.ForceLong] != null)
-                    parameters.Append($"{FlagStrings.ForceLong} {this[FlagStrings.ForceLong]} ");
-            }
-
-            // Generate Subchannels
-            if (IsFlagSupported(FlagStrings.GenerateSubchannelsLong))
-            {
-                if (this[FlagStrings.GenerateSubchannelsLong] != null)
-                    parameters.Append($"{FlagStrings.GenerateSubchannelsLong} {this[FlagStrings.GenerateSubchannelsLong]} ");
-            }
-
-            // Long Format
-            if (IsFlagSupported(FlagStrings.LongFormatLong))
-            {
-                if (this[FlagStrings.LongFormatLong] != null)
-                    parameters.Append($"{FlagStrings.LongFormatLong} {this[FlagStrings.LongFormatLong]} ");
-            }
-
-            // Long Sectors
-            if (IsFlagSupported(FlagStrings.LongSectorsLong))
-            {
-                if (this[FlagStrings.LongSectorsLong] != null)
-                    parameters.Append($"{FlagStrings.LongSectorsLong} {this[FlagStrings.LongSectorsLong]} ");
-            }
-
-            // MD5
-            if (IsFlagSupported(FlagStrings.MD5Long))
-            {
-                if (this[FlagStrings.MD5Long] != null)
-                    parameters.Append($"{FlagStrings.MD5Long} {this[FlagStrings.MD5Long]} ");
-            }
-
-            // Metadata
-            if (IsFlagSupported(FlagStrings.MetadataLong))
-            {
-                if (this[FlagStrings.MetadataLong] != null)
-                    parameters.Append($"{FlagStrings.MetadataLong} {this[FlagStrings.MetadataLong]} ");
-            }
-
-            // Partitions
-            if (IsFlagSupported(FlagStrings.PartitionsLong))
-            {
-                if (this[FlagStrings.PartitionsLong] != null)
-                    parameters.Append($"{FlagStrings.PartitionsLong} {this[FlagStrings.PartitionsLong]} ");
-            }
-
-            // Persistent
-            if (IsFlagSupported(FlagStrings.PersistentLong))
-            {
-                if (this[FlagStrings.PersistentLong] != null)
-                    parameters.Append($"{FlagStrings.PersistentLong} {this[FlagStrings.PersistentLong]} ");
-            }
-
-            // Private
-            if (IsFlagSupported(FlagStrings.PrivateLong))
-            {
-                if (this[FlagStrings.PrivateLong] != null)
-                    parameters.Append($"{FlagStrings.PrivateLong} {this[FlagStrings.PrivateLong]} ");
-            }
-
-            // Resume
-            if (IsFlagSupported(FlagStrings.ResumeLong))
-            {
-                if (this[FlagStrings.ResumeLong] != null)
-                    parameters.Append($"{FlagStrings.ResumeLong} {this[FlagStrings.ResumeLong]} ");
-            }
-
-            // Retry Subchannel
-            if (IsFlagSupported(FlagStrings.RetrySubchannelLong))
-            {
-                if (this[FlagStrings.RetrySubchannelLong] != null)
-                    parameters.Append($"{FlagStrings.RetrySubchannelLong} {this[FlagStrings.RetrySubchannelLong]} ");
-            }
-
-            // Sector Tags
-            if (IsFlagSupported(FlagStrings.SectorTagsLong))
-            {
-                if (this[FlagStrings.SectorTagsLong] != null)
-                    parameters.Append($"{FlagStrings.SectorTagsLong} {this[FlagStrings.SectorTagsLong]} ");
-            }
-
-            // Separated Tracks
-            if (IsFlagSupported(FlagStrings.SeparatedTracksLong))
-            {
-                if (this[FlagStrings.SeparatedTracksLong] != null)
-                    parameters.Append($"{FlagStrings.SeparatedTracksLong} {this[FlagStrings.SeparatedTracksLong]} ");
-            }
-
-            // SHA-1
-            if (IsFlagSupported(FlagStrings.SHA1Long))
-            {
-                if (this[FlagStrings.SHA1Long] != null)
-                    parameters.Append($"{FlagStrings.SHA1Long} {this[FlagStrings.SHA1Long]} ");
-            }
-
-            // SHA-256
-            if (IsFlagSupported(FlagStrings.SHA256Long))
-            {
-                if (this[FlagStrings.SHA256Long] != null)
-                    parameters.Append($"{FlagStrings.SHA256Long} {this[FlagStrings.SHA256Long]} ");
-            }
-
-            // SHA-384
-            if (IsFlagSupported(FlagStrings.SHA384Long))
-            {
-                if (this[FlagStrings.SHA384Long] != null)
-                    parameters.Append($"{FlagStrings.SHA384Long} {this[FlagStrings.SHA384Long]} ");
-            }
-
-            // SHA-512
-            if (IsFlagSupported(FlagStrings.SHA512Long))
-            {
-                if (this[FlagStrings.SHA512Long] != null)
-                    parameters.Append($"{FlagStrings.SHA512Long} {this[FlagStrings.SHA512Long]} ");
-            }
-
-            // Skip CD-i Ready Hole
-            if (IsFlagSupported(FlagStrings.SkipCdiReadyHoleLong))
-            {
-                if (this[FlagStrings.SkipCdiReadyHoleLong] != null)
-                    parameters.Append($"{FlagStrings.SkipCdiReadyHoleLong} {this[FlagStrings.SkipCdiReadyHoleLong]} ");
-            }
-
-            // SpamSum
-            if (IsFlagSupported(FlagStrings.SpamSumLong))
-            {
-                if (this[FlagStrings.SpamSumLong] != null)
-                    parameters.Append($"{FlagStrings.SpamSumLong} {this[FlagStrings.SpamSumLong]} ");
-            }
-
-            // Stop on Error
-            if (IsFlagSupported(FlagStrings.StopOnErrorLong))
-            {
-                if (this[FlagStrings.StopOnErrorLong] != null)
-                    parameters.Append($"{FlagStrings.StopOnErrorLong} {this[FlagStrings.StopOnErrorLong]} ");
-            }
-
-            // Stop on Error
-            if (IsFlagSupported(FlagStrings.StoreEncryptedLong))
-            {
-                if (this[FlagStrings.StoreEncryptedLong] != null)
-                    parameters.Append($"{FlagStrings.StoreEncryptedLong} {this[FlagStrings.StoreEncryptedLong]} ");
-            }
-
-            // Tape
-            if (IsFlagSupported(FlagStrings.TapeLong))
-            {
-                if (this[FlagStrings.TapeLong] != null)
-                    parameters.Append($"{FlagStrings.TapeLong} {this[FlagStrings.TapeLong]} ");
-            }
-
-            // Title Keys
-            if (IsFlagSupported(FlagStrings.TitleKeysLong))
-            {
-                if (this[FlagStrings.TitleKeysLong] != null)
-                    parameters.Append($"{FlagStrings.TitleKeysLong} {this[FlagStrings.TitleKeysLong]} ");
-            }
-
-            // Trap Disc
-            if (IsFlagSupported(FlagStrings.TrapDiscLong))
-            {
-                if (this[FlagStrings.TrapDiscLong] != null)
-                    parameters.Append($"{FlagStrings.TrapDiscLong} {this[FlagStrings.TrapDiscLong]} ");
-            }
-
-            // Trim
-            if (IsFlagSupported(FlagStrings.TrimLong))
-            {
-                if (this[FlagStrings.TrimLong] != null)
-                    parameters.Append($"{FlagStrings.TrimLong} {this[FlagStrings.TrimLong]} ");
-            }
-
-            // Use Buffered Reads
-            if (IsFlagSupported(FlagStrings.UseBufferedReadsLong))
-            {
-                if (this[FlagStrings.UseBufferedReadsLong] != null)
-                    parameters.Append($"{FlagStrings.UseBufferedReadsLong} {this[FlagStrings.UseBufferedReadsLong]} ");
-            }
-
-            // Verify Disc
-            if (IsFlagSupported(FlagStrings.VerifyDiscLong))
-            {
-                if (this[FlagStrings.VerifyDiscLong] != null)
-                    parameters.Append($"{FlagStrings.VerifyDiscLong} {this[FlagStrings.VerifyDiscLong]} ");
-            }
-
-            // Verify Sectors
-            if (IsFlagSupported(FlagStrings.VerifySectorsLong))
-            {
-                if (this[FlagStrings.VerifySectorsLong] != null)
-                    parameters.Append($"{FlagStrings.VerifySectorsLong} {this[FlagStrings.VerifySectorsLong]} ");
-            }
-
-            // Whole Disc
-            if (IsFlagSupported(FlagStrings.WholeDiscLong))
-            {
-                if (this[FlagStrings.WholeDiscLong] != null)
-                    parameters.Append($"{FlagStrings.WholeDiscLong} {this[FlagStrings.WholeDiscLong]} ");
-            }
-
-            #endregion
-
-            #region Int8 flags
-
-            // Speed
-            if (IsFlagSupported(FlagStrings.SpeedLong))
-            {
-                if (this[FlagStrings.SpeedLong] == true && SpeedValue != null)
-                    parameters.Append($"{FlagStrings.SpeedLong} {SpeedValue} ");
-            }
-
-            #endregion
-
-            #region Int16 flags
-
-            // Retry Passes
-            if (IsFlagSupported(FlagStrings.RetryPassesLong))
-            {
-                if (this[FlagStrings.RetryPassesLong] == true && RetryPassesValue != null)
-                    parameters.Append($"{FlagStrings.RetryPassesLong} {RetryPassesValue} ");
-            }
-
-            // Width
-            if (IsFlagSupported(FlagStrings.WidthLong))
-            {
-                if (this[FlagStrings.WidthLong] == true && WidthValue != null)
-                    parameters.Append($"{FlagStrings.WidthLong} {WidthValue} ");
-            }
-
-            #endregion
-
-            #region Int32 flags
-
-            // Block Size
-            if (IsFlagSupported(FlagStrings.BlockSizeLong))
-            {
-                if (this[FlagStrings.BlockSizeLong] == true && BlockSizeValue != null)
-                    parameters.Append($"{FlagStrings.BlockSizeLong} {BlockSizeValue} ");
-            }
-
-            // Count
-            if (IsFlagSupported(FlagStrings.CountLong))
-            {
-                if (this[FlagStrings.CountLong] == true && CountValue != null)
-                    parameters.Append($"{FlagStrings.CountLong} {CountValue} ");
-            }
-
-            // Max Blocks
-            if (IsFlagSupported(FlagStrings.MaxBlocksLong))
-            {
-                if (this[FlagStrings.MaxBlocksLong] == true && MaxBlocksValue != null)
-                    parameters.Append($"{FlagStrings.MaxBlocksLong} {MaxBlocksValue} ");
-            }
-
-            // Media Last Sequence
-            if (IsFlagSupported(FlagStrings.MediaLastSequenceLong))
-            {
-                if (this[FlagStrings.MediaLastSequenceLong] == true && MediaLastSequenceValue != null)
-                    parameters.Append($"{FlagStrings.MediaLastSequenceLong} {MediaLastSequenceValue} ");
-            }
-
-            // Media Sequence
-            if (IsFlagSupported(FlagStrings.MediaSequenceLong))
-            {
-                if (this[FlagStrings.MediaSequenceLong] == true && MediaSequenceValue != null)
-                    parameters.Append($"{FlagStrings.MediaSequenceLong} {MediaSequenceValue} ");
-            }
-
-            // Skip
-            if (IsFlagSupported(FlagStrings.SkipLong))
-            {
-                if (this[FlagStrings.SkipLong] == true && SkipValue != null)
-                    parameters.Append($"{FlagStrings.SkipLong} {SkipValue} ");
-            }
-
-            #endregion
-
-            #region Int64 flags
-
-            // Length
-            if (IsFlagSupported(FlagStrings.LengthLong))
-            {
-                if (this[FlagStrings.LengthLong] == true && LengthValue != null)
-                {
-                    if (LengthValue >= 0)
-                        parameters.Append($"{FlagStrings.LengthLong} {LengthValue} ");
-                    else if (LengthValue == -1 && BaseCommand == CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode)
-                        parameters.Append($"{FlagStrings.LengthLong} all ");
-                }
-            }
-
-            // Start
-            if (IsFlagSupported(FlagStrings.StartLong))
-            {
-                if (this[FlagStrings.StartLong] == true && StartValue != null)
-                    parameters.Append($"{FlagStrings.StartLong} {StartValue} ");
-            }
-
-            #endregion
-
-            #region String flags
-
-            // Comments
-            if (IsFlagSupported(FlagStrings.CommentsLong))
-            {
-                if (this[FlagStrings.CommentsLong] == true && CommentsValue != null)
-                    parameters.Append($"{FlagStrings.CommentsLong} \"{CommentsValue}\" ");
-            }
-
-            // Creator
-            if (IsFlagSupported(FlagStrings.CreatorLong))
-            {
-                if (this[FlagStrings.CreatorLong] == true && CreatorValue != null)
-                    parameters.Append($"{FlagStrings.CreatorLong} \"{CreatorValue}\" ");
-            }
-
-            // Drive Manufacturer
-            if (IsFlagSupported(FlagStrings.DriveManufacturerLong))
-            {
-                if (this[FlagStrings.DriveManufacturerLong] == true && DriveManufacturerValue != null)
-                    parameters.Append($"{FlagStrings.DriveManufacturerLong} \"{DriveManufacturerValue}\" ");
-            }
-
-            // Drive Model
-            if (IsFlagSupported(FlagStrings.DriveModelLong))
-            {
-                if (this[FlagStrings.DriveModelLong] == true && DriveModelValue != null)
-                    parameters.Append($"{FlagStrings.DriveModelLong} \"{DriveModelValue}\" ");
-            }
-
-            // Drive Revision
-            if (IsFlagSupported(FlagStrings.DriveRevisionLong))
-            {
-                if (this[FlagStrings.DriveRevisionLong] == true && DriveRevisionValue != null)
-                    parameters.Append($"{FlagStrings.DriveRevisionLong} \"{DriveRevisionValue}\" ");
-            }
-
-            // Drive Serial
-            if (IsFlagSupported(FlagStrings.DriveSerialLong))
-            {
-                if (this[FlagStrings.DriveSerialLong] == true && DriveSerialValue != null)
-                    parameters.Append($"{FlagStrings.DriveSerialLong} \"{DriveSerialValue}\" ");
-            }
-
-            // Encoding
-            if (IsFlagSupported(FlagStrings.EncodingLong))
-            {
-                if (this[FlagStrings.EncodingLong] == true && EncodingValue != null)
-                    parameters.Append($"{FlagStrings.EncodingLong} \"{EncodingValue}\" ");
-            }
-
-            // Format (Convert)
-            if (IsFlagSupported(FlagStrings.FormatConvertLong))
-            {
-                if (this[FlagStrings.FormatConvertLong] == true && FormatConvertValue != null)
-                    parameters.Append($"{FlagStrings.FormatConvertLong} \"{FormatConvertValue}\" ");
-            }
-
-            // Format (Dump)
-            if (IsFlagSupported(FlagStrings.FormatDumpLong))
-            {
-                if (this[FlagStrings.FormatDumpLong] == true && FormatDumpValue != null)
-                    parameters.Append($"{FlagStrings.FormatDumpLong} \"{FormatDumpValue}\" ");
-            }
-
-            // Geometry
-            if (IsFlagSupported(FlagStrings.GeometryLong))
-            {
-                if (this[FlagStrings.GeometryLong] == true && GeometryValue != null)
-                    parameters.Append($"{FlagStrings.GeometryLong} \"{GeometryValue}\" ");
-            }
-
-            // ImgBurn Log
-            if (IsFlagSupported(FlagStrings.ImgBurnLogLong))
-            {
-                if (this[FlagStrings.ImgBurnLogLong] == true && ImgBurnLogValue != null)
-                    parameters.Append($"{FlagStrings.ImgBurnLogLong} \"{ImgBurnLogValue}\" ");
-            }
-
-            // Media Barcode
-            if (IsFlagSupported(FlagStrings.MediaBarcodeLong))
-            {
-                if (this[FlagStrings.MediaBarcodeLong] == true && MediaBarcodeValue != null)
-                    parameters.Append($"{FlagStrings.MediaBarcodeLong} \"{MediaBarcodeValue}\" ");
-            }
-
-            // Media Manufacturer
-            if (IsFlagSupported(FlagStrings.MediaManufacturerLong))
+            // Loop though and append all existing
+            foreach (var kvp in _inputs)
             {
-                if (this[FlagStrings.MediaManufacturerLong] == true && MediaManufacturerValue != null)
-                    parameters.Append($"{FlagStrings.MediaManufacturerLong} \"{MediaManufacturerValue}\" ");
-            }
-
-            // Media Model
-            if (IsFlagSupported(FlagStrings.MediaModelLong))
-            {
-                if (this[FlagStrings.MediaModelLong] == true && MediaModelValue != null)
-                    parameters.Append($"{FlagStrings.MediaModelLong} \"{MediaModelValue}\" ");
-            }
-
-            // Media Part Number
-            if (IsFlagSupported(FlagStrings.MediaPartNumberLong))
-            {
-                if (this[FlagStrings.MediaPartNumberLong] == true && MediaPartNumberValue != null)
-                    parameters.Append($"{FlagStrings.MediaPartNumberLong} \"{MediaPartNumberValue}\" ");
-            }
-
-            // Media Serial
-            if (IsFlagSupported(FlagStrings.MediaSerialLong))
-            {
-                if (this[FlagStrings.MediaSerialLong] == true && MediaSerialValue != null)
-                    parameters.Append($"{FlagStrings.MediaSerialLong} \"{MediaSerialValue}\" ");
-            }
-
-            // Media Title
-            if (IsFlagSupported(FlagStrings.MediaTitleLong))
-            {
-                if (this[FlagStrings.MediaTitleLong] == true && MediaTitleValue != null)
-                    parameters.Append($"{FlagStrings.MediaTitleLong} \"{MediaTitleValue}\" ");
-            }
-
-            // MHDD Log
-            if (IsFlagSupported(FlagStrings.MHDDLogLong))
-            {
-                if (this[FlagStrings.MHDDLogLong] == true && MHDDLogValue != null)
-                    parameters.Append($"{FlagStrings.MHDDLogLong} \"{MHDDLogValue}\" ");
-            }
+                // If the value is unsupported
+                if (!IsFlagSupported(kvp.Key))
+                    continue;
 
-            // Namespace
-            if (IsFlagSupported(FlagStrings.NamespaceLong))
-            {
-                if (this[FlagStrings.NamespaceLong] == true && NamespaceValue != null)
-                    parameters.Append($"{FlagStrings.NamespaceLong} \"{NamespaceValue}\" ");
-            }
-
-            // Options
-            if (IsFlagSupported(FlagStrings.OptionsLong))
-            {
-                if (this[FlagStrings.OptionsLong] == true && OptionsValue != null)
-                    parameters.Append($"{FlagStrings.OptionsLong} \"{OptionsValue}\" ");
-            }
-
-            // Output Prefix
-            if (IsFlagSupported(FlagStrings.OutputPrefixLong))
-            {
-                if (this[FlagStrings.OutputPrefixLong] == true && OutputPrefixValue != null)
-                    parameters.Append($"{FlagStrings.OutputPrefixLong} \"{OutputPrefixValue}\" ");
-            }
+                // If the value doesn't exist
+                string formatted = kvp.Value.Format(useEquals: false);
+                if (formatted.Length == 0)
+                    continue;
 
-            // Resume File
-            if (IsFlagSupported(FlagStrings.ResumeFileLong))
-            {
-                if (this[FlagStrings.ResumeFileLong] == true && ResumeFileValue != null)
-                    parameters.Append($"{FlagStrings.ResumeFileLong} \"{ResumeFileValue}\" ");
-            }
-
-            // Subchannel
-            if (IsFlagSupported(FlagStrings.SubchannelLong))
-            {
-                if (this[FlagStrings.SubchannelLong] == true && SubchannelValue != null)
-                    parameters.Append($"{FlagStrings.SubchannelLong} \"{SubchannelValue}\" ");
+                // Append the parameter
+                parameters.Append($"{formatted} ");
             }
-
-            // XML Sidecar
-            if (IsFlagSupported(FlagStrings.XMLSidecarLong))
-            {
-                if (this[FlagStrings.XMLSidecarLong] == true && XMLSidecarValue != null)
-                    parameters.Append($"{FlagStrings.XMLSidecarLong} \"{XMLSidecarValue}\" ");
-            }
-
-            #endregion
 
             // Handle filenames based on command, if necessary
             switch (BaseCommand)
@@ -1266,44 +609,16 @@ namespace MPF.ExecutionContexts.Aaru
 
             flags = [];
 
-            BlockSizeValue = null;
-            CommentsValue = null;
-            CreatorValue = null;
-            CountValue = null;
-            DriveManufacturerValue = null;
-            DriveModelValue = null;
-            DriveRevisionValue = null;
-            DriveSerialValue = null;
-            EncodingValue = null;
-            FormatConvertValue = null;
-            FormatDumpValue = null;
-            ImgBurnLogValue = null;
             InputValue = null;
             Input1Value = null;
             Input2Value = null;
-            LengthValue = null;
-            MediaBarcodeValue = null;
-            MediaLastSequenceValue = null;
-            MediaManufacturerValue = null;
-            MediaModelValue = null;
-            MediaPartNumberValue = null;
-            MediaSequenceValue = null;
-            MediaSerialValue = null;
-            MediaTitleValue = null;
-            MHDDLogValue = null;
-            NamespaceValue = null;
-            OptionsValue = null;
             OutputValue = null;
-            OutputPrefixValue = null;
             RemoteHostValue = null;
-            ResumeFileValue = null;
-            RetryPassesValue = null;
-            SkipValue = null;
-            SpeedValue = null;
-            StartValue = null;
-            SubchannelValue = null;
-            WidthValue = null;
-            XMLSidecarValue = null;
+
+            foreach (var kvp in _preCommandInputs)
+                kvp.Value.ClearValue();
+            foreach (var kvp in _inputs)
+                kvp.Value.ClearValue();
         }
 
         /// <inheritdoc/>
@@ -1320,7 +635,6 @@ namespace MPF.ExecutionContexts.Aaru
             if (driveSpeed != null)
             {
                 this[FlagStrings.SpeedLong] = true;
-                SpeedValue = (sbyte?)driveSpeed;
                 (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte)driveSpeed);
             }
 
@@ -1334,7 +648,6 @@ namespace MPF.ExecutionContexts.Aaru
             if (rereadCount > 0)
             {
                 this[FlagStrings.RetryPassesLong] = true;
-                RetryPassesValue = (short)rereadCount;
                 (_inputs[FlagStrings.RetryPassesLong] as Int16Input)?.SetValue((short)rereadCount);
             }
 
@@ -1459,380 +772,26 @@ namespace MPF.ExecutionContexts.Aaru
             start++;
 
             // Loop through all auxilary flags, if necessary
-            int i = 0;
-            for (i = start; i < parts.Length; i++)
+            int i = start;
+            for (; i < parts.Length; i++)
             {
-                // Flag read-out values
-                sbyte? byteValue;
-                short? shortValue;
-                int? intValue;
-                long? longValue;
-                string? stringValue;
-
                 // Keep a count of keys to determine if we should break out to filename handling or not
                 int keyCount = Keys.Count;
 
-                #region Boolean flags
-
-                // Adler-32
-                ProcessBooleanParameter(parts, FlagStrings.Adler32Short, FlagStrings.Adler32Long, ref i, true);
-
-                // Clear
-                ProcessBooleanParameter(parts, null, FlagStrings.ClearLong, ref i, true);
-
-                // Clear All
-                ProcessBooleanParameter(parts, null, FlagStrings.ClearAllLong, ref i, true);
-
-                // CRC16
-                ProcessBooleanParameter(parts, null, FlagStrings.CRC16Long, ref i, true);
-
-                // CRC32
-                ProcessBooleanParameter(parts, FlagStrings.CRC32Short, FlagStrings.CRC32Long, ref i, true);
-
-                // CRC64
-                ProcessBooleanParameter(parts, null, FlagStrings.CRC64Long, ref i, true);
-
-                // Disk Tags
-                ProcessBooleanParameter(parts, FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, ref i, true);
-
-                // Deduplicated Sectors
-                ProcessBooleanParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, ref i, true);
-
-                // Eject
-                ProcessBooleanParameter(parts, null, FlagStrings.EjectLong, ref i, true);
-
-                // Extended Attributes
-                ProcessBooleanParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, ref i, true);
-
-                // Filesystems
-                ProcessBooleanParameter(parts, FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, ref i, true);
-
-                // First Pregap
-                ProcessBooleanParameter(parts, null, FlagStrings.FirstPregapLong, ref i, true);
-
-                // Fix Offset
-                ProcessBooleanParameter(parts, null, FlagStrings.FixOffsetLong, ref i, true);
-
-                // Fix Subchannel
-                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelLong, ref i, true);
-
-                // Fix Subchannel CRC
-                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelCrcLong, ref i, true);
-
-                // Fix Subchannel Position
-                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelPositionLong, ref i, true);
-
-                // Fletcher-16
-                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher16Long, ref i, true);
-
-                // Fletcher-32
-                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher32Long, ref i, true);
-
-                // Force
-                ProcessBooleanParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, ref i, true);
-
-                // Generate Subchannels
-                ProcessBooleanParameter(parts, null, FlagStrings.GenerateSubchannelsLong, ref i, true);
-
-                // Long Format
-                ProcessBooleanParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, ref i, true);
-
-                // Long Sectors
-                ProcessBooleanParameter(parts, FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, ref i, true);
-
-                // MD5
-                ProcessBooleanParameter(parts, FlagStrings.MD5Short, FlagStrings.MD5Long, ref i, true);
-
-                // Metadata
-                ProcessBooleanParameter(parts, null, FlagStrings.MetadataLong, ref i, true);
-
-                // Partitions
-                ProcessBooleanParameter(parts, FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, ref i, true);
-
-                // Persistent
-                ProcessBooleanParameter(parts, null, FlagStrings.PersistentLong, ref i, true);
-
-                // Private
-                ProcessBooleanParameter(parts, null, FlagStrings.PrivateLong, ref i, true);
-
-                // Resume
-                ProcessBooleanParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, ref i, true);
-
-                // Retry Subchannel
-                ProcessBooleanParameter(parts, null, FlagStrings.RetrySubchannelLong, ref i, true);
-
-                // Sector Tags
-                ProcessBooleanParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, ref i, true);
-
-                // Separated Tracks
-                ProcessBooleanParameter(parts, FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, ref i, true);
-
-                // SHA-1
-                ProcessBooleanParameter(parts, FlagStrings.SHA1Short, FlagStrings.SHA1Long, ref i, true);
-
-                // SHA-256
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA256Long, ref i, true);
-
-                // SHA-384
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA384Long, ref i, true);
-
-                // SHA-512
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA512Long, ref i, true);
-
-                // Skip CD-i Ready Hole
-                ProcessBooleanParameter(parts, null, FlagStrings.SkipCdiReadyHoleLong, ref i, true);
-
-                // SpamSum
-                ProcessBooleanParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, ref i, true);
-
-                // Stop on Error
-                ProcessBooleanParameter(parts, FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, ref i, true);
-
-                // Store Encrypted
-                ProcessBooleanParameter(parts, null, FlagStrings.StoreEncryptedLong, ref i, true);
-
-                // Tape
-                ProcessBooleanParameter(parts, FlagStrings.TapeShort, FlagStrings.TapeLong, ref i, true);
-
-                // Title Keys
-                ProcessBooleanParameter(parts, null, FlagStrings.TitleKeysLong, ref i, true);
-
-                // Trap Disc
-                ProcessBooleanParameter(parts, FlagStrings.TrapDiscShort, FlagStrings.TrapDiscLong, ref i, true);
-
-                // Trim
-                ProcessBooleanParameter(parts, null, FlagStrings.TrimLong, ref i, true);
-
-                // Use Buffered Reads
-                ProcessBooleanParameter(parts, null, FlagStrings.UseBufferedReadsLong, ref i, true);
-
-                // Verify Disc
-                ProcessBooleanParameter(parts, FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, ref i, true);
-
-                // Verify Sectors
-                ProcessBooleanParameter(parts, FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, ref i, true);
-
-                // Whole Disc
-                ProcessBooleanParameter(parts, FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, ref i, true);
-
-                #endregion
-
-                #region Int8 flags
-
-                // Speed
-                byteValue = ProcessInt8Parameter(parts, null, FlagStrings.SpeedLong, ref i);
-                if (byteValue != null && byteValue != SByte.MinValue)
-                    SpeedValue = byteValue;
-
-                #endregion
-
-                #region Int16 flags
-
-                // Retry Passes
-                shortValue = ProcessInt16Parameter(parts, FlagStrings.RetryPassesShort, FlagStrings.RetryPassesLong, ref i);
-                if (shortValue != null && shortValue != Int16.MinValue)
-                    RetryPassesValue = shortValue;
-
-                // Width
-                shortValue = ProcessInt16Parameter(parts, FlagStrings.WidthShort, FlagStrings.WidthLong, ref i);
-                if (shortValue != null && shortValue != Int16.MinValue)
-                    WidthValue = shortValue;
-
-                #endregion
-
-                #region Int32 flags
-
-                // Block Size
-                intValue = ProcessInt32Parameter(parts, FlagStrings.BlockSizeShort, FlagStrings.BlockSizeLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    BlockSizeValue = intValue;
-
-                // Count
-                intValue = ProcessInt32Parameter(parts, FlagStrings.CountShort, FlagStrings.CountLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    CountValue = intValue;
-
-                // MaxBlocks
-                intValue = ProcessInt32Parameter(parts, null, FlagStrings.MaxBlocksLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    MaxBlocksValue = intValue;
-
-                // Media Last Sequence
-                intValue = ProcessInt32Parameter(parts, null, FlagStrings.MediaLastSequenceLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    MediaLastSequenceValue = intValue;
-
-                // Media Sequence
-                intValue = ProcessInt32Parameter(parts, null, FlagStrings.MediaSequenceLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    MediaSequenceValue = intValue;
-
-                // Skip
-                intValue = ProcessInt32Parameter(parts, FlagStrings.SkipShort, FlagStrings.SkipLong, ref i);
-                if (intValue != null && intValue != Int32.MinValue)
-                    SkipValue = intValue;
-
-                #endregion
-
-                #region Int64 flags
-
-                // Length
-                longValue = ProcessInt64Parameter(parts, FlagStrings.LengthShort, FlagStrings.LengthLong, ref i);
-                if (longValue != null && longValue != long.MinValue)
+                // Match all possible flags
+                foreach (var kvp in _inputs)
                 {
-                    LengthValue = longValue;
+                    // If the flag is not supported
+                    if (!IsFlagSupported(kvp.Key))
+                        continue;
+
+                    // If the value was not a match
+                    if (!kvp.Value.Process(parts, ref i))
+                        continue;
+
+                    // Set the flag
+                    this[kvp.Key] = true;
                 }
-                else
-                {
-                    stringValue = ProcessStringParameter(parts, FlagStrings.LengthShort, FlagStrings.LengthLong, ref i);
-                    if (string.Equals(stringValue, "all"))
-                        LengthValue = -1;
-                }
-
-                // Start -- Required value
-                longValue = ProcessInt64Parameter(parts, FlagStrings.StartShort, FlagStrings.StartLong, ref i);
-                if (longValue != long.MinValue)
-                    StartValue = longValue;
-
-                #endregion
-
-                #region String flags
-
-                // Comments
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.CommentsLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    CommentsValue = stringValue;
-
-                // Creator
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.CreatorLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    CreatorValue = stringValue;
-
-                // Drive Manufacturer
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.DriveManufacturerLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    DriveManufacturerValue = stringValue;
-
-                // Drive Model
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.DriveModelLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    DriveModelValue = stringValue;
-
-                // Drive Revision
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.DriveRevisionLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    DriveRevisionValue = stringValue;
-
-                // Drive Serial
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.DriveSerialLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    DriveSerialValue = stringValue;
-
-                // Encoding -- TODO: List of encodings?
-                stringValue = ProcessStringParameter(parts, FlagStrings.EncodingShort, FlagStrings.EncodingLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    EncodingValue = stringValue;
-
-                // Format (Convert) -- TODO: List of formats?
-                stringValue = ProcessStringParameter(parts, FlagStrings.FormatConvertShort, FlagStrings.FormatConvertLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    FormatConvertValue = stringValue;
-
-                // Format (Dump) -- TODO: List of formats?
-                stringValue = ProcessStringParameter(parts, FlagStrings.FormatDumpShort, FlagStrings.FormatDumpLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    FormatDumpValue = stringValue;
-
-                // Geometry
-                stringValue = ProcessStringParameter(parts, FlagStrings.GeometryShort, FlagStrings.GeometryLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    GeometryValue = stringValue;
-
-                // ImgBurn Log
-                stringValue = ProcessStringParameter(parts, FlagStrings.ImgBurnLogShort, FlagStrings.ImgBurnLogLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    ImgBurnLogValue = stringValue;
-
-                // Media Barcode
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaBarcodeLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaBarcodeValue = stringValue;
-
-                // Media Manufacturer
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaManufacturerLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaManufacturerValue = stringValue;
-
-                // Media Model
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaModelLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaModelValue = stringValue;
-
-                // Media Part Number
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaPartNumberLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaPartNumberValue = stringValue;
-
-                // Media Serial
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaSerialLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaSerialValue = stringValue;
-
-                // Media Title
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.MediaTitleLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MediaTitleValue = stringValue;
-
-                // MHDD Log
-                stringValue = ProcessStringParameter(parts, FlagStrings.MHDDLogShort, FlagStrings.MHDDLogLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    MHDDLogValue = stringValue;
-
-                // Namespace
-                stringValue = ProcessStringParameter(parts, FlagStrings.NamespaceShort, FlagStrings.NamespaceLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    NamespaceValue = stringValue;
-
-                // Options -- TODO: Validate options?
-                stringValue = ProcessStringParameter(parts, FlagStrings.OptionsShort, FlagStrings.OptionsLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    OptionsValue = stringValue;
-
-                // Output Prefix
-                stringValue = ProcessStringParameter(parts, FlagStrings.OutputPrefixShort, FlagStrings.OutputPrefixLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    OutputPrefixValue = stringValue;
-
-                // Resume File
-                stringValue = ProcessStringParameter(parts, FlagStrings.ResumeFileShort, FlagStrings.ResumeFileLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    ResumeFileValue = stringValue;
-
-                // Subchannel
-                stringValue = ProcessStringParameter(parts, null, FlagStrings.SubchannelLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                {
-                    if (string.Equals(stringValue, "any")
-                        || string.Equals(stringValue, "rw")
-                        || string.Equals(stringValue, "rw-or-pq")
-                        || string.Equals(stringValue, "pq")
-                        || string.Equals(stringValue, "none")
-                        )
-                    {
-                        SubchannelValue = stringValue;
-                    }
-                    else
-                    {
-                        SubchannelValue = "any";
-                    }
-                }
-
-                // XML Sidecar
-                stringValue = ProcessStringParameter(parts, FlagStrings.XMLSidecarShort, FlagStrings.XMLSidecarLong, ref i);
-                if (!string.IsNullOrEmpty(stringValue))
-                    XMLSidecarValue = stringValue;
-
-                #endregion
 
                 // If we didn't add any new flags, break out since we might be at filename handling
                 if (keyCount == Keys.Count)

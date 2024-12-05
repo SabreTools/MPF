@@ -142,9 +142,8 @@ namespace MPF.ExecutionContexts.Aaru
         public const string EncodingShort = "-e";
         public const string EncodingLong = "--encoding";
         public const string FormatConvertShort = "-p";
-        public const string FormatConvertLong = "--format";
         public const string FormatDumpShort = "-t";
-        public const string FormatDumpLong = "--format";
+        public const string FormatLong = "--format";
         public const string GeometryShort = "-g";
         public const string GeometryLong = "--geometry";
         public const string ImgBurnLogShort = "-b";

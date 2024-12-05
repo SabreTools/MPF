@@ -15,9 +15,9 @@ namespace MPF.ExecutionContexts.Data
         public readonly string Name;
 
         /// <summary>
-        /// Short name for the input
+        /// Alternative name for the input
         /// </summary>
-        protected readonly string? _shortName;
+        protected readonly string[] _altNames;
 
         /// <summary>
         /// Indicates if the value following is required or not
@@ -37,7 +37,7 @@ namespace MPF.ExecutionContexts.Data
         public Input(string name)
         {
             Name = name;
-            _shortName = null;
+            _altNames = [];
             _required = true;
         }
 
@@ -46,7 +46,7 @@ namespace MPF.ExecutionContexts.Data
         public Input(string name, bool required)
         {
             Name = name;
-            _shortName = null;
+            _altNames = [];
             _required = required;
         }
 
@@ -55,7 +55,7 @@ namespace MPF.ExecutionContexts.Data
         public Input(string shortName, string longName)
         {
             Name = longName;
-            _shortName = shortName;
+            _altNames = [shortName];
             _required = true;
         }
 
@@ -65,7 +65,24 @@ namespace MPF.ExecutionContexts.Data
         public Input(string shortName, string longName, bool required)
         {
             Name = longName;
-            _shortName = shortName;
+            _altNames = [shortName];
+            _required = required;
+        }
+
+        /// <param name="names">Set of names to use</param>
+        public Input(string[] names)
+        {
+            Name = names.Length > 0 ? names[0] : string.Empty;
+            _altNames = names;
+            _required = true;
+        }
+
+        /// <param name="names">Set of names to use</param>
+        /// <param name="required">Indicates if a following value is required</param>
+        public Input(string[] names, bool required)
+        {
+            Name = names.Length > 0 ? names[0] : string.Empty;
+            _altNames = names;
             _required = required;
         }
 
@@ -212,6 +229,14 @@ namespace MPF.ExecutionContexts.Data
         /// <inheritdoc/>
         public Input(string shortName, string longName, bool required)
             : base(shortName, longName, required) { }
+
+        /// <inheritdoc/>
+        public Input(string[] names)
+            : base(names) { }
+
+        /// <inheritdoc/>
+        public Input(string[] names, bool required)
+            : base(names, required) { }
 
         #endregion
 
