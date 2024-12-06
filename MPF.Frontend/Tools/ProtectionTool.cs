@@ -21,7 +21,7 @@ namespace MPF.Frontend.Tools
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<ProtectionDictionary> RunProtectionScanOnPath(string path,
-            Frontend.Options options,
+            Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
 #if NET40

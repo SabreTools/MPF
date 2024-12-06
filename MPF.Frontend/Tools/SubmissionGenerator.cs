@@ -45,7 +45,7 @@ namespace MPF.Frontend.Tools
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Frontend.Options options,
+            Options options,
             BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
@@ -157,7 +157,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public async static Task<bool> FillFromRedump(Frontend.Options options,
+        public async static Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {

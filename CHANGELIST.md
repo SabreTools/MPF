@@ -54,6 +54,7 @@
 - Ensure Redumper support matrix is consistent
 - Add FrontendTool tests
 - Update protection tool tests
+- Remove unnecessary namespace prefixes
 
 ### 3.2.4 (2024-11-24)
 
