@@ -5,9 +5,9 @@ using Xunit;
 
 namespace MPF.Frontend.Test
 {
-    public class EnumConverterTests
+    public class DriveTests
     {
-        #region Cross-enumeration conversions
+        #region ToInternalDriveType
 
         /// <summary>
         /// DiscType values that map to InternalDriveType
@@ -55,40 +55,5 @@ namespace MPF.Frontend.Test
         }
 
         #endregion
-
-        #region Convert to Long Name
-
-        // TODO: Maybe add a test for the generic "GetLongName" method
-
-        /// <summary>
-        /// Check that every InternalProgram has a long name provided
-        /// </summary>
-        /// <param name="internalProgram">InternalProgram value to check</param>
-        [Theory]
-        [MemberData(nameof(GenerateInternalProgramTestData))]
-        public void InternalProgramLongNameTest(InternalProgram? internalProgram)
-        {
-            string actual = internalProgram.LongName();
-            Assert.NotNull(actual);
-        }
-
-        /// <summary>
-        /// Generate a test set of InternalProgram values
-        /// </summary>
-        /// <returns>MemberData-compatible list of InternalProgram values</returns>
-        public static List<object?[]> GenerateInternalProgramTestData()
-        {
-            var testData = new List<object?[]>() { new object?[] { null } };
-            foreach (InternalProgram? internalProgram in Enum.GetValues(typeof(InternalProgram)))
-            {
-                testData.Add([internalProgram]);
-            }
-
-            return testData;
-        }
-
-        #endregion
-
-        // TODO: Add from-string tests
     }
 }
