@@ -558,6 +558,7 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
 
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums!.Layerbreak == default)

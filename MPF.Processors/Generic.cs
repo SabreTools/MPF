@@ -44,6 +44,7 @@ namespace MPF.Processors
                 case MediaType.DVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                 case MediaType.UMD:

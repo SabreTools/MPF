@@ -702,6 +702,7 @@ namespace MPF.Processors
 
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
+                case MediaType.NintendoWiiUOpticalDisc:
                     return [
                             new($"{baseFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),

@@ -1258,7 +1258,7 @@ namespace MPF.Frontend.ViewModels
             else if (Options.SkipSystemDetection && Options.DefaultSystem != null)
             {
                 var currentSystem = Options.DefaultSystem;
-                VerboseLogLn($"System detection disabled, setting to default of {currentSystem.LongName()}.");
+                VerboseLogLn($"System detection disabled, defaulting to {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 CurrentSystem = Systems[sysIndex];
             }
@@ -1932,7 +1932,7 @@ namespace MPF.Frontend.ViewModels
         public void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            DriveSpeeds = (List<int>)InterfaceConstants.GetSpeedsForMediaType(CurrentMediaType);
+            DriveSpeeds = InterfaceConstants.GetSpeedsForMediaType(CurrentMediaType);
             VerboseLogLn($"Supported media speeds: {string.Join(", ", [.. DriveSpeeds.ConvertAll(ds => ds.ToString())])}");
 
             // Set the selected speed
@@ -1963,7 +1963,7 @@ namespace MPF.Frontend.ViewModels
             if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
                 return false;
 
-            return (CurrentProgram) switch
+            return CurrentProgram switch
             {
                 // Aaru
                 InternalProgram.Aaru when CurrentMediaType == MediaType.BluRay => true,
@@ -1977,6 +1977,7 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.Aaru when CurrentMediaType == MediaType.HDDVD => true,
                 InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
                 InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
                 InternalProgram.Aaru when CurrentMediaType == MediaType.SDCard => true,
 
                 // DiscImageCreator
@@ -1991,6 +1992,7 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.HDDVD => true,
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.SDCard => true,
 
                 // Redumper
@@ -1999,6 +2001,9 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.Redumper when CurrentMediaType == MediaType.DVD => true,
                 InternalProgram.Redumper when CurrentMediaType == MediaType.GDROM => true,
                 InternalProgram.Redumper when CurrentMediaType == MediaType.HDDVD => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
 
                 // Default
                 _ => false,

@@ -50,6 +50,7 @@
 - Unify queue handling in processing queue
 - Add non-tools frontend tests
 - Update RedumpLib to 1.6.1
+- Ensure consistency in frontend code
 
 ### 3.2.4 (2024-11-24)
 

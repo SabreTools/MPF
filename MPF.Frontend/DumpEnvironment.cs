@@ -285,7 +285,8 @@ namespace MPF.Frontend
                     or MediaType.HDDVD
                     or MediaType.BluRay
                     or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => true,
+                    or MediaType.NintendoWiiOpticalDisc
+                    or MediaType.NintendoWiiUOpticalDisc => true,
                 _ => false,
             };
         }
@@ -343,7 +344,8 @@ namespace MPF.Frontend
                 // Partially supported types
                 MediaType.GDROM
                     or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => ResultEventArgs.Success($"{_type.LongName()} partially supported for dumping"),
+                    or MediaType.NintendoWiiOpticalDisc
+                    or MediaType.NintendoWiiUOpticalDisc => ResultEventArgs.Success($"{_type.LongName()} partially supported for dumping"),
 
                 // Special case for other supported tools
                 MediaType.UMD => ResultEventArgs.Failure($"{_type.LongName()} supported for submission info parsing"),
