@@ -15,10 +15,14 @@ namespace MPF.ExecutionContexts.Redumper
         {
             return type switch
             {
-                MediaType.CDROM => ".bin",
+                MediaType.CDROM
+                    or MediaType.GDROM => ".bin",
                 MediaType.DVD
                     or MediaType.HDDVD
-                    or MediaType.BluRay => ".iso",
+                    or MediaType.BluRay
+                    or MediaType.NintendoWiiOpticalDisc => ".iso",
+                MediaType.NintendoGameCubeGameDisc => ".raw",
+                MediaType.NintendoWiiUOpticalDisc => ".wud",
                 _ => null,
             };
         }

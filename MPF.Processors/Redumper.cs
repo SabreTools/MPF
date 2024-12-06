@@ -397,6 +397,7 @@ namespace MPF.Processors
             switch (Type)
             {
                 case MediaType.CDROM:
+                case MediaType.GDROM:
                     List<OutputFile> cdrom = [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -477,6 +478,8 @@ namespace MPF.Processors
                     return cdrom;
 
                 case MediaType.DVD:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
                     return [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -534,6 +537,7 @@ namespace MPF.Processors
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
                 case MediaType.BluRay:
+                case MediaType.NintendoWiiUOpticalDisc:
                     return [
                         new($"{baseFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

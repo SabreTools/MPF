@@ -12,13 +12,14 @@ namespace MPF.ExecutionContexts.Test
         [Theory]
         [InlineData(null, null)]
         [InlineData(MediaType.CDROM, ".bin")]
-        [InlineData(MediaType.GDROM, null)]
+        [InlineData(MediaType.GDROM, ".bin")]
         [InlineData(MediaType.DVD, ".iso")]
         [InlineData(MediaType.HDDVD, ".iso")]
         [InlineData(MediaType.BluRay, ".iso")]
-        [InlineData(MediaType.FloppyDisk, null)]
-        [InlineData(MediaType.HardDisk, null)]
-        [InlineData(MediaType.ApertureCard,null)]
+        [InlineData(MediaType.NintendoWiiOpticalDisc, ".iso")]
+        [InlineData(MediaType.NintendoGameCubeGameDisc, ".raw")]
+        [InlineData(MediaType.NintendoWiiUOpticalDisc, ".wud")]
+        [InlineData(MediaType.ApertureCard, null)]
         public void ExtensionTest(MediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);
