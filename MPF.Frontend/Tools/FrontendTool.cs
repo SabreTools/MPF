@@ -31,6 +31,7 @@ namespace MPF.Frontend.Tools
 
                 // BD dump speed
                 MediaType.BluRay => options.PreferredDumpSpeedBD,
+                MediaType.NintendoWiiUOpticalDisc => options.PreferredDumpSpeedBD,
 
                 // Default
                 _ => options.PreferredDumpSpeedCD,
@@ -518,21 +519,18 @@ namespace MPF.Frontend.Tools
                     return string.Empty;
 
                 // Remove quotes and angle brackets from path
-                path = path!.Replace("\"", string.Empty);
-                path = path!.Replace("<", string.Empty);
-                path = path!.Replace(">", string.Empty);
+                path = path!.Trim('\"');
+                path = path!.Trim('<');
+                path = path!.Trim('>');
+
+                // Remove invalid path characters
+                foreach (char c in Path.GetInvalidPathChars())
+                    path = path.Replace(c, '_');
 
                 // Try getting the combined path and returning that directly
                 string fullPath = getFullPath ? Path.GetFullPath(path) : path;
                 var fullDirectory = Path.GetDirectoryName(fullPath);
                 string fullFile = Path.GetFileName(fullPath);
-
-                // Remove invalid path characters
-                if (fullDirectory != null)
-                {
-                    foreach (char c in Path.GetInvalidPathChars())
-                        fullDirectory = fullDirectory.Replace(c, '_');
-                }
 
                 // Remove invalid filename characters
                 foreach (char c in Path.GetInvalidFileNameChars())

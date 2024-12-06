@@ -52,6 +52,7 @@
 - Update RedumpLib to 1.6.1
 - Ensure consistency in frontend code
 - Ensure Redumper support matrix is consistent
+- Add FrontendTool tests
 
 ### 3.2.4 (2024-11-24)
 
