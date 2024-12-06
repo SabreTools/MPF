@@ -49,7 +49,7 @@ namespace MPF.Frontend
                 }
 
                 if (method != null)
-                    return method.Invoke(null, new[] { value }) as string ?? string.Empty;
+                    return method.Invoke(null, [value]) as string ?? string.Empty;
                 else
                     return string.Empty;
             }
@@ -67,7 +67,7 @@ namespace MPF.Frontend
         /// <returns>String representing the value, if possible</returns>
         public static string LongName(this InternalProgram? prog)
         {
-            return (prog) switch
+            return prog switch
             {
                 #region Dumping support
 
@@ -98,7 +98,7 @@ namespace MPF.Frontend
         /// <returns>String representing the value, if possible</returns>
         public static string LongName(this RedumperReadMethod? method)
         {
-            return (method) switch
+            return method switch
             {
                 RedumperReadMethod.D8 => "D8",
                 RedumperReadMethod.BE => "BE",
@@ -116,7 +116,7 @@ namespace MPF.Frontend
         /// <returns>String representing the value, if possible</returns>
         public static string LongName(this RedumperSectorOrder? order)
         {
-            return (order) switch
+            return order switch
             {
                 RedumperSectorOrder.DATA_C2_SUB => "DATA_C2_SUB",
                 RedumperSectorOrder.DATA_SUB_C2 => "DATA_SUB_C2",

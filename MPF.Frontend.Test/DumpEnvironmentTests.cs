@@ -1,5 +1,4 @@
-﻿using MPF.Frontend;
-using SabreTools.RedumpLib.Data;
+﻿using SabreTools.RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Frontend.Test

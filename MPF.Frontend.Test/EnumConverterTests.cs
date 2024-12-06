@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using MPF.Frontend;
 using Xunit;
 
 namespace MPF.Frontend.Test

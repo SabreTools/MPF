@@ -53,7 +53,8 @@ namespace MPF.Frontend
                     or MediaType.NintendoGameCubeGameDisc
                     or MediaType.NintendoWiiOpticalDisc => DVD,
                 MediaType.HDDVD => HDDVD,
-                MediaType.BluRay => BD,
+                MediaType.BluRay
+                    or MediaType.NintendoWiiUOpticalDisc => BD,
                 _ => Unknown,
             };
         }

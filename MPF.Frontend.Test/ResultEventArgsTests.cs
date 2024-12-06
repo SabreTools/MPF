@@ -1,5 +1,4 @@
-﻿using MPF.Frontend;
-using Xunit;
+﻿using Xunit;
 
 namespace MPF.Frontend.Test
 {

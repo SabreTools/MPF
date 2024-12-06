@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-#if NET40
-using System.Threading;
-#endif
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.ExecutionContexts;

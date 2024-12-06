@@ -744,7 +744,7 @@ namespace MPF.Frontend
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        private static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
+        internal static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
         {
             if (settings.ContainsKey(key))
             {
@@ -766,7 +766,7 @@ namespace MPF.Frontend
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        private static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
+        internal static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
         {
             if (settings.ContainsKey(key))
             {
@@ -788,7 +788,7 @@ namespace MPF.Frontend
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
-        private static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
+        internal static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
         {
             if (settings.ContainsKey(key))
                 return settings[key];

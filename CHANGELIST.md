@@ -48,6 +48,7 @@
 - Add tests around default values
 - Increase sleep time in queue
 - Unify queue handling in processing queue
+- Add non-tools frontend tests
 
 ### 3.2.4 (2024-11-24)
 
