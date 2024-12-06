@@ -71,8 +71,8 @@ if (!$NO_BUILD.IsPresent) {
     dotnet restore
 
     # Create Nuget Packages
-    dotnet pack MPF.ExecutionContexts\MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
-    dotnet pack MPF.Processors\MPF.Processors.csproj --output $BUILD_FOLDER
+    dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
+    dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER
 
     # Build UI
     foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
@@ -96,16 +96,16 @@ if (!$NO_BUILD.IsPresent) {
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                    dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.UI\MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.UI/MPF.UI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             }
         }
     }
@@ -132,16 +132,16 @@ if (!$NO_BUILD.IsPresent) {
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.CLI\MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.CLI\MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.CLI\MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                    dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.CLI\MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             }
         }
     }
@@ -168,16 +168,16 @@ if (!$NO_BUILD.IsPresent) {
             if ($SINGLE_FILE_CAPABLE -contains $FRAMEWORK) {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
                 }
-                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
             }
             else {
                 # Only include Debug if set
                 if ($INCLUDE_DEBUG.IsPresent) {
-                    dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                    dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
                 }
-                dotnet publish MPF.Check\MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+                dotnet publish MPF.Check/MPF.Check.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             }
         }
     }
@@ -185,6 +185,47 @@ if (!$NO_BUILD.IsPresent) {
 
 # Only create archives if requested
 if (!$NO_ARCHIVE.IsPresent) {
+    # Download and extract, if needed
+    if ($INCLUDE_PROGRAMS.IsPresent) {
+        Write-Host "===== Downloading Required Programs ====="
+
+        # Aaru
+        # --- Skipped for now ---
+
+        # DiscImageCreator
+        Invoke-WebRequest -Uri https://github.com/user-attachments/files/17211434/DiscImageCreator_20241001.zip -OutFile DiscImageCreator_20241001.zip
+        Expand-Archive -LiteralPath "DiscImageCreator_20241001.zip" -DestinationPath "$BUILD_FOLDER/Creator"
+
+        # Redumper
+        Invoke-WebRequest -Uri https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip -OutFile redumper-2024.11.03_build438-win64.zip
+        Expand-Archive -LiteralPath "redumper-2024.11.03_build438-win64.zip" -DestinationPath "$BUILD_FOLDER/Redumper"
+
+        # Create directories and copy data
+        foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
+            foreach ($RUNTIME in $UI_RUNTIMES) {
+                if ($INCLUDE_DEBUG.IsPresent) {
+                    New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "Creator/Release_ANSI/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/" -Recurse -Force
+
+                    New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "Redumper/redumper-2024.11.03_build438-win64/bin/redumper.exe" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/" -Force
+                }
+
+                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator" -Type Directory -ErrorAction SilentlyContinue
+                Copy-Item -Path "Creator/Release_ANSI/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/" -Recurse -Force
+
+                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper" -Type Directory -ErrorAction SilentlyContinue
+                Copy-Item -Path "Redumper/redumper-2024.11.03_build438-win64/bin/redumper.exe" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/" -Force
+            }
+        }
+
+        # Clean up the odownloaded files and directories
+        Remove-Item -Path "DiscImageCreator_20241001.zip"
+        Remove-Item -Path "Creator" -Recurse
+        Remove-Item -Path "redumper-2024.11.03_build438-win64.zip"
+        Remove-Item -Path "Redumper" -Recurse
+    }
+
     # Create UI archives
     foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
         foreach ($RUNTIME in $UI_RUNTIMES) {
@@ -205,21 +246,21 @@ if (!$NO_ARCHIVE.IsPresent) {
 
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER\MPF.UI\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
+                Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
                 if ($INCLUDE_PROGRAMS.IsPresent) {
-                    7z a -tzip $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
                 else {
-                    7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_debug.zip *
                 }
             }
             
-            Set-Location -Path $BUILD_FOLDER\MPF.UI\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
+            Set-Location -Path $BUILD_FOLDER/MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
             if ($INCLUDE_PROGRAMS.IsPresent) {
-                7z a -tzip $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                7z a -tzip $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
             }
             else {
-                7z a -tzip -x!Programs\* $BUILD_FOLDER\MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
+                7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.UI_${FRAMEWORK}_${RUNTIME}_release.zip *
             }
         }
     }
@@ -244,11 +285,11 @@ if (!$NO_ARCHIVE.IsPresent) {
 
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER\MPF.CLI\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
-                7z a -tzip $BUILD_FOLDER\MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
             }
-            Set-Location -Path $BUILD_FOLDER\MPF.CLI\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
-            7z a -tzip $BUILD_FOLDER\MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+            Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+            7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
         }
     }
 
@@ -272,11 +313,11 @@ if (!$NO_ARCHIVE.IsPresent) {
 
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
-                Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Debug\${FRAMEWORK}\${RUNTIME}\publish\
-                7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_debug.zip *
             }
-            Set-Location -Path $BUILD_FOLDER\MPF.Check\bin\Release\${FRAMEWORK}\${RUNTIME}\publish\
-            7z a -tzip $BUILD_FOLDER\MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
+            Set-Location -Path $BUILD_FOLDER/MPF.Check/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+            7z a -tzip $BUILD_FOLDER/MPF.Check_${FRAMEWORK}_${RUNTIME}_release.zip *
         }
     }
 

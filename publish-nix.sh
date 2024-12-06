@@ -3,6 +3,7 @@
 # This batch file assumes the following:
 # - .NET 9.0 (or newer) SDK is installed and in PATH
 # - zip is installed and in PATH
+# - wget is installed an in PATH
 # - Git is installed and in PATH
 # - The relevant commandline programs are already downloaded
 #   and put into their respective folders
@@ -203,6 +204,47 @@ fi
 
 # Only create archives if requested
 if [ $NO_ARCHIVE = false ]; then
+    # Download and extract, if needed
+    if [ $INCLUDE_PROGRAMS = true ]; then
+        echo "===== Downloading Required Programs ====="
+
+        # Aaru
+        # --- Skipped for now ---
+
+        # DiscImageCreator
+        wget https://github.com/user-attachments/files/17211434/DiscImageCreator_20241001.zip
+        unzip -u DiscImageCreator_20241001.zip
+
+        # Redumper
+        wget https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip
+        unzip redumper-2024.11.03_build438-win64.zip
+
+        # Create directories and copy data
+        for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
+            for RUNTIME in "${UI_RUNTIMES[@]}"; do
+                if [ $INCLUDE_DEBUG = true ]; then
+                    mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator
+                    cp -rf Release_ANSI/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
+
+                    mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
+                    cp -rf redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                fi
+
+                mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator
+                cp -rf Release_ANSI/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
+
+                mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
+                cp -rf redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+            done
+        done
+
+        # Clean up the odownloaded files and directories
+        rm DiscImageCreator_20241001.zip
+        rm -r Release_ANSI
+        rm redumper-2024.11.03_build438-win64.zip
+        rm -r redumper-2024.11.03_build438-win64
+    fi
+
     # Create UI archives
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
