@@ -49,6 +49,7 @@
 - Increase sleep time in queue
 - Unify queue handling in processing queue
 - Add non-tools frontend tests
+- Update RedumpLib to 1.6.1
 
 ### 3.2.4 (2024-11-24)
 
