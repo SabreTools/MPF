@@ -73,7 +73,7 @@ namespace MPF.Frontend
                     if (_tokenSource.IsCancellationRequested)
                         break;
 
-                    Thread.Sleep(1);
+                    Thread.Sleep(25);
                     continue;
                 }
 
