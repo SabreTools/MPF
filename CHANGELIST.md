@@ -53,6 +53,7 @@
 - Ensure consistency in frontend code
 - Ensure Redumper support matrix is consistent
 - Add FrontendTool tests
+- Update protection tool tests
 
 ### 3.2.4 (2024-11-24)
 

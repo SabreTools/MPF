@@ -160,12 +160,26 @@ namespace MPF.Frontend.Tools
                 foundProtections = foundProtections.FindAll(p => p != "Cactus Data Shield 200");
             }
 
+            // Cactus Data Shield / SafeDisc
+            if (foundProtections.Exists(p => p == "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)"))
+            {
+                foundProtections = foundProtections
+                    .FindAll(p => p != "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)");
+
+                if (foundProtections.Exists(p => !p.StartsWith("SafeDisc")))
+                    foundProtections.Add("Cactus Data Shield 300");
+            }
+
             // CD-Check
             foundProtections = foundProtections.FindAll(p => p != "Executable-Based CD Check");
 
             // CD-Cops
-            if (foundProtections.Exists(p => p == "CD-Cops") && foundProtections.Exists(p => p.StartsWith("CD-Cops") && p.Length > "CD-Cops".Length))
+            if (foundProtections.Exists(p => p == "CD-Cops")
+                && foundProtections.Exists(p => p.StartsWith("CD-Cops")
+                    && p.Length > "CD-Cops".Length))
+            {
                 foundProtections = foundProtections.FindAll(p => p != "CD-Cops");
+            }
 
             // CD-Key / Serial
             foundProtections = foundProtections.FindAll(p => p != "CD-Key / Serial");
@@ -239,73 +253,72 @@ namespace MPF.Frontend.Tools
             // SafeCast
             // TODO: Figure this one out
 
-            // Cactus Data Shield / SafeDisc
-            if (foundProtections.Exists(p => p == "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)"))
-            {
-                foundProtections = foundProtections
-                    .FindAll(p => p != "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)");
-
-                if (foundProtections.Exists(p => !p.StartsWith("SafeDisc")))
-                    foundProtections.Add("Cactus Data Shield 300");
-            }
-
             // SafeDisc
             if (foundProtections.Exists(p => p.StartsWith("SafeDisc")))
             {
-                // Confirmed this set of checks works with Redump entries 10430, 11347, 13230, 18614, 28257, 31149, 31824, 52606, 57721, 58455, 58573, 62935, 63941, 64255, 65569, 66005, 70504, 73502, 74520, 78048, 79729, 83468, 98589, and 101261.
+                // Confirmed this set of checks works with Redump entries 10430, 11347, 13230, 18614, 28257, 31149, 31824, 52606, 57721, 58455,
+                // 58573, 62935, 63941, 64255, 65569, 66005, 70504, 73502, 74520, 78048, 79729, 83468, 98589, and 101261.
 
-                // Best case scenario for SafeDisc 2+: A full SafeDisc version is found in a line starting with "Macrovision Protected Application". All other SafeDisc detections can be safely scrubbed.
+                // Best case scenario for SafeDisc 2+: A full SafeDisc version is found in a line starting with "Macrovision Protected Application".
+                // All other SafeDisc detections can be safely scrubbed.
                 // TODO: Scrub "Macrovision Protected Application, " from before the SafeDisc version.
-                if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled) && p.StartsWith("Macrovision Protected Application") && !p.Contains("SRV Tool APP")))
+                if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)
+                        && p.StartsWith("Macrovision Protected Application")
+                        && !p.Contains("SRV Tool APP")))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                         .FindAll(p => !p.StartsWith("Macrovision Security Driver"))
                         .FindAll(p => !p.Contains("SRV Tool APP"))
                         .FindAll(p => p != "SafeDisc")
                         .FindAll(p => !p.StartsWith("Macrovision Protected Application [Version Expunged]"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\/4\+", RegexOptions.Compiled)))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\/4\+", RegexOptions.Compiled))
                         .FindAll(p => p != "SafeDisc 1/Lite")
                         .FindAll(p => p != "SafeDisc 2+")
                         .FindAll(p => p != "SafeDisc 3+ (DVD)");
                 }
 
                 // Next best case for SafeDisc 2+: A full SafeDisc version is found from the "SafeDisc SRV Tool APP".
-                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled) && p.StartsWith("Macrovision Protected Application") && p.Contains("SRV Tool APP")))
+                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)
+                        && p.StartsWith("Macrovision Protected Application")
+                        && p.Contains("SRV Tool APP")))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                         .FindAll(p => !p.StartsWith("Macrovision Security Driver"))
                         .FindAll(p => p != "SafeDisc")
                         .FindAll(p => !p.StartsWith("Macrovision Protected Application [Version Expunged]"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\/4\+", RegexOptions.Compiled)))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\/4\+", RegexOptions.Compiled))
                         .FindAll(p => p != "SafeDisc 1/Lite")
                         .FindAll(p => p != "SafeDisc 2+")
                         .FindAll(p => p != "SafeDisc 3+ (DVD)");
                 }
 
                 // Covers specific edge cases where older drivers are erroneously placed in discs with a newer version of SafeDisc, and the specific SafeDisc version is expunged.
-                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled) || Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled)) && foundProtections.Exists(p => p == "SafeDisc 3+ (DVD)"))
+                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled)
+                        || Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled))
+                    && foundProtections.Exists(p => p == "SafeDisc 3+ (DVD)"))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                     .FindAll(p => !p.StartsWith("Macrovision Protected Application [Version Expunged]"))
                     .FindAll(p => !p.StartsWith("Macrovision Security Driver"))
-                    .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
-                    .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                    .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
+                    .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [1-2]\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
                     .FindAll(p => p != "SafeDisc")
                     .FindAll(p => p != "SafeDisc 1/Lite")
                     .FindAll(p => p != "SafeDisc 2+");
                 }
 
                 // Best case for SafeDisc 1.X: A full SafeDisc version is found that isn't part of a version range. 
-                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled) && !(Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))))
+                else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled)
+                        && !Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                         .FindAll(p => !p.StartsWith("Macrovision Security Driver"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
                         .FindAll(p => p != "SafeDisc")
                         .FindAll(p => p != "SafeDisc 1")
                         .FindAll(p => p != "SafeDisc 1/Lite");
@@ -313,12 +326,14 @@ namespace MPF.Frontend.Tools
 
                 // Next best case for SafeDisc 1: A SafeDisc version range is found from "SECDRV.SYS".
                 // TODO: Scrub "Macrovision Security Driver {Version}" from before the SafeDisc version.
-                else if (foundProtections.Exists(p => p.StartsWith("Macrovision Security Driver") && Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled) || Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$")))
+                else if (foundProtections.Exists(p => p.StartsWith("Macrovision Security Driver")
+                        && Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)
+                        || Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$")))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                         .FindAll(p => !p.StartsWith("Macrovision Protected Application [Version Expunged]"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
                         .FindAll(p => p != "SafeDisc")
                         .FindAll(p => p != "SafeDisc 1")
                         .FindAll(p => p != "SafeDisc 1/Lite");
@@ -330,8 +345,8 @@ namespace MPF.Frontend.Tools
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))
                         .FindAll(p => !p.StartsWith("Macrovision Protected Application [Version Expunged]"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled))
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
                         .FindAll(p => p != "SafeDisc")
                         .FindAll(p => p != "SafeDisc 1")
                         .FindAll(p => p != "SafeDisc 1/Lite")
@@ -343,7 +358,7 @@ namespace MPF.Frontend.Tools
                 else if (foundProtections.Exists(p => p == "SafeDisc Lite"))
                 {
                     foundProtections = foundProtections.FindAll(p => p != "SafeDisc")
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-1\.[0-9]{2}\.[0-9]{3}\/Lite", RegexOptions.Compiled)));
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-1\.[0-9]{2}\.[0-9]{3}\/Lite", RegexOptions.Compiled));
                 }
 
                 // Only SafeDisc 3+ is found.
@@ -352,7 +367,7 @@ namespace MPF.Frontend.Tools
                     foundProtections = foundProtections.FindAll(p => p != "SafeDisc")
                         .FindAll(p => p != "SafeDisc 2+")
                         .FindAll(p => !p.StartsWith("Macrovision Protection File"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)));
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled));
                 }
 
                 // Only SafeDisc 2+ is found.
@@ -360,7 +375,7 @@ namespace MPF.Frontend.Tools
                 {
                     foundProtections = foundProtections.FindAll(p => p != "SafeDisc")
                         .FindAll(p => !p.StartsWith("Macrovision Protection File"))
-                        .FindAll(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled)));
+                        .FindAll(p => !Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}\+", RegexOptions.Compiled));
                 }
             }
 

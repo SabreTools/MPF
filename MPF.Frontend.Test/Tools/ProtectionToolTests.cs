@@ -6,10 +6,23 @@ using Xunit;
 
 namespace MPF.Frontend.Test.Tools
 {
-    public class ProtectionTests
+    public class ProtectionToolTests
     {
         [Fact]
-        public void SanitizeFoundProtectionsActiveMARKTest()
+        public void SanitizeFoundProtections_Exception()
+        {
+            List<string> protections =
+            [
+                "Anything Else Protection",
+                "[Exception opening file",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal("Anything Else Protection, Exception occurred while scanning [RESCAN NEEDED]", sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_ActiveMARK()
         {
             List<string> protections =
             [
@@ -22,7 +35,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsCactusDataShieldTest()
+        public void SanitizeFoundProtections_CactusDataShield()
         {
             List<string> protections =
             [
@@ -35,7 +48,20 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsCDCheckTest()
+        public void SanitizeFoundProtections_CactusDataShieldMacrovision()
+        {
+            List<string> protections =
+            [
+                "Anything Else Protection",
+                "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal("Anything Else Protection, Cactus Data Shield 300", sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_CDCheck()
         {
             List<string> protections =
             [
@@ -48,7 +74,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsCDCopsTest()
+        public void SanitizeFoundProtections_CDCops()
         {
             List<string> protections =
             [
@@ -61,7 +87,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsCDKeyTest()
+        public void SanitizeFoundProtections_CDKey()
         {
             List<string> protections =
             [
@@ -74,7 +100,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsEACdKeyTest()
+        public void SanitizeFoundProtections_EACdKey()
         {
             List<string> protections =
             [
@@ -87,7 +113,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsEADRMTest()
+        public void SanitizeFoundProtections_EADRM()
         {
             List<string> protections =
             [
@@ -100,7 +126,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsGFWLTest()
+        public void SanitizeFoundProtections_GFWL()
         {
             List<string> protections =
             [
@@ -113,7 +139,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsGFWLZDPPTest()
+        public void SanitizeFoundProtections_GFWLZDPP()
         {
             List<string> protections =
             [
@@ -126,7 +152,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsImpulseReactorTest()
+        public void SanitizeFoundProtections_ImpulseReactor()
         {
             List<string> protections =
             [
@@ -143,7 +169,7 @@ namespace MPF.Frontend.Test.Tools
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void SanitizeFoundProtectionsJoWoodXProtTest(int skip)
+        public void SanitizeFoundProtections_JoWoodXProtTest(int skip)
         {
             List<string> protections =
             [
@@ -166,7 +192,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsOnlineRegistrationTest()
+        public void SanitizeFoundProtections_OnlineRegistration()
         {
             List<string> protections =
             [
@@ -179,11 +205,48 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Theory]
+        [InlineData(0, "Macrovision Protected Application [SafeDisc 0.00.000], SafeDisc 0.00.000, SafeDisc Lite")]
+        [InlineData(1, "Macrovision Protected Application [SafeDisc 0.00.000 / SRV Tool APP], SafeDisc 0.00.000, SafeDisc Lite")]
+        [InlineData(2, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc 0.00.000, SafeDisc 0.00.000-1.11.111, SafeDisc Lite")]
+        [InlineData(3, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc 0.00.000, SafeDisc Lite")]
+        [InlineData(4, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc Lite")]
+        [InlineData(5, "Macrovision Security Driver, SafeDisc Lite")]
+        [InlineData(6, "Macrovision Protection File, SafeDisc 2+, SafeDisc 3+ (DVD), SafeDisc Lite")]
+        [InlineData(7, "SafeDisc 3+ (DVD)")]
+        [InlineData(8, "SafeDisc 2+")]
+        public void SanitizeFoundProtections_SafeDisc(int skip, string expected)
+        {
+             List<string> protections =
+            [
+                "Macrovision Protected Application [SafeDisc 0.00.000]",
+                "Macrovision Protected Application [SafeDisc 0.00.000 / SRV Tool APP]",
+                "SafeDisc 0.00.000-1.11.111",
+                "SafeDisc 0.00.000",
+                "Macrovision Security Driver [SafeDisc 1.11.111]",
+                "Macrovision Security Driver",
+                "SafeDisc Lite",
+                "SafeDisc 3+ (DVD)",
+                "SafeDisc 2+",
+                "Macrovision Protection File",
+            ];
+
+            // Safeguard for the future
+            if (skip >= protections.Count)
+                throw new ArgumentException("Invalid skip value", nameof(skip));
+
+            // The list is in order of preference
+            protections = protections.Skip(skip).ToList();
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal(expected, sanitized);
+        }
+
+        [Theory]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void SanitizeFoundProtectionStarForceTest(int skip)
+        public void SanitizeFoundProtections_StarForce(int skip)
         {
             List<string> protections =
             [
@@ -206,7 +269,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsSysiphusTest()
+        public void SanitizeFoundProtections_Sysiphus()
         {
             List<string> protections =
             [
@@ -219,7 +282,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void SanitizeFoundProtectionsXCPTest()
+        public void SanitizeFoundProtections_XCP()
         {
             List<string> protections =
             [
