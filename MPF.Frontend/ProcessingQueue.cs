@@ -1,7 +1,5 @@
 ﻿using System;
-#if NET20 || NET35
-using System.Collections.Generic;
-#else
+#if NET40_OR_GREATER || NETCOREAPP
 using System.Collections.Concurrent;
 #endif
 using System.Threading;
@@ -14,11 +12,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Internal queue to hold data to process
         /// </summary>
-#if NET20 || NET35
-        private readonly Queue<T> _internalQueue;
-#else
         private readonly ConcurrentQueue<T> _internalQueue;
-#endif
 
         /// <summary>
         /// Custom processing step for dequeued data
@@ -77,17 +71,12 @@ namespace MPF.Frontend
                     continue;
                 }
 
-#if NET20 || NET35
-                // Get the next item from the queue and invoke the lambda, if possible
-                _customProcessing?.Invoke(_internalQueue.Dequeue());
-#else
                 // Get the next item from the queue
                 if (!_internalQueue.TryDequeue(out var nextItem))
                     continue;
 
                 // Invoke the lambda, if possible
                 _customProcessing?.Invoke(nextItem);
-#endif
             }
         }
     }

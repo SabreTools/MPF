@@ -47,6 +47,7 @@
 - Ensure dumping commands are tested
 - Add tests around default values
 - Increase sleep time in queue
+- Unify queue handling in processing queue
 
 ### 3.2.4 (2024-11-24)
 
