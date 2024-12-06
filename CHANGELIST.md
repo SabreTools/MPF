@@ -58,6 +58,7 @@
 - Clean up original Drive tests
 - Add debug flag to publish scripts
 - Add gated program downloads to publish scripts
+- Migrate to using publish script for GHA
 
 ### 3.2.4 (2024-11-24)
 

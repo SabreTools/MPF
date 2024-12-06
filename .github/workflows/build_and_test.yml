@@ -1,0 +1,43 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+        
+    - name: Run tests
+      run: dotnet test
+      
+    - name: Run publish script
+      run: ./publish-nix.sh -dp
+
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        name: 'Nuget Package'
+        path: '*.nupkg'
+
+    - name: Upload to rolling
+      uses: ncipollo/release-action@v1.14.0
+      with:
+        allowUpdates: True
+        artifacts: "*.nupkg,*.zip"
+        body: 'Last built commit: ${{ github.sha }}'
+        name: 'Rolling Release'
+        prerelease: True
+        replacesArtifacts: True
+        tag: "rolling"
+        updateOnlyUnreleased: True
