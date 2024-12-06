@@ -56,6 +56,7 @@
 - Update protection tool tests
 - Remove unnecessary namespace prefixes
 - Clean up original Drive tests
+- Add debug flag to publish scripts
 
 ### 3.2.4 (2024-11-24)
 
