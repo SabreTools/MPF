@@ -298,7 +298,7 @@ namespace MPF.Frontend.Tools
                 return new Options();
 
             // Ensure the file exists
-            if (!File.Exists(ConfigurationPath))
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
             {
                 File.Create(ConfigurationPath).Dispose();
                 return new Options();

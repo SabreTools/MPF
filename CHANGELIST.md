@@ -62,6 +62,7 @@
 - Update README to remove AppVeyor references
 - Remove unused gated using statement
 - Add alternate config location
+- Add safety check around empty config files
 
 ### 3.2.4 (2024-11-24)
 
