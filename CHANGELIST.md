@@ -59,6 +59,7 @@
 - Add debug flag to publish scripts
 - Add gated program downloads to publish scripts
 - Migrate to using publish script for GHA
+- Update README to remove AppVeyor references
 
 ### 3.2.4 (2024-11-24)
 
