@@ -4,9 +4,6 @@ using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
 #endif
-#if NET35_OR_GREATER || NETCOREAPP
-using System.Linq;
-#endif
 using System.Text;
 using SabreTools.RedumpLib.Data;
 

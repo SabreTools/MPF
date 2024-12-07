@@ -60,6 +60,7 @@
 - Add gated program downloads to publish scripts
 - Migrate to using publish script for GHA
 - Update README to remove AppVeyor references
+- Remove unused gated using statement
 
 ### 3.2.4 (2024-11-24)
 
