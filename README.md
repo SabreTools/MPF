@@ -16,6 +16,8 @@ For the latest WIP build here: [Rolling Release](https://github.com/SabreTools/M
 
 MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
+Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `%userprofile%\.config\mpf\config.json` on Windows or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
+
 ### UI Support Limitations
 
 The main UI has some known limitations that are documented in code and in some prior support tickets:
@@ -32,7 +34,9 @@ The main UI has some known limitations that are documented in code and in some p
 
 ## Media Preservation Frontend CLI (MPF.CLI)
 
-MPF.CLI is a commandline-only program that allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the `config.json` file.
+MPF.CLI is a commandline-only program that allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. All options are manually configured through the configuration file. See below for details.
+
+Configuration files are stored by default next to the application as `config.json`. This contains all settings for the UI including credentials. In addition to this, the configuration can also be located at `%userprofile%\.config\mpf\config.json` on Windows or `~/.config/mpf/config.json` on Unix-like systems. The second path will be used by default if running from a read-only device or folder. If neither directory is readable, no options will be loaded or saved.
 
 ### CLI Support Limitations
 

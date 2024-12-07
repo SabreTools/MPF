@@ -10,13 +10,25 @@ namespace MPF.Frontend.Tools
     public static class OptionsLoader
     {
         /// <summary>
+        /// Configuration file name
+        /// </summary>
+        private const string ConfigurationFileName = "config.json";
+
+        /// <summary>
         /// Full path to the configuration file used by the program
         /// </summary>
-#if NET20 || NET35 || NET40 || NET452
-        private static string ConfigurationPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.json");
-#else
-        private static string ConfigurationPath => Path.Combine(AppContext.BaseDirectory, "config.json");
-#endif
+        private static string ConfigurationPath
+        {
+            get
+            {
+                if (_configPath != null)
+                    return _configPath;
+
+                _configPath = GetConfigurationPath();
+                return _configPath;
+            }
+        }
+        private static string? _configPath = null;
 
         #region Arguments
 
@@ -281,6 +293,11 @@ namespace MPF.Frontend.Tools
         /// </summary>
         public static Options LoadFromConfig()
         {
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new Options();
+
+            // Ensure the file exists
             if (!File.Exists(ConfigurationPath))
             {
                 File.Create(ConfigurationPath).Dispose();
@@ -300,6 +317,10 @@ namespace MPF.Frontend.Tools
         /// </summary>
         public static void SaveToConfig(Options options, bool saveDefault = false)
         {
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return;
+
             // If default values should be saved as well
             if (saveDefault)
             {
@@ -327,6 +348,53 @@ namespace MPF.Frontend.Tools
             var sw = new StreamWriter(ConfigurationPath) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
             serializer.Serialize(writer, options.Settings, typeof(Dictionary<string, string>));
+        }
+
+        /// <summary>
+        /// Attempt to determine the configuration path
+        /// </summary>
+        private static string GetConfigurationPath()
+        {
+            // User home directory
+#if NET20 || NET35
+            string homeDir = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            homeDir = Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+#else
+            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            homeDir = Path.Combine(homeDir, ".config", "mpf");
+#endif
+            if (File.Exists(Path.Combine(homeDir, ConfigurationFileName)))
+                return Path.Combine(homeDir, ConfigurationFileName);
+
+            // Local folder
+#if NET20 || NET35 || NET40 || NET452
+            string runtimeDir =  Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+#else
+            string runtimeDir = AppContext.BaseDirectory;
+#endif
+            if (File.Exists(Path.Combine(runtimeDir, ConfigurationFileName)))
+                return Path.Combine(runtimeDir, ConfigurationFileName);
+
+            // Attempt to use local folder
+            try
+            {
+                Directory.CreateDirectory(runtimeDir);
+                File.Create(Path.Combine(runtimeDir, ConfigurationFileName)).Dispose();
+                return Path.Combine(runtimeDir, ConfigurationFileName);
+            }
+            catch { }
+
+            // Attempt to use home directory
+            try
+            {
+                Directory.CreateDirectory(homeDir);
+                File.Create(Path.Combine(homeDir, ConfigurationFileName)).Dispose();
+                return Path.Combine(homeDir, ConfigurationFileName);
+            }
+            catch { }
+
+            // This should not happen
+            return string.Empty;
         }
 
         #endregion

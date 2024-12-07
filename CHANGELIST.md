@@ -61,6 +61,7 @@
 - Migrate to using publish script for GHA
 - Update README to remove AppVeyor references
 - Remove unused gated using statement
+- Add alternate config location
 
 ### 3.2.4 (2024-11-24)
 
