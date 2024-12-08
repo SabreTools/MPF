@@ -5,7 +5,7 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": ".NET Core Launch (Check)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -13,6 +13,20 @@
             "program": "${workspaceFolder}/MPF.Check/bin/Debug/net9.0/MPF.Check.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MPF.Check",
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "justMyCode": false
+        },
+        {
+            "name": ".NET Core Launch (CLI)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/MPF.CLI/bin/Debug/net9.0/MPF.CLI.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/MPF.CLI",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false,

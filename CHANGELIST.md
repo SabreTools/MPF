@@ -63,6 +63,7 @@
 - Remove unused gated using statement
 - Add alternate config location
 - Add safety check around empty config files
+- Add launch config for CLI
 
 ### 3.2.4 (2024-11-24)
 
