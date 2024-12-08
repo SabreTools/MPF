@@ -72,18 +72,20 @@ namespace MPF.Processors.Test
         [Fact]
         public void CheckRequiredFiles_Invalid_Filled()
         {
-            string basePath = string.Empty;
+            string? baseDirectory = null;
+            string baseFilename = string.Empty;
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Equal(3, actual.Count);
         }
 
         [Fact]
         public void CheckRequiredFiles_Valid_Empty()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay", "test");
+            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
+            string baseFilename = "test";
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Empty(actual);
         }
 

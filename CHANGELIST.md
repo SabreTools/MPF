@@ -64,6 +64,7 @@
 - Add alternate config location
 - Add safety check around empty config files
 - Add launch config for CLI
+- Remove unnecessary re-splitting of path
 
 ### 3.2.4 (2024-11-24)
 

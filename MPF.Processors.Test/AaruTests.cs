@@ -108,18 +108,20 @@ namespace MPF.Processors.Test
         [Fact]
         public void CheckRequiredFiles_Invalid_Filled()
         {
-            string basePath = string.Empty;
+            string? baseDirectory = null;
+            string baseFilename = string.Empty;
             var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Equal(7, actual.Count);
         }
 
         [Fact]
         public void CheckRequiredFiles_Valid_Empty()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM", "test");
+            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
+            string baseFilename = "test";
             var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Empty(actual);
         }
 

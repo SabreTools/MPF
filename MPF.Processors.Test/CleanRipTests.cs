@@ -93,18 +93,20 @@ namespace MPF.Processors.Test
         [Fact]
         public void CheckRequiredFiles_Invalid_Filled()
         {
-            string basePath = string.Empty;
+            string? baseDirectory = null;
+            string baseFilename = string.Empty;
             var processor = new CleanRip(RedumpSystem.NintendoGameCube, MediaType.DVD);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Equal(3, actual.Count);
         }
 
         [Fact]
         public void CheckRequiredFiles_Valid_Empty()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD", "test");
+            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
+            string baseFilename = "test";
             var processor = new CleanRip(RedumpSystem.NintendoGameCube, MediaType.DVD);
-            var actual = processor.CheckRequiredFiles(basePath);
+            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
             Assert.Empty(actual);
         }
 

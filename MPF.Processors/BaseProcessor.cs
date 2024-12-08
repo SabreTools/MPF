@@ -187,13 +187,8 @@ namespace MPF.Processors
             // Sanitize the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            // Then get the base path for all checking
-            string basePath = outputFilename;
-            if (!string.IsNullOrEmpty(outputDirectory))
-                basePath = Path.Combine(outputDirectory, outputFilename);
-
             // Finally, let the parameters say if all files exist
-            return CheckRequiredFiles(basePath);
+            return CheckRequiredFiles(outputDirectory, outputFilename);
         }
 
         /// <summary>
@@ -328,13 +323,15 @@ namespace MPF.Processors
         /// <summary>
         /// Validate if all required output files exist
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="baseDirectory">Base directory to check</param>
+        /// <param name="baseFilename">Base filename template to use</param>
         /// <returns>A list representing missing files, empty if none</returns>
-        internal List<string> CheckRequiredFiles(string basePath)
+        internal List<string> CheckRequiredFiles(string? baseDirectory, string baseFilename)
         {
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
+            // Assemble a base path
+            string basePath = baseFilename;
+            if (!string.IsNullOrEmpty(baseDirectory))
+                basePath = Path.Combine(baseDirectory, basePath);
 
             // Get the list of output files
             var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
@@ -371,7 +368,7 @@ namespace MPF.Processors
                     continue;
 
                 // Use the built-in existence function
-                if (outputFile.Exists(baseDirectory))
+                if (outputFile.Exists(baseDirectory ?? string.Empty))
                     continue;
 
                 // If the log archive doesn't exist
