@@ -156,7 +156,7 @@ namespace MPF.Frontend.Tools
             #region Game Engine
 
             // RenderWare
-            foundProtections = foundProtections.FindAll(p => p != "RenderWare");
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("RenderWare"));
 
             #endregion
 
@@ -233,9 +233,6 @@ namespace MPF.Frontend.Tools
 
             // WinRAR SFX
             foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinRAR SFX"));
-
-            // WinZip SFX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinZip SFX"));
 
             // WinZip SFX
             foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinZip SFX"));

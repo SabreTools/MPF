@@ -21,6 +21,380 @@ namespace MPF.Frontend.Test.Tools
             Assert.Equal("Anything Else Protection, Exception occurred while scanning [RESCAN NEEDED]", sanitized);
         }
 
+        #region Game Engine
+
+        [Fact]
+        public void SanitizeFoundProtections_RenderWare()
+        {
+            List<string> protections =
+            [
+                "RenderWare",
+                "RenderWare ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        #endregion
+
+        #region Packers
+
+        [Fact]
+        public void SanitizeFoundProtections_dotNetReactor()
+        {
+            List<string> protections =
+            [
+                ".NET Reactor",
+                ".NET Reactor ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_SevenZipSFX()
+        {
+            List<string> protections =
+            [
+                "7-Zip SFX",
+                "7-Zip SFX ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_ASPack()
+        {
+            List<string> protections =
+            [
+                "ASPack",
+                "ASPack ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_AutoPlayMediaStudio()
+        {
+            List<string> protections =
+            [
+                "AutoPlay Media Studio",
+                "AutoPlay Media Studio ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_CaphyonAdvancedInstaller()
+        {
+            List<string> protections =
+            [
+                "Caphyon Advanced Installer",
+                "Caphyon Advanced Installer ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_CExe()
+        {
+            List<string> protections =
+            [
+                "CExe",
+                "CExe ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_dotFuscator()
+        {
+            List<string> protections =
+            [
+                "dotFuscator",
+                "dotFuscator ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_EmbeddedArchive()
+        {
+            List<string> protections =
+            [
+                "Embedded 7-zip Archive",
+                "Embedded PKZIP Archive",
+                "Embedded RAR Archive",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_EmbeddedExecutable()
+        {
+            List<string> protections =
+            [
+                "Embedded Executable",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_EXEStealth()
+        {
+            List<string> protections =
+            [
+                "EXE Stealth",
+                "EXE Stealth ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_GenteeInstaller()
+        {
+            List<string> protections =
+            [
+                "Gentee Installer",
+                "Gentee Installer ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_HyperTechCrackProof()
+        {
+            List<string> protections =
+            [
+                "HyperTech CrackProof",
+                "HyperTech CrackProof ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_InnoSetup()
+        {
+            List<string> protections =
+            [
+                "Inno Setup",
+                "Inno Setup ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_InstallAnywhere()
+        {
+            List<string> protections =
+            [
+                "InstallAnywhere",
+                "InstallAnywhere ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_InstallerVISE()
+        {
+            List<string> protections =
+            [
+                "Installer VISE",
+                "Installer VISE ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_IntelInstallationFramework()
+        {
+            List<string> protections =
+            [
+                "Intel Installation Framework",
+                "Intel Installation Framework ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_MicrosoftCABSFX()
+        {
+            List<string> protections =
+            [
+                "Microsoft CAB SFX",
+                "Microsoft CAB SFX ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_NeoLite()
+        {
+            List<string> protections =
+            [
+                "NeoLite",
+                "NeoLite ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_NSIS()
+        {
+            List<string> protections =
+            [
+                "NSIS",
+                "NSIS ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_PECompact()
+        {
+            List<string> protections =
+            [
+                "PE Compact",
+                "PE Compact ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_PEtite()
+        {
+            List<string> protections =
+            [
+                "PEtite",
+                "PEtite ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_SetupFactory()
+        {
+            List<string> protections =
+            [
+                "Setup Factory",
+                "Setup Factory ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_Shrinker()
+        {
+            List<string> protections =
+            [
+                "Shrinker",
+                "Shrinker ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_UPX()
+        {
+            List<string> protections =
+            [
+                "UPX",
+                "UPX ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_WinRARSFX()
+        {
+            List<string> protections =
+            [
+                "WinRAR SFX",
+                "WinRAR SFX ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_WinZipSFX()
+        {
+            List<string> protections =
+            [
+                "WinZip SFX",
+                "WinZip SFX ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtections_WiseInstaller()
+        {
+            List<string> protections =
+            [
+                "Wise Installation",
+                "Wise Installation ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        #endregion
+
+        #region Protections
+
         [Fact]
         public void SanitizeFoundProtections_ActiveMARK()
         {
@@ -109,7 +483,7 @@ namespace MPF.Frontend.Test.Tools
             ];
 
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
-            Assert.Equal("EA CdKey Registration Module v1.2.0", sanitized);
+            Assert.Empty(sanitized);
         }
 
         [Fact]
@@ -216,9 +590,9 @@ namespace MPF.Frontend.Test.Tools
         [InlineData(8, "SafeDisc 2+")]
         public void SanitizeFoundProtections_SafeDisc(int skip, string expected)
         {
-             List<string> protections =
-            [
-                "Macrovision Protected Application [SafeDisc 0.00.000]",
+            List<string> protections =
+           [
+               "Macrovision Protected Application [SafeDisc 0.00.000]",
                 "Macrovision Protected Application [SafeDisc 0.00.000 / SRV Tool APP]",
                 "SafeDisc 0.00.000-1.11.111",
                 "SafeDisc 0.00.000",
@@ -293,5 +667,7 @@ namespace MPF.Frontend.Test.Tools
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("XCP v1.2.0", sanitized);
         }
+
+        #endregion
     }
 }
