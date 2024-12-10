@@ -267,11 +267,6 @@
                                           ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Include Executable Packers"
-                                          IsChecked="{Binding Options.ScanPackersForProtection}"
-                                          ToolTip="Include executable packers in outputted protections" Margin="0,4"
-                                />
-
                                 <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
                                           IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
                                           ToolTip="Include debug information during protection scans" Margin="0,4"

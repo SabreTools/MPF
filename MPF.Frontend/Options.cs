@@ -590,15 +590,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Scan for executable packers during protection scanning
-        /// </summary>
-        public bool ScanPackersForProtection
-        {
-            get { return GetBooleanSetting(Settings, "ScanPackersForProtection", false); }
-            set { Settings["ScanPackersForProtection"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Include debug information with scan results
         /// </summary>
         public bool IncludeDebugProtectionInformation

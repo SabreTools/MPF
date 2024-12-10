@@ -35,7 +35,6 @@ namespace MPF.Check
 
                 // Protection Scanning Options
                 ScanArchivesForProtection = true,
-                ScanPackersForProtection = false,
                 IncludeDebugProtectionInformation = false,
                 HideDriveLetters = false,
 
@@ -145,7 +144,6 @@ namespace MPF.Check
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
             Console.WriteLine("    --disable-archives         Disable scanning archives (requires --scan)");
-            Console.WriteLine("    --enable-packers           Enable scanning for packers (requires --scan)");
             Console.WriteLine("    --enable-debug             Enable debug protection information (requires --scan)");
             Console.WriteLine("    --hide-drive-letters       Hide drive letters from scan output (requires --scan)");
             Console.WriteLine("-x, --suffix                   Enable adding filename suffix");
@@ -167,7 +165,6 @@ namespace MPF.Check
             // These values require multiple parts to be active
             bool scan = false,
                 enableArchives = true,
-                enablePackers = false,
                 enableDebug = false,
                 hideDriveLetters = false;
 
@@ -266,12 +263,6 @@ namespace MPF.Check
                     enableArchives = false;
                 }
 
-                // Enable scanning for packers (requires --scan)
-                else if (args[startIndex].Equals("--enable-packers"))
-                {
-                    enablePackers = true;
-                }
-
                 // Enable debug protection information (requires --scan)
                 else if (args[startIndex].Equals("--enable-debug"))
                 {
@@ -324,7 +315,6 @@ namespace MPF.Check
             // Now deal with the complex options
             options.ScanForProtection = scan && !string.IsNullOrEmpty(opts.DevicePath);
             options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(opts.DevicePath);
-            options.ScanPackersForProtection = enablePackers && scan && !string.IsNullOrEmpty(opts.DevicePath);
             options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(opts.DevicePath);
             options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
 

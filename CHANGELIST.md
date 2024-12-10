@@ -66,6 +66,7 @@
 - Add launch config for CLI
 - Remove unnecessary re-splitting of path
 - Always filter out game engines and packers
+- Remove now-redundant option
 
 ### 3.2.4 (2024-11-24)
 
