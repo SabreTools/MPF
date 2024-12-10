@@ -33,8 +33,8 @@ namespace MPF.Frontend.Tools
                 var scanner = new Scanner(
                     options.ScanArchivesForProtection,
                     scanContents: true, // Hardcoded value to avoid issues
-                    scanGameEngines: false, // Hardcoded value to avoid issues
-                    options.ScanPackersForProtection,
+                    scanGameEngines: true, // TODO: Remove when BOS updates
+                    scanPackers: true,  // TODO: Remove when BOS updates
                     scanPaths: true, // Hardcoded value to avoid issues
                     options.IncludeDebugProtectionInformation,
                     progress);
@@ -137,6 +137,13 @@ namespace MPF.Frontend.Tools
         /// Sanitize unnecessary protection duplication from output
         /// </summary>
         /// <param name="foundProtections">Enumerable of found protections</param>
+        /// <remarks>
+        /// This filtering only impacts the information that goes into the single-line
+        /// protection field in the output submission info. The filtering performed by
+        /// this method applies to the needs of Redump and not necessarily any other
+        /// application. The full protection list should be used as a reference in all
+        /// other cases.
+        /// </remarks>
         public static string SanitizeFoundProtections(List<string> foundProtections)
         {
             // EXCEPTIONS
@@ -145,6 +152,100 @@ namespace MPF.Frontend.Tools
                 foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file"));
                 foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
             }
+
+            #region Game Engine
+
+            // RenderWare
+            foundProtections = foundProtections.FindAll(p => p != "RenderWare");
+
+            #endregion
+
+            #region Packers
+
+            // .NET Reactor
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith(".NET Reactor"));
+
+            // 7-Zip SFX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("7-Zip SFX"));
+
+            // ASPack
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("ASPack"));
+
+            // AutoPlay Media Studio
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("AutoPlay Media Studio"));
+
+            // Caphyon Advanced Installer
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Caphyon Advanced Installer"));
+
+            // CExe
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("CExe"));
+
+            // dotFuscator
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("dotFuscator"));
+
+            // Embedded Archive / Executable
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Embedded"));
+
+            // EXE Stealth
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("EXE Stealth"));
+
+            // Gentee Installer
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Gentee Installer"));
+
+            // HyperTech CrackProof
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("HyperTech CrackProof"));
+
+            // Inno Setup
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Inno Setup"));
+
+            // InstallAnywhere
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("InstallAnywhere"));
+
+            // Installer VISE
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Installer VISE"));
+
+            // Intel Installation Framework
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Intel Installation Framework"));
+
+            // Microsoft CAB SFX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Microsoft CAB SFX"));
+
+            // NeoLite
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("NeoLite"));
+
+            // NSIS
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("NSIS"));
+
+            // PE Compact
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("PE Compact"));
+
+            // PEtite
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("PEtite"));
+
+            // Setup Factory
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Setup Factory"));
+
+            // Shrinker
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Shrinker"));
+
+            // UPX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("UPX"));
+
+            // WinRAR SFX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinRAR SFX"));
+
+            // WinZip SFX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinZip SFX"));
+
+            // WinZip SFX
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinZip SFX"));
+
+            // Wise Installer
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Wise Installation"));
+
+            #endregion
+
+            #region Protections
 
             // ActiveMARK
             if (foundProtections.Exists(p => p == "ActiveMARK 5")
@@ -428,6 +529,8 @@ namespace MPF.Frontend.Tools
             {
                 foundProtections = foundProtections.FindAll(p => p != "XCP");
             }
+
+            #endregion
 
             // Sort and return the protections
             foundProtections.Sort();

@@ -65,6 +65,7 @@
 - Add safety check around empty config files
 - Add launch config for CLI
 - Remove unnecessary re-splitting of path
+- Always filter out game engines and packers
 
 ### 3.2.4 (2024-11-24)
 
