@@ -283,15 +283,10 @@ namespace MPF.Frontend.Tools
             }
 
             // CD-Key / Serial
-            foundProtections = foundProtections.FindAll(p => p != "CD-Key / Serial");
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("CD-Key / Serial"));
 
             // Electronic Arts
-            if (foundProtections.Exists(p => p == "EA CdKey Registration Module")
-                && foundProtections.Exists(p => p.StartsWith("EA CdKey Registration Module")
-                    && p.Length > "EA CdKey Registration Module".Length))
-            {
-                foundProtections = foundProtections.FindAll(p => p != "EA CdKey Registration Module");
-            }
+            foundProtections = foundProtections.FindAll(p => !p.StartsWith("EA CdKey"));
             if (foundProtections.Exists(p => p == "EA DRM Protection")
                 && foundProtections.Exists(p => p.StartsWith("EA DRM Protection")
                     && p.Length > "EA DRM Protection".Length))
