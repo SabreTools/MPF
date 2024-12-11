@@ -69,6 +69,7 @@
 - Remove now-redundant option
 - Always omit EA CD-Key
 - Add packer filtering tests
+- Simplify prefix filtering
 
 ### 3.2.4 (2024-11-24)
 

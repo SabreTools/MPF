@@ -14,6 +14,58 @@ namespace MPF.Frontend.Tools
     public static class ProtectionTool
     {
         /// <summary>
+        /// Set of protection prefixes to filter on
+        /// </summary>
+        /// <remarks>Based on Redump requirements</remarks>
+        private static readonly string[] FilterPrefixes = [
+            #region Game Engine
+
+            "RenderWare",
+
+            #endregion
+
+            #region Packers
+
+            ".NET Reactor",
+            "7-Zip SFX",
+            "ASPack",
+            "AutoPlay Media Studio",
+            "Caphyon Advanced Installer",
+            "CExe",
+            "dotFuscator",
+            "Embedded",
+            "EXE Stealth",
+            "Gentee Installer",
+            "HyperTech CrackProof",
+            "Inno Setup",
+            "InstallAnywhere",
+            "Installer VISE",
+            "Intel Installation Framework",
+            "Microsoft CAB SFX",
+            "NeoLite",
+            "NSIS",
+            "PE Compact",
+            "PEtite",
+            "Setup Factory",
+            "Shrinker",
+            "UPX",
+            "WinRAR SFX",
+            "WinZip SFX",
+            "Wise Installation",
+
+            #endregion
+
+            #region Protections
+
+            "CD-Key / Serial",
+            "EA CdKey",
+            "Executable-Based CD Check",
+            "Executable-Based Online Registration",
+
+            #endregion
+        ];
+
+        /// <summary>
         /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
@@ -153,96 +205,11 @@ namespace MPF.Frontend.Tools
                 foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
             }
 
-            #region Game Engine
-
-            // RenderWare
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("RenderWare"));
-
-            #endregion
-
-            #region Packers
-
-            // .NET Reactor
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith(".NET Reactor"));
-
-            // 7-Zip SFX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("7-Zip SFX"));
-
-            // ASPack
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("ASPack"));
-
-            // AutoPlay Media Studio
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("AutoPlay Media Studio"));
-
-            // Caphyon Advanced Installer
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Caphyon Advanced Installer"));
-
-            // CExe
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("CExe"));
-
-            // dotFuscator
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("dotFuscator"));
-
-            // Embedded Archive / Executable
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Embedded"));
-
-            // EXE Stealth
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("EXE Stealth"));
-
-            // Gentee Installer
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Gentee Installer"));
-
-            // HyperTech CrackProof
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("HyperTech CrackProof"));
-
-            // Inno Setup
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Inno Setup"));
-
-            // InstallAnywhere
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("InstallAnywhere"));
-
-            // Installer VISE
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Installer VISE"));
-
-            // Intel Installation Framework
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Intel Installation Framework"));
-
-            // Microsoft CAB SFX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Microsoft CAB SFX"));
-
-            // NeoLite
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("NeoLite"));
-
-            // NSIS
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("NSIS"));
-
-            // PE Compact
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("PE Compact"));
-
-            // PEtite
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("PEtite"));
-
-            // Setup Factory
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Setup Factory"));
-
-            // Shrinker
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Shrinker"));
-
-            // UPX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("UPX"));
-
-            // WinRAR SFX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinRAR SFX"));
-
-            // WinZip SFX
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("WinZip SFX"));
-
-            // Wise Installer
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Wise Installation"));
-
-            #endregion
-
-            #region Protections
+            // Filtered prefixes
+            foreach (string prefix in FilterPrefixes)
+            {
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith(prefix));
+            }
 
             // ActiveMARK
             if (foundProtections.Exists(p => p == "ActiveMARK 5")
@@ -268,9 +235,6 @@ namespace MPF.Frontend.Tools
                     foundProtections.Add("Cactus Data Shield 300");
             }
 
-            // CD-Check
-            foundProtections = foundProtections.FindAll(p => p != "Executable-Based CD Check");
-
             // CD-Cops
             if (foundProtections.Exists(p => p == "CD-Cops")
                 && foundProtections.Exists(p => p.StartsWith("CD-Cops")
@@ -279,11 +243,7 @@ namespace MPF.Frontend.Tools
                 foundProtections = foundProtections.FindAll(p => p != "CD-Cops");
             }
 
-            // CD-Key / Serial
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("CD-Key / Serial"));
-
             // Electronic Arts
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("EA CdKey"));
             if (foundProtections.Exists(p => p == "EA DRM Protection")
                 && foundProtections.Exists(p => p.StartsWith("EA DRM Protection")
                     && p.Length > "EA DRM Protection".Length))
@@ -336,9 +296,6 @@ namespace MPF.Frontend.Tools
 
             // LaserLok
             // TODO: Figure this one out
-
-            // Online Registration
-            foundProtections = foundProtections.FindAll(p => !p.StartsWith("Executable-Based Online Registration"));
 
             // ProtectDISC / VOB ProtectCD/DVD
             // TODO: Figure this one out
@@ -521,8 +478,6 @@ namespace MPF.Frontend.Tools
             {
                 foundProtections = foundProtections.FindAll(p => p != "XCP");
             }
-
-            #endregion
 
             // Sort and return the protections
             foundProtections.Sort();
