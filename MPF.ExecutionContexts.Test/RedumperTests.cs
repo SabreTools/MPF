@@ -80,6 +80,17 @@ namespace MPF.ExecutionContexts.Test
             Assert.True(context.IsDumpingCommand());
         }
 
+        [Theory]
+        [InlineData("cd --drive=dr --image-path=\"directory name\" --image-name=\"image name.bin\"")]
+        public void SpacesTest(string parameters)
+        {
+            string? expected = "cd --drive=dr --image-path=\"directory name\" --image-name=\"image name.bin\"";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+            Assert.True(context.IsDumpingCommand());
+        }
+
         #endregion
 
         #region DVD
