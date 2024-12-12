@@ -257,6 +257,35 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetParameters
+
+        [Fact]
+        public void GetParameters_Empty_Null()
+        {
+            string basePath = string.Empty;
+            string? parameters = DiscImageCreator.GetParameters(basePath);
+            Assert.Null(parameters);
+        }
+
+        [Fact]
+        public void GetParameters_Invalid_Null()
+        {
+            string basePath = "INVALID";
+            string? parameters = DiscImageCreator.GetParameters(basePath);
+            Assert.Null(parameters);
+        }
+
+        [Fact]
+        public void GetParameters_Valid_Filled()
+        {
+            string? expectedParameters = "TEST DATA";
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test");
+            string? parameters = DiscImageCreator.GetParameters($"{basePath}_19800101T000000.txt");
+            Assert.Equal(expectedVersion, parameters);
+        }
+
+        #endregion
+
         #region GetPlayStationEXEDate
 
         // TODO: This... is horrible
