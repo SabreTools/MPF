@@ -71,6 +71,7 @@
 - Add packer filtering tests
 - Simplify prefix filtering
 - Fix issue with odd quoting
+- Add DumpingParameters for DIC and Redumper
 
 ### 3.2.4 (2024-11-24)
 

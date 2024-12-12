@@ -998,6 +998,35 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetParameters
+
+        [Fact]
+        public void GetParameters_Empty_Null()
+        {
+            string log = string.Empty;
+            string? actual = Redumper.GetParameters(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetParameters_Invalid_Null()
+        {
+            string log = "INVALID";
+            string? actual = Redumper.GetParameters(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetParameters_Valid_Filled()
+        {
+            string? expected = "cd --verbose";
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            string? actual = Redumper.GetParameters(log);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region GetVersion
 
         [Fact]

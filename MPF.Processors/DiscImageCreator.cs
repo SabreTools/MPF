@@ -80,6 +80,7 @@ namespace MPF.Processors
             var dicVersion = GetCommandFilePathAndVersion(basePath, out var dicCmd);
             info.DumpingInfo!.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {dicVersion ?? "Unknown Version"}";
+            info.DumpingInfo.DumpingParameters = GetParameters(dicCmd) ?? "Unknown Parameters";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
@@ -819,6 +820,33 @@ namespace MPF.Processors
         #endregion
 
         #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the dumping parameters from the log, if possible
+        /// </summary>
+        /// <param name="dicCmd">Log file location</param>
+        /// <returns>Dumping parameters if possible, null otherwise</returns>
+        public static string? GetParameters(string? dicCmd)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (string.IsNullOrEmpty(dicCmd))
+                return null;
+            if (!File.Exists(dicCmd))
+                return null;
+
+            try
+            {
+                // Dumping parameters are on the first line
+                using var sr = File.OpenText(dicCmd);
+                var line = sr.ReadLine();
+                return line?.Trim();
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
 
         /// <summary>
         /// Get the PSX/PS2/KP2 EXE Date from the log, if possible

@@ -28,6 +28,7 @@ namespace MPF.Processors
             // Get the dumping program and version
             info.DumpingInfo!.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+            info.DumpingInfo.DumpingParameters = GetParameters($"{basePath}.log") ?? "Unknown Parameters";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
@@ -1810,6 +1811,44 @@ namespace MPF.Processors
                 var match = regex.Match(nextLine);
                 var version = match.Groups[1].Value;
                 return string.IsNullOrEmpty(version) ? null : version;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the dumping parameters, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Dumping parameters if possible, null on error</returns>
+        internal static string? GetParameters(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
+                return null;
+
+            // Samples:
+            // arguments: cd --verbose --drive=F:\ --speed=24 --retries=200
+            // arguments: bd --image-path=ISO\PS3_VOLUME --image-name=PS3_VOLUME
+
+            try
+            {
+                // If we find the arguments line, return the arguments
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
+                {
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("arguments: ") == true)
+                        return line.Substring("arguments: ".Length).Trim();
+                }
+
+                // We couldn't detect any arguments
+                return null;
             }
             catch
             {
