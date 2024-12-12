@@ -281,7 +281,7 @@ namespace MPF.Processors.Test
             string? expectedParameters = "TEST DATA";
             string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test");
             string? parameters = DiscImageCreator.GetParameters($"{basePath}_19800101T000000.txt");
-            Assert.Equal(expectedVersion, parameters);
+            Assert.Equal(expectedParameters, parameters);
         }
 
         #endregion
