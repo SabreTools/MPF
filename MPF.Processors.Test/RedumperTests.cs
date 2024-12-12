@@ -1019,7 +1019,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetParameters_Valid_Filled()
         {
-            string? expected = "v1980.01.01 build_00";
+            string? expected = "cd --verbose";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetParameters(log);
             Assert.Equal(expected, actual);
