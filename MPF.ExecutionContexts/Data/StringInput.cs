@@ -97,7 +97,7 @@ namespace MPF.ExecutionContexts.Data
                 }
 
                 index++;
-                Value = parts[index];
+                Value = parts[index].Trim('"');
                 return true;
             }
 
@@ -116,7 +116,7 @@ namespace MPF.ExecutionContexts.Data
                     return !_required;
                 }
 
-                Value = val;
+                Value = val.Trim('"');
                 return true;
             }
 
