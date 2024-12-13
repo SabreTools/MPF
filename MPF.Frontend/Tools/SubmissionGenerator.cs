@@ -4,6 +4,7 @@ using System.IO;
 #if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
 #endif
+using System.Text;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
@@ -431,7 +432,7 @@ namespace MPF.Frontend.Tools
         private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
             // Treat empty label as null
-            if (driveLabel.Length == 0)
+            if (driveLabel != null && driveLabel.Length == 0)
                 driveLabel = null;
             
             // Must have at least one label to format
