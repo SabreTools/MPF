@@ -456,7 +456,7 @@ namespace MPF.Frontend.Tools
                 List<string> keysToRemove = new List<string>();
                 foreach (KeyValuePair<string, List<string>> label in labels)
                 {
-                    string tempLabel = SimplifyVolumeLabel(label.Key);
+                    string? tempLabel = SimplifyVolumeLabel(label.Key);
                     if (defaultLabel == tempLabel)
                         keysToRemove.Add(label.Key);
                 }
