@@ -94,9 +94,12 @@ namespace MPF.Frontend.Tools
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
-            if (volLabels != null)
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
+            if (system != RedumpSystem.MicrosoftXbox && system != RedumpSystem.MicrosoftXbox360)
+            {
+                string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
+                if (volLabels != null)
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
+            }
 
             // Extract info based generically on MediaType
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
@@ -397,12 +400,40 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
+        /// Simplifies a volume label into uppercase alphanumeric only string
+        /// </summary>
+        /// <param name="labels">Volume label to simplify</param>
+        /// <returns>Simplified volume label</returns>
+        private static string? SimplifyVolumeLabel(string? label)
+        {
+            if (label == null || label.Length == 0)
+                return label;
+            
+            var labelBuilder = new StringBuilder();
+            foreach (char c in label)
+            {
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+                    labelBuilder.Append(c);
+            }
+            string? simpleLabel = labelBuilder.ToString().ToUpper();
+
+            if (simpleLabel == null || simpleLabel.Length == 0)
+                return null;
+            else
+                return simpleLabel;
+        }
+
+        /// <summary>
         /// Formats a list of volume labels and their corresponding filesystems
         /// </summary>
         /// <param name="labels">Dictionary of volume labels and their filesystems</param>
         /// <returns>Formatted string of volume labels and their filesystems</returns>
         private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
+            // Treat empty label as null
+            if (driveLabel.Length == 0)
+                driveLabel = null;
+            
             // Must have at least one label to format
             if (driveLabel == null && (labels == null || labels.Count == 0))
                 return null;
@@ -417,7 +448,22 @@ namespace MPF.Frontend.Tools
                 return driveLabel;
             }
 
-            // If only one label, don't mention fs
+            // Remove duplicate/useless volume labels
+            string? defaultLabel = SimplifyVolumeLabel(driveLabel);
+            if (defaultLabel != null && defaultLabel.Length != 0)
+            {
+                List<string> keysToRemove = new List<string>();
+                foreach (KeyValuePair<string, List<string>> label in labels)
+                {
+                    string tempLabel = SimplifyVolumeLabel(label.Key);
+                    if (defaultLabel == tempLabel)
+                        keysToRemove.Add(label.Key);
+                }
+                foreach (string key in keysToRemove)
+                    labels.Remove(key);
+            }
+
+            // If only one unique label left, don't mention fs
 #if NET20
             string[] keyArr = new string[labels.Count];
             labels.Keys.CopyTo(keyArr, 0);
