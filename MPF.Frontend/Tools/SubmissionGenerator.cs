@@ -452,7 +452,7 @@ namespace MPF.Frontend.Tools
                 defaultLabel = SimplifyVolumeLabel(driveLabel);
 #if NET35_OR_GREATER || NETCOREAPP
             else
-                defaultLabel = labels.Where(label => label.Value.Contains("UDF")).Select(label => label.Key);
+                defaultLabel = labels.Where(label => label.Value.Contains("UDF")).Select(label => label.Key).FirstOrDefault();
 #endif
 
             // Remove duplicate/useless volume labels
