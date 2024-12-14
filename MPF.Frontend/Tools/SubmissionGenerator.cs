@@ -408,15 +408,15 @@ namespace MPF.Frontend.Tools
         private static string? SimplifyVolumeLabel(string? label)
         {
             if (label == null || label.Length == 0)
-                return label;
+                return null;
             
             var labelBuilder = new StringBuilder();
             foreach (char c in label)
             {
                 if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
-                    labelBuilder.Append(c);
+                    labelBuilder.Append(c.ToUpper());
             }
-            string? simpleLabel = labelBuilder.ToString().ToUpper();
+            string? simpleLabel = labelBuilder.ToString();
 
             if (simpleLabel == null || simpleLabel.Length == 0)
                 return null;
@@ -449,8 +449,16 @@ namespace MPF.Frontend.Tools
                 return driveLabel;
             }
 
+            // Get the default label to compare against
+            string? defaultLabel;
+            if (driveLabel != null || driveLabel.Length != 0)
+                defaultLabel = SimplifyVolumeLabel(driveLabel);
+#if NET35_OR_GREATER || NETCOREAPP
+            else
+                defaultLabel = labels.Where(label => label.Value.Contains("UDF")).Select(label => label.Key);
+#endif
+
             // Remove duplicate/useless volume labels
-            string? defaultLabel = SimplifyVolumeLabel(driveLabel);
             if (defaultLabel != null && defaultLabel.Length != 0)
             {
                 List<string> keysToRemove = new List<string>();
