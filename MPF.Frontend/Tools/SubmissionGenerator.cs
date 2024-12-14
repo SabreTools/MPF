@@ -414,7 +414,7 @@ namespace MPF.Frontend.Tools
             foreach (char c in label)
             {
                 if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
-                    labelBuilder.Append(c.ToUpper());
+                    labelBuilder.Append(char.ToUpper(c));
             }
             string? simpleLabel = labelBuilder.ToString();
 
@@ -450,8 +450,8 @@ namespace MPF.Frontend.Tools
             }
 
             // Get the default label to compare against
-            string? defaultLabel;
-            if (driveLabel != null || driveLabel.Length != 0)
+            string? defaultLabel = null;
+            if (driveLabel != null && driveLabel.Length != 0)
                 defaultLabel = SimplifyVolumeLabel(driveLabel);
 #if NET35_OR_GREATER || NETCOREAPP
             else
