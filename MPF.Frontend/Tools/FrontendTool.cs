@@ -59,15 +59,26 @@ namespace MPF.Frontend.Tools
                 return RedumpSystem.MicrosoftXbox;
 
             // Microsoft Xbox 360
-            if (volumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
+            if (volumeLabel.Equals("XBOX360"))
                 return RedumpSystem.MicrosoftXbox360;
-            else if (volumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
+            else if (volumeLabel.Equals("XGD2DVD_NTSC"))
                 return RedumpSystem.MicrosoftXbox360;
-
-            // Microsoft Xbox 360 - Too overly broad even if a lot of discs use this
-            //if (volumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
-            //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
-            //if (volumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
+            else if (volumeLabel.Equals("XBOX_TINYTEST"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("13599"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("14719"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("15574"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("16197"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("16197"))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (volumeLabel.Equals("17349"))
+                return RedumpSystem.MicrosoftXbox360;
+            // DVD_ROM and CD_ROM have too many false positives
+            //else if (volumeLabel.Equals("DVD_ROM"))
             //    return RedumpSystem.MicrosoftXbox360;
 
             // Sega Mega-CD / Sega-CD

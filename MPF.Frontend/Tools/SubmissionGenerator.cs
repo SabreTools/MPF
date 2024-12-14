@@ -95,12 +95,9 @@ namespace MPF.Frontend.Tools
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            if (system != RedumpSystem.MicrosoftXbox && system != RedumpSystem.MicrosoftXbox360)
-            {
-                string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
-                if (volLabels != null)
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
-            }
+            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
+            if (volLabels != null)
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
@@ -465,7 +462,8 @@ namespace MPF.Frontend.Tools
                 foreach (KeyValuePair<string, List<string>> label in labels)
                 {
                     string? tempLabel = SimplifyVolumeLabel(label.Key);
-                    if (defaultLabel == tempLabel)
+                    // Remove duplicate volume labels and remove "DVD_ROM" / "CD_ROM" labels
+                    if (defaultLabel == tempLabel || label.Key == "DVD_ROM" || label.Key == "CD_ROM")
                         keysToRemove.Add(label.Key);
                 }
                 foreach (string key in keysToRemove)
@@ -505,7 +503,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Ensure that no labels are empty
-            volLabels = volLabels.FindAll(l => !string.IsNullOrEmpty(l?.Trim()));
+            volLabels = volLabels.FindAll(label => !string.IsNullOrEmpty(label?.Trim()));
 
             // Print each label separated by a comma and a space
             if (volLabels.Count == 0)
