@@ -1963,8 +1963,8 @@ namespace MPF.Processors
                         if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
                             label = label.Substring(1);
 
-                        // Skip if label is blank
-                        if (label == null || label.Length <= 0)
+                        // Skip if label is blank, and skip Joliet (DIC Joliet parsing is broken?)
+                        if (label == null || label.Length <= 0 || volType == "Joliet")
                         {
                             volType = "UNKNOWN";
                             line = sr.ReadLine();
