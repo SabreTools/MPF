@@ -447,6 +447,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Get the default label to compare against
+            // TODO: Full pairwise comparison of all labels, not just comparing against drive/UDF label.
             string? defaultLabel = null;
             if (driveLabel != null && driveLabel.Length != 0)
                 defaultLabel = SimplifyVolumeLabel(driveLabel);
