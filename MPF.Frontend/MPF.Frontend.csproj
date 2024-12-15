@@ -40,9 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BinaryObjectScanner" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="3.3.1" GeneratePathProperty="true">
-            <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="BinaryObjectScanner" Version="3.3.2" />
         <PackageReference Include="LibIRD" Version="0.9.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="SabreTools.RedumpLib" Version="1.6.1" />

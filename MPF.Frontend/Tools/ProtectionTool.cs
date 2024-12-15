@@ -85,8 +85,6 @@ namespace MPF.Frontend.Tools
                 var scanner = new Scanner(
                     options.ScanArchivesForProtection,
                     scanContents: true, // Hardcoded value to avoid issues
-                    scanGameEngines: true, // TODO: Remove when BOS updates
-                    scanPackers: true,  // TODO: Remove when BOS updates
                     scanPaths: true, // Hardcoded value to avoid issues
                     options.IncludeDebugProtectionInformation,
                     progress);
