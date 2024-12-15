@@ -401,24 +401,31 @@ namespace MPF.Frontend.Tools
         /// Simplifies a volume label into uppercase alphanumeric only string
         /// </summary>
         /// <param name="labels">Volume label to simplify</param>
-        /// <returns>Simplified volume label</returns>
+        /// <returns>Simplified volume label, null if empty or invalid</returns>
         private static string? SimplifyVolumeLabel(string? label)
         {
+            // Ignore empty labels
             if (label == null || label.Length == 0)
                 return null;
-            
+
+            // Take only ASCII alphanumeric characters
             var labelBuilder = new StringBuilder();
             foreach (char c in label)
             {
-                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+                if (c >= '0' && c <= '9')
+                    labelBuilder.Append(c);
+                else if (c >= 'A' && c <= 'Z')
+                    labelBuilder.Append(c);
+                else if (c >= 'a' && c <= 'z')
                     labelBuilder.Append(char.ToUpper(c));
             }
-            string? simpleLabel = labelBuilder.ToString();
 
+            // Ignore non-ASCII labels
+            string? simpleLabel = labelBuilder.ToString();
             if (simpleLabel == null || simpleLabel.Length == 0)
                 return null;
-            else
-                return simpleLabel;
+
+            return simpleLabel;
         }
 
         /// <summary>
@@ -431,7 +438,7 @@ namespace MPF.Frontend.Tools
             // Treat empty label as null
             if (driveLabel != null && driveLabel.Length == 0)
                 driveLabel = null;
-            
+
             // Must have at least one label to format
             if (driveLabel == null && (labels == null || labels.Count == 0))
                 return null;
@@ -450,25 +457,41 @@ namespace MPF.Frontend.Tools
             // TODO: Full pairwise comparison of all labels, not just comparing against drive/UDF label.
             string? defaultLabel = null;
             if (driveLabel != null && driveLabel.Length != 0)
+            {
                 defaultLabel = SimplifyVolumeLabel(driveLabel);
+            }
 #if NET35_OR_GREATER || NETCOREAPP
             else
-                defaultLabel = labels.Where(label => label.Value.Contains("UDF")).Select(label => label.Key).FirstOrDefault();
+            {
+                defaultLabel = labels
+                    .Where(label => label.Value.Contains("UDF"))
+                    .Select(label => label.Key)
+                    .FirstOrDefault();
+            }
 #endif
 
             // Remove duplicate/useless volume labels
             if (defaultLabel != null && defaultLabel.Length != 0)
             {
-                List<string> keysToRemove = new List<string>();
-                foreach (KeyValuePair<string, List<string>> label in labels)
+                List<string> keys = [.. labels.Keys];
+                foreach (var label in keys)
                 {
-                    string? tempLabel = SimplifyVolumeLabel(label.Key);
-                    // Remove duplicate volume labels and remove "DVD_ROM" / "CD_ROM" labels
-                    if (defaultLabel == tempLabel || label.Key == "DVD_ROM" || label.Key == "CD_ROM")
-                        keysToRemove.Add(label.Key);
+                    // Always remove "DVD_ROM" / "CD_ROM" labels
+                    if (label == "DVD_ROM" || label == "CD_ROM")
+                    {
+                        labels.Remove(label);
+                        continue;
+                    }
+
+                    // Get upper-case ASCII variant of the label
+                    string? tempLabel = SimplifyVolumeLabel(label);
+                    if (tempLabel == null)
+                        continue;
+
+                    // Remove duplicate volume labels
+                    if (defaultLabel == tempLabel)
+                        labels.Remove(label);
                 }
-                foreach (string key in keysToRemove)
-                    labels.Remove(key);
             }
 
             // If no labels are left, use drive label
@@ -483,8 +506,7 @@ namespace MPF.Frontend.Tools
 
             // If only one unique label left, don't mention fs
 #if NET20
-            string[] keyArr = new string[labels.Count];
-            labels.Keys.CopyTo(keyArr, 0);
+            string[] keyArr = [.. labels.Keys];
             string firstLabel = keyArr[0];
 #else
             string firstLabel = labels.First().Key;
@@ -506,11 +528,11 @@ namespace MPF.Frontend.Tools
                 volLabels.Add(driveLabel);
 
             // Add remaining labels with their corresponding filesystems
-            foreach (KeyValuePair<string, List<string>> label in labels)
+            foreach (var kvp in labels)
             {
                 // Ignore common volume labels
-                if (FrontendTool.GetRedumpSystemFromVolumeLabel(label.Key) == null)
-                    volLabels.Add($"{label.Key} ({string.Join(", ", [.. label.Value])})");
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(kvp.Key) == null)
+                    volLabels.Add($"{kvp.Key} ({string.Join(", ", [.. kvp.Value])})");
             }
 
             // Ensure that no labels are empty

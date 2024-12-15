@@ -74,6 +74,7 @@
 - Add DumpingParameters for DIC and Redumper
 - Better deal with volume labels
 - Fix bug with volume labels
+- Slight formatting tweaks
 
 ### 3.2.4 (2024-11-24)
 
