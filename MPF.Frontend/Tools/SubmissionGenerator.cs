@@ -471,6 +471,16 @@ namespace MPF.Frontend.Tools
                     labels.Remove(key);
             }
 
+            // If no labels are left, use drive label
+            if (labels == null || labels.Count == 0)
+            {
+                // Ignore common volume labels
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                    return null;
+
+                return driveLabel;
+            }
+
             // If only one unique label left, don't mention fs
 #if NET20
             string[] keyArr = new string[labels.Count];
