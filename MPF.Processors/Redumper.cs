@@ -514,7 +514,7 @@ namespace MPF.Processors
                         new($"{baseFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
-                        new($"{baseFilename}.security", System.IsXGD()
+                        new($"{baseFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{baseFilename}.manufacturer")
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "security"),
@@ -624,6 +624,47 @@ namespace MPF.Processors
                 while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
                 {
                     outputStream.Write(buffer, 0, count);
+                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a .manufacturer file is empty or not
+        /// True if standard DVD (empty DMI), False if error or XGD with security sectors 
+        /// </summary>
+        /// <param name="inputFilename">Filename of .manufacturer file to check</param>
+        private static bool IsManufacturerEmpty(string inputFilename)
+        {
+            // If the file doesn't exist, we can't copy
+            if (!File.Exists(inputFilename))
+                return false;
+
+            try
+            {
+                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
+
+                // If the manufacturer file is not the correct size, return false
+                if (2052 != inputStream.Length)
+                    return false;
+
+                // Skip the header
+                inputStream.Seek(4, SeekOrigin.Begin);
+
+                byte[] buffer = new byte[2048];
+                int bytesRead = inputStream.Read(buffer, 0, buffer.Length);
+
+                // Return false if any value is non-zero
+                for (int i = 0; i < bytesRead; i++)
+                {
+                    if (buffer[i] != 0x00)
+                        return false;
                 }
 
                 return true;
