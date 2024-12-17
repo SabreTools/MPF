@@ -76,6 +76,7 @@
 - Fix bug with volume labels
 - Slight formatting tweaks
 - Update BOS to 3.3.2
+- Enable handling non-SS Xbox discs
 
 ### 3.2.4 (2024-11-24)
 
