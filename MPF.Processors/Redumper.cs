@@ -651,13 +651,13 @@ namespace MPF.Processors
                 using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
 
                 // If the manufacturer file is not the correct size, return false
-                if (4100 != inputStream.Length)
+                if (2052 != inputStream.Length)
                     return false;
 
                 // Skip the header
                 inputStream.Seek(4, SeekOrigin.Begin);
 
-                byte[] buffer = new byte[4096];
+                byte[] buffer = new byte[2048];
                 int bytesRead = inputStream.Read(buffer, 0, buffer.Length);
 
                 // Return false if any value is non-zero
