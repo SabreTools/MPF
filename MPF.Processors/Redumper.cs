@@ -395,6 +395,13 @@ namespace MPF.Processors
         /// <inheritdoc/>
         internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
         {
+            // Get the base path
+            string basePath;
+            if (string.IsNullOrEmpty(baseDirectory))
+                basePath = baseFilename;
+            else
+                basePath = Path.Combine(baseDirectory, baseFilename);
+
             switch (Type)
             {
                 case MediaType.CDROM:
@@ -438,13 +445,6 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "toc"),
                     ];
-
-                    // Get the base path for cuesheet reading
-                    string basePath;
-                    if (string.IsNullOrEmpty(baseDirectory))
-                        basePath = baseFilename;
-                    else
-                        basePath = Path.Combine(baseDirectory, baseFilename);
 
                     // Include .hash and .skeleton for all files in cuesheet
                     var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{basePath}.cue");
@@ -514,7 +514,7 @@ namespace MPF.Processors
                         new($"{baseFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
-                        new($"{baseFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{baseFilename}.manufacturer")
+                        new($"{baseFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "security"),
@@ -651,17 +651,14 @@ namespace MPF.Processors
                 using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
 
                 // If the manufacturer file is not the correct size, return false
-                if (2052 != inputStream.Length)
+                if (inputStream.Length != 2052)
                     return false;
 
-                // Skip the header
-                inputStream.Seek(4, SeekOrigin.Begin);
-
-                byte[] buffer = new byte[2048];
+                byte[] buffer = new byte[2052];
                 int bytesRead = inputStream.Read(buffer, 0, buffer.Length);
 
-                // Return false if any value is non-zero
-                for (int i = 0; i < bytesRead; i++)
+                // Return false if any value is non-zero, skip SCSI header (4 bytes)
+                for (int i = 4; i < bytesRead; i++)
                 {
                     if (buffer[i] != 0x00)
                         return false;
