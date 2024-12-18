@@ -226,8 +226,8 @@ namespace MPF.Processors
 
                             // Count the number of sectors
                             int sectorCount = 0;
-                            for (int index = 0; (index = input.IndexOf("MSF:", index, StringComparison.Ordinal)) != -1; index += "MSF:".Length)
-                                count++;
+                            for (int index = 0; (index = info.CopyProtection!.SecuROMData.IndexOf("MSF:", index, StringComparison.Ordinal)) != -1; index += "MSF:".Length)
+                                sectorCount++;
 
                             // Determine SecuROM schema, warn if unusual type
                             SecuROMScheme secuROMScheme = SecuROMScheme.Unknown;
