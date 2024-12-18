@@ -222,6 +222,19 @@ namespace MPF.Processors
                         var fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
                             info.CopyProtection!.SecuROMData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
+
+                        SecuROMScheme secuROMScheme = Unknown;
+                        if (fi.Length == 216)
+                            secuROMScheme = SecuROMScheme.PreV3;
+                        else if (fi.Length == 90)
+                            secuROMScheme = SecuROMScheme.V3;
+                        else if (fi.Length == 99)
+                            secuROMScheme = SecuROMScheme.V4;
+                        else if (fi.Length == 11)
+                            secuROMScheme = SecuROMScheme.V4Plus;
+
+                        if (secuROMScheme == SecuROMScheme.Unknown)
+                            info.CommonDiscInfo!.Comments = "Warning: Incorrect SecuROM sector count" + Environment.NewLine;                        
                     }
 
                     // Needed for some odd copy protections
