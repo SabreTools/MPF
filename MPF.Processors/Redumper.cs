@@ -682,7 +682,7 @@ namespace MPF.Processors
         /// <summary>
         /// Private enum for SecuROM scheme type
         /// </summary>
-        private enum SecuROMScheme
+        internal enum SecuROMScheme
         {
             Unknown,
             PreV3, // 216 Sectors
