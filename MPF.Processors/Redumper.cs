@@ -151,7 +151,7 @@ namespace MPF.Processors
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
-                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme? secuROMScheme) ?? string.Empty;
+                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
                         info.CommonDiscInfo!.Comments += "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
 
@@ -1720,13 +1720,13 @@ namespace MPF.Processors
 
                 // Return the securom scheme if correct sector count
                 if (lines.Count == 216)
-                    secuROMScheme == SecuROMScheme.PreV3;
+                    secuROMScheme = SecuROMScheme.PreV3;
                 else if (lines.Count == 90)
-                    secuROMScheme == SecuROMScheme.V3;
+                    secuROMScheme = SecuROMScheme.V3;
                 else if (lines.Count == 99)
-                    secuROMScheme == SecuROMScheme.V4;
+                    secuROMScheme = SecuROMScheme.V4;
                 else if (lines.Count == 11)
-                    secuROMScheme == SecuROMScheme.V4Plus;
+                    secuROMScheme = SecuROMScheme.V4Plus;
 
                 return string.Join("\n", [.. lines]).TrimEnd('\n');
             }
