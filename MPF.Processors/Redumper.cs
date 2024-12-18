@@ -584,6 +584,99 @@ namespace MPF.Processors
 
         #region Private Extra Methods
 
+        /// <summary>
+        /// Get if the datfile exists in the log
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        private static bool DatfileExists(string log)
+            => GetDatfile(log) != null;
+
+        /// <summary>
+        /// Copies a file with the header removed
+        /// </summary>
+        /// <param name="inputFilename">Filename of file to copy from</param>
+        /// <param name="outputFilename">Filename of file to copy to</param>
+        /// <param name="headerLength">Length of header to remove</param>
+        private static bool RemoveHeader(string inputFilename, string outputFilename, int headerLength = 4)
+        {
+            // If the file doesn't exist, we can't copy
+            if (!File.Exists(inputFilename))
+                return false;
+
+            // If the output file already exists, don't overwrite
+            if (File.Exists(outputFilename))
+                return false;
+
+            try
+            {
+                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
+
+                // If the header length is not valid, don't copy
+                if (headerLength < 1 || headerLength >= inputStream.Length)
+                    return false;
+
+                using var outputStream = new FileStream(outputFilename, FileMode.Create, FileAccess.Write);
+
+                // Skip the header
+                inputStream.Seek(headerLength, SeekOrigin.Begin);
+
+                // inputStream.CopyTo(outputStream);
+                byte[] buffer = new byte[4096];
+                int count;
+                while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
+                {
+                    outputStream.Write(buffer, 0, count);
+                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a .manufacturer file is empty or not
+        /// True if standard DVD (empty DMI), False if error or XGD with security sectors 
+        /// </summary>
+        /// <param name="inputFilename">Filename of .manufacturer file to check</param>
+        private static bool IsManufacturerEmpty(string inputFilename)
+        {
+            // If the file doesn't exist, we can't copy
+            if (!File.Exists(inputFilename))
+                return false;
+
+            try
+            {
+                using var inputStream = new FileStream(inputFilename, FileMode.Open, FileAccess.Read);
+
+                // If the manufacturer file is not the correct size, return false
+                if (inputStream.Length != 2052)
+                    return false;
+
+                byte[] buffer = new byte[2052];
+                int bytesRead = inputStream.Read(buffer, 0, buffer.Length);
+
+                // Return false if any value is non-zero, skip SCSI header (4 bytes)
+                for (int i = 4; i < bytesRead; i++)
+                {
+                    if (buffer[i] != 0x00)
+                        return false;
+                }
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return false;
+            }
+        }
+
+        #endregion
+
         #region Information Extraction Methods
 
         /// <summary>
