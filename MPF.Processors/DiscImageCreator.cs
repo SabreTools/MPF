@@ -223,7 +223,7 @@ namespace MPF.Processors
                         if (fi.Length > 0)
                             info.CopyProtection!.SecuROMData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
 
-                        SecuROMScheme secuROMScheme = Unknown;
+                        SecuROMScheme secuROMScheme = SecuROMScheme.Unknown;
                         if (fi.Length == 216)
                             secuROMScheme = SecuROMScheme.PreV3;
                         else if (fi.Length == 90)
