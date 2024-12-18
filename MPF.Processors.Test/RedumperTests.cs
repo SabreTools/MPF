@@ -892,7 +892,7 @@ namespace MPF.Processors.Test
         public void GetSecuROMData_Empty_Null()
         {
             string log = string.Empty;
-            string? actual = Redumper.GetSecuROMData(log);
+            string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Null(actual);
         }
 
@@ -900,7 +900,7 @@ namespace MPF.Processors.Test
         public void GetSecuROMData_Invalid_Null()
         {
             string log = "INVALID";
-            string? actual = Redumper.GetSecuROMData(log);
+            string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Null(actual);
         }
 
@@ -909,7 +909,7 @@ namespace MPF.Processors.Test
         {
             string? expected = "MSF: 00\nMSF: 01\nMSF: 02";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
-            string? actual = Redumper.GetSecuROMData(log);
+            string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Equal(expected, actual);
         }
 
