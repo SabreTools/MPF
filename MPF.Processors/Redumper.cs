@@ -151,10 +151,12 @@ namespace MPF.Processors
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
-                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log") ?? string.Empty;
+                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme? secuROMScheme) ?? string.Empty;
+                    if (secuROMScheme == SecuROMScheme.Unknown)
+                        info.CommonDiscInfo!.Comments += "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
 
                     // Needed for some odd copy protections
-                    info.CopyProtection!.Protection = GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
+                    info.CopyProtection!.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
                     break;
 
                 case RedumpSystem.DVDAudio:
@@ -671,6 +673,22 @@ namespace MPF.Processors
                 // We don't care what the exception is right now
                 return false;
             }
+        }
+
+        #endregion
+        
+        #region Private Enums
+
+        /// <summary>
+        /// Private enum for SecuROM scheme type
+        /// </summary>
+        private enum SecuROMScheme
+        {
+            Unknown,
+            PreV3, // 216 Sectors
+            V3, // 90 Sectors
+            V4, // 99 Sectors
+            V4Plus, // 11 Sectors
         }
 
         #endregion
@@ -1664,9 +1682,12 @@ namespace MPF.Processors
         /// Get the SecuROM data from the input file, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
+        /// <param name="secuROMScheme">SecuROM scheme found</param>
         /// <returns>SecuROM data, if possible</returns>
-        internal static string? GetSecuROMData(string log)
+        internal static string? GetSecuROMData(string log, out SecuROMScheme secuROMScheme)
         {
+            secuROMScheme = SecuROMScheme.Unknown;
+
             // If the file doesn't exist, we can't get info from it
             if (string.IsNullOrEmpty(log))
                 return null;
@@ -1696,6 +1717,16 @@ namespace MPF.Processors
 
                     lines.Add(line);
                 }
+
+                // Return the securom scheme if correct sector count
+                if (lines.Count == 216)
+                    secuROMScheme == SecuROMScheme.PreV3;
+                else if (lines.Count == 90)
+                    secuROMScheme == SecuROMScheme.V3;
+                else if (lines.Count == 99)
+                    secuROMScheme == SecuROMScheme.V4;
+                else if (lines.Count == 11)
+                    secuROMScheme == SecuROMScheme.V4Plus;
 
                 return string.Join("\n", [.. lines]).TrimEnd('\n');
             }

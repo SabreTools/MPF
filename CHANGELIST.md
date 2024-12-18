@@ -78,6 +78,7 @@
 - Update BOS to 3.3.2
 - Enable handling non-SS Xbox discs
 - Use proper base path for redumper output check
+- Verify securom sector count
 
 ### 3.2.4 (2024-11-24)
 
@@ -274,7 +275,7 @@
 - Add include artifacts flag for check, sanitize options
 - Remove old --protect-file mentions (JohnVeness)
 - Update RedumpLib to 1.4.1
-- Enable loading seed JSON (Deterous)
+- Enable loading seed JSON
 
 ### 3.2.0 (2024-06-20)
 
@@ -350,7 +351,7 @@
 - Clean up usings
 - Remove automatic eject and reset options
 - Remove options from UI
-- Remove firmware output for Redumper (Deterous)
+- Remove firmware output for Redumper
 - Merge EnumConverter and EnumExtensions
 - Move event args to root of Core
 - Move processing queue to root of Core
@@ -390,7 +391,7 @@
 - Rename main application to MPF.UI
 - Fix build scripts
 - Make protection file output required
-- Standardize PS1-5 outputs and parsing (Deterous)
+- Standardize PS1-5 outputs and parsing
 - Update Redumper to build 371
 - Tools always run in separate window
 - Move ConsoleLogger to Check CLI
@@ -466,22 +467,22 @@
 ### 3.1.9 (2024-05-19)
 
 - Update Redumper to build 325
-- Fix CleanRip not pulling info (Deterous)
-- Fix XboxOne/XboxSX Filename bug (Deterous)
-- Trim PIC for XboxOne/XboxSX (Deterous)
+- Fix CleanRip not pulling info
+- Fix XboxOne/XboxSX Filename bug
+- Trim PIC for XboxOne/XboxSX
 - Get volume label from UIC outputs
 - Add site code listing to Check
 - Update RedumpLib and related
 - Update BinaryObjectScanner to 3.1.11
 - Remove now-unused Hash enum
 - Use IO implementation of IniFile
-- Add Xbox Backup Creator support to MPF.Check (Deterous)
+- Add Xbox Backup Creator support to MPF.Check
 - Update BinaryObjectScanner to 3.1.12
-- Prefer PlayStation info from Redumper logs (Deterous)
+- Prefer PlayStation info from Redumper logs
 
 ### 3.1.8 (2024-05-09)
 
-- Option for default Redumper leadin retries (Deterous)
+- Option for default Redumper leadin retries
 - Omit false positives on formatting protections
 - Critical update to BinaryObjectScanner 3.1.10
 - Add _PFI.bin support for UIC
@@ -492,9 +493,9 @@
 
 ### 3.1.6 (2024-04-27)
 
-- Fix parameter parsing for `=` symbol (Deterous)
-- Define better default categories (Deterous)
-- Custom non-redump Redumper options (Deterous)
+- Fix parameter parsing for `=` symbol
+- Define better default categories
+- Custom non-redump Redumper options
 - Update packages
 - Update packages
 
@@ -511,10 +512,10 @@
 - Fix information pulling for redumper (fuzz6001)
 - Update packages
 - Update BinaryObjectScanner to 3.1.4
-- Detect Xbox Series X discs (Deterous)
+- Detect Xbox Series X discs
 - Enable Windows targeting for test project
 - Fix test project project includes
-- Fix CleanRip hash output for Check (Deterous)
+- Fix CleanRip hash output for Check
 - Enable label-side mastering SID and toolstamp
 - Enable remaining fields for label-side information
 - Update BinaryObjectScanner to 3.1.5
@@ -531,38 +532,38 @@
 - Remove GHA pull request builds
 - Add PR check workflow
 - Don't link to AppVeyor artifacts page anymore
-- Add PS3 CFW support to MPF.Check (Deterous)
-- Hide size if value is 0 (Deterous)
-- Fix title normalization (Deterous)
+- Add PS3 CFW support to MPF.Check
+- Hide size if value is 0
+- Fix title normalization
 - Ensure no labels are empty
 - Use SabreTools.Hashing
 - Update to SabreTools.RedumpLib 1.3.5
 - Update packages to latest
-- Enable LibIRD for all .NET frameworks (Deterous)
+- Enable LibIRD for all .NET frameworks
 - Try updating PR check action
-- Fix config access persmission (Deterous)
-- Fix Check UI deadlock (Deterous)
+- Fix config access persmission
+- Fix Check UI deadlock
 - Fix formatting output formatting
-- Update LibIRD to 0.9.0 (Deterous)
+- Update LibIRD to 0.9.0
 - Update packages
-- Fix Redumper generic drive type (Deterous)
-- Add MPF version to Submission info (Deterous)
+- Fix Redumper generic drive type
+- Add MPF version to Submission info
 - Update to RedumpLib 1.3.6
 
 ### 3.1.2 (2024-02-27)
 
 - Remove debugging lines from build script
 - Port build script fixes from BOS
-- Fix double git hash version (feat. Deterous)
+- Fix double git hash version
 - Readd x86 builds by default
-- Hide unavailable dumping programs (Deterous)
+- Hide unavailable dumping programs
 - Remove DIC and Aaru bundles from CI
 - Add x86 builds to AppVeyor
 - Make AppVeyor builds framework-dependent
 - Fix misattributed artifact
 - Update README with current build instructions
-- Opt-in automatic IRD creation after PS3 dump (Deterous)
-- Add CI via Github Workflows (Deterous)
+- Opt-in automatic IRD creation after PS3 dump
+- Add CI via Github Workflows
 - Reorganize solution items
 - Split CI workflow files
 - Add GHA CI status badges
@@ -592,19 +593,19 @@
 - Show hashes in readonly data
 - Update to BinaryObjectScanner 3.1.0
 - Add Mattel HyperScan detection
-- Pull PS3 Disc Key from redump (Deterous)
+- Pull PS3 Disc Key from redump
 
 ### 3.1.1 (2024-02-20)
 
 - Remove .NET 6 from auto-builds
 - Make Redumper the default for new users
-- Fix DIC log parsing for SS version (Deterous)
+- Fix DIC log parsing for SS version
 - Write outputs with UTF-8
 - Add funworld Photo Play detection
 - Fix Aaru drive parameter generation
 - Limit DVD protection outputs
-- Add a GUI for PS3 IRD Creation (Deterous)
-- Update LibIRD, disable UI elements when creating IRD (Deterous)
+- Add a GUI for PS3 IRD Creation
+- Update LibIRD, disable UI elements when creating IRD
 
 ### 3.1.0 (2024-02-06)
 
@@ -612,33 +613,33 @@
 - Update Redumper to build 294
 - Fix commented out code
 - Make missing hash data clearer
-- Get BD PIC Identifier for redumper (Deterous)
-- Support redumper skeleton and hash files (Deterous)
+- Get BD PIC Identifier for redumper
+- Support redumper skeleton and hash files
 - Support ringcode and PIC for triple/quad-layer (fuzz6001)
-- Cleanup !protectionInfo.txt (Deterous)
-- Update Redumper to build 311 (Deterous)
-- Use PSX/PS2 serial as filename when Volume Label not present (Deterous)
-- Allow variables in output path (Deterous)
-- Check for presence of complete dump from other programs (Deterous)
-- Retrieve volume label from logs (Deterous)
+- Cleanup !protectionInfo.txt
+- Update Redumper to build 311
+- Use PSX/PS2 serial as filename when Volume Label not present
+- Allow variables in output path
+- Check for presence of complete dump from other programs
+- Retrieve volume label from logs
 - Correct missing space in PVD (fuzz6001)
-- Prevent crashing on invalid parameters (Deterous)
-- Detect CDTV discs (Deterous)
-- Differentiate CD32 from CDTV (Deterous)
-- Normalise Disc Titles in Submission Info (Deterous)
+- Prevent crashing on invalid parameters
+- Detect CDTV discs
+- Differentiate CD32 from CDTV
+- Normalise Disc Titles in Submission Info
 - Skip warning line in Redumper log
-- Add a GUI for MPF.Check (Deterous)
+- Add a GUI for MPF.Check
 - Fix information pulling for CleanRip and UIC
 - Add UMD handling for the disc info window
 - Detect Photo CD
-- Parse PSX/PS2/KP2 exe date from logs (Deterous)
-- Exclude extra tracks when finding disc matches (Deterous)
-- Verbose Redumper log by default (Deterous)
+- Parse PSX/PS2/KP2 exe date from logs
+- Exclude extra tracks when finding disc matches
+- Verbose Redumper log by default
 - Retrieve serial from Cleanrip
 - Fix build from rushed code
 - Remove `-disc2` from Cleanrip serial
 - Enable Windows builds on Linux and Mac
-- Fix compiler warning (Deterous)
+- Fix compiler warning
 
 ### 3.0.3 (2023-12-04)
 
@@ -726,15 +727,15 @@
 
 ### 2.7.5 (2023-11-06)
 
-- Remove psxt001z Pkg Ref in MPF.Test (Deterous)
+- Remove psxt001z Pkg Ref in MPF.Test
 - Update Redumper to build 247
-- Focus main window after child window closes (Deterous)
+- Focus main window after child window closes
 - Try to get PS3 data from SFB
 - Fix PS3 version finding
-- Pull PS3 Firmware Version (Deterous)
+- Pull PS3 Firmware Version
 - Fix default layerbreak output
-- Enable browsing for Redumper path (Deterous)
-- Update to MMI 3.0.0 (Deterous)
+- Enable browsing for Redumper path
+- Update to MMI 3.0.0
 
 ### 2.7.4 (2023-10-31)
 
@@ -755,7 +756,7 @@
 - Compile most regex statements
 - Handle a couple of messages
 - Remove .manufacturer for Bluray
-- Fix typo that disables DIC during media check (Deterous)
+- Fix typo that disables DIC during media check
 - Fix build
 - Remove duplicate check
 - Add PIC output for Redumper
@@ -784,7 +785,7 @@
 - Add filename suffix setting (nw)
 - Wire through filename suffix
 - Expose suffix setting
-- Set UDF CD threshold at 800MB (Deterous)
+- Set UDF CD threshold at 800MB
 - Update package versions
 - Attempt to parse out PS5 params.json
 - Fix CRC32 hashing
@@ -793,7 +794,7 @@
 - Update to MMI 3.0.0-preview.4
 - Fix two small nullability issues
 - Use Array.Empty in hasher
-- Always use relative path internally (Deterous)
+- Always use relative path internally
 
 ### 2.7.2 (2023-10-17)
 
@@ -801,9 +802,9 @@
 - Cleanup and gated code
 - Gate some switch expressions
 - Suppress some unnecessary messages
-- Disable dumping button when Redumper selected with unsupported media type (Deterous)
-- Improve check for which program supports which media (Deterous)
-- Remove code for getting Universal Hash from DIC logs (Deterous)
+- Disable dumping button when Redumper selected with unsupported media type
+- Improve check for which program supports which media
+- Remove code for getting Universal Hash from DIC logs
 - Fix Redumper retry count not showing
 - Enable parameters checkbox by default
 - Update Redumper to build 230
@@ -823,7 +824,7 @@
 - Unify handling of enable/disable events
 - Enable nullability in Check
 - Remove all but .NET 6 for AppVeyor packaging
-- Place message boxes at center of main window (Deterous)
+- Place message boxes at center of main window
 - Enable nullability in MPF
 - Enable nullability in MPF.UI.Core
 - Enable nullability in MPF.Test
@@ -859,7 +860,7 @@
 - Be smarter about media type based on system
 - Consolidate into MPF.Core
 - Fix failing tests
-- Remove debug symbols in release builds (Deterous)
+- Remove debug symbols in release builds
 - Allow nullability for modern .NET
 - Fix failing tests
 - Remove unnecessary include
@@ -867,7 +868,7 @@
 - Move LogLevel enumeration
 - Split logging code a bit more
 - Split info window code a bit more
-- Clarify build instructions in README (Deterous)
+- Clarify build instructions in README
 - Split options window code a bit more
 - Use binding for more disc info textboxes
 - Handle Redump password changing better
@@ -893,7 +894,7 @@
 - Fix media type ordering
 - Fix dumping button not enabling
 - Recentralize some Check functionality
-- Fix media combobox not updating (Deterous)
+- Fix media combobox not updating
 
 ### 2.6.6 (2023-10-04)
 
@@ -942,7 +943,7 @@
 - Handle extension changing only
 - Swap order of operations for changing program
 - Fix dumping path in DD
-- Fix PlayStation serial code region parsing (Deterous)
+- Fix PlayStation serial code region parsing
 - Retrofit README
 - Migrate to Nuget package for Redump
 - Remove dd for Windows
