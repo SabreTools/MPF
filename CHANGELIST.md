@@ -81,6 +81,7 @@
 - Verify securom sector count
 - Update packages
 - Simplify direct package references
+- Remove vestigial progress indicators
 
 ### 3.2.4 (2024-11-24)
 

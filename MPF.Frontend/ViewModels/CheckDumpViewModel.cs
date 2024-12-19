@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
-using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
@@ -458,14 +456,16 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Populate an environment
-            var env = new DumpEnvironment(Options, Path.GetFullPath(InputPath.Trim('"')), null, CurrentSystem, CurrentMediaType, CurrentProgram, parameters: null);
-
-            // Make new Progress objects
-            var resultProgress = new Progress<ResultEventArgs>();
-            var protectionProgress = new Progress<ProtectionProgress>();
+            var env = new DumpEnvironment(Options,
+                Path.GetFullPath(InputPath.Trim('"')),
+                null,
+                CurrentSystem,
+                CurrentMediaType,
+                CurrentProgram,
+                parameters: null);
 
             // Finally, attempt to do the output dance
-            var result = await env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, processUserInfo);
+            var result = await env.VerifyAndSaveDumpOutput(processUserInfo: processUserInfo);
 
             // Reenable UI and event handlers, if necessary
             EnableUIElements();
