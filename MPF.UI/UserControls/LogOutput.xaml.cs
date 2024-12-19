@@ -28,11 +28,6 @@ namespace MPF.UI.UserControls
         /// </summary>
         private readonly Paragraph _paragraph;
 
-        /// <summary>
-        /// Cached value of the last line written
-        /// </summary>
-        private Run? lastLine = null;
-
 #if NET35
 
         private Button? ClearButton => ItemHelper.FindChild<Button>(this, "ClearButton");
@@ -138,10 +133,7 @@ namespace MPF.UI.UserControls
 
             try
             {
-                if (nextText.StartsWith("\r"))
-                    ReplaceLastLine(nextLogLine);
-                else
-                    AppendToTextBox(nextLogLine);
+                AppendToTextBox(nextLogLine);
             }
             catch (Exception ex)
             {
@@ -160,21 +152,6 @@ namespace MPF.UI.UserControls
             {
                 var run = logLine.GenerateRun();
                 _paragraph.Inlines.Add(run);
-                lastLine = run;
-            });
-        }
-
-        /// <summary>
-        /// Replace the last line written to the log text box
-        /// </summary>
-        /// <param name="logLine">LogLine value to append</param>
-        private void ReplaceLastLine(LogLine logLine)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                lastLine ??= new Run();
-                lastLine.Text = logLine.Text;
-                lastLine.Foreground = logLine.GetForegroundColor();
             });
         }
 
