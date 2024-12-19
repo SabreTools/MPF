@@ -93,6 +93,7 @@
 - Print PS4/PS5 app.pkg info
 - Ensure .NET versions are installed for testing
 - Remove use of psxt001
+- Minor formatting tweaks; add TODO
 
 ### 3.2.4 (2024-11-24)
 

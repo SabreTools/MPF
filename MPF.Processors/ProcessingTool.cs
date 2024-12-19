@@ -452,62 +452,64 @@ namespace MPF.Processors
                 if (size % 96 != 0)
                     return false;
 
-                byte[] sub = new byte[12];
-                uint tpos = 0;
+                // Setup loop variables
+                byte[] expected = new byte[12];
+                uint time = 0;
 
+                // Process sector data
                 for (uint sector = 150; sector < ((size / 96) + 150); sector++)
                 {
                     // Read the sector header
                     subFile.Seek(12, SeekOrigin.Current);
-                    byte[] buffer = subFile.ReadBytes(12);
+                    byte[] actual = subFile.ReadBytes(12);
 
                     // Skip the rest of the data for the sector
                     subFile.Seek(72, SeekOrigin.Current);
 
                     // New track
-                    if ((_btoi(buffer[1]) == (_btoi(sub[1]) + 1)) && (buffer[2] == 0 || buffer[2] == 1))
+                    if ((_btoi(actual[1]) == (_btoi(expected[1]) + 1)) && (actual[2] == 0 || actual[2] == 1))
                     {
-                        Array.Copy(buffer, sub, 6);
-                        tpos = (uint)((_btoi((byte)(buffer[3] * 60)) + _btoi(buffer[4])) * 75) + _btoi(buffer[5]);
+                        Array.Copy(actual, expected, 6);
+                        time = (uint)((_btoi((byte)(actual[3] * 60)) + _btoi(actual[4])) * 75) + _btoi(actual[5]);
                     }
 
                     // New index
-                    else if (_btoi(buffer[2]) == (_btoi(sub[2]) + 1) && buffer[1] == sub[1])
+                    else if (_btoi(actual[2]) == (_btoi(expected[2]) + 1) && actual[1] == expected[1])
                     {
-                        Array.Copy(buffer, 2, sub, 2, 4);
-                        tpos = (uint)((_btoi((byte)(buffer[3] * 60)) + _btoi(buffer[4])) * 75) + _btoi(buffer[5]);
+                        Array.Copy(actual, 2, expected, 2, 4);
+                        time = (uint)((_btoi((byte)(actual[3] * 60)) + _btoi(actual[4])) * 75) + _btoi(actual[5]);
                     }
 
                     // MSF1 [3-5]
                     else
                     {
-                        if (sub[2] == 0)
-                            tpos--;
+                        if (expected[2] == 0)
+                            time--;
                         else
-                            tpos++;
+                            time++;
 
-                        sub[3] = _itob((byte)(tpos / 60 / 75));
-                        sub[4] = _itob((byte)((tpos / 75) % 60));
-                        sub[5] = _itob((byte)(tpos % 75));
+                        expected[3] = _itob((byte)(time / 60 / 75));
+                        expected[4] = _itob((byte)((time / 75) % 60));
+                        expected[5] = _itob((byte)(time % 75));
                     }
 
                     // Force skip [6]
-                    buffer[6] = sub[6] = 0;
+                    actual[6] = expected[6] = 0;
 
                     // MSF2 [7-9]
-                    sub[7] = _itob((byte)(sector / 60 / 75));
-                    sub[8] = _itob((byte)((sector / 75) % 60));
-                    sub[9] = _itob((byte)(sector % 75));
+                    expected[7] = _itob((byte)(sector / 60 / 75));
+                    expected[8] = _itob((byte)((sector / 75) % 60));
+                    expected[9] = _itob((byte)(sector % 75));
 
-                    // CRC-16 [10-11]
+                    // CRC-16 [10-11] -- TODO: Ensure byte order is correct
                     var crcWrapper = new HashWrapper(HashType.CRC16);
-                    crcWrapper.Process(sub, 0, 10);
+                    crcWrapper.Process(expected, 0, 10);
                     byte[] crc = crcWrapper.CurrentHashBytes!;
-                    sub[10] = crc[0];
-                    sub[11] = crc[1];
+                    expected[10] = crc[0];
+                    expected[11] = crc[1];
 
-                    // If a LibCrypt sector is detected
-                    if (!buffer.EqualsExactly(sub))
+                    // If a subchannel mismatch is detected
+                    if (!actual.EqualsExactly(expected))
                         return true;
                 }
             }
@@ -517,7 +519,7 @@ namespace MPF.Processors
                 return false;
             }
 
-            return true;
+            return false;
         }
 
         #endregion
