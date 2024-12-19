@@ -95,7 +95,7 @@ namespace MPF.Processors.Test
             string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
             var actual = processor.GenerateArtifacts(basePath);
-            Assert.Equal(11, actual.Count);
+            Assert.Equal(9, actual.Count);
         }
 
         #endregion
@@ -163,7 +163,7 @@ namespace MPF.Processors.Test
             string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
             var actual = processor.GetZippableFilePaths(basePath);
-            Assert.Equal(11, actual.Count);
+            Assert.Equal(9, actual.Count);
         }
 
         #endregion

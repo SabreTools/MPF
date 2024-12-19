@@ -95,6 +95,7 @@
 - Remove use of psxt001
 - Minor formatting tweaks; add TODO
 - Use simpler cuesheet reader in Redumper
+- Fix now-incorrect test values
 
 ### 3.2.4 (2024-11-24)
 
