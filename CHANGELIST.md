@@ -90,6 +90,7 @@
 - (EXPERIMENTAL) Skip log line queue
 - Fully remove processing queue code
 - Introduce maximum log length
+- Print PS4/PS5 app.pkg info
 
 ### 3.2.4 (2024-11-24)
 
