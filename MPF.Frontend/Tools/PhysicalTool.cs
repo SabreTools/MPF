@@ -485,11 +485,14 @@ namespace MPF.Frontend.Tools
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
-                    byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                    if (BitConverter.IsLittleEndian)
-                        Array.Reverse(date);
+                    if (appPkgHeader != null)
+                    {
+                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
+                        if (BitConverter.IsLittleEndian)
+                            Array.Reverse(date);
 
-                    pkgInfo = $"app.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app.pkg Date: {date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                        pkgInfo = $"app.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app.pkg Date: {date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                    }
                 }
 
                 if (pkgInfo == "")
@@ -635,12 +638,15 @@ namespace MPF.Frontend.Tools
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
-                    byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                    if (BitConverter.IsLittleEndian)
-                        Array.Reverse(date);
+                    if (appPkgHeader != null)
+                    {
+                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
+                        if (BitConverter.IsLittleEndian)
+                            Array.Reverse(date);
 
-                    string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                    pkgInfo = $"app_sc.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app_sc.pkg Date: {pkgDate}";
+                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                        pkgInfo = $"app_sc.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app_sc.pkg Date: {pkgDate}";
+                    }
                 }
 
                 if (pkgInfo == "")
