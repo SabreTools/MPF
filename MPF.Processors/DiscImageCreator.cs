@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 #endif
 using System.Text.RegularExpressions;
-using psxt001z;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -956,8 +955,13 @@ namespace MPF.Processors
 
             try
             {
+#if NET20
+                // Create a list to contain all of the found values
+                var discTypeOrBookTypeSet = new List<string>();
+#else
                 // Create a hashset to contain all of the found values
                 var discTypeOrBookTypeSet = new HashSet<string>();
+#endif
 
                 using var sr = File.OpenText(disc);
                 var line = sr.ReadLine();
@@ -1346,7 +1350,7 @@ namespace MPF.Processors
                 return;
             }
 
-            if (!LibCrypt.DetectLibCrypt([subPath]))
+            if (!ProcessingTool.DetectLibCrypt(subPath))
             {
                 detected = YesNo.No;
                 data = null;

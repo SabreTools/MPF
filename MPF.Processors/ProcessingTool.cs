@@ -8,7 +8,9 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
+using SabreTools.Matching;
 using SabreTools.Models.Logiqx;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
@@ -417,6 +419,105 @@ namespace MPF.Processors
                 'H' => (Region?)Region.JapanEurope,
                 _ => null,
             };
+        }
+
+        #endregion
+
+        #region PlayStation specific tools
+
+        /// <summary>
+        /// Get if LibCrypt data is detected in the subchannel file, if possible
+        /// </summary>
+        /// <param name="subPath">Path to the subchannel file</param>
+        /// <returns>True if LibCrypt was detected, false otherwise</returns>
+        public static bool DetectLibCrypt(string? subPath)
+        {
+            if (string.IsNullOrEmpty(subPath))
+                return false;
+
+            // Create conversion delegates
+            byte _btoi(byte b) => (byte)(b / 16 * 10 + b % 16);
+            byte _itob(byte i) => (byte)(i / 10 * 16 + i % 10);
+
+            try
+            {
+                if (!File.Exists(subPath))
+                    return false;
+
+                // Open the subfile
+                var subFile = File.OpenRead(subPath);
+
+                // Check the size
+                long size = subFile.Length;
+                if (size % 96 != 0)
+                    return false;
+
+                byte[] sub = new byte[12];
+                uint tpos = 0;
+
+                for (uint sector = 150; sector < ((size / 96) + 150); sector++)
+                {
+                    // Read the sector header
+                    subFile.Seek(12, SeekOrigin.Current);
+                    byte[] buffer = subFile.ReadBytes(12);
+
+                    // Skip the rest of the data for the sector
+                    subFile.Seek(72, SeekOrigin.Current);
+
+                    // New track
+                    if ((_btoi(buffer[1]) == (_btoi(sub[1]) + 1)) && (buffer[2] == 0 || buffer[2] == 1))
+                    {
+                        Array.Copy(buffer, sub, 6);
+                        tpos = (uint)((_btoi((byte)(buffer[3] * 60)) + _btoi(buffer[4])) * 75) + _btoi(buffer[5]);
+                    }
+
+                    // New index
+                    else if (_btoi(buffer[2]) == (_btoi(sub[2]) + 1) && buffer[1] == sub[1])
+                    {
+                        Array.Copy(buffer, 2, sub, 2, 4);
+                        tpos = (uint)((_btoi((byte)(buffer[3] * 60)) + _btoi(buffer[4])) * 75) + _btoi(buffer[5]);
+                    }
+
+                    // MSF1 [3-5]
+                    else
+                    {
+                        if (sub[2] == 0)
+                            tpos--;
+                        else
+                            tpos++;
+
+                        sub[3] = _itob((byte)(tpos / 60 / 75));
+                        sub[4] = _itob((byte)((tpos / 75) % 60));
+                        sub[5] = _itob((byte)(tpos % 75));
+                    }
+
+                    // Force skip [6]
+                    buffer[6] = sub[6] = 0;
+
+                    // MSF2 [7-9]
+                    sub[7] = _itob((byte)(sector / 60 / 75));
+                    sub[8] = _itob((byte)((sector / 75) % 60));
+                    sub[9] = _itob((byte)(sector % 75));
+
+                    // CRC-16 [10-11]
+                    var crcWrapper = new HashWrapper(HashType.CRC16);
+                    crcWrapper.Process(sub, 0, 10);
+                    byte[] crc = crcWrapper.CurrentHashBytes!;
+                    sub[10] = crc[0];
+                    sub[11] = crc[1];
+
+                    // If a LibCrypt sector is detected
+                    if (!buffer.EqualsExactly(sub))
+                        return true;
+                }
+            }
+            catch
+            {
+                // We are not concerned with the error
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
