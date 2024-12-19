@@ -84,6 +84,7 @@
 - Remove vestigial progress indicators
 - Remove non-working last line log code
 - Fix access level for log queue
+- Fix access level for log document
 
 ### 3.2.4 (2024-11-24)
 

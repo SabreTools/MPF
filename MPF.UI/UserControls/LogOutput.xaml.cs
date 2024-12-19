@@ -14,7 +14,7 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Document representing the text
         /// </summary>
-        internal FlowDocument Document { get; private set; }
+        private readonly  FlowDocument _document;
 
         /// <summary>
         /// Queue of items that need to be logged
@@ -42,12 +42,12 @@ namespace MPF.UI.UserControls
 #endif
 
             // Update the internal state
-            Document = new FlowDocument()
+            _document = new FlowDocument()
             {
                 Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20))
             };
             _paragraph = new Paragraph();
-            Document.Blocks.Add(_paragraph);
+            _document.Blocks.Add(_paragraph);
 
             // Setup the processing queue
             _logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
@@ -59,7 +59,7 @@ namespace MPF.UI.UserControls
             SaveButton!.Click += OnSaveButton;
 
             // Update the internal state
-            Output.Document = Document;
+            Output.Document = _document;
         }
 
         #region Logging
