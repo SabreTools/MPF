@@ -14,7 +14,7 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Document representing the text
         /// </summary>
-        private readonly  FlowDocument _document;
+        private readonly FlowDocument _document;
 
         /// <summary>
         /// Queue of items that need to be logged
@@ -129,7 +129,11 @@ namespace MPF.UI.UserControls
             if (nextText == null)
                 return;
 
+#if NET40
             Dispatcher.Invoke(() =>
+#else
+            Dispatcher.InvokeAsync(() =>
+#endif
             {
                 var run = logLine.GenerateRun();
                 _paragraph.Inlines.Add(run);

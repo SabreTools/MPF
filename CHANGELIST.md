@@ -86,6 +86,7 @@
 - Fix access level for log queue
 - Fix access level for log document
 - Simplify ProcessLogLine method
+- Use explicit InvokeAsync when possible
 
 ### 3.2.4 (2024-11-24)
 
