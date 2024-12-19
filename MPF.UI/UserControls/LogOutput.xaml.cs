@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,11 @@ namespace MPF.UI.UserControls
         /// Paragraph backing the log
         /// </summary>
         private readonly Paragraph _paragraph;
+
+        /// <summary>
+        /// Maximum number of inlines before trimming
+        /// </summary>
+        private const int MaxInlineCount = 5000;
 
 #if NET35
 
@@ -78,6 +84,8 @@ namespace MPF.UI.UserControls
             {
                 var run = logLine.GenerateRun();
                 _paragraph.Inlines.Add(run);
+                if (_paragraph.Inlines.Count > MaxInlineCount)
+                    ((IList)_paragraph.Inlines).RemoveAt(0);
             });
         }
 
