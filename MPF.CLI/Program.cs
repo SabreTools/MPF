@@ -3,7 +3,6 @@ using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
-using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
@@ -124,15 +123,9 @@ namespace MPF.CLI
             }
             env.SetExecutionContext(paramStr);
 
-            // Make new Progress objects
-            var resultProgress = new Progress<ResultEventArgs>();
-            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-            var protectionProgress = new Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-
             // Invoke the dumping program
             Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run(resultProgress).GetAwaiter().GetResult();
+            var dumpResult = env.Run().GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return;
@@ -158,7 +151,7 @@ namespace MPF.CLI
             }
 
             // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress)
+            var verifyResult = env.VerifyAndSaveDumpOutput()
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
         }

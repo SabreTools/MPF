@@ -3,7 +3,6 @@ using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
-using BinaryObjectScanner;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib;
@@ -69,12 +68,6 @@ namespace MPF.Check
                 return;
             }
 
-            // Make new Progress objects
-            var resultProgress = new Progress<ResultEventArgs>();
-            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-            var protectionProgress = new Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
-
             // Validate the supplied credentials
             bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).GetAwaiter().GetResult();
             string message = validated switch
@@ -108,7 +101,7 @@ namespace MPF.Check
                 var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, seedInfo: opts.Seed)
+                var result = env.VerifyAndSaveDumpOutput(seedInfo: opts.Seed)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }

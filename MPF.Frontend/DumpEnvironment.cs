@@ -389,6 +389,14 @@ namespace MPF.Frontend
             if (_executionContext == null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
+            // Build default console progress indicators if none exist
+            if (progress == null)
+            {
+                var temp = new Progress<ResultEventArgs>();
+                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
+                progress = temp;
+            }
+
             // Check that we have the basics for dumping
             ResultEventArgs result = IsValidForDump();
             if (!result)
@@ -427,6 +435,20 @@ namespace MPF.Frontend
         {
             if (_processor == null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
+
+            // Build default console progress indicators if none exist
+            if (resultProgress == null)
+            {
+                var temp = new Progress<ResultEventArgs>();
+                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
+                resultProgress = temp;
+            }
+            if (protectionProgress == null)
+            {
+                var temp = new Progress<ProtectionProgress>();
+                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
+                protectionProgress = temp;
+            }
 
             resultProgress?.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
 
