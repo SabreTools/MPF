@@ -36,10 +36,10 @@
 
     <ItemGroup>
         <PackageReference Include="psxt001z.Library" Version="0.21.0-rc2" />
-        <PackageReference Include="SabreTools.Hashing" Version="1.4.0" />
-        <PackageReference Include="SabreTools.Models" Version="1.5.7" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.6.1" />
-        <PackageReference Include="SabreTools.Serialization" Version="1.8.3" />
+        <PackageReference Include="SabreTools.Hashing" Version="1.4.1" />
+        <PackageReference Include="SabreTools.Models" Version="1.5.8" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.6.2" />
+        <PackageReference Include="SabreTools.Serialization" Version="1.8.4" />
     </ItemGroup>
 
 </Project>
