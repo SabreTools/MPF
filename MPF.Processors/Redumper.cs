@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
-using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -449,26 +448,39 @@ namespace MPF.Processors
                     ];
 
                     // Include .hash and .skeleton for all files in cuesheet
-                    var cueSheet = SabreTools.Serialization.Deserializers.CueSheet.DeserializeFile($"{basePath}.cue");
-                    if (cueSheet?.Files != null)
+                    try
                     {
-                        int trackId = 1;
-                        foreach (CueFile? file in cueSheet.Files)
+                        // Read the entire cuesheet
+                        string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+
+                        // Track number, assuming 1-based
+                        uint trackNumber = 1;
+                        foreach (string cueLine in cueLines)
                         {
-                            string? trackName = Path.GetFileNameWithoutExtension(file?.FileName);
-                            if (trackName == null)
+                            // Skip all non-FILE lines
+                            if (!cueLine.StartsWith("FILE"))
                                 continue;
 
+                            // Extract the information
+                            var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
+                            if (!match.Success || match.Groups.Count == 0)
+                                continue;
+
+                            // Get the track name from the matches
+                            string trackName = match.Groups[1].Value;
+                            trackName = Path.GetFileNameWithoutExtension(trackName);
+
+                            // Add the artifacts
                             cdrom.Add(new($"{trackName}.hash", OutputFileFlags.Binary
                                 | OutputFileFlags.Zippable,
-                                $"hash_{trackId}"));
+                                $"hash_{trackNumber}"));
                             cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
                                 | OutputFileFlags.Zippable,
-                                $"skeleton_{trackId}"));
-                            trackId++;
+                                $"skeleton_{trackNumber}"));
+                            trackNumber++;
                         }
                     }
-                    else
+                    catch
                     {
                         cdrom.Add(new($"{baseFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
