@@ -482,7 +482,8 @@ namespace MPF.Frontend.Tools
 
                     // Read the app.pkg header
                     using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
-                    var appPkgHeader = SabreTools.Serialization.Deserializers.AppPkgHeader.Deserialize(fileStream);
+                    var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
+                    var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
                     if (BitConverter.IsLittleEndian)
@@ -631,7 +632,8 @@ namespace MPF.Frontend.Tools
 
                     // Read the app_sc.pkg header
                     using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
-                    var appPkgHeader = SabreTools.Serialization.Deserializers.AppPkgHeader.Deserialize(fileStream);
+                    var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
+                    var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
                     if (BitConverter.IsLittleEndian)
