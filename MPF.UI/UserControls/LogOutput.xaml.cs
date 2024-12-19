@@ -121,31 +121,14 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Process the log lines in the queue
         /// </summary>
-        /// <param name="nextLogLine">LogLine item to process</param>
-        internal void ProcessLogLine(LogLine nextLogLine)
+        /// <param name="logLine">LogLine item to process</param>
+        internal void ProcessLogLine(LogLine logLine)
         {
             // Null text gets ignored
-            string nextText = nextLogLine.Text;
+            string nextText = logLine.Text;
             if (nextText == null)
                 return;
 
-            try
-            {
-                AppendToTextBox(nextLogLine);
-            }
-            catch (Exception ex)
-            {
-                // In the event that something fails horribly, we want to log
-                AppendToTextBox(new LogLine(ex.ToString(), LogLevel.ERROR));
-            }
-        }
-
-        /// <summary>
-        /// Append log line to the log text box
-        /// </summary>
-        /// <param name="logLine">LogLine value to append</param>
-        private void AppendToTextBox(LogLine logLine)
-        {
             Dispatcher.Invoke(() =>
             {
                 var run = logLine.GenerateRun();
