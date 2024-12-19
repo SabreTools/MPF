@@ -453,6 +453,61 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
+        /// Get the app.pkg info from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>PKG info if possible, null on error</returns>
+        public static string? GetPlayStation4PkgInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // Try parse the app.pkg (multiple if they exist)
+            try
+            {
+                string? pkgInfo = "";
+
+                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.Name, "app"), "?????????", SearchOption.TopDirectoryOnly);
+
+                foreach (string dir in appDirs)
+                {
+                    string appPkgPath = Path.Combine(dir, "app.pkg");
+                    if (!File.Exists(appPkgPath))
+                        continue;
+
+                    // Read the app.pkg header
+                    using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
+                    var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
+                    var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
+
+                    if (appPkgHeader != null)
+                    {
+                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
+                        if (BitConverter.IsLittleEndian)
+                            Array.Reverse(date);
+
+                        pkgInfo = $"app.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app.pkg Date: {date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                    }
+                }
+
+                if (pkgInfo == "")
+                    return null;
+                else
+                    return pkgInfo;
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the internal serial from a PlayStation 5 disc, if possible
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
@@ -542,6 +597,62 @@ namespace MPF.Frontend.Tools
                 br.BaseStream.Seek(0x800, SeekOrigin.Begin);
                 byte[] jsonBytes = br.ReadBytes((int)(br.BaseStream.Length - 0x800));
                 return JsonConvert.DeserializeObject(Encoding.ASCII.GetString(jsonBytes)) as JObject;
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the app.pkg info from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>PKG info if possible, null on error</returns>
+        public static string? GetPlayStation5PkgInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't do this part
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // Try parse the app_sc.pkg (multiple if they exist)
+            try
+            {
+                string? pkgInfo = "";
+
+                string[] appDirs = Directory.GetDirectories(Path.Combine(drive.Name, "app"), "?????????", SearchOption.TopDirectoryOnly);
+
+                foreach (string dir in appDirs)
+                {
+                    string appPkgPath = Path.Combine(dir, "app_sc.pkg");
+                    if (!File.Exists(appPkgPath))
+                        continue;
+
+                    // Read the app_sc.pkg header
+                    using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
+                    var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
+                    var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
+
+                    if (appPkgHeader != null)
+                    {
+                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
+                        if (BitConverter.IsLittleEndian)
+                            Array.Reverse(date);
+
+                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                        pkgInfo = $"app_sc.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app_sc.pkg Date: {pkgDate}";
+                    }
+                }
+
+                if (pkgInfo == "")
+                    return null;
+                else
+                    return pkgInfo;
             }
             catch
             {

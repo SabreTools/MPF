@@ -921,11 +921,13 @@ namespace MPF.Frontend.Tools
                 case RedumpSystem.SonyPlayStation4:
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
+                    SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
+                    SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
                     break;
 
                 case RedumpSystem.TomyKissSite:
