@@ -19,7 +19,7 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly ProcessingQueue<LogLine> _logQueue;
+        //private readonly ProcessingQueue<LogLine> _logQueue;
 
         /// <summary>
         /// Paragraph backing the log
@@ -50,7 +50,7 @@ namespace MPF.UI.UserControls
             _document.Blocks.Add(_paragraph);
 
             // Setup the processing queue
-            _logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
+            //_logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
 
             // Add handlers
             OutputViewer!.SizeChanged += OutputViewerSizeChanged;
@@ -76,7 +76,10 @@ namespace MPF.UI.UserControls
                 return;
 
             // Enqueue the text
-            _logQueue.Enqueue(new LogLine(text, logLevel));
+            //_logQueue.Enqueue(new LogLine(text, logLevel));
+
+            // EXPERIMENTAL - Directly process the log line
+            ProcessLogLine(new LogLine(text, logLevel));
         }
 
         /// <summary>

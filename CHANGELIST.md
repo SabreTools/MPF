@@ -87,6 +87,7 @@
 - Fix access level for log document
 - Simplify ProcessLogLine method
 - Use explicit InvokeAsync when possible
+- (EXPERIMENTAL) Skip log line queue
 
 ### 3.2.4 (2024-11-24)
 
