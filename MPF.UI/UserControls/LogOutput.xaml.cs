@@ -17,11 +17,6 @@ namespace MPF.UI.UserControls
         private readonly FlowDocument _document;
 
         /// <summary>
-        /// Queue of items that need to be logged
-        /// </summary>
-        //private readonly ProcessingQueue<LogLine> _logQueue;
-
-        /// <summary>
         /// Paragraph backing the log
         /// </summary>
         private readonly Paragraph _paragraph;
@@ -49,9 +44,6 @@ namespace MPF.UI.UserControls
             _paragraph = new Paragraph();
             _document.Blocks.Add(_paragraph);
 
-            // Setup the processing queue
-            //_logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
-
             // Add handlers
             OutputViewer!.SizeChanged += OutputViewerSizeChanged;
             Output!.TextChanged += OnTextChanged;
@@ -75,11 +67,18 @@ namespace MPF.UI.UserControls
             if (text == null)
                 return;
 
-            // Enqueue the text
-            //_logQueue.Enqueue(new LogLine(text, logLevel));
+            // Create a new log line
+            var logLine = new LogLine(text, logLevel);
 
-            // EXPERIMENTAL - Directly process the log line
-            ProcessLogLine(new LogLine(text, logLevel));
+#if NET40
+            Dispatcher.Invoke(() =>
+#else
+            Dispatcher.InvokeAsync(() =>
+#endif
+            {
+                var run = logLine.GenerateRun();
+                _paragraph.Inlines.Add(run);
+            });
         }
 
         /// <summary>
@@ -119,28 +118,6 @@ namespace MPF.UI.UserControls
             {
                 return new Run { Text = Text, Foreground = GetForegroundColor() };
             }
-        }
-
-        /// <summary>
-        /// Process the log lines in the queue
-        /// </summary>
-        /// <param name="logLine">LogLine item to process</param>
-        internal void ProcessLogLine(LogLine logLine)
-        {
-            // Null text gets ignored
-            string nextText = logLine.Text;
-            if (nextText == null)
-                return;
-
-#if NET40
-            Dispatcher.Invoke(() =>
-#else
-            Dispatcher.InvokeAsync(() =>
-#endif
-            {
-                var run = logLine.GenerateRun();
-                _paragraph.Inlines.Add(run);
-            });
         }
 
         #endregion

@@ -88,6 +88,7 @@
 - Simplify ProcessLogLine method
 - Use explicit InvokeAsync when possible
 - (EXPERIMENTAL) Skip log line queue
+- Fully remove processing queue code
 
 ### 3.2.4 (2024-11-24)
 
