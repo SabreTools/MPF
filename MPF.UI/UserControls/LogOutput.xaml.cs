@@ -7,8 +7,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using MPF.Frontend;
 
-#pragma warning disable IDE1006 // Naming Styles
-
 namespace MPF.UI.UserControls
 {
     public partial class LogOutput : UserControl
@@ -21,7 +19,7 @@ namespace MPF.UI.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        internal ProcessingQueue<LogLine> LogQueue { get; private set; }
+        private readonly ProcessingQueue<LogLine> _logQueue;
 
         /// <summary>
         /// Paragraph backing the log
@@ -52,7 +50,7 @@ namespace MPF.UI.UserControls
             Document.Blocks.Add(_paragraph);
 
             // Setup the processing queue
-            LogQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
+            _logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
 
             // Add handlers
             OutputViewer!.SizeChanged += OutputViewerSizeChanged;
@@ -78,7 +76,7 @@ namespace MPF.UI.UserControls
                 return;
 
             // Enqueue the text
-            LogQueue.Enqueue(new LogLine(text, logLevel));
+            _logQueue.Enqueue(new LogLine(text, logLevel));
         }
 
         /// <summary>
