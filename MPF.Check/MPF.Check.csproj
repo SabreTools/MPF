@@ -39,10 +39,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="App.config" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
     </ItemGroup>
 

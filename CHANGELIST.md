@@ -102,6 +102,7 @@
 - Allow symbols to be packed
 - Fix important typo
 - Remove vestigial configuration file
+- Remove reference to removed file
 
 ### 3.2.4 (2024-11-24)
 
