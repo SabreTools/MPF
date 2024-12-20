@@ -485,7 +485,7 @@ namespace MPF.Frontend
                 resultProgress?.Report(ResultEventArgs.Success("Information injection complete!"));
             }
 
-            // Get user-modifiable information if confugured to
+            // Get user-modifiable information if configured to
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
