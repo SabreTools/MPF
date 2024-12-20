@@ -224,17 +224,17 @@ if [ $NO_ARCHIVE = false ]; then
             for RUNTIME in "${UI_RUNTIMES[@]}"; do
                 if [ $INCLUDE_DEBUG = true ]; then
                     mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator
-                    cp -rf Release_ANSI/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
+                    cp -rfp Release_ANSI/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
 
                     mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
-                    cp -rf redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                    cp -rfp redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
                 fi
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator
-                cp -rf Release_ANSI/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
+                cp -rfp Release_ANSI/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
-                cp -rf redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                cp -rfp redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
             done
         done
 

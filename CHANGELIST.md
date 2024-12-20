@@ -98,6 +98,7 @@
 - Fix now-incorrect test values
 - Better SecuROM handling for DIC and Redumper
 - Include native libraries for self-extract
+- Preserve program metadata on publish
 
 ### 3.2.4 (2024-11-24)
 
