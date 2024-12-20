@@ -28,6 +28,10 @@
         <InternalsVisibleTo Include="MPF.Processors.Test" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
     <!-- Support for old .NET versions -->
     <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))">
         <PackageReference Include="System.IO.Compression" Version="4.3.0" />
