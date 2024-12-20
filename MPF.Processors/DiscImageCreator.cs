@@ -216,37 +216,12 @@ namespace MPF.Processors
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
-                    if (File.Exists($"{basePath}_subIntention.txt"))
-                    {
-                        var fi = new FileInfo($"{basePath}_subIntention.txt");
-                        if (fi.Length > 0)
-                        {
-                            info.CopyProtection!.SecuROMData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
-
-                            // Count the number of sectors
-                            int sectorCount = 0;
-                            for (int index = 0; (index = info.CopyProtection!.SecuROMData.IndexOf("MSF:", index, StringComparison.Ordinal)) != -1; index += "MSF:".Length)
-                                sectorCount++;
-
-                            // Determine SecuROM schema, warn if unusual type
-                            SecuROMScheme secuROMScheme = SecuROMScheme.Unknown;
-                            if (sectorCount == 216)
-                                secuROMScheme = SecuROMScheme.PreV3;
-                            else if (sectorCount == 90)
-                                secuROMScheme = SecuROMScheme.V3;
-                            else if (sectorCount == 99)
-                                secuROMScheme = SecuROMScheme.V4;
-                            else if (sectorCount == 11)
-                                secuROMScheme = SecuROMScheme.V4Plus;
-
-                            if (secuROMScheme == SecuROMScheme.Unknown)
-                                info.CommonDiscInfo!.Comments = "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
-                        }
-                    }
+                    info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
+                    if (secuROMScheme == SecuROMScheme.Unknown)
+                        info.CommonDiscInfo!.Comments = "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
 
                     // Needed for some odd copy protections
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
-
                     break;
 
                 case RedumpSystem.DVDAudio:
@@ -1805,6 +1780,58 @@ namespace MPF.Processors
             {
                 // We don't care what the error is
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the SecuROM data from the input file, if possible
+        /// </summary>
+        /// <param name="subIntention">_subIntention.txt file location</param>
+        /// <param name="secuROMScheme">SecuROM scheme found</param>
+        /// <returns>SecuROM data, if possible</returns>
+        internal static string? GetSecuROMData(string subIntention, out SecuROMScheme secuROMScheme)
+        {
+            secuROMScheme = SecuROMScheme.None;
+
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(subIntention))
+                return null;
+            if (!File.Exists(subIntention))
+                return null;
+
+            try
+            {
+                var fi = new FileInfo(subIntention);
+                if (fi.Length == 0)
+                    return null;
+
+                string secuROMData = ProcessingTool.GetFullFile(subIntention) ?? string.Empty;
+
+                // Count the number of sectors
+                int sectorCount = 0;
+                for (int index = 0; (index = secuROMData.IndexOf("MSF:", index, StringComparison.Ordinal)) != -1; index += "MSF:".Length)
+                {
+                    sectorCount++;
+                }
+
+                // Determine SecuROM schema, warn if unusual type
+                secuROMScheme = sectorCount switch
+                {
+                    0 => SecuROMScheme.None,
+                    216 => SecuROMScheme.PreV3,
+                    90 => SecuROMScheme.V3,
+                    99 => SecuROMScheme.V4,
+                    11 => SecuROMScheme.V4Plus,
+                    _ => SecuROMScheme.Unknown,
+                };
+
+                return secuROMData;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                secuROMScheme = SecuROMScheme.None;
+                return null;
             }
         }
 

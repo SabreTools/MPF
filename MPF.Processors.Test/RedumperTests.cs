@@ -894,6 +894,7 @@ namespace MPF.Processors.Test
             string log = string.Empty;
             string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Null(actual);
+            Assert.Equal(SecuROMScheme.None, securomScheme);
         }
 
         [Fact]
@@ -902,6 +903,7 @@ namespace MPF.Processors.Test
             string log = "INVALID";
             string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Null(actual);
+            Assert.Equal(SecuROMScheme.None, securomScheme);
         }
 
         [Fact]
@@ -911,6 +913,7 @@ namespace MPF.Processors.Test
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetSecuROMData(log, out var securomScheme);
             Assert.Equal(expected, actual);
+            Assert.Equal(SecuROMScheme.Unknown, securomScheme);
         }
 
         #endregion

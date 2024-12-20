@@ -825,6 +825,38 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetSecuROMData
+
+        [Fact]
+        public void GetSecuROMData_Empty_Null()
+        {
+            string log = string.Empty;
+            string? actual = DiscImageCreator.GetSecuROMData(log, out var securomScheme);
+            Assert.Null(actual);
+            Assert.Equal(SecuROMScheme.None, securomScheme);
+        }
+
+        [Fact]
+        public void GetSecuROMData_Invalid_Null()
+        {
+            string log = "INVALID";
+            string? actual = DiscImageCreator.GetSecuROMData(log, out var securomScheme);
+            Assert.Null(actual);
+            Assert.Equal(SecuROMScheme.None, securomScheme);
+        }
+
+        [Fact]
+        public void GetSecuROMData_Valid_Filled()
+        {
+            string? expected = "MSF: 00\nMSF: 01\nMSF: 02";
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test_subIntention.txt");
+            string? actual = DiscImageCreator.GetSecuROMData(log, out var securomScheme);
+            Assert.Equal(expected, actual);
+            Assert.Equal(SecuROMScheme.Unknown, securomScheme);
+        }
+
+        #endregion
+
         #region GetSegaCDBuildInfo
 
         [Fact]

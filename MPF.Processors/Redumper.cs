@@ -143,6 +143,7 @@ namespace MPF.Processors
                     break;
             }
 
+            // Extract info based specifically on RedumpSystem
             switch (System)
             {
                 case RedumpSystem.AppleMacintosh:
@@ -1682,7 +1683,7 @@ namespace MPF.Processors
         /// <returns>SecuROM data, if possible</returns>
         internal static string? GetSecuROMData(string log, out SecuROMScheme secuROMScheme)
         {
-            secuROMScheme = SecuROMScheme.Unknown;
+            secuROMScheme = SecuROMScheme.None;
 
             // If the file doesn't exist, we can't get info from it
             if (string.IsNullOrEmpty(log))
@@ -1715,20 +1716,22 @@ namespace MPF.Processors
                 }
 
                 // Return the securom scheme if correct sector count
-                if (lines.Count == 216)
-                    secuROMScheme = SecuROMScheme.PreV3;
-                else if (lines.Count == 90)
-                    secuROMScheme = SecuROMScheme.V3;
-                else if (lines.Count == 99)
-                    secuROMScheme = SecuROMScheme.V4;
-                else if (lines.Count == 11)
-                    secuROMScheme = SecuROMScheme.V4Plus;
+                secuROMScheme = lines.Count switch
+                {
+                    0 => SecuROMScheme.None,
+                    216 => SecuROMScheme.PreV3,
+                    90 => SecuROMScheme.V3,
+                    99 => SecuROMScheme.V4,
+                    11 => SecuROMScheme.V4Plus,
+                    _ => SecuROMScheme.Unknown,
+                };
 
                 return string.Join("\n", [.. lines]).TrimEnd('\n');
             }
             catch
             {
                 // We don't care what the exception is right now
+                secuROMScheme = SecuROMScheme.None;
                 return null;
             }
         }
