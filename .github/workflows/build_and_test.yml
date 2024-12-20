@@ -31,13 +31,13 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: 'Nuget Package'
-        path: '*.nupkg'
+        path: "*.nupkg,*.snupkg"
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:
         allowUpdates: True
-        artifacts: "*.nupkg,*.zip"
+        artifacts: "*.nupkg,*.snupkg,*.zip"
         body: 'Last built commit: ${{ github.sha }}'
         name: 'Rolling Release'
         prerelease: True
