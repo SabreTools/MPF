@@ -97,6 +97,7 @@
 - Use simpler cuesheet reader in Redumper
 - Fix now-incorrect test values
 - Better SecuROM handling for DIC and Redumper
+- Include native libraries for self-extract
 
 ### 3.2.4 (2024-11-24)
 

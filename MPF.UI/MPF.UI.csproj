@@ -10,6 +10,7 @@
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <ImportFrameworkWinFXTargets Condition="$(TargetFramework.StartsWith(`net3`))">true</ImportFrameworkWinFXTargets>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
         <LangVersion>latest</LangVersion>
         <NoWarn>NU1902;NU1903</NoWarn>
         <Nullable>enable</Nullable>
