@@ -2110,9 +2110,10 @@ namespace MPF.Frontend.ViewModels
 
                 OutputPathTextBoxEnabled = false;
                 OutputPathBrowseButtonEnabled = false;
-
+                DriveLetterComboBoxEnabled = false;
+                DriveSpeedComboBoxEnabled = false;
                 DumpingProgramComboBoxEnabled = false;
-                ParametersTextBoxEnabled = false;
+                ParametersTextBoxEnabled = true;
 
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
@@ -2127,9 +2128,10 @@ namespace MPF.Frontend.ViewModels
 
                 OutputPathTextBoxEnabled = true;
                 OutputPathBrowseButtonEnabled = true;
-
+                DriveLetterComboBoxEnabled = true;
+                DriveSpeedComboBoxEnabled = true;
                 DumpingProgramComboBoxEnabled = true;
-                ParametersTextBoxEnabled = true;
+                ParametersTextBoxEnabled = false;
 
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;
