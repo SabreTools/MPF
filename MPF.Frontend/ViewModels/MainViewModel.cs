@@ -1263,8 +1263,9 @@ namespace MPF.Frontend.ViewModels
             else if (!Options.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
-                var currentSystem = GetRedumpSystem(CurrentDrive, Options.DefaultSystem) ?? Options.DefaultSystem;
-                VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
+                var currentSystem = GetRedumpSystem(CurrentDrive);
+                VerboseLogLn(currentSystem == null ? $"unable to detect, defaulting to {Options.DefaultSystem.LongName()}" : ($"detected {currentSystem.LongName()}."));
+                currentSystem ??= Options.DefaultSystem;
 
                 if (currentSystem != null)
                 {
@@ -1462,17 +1463,15 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Get the current system from drive
         /// </summary>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        private static RedumpSystem? GetRedumpSystem(Drive? drive, RedumpSystem? defaultValue)
+        private static RedumpSystem? GetRedumpSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
             if (drive == null)
-                return defaultValue;
+                return null;
 
             // If we can't read the media in that drive, we can't do anything
             if (string.IsNullOrEmpty(drive.Name) || !Directory.Exists(drive.Name))
-                return defaultValue;
+                return null;
 
             // We're going to assume for floppies, HDDs, and removable drives
             if (drive.InternalDriveType != InternalDriveType.Optical)
@@ -1756,7 +1755,7 @@ namespace MPF.Frontend.ViewModels
             #endregion
 
             // Default return
-            return defaultValue;
+            return null;
         }
 
         /// <summary>
@@ -1873,7 +1872,7 @@ namespace MPF.Frontend.ViewModels
             else
             {
                 // No Volume Label found, fallback to something sensible
-                switch (GetRedumpSystem(drive, null))
+                switch (GetRedumpSystem(drive))
                 {
                     case RedumpSystem.SonyPlayStation:
                     case RedumpSystem.SonyPlayStation2:
