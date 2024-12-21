@@ -106,6 +106,7 @@
 - Add README files for two libraries
 - Simplify output name assembly logic
 - Fix output name null edge case
+- Selectively rebuild program list
 
 ### 3.2.4 (2024-11-24)
 

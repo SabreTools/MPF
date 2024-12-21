@@ -518,7 +518,7 @@ namespace MPF.UI.Windows
         public void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+                MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
         }
 
         /// <summary>
@@ -552,7 +552,7 @@ namespace MPF.UI.Windows
         /// Handler for MediaScanButton Click event
         /// </summary>
         public void MediaScanButtonClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
+            MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
 
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
@@ -606,7 +606,7 @@ namespace MPF.UI.Windows
                 if (MainViewModel.Options.FastUpdateLabel)
                     MainViewModel.FastUpdateLabel(removeEventHandlers: true);
                 else
-                    MainViewModel.InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+                    MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
             }
         }
 

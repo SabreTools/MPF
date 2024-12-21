@@ -574,7 +574,7 @@ namespace MPF.Frontend.ViewModels
             _processUserInfo = processUserInfo;
 
             // Finish initializing the rest of the values
-            InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
+            InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
         }
 
         #region Property Updates
@@ -977,7 +977,7 @@ namespace MPF.Frontend.ViewModels
 
             // If settings were changed, reinitialize the UI
             if (savedSettings)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
+                InitializeUIValues(removeEventHandlers: true, rebuildPrograms: true, rescanDrives: true);
         }
 
         #endregion
@@ -988,8 +988,9 @@ namespace MPF.Frontend.ViewModels
         /// Performs UI value setup end to end
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        /// <param name="rebuildPrograms">Whether the available program list should be rebuilt</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
+        public void InitializeUIValues(bool removeEventHandlers, bool rebuildPrograms, bool rescanDrives)
         {
             // Disable the dumping button
             StartStopButtonEnabled = false;
@@ -1024,7 +1025,8 @@ namespace MPF.Frontend.ViewModels
             SetCurrentDiscType();
 
             // Set the dumping program
-            PopulateInternalPrograms();
+            if (rebuildPrograms)
+                PopulateInternalPrograms();
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
