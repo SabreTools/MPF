@@ -111,7 +111,7 @@ namespace MPF.UI.UserControls
             {
                 return LogLevel switch
                 {
-                    LogLevel.SECRET => Brushes.Blue,
+                    LogLevel.SECRET => Brushes.DarkGray,
                     LogLevel.ERROR => Brushes.Red,
                     LogLevel.VERBOSE => Brushes.Yellow,
                     _ => Brushes.White,
