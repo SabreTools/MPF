@@ -118,6 +118,7 @@
 - Pedantic GUI changes
 - More pendantic GUI changes
 - Remove unused progress bar
+- Disable all UI elements on protect scan
 
 ### 3.2.4 (2024-11-24)
 

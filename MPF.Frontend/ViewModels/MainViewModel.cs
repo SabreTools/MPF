@@ -1822,6 +1822,18 @@ namespace MPF.Frontend.ViewModels
 
             var tempContent = Status;
             Status = "Scanning for copy protection... this might take a while!";
+
+            // Disable UI elements
+            SystemTypeComboBoxEnabled = false;
+            MediaTypeComboBoxEnabled = false;
+
+            OutputPathTextBoxEnabled = false;
+            OutputPathBrowseButtonEnabled = false;
+            DriveLetterComboBoxEnabled = false;
+            DriveSpeedComboBoxEnabled = false;
+            DumpingProgramComboBoxEnabled = false;
+            EnableParametersCheckBoxEnabled = false;
+
             StartStopButtonEnabled = false;
             MediaScanButtonEnabled = false;
             UpdateVolumeLabelEnabled = false;
@@ -1834,20 +1846,35 @@ namespace MPF.Frontend.ViewModels
             {
                 var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.Name, Options, progress);
                 var output = ProtectionTool.FormatProtections(protections);
+
                 LogLn($"Detected the following protections in {CurrentDrive.Name}:\r\n\r\n{output}");
-
-                Status = tempContent;
-                StartStopButtonEnabled = ShouldEnableDumpingButton();
-                MediaScanButtonEnabled = true;
-                UpdateVolumeLabelEnabled = true;
-                CopyProtectScanButtonEnabled = true;
-
                 return output;
             }
             catch (Exception ex)
             {
                 ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{ex}");
                 return null;
+            }
+            finally
+            {
+                // Reset the status
+                Status = tempContent;
+
+                // Enable UI elements
+                SystemTypeComboBoxEnabled = true;
+                MediaTypeComboBoxEnabled = true;
+
+                OutputPathTextBoxEnabled = true;
+                OutputPathBrowseButtonEnabled = true;
+                DriveLetterComboBoxEnabled = true;
+                DriveSpeedComboBoxEnabled = true;
+                DumpingProgramComboBoxEnabled = true;
+                EnableParametersCheckBoxEnabled = true;
+
+                StartStopButtonEnabled = ShouldEnableDumpingButton();
+                MediaScanButtonEnabled = true;
+                UpdateVolumeLabelEnabled = true;
+                CopyProtectScanButtonEnabled = true;
             }
         }
 
