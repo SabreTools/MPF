@@ -1394,69 +1394,51 @@ namespace MPF.Frontend.ViewModels
                 return;
             }
 
-            // Get the extension for the file for the next two statements
-            var extension = _environment?.GetDefaultExtension(CurrentMediaType);
+            // Get path pieces that are used in all branches
+            string defaultOutputPath = Options.DefaultOutputPath ?? "ISO";
+            string extension = _environment?.GetDefaultExtension(CurrentMediaType) ?? ".bin";
+            string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? "track";
+            string defaultFilename = $"{label}{extension}";
 
-            // Set the output filename, if it's not already
+            // If no path exists, set one using default values
             if (string.IsNullOrEmpty(OutputPath))
             {
-                var label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName();
-                var directory = Options.DefaultOutputPath;
-                string filename = $"{label}{extension ?? ".bin"}";
-
-                // If the path ends with the label already
-                if (directory != null && label != null && directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
-                    directory = Path.GetDirectoryName(directory);
-
-                if (directory != null && label != null)
 #if NET20 || NET35
-                    OutputPath = Path.Combine(Path.Combine(directory, label), filename);
+                OutputPath = Path.Combine(Path.Combine(defaultOutputPath, label), defaultFilename);
 #else
-                    OutputPath = Path.Combine(directory, label, filename);
+                OutputPath = Path.Combine(defaultOutputPath, label, defaultFilename);
 #endif
-                else
-                    OutputPath = filename;
+                return;
             }
 
+            // For all other cases, separate the last path
+            string lastPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
+            string lastDirectory = Path.GetDirectoryName(lastPath) ?? string.Empty;
+            string lastFilename = Path.GetFileNameWithoutExtension(lastPath);
+
             // Set the output filename, if we changed drives
-            else if (driveChanged)
+            if (driveChanged)
             {
-                var label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName();
-                string oldPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
-                string oldFilename = Path.GetFileNameWithoutExtension(oldPath);
-                var directory = Path.GetDirectoryName(oldPath);
-                string filename = $"{label}{extension ?? ".bin"}";
+                // If the previous path is exactly the default path and last filename
+                if (lastDirectory.EndsWith(Path.Combine(defaultOutputPath, lastFilename)))
+                    lastDirectory = Path.GetDirectoryName(lastDirectory);
 
-                // If the previous path included the label
-                if (directory != null && directory.EndsWith(oldFilename, StringComparison.OrdinalIgnoreCase))
-                    directory = Path.GetDirectoryName(directory);
-
-                // If the path ends with the label already
-                if (directory != null && label != null && directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
-                    directory = Path.GetDirectoryName(directory);
-
-                if (directory != null && label != null)
+                // Create the output path
+                if (lastDirectory == defaultOutputPath)
 #if NET20 || NET35
-                    OutputPath = Path.Combine(Path.Combine(directory, label), filename);
+                    OutputPath = Path.Combine(Path.Combine(lastDirectory, label), defaultFilename);
 #else
-                    OutputPath = Path.Combine(directory, label, filename);
+                    OutputPath = Path.Combine(lastDirectory, label, defaultFilename);
 #endif
                 else
-                    OutputPath = filename;
+                    OutputPath = Path.Combine(lastDirectory, defaultFilename);
             }
 
             // Otherwise, reset the extension of the currently set path
             else
             {
-                string oldPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
-                string filename = Path.GetFileNameWithoutExtension(oldPath);
-                var directory = Path.GetDirectoryName(oldPath);
-                filename = $"{filename}{extension ?? ".bin"}";
-
-                if (directory != null)
-                    OutputPath = Path.Combine(directory, filename);
-                else
-                    OutputPath = filename;
+                lastFilename = $"{lastFilename}{extension}";
+                OutputPath = Path.Combine(lastDirectory, lastFilename);
             }
         }
 
@@ -1889,7 +1871,9 @@ namespace MPF.Frontend.ViewModels
             }
 
             foreach (char c in Path.GetInvalidFileNameChars())
+            {
                 volumeLabel = volumeLabel?.Replace(c, '_');
+            }
 
             return volumeLabel;
         }

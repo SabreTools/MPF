@@ -104,6 +104,7 @@
 - Remove vestigial configuration file
 - Remove reference to removed file
 - Add README files for two libraries
+- Simplify output name assembly logic
 
 ### 3.2.4 (2024-11-24)
 
