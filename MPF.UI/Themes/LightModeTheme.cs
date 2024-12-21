@@ -65,9 +65,6 @@ namespace MPF.UI.Themes
             MenuItem_SubMenu_Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
             MenuItem_SubMenu_Border = Brushes.DarkGray;
 
-            // Handle ProgressBar-specific resources
-            ProgressBar_Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
-
             // Handle ScrollViewer-specific resources
             ScrollViewer_ScrollBar_Background = Brushes.LightGray;
 

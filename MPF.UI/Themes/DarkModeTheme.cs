@@ -47,9 +47,6 @@ namespace MPF.UI.Themes
             MenuItem_SubMenu_Background = darkModeBrush;
             MenuItem_SubMenu_Border = Brushes.DarkGray;
 
-            // Handle ProgressBar-specific resources
-            ProgressBar_Background = darkModeBrush;
-
             // Handle ScrollViewer-specific resources
             ScrollViewer_ScrollBar_Background = darkModeBrush;
 

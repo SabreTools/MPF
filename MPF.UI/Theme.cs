@@ -153,15 +153,6 @@ namespace MPF.UI
 
         #endregion
 
-        #region ProgressBar
-
-        /// <summary>
-        /// Brush for the ProgressBar.Background resource
-        /// </summary>
-        public Brush? ProgressBar_Background { get; protected set; }
-
-        #endregion
-
         #region ScrollViewer
 
         /// <summary>
@@ -238,9 +229,6 @@ namespace MPF.UI
             // Handle MenuItem-specific resources
             Application.Current.Resources["MenuItem.SubMenu.Background"] = MenuItem_SubMenu_Background;
             Application.Current.Resources["MenuItem.SubMenu.Border"] = MenuItem_SubMenu_Border;
-
-            // Handle ProgressBar-specific resources
-            Application.Current.Resources["ProgressBar.Background"] = ProgressBar_Background;
 
             // Handle ScrollViewer-specific resources
             Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = ScrollViewer_ScrollBar_Background;

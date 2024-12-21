@@ -289,11 +289,6 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <!-- ProgressBar -->
-        <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
-        <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
-        <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
-
         <!-- ScrollViewer -->
         <SolidColorBrush x:Key="ScrollViewer.ScrollBar.Background" Color="LightGray"/>
         <SolidColorBrush x:Key="ScrollViewer.ScrollBar.Foreground" Color="DarkGray"/>

@@ -301,116 +301,7 @@ namespace MPF.UI
             </Style.Triggers>
         </Style>";
 
-        /// <summary>
-        /// CustomProgressBarStyle Style XAML (.NET Framework 4.0 and above)
-        /// </summary>
-        private const string _customProgressBarStyleDefault = @"<Style x:Key=""CustomProgressBarStyle"" TargetType=""{x:Type ProgressBar}"">
-            <Setter Property=""Foreground"" Value=""{DynamicResource ProgressBar.Progress}""/>
-            <Setter Property=""Background"" Value=""{DynamicResource ProgressBar.Background}""/>
-            <Setter Property=""BorderBrush"" Value=""{DynamicResource ProgressBar.Border}""/>
-            <Setter Property=""BorderThickness"" Value=""1""/>
-            <Setter Property=""Template"">
-                <Setter.Value>
-                    <ControlTemplate TargetType=""{x:Type ProgressBar}"">
-                        <Grid x:Name=""TemplateRoot"">
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name=""CommonStates"">
-                                    <VisualState x:Name=""Determinate""/>
-                                    <VisualState x:Name=""Indeterminate"">
-                                        <Storyboard RepeatBehavior=""Forever"">
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"" Storyboard.TargetName=""Animation"">
-                                                <EasingDoubleKeyFrame KeyTime=""0"" Value=""0.25""/>
-                                                <EasingDoubleKeyFrame KeyTime=""0:0:1"" Value=""0.25""/>
-                                                <EasingDoubleKeyFrame KeyTime=""0:0:2"" Value=""0.25""/>
-                                            </DoubleAnimationUsingKeyFrames>
-                                            <PointAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.RenderTransformOrigin)"" Storyboard.TargetName=""Animation"">
-                                                <EasingPointKeyFrame KeyTime=""0"" Value=""-0.5,0.5""/>
-                                                <EasingPointKeyFrame KeyTime=""0:0:1"" Value=""0.5,0.5""/>
-                                                <EasingPointKeyFrame KeyTime=""0:0:2"" Value=""1.5,0.5""/>
-                                            </PointAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Border BorderBrush=""{TemplateBinding BorderBrush}"" BorderThickness=""{TemplateBinding BorderThickness}"" Background=""{TemplateBinding Background}""/>
-                            <Rectangle x:Name=""PART_Track""/>
-                            <Grid x:Name=""PART_Indicator"" ClipToBounds=""true"" HorizontalAlignment=""Left"">
-                                <Rectangle x:Name=""Indicator"" Fill=""{TemplateBinding Foreground}""/>
-                                <Rectangle x:Name=""Animation"" Fill=""{TemplateBinding Foreground}"" RenderTransformOrigin=""0.5,0.5"">
-                                    <Rectangle.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Rectangle.RenderTransform>
-                                </Rectangle>
-                            </Grid>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property=""Orientation"" Value=""Vertical"">
-                                <Setter Property=""LayoutTransform"" TargetName=""TemplateRoot"">
-                                    <Setter.Value>
-                                        <RotateTransform Angle=""-90""/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property=""IsIndeterminate"" Value=""true"">
-                                <Setter Property=""Visibility"" TargetName=""Indicator"" Value=""Collapsed""/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>";
-
-        /// <summary>
-        /// CustomProgressBarStyle Style XAML (.NET Framework 3.5)
-        /// </summary>
-        private const string _customProgressBarStyleNet35 = @"<Style TargetType=""{x:Type ProgressBar}"">
-            <Setter Property=""Foreground"" Value=""{DynamicResource ProgressBar.Progress}""/>
-            <Setter Property=""Background"" Value=""{DynamicResource ProgressBar.Background}""/>
-            <Setter Property=""BorderBrush"" Value=""{DynamicResource ProgressBar.Border}""/>
-            <Setter Property=""BorderThickness"" Value=""1""/>
-            <Setter Property=""Template"">
-                <Setter.Value>
-                    <ControlTemplate TargetType=""{x:Type ProgressBar}"">
-                        <Grid x:Name=""TemplateRoot"">
-                            <Border BorderBrush=""{TemplateBinding BorderBrush}"" BorderThickness=""{TemplateBinding BorderThickness}"" Background=""{TemplateBinding Background}""/>
-                            <Rectangle x:Name=""PART_Track""/>
-                            <Grid x:Name=""PART_Indicator"" ClipToBounds=""true"" HorizontalAlignment=""Left"">
-                                <Rectangle x:Name=""Indicator"" Fill=""{TemplateBinding Foreground}""/>
-                                <Rectangle x:Name=""Animation"" Fill=""{TemplateBinding Foreground}"" RenderTransformOrigin=""0.5,0.5"">
-                                    <Rectangle.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Rectangle.RenderTransform>
-                                </Rectangle>
-                            </Grid>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property=""Orientation"" Value=""Vertical"">
-                                <Setter Property=""LayoutTransform"" TargetName=""TemplateRoot"">
-                                    <Setter.Value>
-                                        <RotateTransform Angle=""-90""/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property=""IsIndeterminate"" Value=""true"">
-                                <Setter Property=""Visibility"" TargetName=""Indicator"" Value=""Collapsed""/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>";
-
-        #endregion
+       #endregion
 
         public App()
         {
@@ -425,7 +316,6 @@ namespace MPF.UI
             // Create styles
             CreateStyle("ComboBoxEditableTextBox");
             CreateStyle("CustomComboBoxStyle");
-            CreateStyle("CustomProgressBarStyle");
         }
 
         /// <summary>
@@ -480,11 +370,9 @@ namespace MPF.UI
 #if NET35
                 "ComboBoxEditableTextBox" => XamlReader.Parse(_comboBoxEditableTextBoxStyleNet35, parserContext) as Style,
                 "CustomComboBoxStyle" => XamlReader.Parse(_customComboBoxStyleNet35, parserContext) as Style,
-                "CustomProgressBarStyle" => XamlReader.Parse(_customProgressBarStyleNet35, parserContext) as Style,
 #else
                 "ComboBoxEditableTextBox" => XamlReader.Parse(_comboBoxEditableTextBoxStyleDefault, parserContext) as Style,
                 "CustomComboBoxStyle" => XamlReader.Parse(_customComboBoxStyleDefault, parserContext) as Style,
-                "CustomProgressBarStyle" => XamlReader.Parse(_customProgressBarStyleDefault, parserContext) as Style,
 #endif
                 _ => throw new ArgumentException($"'{resourceName}' is not a recognized style", nameof(resourceName)),
             };
