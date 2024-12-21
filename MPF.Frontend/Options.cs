@@ -469,7 +469,7 @@ namespace MPF.Frontend
         /// </summary>
         public bool EnableTabsInInputFields
         {
-            get { return GetBooleanSetting(Settings, "EnableTabsInInputFields", false); }
+            get { return GetBooleanSetting(Settings, "EnableTabsInInputFields", true); }
             set { Settings["EnableTabsInInputFields"] = value.ToString(); }
         }
 

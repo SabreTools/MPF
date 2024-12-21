@@ -113,6 +113,7 @@
 - Ensure parameters checkbox is enabled to start
 - Fix log line for default system use
 - Retire and replace blue secret text
+- Enable tabs in input fields by default
 
 ### 3.2.4 (2024-11-24)
 
