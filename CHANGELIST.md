@@ -116,6 +116,7 @@
 - Enable tabs in input fields by default
 - Adjust row count in protection options
 - Pedantic GUI changes
+- More pendantic GUI changes
 
 ### 3.2.4 (2024-11-24)
 
