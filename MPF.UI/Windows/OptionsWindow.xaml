@@ -256,7 +256,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Protection">
-                            <UniformGrid Columns="2" Rows="3">
+                            <UniformGrid Columns="2" Rows="2">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Protection Scan"
                                           IsChecked="{Binding Options.ScanForProtection}"
                                           ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
