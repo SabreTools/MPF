@@ -108,6 +108,7 @@
 - Fix output name null edge case
 - Selectively rebuild program list
 - Use IBM PC as default system out of the box
+- Separate params checkbox from input
 
 ### 3.2.4 (2024-11-24)
 

@@ -182,7 +182,7 @@
                     <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
                     <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             IsEnabled="{Binding ParametersCheckBoxEnabled}"/>
+                             IsEnabled="{Binding ParametersTextBoxEnabled}"/>
                     <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right"
                              IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding EnableParametersCheckBoxEnabled}"/>

@@ -316,6 +316,20 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Indicates the status of the parameters text box
         /// </summary>
+        public bool ParametersTextBoxEnabled
+        {
+            get => _parametersTextBoxEnabled;
+            set
+            {
+                _parametersTextBoxEnabled = value;
+                TriggerPropertyChanged(nameof(ParametersTextBoxEnabled));
+            }
+        }
+        private bool _parametersTextBoxEnabled;
+
+        /// <summary>
+        /// Indicates the status of the parameters check box
+        /// </summary>
         public bool ParametersCheckBoxEnabled
         {
             get => _parametersCheckBoxEnabled;
@@ -995,12 +1009,12 @@ namespace MPF.Frontend.ViewModels
             // Disable the dumping button
             StartStopButtonEnabled = false;
 
-            // Safely uncheck the parameters box, just in case
-            if (ParametersCheckBoxEnabled == true)
+            // Safely check the parameters box, just in case
+            if (ParametersCheckBoxEnabled == false)
             {
                 bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
                 DisableEventHandlers();
-                ParametersCheckBoxEnabled = false;
+                ParametersCheckBoxEnabled = true;
                 if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
             }
 
@@ -1050,12 +1064,12 @@ namespace MPF.Frontend.ViewModels
             // Disable the dumping button
             StartStopButtonEnabled = false;
 
-            // Safely uncheck the parameters box, just in case
-            if (ParametersCheckBoxEnabled == true)
+            // Safely check the parameters box, just in case
+            if (ParametersCheckBoxEnabled == false)
             {
                 bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
                 DisableEventHandlers();
-                ParametersCheckBoxEnabled = false;
+                ParametersCheckBoxEnabled = true;
                 if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
             }
 
@@ -1331,8 +1345,8 @@ namespace MPF.Frontend.ViewModels
             // If we're in a type that doesn't support drive speeds
             DriveSpeedComboBoxEnabled = _environment.DoesSupportDriveSpeed();
 
-            // If input params are not enabled, generate the full parameters from the environment
-            if (!ParametersCheckBoxEnabled)
+            // If input params are enabled, generate the full parameters from the environment
+            if (ParametersCheckBoxEnabled)
             {
                 var generated = _environment.GetFullParameters(DriveSpeed);
                 if (generated != null)
@@ -2008,12 +2022,12 @@ namespace MPF.Frontend.ViewModels
             _environment.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
-            if (ParametersCheckBoxEnabled == true && _displayUserMessage != null)
+            if (ParametersCheckBoxEnabled == false && _displayUserMessage != null)
             {
                 bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", 3, true);
                 if (result == true)
                 {
-                    ParametersCheckBoxEnabled = false;
+                    ParametersCheckBoxEnabled = true;
                     ProcessCustomParameters();
                 }
                 else if (result == null)
@@ -2022,9 +2036,6 @@ namespace MPF.Frontend.ViewModels
                 }
                 // If false, then we continue with the current known environment
             }
-
-            // Run path adjustments for DiscImageCreator -- Disabled until further notice
-            //Env.AdjustPathsForDiscImageCreator();
 
             try
             {
@@ -2092,13 +2103,16 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ToggleParameters()
         {
-            if (ParametersCheckBoxEnabled == true)
+            if (ParametersCheckBoxEnabled == false)
             {
                 SystemTypeComboBoxEnabled = false;
                 MediaTypeComboBoxEnabled = false;
 
                 OutputPathTextBoxEnabled = false;
                 OutputPathBrowseButtonEnabled = false;
+
+                DumpingProgramComboBoxEnabled = false;
+                ParametersTextBoxEnabled = false;
 
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
@@ -2113,6 +2127,9 @@ namespace MPF.Frontend.ViewModels
 
                 OutputPathTextBoxEnabled = true;
                 OutputPathBrowseButtonEnabled = true;
+
+                DumpingProgramComboBoxEnabled = true;
+                ParametersTextBoxEnabled = true;
 
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;
