@@ -105,6 +105,7 @@
 - Remove reference to removed file
 - Add README files for two libraries
 - Simplify output name assembly logic
+- Fix output name null edge case
 
 ### 3.2.4 (2024-11-24)
 

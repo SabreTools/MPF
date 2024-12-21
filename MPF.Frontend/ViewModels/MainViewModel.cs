@@ -1421,7 +1421,7 @@ namespace MPF.Frontend.ViewModels
             {
                 // If the previous path is exactly the default path and last filename
                 if (lastDirectory.EndsWith(Path.Combine(defaultOutputPath, lastFilename)))
-                    lastDirectory = Path.GetDirectoryName(lastDirectory);
+                    lastDirectory = Path.GetDirectoryName(lastDirectory) ?? string.Empty;
 
                 // Create the output path
                 if (lastDirectory == defaultOutputPath)
