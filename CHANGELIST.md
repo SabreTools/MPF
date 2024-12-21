@@ -110,6 +110,7 @@
 - Use IBM PC as default system out of the box
 - Separate params checkbox from input
 - Disable more UI elements when editing
+- Ensure parameters checkbox is enabled to start
 
 ### 3.2.4 (2024-11-24)
 

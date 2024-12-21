@@ -566,6 +566,7 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = true;
             StartStopButtonText = StartDumpingValue;
             MediaScanButtonEnabled = true;
+            ParametersCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
