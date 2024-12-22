@@ -192,6 +192,22 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Ensures that no potential output files have been created
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="processor">Processor object representing how to process the outputs</param>
+        /// <returns>True if any dumping files exist, False if none</returns>
+        public bool FoundAnyFiles(string? outputDirectory, string outputFilename)
+        {
+            // Sanitize the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Finally, let the parameters say if all files exist
+            return CheckExistingFiles(outputDirectory, outputFilename);
+        }
+
+        /// <summary>
         /// Generate artifacts and return them as a dictionary
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
@@ -392,6 +408,39 @@ namespace MPF.Processors
             }
 
             return missingFiles;
+        }
+
+        /// <summary>
+        /// Validate if any output files exist
+        /// </summary>
+        /// <param name="baseDirectory">Base directory to check</param>
+        /// <param name="baseFilename">Base filename template to use</param>
+        /// <returns>True if any dumping files exist, False if none</returns>
+        internal bool CheckExistingFiles(string? baseDirectory, string baseFilename)
+        {
+            // Assemble a base path
+            string basePath = baseFilename;
+            if (!string.IsNullOrEmpty(baseDirectory))
+                basePath = Path.Combine(baseDirectory, basePath);
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
+            if (outputFiles.Count == 0)
+                return false;
+
+            // Check for the log file
+            if (File.Exists($"{basePath}_logs.zip"))
+                return true;
+
+            // Check all output files
+            foreach (var outputFile in outputFiles)
+            {
+                // Use the built-in existence function
+                if (outputFile.Exists(baseDirectory ?? string.Empty))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -121,6 +121,7 @@
 - Disable all UI elements on protect scan
 - Account for menu items for disable/enable
 - Allow check and IRD most of the time
+- Check for partial dumps
 
 ### 3.2.4 (2024-11-24)
 

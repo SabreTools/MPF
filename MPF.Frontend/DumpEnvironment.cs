@@ -177,6 +177,35 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Check output path for partial logs from all dumping programs
+        /// </summary>
+        public InternalProgram? CheckForPartialProgram(string? outputDirectory, string outputFilename)
+        {
+            // If a complete dump exists from a different program
+            InternalProgram? programFound = null;
+            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            {
+                var processor = new Processors.Aaru(_system, _type);
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
+                    programFound = InternalProgram.Aaru;
+            }
+            if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
+            {
+                var processor = new Processors.DiscImageCreator(_system, _type);
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
+                    programFound = InternalProgram.DiscImageCreator;
+            }
+            if (programFound == null && _internalProgram != InternalProgram.Redumper)
+            {
+                var processor = new Processors.Redumper(_system, _type);
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
+                    programFound = InternalProgram.Redumper;
+            }
+
+            return programFound;
+        }
+
+        /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
@@ -298,6 +327,15 @@ namespace MPF.Frontend
                 return false;
 
             return _processor.FoundAllFiles(outputDirectory, outputFilename).Count == 0;
+        }
+
+        /// <inheritdoc cref="BaseProcessor.FoundAnyFiles(string?, string)"/>
+        public bool FoundAnyFiles(string? outputDirectory, string outputFilename)
+        {
+            if (_processor == null)
+                return false;
+
+            return _processor.FoundAnyFiles(outputDirectory, outputFilename).Count;
         }
 
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
