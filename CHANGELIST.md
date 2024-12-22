@@ -122,6 +122,7 @@
 - Account for menu items for disable/enable
 - Allow check and IRD most of the time
 - Check for partial dumps
+- Slightly reduce nesting of file pre-dump checks
 
 ### 3.2.4 (2024-11-24)
 

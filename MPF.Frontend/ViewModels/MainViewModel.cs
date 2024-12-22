@@ -2211,9 +2211,8 @@ namespace MPF.Frontend.ViewModels
             var outputDirectory = Path.GetDirectoryName(_environment!.OutputPath);
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
-            // If a complete or partial dump already exists
-            bool foundAllFiles = _environment.FoundAllFiles(outputDirectory, outputFilename);
-            if (foundAllFiles && _displayUserMessage != null)
+            // If a complete dump already exists
+            if (_environment.FoundAllFiles(outputDirectory, outputFilename) && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
                 if (mbresult != true)
@@ -2222,45 +2221,42 @@ namespace MPF.Frontend.ViewModels
                     return false;
                 }
             }
-            else
+
+            // If a partial dump exists
+            else if (_environment.FoundAnyFiles(outputDirectory, outputFilename) && _displayUserMessage != null)
             {
-                // If a partial dump exists
-                bool foundAnyFiles = _environment.FoundAnyFiles(outputDirectory, outputFilename);
-                if (foundAnyFiles && _displayUserMessage != null)
+                bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                if (mbresult != true)
                 {
-                    bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                    LogLn("Dumping aborted!");
+                    return false;
+                }
+            }
+
+            // Check other dumping programs
+            else if (_displayUserMessage != null)
+            {
+                // If a complete dump exists from a different program
+                InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
+                if (completeProgramFound != null)
+                {
+                    bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                     if (mbresult != true)
                     {
                         LogLn("Dumping aborted!");
                         return false;
                     }
                 }
-                else
+
+                // If a partial dump exists from a different program
+                InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(outputDirectory, outputFilename);
+                if (partialProgramFound != null)
                 {
-                    // If a complete dump exists from a different program
-                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
-                    if (completeProgramFound != null && _displayUserMessage != null)
+                    bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                    if (mbresult != true)
                     {
-                        bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
-                        if (mbresult != true)
-                        {
-                            LogLn("Dumping aborted!");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        // If a partial dump exists from a different program
-                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(outputDirectory, outputFilename);
-                        if (partialProgramFound != null && _displayUserMessage != null)
-                        {
-                            bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
-                            if (mbresult != true)
-                            {
-                                LogLn("Dumping aborted!");
-                                return false;
-                            }
-                        }
+                        LogLn("Dumping aborted!");
+                        return false;
                     }
                 }
             }
