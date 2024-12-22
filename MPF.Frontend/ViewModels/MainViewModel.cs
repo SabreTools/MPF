@@ -1256,15 +1256,17 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
-            else if (CurrentDrive?.MarkedActive != true)
-            {
-                VerboseLogLn("Skipping system type detection because drive not marked as active!");
-            }
             else if (!Options.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
                 VerboseLogLn(currentSystem == null ? $"unable to detect, defaulting to {Options.DefaultSystem.LongName()}" : ($"detected {currentSystem.LongName()}."));
+
+                // If no detected system, the filesystem is unreadable, and the default system is PC, then assume it is actually a Mac disc
+                if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                    currentSystem = RedumpSystem.AppleMacintosh;
+
+                // Fallback to default system
                 currentSystem ??= Options.DefaultSystem;
 
                 if (currentSystem != null)
@@ -1463,15 +1465,25 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Get the current system from drive
         /// </summary>
-        private static RedumpSystem? GetRedumpSystem(Drive? drive)
+        private static RedumpSystem? GetRedumpSystem(Drive? drive, bool physicalCheck)
         {
             // If the drive does not exist, we can't do anything
-            if (drive == null)
+            if (drive == null || string.IsNullOrEmpty(drive.Name))
                 return null;
 
-            // If we can't read the media in that drive, we can't do anything
-            if (string.IsNullOrEmpty(drive.Name) || !Directory.Exists(drive.Name))
+            // If we can't read the files in the drive, we can only perform physical checks
+            if (drive.MarkedActive == false || !Directory.Exists(drive.Name))
+            {
+                // Check for Panasonic 3DO - filesystem not readable on Windows
+                RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
+                if (detected3DOSystem != null)
+                {
+                    return detected3DOSystem;
+                }
+
+                // Otherwise, return null
                 return null;
+            }
 
             // We're going to assume for floppies, HDDs, and removable drives
             if (drive.InternalDriveType != InternalDriveType.Optical)
@@ -1602,13 +1614,6 @@ namespace MPF.Frontend.ViewModels
                 }
             }
             catch { }
-
-            // Panasonic 3DO
-            RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
-            if (detected3DOSystem != null)
-            {
-                return detected3DOSystem;
-            }
 
             // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
             RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
