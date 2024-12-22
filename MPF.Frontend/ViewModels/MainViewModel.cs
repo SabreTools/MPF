@@ -1698,6 +1698,12 @@ namespace MPF.Frontend.ViewModels
 
             #region Computers
 
+            // Amiga CD (Do this check AFTER CD32/CDTV)
+            if (File.Exists(Path.Combine(drive.Name, "Disk.info")))
+            {
+                return RedumpSystem.CommodoreAmigaCD;
+            }
+
             // Fujitsu FM Towns
             try
             {
@@ -1709,8 +1715,6 @@ namespace MPF.Frontend.ViewModels
                 }
             }
             catch { }
-
-            #endregion
 
             // Sharp X68000
             if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))
