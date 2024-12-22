@@ -91,6 +91,30 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region CheckExistingFiles
+
+        [Fact]
+        public void CheckExistingFiles_Invalid_Filled()
+        {
+            string? baseDirectory = null;
+            string baseFilename = string.Empty;
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void CheckExistingFiles_Valid_Empty()
+        {
+            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
+            string baseFilename = "test";
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
+            Assert.False(actual);
+        }
+
+        #endregion
+
         #region GetDeleteableFilePaths
 
         [Fact]
