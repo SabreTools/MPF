@@ -1603,6 +1603,13 @@ namespace MPF.Frontend.ViewModels
             }
             catch { }
 
+            // Sega Saturn/Dreamcast/Mega-CD/Sega-CD
+            RedumpSystem? detectedSegaSystem = DetectSegaSystem(drive);
+            if (detectedSegaSystem != null)
+            {
+                return detectedSegaSystem;
+            }
+
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
             {
