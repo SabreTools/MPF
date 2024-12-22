@@ -1603,7 +1603,14 @@ namespace MPF.Frontend.ViewModels
             }
             catch { }
 
-            // Sega Saturn/Dreamcast/Mega-CD/Sega-CD
+            // Panasonic 3DO
+            RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
+            if (detected3DOSystem != null)
+            {
+                return detected3DOSystem;
+            }
+
+            // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
             RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
             if (detectedSegaSystem != null)
             {
@@ -1662,17 +1669,6 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sony PlayStation 4
-            // There are more possible paths that could be checked.
-            //  There are some entries that can be found on most PS4 discs:
-            //    "/app/GAME_SERIAL/app.pkg"
-            //    "/bd/param.sfo"
-            //    "/license/rif"
-            // There are also extra files that can be found on some discs:
-            //    "/patch/GAME_SERIAL/patch.pkg" can be found in Redump entry 66816.
-            //        Originally on disc as "/patch/CUSA11302/patch.pkg".
-            //        Is used as an on-disc update for the base game app without needing to get update from the internet.
-            //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
-            //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
 #if NET20 || NET35
             if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
 #else
@@ -1680,6 +1676,16 @@ namespace MPF.Frontend.ViewModels
 #endif
             {
                 return RedumpSystem.SonyPlayStation4;
+            }
+
+            // Sony PlayStation 5
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "PS5", "UPDATE", "PS5UPDATE.PUP")))
+#endif
+            {
+                return RedumpSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro
@@ -1691,6 +1697,20 @@ namespace MPF.Frontend.ViewModels
             #endregion
 
             #region Computers
+
+            // Fujitsu FM Towns
+            try
+            {
+                if (File.Exists(Path.Combine(drive.Name, "TMENU.EXP"))
+                    || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
+                    || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
+                {
+                    return RedumpSystem.FujitsuFMTownsseries;
+                }
+            }
+            catch { }
+
+            #endregion
 
             // Sharp X68000
             if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))

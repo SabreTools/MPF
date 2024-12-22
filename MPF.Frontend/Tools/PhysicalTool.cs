@@ -746,7 +746,7 @@ namespace MPF.Frontend.Tools
         /// Detect the Sega system based on the CD ROM header
         /// </summary>
         /// <param name="drive">Drive to detect system from</param>
-        /// <returns>Detected RedumpSystem if detected, null on error</returns>
+        /// <returns>Detected RedumpSystem if detected, null otherwise</returns>
         public static RedumpSystem? DetectSegaSystem(Drive? drive)
         {
             if (drive == null)
@@ -768,6 +768,32 @@ namespace MPF.Frontend.Tools
                 return RedumpSystem.SegaMegaCDSegaCD;
             else if (systemType.Equals("SEGA GENESIS    ", StringComparison.Ordinal))
                 return RedumpSystem.SegaMegaCDSegaCD;
+
+            return null;
+        }
+
+        #endregion
+    
+        #region Other
+
+        /// <summary>
+        /// Detect a 3DO disc based on the CD ROM header
+        /// </summary>
+        /// <param name="drive">Drive to detect 3DO disc from</param>
+        /// <returns>RedumpSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
+        public static RedumpSystem? Detect3DOSystem(Drive? drive)
+        {
+            if (drive == null)
+                return null;
+
+            byte[]? firstSector = GetFirstBytes(drive, 0x90);
+            if (firstSector == null || firstSector.Length < 0x90)
+                return null;
+            
+            string systemType = Encoding.ASCII.GetString(firstSector, 0x84, 0xC);
+
+            if (systemType.Equals("duckiamaduck", StringComparison.Ordinal))
+                return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
 
             return null;
         }
