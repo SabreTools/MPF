@@ -786,13 +786,13 @@ namespace MPF.Frontend.Tools
             if (drive == null)
                 return null;
 
-            byte[]? firstSector = GetFirstBytes(drive, 0x90);
-            if (firstSector == null || firstSector.Length < 0x90)
+            byte[]? firstSector = GetFirstBytes(drive, 0xC0);
+            if (firstSector == null || firstSector.Length < 0xC0)
                 return null;
             
-            string systemType = Encoding.ASCII.GetString(firstSector, 0x84, 0xC);
+            string systemType = Encoding.ASCII.GetString(firstSector, 0xB0, 0x10);
 
-            if (systemType.Equals("duckiamaduck", StringComparison.Ordinal))
+            if (systemType.Equals("iamaduckiamaduck", StringComparison.Ordinal))
                 return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
 
             return null;

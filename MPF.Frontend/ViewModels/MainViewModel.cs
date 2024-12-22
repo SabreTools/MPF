@@ -1573,6 +1573,12 @@ namespace MPF.Frontend.ViewModels
                 return RedumpSystem.MattelFisherPriceiXL;
             }
 
+            // Memorex - Visual Information System
+            if (File.Exists(Path.Combine(drive.Name, "CONTROL.TAT")))
+            {
+                return RedumpSystem.MemorexVisualInformationSystem;
+            }
+
             // Microsoft Xbox 360
             try
             {
@@ -1731,6 +1737,12 @@ namespace MPF.Frontend.ViewModels
 #endif
             {
                 return RedumpSystem.VMLabsNUON;
+            }
+
+            // ZAPit Games - GameWave
+            if (File.Exists(Path.Combine(drive.Name, "gamewave.diz")))
+            {
+                return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
             }
 
             #endregion
