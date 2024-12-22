@@ -663,8 +663,7 @@ namespace MPF.Frontend.ViewModels
                 CopyProtectScanButtonEnabled = true;
 
                 // Get the current system type
-                if (index != -1)
-                    DetermineSystemType();
+                DetermineSystemType();
 
                 // Only enable the start/stop if we don't have the default selected
                 StartStopButtonEnabled = ShouldEnableDumpingButton();
@@ -1644,6 +1643,19 @@ namespace MPF.Frontend.ViewModels
                 return RedumpSystem.SegaMegaCDSegaCD;
             }
 
+            // SNK Neo-Geo CD
+            try
+            {
+                if (File.Exists(Path.Combine(drive.Name, "ABS.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "BIB.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "IPL.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "BIB.TXT")))
+                {
+                    return RedumpSystem.SNKNeoGeoCD;
+                }
+            }
+            catch { }
+
             // Sony PlayStation and Sony PlayStation 2
             string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
             string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
@@ -1697,6 +1709,16 @@ namespace MPF.Frontend.ViewModels
             if (File.Exists(Path.Combine(drive.Name, "0SYSTEM")))
             {
                 return RedumpSystem.VTechVFlashVSmilePro;
+            }
+
+            // VM Labs NUON
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "NUON"), "nuon.run")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "NUON", "nuon.run")))
+#endif
+            {
+                return RedumpSystem.VMLabsNUON;
             }
 
             #endregion
