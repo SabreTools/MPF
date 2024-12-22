@@ -1261,12 +1261,17 @@ namespace MPF.Frontend.ViewModels
                 var currentSystem = GetRedumpSystem(CurrentDrive);
                 VerboseLogLn(currentSystem == null ? $"unable to detect, defaulting to {Options.DefaultSystem.LongName()}" : ($"detected {currentSystem.LongName()}."));
 
-                // If no detected system, the filesystem is unreadable, and the default system is PC, then assume it is actually a Mac disc
+                // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
                 if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
-                    currentSystem = RedumpSystem.AppleMacintosh;
+                {
+                    // If disc is readable on inactive drive, assume it is a Mac disc
+                    if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
+                        currentSystem = RedumpSystem.AppleMacintosh;
+                }
 
-                // Fallback to default system
-                currentSystem ??= Options.DefaultSystem;
+                // Fallback to default system only if drive is active
+                if (currentSystem == null && CurrentDrive.MarkedActive)
+                    currentSystem = Options.DefaultSystem;
 
                 if (currentSystem != null)
                 {
@@ -1478,6 +1483,13 @@ namespace MPF.Frontend.ViewModels
                 if (detected3DOSystem != null)
                 {
                     return detected3DOSystem;
+                }
+
+                // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
+                RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
+                if (detectedSegaSystem != null)
+                {
+                    return detectedSegaSystem;
                 }
 
                 // Otherwise, return null
