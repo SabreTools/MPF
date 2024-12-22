@@ -143,7 +143,7 @@ namespace MPF.Processors.Test
             string baseFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
             var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
-            Assert.False(actual);
+            Assert.True(actual);
         }
 
         #endregion

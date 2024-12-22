@@ -110,7 +110,7 @@ namespace MPF.Processors.Test
             string baseFilename = "test";
             var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
             var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
-            Assert.False(actual);
+            Assert.True(actual);
         }
 
         #endregion

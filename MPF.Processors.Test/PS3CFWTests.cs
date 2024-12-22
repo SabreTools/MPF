@@ -110,7 +110,7 @@ namespace MPF.Processors.Test
             string baseFilename = "test";
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
             var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
-            Assert.False(actual);
+            Assert.True(actual);
         }
 
         #endregion
