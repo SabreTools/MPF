@@ -1824,6 +1824,10 @@ namespace MPF.Frontend.ViewModels
             Status = "Scanning for copy protection... this might take a while!";
 
             // Disable UI elements
+            OptionsMenuItemEnabled = false;
+            CheckDumpMenuItemEnabled = false;
+            CreateIRDMenuItemEnabled = false;
+
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
 
@@ -1861,6 +1865,10 @@ namespace MPF.Frontend.ViewModels
                 Status = tempContent;
 
                 // Enable UI elements
+                OptionsMenuItemEnabled = true;
+                CheckDumpMenuItemEnabled = true;
+                CreateIRDMenuItemEnabled = true;
+
                 SystemTypeComboBoxEnabled = true;
                 MediaTypeComboBoxEnabled = true;
 
@@ -2132,6 +2140,8 @@ namespace MPF.Frontend.ViewModels
         {
             if (ParametersCheckBoxEnabled == false)
             {
+                OptionsMenuItemEnabled = false;
+
                 SystemTypeComboBoxEnabled = false;
                 MediaTypeComboBoxEnabled = false;
 
@@ -2149,6 +2159,8 @@ namespace MPF.Frontend.ViewModels
             else
             {
                 ProcessCustomParameters();
+
+                OptionsMenuItemEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
                 MediaTypeComboBoxEnabled = true;
