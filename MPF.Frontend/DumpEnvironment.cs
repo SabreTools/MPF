@@ -335,7 +335,7 @@ namespace MPF.Frontend
             if (_processor == null)
                 return false;
 
-            return _processor.FoundAnyFiles(outputDirectory, outputFilename).Count;
+            return _processor.FoundAnyFiles(outputDirectory, outputFilename);
         }
 
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>

@@ -2240,10 +2240,10 @@ namespace MPF.Frontend.ViewModels
                 else
                 {
                     // If a complete dump exists from a different program
-                    InternalProgram? programFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
-                    if (programFound != null && _displayUserMessage != null)
+                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
+                    if (completeProgramFound != null && _displayUserMessage != null)
                     {
-                        bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                        bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                         if (mbresult != true)
                         {
                             LogLn("Dumping aborted!");
@@ -2254,10 +2254,10 @@ namespace MPF.Frontend.ViewModels
                     else
                     {
                         // If a partial dump exists from a different program
-                        InternalProgram? programFound = _environment.CheckForPartialProgram(outputDirectory, outputFilename);
-                        if (programFound != null && _displayUserMessage != null)
+                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(outputDirectory, outputFilename);
+                        if (partialProgramFound != null && _displayUserMessage != null)
                         {
-                            bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {programFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
+                            bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                             if (mbresult != true)
                             {
                                 LogLn("Dumping aborted!");
