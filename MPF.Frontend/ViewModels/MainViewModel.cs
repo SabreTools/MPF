@@ -2221,7 +2221,6 @@ namespace MPF.Frontend.ViewModels
                     LogLn("Dumping aborted!");
                     return false;
                 }
-                // else continue with dump, don't check further
             }
             else
             {
@@ -2235,7 +2234,6 @@ namespace MPF.Frontend.ViewModels
                         LogLn("Dumping aborted!");
                         return false;
                     }
-                    // else continue with dump, don't check further
                 }
                 else
                 {
@@ -2249,7 +2247,6 @@ namespace MPF.Frontend.ViewModels
                             LogLn("Dumping aborted!");
                             return false;
                         }
-                        // else continue with dump, don't check further
                     }
                     else
                     {
@@ -2263,7 +2260,6 @@ namespace MPF.Frontend.ViewModels
                                 LogLn("Dumping aborted!");
                                 return false;
                             }
-                            // else continue with dump, don't check further
                         }
                     }
                 }
