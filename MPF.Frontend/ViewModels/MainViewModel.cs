@@ -1465,7 +1465,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Get the current system from drive
         /// </summary>
-        private static RedumpSystem? GetRedumpSystem(Drive? drive, bool physicalCheck)
+        private static RedumpSystem? GetRedumpSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
             if (drive == null || string.IsNullOrEmpty(drive.Name))
