@@ -84,7 +84,7 @@ namespace MPF.Frontend.Tools
                         return null;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // We don't care what the error is
                 return null;
