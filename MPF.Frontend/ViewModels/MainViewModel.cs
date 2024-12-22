@@ -1666,8 +1666,8 @@ namespace MPF.Frontend.ViewModels
             {
                 if (File.Exists(Path.Combine(drive.Name, "ABS.TXT"))
                     || File.Exists(Path.Combine(drive.Name, "BIB.TXT"))
-                    || File.Exists(Path.Combine(drive.Name, "IPL.TXT"))
-                    || File.Exists(Path.Combine(drive.Name, "BIB.TXT")))
+                    || File.Exists(Path.Combine(drive.Name, "CPY.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "IPL.TXT")))
                 {
                     return RedumpSystem.SNKNeoGeoCD;
                 }
