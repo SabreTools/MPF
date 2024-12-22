@@ -151,12 +151,12 @@ namespace MPF.Frontend
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
-            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Aaru(_system, _type);
+                var processor = new Processors.Redumper(_system, _type);
                 var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
-                    programFound = InternalProgram.Aaru;
+                    programFound = InternalProgram.Redumper;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
@@ -165,12 +165,41 @@ namespace MPF.Frontend
                 if (missingFiles.Count == 0)
                     programFound = InternalProgram.DiscImageCreator;
             }
+            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            {
+                var processor = new Processors.Aaru(_system, _type);
+                var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+                if (missingFiles.Count == 0)
+                    programFound = InternalProgram.Aaru;
+            }
+
+            return programFound;
+        }
+
+        /// <summary>
+        /// Check output path for partial logs from all dumping programs
+        /// </summary>
+        public InternalProgram? CheckForPartialProgram(string? outputDirectory, string outputFilename)
+        {
+            // If a complete dump exists from a different program
+            InternalProgram? programFound = null;
             if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
                 var processor = new Processors.Redumper(_system, _type);
-                var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
-                if (missingFiles.Count == 0)
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
                     programFound = InternalProgram.Redumper;
+            }
+            if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
+            {
+                var processor = new Processors.DiscImageCreator(_system, _type);
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
+                    programFound = InternalProgram.DiscImageCreator;
+            }
+            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            {
+                var processor = new Processors.Aaru(_system, _type);
+                if (processor.FoundAnyFiles(outputDirectory, outputFilename))
+                    programFound = InternalProgram.Aaru;
             }
 
             return programFound;
@@ -298,6 +327,15 @@ namespace MPF.Frontend
                 return false;
 
             return _processor.FoundAllFiles(outputDirectory, outputFilename).Count == 0;
+        }
+
+        /// <inheritdoc cref="BaseProcessor.FoundAnyFiles(string?, string)"/>
+        public bool FoundAnyFiles(string? outputDirectory, string outputFilename)
+        {
+            if (_processor == null)
+                return false;
+
+            return _processor.FoundAnyFiles(outputDirectory, outputFilename);
         }
 
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
