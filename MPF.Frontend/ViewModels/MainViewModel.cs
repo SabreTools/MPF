@@ -1627,10 +1627,10 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
-            RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
-            if (detectedSegaSystem != null)
+            RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
+            if (segaSystem != null)
             {
-                return detectedSegaSystem;
+                return segaSystem;
             }
 
             // Sega Dreamcast
