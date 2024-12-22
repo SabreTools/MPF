@@ -1825,8 +1825,6 @@ namespace MPF.Frontend.ViewModels
 
             // Disable UI elements
             OptionsMenuItemEnabled = false;
-            CheckDumpMenuItemEnabled = false;
-            CreateIRDMenuItemEnabled = false;
 
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
@@ -1866,8 +1864,6 @@ namespace MPF.Frontend.ViewModels
 
                 // Enable UI elements
                 OptionsMenuItemEnabled = true;
-                CheckDumpMenuItemEnabled = true;
-                CreateIRDMenuItemEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
                 MediaTypeComboBoxEnabled = true;
