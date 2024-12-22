@@ -151,12 +151,12 @@ namespace MPF.Frontend
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
-            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Aaru(_system, _type);
+                var processor = new Processors.Redumper(_system, _type);
                 var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
-                    programFound = InternalProgram.Aaru;
+                    programFound = InternalProgram.Redumper;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
@@ -165,12 +165,12 @@ namespace MPF.Frontend
                 if (missingFiles.Count == 0)
                     programFound = InternalProgram.DiscImageCreator;
             }
-            if (programFound == null && _internalProgram != InternalProgram.Redumper)
+            if (programFound == null && _internalProgram != InternalProgram.Aaru)
             {
-                var processor = new Processors.Redumper(_system, _type);
+                var processor = new Processors.Aaru(_system, _type);
                 var missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
-                    programFound = InternalProgram.Redumper;
+                    programFound = InternalProgram.Aaru;
             }
 
             return programFound;
@@ -183,11 +183,11 @@ namespace MPF.Frontend
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
-            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+            if (programFound == null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Aaru(_system, _type);
+                var processor = new Processors.Redumper(_system, _type);
                 if (processor.FoundAnyFiles(outputDirectory, outputFilename))
-                    programFound = InternalProgram.Aaru;
+                    programFound = InternalProgram.Redumper;
             }
             if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
             {
@@ -195,11 +195,11 @@ namespace MPF.Frontend
                 if (processor.FoundAnyFiles(outputDirectory, outputFilename))
                     programFound = InternalProgram.DiscImageCreator;
             }
-            if (programFound == null && _internalProgram != InternalProgram.Redumper)
+            if (programFound == null && _internalProgram != InternalProgram.Aaru)
             {
-                var processor = new Processors.Redumper(_system, _type);
+                var processor = new Processors.Aaru(_system, _type);
                 if (processor.FoundAnyFiles(outputDirectory, outputFilename))
-                    programFound = InternalProgram.Redumper;
+                    programFound = InternalProgram.Aaru;
             }
 
             return programFound;
