@@ -762,6 +762,8 @@ namespace MPF.Frontend.Tools
                 return RedumpSystem.SegaSaturn;
             else if (systemType.Equals("SEGA SEGAKATANA ", StringComparison.Ordinal))
                 return RedumpSystem.SegaDreamcast;
+            else if (systemType.Equals("SEGADISCSYSTEM  ", StringComparison.Ordinal))
+                return RedumpSystem.SegaMegaCDSegaCD;
             else if (systemType.Equals("SEGA MEGA DRIVE ", StringComparison.Ordinal))
                 return RedumpSystem.SegaMegaCDSegaCD;
             else if (systemType.Equals("SEGA GENESIS    ", StringComparison.Ordinal))
