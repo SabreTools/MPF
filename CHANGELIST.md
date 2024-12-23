@@ -126,6 +126,7 @@
 - Slightly increase nesting of file pre-dump checks
 - Improve system detection
 - Avoid unnecessary null checks
+- Pass options to process user info separately
 
 ### 3.2.4 (2024-11-24)
 

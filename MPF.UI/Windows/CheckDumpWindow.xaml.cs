@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 #endif
 using System.Windows;
 using System.Windows.Controls;
+using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
@@ -163,11 +164,12 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Show the disc information window
         /// </summary>
+        /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowDiscInformationWindow(ref SubmissionInfo? submissionInfo)
+        public bool? ShowDiscInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            var discInformationWindow = new DiscInformationWindow(CheckDumpViewModel.Options, submissionInfo)
+            var discInformationWindow = new DiscInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,

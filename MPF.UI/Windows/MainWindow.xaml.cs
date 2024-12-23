@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 #endif
 using System.Windows;
 using System.Windows.Controls;
+using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
 using MPF.UI.UserControls;
@@ -251,21 +252,22 @@ namespace MPF.UI.Windows
         public void ShowDebugDiscInfoWindow()
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
-            _ = ShowDiscInformationWindow(ref submissionInfo);
+            _ = ShowDiscInformationWindow(MainViewModel.Options, ref submissionInfo);
             Formatter.ProcessSpecialFields(submissionInfo!);
         }
 
         /// <summary>
         /// Show the disc information window
         /// </summary>
+        /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowDiscInformationWindow(ref SubmissionInfo? submissionInfo)
+        public bool? ShowDiscInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            if (MainViewModel.Options.ShowDiscEjectReminder)
+            if (options?.ShowDiscEjectReminder == true)
                 CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            var discInformationWindow = new DiscInformationWindow(MainViewModel.Options, submissionInfo)
+            var discInformationWindow = new DiscInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,

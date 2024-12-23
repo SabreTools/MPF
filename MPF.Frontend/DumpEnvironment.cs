@@ -463,12 +463,14 @@ namespace MPF.Frontend
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
+        /// <param name="options">Optional set of options for the user prompt</param>
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<ResultEventArgs> VerifyAndSaveDumpOutput(
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
             ProcessUserInfoDelegate? processUserInfo = null,
+            Options? options = null,
             SubmissionInfo? seedInfo = null)
         {
             if (_processor == null)
@@ -527,9 +529,7 @@ namespace MPF.Frontend
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
-
-                bool? filledInfo = processUserInfo(ref submissionInfo);
-
+                bool? filledInfo = processUserInfo(options, ref submissionInfo);
                 if (filledInfo == true)
                     resultProgress.Report(ResultEventArgs.Success("Additional disc information added!"));
                 else

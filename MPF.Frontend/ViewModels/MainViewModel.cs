@@ -2203,7 +2203,11 @@ namespace MPF.Frontend.ViewModels
                 // Verify dump output and save it
                 if (result)
                 {
-                    result = await _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, _processUserInfo);
+                    result = await _environment.VerifyAndSaveDumpOutput(
+                        resultProgress,
+                        protectionProgress,
+                        _processUserInfo,
+                        Options);
                 }
                 else
                 {

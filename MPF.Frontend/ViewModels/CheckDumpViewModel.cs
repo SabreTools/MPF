@@ -465,7 +465,7 @@ namespace MPF.Frontend.ViewModels
                 parameters: null);
 
             // Finally, attempt to do the output dance
-            var result = await env.VerifyAndSaveDumpOutput(processUserInfo: processUserInfo);
+            var result = await env.VerifyAndSaveDumpOutput(processUserInfo: processUserInfo, options: Options);
 
             // Reenable UI and event handlers, if necessary
             EnableUIElements();
