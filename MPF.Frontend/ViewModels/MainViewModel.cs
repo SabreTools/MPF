@@ -663,8 +663,7 @@ namespace MPF.Frontend.ViewModels
                 CopyProtectScanButtonEnabled = true;
 
                 // Get the current system type
-                if (index != -1)
-                    DetermineSystemType();
+                DetermineSystemType();
 
                 // Only enable the start/stop if we don't have the default selected
                 StartStopButtonEnabled = ShouldEnableDumpingButton();
@@ -1256,16 +1255,27 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
-            else if (CurrentDrive?.MarkedActive != true)
-            {
-                VerboseLogLn("Skipping system type detection because drive not marked as active!");
-            }
             else if (!Options.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
                 VerboseLogLn(currentSystem == null ? $"unable to detect, defaulting to {Options.DefaultSystem.LongName()}" : ($"detected {currentSystem.LongName()}."));
-                currentSystem ??= Options.DefaultSystem;
+
+                // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
+                if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                {
+                    try
+                    {
+                        // If disc is readable on inactive drive, assume it is a Mac disc
+                        if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
+                            currentSystem = RedumpSystem.AppleMacintosh;
+                    }
+                    catch {}
+                }
+
+                // Fallback to default system only if drive is active
+                if (currentSystem == null && CurrentDrive.MarkedActive)
+                    currentSystem = Options.DefaultSystem;
 
                 if (currentSystem != null)
                 {
@@ -1466,12 +1476,33 @@ namespace MPF.Frontend.ViewModels
         private static RedumpSystem? GetRedumpSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
-            if (drive == null)
+            if (drive == null || string.IsNullOrEmpty(drive.Name))
                 return null;
 
-            // If we can't read the media in that drive, we can't do anything
-            if (string.IsNullOrEmpty(drive.Name) || !Directory.Exists(drive.Name))
+            // If we can't read the files in the drive, we can only perform physical checks
+            if (drive.MarkedActive == false || !Directory.Exists(drive.Name))
+            {
+                try
+                {
+                    // Check for Panasonic 3DO - filesystem not readable on Windows
+                    RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
+                    if (detected3DOSystem != null)
+                    {
+                        return detected3DOSystem;
+                    }
+
+                    // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
+                    RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
+                    if (detectedSegaSystem != null)
+                    {
+                        return detectedSegaSystem;
+                    }
+                }
+                catch {}
+
+                // Otherwise, return null
                 return null;
+            }
 
             // We're going to assume for floppies, HDDs, and removable drives
             if (drive.InternalDriveType != InternalDriveType.Optical)
@@ -1550,6 +1581,12 @@ namespace MPF.Frontend.ViewModels
                 return RedumpSystem.MattelFisherPriceiXL;
             }
 
+            // Memorex - Visual Information System
+            if (File.Exists(Path.Combine(drive.Name, "CONTROL.TAT")))
+            {
+                return RedumpSystem.MemorexVisualInformationSystem;
+            }
+
             // Microsoft Xbox 360
             try
             {
@@ -1603,6 +1640,17 @@ namespace MPF.Frontend.ViewModels
             }
             catch { }
 
+            try
+            {
+                // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
+                RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
+                if (segaSystem != null)
+                {
+                    return segaSystem;
+                }
+            }
+            catch {}
+            
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
             {
@@ -1624,6 +1672,19 @@ namespace MPF.Frontend.ViewModels
             {
                 return RedumpSystem.SegaMegaCDSegaCD;
             }
+
+            // SNK Neo-Geo CD
+            try
+            {
+                if (File.Exists(Path.Combine(drive.Name, "ABS.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "BIB.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "CPY.TXT"))
+                    || File.Exists(Path.Combine(drive.Name, "IPL.TXT")))
+                {
+                    return RedumpSystem.SNKNeoGeoCD;
+                }
+            }
+            catch { }
 
             // Sony PlayStation and Sony PlayStation 2
             string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
@@ -1655,17 +1716,6 @@ namespace MPF.Frontend.ViewModels
             catch { }
 
             // Sony PlayStation 4
-            // There are more possible paths that could be checked.
-            //  There are some entries that can be found on most PS4 discs:
-            //    "/app/GAME_SERIAL/app.pkg"
-            //    "/bd/param.sfo"
-            //    "/license/rif"
-            // There are also extra files that can be found on some discs:
-            //    "/patch/GAME_SERIAL/patch.pkg" can be found in Redump entry 66816.
-            //        Originally on disc as "/patch/CUSA11302/patch.pkg".
-            //        Is used as an on-disc update for the base game app without needing to get update from the internet.
-            //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
-            //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
 #if NET20 || NET35
             if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS4"), "UPDATE"), "PS4UPDATE.PUP")))
 #else
@@ -1675,15 +1725,59 @@ namespace MPF.Frontend.ViewModels
                 return RedumpSystem.SonyPlayStation4;
             }
 
+            // Sony PlayStation 5
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(Path.Combine(drive.Name, "PS5"), "UPDATE"), "PS5UPDATE.PUP")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "PS5", "UPDATE", "PS5UPDATE.PUP")))
+#endif
+            {
+                return RedumpSystem.SonyPlayStation5;
+            }
+
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drive.Name, "0SYSTEM")))
             {
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
+            // VM Labs NUON
+#if NET20 || NET35
+            if (File.Exists(Path.Combine(Path.Combine(drive.Name, "NUON"), "nuon.run")))
+#else
+            if (File.Exists(Path.Combine(drive.Name, "NUON", "nuon.run")))
+#endif
+            {
+                return RedumpSystem.VMLabsNUON;
+            }
+
+            // ZAPit Games - GameWave
+            if (File.Exists(Path.Combine(drive.Name, "gamewave.diz")))
+            {
+                return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
+            }
+
             #endregion
 
             #region Computers
+
+            // Amiga CD (Do this check AFTER CD32/CDTV)
+            if (File.Exists(Path.Combine(drive.Name, "Disk.info")))
+            {
+                return RedumpSystem.CommodoreAmigaCD;
+            }
+
+            // Fujitsu FM Towns
+            try
+            {
+                if (File.Exists(Path.Combine(drive.Name, "TMENU.EXP"))
+                    || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
+                    || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
+                {
+                    return RedumpSystem.FujitsuFMTownsseries;
+                }
+            }
+            catch { }
 
             // Sharp X68000
             if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))

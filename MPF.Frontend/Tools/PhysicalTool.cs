@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.IO;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
 {
@@ -12,7 +13,7 @@ namespace MPF.Frontend.Tools
     {
         #region Generic
 
-        /// <summary>s
+        /// <summary>
         /// Get the last modified date for a file from a physical disc, if possible
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
@@ -51,6 +52,45 @@ namespace MPF.Frontend.Tools
             // Format and return the string
             var dt = new DateTime(year, month, day);
             return dt.ToString("yyyy-MM-dd");
+        }
+
+        /// <summary>
+        /// Get the first numBytes bytes from a disc drive
+        /// </summary>
+        /// <param name="drive">Drive to get sector from</param>
+        /// <param name="numBytes">Number of bytes to read from drive, maximum of one sector (2048 bytes)</param>
+        /// <returns>Byte array of first sector of data, null on error</returns>
+        public static byte[]? GetFirstBytes(Drive? drive, int numBytes)
+        {
+            if (drive == null || drive.Letter == null || drive.Letter == '\0')
+                return null;
+
+            // Must read between 1 and 2048 bytes
+            if (numBytes < 1)
+                return null;
+            else if (numBytes > 2048)
+                numBytes = 2048;
+            
+            string drivePath = $"\\\\.\\{drive.Letter}:";
+            var firstSector = new byte[numBytes];
+            try
+            {
+                // Open the drive as a raw device
+                using (FileStream driveStream = new FileStream(drivePath, FileMode.Open, FileAccess.Read))
+                {
+                    // Read the first sector
+                    int bytesRead = driveStream.Read(firstSector, 0, numBytes);
+                    if (bytesRead < numBytes)
+                        return null;
+                }
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
+            }
+
+            return firstSector;
         }
 
         #endregion
@@ -699,5 +739,66 @@ namespace MPF.Frontend.Tools
         }
 
         #endregion
+    
+        #region Sega
+
+        /// <summary>
+        /// Detect the Sega system based on the CD ROM header
+        /// </summary>
+        /// <param name="drive">Drive to detect system from</param>
+        /// <returns>Detected RedumpSystem if detected, null otherwise</returns>
+        public static RedumpSystem? DetectSegaSystem(Drive? drive)
+        {
+            if (drive == null)
+                return null;
+
+            byte[]? firstSector = GetFirstBytes(drive, 0x10);
+            if (firstSector == null || firstSector.Length < 0x10)
+                return null;
+            
+            string systemType = Encoding.ASCII.GetString(firstSector, 0x00, 0x10);
+
+            if (systemType.Equals("SEGA SEGASATURN ", StringComparison.Ordinal))
+                return RedumpSystem.SegaSaturn;
+            else if (systemType.Equals("SEGA SEGAKATANA ", StringComparison.Ordinal))
+                return RedumpSystem.SegaDreamcast;
+            else if (systemType.Equals("SEGADISCSYSTEM  ", StringComparison.Ordinal))
+                return RedumpSystem.SegaMegaCDSegaCD;
+            else if (systemType.Equals("SEGA MEGA DRIVE ", StringComparison.Ordinal))
+                return RedumpSystem.SegaMegaCDSegaCD;
+            else if (systemType.Equals("SEGA GENESIS    ", StringComparison.Ordinal))
+                return RedumpSystem.SegaMegaCDSegaCD;
+
+            return null;
+        }
+
+        #endregion
+    
+        #region Other
+
+        /// <summary>
+        /// Detect a 3DO disc based on the CD ROM header
+        /// </summary>
+        /// <param name="drive">Drive to detect 3DO disc from</param>
+        /// <returns>RedumpSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
+        public static RedumpSystem? Detect3DOSystem(Drive? drive)
+        {
+            if (drive == null)
+                return null;
+
+            byte[]? firstSector = GetFirstBytes(drive, 0xC0);
+            if (firstSector == null || firstSector.Length < 0xC0)
+                return null;
+            
+            string systemType = Encoding.ASCII.GetString(firstSector, 0xB0, 0x10);
+
+            if (systemType.Equals("iamaduckiamaduck", StringComparison.Ordinal))
+                return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
+
+            return null;
+        }
+
+        #endregion
+    
     }
 }
