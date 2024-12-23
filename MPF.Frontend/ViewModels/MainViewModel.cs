@@ -2206,8 +2206,7 @@ namespace MPF.Frontend.ViewModels
                     result = await _environment.VerifyAndSaveDumpOutput(
                         resultProgress,
                         protectionProgress,
-                        _processUserInfo,
-                        Options);
+                        _processUserInfo);
                 }
                 else
                 {
