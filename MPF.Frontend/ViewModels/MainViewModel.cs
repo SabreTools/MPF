@@ -2430,9 +2430,9 @@ namespace MPF.Frontend.ViewModels
 
             // Update the label with only the first line of output
             if (message != null && message.Contains("\n"))
-                Status = value?.Message?.Split('\n')[0] + " (See log output)";
+                Status = message.Split('\n')[0] + " (See log output)";
             else
-                Status = value?.Message ?? string.Empty;
+                Status = message ?? string.Empty;
 
             // Log based on success or failure
             if (value != null && value)

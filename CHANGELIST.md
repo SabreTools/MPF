@@ -125,6 +125,7 @@
 - Slightly reduce nesting of file pre-dump checks
 - Slightly increase nesting of file pre-dump checks
 - Improve system detection
+- Avoid unnecessary null checks
 
 ### 3.2.4 (2024-11-24)
 

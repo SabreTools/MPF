@@ -488,7 +488,7 @@ namespace MPF.Frontend
                 protectionProgress = temp;
             }
 
-            resultProgress?.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
+            resultProgress.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
             var outputDirectory = Path.GetDirectoryName(OutputPath);
@@ -498,12 +498,12 @@ namespace MPF.Frontend
             List<string> missingFiles = _processor.FoundAllFiles(outputDirectory, outputFilename);
             if (missingFiles.Count > 0)
             {
-                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
+                resultProgress.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
                 return ResultEventArgs.Failure("Error! Please check output directory as dump may be incomplete!");
             }
 
             // Extract the information from the output files
-            resultProgress?.Report(ResultEventArgs.Success("Extracting output information from output files..."));
+            resultProgress.Report(ResultEventArgs.Success("Extracting output information from output files..."));
             var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
                 OutputPath,
                 _drive,
@@ -513,126 +513,126 @@ namespace MPF.Frontend
                 _processor,
                 resultProgress,
                 protectionProgress);
-            resultProgress?.Report(ResultEventArgs.Success("Extracting information complete!"));
+            resultProgress.Report(ResultEventArgs.Success("Extracting information complete!"));
 
             // Inject seed submission info data, if necessary
             if (seedInfo != null)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
+                resultProgress.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
                 submissionInfo = Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
-                resultProgress?.Report(ResultEventArgs.Success("Information injection complete!"));
+                resultProgress.Report(ResultEventArgs.Success("Information injection complete!"));
             }
 
             // Get user-modifiable information if configured to
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
+                resultProgress.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
 
                 bool? filledInfo = processUserInfo(ref submissionInfo);
 
                 if (filledInfo == true)
-                    resultProgress?.Report(ResultEventArgs.Success("Additional disc information added!"));
+                    resultProgress.Report(ResultEventArgs.Success("Additional disc information added!"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Success("Disc information skipped!"));
+                    resultProgress.Report(ResultEventArgs.Success("Disc information skipped!"));
             }
 
             // Process special fields for site codes
-            resultProgress?.Report(ResultEventArgs.Success("Processing site codes..."));
+            resultProgress.Report(ResultEventArgs.Success("Processing site codes..."));
             Formatter.ProcessSpecialFields(submissionInfo!);
-            resultProgress?.Report(ResultEventArgs.Success("Processing complete!"));
+            resultProgress.Report(ResultEventArgs.Success("Processing complete!"));
 
             // Format the information for the text output
-            resultProgress?.Report(ResultEventArgs.Success("Formatting information..."));
+            resultProgress.Report(ResultEventArgs.Success("Formatting information..."));
             var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility, out string? formatResult);
             if (formattedValues == null)
-                resultProgress?.Report(ResultEventArgs.Failure(formatResult));
+                resultProgress.Report(ResultEventArgs.Failure(formatResult));
             else
-                resultProgress?.Report(ResultEventArgs.Success(formatResult));
+                resultProgress.Report(ResultEventArgs.Success(formatResult));
 
             // Get the filename suffix for auto-generated files
             var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
-            resultProgress?.Report(ResultEventArgs.Success("Writing submission information file..."));
+            resultProgress.Report(ResultEventArgs.Success("Writing submission information file..."));
             bool txtSuccess = WriteOutputData(outputDirectory, filenameSuffix, formattedValues, out string txtResult);
             if (txtSuccess)
-                resultProgress?.Report(ResultEventArgs.Success(txtResult));
+                resultProgress.Report(ResultEventArgs.Success(txtResult));
             else
-                resultProgress?.Report(ResultEventArgs.Failure(txtResult));
+                resultProgress.Report(ResultEventArgs.Failure(txtResult));
 
             // Write the copy protection output
             if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Count > 0)
             {
                 if (_options.ScanForProtection)
                 {
-                    resultProgress?.Report(ResultEventArgs.Success("Writing protection information file..."));
+                    resultProgress.Report(ResultEventArgs.Success("Writing protection information file..."));
                     bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
-                        resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
+                        resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                     else
-                        resultProgress?.Report(ResultEventArgs.Failure("Writing could not complete!"));
+                        resultProgress.Report(ResultEventArgs.Failure("Writing could not complete!"));
                 }
             }
 
             // Write the JSON output, if required
             if (_options.OutputSubmissionJSON)
             {
-                resultProgress?.Report(ResultEventArgs.Success($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
+                resultProgress.Report(ResultEventArgs.Success($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
                 bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
-                    resultProgress?.Report(ResultEventArgs.Success("Writing complete!"));
+                    resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure("Writing could not complete!"));
+                    resultProgress.Report(ResultEventArgs.Failure("Writing could not complete!"));
             }
 
             // Compress the logs, if required
             if (_options.CompressLogFiles)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Compressing log files..."));
+                resultProgress.Report(ResultEventArgs.Success("Compressing log files..."));
                 if (_processor == null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("No processor provided!"));
+                    resultProgress.Report(ResultEventArgs.Failure("No processor provided!"));
                 }
                 else
                 {
                     bool compressSuccess = _processor.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, out string compressResult);
                     if (compressSuccess)
-                        resultProgress?.Report(ResultEventArgs.Success(compressResult));
+                        resultProgress.Report(ResultEventArgs.Success(compressResult));
                     else
-                        resultProgress?.Report(ResultEventArgs.Failure(compressResult));
+                        resultProgress.Report(ResultEventArgs.Failure(compressResult));
                 }
             }
 
             // Delete unnecessary files, if required
             if (_options.DeleteUnnecessaryFiles)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
+                resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
                 if (_processor == null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("No processor provided!"));
+                    resultProgress.Report(ResultEventArgs.Failure("No processor provided!"));
                 }
                 else
                 {
                     bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
                     if (deleteSuccess)
-                        resultProgress?.Report(ResultEventArgs.Success(deleteResult));
+                        resultProgress.Report(ResultEventArgs.Success(deleteResult));
                     else
-                        resultProgress?.Report(ResultEventArgs.Failure(deleteResult));
+                        resultProgress.Report(ResultEventArgs.Failure(deleteResult));
                 }
             }
 
             // Create PS3 IRD, if required
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && _type == MediaType.BluRay)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
+                resultProgress.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
                 bool deleteSuccess = await WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
                 if (deleteSuccess)
-                    resultProgress?.Report(ResultEventArgs.Success("IRD created!"));
+                    resultProgress.Report(ResultEventArgs.Success("IRD created!"));
                 else
-                    resultProgress?.Report(ResultEventArgs.Failure("Failed to create IRD"));
+                    resultProgress.Report(ResultEventArgs.Failure("Failed to create IRD"));
             }
 
-            resultProgress?.Report(ResultEventArgs.Success("Submission information process complete!"));
+            resultProgress.Report(ResultEventArgs.Success("Submission information process complete!"));
             return ResultEventArgs.Success();
         }
 
