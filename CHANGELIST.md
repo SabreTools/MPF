@@ -128,6 +128,7 @@
 - Avoid unnecessary null checks
 - Pass options to process user info separately
 - Use internal options instead of external
+- Use Invoke explicitly for delegates
 
 ### 3.2.4 (2024-11-24)
 

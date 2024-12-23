@@ -527,7 +527,7 @@ namespace MPF.Frontend
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
-                bool? filledInfo = processUserInfo(_options, ref submissionInfo);
+                bool? filledInfo = processUserInfo.Invoke(_options, ref submissionInfo);
                 if (filledInfo == true)
                     resultProgress.Report(ResultEventArgs.Success("Additional disc information added!"));
                 else
