@@ -752,7 +752,7 @@ namespace MPF.Frontend.Tools
             if (drive == null)
                 return null;
 
-            byte[]? firstSector = GetFirstBytes(drive, 0x10);
+            var firstSector = GetFirstBytes(drive, 0x10);
             if (firstSector == null || firstSector.Length < 0x10)
                 return null;
             
@@ -786,7 +786,7 @@ namespace MPF.Frontend.Tools
             if (drive == null)
                 return null;
 
-            byte[]? firstSector = GetFirstBytes(drive, 0xC0);
+            var firstSector = GetFirstBytes(drive, 0xC0);
             if (firstSector == null || firstSector.Length < 0xC0)
                 return null;
             
