@@ -1264,9 +1264,13 @@ namespace MPF.Frontend.ViewModels
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
                 if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
                 {
-                    // If disc is readable on inactive drive, assume it is a Mac disc
-                    if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
-                        currentSystem = RedumpSystem.AppleMacintosh;
+                    try
+                    {
+                        // If disc is readable on inactive drive, assume it is a Mac disc
+                        if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
+                            currentSystem = RedumpSystem.AppleMacintosh;
+                    }
+                    catch {}
                 }
 
                 // Fallback to default system only if drive is active
@@ -1478,19 +1482,23 @@ namespace MPF.Frontend.ViewModels
             // If we can't read the files in the drive, we can only perform physical checks
             if (drive.MarkedActive == false || !Directory.Exists(drive.Name))
             {
-                // Check for Panasonic 3DO - filesystem not readable on Windows
-                RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
-                if (detected3DOSystem != null)
+                try
                 {
-                    return detected3DOSystem;
-                }
+                    // Check for Panasonic 3DO - filesystem not readable on Windows
+                    RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
+                    if (detected3DOSystem != null)
+                    {
+                        return detected3DOSystem;
+                    }
 
-                // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
-                RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
-                if (detectedSegaSystem != null)
-                {
-                    return detectedSegaSystem;
+                    // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
+                    RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
+                    if (detectedSegaSystem != null)
+                    {
+                        return detectedSegaSystem;
+                    }
                 }
+                catch {}
 
                 // Otherwise, return null
                 return null;
@@ -1632,13 +1640,17 @@ namespace MPF.Frontend.ViewModels
             }
             catch { }
 
-            // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
-            RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
-            if (segaSystem != null)
+            try
             {
-                return segaSystem;
+                // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
+                RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
+                if (segaSystem != null)
+                {
+                    return segaSystem;
+                }
             }
-
+            catch {}
+            
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
             {
