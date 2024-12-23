@@ -587,36 +587,31 @@ namespace MPF.Frontend
             if (_options.CompressLogFiles)
             {
                 resultProgress.Report(ResultEventArgs.Success("Compressing log files..."));
-                if (_processor == null)
-                {
-                    resultProgress.Report(ResultEventArgs.Failure("No processor provided!"));
-                }
-                else
+#if NET40
+                await Task.Factory.StartNew(() =>
+#else
+                await Task.Run(() =>
+#endif
                 {
                     bool compressSuccess = _processor.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, out string compressResult);
                     if (compressSuccess)
                         resultProgress.Report(ResultEventArgs.Success(compressResult));
                     else
                         resultProgress.Report(ResultEventArgs.Failure(compressResult));
-                }
+
+                    return compressSuccess;
+                });
             }
 
             // Delete unnecessary files, if required
             if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
-                if (_processor == null)
-                {
-                    resultProgress.Report(ResultEventArgs.Failure("No processor provided!"));
-                }
+                bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
+                if (deleteSuccess)
+                    resultProgress.Report(ResultEventArgs.Success(deleteResult));
                 else
-                {
-                    bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
-                    if (deleteSuccess)
-                        resultProgress.Report(ResultEventArgs.Success(deleteResult));
-                    else
-                        resultProgress.Report(ResultEventArgs.Failure(deleteResult));
-                }
+                    resultProgress.Report(ResultEventArgs.Failure(deleteResult));
             }
 
             // Create PS3 IRD, if required
