@@ -72,7 +72,7 @@ namespace MPF.Frontend.Tools
                 numBytes = 2048;
             
             string drivePath = $"\\\\.\\{drive.Letter}:";
-            byte[]? firstSector = new byte[numBytes];
+            var firstSector = new byte[numBytes];
             try
             {
                 // Open the drive as a raw device
@@ -752,7 +752,7 @@ namespace MPF.Frontend.Tools
             if (drive == null)
                 return null;
 
-            var firstSector = GetFirstBytes(drive, 0x10);
+            byte[]? firstSector = GetFirstBytes(drive, 0x10);
             if (firstSector == null || firstSector.Length < 0x10)
                 return null;
             
@@ -786,7 +786,7 @@ namespace MPF.Frontend.Tools
             if (drive == null)
                 return null;
 
-            var firstSector = GetFirstBytes(drive, 0xC0);
+            byte[]? firstSector = GetFirstBytes(drive, 0xC0);
             if (firstSector == null || firstSector.Length < 0xC0)
                 return null;
             
