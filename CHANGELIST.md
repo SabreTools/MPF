@@ -132,6 +132,7 @@
 - Wrap log compression in a thread
 - Do not display invalid credentials on empty
 - Tab input only needed for ringcodes
+- More fields behind RedumpCompatible option
 
 ### 3.2.4 (2024-11-24)
 
