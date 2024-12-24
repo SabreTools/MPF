@@ -81,9 +81,10 @@ namespace MPF.Processors
                                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                                 info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
                                 if (!redumpCompat)
+                                {
                                     info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
-
-                                info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                                    info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                                }
                             }
 
                             break;
