@@ -723,6 +723,35 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetPlayStation2Protection
+
+        [Fact]
+        public void GetPlayStation2Protection_Empty_Null()
+        {
+            string log = string.Empty;
+            string? actual = Redumper.GetPlayStation2Protection(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetPlayStation2Protection_Invalid_Null()
+        {
+            string log = "INVALID";
+            string? actual = Redumper.GetPlayStation2Protection(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetPlayStation2Protection_Valid_Filled()
+        {
+            string? expected = "PS2/Datel BIG.DAT, C2: 4361, range: 25-4385";
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            string? actual = Redumper.GetPlayStation2Protection(log);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region GetPVD
 
         [Fact]

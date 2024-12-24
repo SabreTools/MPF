@@ -80,6 +80,9 @@ PSX [
     serial: serial
     version: version
 
+<< GetPlayStation2Protection >>
+protection: PS2/Datel BIG.DAT, C2: 4361, range: 25-4385
+
 << GetPlayStationEDCStatus >>
 EDC: yes
 
