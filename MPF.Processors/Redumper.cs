@@ -364,6 +364,10 @@ namespace MPF.Processors
                         info.VersionAndEditions!.Version = ps2Version ?? string.Empty;
                     }
 
+                    string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
+                    if (ps2Protection != null)
+                        info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}" + Environment.NewLine;
+                    
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -1477,6 +1481,44 @@ namespace MPF.Processors
                 }
 
                 return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get PlayStation 2 protection info from the log file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>PlayStation 2 protection if possible, null otherwise</returns>
+        internal static string? GetPlayStation2Protection(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                // Check for the protection strings
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.Trim();
+                while (!sr.EndOfStream)
+                {
+                    if (line == null)
+                        return null;
+
+                    if (line.StartsWith("protection: PS2"))
+                        return line.Substring("protection: ".Length).Trim();
+
+                    line = sr.ReadLine()?.Trim();
+                }
+
+                return null;
             }
             catch
             {
