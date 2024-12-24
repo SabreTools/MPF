@@ -366,7 +366,7 @@ namespace MPF.Processors
 
                     string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
                     if (ps2Protection != null)
-                        info.CommonDiscInfo!.Comments = $"Protection: {ps2Protection}" + Environment.NewLine;
+                        info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}" + Environment.NewLine;
                     
                     break;
 
