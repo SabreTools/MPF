@@ -55,12 +55,12 @@ namespace MPF.Processors
 
                     if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName, out var gcSerial))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = gcName ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalName] = gcName ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
                         if (!redumpCompat)
                         {
                             info.VersionAndEditions!.Version = gcVersion ?? info.VersionAndEditions.Version;
-                            info.CommonDiscInfo!.Region = gcRegion ?? info.CommonDiscInfo.Region;
+                            info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
                         }
                     }
 
