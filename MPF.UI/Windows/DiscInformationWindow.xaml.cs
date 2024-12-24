@@ -23,26 +23,9 @@ namespace MPF.UI.Windows
         #endregion
 
         #region Additional Info
-
-        private UserInput? CommentsTextBox => ItemHelper.FindChild<UserInput>(this, "CommentsTextBox");
+        
         private UserInput? DiscIDTextBox => ItemHelper.FindChild<UserInput>(this, "DiscIDTextBox");
         private UserInput? DiscKeyTextBox => ItemHelper.FindChild<UserInput>(this, "DiscKeyTextBox");
-
-        #endregion
-
-        #region Contents
-
-        private UserInput? ExtrasTextBox => ItemHelper.FindChild<UserInput>(this, "ExtrasTextBox");
-        private UserInput? GameFootageTextBox => ItemHelper.FindChild<UserInput>(this, "GameFootageTextBox");
-        private UserInput? GamesTextBox => ItemHelper.FindChild<UserInput>(this, "GamesTextBox");
-        private UserInput? GeneralContent => ItemHelper.FindChild<UserInput>(this, "GeneralContent");
-        private UserInput? NetYarozeGamesTextBox => ItemHelper.FindChild<UserInput>(this, "NetYarozeGamesTextBox");
-        private UserInput? PatchesTextBox => ItemHelper.FindChild<UserInput>(this, "PatchesTextBox");
-        private UserInput? PlayableDemosTextBox => ItemHelper.FindChild<UserInput>(this, "PlayableDemosTextBox");
-        private UserInput? RollingDemosTextBox => ItemHelper.FindChild<UserInput>(this, "RollingDemosTextBox");
-        private UserInput? SavegamesTextBox => ItemHelper.FindChild<UserInput>(this, "SavegamesTextBox");
-        private UserInput? TechDemosTextBox => ItemHelper.FindChild<UserInput>(this, "TechDemosTextBox");
-        private UserInput? VideosTextBox => ItemHelper.FindChild<UserInput>(this, "VideosTextBox");
 
         #endregion
 
@@ -185,27 +168,11 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Enable tab entry on supported fields
+        /// Enable tab entry on ringcode fields
         /// </summary>
         /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            // Additional Information
-            CommentsTextBox!.Tab = true;
-
-            // Contents
-            GeneralContent!.Tab = true;
-            GamesTextBox!.Tab = true;
-            NetYarozeGamesTextBox!.Tab = true;
-            PlayableDemosTextBox!.Tab = true;
-            RollingDemosTextBox!.Tab = true;
-            TechDemosTextBox!.Tab = true;
-            GameFootageTextBox!.Tab = true;
-            VideosTextBox!.Tab = true;
-            PatchesTextBox!.Tab = true;
-            SavegamesTextBox!.Tab = true;
-            ExtrasTextBox!.Tab = true;
-
             // L0
             L0MasteringRing!.Tab = true;
             L0MasteringSID!.Tab = true;
