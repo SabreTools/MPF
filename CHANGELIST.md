@@ -136,6 +136,7 @@
 - Parse redumper BIG.DAT info
 - Unify DisplayUserMessage definitions
 - Clean up unused disabled warnings
+- Missed one
 
 ### 3.2.4 (2024-11-24)
 
