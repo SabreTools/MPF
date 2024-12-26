@@ -19,7 +19,7 @@
     </Window.Resources>
 
     <Grid>
-        <Border CornerRadius="10" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
+        <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
             <StackPanel Orientation="Vertical">
                 <Grid Margin="0,2,0,0">
                     <Grid.ColumnDefinitions>
