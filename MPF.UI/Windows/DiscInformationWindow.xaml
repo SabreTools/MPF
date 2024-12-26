@@ -411,7 +411,7 @@
                                                 Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True"/>
                             <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True"
-                                                Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="75"
+                                                Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="HashDataSize" Label="Size" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.SizeAndChecksums.Size, Mode=TwoWay}"/>
