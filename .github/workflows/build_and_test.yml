@@ -1,7 +1,8 @@
 name: Build and Test
 
 on:
-  push: {}
+  push:
+    branches: [ "master" ]
 
 jobs:
   build:
