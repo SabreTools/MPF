@@ -5,8 +5,6 @@ using System.Windows.Controls;
 using MPF.Frontend.ViewModels;
 using WinForms = System.Windows.Forms;
 
-#pragma warning disable IDE1006 // Naming Styles
-
 namespace MPF.UI.Windows
 {
     /// <summary>

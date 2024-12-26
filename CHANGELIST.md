@@ -135,6 +135,7 @@
 - More fields behind RedumpCompatible option
 - Parse redumper BIG.DAT info
 - Unify DisplayUserMessage definitions
+- Clean up unused disabled warnings
 
 ### 3.2.4 (2024-11-24)
 

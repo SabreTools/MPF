@@ -5,14 +5,11 @@ using System.Threading;
 #endif
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;
-
-#pragma warning disable IDE1006 // Naming Styles
 
 namespace MPF.UI.Windows
 {

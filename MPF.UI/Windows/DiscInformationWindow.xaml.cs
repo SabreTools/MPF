@@ -1,11 +1,7 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
-using MPF.UI.UserControls;
 using SabreTools.RedumpLib.Data;
-
-#pragma warning disable IDE1006 // Naming Styles
 
 namespace MPF.UI.Windows
 {

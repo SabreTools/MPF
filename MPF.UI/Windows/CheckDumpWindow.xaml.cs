@@ -10,8 +10,6 @@ using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Data;
 using WinForms = System.Windows.Forms;
 
-#pragma warning disable IDE1006 // Naming Styles
-
 namespace MPF.UI.Windows
 {
     /// <summary>
