@@ -180,4 +180,4 @@
             </StackPanel>
         </Border>
     </Grid>
-</windows:WindowBase>
+</coreWindows:WindowBase>
