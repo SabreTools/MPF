@@ -19,7 +19,7 @@
     </Window.Resources>
 
     <Grid>
-        <Border CornerRadius="10" BorderBrush="Gray" BorderThickness="2">
+        <Border CornerRadius="10" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
             <StackPanel Orientation="Vertical">
                 <Grid Margin="0,2,0,0">
                     <Grid.ColumnDefinitions>
@@ -32,7 +32,7 @@
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                     <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                         <Label.Content>
                             <Run FontWeight="Bold" Text="Check Existing Dump" />
