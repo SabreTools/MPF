@@ -1,14 +1,14 @@
 ﻿<windows:WindowBase x:Class="MPF.UI.Windows.RingCodeGuideWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:MPF.UI.UserControls"
-        xmlns:windows="clr-namespace:MPF.UI.Windows"
-        mc:Ignorable="d"
-        Title="Ring Code Guide" Width="500" WindowStyle="None"
-        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
-        BorderBrush="DarkGray" BorderThickness="2">
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:controls="clr-namespace:MPF.UI.UserControls"
+                    xmlns:windows="clr-namespace:MPF.UI.Windows"
+                    mc:Ignorable="d"
+                    Title="Ring Code Guide" Width="500" WindowStyle="None"
+                    WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
+                    AllowsTransparency="True" Background="Transparent">
 
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -20,6 +20,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
