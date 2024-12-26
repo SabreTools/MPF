@@ -10,8 +10,7 @@
                         mc:Ignorable="d"
                         Title="Media Preservation Frontend" Width="600" WindowStyle="None"
                         AllowsTransparency="True" Background="Transparent"
-                        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
-                        BorderBrush="DarkGray" BorderThickness="2">
+                        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height">
 
     <Window.DataContext>
         <viewModels:MainViewModel/>
@@ -21,7 +20,7 @@
     </Window.Resources>
 
     <Grid>
-        <Border CornerRadius="20" Background="White" BorderBrush="Gray" BorderThickness="2">
+        <Border CornerRadius="10" Background="White" BorderBrush="Gray" BorderThickness="2">
             <StackPanel Orientation="Vertical">
                 <Grid Margin="0,2,0,0">
                     <Grid.ColumnDefinitions>
@@ -111,10 +110,10 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                        <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick" Margin="-5,0,0,0">
                             <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                         </Button>
-                        <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                        <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick" Margin="-5,0,0,0">
                             <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                         </Button>
                     </Grid>
