@@ -134,6 +134,7 @@
 - Tab input only needed for ringcodes
 - More fields behind RedumpCompatible option
 - Parse redumper BIG.DAT info
+- Unify DisplayUserMessage definitions
 
 ### 3.2.4 (2024-11-24)
 

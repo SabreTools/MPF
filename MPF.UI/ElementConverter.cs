@@ -9,7 +9,7 @@ using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
 
 namespace MPF.UI
 {
-    internal class ElementConverter: IValueConverter
+    internal class ElementConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
