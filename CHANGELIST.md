@@ -137,6 +137,7 @@
 - Unify DisplayUserMessage definitions
 - Clean up unused disabled warnings
 - Missed one
+- Minor changes to read-only field boxes
 
 ### 3.2.4 (2024-11-24)
 
