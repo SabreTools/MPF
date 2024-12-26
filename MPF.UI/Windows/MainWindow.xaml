@@ -33,7 +33,7 @@
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1"  MouseDown="TitleMouseDown"/>
                     <StackPanel Panel.ZIndex="1" Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                         <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -117,6 +117,8 @@
                         <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                             <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                         </Button>
+                    </Grid>
+                    <Grid Grid.Column="6" MouseDown="TitleMouseDown">
                     </Grid>
                 </Grid>
 
