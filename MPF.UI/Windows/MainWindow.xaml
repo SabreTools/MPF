@@ -19,204 +19,202 @@
         <core:ElementConverter x:Key="ElementConverter" />
     </Window.Resources>
 
-    <Grid>
-        <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
-            <StackPanel Orientation="Vertical">
-                <Grid Margin="0,2,0,0">
+    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="0,2,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1"  MouseDown="TitleMouseDown"/>
+                <StackPanel Panel.ZIndex="1" Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                    <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
+                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+                        <MenuItem x:Name="FileMenuItem" Header="_File"
+                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                            Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                            Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}" />
+                        </MenuItem>
+                        <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
+                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                            Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                            Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="CheckDumpMenuItem" Header="_Check Dump" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}"
+                                IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
+                            <MenuItem x:Name="CreateIRDMenuItem" Header="_Create PS3 IRD" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}"
+                                IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
+                            <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}"
+                                IsEnabled="{Binding OptionsMenuItemEnabled}"/>
+                            <MenuItem x:Name="DebugViewMenuItem" Header="_Debug Info Window" HorizontalAlignment="Left" Width="185"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
+                        </MenuItem>
+                        <MenuItem x:Name="HelpMenuItem" Header="_Help"
+                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                            Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                            Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}" />
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                    <Label.Content>
+                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="Media Preservation Frontend" /></TextBlock>
+                    </Label.Content>
+                    <Label.ContextMenu>
+                        <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Style="{DynamicResource CustomContextMenuStyle}">
+                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                        </ContextMenu>
+                    </Label.ContextMenu>
+                </Label>
+                <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25"/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1"  MouseDown="TitleMouseDown"/>
-                    <StackPanel Panel.ZIndex="1" Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                        <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
-                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                            <MenuItem x:Name="FileMenuItem" Header="_File"
-                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                Template="{DynamicResource CustomMenuItemTemplate}">
-                                <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}" />
-                            </MenuItem>
-                            <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
-                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                Template="{DynamicResource CustomMenuItemTemplate}">
-                                <MenuItem x:Name="CheckDumpMenuItem" Header="_Check Dump" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"
-                                    IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
-                                <MenuItem x:Name="CreateIRDMenuItem" Header="_Create PS3 IRD" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"
-                                    IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
-                                <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"
-                                    IsEnabled="{Binding OptionsMenuItemEnabled}"/>
-                                <MenuItem x:Name="DebugViewMenuItem" Header="_Debug Info Window" HorizontalAlignment="Left" Width="185"
-                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
-                            </MenuItem>
-                            <MenuItem x:Name="HelpMenuItem" Header="_Help"
-                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                Template="{DynamicResource CustomMenuItemTemplate}">
-                                <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}" />
-                                <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}" />
-                            </MenuItem>
-                        </Menu>
-                    </StackPanel>
-                    <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
-                        <Label.Content>
-                            <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="Media Preservation Frontend" /></TextBlock>
-                        </Label.Content>
-                        <Label.ContextMenu>
-                            <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        Style="{DynamicResource CustomContextMenuStyle}">
-                                <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
-                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        Template="{DynamicResource CustomMenuItemTemplate}"/>
-                                <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
-                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            </ContextMenu>
-                        </Label.ContextMenu>
-                    </Label>
-                    <Grid Grid.Column="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
-                            <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
-                        </Button>
-                        <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
-                            <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
-                        </Button>
-                    </Grid>
+                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
                 </Grid>
+            </Grid>
 
-                <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
-                    <Grid Margin="5,5,5,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="2.5*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
+                <Grid Margin="5,5,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-                        <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-                        <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                                ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
-                            <ComboBox.ItemContainerStyle>
-                                <Style TargetType="{x:Type ComboBoxItem}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                            <Setter Property="IsEnabled" Value="False"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ComboBox.ItemContainerStyle>
-                        </ComboBox>
-                        <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
-                                ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
+                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                            ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ComboBoxItem}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+                    </ComboBox>
+                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
+                            ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                        <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Path"/>
-                        <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding OutputPathTextBoxEnabled}" />
-                        <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
-                                IsEnabled="{Binding OutputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
+                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Path"/>
+                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                            Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding OutputPathTextBoxEnabled}" />
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                            IsEnabled="{Binding OutputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                        <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
-                        <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
-                                ItemsSource="{Binding Drives}" SelectedItem="{Binding Path=CurrentDrive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding DriveLetterComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Letter}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                            ItemsSource="{Binding Drives}" SelectedItem="{Binding Path=CurrentDrive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding DriveLetterComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Letter}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
 
-                        <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
-                        <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
-                                ItemsSource="{Binding DriveSpeeds}" SelectedItem="{Binding Path=DriveSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding DriveSpeedComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
+                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                            ItemsSource="{Binding DriveSpeeds}" SelectedItem="{Binding Path=DriveSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding DriveSpeedComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                        <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
-                        <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                                ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
+                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                            ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                        <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
-                        <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
-                                Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding ParametersTextBoxEnabled}"/>
-                        <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right"
-                                IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding EnableParametersCheckBoxEnabled}"/>
-                    </Grid>
-                </GroupBox>
+                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                            Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding ParametersTextBoxEnabled}"/>
+                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right"
+                            IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding EnableParametersCheckBoxEnabled}"/>
+                </Grid>
+            </GroupBox>
 
-                <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Controls">
-                    <UniformGrid Columns="4" Margin="5,5,5,5">
-                        <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
-                                Content="{Binding StartStopButtonText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                IsEnabled="{Binding StartStopButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                        <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Discs"
-                                IsEnabled="{Binding MediaScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                        <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Update Label"
-                                IsEnabled="{Binding UpdateVolumeLabelEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                        <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Protection"
-                                IsEnabled="{Binding CopyProtectScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    </UniformGrid>
-                </GroupBox>
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Controls">
+                <UniformGrid Columns="4" Margin="5,5,5,5">
+                    <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
+                            Content="{Binding StartStopButtonText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding StartStopButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Discs"
+                            IsEnabled="{Binding MediaScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Update Label"
+                            IsEnabled="{Binding UpdateVolumeLabelEnabled}" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Protection"
+                            IsEnabled="{Binding CopyProtectScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
+                </UniformGrid>
+            </GroupBox>
 
-                <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
-                    <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
-                        <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
-                                Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    </UniformGrid>
-                </GroupBox>
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
+                <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
+                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </UniformGrid>
+            </GroupBox>
 
-                <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
-                        IsExpanded="{Binding LogPanelExpanded}">
-                    <controls:LogOutput x:Name="LogOutput"/>
-                </Expander>
-            </StackPanel>
-        </Border>
-    </Grid>
+            <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
+                    IsExpanded="{Binding LogPanelExpanded}">
+                <controls:LogOutput x:Name="LogOutput"/>
+            </Expander>
+        </StackPanel>
+    </Border>
 </coreWindows:WindowBase>

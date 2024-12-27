@@ -10,174 +10,172 @@
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
-    <Grid>
-        <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
-            <StackPanel Orientation="Vertical">
-                <Grid Margin="0,10,0,0">
+    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="115"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
+                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                    <Label.Content>
+                        <Run FontWeight="Bold" BaselineAlignment="Center" Text="Ring Code Guide" />
+                    </Label.Content>
+                    <Label.ContextMenu>
+                        <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Style="{DynamicResource CustomContextMenuStyle}">
+                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                        </ContextMenu>
+                    </Label.ContextMenu>
+                </Label>
+                <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25"/>
-                        <ColumnDefinition Width="115"/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                    <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
-                        <Label.Content>
-                            <Run FontWeight="Bold" BaselineAlignment="Center" Text="Ring Code Guide" />
-                        </Label.Content>
-                        <Label.ContextMenu>
-                            <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        Style="{DynamicResource CustomContextMenuStyle}">
-                                <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
-                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Template="{DynamicResource CustomMenuItemTemplate}"/>
-                                <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
-                                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                        BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                        Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            </ContextMenu>
-                        </Label.ContextMenu>
-                    </Label>
-                    <Grid Grid.Column="5">
+                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                        Style="{DynamicResource CustomTabControlStyle}">
+                <TabItem  Header="1-Layer Ringcode" Style="{DynamicResource CustomTabItemStyle}">
+                    <Grid Margin="5,5,5,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
-                            <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
-                        </Button>
-                        <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
-                            <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
-                        </Button>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" Source="../Images/ring-code-guide-1-layer.png"
+                            HorizontalAlignment="Center" Stretch="Fill" Width="500" Height="500"
+                            RenderOptions.BitmapScalingMode="HighQuality" />
+                        <Label Grid.Row="1">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
+                                    <Run Text=" Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="2">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Green" Text="2. Mastering SID:" />
+                                    <Run Text=" IFPI L553" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="3">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
+                                    <Run Text=" A2" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="4">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
+                                    <Run Text=" IFPI 94V1" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
                     </Grid>
-                </Grid>
+                </TabItem>
 
-                <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                            Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                            Style="{DynamicResource CustomTabControlStyle}">
-                    <TabItem  Header="1-Layer Ringcode" Style="{DynamicResource CustomTabItemStyle}">
-                        <Grid Margin="5,5,5,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                <TabItem  Header="2-Layer Ringcode" Style="{DynamicResource CustomTabItemStyle}">
+                    <Grid Margin="5,5,5,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                            <Image Grid.Row="0" Source="../Images/ring-code-guide-1-layer.png"
-                                HorizontalAlignment="Center" Stretch="Fill" Width="500" Height="500"
-                                RenderOptions.BitmapScalingMode="HighQuality" />
-                            <Label Grid.Row="1">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
-                                        <Run Text=" Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="2">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Green" Text="2. Mastering SID:" />
-                                        <Run Text=" IFPI L553" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="3">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
-                                        <Run Text=" A2" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="4">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
-                                        <Run Text=" IFPI 94V1" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                        </Grid>
-                    </TabItem>
-
-                    <TabItem  Header="2-Layer Ringcode" Style="{DynamicResource CustomTabItemStyle}">
-                        <Grid Margin="5,5,5,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <Image Grid.Row="0" Source="../Images/ring-code-guide-2-layer.png"
-                                HorizontalAlignment="Center" Stretch="Fill" Width="475" Height="500"
-                                RenderOptions.BitmapScalingMode="HighQuality" />
-                            <Label Grid.Row="1">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
-                                        <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="2">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
-                                        <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="3">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="Purple" Text="3. Outer Mastering SID:" />
-                                        <Run Text=" IFPI LB48" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="4">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Inner Mastering SID:" />
-                                        <Run Text=" IFPI LB48" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Row="5">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <Run FontWeight="Bold" Text="Note:" />
-                                        <Run Text=" See the 1-Layer guide for more details on additional fields" />
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </StackPanel>
-        </Border>
-    </Grid>
+                        <Image Grid.Row="0" Source="../Images/ring-code-guide-2-layer.png"
+                            HorizontalAlignment="Center" Stretch="Fill" Width="475" Height="500"
+                            RenderOptions.BitmapScalingMode="HighQuality" />
+                        <Label Grid.Row="1">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
+                                    <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="2">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
+                                    <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="3">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="Purple" Text="3. Outer Mastering SID:" />
+                                    <Run Text=" IFPI LB48" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="4">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Inner Mastering SID:" />
+                                    <Run Text=" IFPI LB48" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="5">
+                            <Label.Content>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Text="Note:" />
+                                    <Run Text=" See the 1-Layer guide for more details on additional fields" />
+                                </TextBlock>
+                            </Label.Content>
+                        </Label>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </StackPanel>
+    </Border>
 </coreWindows:WindowBase>
