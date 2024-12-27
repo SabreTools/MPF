@@ -9,7 +9,7 @@
                         mc:Ignorable="d"
                         Title="Create PS3 IRD" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
-                        BorderBrush="DarkGray" BorderThickness="2">
+                        AllowsTransparency="True" Background="Transparent">
 
     <Window.DataContext>
         <viewModels:CreateIRDViewModel/>
@@ -18,7 +18,7 @@
         <core:ElementConverter x:Key="ElementConverter" />
     </Window.Resources>
 
-    <Grid>
+    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
         <StackPanel Orientation="Vertical">
             <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
@@ -28,9 +28,10 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
                         <Run FontWeight="Bold" Text="Create PS3 IRD" />
@@ -212,5 +213,5 @@
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
-    </Grid>
+    </Border>
 </coreWindows:WindowBase>
