@@ -25,7 +25,6 @@
                  IsReadOnly="{Binding ElementName=userInput, Path=IsReadOnly}"
                  VerticalContentAlignment="{Binding ElementName=userInput, Path=VerticalContentAlignmentValue}"
                  HorizontalScrollBarVisibility="{Binding ElementName=userInput, Path=HorizontalScrollBarVisibility}"
-                 VerticalScrollBarVisibility="{Binding ElementName=userInput, Path=VerticalScrollBarVisibility}"
-                 ScrollViewer.Style="{StaticResource CustomScrollViewerControlStyle}" />
+                 VerticalScrollBarVisibility="{Binding ElementName=userInput, Path=VerticalScrollBarVisibility}"/>
     </Grid>
 </UserControl>
