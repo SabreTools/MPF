@@ -49,6 +49,7 @@ namespace MPF.UI.Themes
 
             // Handle ScrollViewer-specific resources
             ScrollViewer_ScrollBar_Background = darkModeBrush;
+            ScrollViewer_ScrollBar_Foreground = Brushes.Gray;
 
             // Handle TabItem-specific resources
             TabItem_Selected_Background = darkModeBrush;

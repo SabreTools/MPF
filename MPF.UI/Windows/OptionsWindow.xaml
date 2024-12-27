@@ -18,7 +18,10 @@
         <core:ElementConverter x:Key="ElementConverter" />
     </Window.Resources>
 
-    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
+    <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Opacity="0.2" BlurRadius="10" Direction="270" ShadowDepth="3" />
+        </Border.Effect>
         <StackPanel Orientation="Vertical">
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>

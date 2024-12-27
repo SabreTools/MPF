@@ -160,6 +160,11 @@ namespace MPF.UI
         /// </summary>
         public Brush? ScrollViewer_ScrollBar_Background { get; protected set; }
 
+        /// <summary>
+        /// Brush for the ScrollViewer.ScrollBar.Foreground resource
+        /// </summary>
+        public Brush? ScrollViewer_ScrollBar_Foreground { get; protected set; }
+
         #endregion
 
         #region TabItem
@@ -232,6 +237,7 @@ namespace MPF.UI
 
             // Handle ScrollViewer-specific resources
             Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = ScrollViewer_ScrollBar_Background;
+            Application.Current.Resources["ScrollViewer.ScrollBar.Foreground"] = ScrollViewer_ScrollBar_Foreground;
 
             // Handle TabItem-specific resources
             Application.Current.Resources["TabItem.Selected.Background"] = TabItem_Selected_Background;
