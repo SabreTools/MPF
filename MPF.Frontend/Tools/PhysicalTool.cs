@@ -520,6 +520,10 @@ namespace MPF.Frontend.Tools
                     if (!File.Exists(appPkgPath))
                         continue;
 
+                    long appPkgSize = new FileInfo(appPkgPath).Length;
+                    if (appPkgSize < 4096)
+                        continue;
+
                     // Read the app.pkg header
                     using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
@@ -531,7 +535,8 @@ namespace MPF.Frontend.Tools
                         if (BitConverter.IsLittleEndian)
                             Array.Reverse(date);
 
-                        pkgInfo = $"app.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app.pkg Date: {date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
+                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash.ToString("X8")})";
                     }
                 }
 
@@ -673,6 +678,10 @@ namespace MPF.Frontend.Tools
                     if (!File.Exists(appPkgPath))
                         continue;
 
+                    long appPkgSize = new FileInfo(appPkgPath).Length;
+                    if (appPkgSize < 4096)
+                        continue;
+
                     // Read the app_sc.pkg header
                     using var fileStream = new FileStream(appPkgPath, FileMode.Open, FileAccess.Read);
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Deserializers.AppPkgHeader();
@@ -685,7 +694,7 @@ namespace MPF.Frontend.Tools
                             Array.Reverse(date);
 
                         string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo = $"app_sc.pkg ID: {appPkgHeader.ContentID}" + Environment.NewLine + $"app_sc.pkg Date: {pkgDate}";
+                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash.ToString("X8")})";
                     }
                 }
 
