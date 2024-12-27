@@ -67,7 +67,6 @@ namespace MPF.UI.Themes
 
             // Handle ScrollViewer-specific resources
             ScrollViewer_ScrollBar_Background = Brushes.LightGray;
-            ScrollViewer_ScrollBar_Foreground = Brushes.Gainsboro;
 
             // Handle TabItem-specific resources
             TabItem_Selected_Background = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
