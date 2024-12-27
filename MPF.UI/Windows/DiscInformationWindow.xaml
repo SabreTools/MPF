@@ -36,18 +36,18 @@
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Style="{DynamicResource CustomContextMenuStyle}">
+                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                     Style="{DynamicResource CustomContextMenuStyle}">
                             <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
                             <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
                         </ContextMenu>
                     </Label.ContextMenu>
                 </Label>
@@ -73,7 +73,7 @@
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox Header="Common Disc Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="Title"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
@@ -96,8 +96,8 @@
 
                                         <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
                                         <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                                ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                Style="{DynamicResource CustomComboBoxStyle}" />
+                                                  ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  Style="{DynamicResource CustomComboBoxStyle}" />
                                     </Grid>
 
                                     <Grid>
@@ -108,8 +108,8 @@
 
                                         <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
                                         <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                                ItemsSource="{Binding Regions}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                                Style="{DynamicResource CustomComboBoxStyle}" />
+                                                  ItemsSource="{Binding Regions}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  Style="{DynamicResource CustomComboBoxStyle}" />
                                     </Grid>
 
                                     <Grid>
@@ -120,8 +120,8 @@
 
                                         <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
                                         <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
-                                                ItemsSource="{Binding Languages}"
-                                        SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                                  ItemsSource="{Binding Languages}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
@@ -138,8 +138,8 @@
 
                                         <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
                                         <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
-                                                ItemsSource="{Binding LanguageSelections}"
-                                        SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                                  ItemsSource="{Binding LanguageSelections}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
@@ -154,7 +154,7 @@
                             </GroupBox>
 
                             <GroupBox Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
                                     <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
@@ -168,7 +168,7 @@
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
@@ -192,7 +192,7 @@
 
                                         <Label/>
                                         <CheckBox Grid.Column="1" x:Name="PostgapTypeCheckBox" Content="Postgap type (Form 2)" Margin="0,4"
-                                                IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PostgapType], Mode=TwoWay}"/>
+                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PostgapType], Mode=TwoWay}"/>
                                     </Grid>
                                     <controls:UserInput x:Name="SeriesTextBox" Label="Series"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)Series], Mode=TwoWay}"/>
@@ -204,13 +204,13 @@
 
                                         <Label/>
                                         <CheckBox Grid.Column="1" x:Name="VCDCheckBox" Content="V-CD" Margin="0,4"
-                                                IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)VCD], Mode=TwoWay}"/>
+                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)VCD], Mode=TwoWay}"/>
                                     </Grid>
                                 </StackPanel>
                             </GroupBox>
 
                             <GroupBox Header="Physical Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)BBFCRegistrationNumber], Mode=TwoWay}"/>
@@ -230,7 +230,7 @@
                             </GroupBox>
 
                             <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AcclaimID], Mode=TwoWay}"/>
@@ -347,7 +347,7 @@
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}"/>
@@ -363,7 +363,7 @@
                             </GroupBox>
 
                             <GroupBox x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}"/>
@@ -379,7 +379,7 @@
                             </GroupBox>
 
                             <GroupBox x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}"/>
@@ -391,7 +391,7 @@
                             </GroupBox>
 
                             <GroupBox x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}"/>
@@ -462,10 +462,10 @@
                             <controls:UserInput x:Name="PFIHash" Label="PFI Hash" IsReadOnly="True"
                                                 Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PFIHash], Mode=TwoWay}"/>
                             <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True"
-                                                Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="125" TextWrapping="NoWrap"
+                                                Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True"
-                                                Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="125" TextWrapping="NoWrap"
+                                                Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" IsReadOnly="True"
                                                 Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)RingNonZeroDataStart], Mode=TwoWay}"/>

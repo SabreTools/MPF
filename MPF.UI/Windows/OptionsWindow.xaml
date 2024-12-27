@@ -33,19 +33,19 @@
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown"
-                    Content="{Binding Path=Title, Mode=OneWay}" FontWeight="Bold">
+                       Content="{Binding Path=Title, Mode=OneWay}" FontWeight="Bold">
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Style="{DynamicResource CustomContextMenuStyle}">
+                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                     Style="{DynamicResource CustomContextMenuStyle}">
                             <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
                             <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}"/>
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
                         </ContextMenu>
                     </Label.ContextMenu>
                 </Label>
@@ -73,18 +73,18 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="User Interface">
                             <UniformGrid Columns="2" Rows="2">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
-                                        IsChecked="{Binding Options.EnableDarkMode}"
-                                        ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
+                                          IsChecked="{Binding Options.EnableDarkMode}"
+                                          ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Check for Updates on Startup"
-                                        IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
-                                        ToolTip="Check for updates when the application starts" Margin="0,4"
+                                          IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
+                                          ToolTip="Check for updates when the application starts" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Fast Update Label"
-                                        IsChecked="{Binding Options.FastUpdateLabel}"
-                                        ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
+                                          IsChecked="{Binding Options.FastUpdateLabel}"
+                                          ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
                                 />
                             </UniformGrid>
                         </GroupBox>
@@ -92,13 +92,13 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Detection">
                             <UniformGrid Columns="2" Rows="3">
                                 <CheckBox x:Name="SkipMediaTypeDetectionCheckBox" VerticalAlignment="Center" Content="Skip Type Detect"
-                                        IsChecked="{Binding Options.SkipMediaTypeDetection}"
-                                        ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
+                                          IsChecked="{Binding Options.SkipMediaTypeDetection}"
+                                          ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
-                                        IsChecked="{Binding Options.SkipSystemDetection}"
-                                        ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
+                                          IsChecked="{Binding Options.SkipSystemDetection}"
+                                          ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
@@ -110,8 +110,8 @@
 
                                 <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                        ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                        SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                          ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Style.Triggers>
@@ -128,13 +128,13 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Logging">
                             <UniformGrid Columns="2" Rows="1">
                                 <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
-                                        IsChecked="{Binding Options.VerboseLogging}"
-                                        ToolTip="Display all logging statements" Margin="0,4"
+                                          IsChecked="{Binding Options.VerboseLogging}"
+                                          ToolTip="Display all logging statements" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
-                                        IsChecked="{Binding Options.OpenLogWindowAtStartup}"
-                                        ToolTip="Open the log panel when the program launches" Margin="0,4"
+                                          IsChecked="{Binding Options.OpenLogWindowAtStartup}"
+                                          ToolTip="Open the log panel when the program launches" Margin="0,4"
                                 />
                             </UniformGrid>
                         </GroupBox>
@@ -159,32 +159,32 @@
 
                         <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
                         <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                Text="{Binding Options.AaruPath}" VerticalContentAlignment="Center" />
+                                 Text="{Binding Options.AaruPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
                         <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                Text="{Binding Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
+                                 Text="{Binding Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Redumper Path" />
                         <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
+                                 Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Dumping Program" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                Style="{DynamicResource CustomComboBoxStyle}" />
+                                  ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                  Style="{DynamicResource CustomComboBoxStyle}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path"
-                            ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)" />
+                               ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)" />
                         <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                Text="{Binding Options.DefaultOutputPath}" VerticalContentAlignment="Center" 
-                                ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)" />
+                                 Text="{Binding Options.DefaultOutputPath}" VerticalContentAlignment="Center" 
+                                 ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
                     </Grid>
@@ -195,87 +195,87 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
                             <UniformGrid Columns="2" Rows="6">
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
-                                    IsChecked="{Binding Options.PromptForDiscInformation}"
-                                    ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.PromptForDiscInformation}"
+                                     ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
+                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Pull All Information"
-                                    IsChecked="{Binding Options.PullAllInformation}"
-                                    ToolTip="Enable pulling all comment and content data after dumping" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.PullAllInformation}"
+                                     ToolTip="Enable pulling all comment and content data after dumping" Margin="0,4"
+                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Tab Input"
-                                    IsChecked="{Binding Options.EnableTabsInInputFields}"
-                                    ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.EnableTabsInInputFields}"
+                                     ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Redump Compatibility"
-                                    IsChecked="{Binding Options.EnableRedumpCompatibility}"
-                                    ToolTip="Enable limiting outputs to only those supported by Redump" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.EnableRedumpCompatibility}"
+                                     ToolTip="Enable limiting outputs to only those supported by Redump" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Eject Reminder"
-                                    IsChecked="{Binding Options.ShowDiscEjectReminder}"
-                                    ToolTip="Enable showing the disc eject reminder after information is gathered" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.ShowDiscEjectReminder}"
+                                     ToolTip="Enable showing the disc eject reminder after information is gathered" Margin="0,4"
+                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
-                                    IsChecked="{Binding Options.AddPlaceholders}"
-                                    ToolTip="Enable adding placeholder text in the output for required and optional fields" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.AddPlaceholders}"
+                                     ToolTip="Enable adding placeholder text in the output for required and optional fields" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Add Filename Suffix"
-                                    IsChecked="{Binding Options.AddFilenameSuffix}"
-                                    ToolTip="Enable appending the output filename to the generated files" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.AddFilenameSuffix}"
+                                     ToolTip="Enable appending the output filename to the generated files" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Output Submission JSON"
-                                    IsChecked="{Binding Options.OutputSubmissionJSON}"
-                                    ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.OutputSubmissionJSON}"
+                                     ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Include Artifacts"
-                                    IsChecked="{Binding Options.IncludeArtifacts}" IsEnabled="{Binding Options.OutputSubmissionJSON}"
-                                    ToolTip="Include log files in serialized JSON data" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.IncludeArtifacts}" IsEnabled="{Binding Options.OutputSubmissionJSON}"
+                                     ToolTip="Include log files in serialized JSON data" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
-                                    IsChecked="{Binding Options.CompressLogFiles}"
-                                    ToolTip="Compress output log files to reduce space" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.CompressLogFiles}"
+                                     ToolTip="Compress output log files to reduce space" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Delete Unnecessary Files"
-                                    IsChecked="{Binding Options.DeleteUnnecessaryFiles}"
-                                    ToolTip="Delete unnecesary output files to reduce space" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.DeleteUnnecessaryFiles}"
+                                     ToolTip="Delete unnecesary output files to reduce space" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Create PS3 IRD After Dumping"
-                                    IsChecked="{Binding Options.CreateIRDAfterDumping}"
-                                    ToolTip="Automatically creates an IRD file after dumping a PS3 disc" Margin="0,4"
-                                    />
+                                     IsChecked="{Binding Options.CreateIRDAfterDumping}"
+                                     ToolTip="Automatically creates an IRD file after dumping a PS3 disc" Margin="0,4"
+                                     />
                             </UniformGrid>
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Protection">
                             <UniformGrid Columns="2" Rows="2">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Protection Scan"
-                                        IsChecked="{Binding Options.ScanForProtection}"
-                                        ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
+                                          IsChecked="{Binding Options.ScanForProtection}"
+                                          ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Scan Archive Contents"
-                                        IsChecked="{Binding Options.ScanArchivesForProtection}"
-                                        ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
+                                          IsChecked="{Binding Options.ScanArchivesForProtection}"
+                                          ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
-                                        IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
-                                        ToolTip="Include debug information during protection scans" Margin="0,4"
+                                          IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
+                                          ToolTip="Include debug information during protection scans" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Hide Drive Letters"
-                                        IsChecked="{Binding Options.HideDriveLetters}"
-                                        ToolTip="Remove drive letters from protection scan output" Margin="0,4"
+                                          IsChecked="{Binding Options.HideDriveLetters}"
+                                          ToolTip="Remove drive letters from protection scan output" Margin="0,4"
                                 />
                             </UniformGrid>
                         </GroupBox>
@@ -307,21 +307,21 @@
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForDVDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedDVD}"  />
                                 <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
-                                Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                                   Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="2" Grid.Column="0" Content="HD-DVD" />
                                 <Slider x:Name="DumpSpeedHDDVDSlider" Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForHDDVDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedHDDVD}"  />
                                 <TextBox x:Name="DumpSpeedHDDVDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
-                                Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                                   Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="3" Grid.Column="0" Content="BD" />
                                 <Slider x:Name="DumpSpeedBDSlider" Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForBDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedBD}"  />
                                 <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="3" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
-                                Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                                   Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
                             </Grid>
                         </GroupBox>
                     </StackPanel>
@@ -332,29 +332,29 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Aaru">
                             <UniformGrid Columns="2" Rows="3">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
-                                        IsChecked="{Binding Options.AaruEnableDebug}"
-                                        ToolTip="Enable debug output in logs" Margin="0,4"
+                                          IsChecked="{Binding Options.AaruEnableDebug}"
+                                          ToolTip="Enable debug output in logs" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
-                                        IsChecked="{Binding Options.AaruEnableVerbose}"
-                                        ToolTip="Enable verbose output in logs" Margin="0,4"
+                                          IsChecked="{Binding Options.AaruEnableVerbose}"
+                                          ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Force Dumping"
-                                        IsChecked="{Binding Options.AaruForceDumping}"
-                                        ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
+                                          IsChecked="{Binding Options.AaruForceDumping}"
+                                          ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
-                                        IsChecked="{Binding Options.AaruStripPersonalData}"
-                                        ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
+                                          IsChecked="{Binding Options.AaruStripPersonalData}"
+                                          ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
                                 />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.AaruRereadCount}"
-                                        ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
+                                         Text="{Binding Options.AaruRereadCount}"
+                                         ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
                                 />
                             </UniformGrid>
                         </GroupBox>
@@ -362,41 +362,41 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="DiscImageCreator">
                             <UniformGrid Columns="2" Rows="5">
                                 <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
-                                        IsChecked="{Binding Options.DICQuietMode}"
-                                        ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
+                                          IsChecked="{Binding Options.DICQuietMode}"
+                                          ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
-                                        IsChecked="{Binding Options.DICParanoidMode}"
-                                        ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
+                                          IsChecked="{Binding Options.DICParanoidMode}"
+                                          ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Use CMI Flag"
-                                        IsChecked="{Binding Options.DICUseCMIFlag}"
-                                        ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
+                                          IsChecked="{Binding Options.DICUseCMIFlag}"
+                                          ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
-                                        IsChecked="{Binding Options.DICMultiSectorRead}"
-                                        ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
+                                          IsChecked="{Binding Options.DICMultiSectorRead}"
+                                          ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                                 />
 
                                 <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
-                                        ToolTip="Set the default value for the /mr flag"
+                                          Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
+                                          ToolTip="Set the default value for the /mr flag"
                                 />
 
                                 <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.DICRereadCount}"
-                                        ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
+                                          Text="{Binding Options.DICRereadCount}"
+                                          ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
                                 />
 
                                 <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.DICDVDRereadCount}"
-                                        ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
+                                          Text="{Binding Options.DICDVDRereadCount}"
+                                          ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
                                 />
                             </UniformGrid>
                         </GroupBox>
@@ -404,54 +404,54 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
                             <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
-                                        IsChecked="{Binding Options.RedumperEnableDebug}"
-                                        ToolTip="Enable debug output in logs" Margin="0,4"
+                                          IsChecked="{Binding Options.RedumperEnableDebug}"
+                                          ToolTip="Enable debug output in logs" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
-                                        IsChecked="{Binding Options.RedumperEnableVerbose}"
-                                        ToolTip="Enable verbose output in logs" Margin="0,4"
+                                          IsChecked="{Binding Options.RedumperEnableVerbose}"
+                                          ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.RedumperRereadCount}"
-                                        ToolTip="Specifies how many rereads are attempted on read error"
+                                         Text="{Binding Options.RedumperRereadCount}"
+                                         ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Set Default Plextor Lead-in Retries"
-                                        IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
-                                        ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
+                                          IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
+                                          ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
                                 />
                                 <Label/>
                                 <!-- Empty label for padding -->
 
                                 <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                        Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
-                                        ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
+                                         ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
-                                        IsChecked="{Binding Options.RedumperNonRedumpMode}"
-                                        ToolTip="Enable non-redump options" Margin="0,4"
+                                          IsChecked="{Binding Options.RedumperNonRedumpMode}"
+                                          ToolTip="Enable non-redump options" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
-                                        IsChecked="{Binding Options.RedumperUseGenericDriveType}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
-                                        ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
+                                          IsChecked="{Binding Options.RedumperUseGenericDriveType}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                          ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                        ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                        Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                          ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default Sector Order:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                        ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                        Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                          ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
                             </UniformGrid>
                         </GroupBox>
