@@ -144,6 +144,7 @@
 - Don't add special field keys with no reason
 - Add pure-getkey output names for PS3CFW
 - Partially clean up PS3CFW
+- Wrap some PhysicalTool method calls
 
 ### 3.2.4 (2024-11-24)
 

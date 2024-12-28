@@ -38,20 +38,28 @@ namespace MPF.Frontend.Tools
             if (!File.Exists(exePath))
                 return null;
 
-            // Get the last modified time
-            var fi = new FileInfo(exePath);
-            var lastModified = fi.LastWriteTimeUtc;
-            int year = lastModified.Year;
-            int month = lastModified.Month;
-            int day = lastModified.Day;
+            try
+            {
+                // Get the last modified time
+                var fi = new FileInfo(exePath);
+                var lastModified = fi.LastWriteTimeUtc;
+                int year = lastModified.Year;
+                int month = lastModified.Month;
+                int day = lastModified.Day;
 
-            // Fix the Y2K timestamp issue, if required
-            if (fixTwoDigitYear)
-                year = year >= 1900 && year < 1920 ? 2000 + year % 100 : year;
+                // Fix the Y2K timestamp issue, if required
+                if (fixTwoDigitYear)
+                    year = year >= 1900 && year < 1920 ? 2000 + year % 100 : year;
 
-            // Format and return the string
-            var dt = new DateTime(year, month, day);
-            return dt.ToString("yyyy-MM-dd");
+                // Format and return the string
+                var dt = new DateTime(year, month, day);
+                return dt.ToString("yyyy-MM-dd");
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
+            }
         }
 
         /// <summary>
@@ -70,19 +78,18 @@ namespace MPF.Frontend.Tools
                 return null;
             else if (numBytes > 2048)
                 numBytes = 2048;
-            
+
             string drivePath = $"\\\\.\\{drive.Letter}:";
             var firstSector = new byte[numBytes];
             try
             {
                 // Open the drive as a raw device
-                using (FileStream driveStream = new FileStream(drivePath, FileMode.Open, FileAccess.Read))
-                {
-                    // Read the first sector
-                    int bytesRead = driveStream.Read(firstSector, 0, numBytes);
-                    if (bytesRead < numBytes)
-                        return null;
-                }
+                using var driveStream = new FileStream(drivePath, FileMode.Open, FileAccess.Read);
+
+                // Read the first sector
+                int bytesRead = driveStream.Read(firstSector, 0, numBytes);
+                if (bytesRead < numBytes)
+                    return null;
             }
             catch
             {
@@ -142,7 +149,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is right now
+                // We don't care what the error is
                 return false;
             }
         }
@@ -170,31 +177,36 @@ namespace MPF.Frontend.Tools
             string psxExePath = Path.Combine(drive.Name, "PSX.EXE");
             string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
 
-            // Read the CNF file as an INI file
-            var systemCnf = new IniFile(systemCnfPath);
-            string? bootValue = string.Empty;
-
-            // PlayStation uses "BOOT" as the key
-            if (systemCnf.ContainsKey("BOOT"))
-                bootValue = systemCnf["BOOT"];
-
-            // PlayStation 2 uses "BOOT2" as the key
-            if (systemCnf.ContainsKey("BOOT2"))
-                bootValue = systemCnf["BOOT2"];
-
-            // If we had any boot value, parse it and get the executable name
-            if (!string.IsNullOrEmpty(bootValue))
+            try
             {
-                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)", RegexOptions.Compiled);
-                if (match.Groups.Count > 1)
+                // Read the CNF file as an INI file
+                var systemCnf = new IniFile(systemCnfPath);
+                string? bootValue = string.Empty;
+
+                // PlayStation uses "BOOT" as the key
+                if (systemCnf.ContainsKey("BOOT"))
+                    bootValue = systemCnf["BOOT"];
+
+                // PlayStation 2 uses "BOOT2" as the key
+                if (systemCnf.ContainsKey("BOOT2"))
+                    bootValue = systemCnf["BOOT2"];
+
+                // If we had any boot value, parse it and get the executable name
+                if (!string.IsNullOrEmpty(bootValue))
                 {
-                    string? serial = match.Groups[1].Value;
-
-                    // Some games may have the EXE in a subfolder
-                    serial = Path.GetFileName(serial);
-
-                    return serial;
+                    var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)", RegexOptions.Compiled);
+                    if (match.Groups.Count > 1)
+                    {
+                        // Some games may have the EXE in a subfolder
+                        string? serial = match.Groups[1].Value;
+                        return Path.GetFileName(serial);
+                    }
                 }
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
@@ -251,13 +263,21 @@ namespace MPF.Frontend.Tools
             // Get the SYSTEM.CNF path to check
             string systemCnfPath = Path.Combine(drive.Name, "SYSTEM.CNF");
 
-            // Try to parse the SYSTEM.CNF file
-            var systemCnf = new IniFile(systemCnfPath);
-            if (systemCnf.ContainsKey("VER"))
-                return systemCnf["VER"];
+            try
+            {
+                // Try to parse the SYSTEM.CNF file
+                var systemCnf = new IniFile(systemCnfPath);
+                if (systemCnf.ContainsKey("VER"))
+                    return systemCnf["VER"];
 
-            // If "VER" can't be found, we can't do much
-            return null;
+                // If "VER" can't be found, we can't do much
+                return null;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
+            }
         }
 
         /// <summary>
@@ -742,13 +762,13 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is right now
+                // We don't care what the error is
                 return null;
             }
         }
 
         #endregion
-    
+
         #region Sega
 
         /// <summary>
@@ -764,7 +784,7 @@ namespace MPF.Frontend.Tools
             byte[]? firstSector = GetFirstBytes(drive, 0x10);
             if (firstSector == null || firstSector.Length < 0x10)
                 return null;
-            
+
             string systemType = Encoding.ASCII.GetString(firstSector, 0x00, 0x10);
 
             if (systemType.Equals("SEGA SEGASATURN ", StringComparison.Ordinal))
@@ -782,7 +802,7 @@ namespace MPF.Frontend.Tools
         }
 
         #endregion
-    
+
         #region Other
 
         /// <summary>
@@ -798,7 +818,7 @@ namespace MPF.Frontend.Tools
             byte[]? firstSector = GetFirstBytes(drive, 0xC0);
             if (firstSector == null || firstSector.Length < 0xC0)
                 return null;
-            
+
             string systemType = Encoding.ASCII.GetString(firstSector, 0xB0, 0x10);
 
             if (systemType.Equals("iamaduckiamaduck", StringComparison.Ordinal))
@@ -808,6 +828,6 @@ namespace MPF.Frontend.Tools
         }
 
         #endregion
-    
+
     }
 }

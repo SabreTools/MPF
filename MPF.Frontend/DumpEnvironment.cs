@@ -784,7 +784,7 @@ namespace MPF.Frontend
             }
             catch
             {
-                // We don't care what the error is right now
+                // We don't care what the error is
                 return false;
             }
 
@@ -840,7 +840,7 @@ namespace MPF.Frontend
             }
             catch
             {
-                // We don't care what the error is right now
+                // We don't care what the error is
                 return false;
             }
 
