@@ -236,7 +236,8 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Include Artifacts"
                                      IsChecked="{Binding Options.IncludeArtifacts}" IsEnabled="{Binding Options.OutputSubmissionJSON}"
-                                     ToolTip="Include log files in serialized JSON data" Margin="0,4"
+                                     ToolTip="Include log files in serialized JSON data"
+                                     ToolTipService.ShowOnDisabled="True" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
@@ -385,6 +386,7 @@
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Set the default value for the /mr flag"
+                                          ToolTipService.ShowOnDisabled="True"
                                 />
 
                                 <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -430,6 +432,7 @@
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
+                                         ToolTipService.ShowOnDisabled="True"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
@@ -439,7 +442,8 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
                                           IsChecked="{Binding Options.RedumperUseGenericDriveType}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
-                                          ToolTip="Enable setting drive type to Generic by default" Margin="0,4"
+                                          ToolTip="Enable setting drive type to Generic by default"
+                                          ToolTipService.ShowOnDisabled="True" Margin="0,4"
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
