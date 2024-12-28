@@ -79,11 +79,11 @@ namespace MPF.Processors
                 case MediaType.BluRay:
                     return [
                         new($"{baseFilename}.iso", OutputFileFlags.Required),
-                        new($"{baseFilename}.getkey.log", OutputFileFlags.Required
+                        new([$"{baseFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new($"{baseFilename}.disc.pic", OutputFileFlags.Required
+                        new([$"{baseFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
