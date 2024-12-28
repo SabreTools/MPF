@@ -403,8 +403,15 @@ namespace MPF.UI.Windows
             if (optionsWindow?.OptionsViewModel == null)
                 return;
 
+            // Get if the settings were saved
             bool savedSettings = optionsWindow.OptionsViewModel.SavedSettings;
             var options = optionsWindow.OptionsViewModel.Options;
+
+            // Force a refresh of the path, if necessary
+            if (MainViewModel.Options.DefaultOutputPath != options.DefaultOutputPath)
+                MainViewModel.OutputPath = string.Empty;
+
+            // Update and save options, if necessary
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the UI color scheme according to the options

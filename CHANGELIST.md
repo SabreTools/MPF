@@ -146,6 +146,7 @@
 - Partially clean up PS3CFW
 - Wrap some PhysicalTool method calls
 - Minor UI and other fixes
+- Force path update if default changed
 
 ### 3.2.4 (2024-11-24)
 
