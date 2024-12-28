@@ -984,7 +984,9 @@ namespace MPF.Frontend.Tools
                 return;
 
             // Set the value
-            info.CommonDiscInfo!.CommentsSpecialFields![key] = valueFunc(drive) ?? string.Empty;
+            string? value = valueFunc(drive);
+            if (value != null)
+                info.CommonDiscInfo!.CommentsSpecialFields![key] = value;
         }
 
         /// <summary>
@@ -1016,7 +1018,9 @@ namespace MPF.Frontend.Tools
                 return;
 
             // Set the value
-            info.CommonDiscInfo!.ContentsSpecialFields![key] = valueFunc(drive) ?? string.Empty;
+            string? value = valueFunc(drive);
+            if (value != null)
+                info.CommonDiscInfo!.ContentsSpecialFields![key] = value;
         }
 
         /// <summary>
