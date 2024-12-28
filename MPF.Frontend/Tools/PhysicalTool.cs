@@ -205,8 +205,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
-                return null;
+                // We don't care what the error is, assume SYSTEM.CNF doesn't exist
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
@@ -550,14 +549,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                    {
-                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(date);
-
-                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash:X8})";
-                    }
+                        pkgInfo += $"{appPkgHeader.ContentID}";
                 }
 
                 if (pkgInfo == "")
@@ -708,14 +700,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                    {
-                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(date);
-
-                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash:X8})";
-                    }
+                        pkgInfo += $"{appPkgHeader.ContentID}";
                 }
 
                 if (pkgInfo == "")

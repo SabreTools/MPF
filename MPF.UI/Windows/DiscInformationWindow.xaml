@@ -8,7 +8,7 @@
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         mc:Ignorable="d"
-                        Title="Disc Information" Width="515" WindowStyle="None"
+                        Title="Disc Information" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -17,8 +17,8 @@
     </Window.Resources>
 
     <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
-        <StackPanel Orientation="Vertical" Width="500" MaxHeight="650">
-            <Grid Margin="0,10,0,0">
+        <StackPanel Orientation="Vertical" MaxHeight="650">
+            <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition Width="115"/>
@@ -91,7 +91,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
@@ -103,7 +103,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
@@ -115,7 +115,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
@@ -133,7 +133,7 @@
                                     <Grid x:Name="LanguageSelectionGrid" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
@@ -187,7 +187,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
@@ -199,7 +199,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.25*" />
+                                            <ColumnDefinition Width="1.50*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
@@ -496,6 +496,13 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <GroupBox.Template>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </GroupBox.Template>
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept"
                             Style="{DynamicResource CustomButtonStyle}" />

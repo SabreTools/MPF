@@ -2061,10 +2061,7 @@ namespace MPF.Frontend.ViewModels
             VerboseLogLn($"Supported media speeds: {string.Join(", ", [.. DriveSpeeds.ConvertAll(ds => ds.ToString())])}");
 
             // Set the selected speed
-            int speed = FrontendTool.GetDefaultSpeedForMediaType(CurrentMediaType, Options);
-
-            VerboseLogLn($"Setting drive speed to: {speed}");
-            DriveSpeed = speed;
+            DriveSpeed = FrontendTool.GetDefaultSpeedForMediaType(CurrentMediaType, Options);
         }
 
         /// <summary>
