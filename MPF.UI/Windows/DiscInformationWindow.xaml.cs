@@ -207,7 +207,7 @@ namespace MPF.UI.Windows
 
             if (submissionInfo.FullyMatchedID == null)
                 FullyMatchedID!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.PartiallyMatchedIDs == null)
+            if (submissionInfo.PartiallyMatchedIDs == null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);

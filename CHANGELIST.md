@@ -138,6 +138,7 @@
 - Clean up unused disabled warnings
 - Missed one
 - Minor UI changes
+- Hide empty partially matched list
 
 ### 3.2.4 (2024-11-24)
 
