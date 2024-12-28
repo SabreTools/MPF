@@ -555,7 +555,7 @@ namespace MPF.Frontend.Tools
                             Array.Reverse(date);
 
                         string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash:X8})";
+                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate})";
                     }
                 }
 
@@ -713,7 +713,7 @@ namespace MPF.Frontend.Tools
                             Array.Reverse(date);
 
                         string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate}, {appPkgHeader.VersionHash:X8})";
+                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate})";
                     }
                 }
 

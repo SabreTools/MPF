@@ -26,7 +26,7 @@
                     <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown" Content="{Binding Path=Title,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
             </Grid>
 
