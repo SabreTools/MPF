@@ -23,11 +23,18 @@ namespace MPF.Processors
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
 
+            // Try to determine the ISO file
+            string isoPath = string.Empty;
+            if (File.Exists($"{basePath}.iso"))
+                isoPath = $"{basePath}.iso";
+            else if (File.Exists($"{basePath}.ISO"))
+                isoPath = $"{basePath}.ISO";
+
             // TODO: Determine if there's a CFW version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + ".iso")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(isoPath)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
-            Datafile? datafile = GeneratePS3CFWDatafile(basePath + ".iso");
+            Datafile? datafile = GeneratePS3CFWDatafile(isoPath);
 
             // Fill in the hash data
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
@@ -42,25 +49,31 @@ namespace MPF.Processors
             }
 
             // Get the PVD from the ISO
-            if (GetPVD(basePath + ".iso", out string? pvd))
+            if (GetPVD(isoPath, out string? pvd))
                 info.Extras!.PVD = pvd;
 
-            // Try to determine the name of the GetKey file(s)
-            string? getKeyBasePath = GetCFWBasePath(basePath);
+            // Get the base directory
+            string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
 
-            // If GenerateSubmissionInfo is run, getkey.log existence should already be checked
-            if (!File.Exists(getKeyBasePath + "getkey.log"))
-                return;
+            // Try to determine the name of the GetKey file
+            string getKeyPath = string.Empty;
+            if (File.Exists($"{basePath}.getkey.log"))
+                getKeyPath = $"{basePath}.getkey.log";
+            else if (File.Exists(Path.Combine(baseDir, "getkey.log")))
+                getKeyPath = Path.Combine(baseDir, "getkey.log");
 
             // Get dumping date from GetKey log date
-            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyBasePath + "getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
+            if (!string.IsNullOrEmpty(getKeyPath))
+                info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyPath)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
-            if (File.Exists(getKeyBasePath + "disc.pic"))
-                info.Extras!.PIC = GetPIC(getKeyBasePath + "disc.pic", 264);
+            if (File.Exists($"{basePath}.disc.pic"))
+                info.Extras!.PIC = GetPIC($"{basePath}.disc.pic", 264);
+            else if (File.Exists(Path.Combine(baseDir, "disc.pic")))
+                info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
-            if (ProcessingTool.ParseGetKeyLog(getKeyBasePath + "getkey.log", out string? key, out string? id, out string? pic))
+            if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))
             {
                 if (key != null)
                     info.Extras!.DiscKey = key.ToUpperInvariant();
@@ -121,40 +134,6 @@ namespace MPF.Processors
                     };
                 }
                 return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region Helper Functions
-
-        /// <summary>
-        /// Estimate the base filename of the getkey.log file associated with the dump
-        /// </summary>
-        /// <param name="iso">Path to ISO file</param>
-        /// <returns>Base filename, null if not found</returns>
-        internal static string? GetCFWBasePath(string iso)
-        {
-            // If the ISO file doesn't exist
-            if (string.IsNullOrEmpty(iso))
-                return null;
-            if (!File.Exists(iso))
-                return null;
-
-            try
-            {
-                string dir = Path.GetDirectoryName(iso) ?? ".";
-                string[] files = Directory.GetFiles(dir, "*getkey.log");
-
-                if (files.Length != 1)
-                    return null;
-
-                return files[0].Substring(0, files[0].Length - 10);
             }
             catch
             {

@@ -195,34 +195,5 @@ namespace MPF.Processors.Test
         }
 
         #endregion
-
-        #region GetCFWBasePath
-
-        [Fact]
-        public void GetCFWBasePath_Empty_Null()
-        {
-            string iso = string.Empty;
-            string? actual = PS3CFW.GetCFWBasePath(iso);
-            Assert.Null(actual);
-        }
-
-        [Fact]
-        public void GetCFWBasePath_Invalid_Null()
-        {
-            string iso = "INVALID";
-            string? actual = PS3CFW.GetCFWBasePath(iso);
-            Assert.Null(actual);
-        }
-
-        [Fact]
-        public void GetCFWBasePath_Valid_Filled()
-        {
-            string iso = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay", "test.iso");
-            string? actual = PS3CFW.GetCFWBasePath(iso);
-
-            Assert.NotNull(actual);
-        }
-
-        #endregion
     }
 }
