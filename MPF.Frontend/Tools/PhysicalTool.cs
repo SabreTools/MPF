@@ -549,14 +549,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                    {
-                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(date);
-
-                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate})";
-                    }
+                        pkgInfo += $"{appPkgHeader.ContentID}";
                 }
 
                 if (pkgInfo == "")
@@ -707,14 +700,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                    {
-                        byte[] date = BitConverter.GetBytes(appPkgHeader.VersionDate);
-                        if (BitConverter.IsLittleEndian)
-                            Array.Reverse(date);
-
-                        string pkgDate = $"{date[0]:X2}{date[1]:X2}-{date[2]:X2}-{date[3]:X2}";
-                        pkgInfo += $"{appPkgHeader.ContentID} ({pkgDate})";
-                    }
+                        pkgInfo += $"{appPkgHeader.ContentID}";
                 }
 
                 if (pkgInfo == "")
