@@ -48,19 +48,19 @@ namespace MPF.Processors
             // Try to determine the name of the GetKey file(s)
             string? getKeyBasePath = GetCFWBasePath(basePath);
 
-            // If GenerateSubmissionInfo is run, .getkey.log existence should already be checked
-            if (!File.Exists(getKeyBasePath + ".getkey.log"))
+            // If GenerateSubmissionInfo is run, getkey.log existence should already be checked
+            if (!File.Exists(getKeyBasePath + "getkey.log"))
                 return;
 
             // Get dumping date from GetKey log date
-            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyBasePath + ".getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyBasePath + "getkey.log")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
-            if (File.Exists(getKeyBasePath + ".disc.pic"))
-                info.Extras!.PIC = GetPIC(getKeyBasePath + ".disc.pic", 264);
+            if (File.Exists(getKeyBasePath + "disc.pic"))
+                info.Extras!.PIC = GetPIC(getKeyBasePath + "disc.pic", 264);
 
-            // Parse Disc Key, Disc ID, and PIC from the .getkey.log file
-            if (ProcessingTool.ParseGetKeyLog(getKeyBasePath + ".getkey.log", out string? key, out string? id, out string? pic))
+            // Parse Disc Key, Disc ID, and PIC from the getkey.log file
+            if (ProcessingTool.ParseGetKeyLog(getKeyBasePath + "getkey.log", out string? key, out string? id, out string? pic))
             {
                 if (key != null)
                     info.Extras!.DiscKey = key.ToUpperInvariant();
@@ -78,12 +78,13 @@ namespace MPF.Processors
             {
                 case MediaType.BluRay:
                     return [
-                        new($"{baseFilename}.iso", OutputFileFlags.Required),
-                        new($"{baseFilename}.getkey.log", OutputFileFlags.Required
+                        new([$"{baseFilename}.iso", $"{baseFilename}.ISO"], OutputFileFlags.Required),
+                        new([$"{baseFilename}.cue", $"{baseFilename}.CUE"], OutputFileFlags.Zippable),
+                        new([$"{baseFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new($"{baseFilename}.disc.pic", OutputFileFlags.Required
+                        new([$"{baseFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
@@ -133,7 +134,7 @@ namespace MPF.Processors
         #region Helper Functions
 
         /// <summary>
-        /// Estimate the base filename of the .getkey.log file associated with the dump
+        /// Estimate the base filename of the getkey.log file associated with the dump
         /// </summary>
         /// <param name="iso">Path to ISO file</param>
         /// <returns>Base filename, null if not found</returns>
@@ -148,12 +149,12 @@ namespace MPF.Processors
             try
             {
                 string dir = Path.GetDirectoryName(iso) ?? ".";
-                string[] files = Directory.GetFiles(dir, "*.getkey.log");
+                string[] files = Directory.GetFiles(dir, "*getkey.log");
 
                 if (files.Length != 1)
                     return null;
 
-                return files[0].Substring(0, files[0].Length - 11);
+                return files[0].Substring(0, files[0].Length - 10);
             }
             catch
             {

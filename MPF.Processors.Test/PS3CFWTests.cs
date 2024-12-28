@@ -29,7 +29,7 @@ namespace MPF.Processors.Test
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
 
             var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
-            Assert.Equal(3, actual.Count);
+            Assert.Equal(4, actual.Count);
         }
 
         [Fact]
