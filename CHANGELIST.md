@@ -140,6 +140,7 @@
 - Minor UI changes
 - Hide empty partially matched list
 - Reenable XGD1 PVD reporting
+- Improve PS4/PS5 parsing
 
 ### 3.2.4 (2024-11-24)
 
