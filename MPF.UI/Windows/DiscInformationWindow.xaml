@@ -7,9 +7,9 @@
                         xmlns:core="clr-namespace:MPF.UI"
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
-                        mc:Ignorable="d" MinWidth="515" Width="550" MaxWidth="1100" MaxHeight="650"
-                        Title="Disc Information" WindowStyle="None"
-                        WindowStartupLocation="CenterOwner" ResizeMode="CanResize" SizeToContent="Height"
+                        mc:Ignorable="d"
+                        Title="Disc Information" Width="600" WindowStyle="None"
+                        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
     <Window.Resources>
