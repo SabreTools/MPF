@@ -179,8 +179,7 @@ namespace MPF.Processors
                     }
 
                     // Read the PVD
-                    if (!redumpCompat || System != RedumpSystem.MicrosoftXbox)
-                        info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
+                    info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Bluray-specific options
                     if (Type == MediaType.BluRay)
