@@ -43,7 +43,7 @@
         <PackageReference Include="BinaryObjectScanner" Version="3.3.3" />
         <PackageReference Include="LibIRD" Version="0.9.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.6.2" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.6.3" />
     </ItemGroup>
 
 </Project>

@@ -148,6 +148,7 @@
 - Minor UI and other fixes
 - Force path update if default changed
 - Force showing tooltips on disabled items
+- Update RedumpLib to 1.6.3
 
 ### 3.2.4 (2024-11-24)
 
