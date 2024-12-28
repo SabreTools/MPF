@@ -205,8 +205,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
-                return null;
+                // We don't care what the error is, assume SYSTEM.CNF doesn't exist
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
