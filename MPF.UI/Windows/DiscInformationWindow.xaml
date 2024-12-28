@@ -8,7 +8,7 @@
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         mc:Ignorable="d"
-                        Title="Disc Information" Width="515" WindowStyle="None"
+                        Title="Disc Information" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -17,7 +17,7 @@
     </Window.Resources>
 
     <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
-        <StackPanel Orientation="Vertical" Width="500" MaxHeight="650">
+        <StackPanel Orientation="Vertical" MaxHeight="650">
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
