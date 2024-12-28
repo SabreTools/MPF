@@ -21,7 +21,7 @@
             <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="115"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -496,6 +496,13 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <GroupBox.Template>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </GroupBox.Template>
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept"
                             Style="{DynamicResource CustomButtonStyle}" />
