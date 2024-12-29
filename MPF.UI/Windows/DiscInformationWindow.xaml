@@ -292,17 +292,17 @@
 
                 <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
-                    <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <GroupBox.Template>
-                            <ControlTemplate TargetType="GroupBox">
-                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
-                                </Border>
-                            </ControlTemplate>
-                        </GroupBox.Template>
-                            <StackPanel Orientation="Vertical">
+                        <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox.Template>
+                                <ControlTemplate TargetType="GroupBox">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                        <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </GroupBox.Template>
 
+                            <StackPanel Orientation="Vertical">
                                 <controls:UserInput x:Name="GeneralContent" Label="General"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
                                                     Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
@@ -427,8 +427,8 @@
                                     </Border>
                                 </ControlTemplate>
                             </GroupBox.Template>
-                            <StackPanel Orientation="Vertical">
 
+                            <StackPanel Orientation="Vertical">
                                 <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}"/>
                                 <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True"/>
