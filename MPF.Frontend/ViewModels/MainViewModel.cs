@@ -896,10 +896,10 @@ namespace MPF.Frontend.ViewModels
 
                 Extras = new ExtrasSection()
                 {
-                    PVD = "PVD with a stupidly long line and nothing else but a little more\nPVD with a stupidly long line and nothing else but a little more\nPVD with a stupidly long line and nothing else but a little more\nPVD with a stupidly long line and nothing else but a little more\nPVD with a stupidly long line and nothing else but a little more\nPVD with a stupidly long line and nothing else but a little more\n",
+                    PVD = "0320 : 20 20 20 20 20 20 20 20  20 20 20 20 20 32 30 31                201\n0330 : 30 31 30 32 35 31 36 31  39 30 30 30 00 04 32 30   010251619000 .20\n0340 : 31 30 31 30 32 35 31 36  31 39 30 30 30 00 04 30   1010251619000 .0\n0350 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 00   000000000000000 \n0360 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30   0000000000000000\n0370 : 00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00    .              ",
                     DiscKey = "Disc key",
                     DiscID = "Disc ID",
-                    PIC = "PIC",
+                    PIC = "10020000444901080000200042444F01\n1101010001000000004F947F00100000\n004F947E000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000",
                     Header = "Header",
                     BCA = "BCA",
                     SecuritySectorRanges = "SSv1 Ranges",
