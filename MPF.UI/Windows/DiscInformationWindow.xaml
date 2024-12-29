@@ -91,7 +91,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
@@ -103,7 +103,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
@@ -115,7 +115,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
@@ -133,7 +133,7 @@
                                     <Grid x:Name="LanguageSelectionGrid" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
@@ -187,7 +187,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
@@ -199,7 +199,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.50*" />
+                                            <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
