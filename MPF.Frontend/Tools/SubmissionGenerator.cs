@@ -68,23 +68,18 @@ namespace MPF.Frontend.Tools
                 return null;
             }
 
-            // Sanitize the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Create the SubmissionInfo object with all user-inputted values by default
-            string combinedBase;
-            if (string.IsNullOrEmpty(outputDirectory))
-                combinedBase = outputFilename;
-            else
-                combinedBase = Path.Combine(outputDirectory, outputFilename);
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
             // Create the default submission info
             SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, combinedBase, options.EnableRedumpCompatibility);
+            processor?.GenerateSubmissionInfo(info, basePath, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
-                info.Artifacts = processor?.GenerateArtifacts(combinedBase);
+                info.Artifacts = processor?.GenerateArtifacts(outputDirectory, outputFilename);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
@@ -103,7 +98,7 @@ namespace MPF.Frontend.Tools
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, combinedBase);
+            ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
             if (drive != null && system.SupportsAntiModchipScans() && info.CopyProtection!.AntiModchip == YesNo.NULL)

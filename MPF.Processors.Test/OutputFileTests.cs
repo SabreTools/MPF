@@ -105,14 +105,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void Exists_Empty_False()
         {
-            string baseDirectory = string.Empty;
+            string outputDirectory = string.Empty;
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            bool ofActual = of.Exists(baseDirectory);
-            bool cofActual = cof.Exists(baseDirectory);
-            bool rofActual = rof.Exists(baseDirectory);
+            bool ofActual = of.Exists(outputDirectory);
+            bool cofActual = cof.Exists(outputDirectory);
+            bool rofActual = rof.Exists(outputDirectory);
 
             Assert.False(ofActual);
             Assert.False(cofActual);
@@ -122,14 +122,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void Exists_Invalid_False()
         {
-            string baseDirectory = "INVALID";
+            string outputDirectory = "INVALID";
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            bool ofActual = of.Exists(baseDirectory);
-            bool cofActual = cof.Exists(baseDirectory);
-            bool rofActual = rof.Exists(baseDirectory);
+            bool ofActual = of.Exists(outputDirectory);
+            bool cofActual = cof.Exists(outputDirectory);
+            bool rofActual = rof.Exists(outputDirectory);
 
             Assert.False(ofActual);
             Assert.False(cofActual);
@@ -139,14 +139,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void Exists_Valid_True()
         {
-            string baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
+            string outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            bool ofActual = of.Exists(baseDirectory);
-            bool cofActual = cof.Exists(baseDirectory);
-            bool rofActual = rof.Exists(baseDirectory);
+            bool ofActual = of.Exists(outputDirectory);
+            bool cofActual = cof.Exists(outputDirectory);
+            bool rofActual = rof.Exists(outputDirectory);
 
             Assert.True(ofActual);
             Assert.True(cofActual);
@@ -160,14 +160,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetPaths_Empty_Empty()
         {
-            string baseDirectory = string.Empty;
+            string outputDirectory = string.Empty;
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            var ofActual = of.GetPaths(baseDirectory);
-            var cofActual = cof.GetPaths(baseDirectory);
-            var rofActual = rof.GetPaths(baseDirectory);
+            var ofActual = of.GetPaths(outputDirectory);
+            var cofActual = cof.GetPaths(outputDirectory);
+            var rofActual = rof.GetPaths(outputDirectory);
 
             Assert.Empty(ofActual);
             Assert.Empty(cofActual);
@@ -177,14 +177,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetPaths_Invalid_Empty()
         {
-            string baseDirectory = "INVALID";
+            string outputDirectory = "INVALID";
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            var ofActual = of.GetPaths(baseDirectory);
-            var cofActual = cof.GetPaths(baseDirectory);
-            var rofActual = rof.GetPaths(baseDirectory);
+            var ofActual = of.GetPaths(outputDirectory);
+            var cofActual = cof.GetPaths(outputDirectory);
+            var rofActual = rof.GetPaths(outputDirectory);
 
             Assert.Empty(ofActual);
             Assert.Empty(cofActual);
@@ -194,14 +194,14 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetPaths_Valid_Filled()
         {
-            string baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
+            string outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
             var of = new OutputFile("pic.bin", OutputFileFlags.None, "key");
             var cof = new CustomOutputFile("pic.bin", OutputFileFlags.None, "key", File.Exists);
             var rof = new RegexOutputFile("pic.bin", OutputFileFlags.None, "key");
 
-            var ofActual = of.GetPaths(baseDirectory);
-            var cofActual = cof.GetPaths(baseDirectory);
-            var rofActual = rof.GetPaths(baseDirectory);
+            var ofActual = of.GetPaths(outputDirectory);
+            var cofActual = cof.GetPaths(outputDirectory);
+            var rofActual = rof.GetPaths(outputDirectory);
 
             Assert.Single(ofActual);
             Assert.Single(cofActual);

@@ -400,54 +400,57 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             // Get the base path
             string basePath;
-            if (string.IsNullOrEmpty(baseDirectory))
-                basePath = baseFilename;
+            if (string.IsNullOrEmpty(outputDirectory))
+                basePath = outputFilename;
             else
-                basePath = Path.Combine(baseDirectory, baseFilename);
+                basePath = Path.Combine(outputDirectory, outputFilename);
 
             switch (Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
                     List<OutputFile> cdrom = [
-                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                        new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
-                        new($"{baseFilename}.atip", OutputFileFlags.Binary
+                        new($"{outputFilename}.atip", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "atip"),
-                        new($"{baseFilename}.cdtext", OutputFileFlags.Binary
+                        new($"{outputFilename}.cdtext", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "cdtext"),
-                        new($"{baseFilename}.cue", OutputFileFlags.Required),
-                        new($"{baseFilename}.fulltoc", OutputFileFlags.Required
+                        new($"{outputFilename}.cue", OutputFileFlags.Required),
+                        new($"{outputFilename}.fulltoc", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "fulltoc"),
-                        new($"{baseFilename}.log", OutputFileFlags.Required
+                        new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
+                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
-                        new($"{baseFilename}.pma", OutputFileFlags.Binary
+                        new($"{outputFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
-                        new([$"{baseFilename}.scram", $"{baseFilename}.scrap"], OutputFileFlags.Required
+                        new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
-                        new($"{baseFilename}.state", OutputFileFlags.Required
+                        new($"{outputFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
-                        new($"{baseFilename}.subcode", OutputFileFlags.Required
+                        new($"{outputFilename}.subcode", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "subcode"),
-                        new($"{baseFilename}.toc", OutputFileFlags.Required
+                        new($"{outputFilename}.toc", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "toc"),
@@ -488,10 +491,10 @@ namespace MPF.Processors
                     }
                     catch
                     {
-                        cdrom.Add(new($"{baseFilename}.hash", OutputFileFlags.Binary
+                        cdrom.Add(new($"{outputFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"));
-                        cdrom.Add(new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                        cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"));
                     }
@@ -502,55 +505,55 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
-                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                        new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
-                        new($"{baseFilename}.dmi", OutputFileFlags.Binary
+                        new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
-                        new($"{baseFilename}.hash", OutputFileFlags.Binary
+                        new($"{outputFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"),
-                        new($"{baseFilename}.log", OutputFileFlags.Required
+                        new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
+                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
-                        new([$"{baseFilename}.manufacturer", $"{baseFilename}.0.manufacturer"], OutputFileFlags.Required
+                        new([$"{outputFilename}.manufacturer", $"{outputFilename}.0.manufacturer"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "manufacturer_0"),
-                        new($"{baseFilename}.1.manufacturer", OutputFileFlags.Binary
+                        new($"{outputFilename}.1.manufacturer", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "manufacturer_1"),
-                        new($"{baseFilename}.pfi", OutputFileFlags.Binary
+                        new($"{outputFilename}.pfi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pfi"),
-                        new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
+                        new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_0"),
-                        new($"{baseFilename}.1.physical", OutputFileFlags.Binary
+                        new($"{outputFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
-                        new($"{baseFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
+                        new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "security"),
-                        new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                        new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
-                        new($"{baseFilename}.ss", OutputFileFlags.Binary
+                        new($"{outputFilename}.ss", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ss"),
-                        new($"{baseFilename}.ssv1", OutputFileFlags.Binary
+                        new($"{outputFilename}.ssv1", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv1"),
-                        new($"{baseFilename}.ssv2", OutputFileFlags.Binary
+                        new($"{outputFilename}.ssv2", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv2"),
-                        new($"{baseFilename}.state", OutputFileFlags.Required
+                        new($"{outputFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
@@ -560,35 +563,35 @@ namespace MPF.Processors
                 case MediaType.BluRay:
                 case MediaType.NintendoWiiUOpticalDisc:
                     return [
-                        new($"{baseFilename}.asus", OutputFileFlags.Binary
+                        new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
-                        new($"{baseFilename}.hash", OutputFileFlags.Binary
+                        new($"{outputFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"),
-                        new($"{baseFilename}.log", OutputFileFlags.Required
+                        new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new CustomOutputFile([$"{baseFilename}.dat", $"{baseFilename}.log"], OutputFileFlags.Required,
+                        new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
-                        new([$"{baseFilename}.physical", $"{baseFilename}.0.physical"], OutputFileFlags.Required
+                        new([$"{outputFilename}.physical", $"{outputFilename}.0.physical"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_0"),
-                        new($"{baseFilename}.1.physical", OutputFileFlags.Binary
+                        new($"{outputFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
-                        new($"{baseFilename}.2.physical", OutputFileFlags.Binary
+                        new($"{outputFilename}.2.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_2"),
-                        new($"{baseFilename}.3.physical", OutputFileFlags.Binary
+                        new($"{outputFilename}.3.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_3"),
-                        new($"{baseFilename}.skeleton", OutputFileFlags.Binary
+                        new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
-                        new($"{baseFilename}.state", OutputFileFlags.Required
+                        new($"{outputFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),

@@ -593,7 +593,7 @@ namespace MPF.Frontend
                 await Task.Run(() =>
 #endif
                 {
-                    bool compressSuccess = _processor.CompressLogFiles(outputDirectory, filenameSuffix, outputFilename, out string compressResult);
+                    bool compressSuccess = _processor.CompressLogFiles(outputDirectory, outputFilename, filenameSuffix, out string compressResult);
                     if (compressSuccess)
                         resultProgress.Report(ResultEventArgs.Success(compressResult));
                     else
@@ -686,7 +686,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Write the data to the output folder
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="lines">Preformatted string of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
@@ -730,7 +730,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Write the data to the output folder
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
         /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
@@ -795,7 +795,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Write the protection data to the output folder
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
         /// <param name="hideDriveLetters">True if drive letters are to be removed from output, false otherwise</param>
@@ -850,7 +850,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Create an IRD and write it to the specified output directory with optional filename suffix
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>True on success, false on error</returns>

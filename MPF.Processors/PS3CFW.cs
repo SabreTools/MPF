@@ -85,19 +85,22 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             switch (Type)
             {
                 case MediaType.BluRay:
                     return [
-                        new([$"{baseFilename}.iso", $"{baseFilename}.ISO"], OutputFileFlags.Required),
-                        new([$"{baseFilename}.cue", $"{baseFilename}.CUE"], OutputFileFlags.Zippable),
-                        new([$"{baseFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
+                        new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
+                        new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
+                        new([$"{outputFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new([$"{baseFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
+                        new([$"{outputFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),

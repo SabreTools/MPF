@@ -62,7 +62,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
             return [];
         }

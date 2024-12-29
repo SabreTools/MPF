@@ -13,67 +13,115 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetOutputFiles_Null_Empty()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, null);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
         [Fact]
         public void GetOutputFiles_CDROM_Populated()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Equal(14, actual.Count);
         }
 
         [Fact]
         public void GetOutputFiles_DVD_Populated()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.DVD);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Equal(16, actual.Count);
         }
 
         [Fact]
         public void GetOutputFiles_HDDVD_Populated()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.HDDVD);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Equal(10, actual.Count);
         }
 
         [Fact]
         public void GetOutputFiles_BluRay_Populated()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.BluRay);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Equal(10, actual.Count);
         }
 
         [Fact]
         public void GetOutputFiles_Other_Empty()
         {
-            string? baseDirectory = null;
-            string baseFilename = "test";
+            string? outputDirectory = null;
+            string outputFilename = "test";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.ApertureCard);
 
-            var actual = processor.GetOutputFiles(baseDirectory, baseFilename);
+            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
             Assert.Empty(actual);
+        }
+
+        #endregion
+
+        #region FoundAllFiles
+
+        [Fact]
+        public void FoundAllFiles_Invalid_Filled()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            Assert.Equal(8, actual.Count);
+        }
+
+        [Fact]
+        public void FoundAllFiles_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        #endregion
+
+        #region FoundAnyFiles
+
+        [Fact]
+        public void FoundAnyFiles_Invalid_Filled()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void FoundAnyFiles_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            Assert.True(actual);
         }
 
         #endregion
@@ -83,67 +131,21 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateArtifacts_Invalid_Empty()
         {
-            string basePath = string.Empty;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GenerateArtifacts(basePath);
+            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
         [Fact]
         public void GenerateArtifacts_Valid_Filled()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GenerateArtifacts(basePath);
+            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
             Assert.Equal(9, actual.Count);
-        }
-
-        #endregion
-
-        #region CheckRequiredFiles
-
-        [Fact]
-        public void CheckRequiredFiles_Invalid_Filled()
-        {
-            string? baseDirectory = null;
-            string baseFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
-            Assert.Equal(8, actual.Count);
-        }
-
-        [Fact]
-        public void CheckRequiredFiles_Valid_Empty()
-        {
-            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
-            string baseFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckRequiredFiles(baseDirectory, baseFilename);
-            Assert.Empty(actual);
-        }
-
-        #endregion
-
-        #region CheckExistingFiles
-
-        [Fact]
-        public void CheckExistingFiles_Invalid_Filled()
-        {
-            string? baseDirectory = null;
-            string baseFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
-            Assert.False(actual);
-        }
-
-        [Fact]
-        public void CheckExistingFiles_Valid_Empty()
-        {
-            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
-            string baseFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.CheckExistingFiles(baseDirectory, baseFilename);
-            Assert.True(actual);
         }
 
         #endregion
@@ -153,18 +155,20 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDeleteableFilePaths_Invalid_Empty()
         {
-            string basePath = string.Empty;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetDeleteableFilePaths(basePath);
+            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
         [Fact]
         public void GetDeleteableFilePaths_Valid_Single()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetDeleteableFilePaths(basePath);
+            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
             Assert.Single(actual);
         }
 
@@ -175,18 +179,20 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetZippableFilePaths_Invalid_Empty()
         {
-            string basePath = string.Empty;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetZippableFilePaths(basePath);
+            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
         [Fact]
         public void GetZippableFilePaths_Valid_Filled()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetZippableFilePaths(basePath);
+            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
             Assert.Equal(9, actual.Count);
         }
 

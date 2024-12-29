@@ -54,10 +54,10 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override bool Exists(string baseDirectory)
+        public override bool Exists(string outputDirectory)
         {
             // Ensure the directory exists
-            if (!Directory.Exists(baseDirectory))
+            if (!Directory.Exists(outputDirectory))
                 return false;
             
             foreach (string filename in Filenames)
@@ -68,7 +68,7 @@ namespace MPF.Processors
 
                 try
                 {
-                    string possibleFile = Path.Combine(baseDirectory, filename);
+                    string possibleFile = Path.Combine(outputDirectory, filename);
                     if (_existsFunc(possibleFile))
                         return true;
                 }
@@ -88,13 +88,13 @@ namespace MPF.Processors
 #endif
 
         /// <inheritdoc/>
-        public override List<string> GetPaths(string baseDirectory)
+        public override List<string> GetPaths(string outputDirectory)
         {
             List<string> paths = [];
 
             foreach (string filename in Filenames)
             {
-                string possibleFile = Path.Combine(baseDirectory, filename);
+                string possibleFile = Path.Combine(outputDirectory, filename);
                 if (!_existsFunc(possibleFile))
                     continue;
 

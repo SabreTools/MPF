@@ -24,11 +24,11 @@ namespace MPF.Processors
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
 
-            // Get base directory
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
+            // Get output directory
+            string outputDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
             // Get log filename
-            string? logPath = GetLogName(baseDirectory);
+            string? logPath = GetLogName(outputDirectory);
             if (string.IsNullOrEmpty(logPath))
                 return;
 
@@ -74,7 +74,7 @@ namespace MPF.Processors
                         case RedumpSystem.MicrosoftXbox:
 
                             // Parse DMI.bin
-                            string xmidString = ProcessingTool.GetXMID(Path.Combine(baseDirectory, "DMI.bin"));
+                            string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
                             var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                             if (xmid != null)
                             {
@@ -99,7 +99,7 @@ namespace MPF.Processors
                             //string? mediaID = GetMediaID(logPath);
 
                             // Parse DMI.bin
-                            string xemidString = ProcessingTool.GetXeMID(Path.Combine(baseDirectory, "DMI.bin"));
+                            string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
                             var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                             if (xemid != null)
                             {
@@ -115,9 +115,9 @@ namespace MPF.Processors
                     }
 
                     // Get the output file paths
-                    string dmiPath = Path.Combine(baseDirectory, "DMI.bin");
-                    string pfiPath = Path.Combine(baseDirectory, "PFI.bin");
-                    string ssPath = Path.Combine(baseDirectory, "SS.bin");
+                    string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
+                    string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
+                    string ssPath = Path.Combine(outputDirectory, "SS.bin");
 
                     // Deal with SS.bin
                     if (File.Exists(ssPath))
@@ -128,7 +128,7 @@ namespace MPF.Processors
                             info.Extras!.SecuritySectorRanges = ranges;
 
                         // Recreate RawSS.bin
-                        RecreateSS(logPath!, ssPath, Path.Combine(baseDirectory, "RawSS.bin"));
+                        RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
 
                         // Run ss_sector_range to get repeatable SS hash
                         ProcessingTool.CleanSS(ssPath, ssPath);
@@ -147,16 +147,19 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             switch (Type)
             {
                 case MediaType.DVD:
                     return [
-                        new($"{baseFilename}.dvd", OutputFileFlags.Artifact
+                        new($"{outputFilename}.dvd", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "dvd"),
-                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{outputFilename}.iso", OutputFileFlags.Required),
                         
                         new("DMI.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
@@ -190,26 +193,26 @@ namespace MPF.Processors
         /// <summary>
         /// Determines the file path of the XBC log
         /// </summary>
-        /// <param name="baseDir">Base directory to search in</param>
+        /// <param name="outputDirectory">Base directory to search in</param>
         /// <returns>Log path if found, null otherwise</returns>
-        internal static string? GetLogName(string baseDir)
+        internal static string? GetLogName(string outputDirectory)
         {
             // If the directory name is invalid
-            if (baseDir.Length == 0)
+            if (outputDirectory.Length == 0)
                 return null;
 
             // If the directory doesn't exist
-            if (!Directory.Exists(baseDir))
+            if (!Directory.Exists(outputDirectory))
                 return null;
 
             // Check the known paths first
-            if (IsSuccessfulLog(Path.Combine(baseDir, "Log.txt")))
-                return Path.Combine(baseDir, "Log.txt");
-            else if (IsSuccessfulLog(Path.Combine(baseDir, "log.txt")))
-                return Path.Combine(baseDir, "log.txt");
+            if (IsSuccessfulLog(Path.Combine(outputDirectory, "Log.txt")))
+                return Path.Combine(outputDirectory, "Log.txt");
+            else if (IsSuccessfulLog(Path.Combine(outputDirectory, "log.txt")))
+                return Path.Combine(outputDirectory, "log.txt");
 
             // Search for a renamed log file (assume there is only one)
-            string[] files = Directory.GetFiles(baseDir, "*.txt", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(outputDirectory, "*.txt", SearchOption.TopDirectoryOnly);
             foreach (string file in files)
             {
                 if (IsSuccessfulLog(file))

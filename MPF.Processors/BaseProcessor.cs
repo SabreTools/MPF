@@ -54,10 +54,11 @@ namespace MPF.Processors
         // <summary>
         /// Generate a list of all output files generated
         /// </summary>
-        /// <param name="baseDirectory">Base filename and path to use for checking</param>
-        /// <param name="baseFilename">Base filename and path to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all output files, empty otherwise</returns>
-        internal abstract List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename);
+        /// <remarks>Assumes filename has an extension</remarks>
+        internal abstract List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename);
 
         #endregion
 
@@ -66,30 +67,28 @@ namespace MPF.Processors
         /// <summary>
         /// Compress log files to save space
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
-        /// <param name="filenameSuffix">Output filename to use as the base path</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="filenameSuffix">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public bool CompressLogFiles(string? outputDirectory, string? filenameSuffix, string outputFilename, out string status)
+        /// <remarks>Assumes filename has an extension</remarks>
+        public bool CompressLogFiles(string? outputDirectory, string outputFilename, string? filenameSuffix, out string status)
         {
 #if NET20 || NET35 || NET40
             status = "Log compression is not available for this framework version";
             return false;
 #else
-            // Prepare the necessary paths
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-            string combinedBase;
-            if (string.IsNullOrEmpty(outputDirectory))
-                combinedBase = outputFilename;
-            else
-                combinedBase = Path.Combine(outputDirectory, outputFilename);
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
             // Generate the archive filename
-            string archiveName = $"{combinedBase}_logs.zip";
+            string archiveName = $"{basePath}_logs.zip";
 
             // Get the lists of zippable files
-            var zippableFiles = GetZippableFilePaths(combinedBase);
+            var zippableFiles = GetZippableFilePaths(outputDirectory, outputFilename);
             var generatedFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
 
             // Don't create an archive if there are no paths
@@ -138,22 +137,15 @@ namespace MPF.Processors
         /// <summary>
         /// Compress log files to save space
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
+        /// <remarks>Assumes filename has an extension</remarks>
         public bool DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, out string status)
         {
-            // Prepare the necessary paths
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-            string combinedBase;
-            if (string.IsNullOrEmpty(outputDirectory))
-                combinedBase = outputFilename;
-            else
-                combinedBase = Path.Combine(outputDirectory, outputFilename);
-
             // Get the list of deleteable files from the parameters object
-            var files = GetDeleteableFilePaths(combinedBase);
+            var files = GetDeleteableFilePaths(outputDirectory, outputFilename);
 
             if (files.Count == 0)
             {
@@ -178,52 +170,123 @@ namespace MPF.Processors
         /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>A list representing missing files, empty if none</returns>
+        /// <remarks>Assumes filename has an extension</remarks>
         public List<string> FoundAllFiles(string? outputDirectory, string outputFilename)
         {
-            // Sanitize the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
-            // Finally, let the parameters say if all files exist
-            return CheckRequiredFiles(outputDirectory, outputFilename);
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            if (outputFiles.Count == 0)
+                return ["Media and system combination not supported"];
+
+            // Check for the log file
+            bool logArchiveExists = false;
+#if NET452_OR_GREATER || NETCOREAPP
+            ZipArchive? logArchive = null;
+#endif
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                logArchiveExists = true;
+#if NET452_OR_GREATER || NETCOREAPP
+                try
+                {
+                    // Try to open the archive
+                    logArchive = ZipFile.OpenRead($"{basePath}_logs.zip");
+                }
+                catch
+                {
+                    logArchiveExists = false;
+                }
+#endif
+            }
+
+            // Get a list of all missing required files
+            var missingFiles = new List<string>();
+            foreach (var outputFile in outputFiles)
+            {
+                // Only check required files
+                if (!outputFile.IsRequired)
+                    continue;
+
+                // Use the built-in existence function
+                if (outputFile.Exists(outputDirectory ?? string.Empty))
+                    continue;
+
+                // If the log archive doesn't exist
+                if (!logArchiveExists)
+                {
+                    missingFiles.Add(outputFile.Filenames[0]);
+                    continue;
+                }
+
+#if NET20 || NET35 || NET40
+                // Assume the zipfile has the file in it
+                continue;
+#else
+                // Check the log archive
+                if (outputFile.Exists(logArchive))
+                    continue;
+
+                // Add the file to the missing list
+                missingFiles.Add(outputFile.Filenames[0]);
+#endif
+            }
+
+            return missingFiles;
         }
 
         /// <summary>
         /// Ensures that no potential output files have been created
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if any dumping files exist, False if none</returns>
+        /// <remarks>Assumes filename has an extension</remarks>
         public bool FoundAnyFiles(string? outputDirectory, string outputFilename)
         {
-            // Sanitize the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
-            // Finally, let the parameters say if all files exist
-            return CheckExistingFiles(outputDirectory, outputFilename);
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            if (outputFiles.Count == 0)
+                return false;
+
+            // Check for the log file
+            if (File.Exists($"{basePath}_logs.zip"))
+                return true;
+
+            // Check all output files
+            foreach (var outputFile in outputFiles)
+            {
+                // Use the built-in existence function
+                if (outputFile.Exists(outputDirectory ?? string.Empty))
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Generate artifacts and return them as a dictionary
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
-        public Dictionary<string, string> GenerateArtifacts(string basePath)
+        /// <remarks>Assumes filename has an extension</remarks>
+        public Dictionary<string, string> GenerateArtifacts(string? outputDirectory, string outputFilename)
         {
-            // Handle invalid inputs
-            if (basePath.Length == 0)
-                return [];
-
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
-
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
+            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -238,11 +301,11 @@ namespace MPF.Processors
                     continue;
 
                 // Skip non-existent files
-                if (!outputFile.Exists(baseDirectory))
+                if (!outputFile.Exists(outputDirectory ?? string.Empty))
                     continue;
 
                 // Skip non-existent files
-                foreach (var filePath in outputFile.GetPaths(baseDirectory))
+                foreach (var filePath in outputFile.GetPaths(outputDirectory ?? string.Empty))
                 {
                     // Get binary artifacts as a byte array
                     if (outputFile.IsBinaryArtifact)
@@ -337,125 +400,16 @@ namespace MPF.Processors
 #endif
 
         /// <summary>
-        /// Validate if all required output files exist
-        /// </summary>
-        /// <param name="baseDirectory">Base directory to check</param>
-        /// <param name="baseFilename">Base filename template to use</param>
-        /// <returns>A list representing missing files, empty if none</returns>
-        internal List<string> CheckRequiredFiles(string? baseDirectory, string baseFilename)
-        {
-            // Assemble a base path
-            string basePath = baseFilename;
-            if (!string.IsNullOrEmpty(baseDirectory))
-                basePath = Path.Combine(baseDirectory, basePath);
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
-            if (outputFiles.Count == 0)
-                return ["Media and system combination not supported"];
-
-            // Check for the log file
-            bool logArchiveExists = false;
-#if NET452_OR_GREATER || NETCOREAPP
-            ZipArchive? logArchive = null;
-#endif
-            if (File.Exists($"{basePath}_logs.zip"))
-            {
-                logArchiveExists = true;
-#if NET452_OR_GREATER || NETCOREAPP
-                try
-                {
-                    // Try to open the archive
-                    logArchive = ZipFile.OpenRead($"{basePath}_logs.zip");
-                }
-                catch
-                {
-                    logArchiveExists = false;
-                }
-#endif
-            }
-
-            // Get a list of all missing required files
-            var missingFiles = new List<string>();
-            foreach (var outputFile in outputFiles)
-            {
-                // Only check required files
-                if (!outputFile.IsRequired)
-                    continue;
-
-                // Use the built-in existence function
-                if (outputFile.Exists(baseDirectory ?? string.Empty))
-                    continue;
-
-                // If the log archive doesn't exist
-                if (!logArchiveExists)
-                {
-                    missingFiles.Add(outputFile.Filenames[0]);
-                    continue;
-                }
-
-#if NET20 || NET35 || NET40
-                // Assume the zipfile has the file in it
-                continue;
-#else
-                // Check the log archive
-                if (outputFile.Exists(logArchive))
-                    continue;
-
-                // Add the file to the missing list
-                missingFiles.Add(outputFile.Filenames[0]);
-#endif
-            }
-
-            return missingFiles;
-        }
-
-        /// <summary>
-        /// Validate if any output files exist
-        /// </summary>
-        /// <param name="baseDirectory">Base directory to check</param>
-        /// <param name="baseFilename">Base filename template to use</param>
-        /// <returns>True if any dumping files exist, False if none</returns>
-        internal bool CheckExistingFiles(string? baseDirectory, string baseFilename)
-        {
-            // Assemble a base path
-            string basePath = baseFilename;
-            if (!string.IsNullOrEmpty(baseDirectory))
-                basePath = Path.Combine(baseDirectory, basePath);
-
-            // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
-            if (outputFiles.Count == 0)
-                return false;
-
-            // Check for the log file
-            if (File.Exists($"{basePath}_logs.zip"))
-                return true;
-
-            // Check all output files
-            foreach (var outputFile in outputFiles)
-            {
-                // Use the built-in existence function
-                if (outputFile.Exists(baseDirectory ?? string.Empty))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Generate a list of all deleteable file paths
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
-        internal List<string> GetDeleteableFilePaths(string basePath)
+        /// <remarks>Assumes filename has an extension</remarks>
+        internal List<string> GetDeleteableFilePaths(string? outputDirectory, string outputFilename)
         {
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
-
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
+            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -466,11 +420,11 @@ namespace MPF.Processors
             var deleteablePaths = new List<string>();
             foreach (var file in deleteable)
             {
-                var paths = file.GetPaths(baseDirectory);
+                var paths = file.GetPaths(outputDirectory ?? string.Empty);
                 paths = paths.FindAll(File.Exists);
                 deleteablePaths.AddRange(paths);
             }
-            
+
             return deleteablePaths;
         }
 
@@ -500,10 +454,10 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all MPF-specific log files generated
         /// </summary>
-        /// <param name="basePath">Base directory to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
-        internal static List<string> GetGeneratedFilePaths(string? baseDirectory, string? filenameSuffix)
+        internal static List<string> GetGeneratedFilePaths(string? outputDirectory, string? filenameSuffix)
         {
             // Get the list of generated files
             var generatedFilenames = GetGeneratedFilenames(filenameSuffix);
@@ -511,14 +465,14 @@ namespace MPF.Processors
                 return [];
 
             // Ensure the output directory
-            baseDirectory ??= string.Empty;
+            outputDirectory ??= string.Empty;
 
             // Return only files that exist
             var generatedFiles = new List<string>();
             foreach (var filename in generatedFilenames)
             {
                 // Skip non-existent files
-                string possiblePath = Path.Combine(baseDirectory, filename);
+                string possiblePath = Path.Combine(outputDirectory, filename);
                 if (!File.Exists(possiblePath))
                     continue;
 
@@ -531,16 +485,14 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all zippable file paths
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all zippable file paths, empty otherwise</returns>
-        internal List<string> GetZippableFilePaths(string basePath)
+        /// <remarks>Assumes filename has an extension</remarks>
+        internal List<string> GetZippableFilePaths(string? outputDirectory, string outputFilename)
         {
-            // Split the base path for matching
-            string baseDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
-            string baseFilename = Path.GetFileNameWithoutExtension(basePath);
-
             // Get the list of output files
-            var outputFiles = GetOutputFiles(baseDirectory, baseFilename);
+            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -551,11 +503,11 @@ namespace MPF.Processors
             var zippablePaths = new List<string>();
             foreach (var file in zippable)
             {
-                var paths = file.GetPaths(baseDirectory);
+                var paths = file.GetPaths(outputDirectory ?? string.Empty);
                 paths = paths.FindAll(File.Exists);
                 zippablePaths.AddRange(paths);
             }
-            
+
             return zippablePaths;
         }
 

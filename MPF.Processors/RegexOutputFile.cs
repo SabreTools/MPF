@@ -47,14 +47,14 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override bool Exists(string baseDirectory)
+        public override bool Exists(string outputDirectory)
         {
             // Ensure the directory exists
-            if (!Directory.Exists(baseDirectory))
+            if (!Directory.Exists(outputDirectory))
                 return false;
             
             // Get list of all files in directory
-            var directoryFiles = Directory.GetFiles(baseDirectory);
+            var directoryFiles = Directory.GetFiles(outputDirectory);
             foreach (string file in directoryFiles)
             {
                 if (Array.FindIndex(Filenames, pattern => Regex.IsMatch(file, pattern)) > -1)
@@ -85,16 +85,16 @@ namespace MPF.Processors
 #endif
 
         /// <inheritdoc/>
-        public override List<string> GetPaths(string baseDirectory)
+        public override List<string> GetPaths(string outputDirectory)
         {
             // Ensure the directory exists
-            if (!Directory.Exists(baseDirectory))
+            if (!Directory.Exists(outputDirectory))
                 return [];
 
             List<string> paths = [];
             
             // Get list of all files in directory
-            var directoryFiles = Directory.GetFiles(baseDirectory);
+            var directoryFiles = Directory.GetFiles(outputDirectory);
             foreach (string file in directoryFiles)
             {
                 var matches = Array.FindAll(Filenames, pattern => Regex.IsMatch(file, pattern));

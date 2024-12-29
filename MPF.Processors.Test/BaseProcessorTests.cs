@@ -52,34 +52,34 @@ namespace MPF.Processors.Test
         #region GetGeneratedFilePaths
 
         [Fact]
-        public void GetGeneratedFilePaths_NullBaseDirectory_Empty()
+        public void GetGeneratedFilePaths_NulloutputDirectory_Empty()
         {
-            string? baseDirectory = null;
-            var actual = BaseProcessor.GetGeneratedFilePaths(baseDirectory, filenameSuffix: null);
+            string? outputDirectory = null;
+            var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
             Assert.Empty(actual);
         }
 
         [Fact]
-        public void GetGeneratedFilePaths_EmptyBaseDirectory_Empty()
+        public void GetGeneratedFilePaths_EmptyoutputDirectory_Empty()
         {
-            string? baseDirectory = string.Empty;
-            var actual = BaseProcessor.GetGeneratedFilePaths(baseDirectory, filenameSuffix: null);
+            string? outputDirectory = string.Empty;
+            var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
             Assert.Empty(actual);
         }
 
         [Fact]
-        public void GetGeneratedFilePaths_InvalidBaseDirectory_Empty()
+        public void GetGeneratedFilePaths_InvalidoutputDirectory_Empty()
         {
-            string? baseDirectory = "INVALID";
-            var actual = BaseProcessor.GetGeneratedFilePaths(baseDirectory, filenameSuffix: null);
+            string? outputDirectory = "INVALID";
+            var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
             Assert.Empty(actual);
         }
 
         [Fact]
-        public void GetGeneratedFilePaths_ValidBaseDirectory_Empty()
+        public void GetGeneratedFilePaths_ValidoutputDirectory_Empty()
         {
-            string? baseDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
-            var actual = BaseProcessor.GetGeneratedFilePaths(baseDirectory, filenameSuffix: null);
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
+            var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
             Assert.Equal(4, actual.Count);
         }
 

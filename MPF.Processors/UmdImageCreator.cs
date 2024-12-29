@@ -77,33 +77,36 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             switch (Type)
             {
                 case MediaType.UMD:
                     return [
-                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                        new($"{baseFilename}_disc.txt", OutputFileFlags.Required
+                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "disc"),
-                        new($"{baseFilename}_drive.txt", OutputFileFlags.Artifact
+                        new($"{outputFilename}_drive.txt", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "drive"),
-                        new($"{baseFilename}_mainError.txt", OutputFileFlags.Required
+                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "main_error"),
-                        new($"{baseFilename}_mainInfo.txt", OutputFileFlags.Required
+                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "main_info"),
-                        new($"{baseFilename}_PFI.bin", OutputFileFlags.Binary
+                        new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pfi"),
-                        new($"{baseFilename}_volDesc.txt", OutputFileFlags.Required
+                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "vol_desc"),

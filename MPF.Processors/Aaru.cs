@@ -185,37 +185,40 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             switch (Type)
             {
                 case MediaType.CDROM:
                     return [
-                        new($"{baseFilename}.aaruf", OutputFileFlags.Required),
-                        new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
+                        new($"{outputFilename}.aaruf", OutputFileFlags.Required),
+                        new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cicm"),
-                        new($"{baseFilename}.error.log", OutputFileFlags.Artifact
+                        new($"{outputFilename}.error.log", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "error_log"),
-                        new($"{baseFilename}.ibg", OutputFileFlags.Required
+                        new($"{outputFilename}.ibg", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ibg"),
-                        new($"{baseFilename}.log", OutputFileFlags.Required
+                        new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
+                        new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "mhddlog"),
-                        new($"{baseFilename}.resume.xml", OutputFileFlags.Required
+                        new($"{outputFilename}.resume.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "resume"),
-                        new($"{baseFilename}.sub.log", OutputFileFlags.Required
+                        new($"{outputFilename}.sub.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "sub_log"),
@@ -225,27 +228,27 @@ namespace MPF.Processors
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                     return [
-                        new($"{baseFilename}.aaruf", OutputFileFlags.Required),
-                        new($"{baseFilename}.cicm.xml", OutputFileFlags.Required
+                        new($"{outputFilename}.aaruf", OutputFileFlags.Required),
+                        new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "cicm"),
-                        new($"{baseFilename}.error.log", OutputFileFlags.Artifact
+                        new($"{outputFilename}.error.log", OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "error_log"),
-                        new($"{baseFilename}.ibg", OutputFileFlags.Required
+                        new($"{outputFilename}.ibg", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ibg"),
-                        new($"{baseFilename}.log", OutputFileFlags.Required
+                        new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),
-                        new($"{baseFilename}.mhddlog.bin", OutputFileFlags.Required
+                        new($"{outputFilename}.mhddlog.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "mhddlog"),
-                        new($"{baseFilename}.resume.xml", OutputFileFlags.Required
+                        new($"{outputFilename}.resume.xml", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "resume"),

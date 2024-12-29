@@ -69,21 +69,24 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? baseDirectory, string baseFilename)
+        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
         {
+            // Remove the extension by default
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             switch (Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
-                        new($"{baseFilename}.bca", OutputFileFlags.Required
+                        new($"{outputFilename}.bca", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "bca"),
-                        new($"{baseFilename}.iso", OutputFileFlags.Required),
+                        new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                        new($"{baseFilename}-dumpinfo.txt", OutputFileFlags.Required
+                        new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "dumpinfo"),
