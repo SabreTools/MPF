@@ -867,6 +867,7 @@ namespace MPF.Frontend.ViewModels
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
                     {
                         [SiteCode.ISBN] = "ISBN",
+                        [SiteCode.RingNonZeroDataStart] = "+123"
                     },
                     Contents = "Special contents 1\r\nSpecial contents 2",
                     ContentsSpecialFields = new Dictionary<SiteCode, string>()

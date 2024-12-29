@@ -292,16 +292,16 @@
 
                 <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
-                        <StackPanel Orientation="Vertical">
-                            <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <GroupBox.Template>
-                                    <ControlTemplate TargetType="GroupBox">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </GroupBox.Template>
+                    <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <GroupBox.Template>
+                            <ControlTemplate TargetType="GroupBox">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                                </Border>
+                            </ControlTemplate>
+                        </GroupBox.Template>
+                            <StackPanel Orientation="Vertical">
 
                                 <controls:UserInput x:Name="GeneralContent" Label="General"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
@@ -349,8 +349,8 @@
                                 <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
                                                     Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[(redump:SiteCode)Extras], Mode=TwoWay}"/>
-                            </GroupBox>
-                        </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
                     </ScrollViewer>
                 </TabItem>
 
@@ -418,16 +418,16 @@
 
                 <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
-                        <StackPanel Orientation="Vertical">
-                            <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <GroupBox.Template>
-                                    <ControlTemplate TargetType="GroupBox">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </GroupBox.Template>
+                        <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <GroupBox.Template>
+                                <ControlTemplate TargetType="GroupBox">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                                        <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </GroupBox.Template>
+                            <StackPanel Orientation="Vertical">
 
                                 <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True"
                                                     Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}"/>
@@ -508,8 +508,8 @@
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)XeMID], Mode=TwoWay}"/>
                                 <controls:UserInput x:Name="XMID" Label="XMID" IsReadOnly="True"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)XMID], Mode=TwoWay}"/>
-                            </GroupBox>
-                        </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
                     </ScrollViewer>
                 </TabItem>
             </TabControl>
