@@ -149,6 +149,7 @@
 - Force path update if default changed
 - Force showing tooltips on disabled items
 - Update RedumpLib to 1.6.3
+- Minor UI changes to DIW
 
 ### 3.2.4 (2024-11-24)
 
