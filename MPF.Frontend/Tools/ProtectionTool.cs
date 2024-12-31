@@ -86,6 +86,7 @@ namespace MPF.Frontend.Tools
                     options.ScanArchivesForProtection,
                     scanContents: true, // Hardcoded value to avoid issues
                     scanPaths: true, // Hardcoded value to avoid issues
+                    scanSubdirectories: true, // Hardcoded value to avoid issues
                     options.IncludeDebugProtectionInformation,
                     progress);
 
