@@ -17,7 +17,7 @@
         <!-- Package Properties -->
         <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
         <Description>Common code for all MPF execution contexts</Description>
-        <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
+        <Copyright>Copyright (c) Matt Nadareski 2019-2025</Copyright>
         <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

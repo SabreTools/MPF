@@ -18,7 +18,7 @@
         <Title>MPF CLI</Title>
         <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
         <Description>CLI frontend for various dumping programs</Description>
-        <Copyright>Copyright (c) Matt Nadareski 2019-2024</Copyright>
+        <Copyright>Copyright (c) Matt Nadareski 2019-2025</Copyright>
         <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

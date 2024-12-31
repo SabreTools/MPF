@@ -152,6 +152,7 @@
 - Minor UI changes to DIW
 - Be consistent with filename extensions
 - Remove unnecessary action step
+- Update copyright
 
 ### 3.2.4 (2024-11-24)
 
