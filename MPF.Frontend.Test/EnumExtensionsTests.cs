@@ -64,7 +64,7 @@ namespace MPF.Frontend.Test
         [InlineData(InternalProgram.DiscImageCreator, "dic")]
         [InlineData(InternalProgram.Redumper, "redumper")]
         [InlineData(InternalProgram.CleanRip, "cleanrip")]
-        [InlineData(InternalProgram.PS3CFW, "ps3cf2")]
+        [InlineData(InternalProgram.PS3CFW, "ps3cfw")]
         [InlineData(InternalProgram.UmdImageCreator, "uic")]
         [InlineData(InternalProgram.XboxBackupCreator, "xbc")]
         public void ShortName_InternalProgram(InternalProgram? prog, string? expected)

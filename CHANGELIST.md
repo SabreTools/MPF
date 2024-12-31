@@ -156,6 +156,7 @@
 - Update BinaryObjectScanner to 3.3.4
 - Add and use internal program short names
 - Fix BinaryObjectScanner update
+- Fix short name test
 
 ### 3.2.4 (2024-11-24)
 
