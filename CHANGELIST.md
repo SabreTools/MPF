@@ -153,6 +153,7 @@
 - Be consistent with filename extensions
 - Remove unnecessary action step
 - Update copyright
+- Update BinaryObjectScanner to 3.3.4
 
 ### 3.2.4 (2024-11-24)
 
