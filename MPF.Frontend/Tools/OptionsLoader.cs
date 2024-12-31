@@ -135,7 +135,7 @@ namespace MPF.Frontend.Tools
                 if (((InternalProgram)val!) == InternalProgram.NONE)
                     continue;
 
-                programs.Add($"{((InternalProgram?)val).LongName()}");
+                programs.Add($"{((InternalProgram?)val).ShortName()} - {((InternalProgram?)val).LongName()}");
             }
 
             return programs;

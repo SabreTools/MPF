@@ -182,12 +182,12 @@ namespace MPF.Check
                 if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
                     string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    options.InternalProgram = internalProgram.ToInternalProgram();
                 }
                 else if (args[startIndex] == "-u" || args[startIndex] == "--use")
                 {
                     string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = Frontend.Options.ToInternalProgram(internalProgram);
+                    options.InternalProgram = internalProgram.ToInternalProgram();
                     startIndex++;
                 }
 

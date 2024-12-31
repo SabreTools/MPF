@@ -130,7 +130,85 @@ namespace MPF.Frontend
 
         #endregion
 
+        #region Convert to Short Name
+
+        /// <summary>
+        /// Get the short string representation of the InternalProgram enum values
+        /// </summary>
+        /// <param name="prog">InternalProgram value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this InternalProgram? prog)
+        {
+            return prog switch
+            {
+                #region Dumping support
+
+                InternalProgram.Aaru => "aaru",
+                InternalProgram.DiscImageCreator => "dic",
+                InternalProgram.Redumper => "redumper",
+
+                #endregion
+
+                #region Verification support only
+
+                InternalProgram.CleanRip => "cleanrip",
+                InternalProgram.PS3CFW => "ps3cfw",
+                InternalProgram.UmdImageCreator => "uic",
+                InternalProgram.XboxBackupCreator => "xbc",
+
+                #endregion
+
+                InternalProgram.NONE => "Unknown",
+                _ => "Unknown",
+            };
+        }
+
+        #endregion
+
         #region Convert from String
+
+        /// <summary>
+        /// Get the InternalProgram enum value for a given string
+        /// </summary>
+        /// <param name="internalProgram">String value to convert</param>
+        /// <returns>InternalProgram represented by the string, if possible</returns>
+        public static InternalProgram ToInternalProgram(this string? internalProgram)
+        {
+            return (internalProgram?.ToLowerInvariant()) switch
+            {
+                // Dumping support
+                "aaru"
+                    or "chef"
+                    or "dichef"
+                    or "discimagechef" => InternalProgram.Aaru,
+                "creator"
+                    or "dic"
+                    or "dicreator"
+                    or "discimagecreator" => InternalProgram.DiscImageCreator,
+                "rd"
+                    or "redumper" => InternalProgram.Redumper,
+
+                // Verification support only
+                "cleanrip"
+                    or "cr" => InternalProgram.CleanRip,
+                "ps3cfw"
+                    or "ps3"
+                    or "getkey"
+                    or "managunz"
+                    or "multiman" => InternalProgram.PS3CFW,
+                "uic"
+                    or "umd"
+                    or "umdcreator"
+                    or "umdimagecreator" => InternalProgram.UmdImageCreator,
+                "xbc"
+                    or "xbox"
+                    or "xbox360"
+                    or "xboxcreator"
+                    or "xboxbackupcreator" => InternalProgram.XboxBackupCreator,
+
+                _ => InternalProgram.NONE,
+            };
+        }
 
         /// <summary>
         /// Get the RedumperReadMethod enum value for a given string

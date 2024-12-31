@@ -61,7 +61,7 @@ namespace MPF.Frontend
             get
             {
                 var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.Redumper.ToString());
-                var valueEnum = ToInternalProgram(valueString);
+                var valueEnum = valueString.ToInternalProgram();
                 return valueEnum == InternalProgram.NONE ? InternalProgram.Redumper : valueEnum;
             }
             set
@@ -684,49 +684,6 @@ namespace MPF.Frontend
         }
 
         #region Helpers
-
-        /// <summary>
-        /// Get the InternalProgram enum value for a given string
-        /// </summary>
-        /// <param name="internalProgram">String value to convert</param>
-        /// <returns>InternalProgram represented by the string, if possible</returns>
-        public static InternalProgram ToInternalProgram(string? internalProgram)
-        {
-            return (internalProgram?.ToLowerInvariant()) switch
-            {
-                // Dumping support
-                "aaru"
-                    or "chef"
-                    or "dichef"
-                    or "discimagechef" => InternalProgram.Aaru,
-                "creator"
-                    or "dic"
-                    or "dicreator"
-                    or "discimagecreator" => InternalProgram.DiscImageCreator,
-                "rd"
-                    or "redumper" => InternalProgram.Redumper,
-
-                // Verification support only
-                "cleanrip"
-                    or "cr" => InternalProgram.CleanRip,
-                "ps3cfw"
-                    or "ps3"
-                    or "getkey"
-                    or "managunz"
-                    or "multiman" => InternalProgram.PS3CFW,
-                "uic"
-                    or "umd"
-                    or "umdcreator"
-                    or "umdimagecreator" => InternalProgram.UmdImageCreator,
-                "xbc"
-                    or "xbox"
-                    or "xbox360"
-                    or "xboxcreator"
-                    or "xboxbackupcreator" => InternalProgram.XboxBackupCreator,
-
-                _ => InternalProgram.NONE,
-            };
-        }
 
         /// <summary>
         /// Get a Boolean setting from a settings, dictionary

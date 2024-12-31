@@ -6,22 +6,6 @@ namespace MPF.Frontend.Test
     public class OptionsTests
     {
         [Theory]
-        [InlineData(null, InternalProgram.NONE)]
-        [InlineData("", InternalProgram.NONE)]
-        [InlineData("aaru", InternalProgram.Aaru)]
-        [InlineData("dic", InternalProgram.DiscImageCreator)]
-        [InlineData("redumper", InternalProgram.Redumper)]
-        [InlineData("cleanrip", InternalProgram.CleanRip)]
-        [InlineData("ps3cfw", InternalProgram.PS3CFW)]
-        [InlineData("uic", InternalProgram.UmdImageCreator)]
-        [InlineData("xbc", InternalProgram.XboxBackupCreator)]
-        public void ToInternalProgramTest(string? internalProgram, InternalProgram expected)
-        {
-            InternalProgram actual = Options.ToInternalProgram(internalProgram);
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [InlineData("key2", null, "key", false, false)]
         [InlineData("key", null, "key", false, false)]
         [InlineData("key", "", "key", false, false)]

@@ -55,9 +55,45 @@ namespace MPF.Frontend.Test
 
         #endregion
 
+        #region Short Name
+
+        [Theory]
+        [InlineData(null, "Unknown")]
+        [InlineData(InternalProgram.NONE, "Unknown")]
+        [InlineData(InternalProgram.Aaru, "aaru")]
+        [InlineData(InternalProgram.DiscImageCreator, "dic")]
+        [InlineData(InternalProgram.Redumper, "redumper")]
+        [InlineData(InternalProgram.CleanRip, "cleanrip")]
+        [InlineData(InternalProgram.PS3CFW, "ps3cf2")]
+        [InlineData(InternalProgram.UmdImageCreator, "uic")]
+        [InlineData(InternalProgram.XboxBackupCreator, "xbc")]
+        public void ShortName_InternalProgram(InternalProgram? prog, string? expected)
+        {
+            string? actual = prog.ShortName();
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region From String
 
-        // TODO: Write from-string tests
+        [Theory]
+        [InlineData(null, InternalProgram.NONE)]
+        [InlineData("", InternalProgram.NONE)]
+        [InlineData("aaru", InternalProgram.Aaru)]
+        [InlineData("dic", InternalProgram.DiscImageCreator)]
+        [InlineData("redumper", InternalProgram.Redumper)]
+        [InlineData("cleanrip", InternalProgram.CleanRip)]
+        [InlineData("ps3cfw", InternalProgram.PS3CFW)]
+        [InlineData("uic", InternalProgram.UmdImageCreator)]
+        [InlineData("xbc", InternalProgram.XboxBackupCreator)]
+        public void ToInternalProgramTest(string? internalProgram, InternalProgram expected)
+        {
+            InternalProgram actual = internalProgram.ToInternalProgram();
+            Assert.Equal(expected, actual);
+        }
+
+        // TODO: Write remaining from-string tests
 
         #endregion
 
