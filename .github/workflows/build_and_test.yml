@@ -27,12 +27,6 @@ jobs:
     - name: Run publish script
       run: ./publish-nix.sh -dp
 
-    - name: Upload package
-      uses: actions/upload-artifact@v4
-      with:
-        name: 'Nuget Package'
-        path: "*.nupkg,*.snupkg"
-
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
       with:

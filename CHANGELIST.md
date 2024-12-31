@@ -151,6 +151,7 @@
 - Update RedumpLib to 1.6.3
 - Minor UI changes to DIW
 - Be consistent with filename extensions
+- Remove unnecessary action step
 
 ### 3.2.4 (2024-11-24)
 
