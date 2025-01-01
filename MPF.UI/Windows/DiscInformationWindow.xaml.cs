@@ -79,6 +79,7 @@ namespace MPF.UI.Windows
         private UserInput? PIC => ItemHelper.FindChild<UserInput>(this, "PIC");
         private UserInput? PVD => ItemHelper.FindChild<UserInput>(this, "PVD");
         private UserInput? RingNonZeroDataStart => ItemHelper.FindChild<UserInput>(this, "RingNonZeroDataStart");
+        private UserInput? RingPerfectAudioOffset => ItemHelper.FindChild<UserInput>(this, "RingPerfectAudioOffset");
         private UserInput? SecuROMData => ItemHelper.FindChild<UserInput>(this, "SecuROMData");
         private UserInput? SSHash => ItemHelper.FindChild<UserInput>(this, "SSHash");
         private UserInput? SecuritySectorRanges => ItemHelper.FindChild<UserInput>(this, "SecuritySectorRanges");
@@ -261,6 +262,8 @@ namespace MPF.UI.Windows
                 PVD!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingNonZeroDataStart) != true)
                 RingNonZeroDataStart!.Visibility = Visibility.Collapsed;
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingPerfectAudioOffset) != true)
+                RingPerfectAudioOffset!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData))
                 SecuROMData!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSHash) != true)

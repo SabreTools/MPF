@@ -816,6 +816,35 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetRingPerfectAudioOffset
+
+        [Fact]
+        public void GetRingPerfectAudioOffset_Empty_Null()
+        {
+            string log = string.Empty;
+            string? actual = Redumper.GetRingPerfectAudioOffset(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetRingPerfectAudioOffset_Invalid_Null()
+        {
+            string log = "INVALID";
+            string? actual = Redumper.GetRingPerfectAudioOffset(log);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetRingPerfectAudioOffset_Valid_Filled()
+        {
+            string? expected = "+0";
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            string? actual = Redumper.GetRingPerfectAudioOffset(log);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region GetSaturnBuildInfo
 
         [Fact]

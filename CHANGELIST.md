@@ -157,6 +157,7 @@
 - Add and use internal program short names
 - Fix BinaryObjectScanner update
 - Fix short name test
+- Update RedumpLib to 1.6.4
 
 ### 3.2.4 (2024-11-24)
 

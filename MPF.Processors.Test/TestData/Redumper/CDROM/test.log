@@ -98,6 +98,10 @@ PVD:
 << GetRingNonZeroDataStart >>
 non-zero data sample range: [12345 23456]
 
+<< GetRingPerfectAudioOffset >>
+Perfect Audio Offset (silence level: 0): [-2553 .. +10213]
+fallback offset 0 applied
+
 << GetSaturnHeader >>
 SS [
     build date: date

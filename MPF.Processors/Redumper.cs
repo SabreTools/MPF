@@ -82,6 +82,8 @@ namespace MPF.Processors
                     {
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+                        string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset;
                     }
 
                     break;
@@ -1590,6 +1592,42 @@ namespace MPF.Processors
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("non-zero data sample range") == true)
                         return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+                }
+
+                // We couldn't detect it then
+                return null;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the perfect audio offset from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Non-zero dta start if possible, null on error</returns>
+        internal static string? GetRingPerfectAudioOffset(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                // If we fallback offset, only return if the value is 0
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream)
+                {
+                    string? line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("fallback offset 0 applied") == true)
+                        return "+0";
+                    else if (line?.StartsWith("fallback offset") == true)
+                        return null; // TODO: Return all fallback offsets?
                 }
 
                 // We couldn't detect it then
