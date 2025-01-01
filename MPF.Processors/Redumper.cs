@@ -1619,15 +1619,13 @@ namespace MPF.Processors
 
             try
             {
-                // If we fallback offset, only return if the value is 0
+                // If we have a perfect audio offset, return
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine()?.TrimStart();
-                    if (line?.StartsWith("fallback offset 0 applied") == true)
+                    if (line?.StartsWith("Perfect Audio Offset applied") == true)
                         return "+0";
-                    else if (line?.StartsWith("fallback offset") == true)
-                        return null; // TODO: Return all fallback offsets?
                 }
 
                 // We couldn't detect it then
