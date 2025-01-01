@@ -974,6 +974,37 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetSCSIErrorCount
+
+        [Fact]
+        public void GetSCSIErrorCount_Empty_Null()
+        {
+            long expected = -1;
+            string log = string.Empty;
+            long actual = Redumper.GetSCSIErrorCount(log);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetSCSIErrorCount_Invalid_Null()
+        {
+            long expected = -1;
+            string log = "INVALID";
+            long actual = Redumper.GetSCSIErrorCount(log);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetSCSIErrorCount_Valid_Filled()
+        {
+            long expected = 12345;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            long actual = Redumper.GetSCSIErrorCount(log);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region GetSecuROMData
 
         [Fact]

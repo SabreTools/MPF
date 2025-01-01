@@ -159,6 +159,7 @@
 - Fix short name test
 - Update RedumpLib to 1.6.4
 - Fix misunderstanding on perfect offset
+- Handle SCSI error count
 
 ### 3.2.4 (2024-11-24)
 

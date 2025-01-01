@@ -126,6 +126,10 @@ SS [
         00E0 TEST DATA
         00F0 TEST DATA
 
+<< GetSCSIErrorCount >>
+SCSI: 23456 samples
+SCSI: 12345
+
 << GetSecuROMData >>
 SecuROM [
     version: 0

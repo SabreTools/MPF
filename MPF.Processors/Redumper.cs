@@ -111,6 +111,10 @@ namespace MPF.Processors
                         info.SizeAndChecksums!.Layerbreak3 = !string.IsNullOrEmpty(layerbreak3) ? long.Parse(layerbreak3) : default;
                     }
 
+                    // Attempt to get the error count
+                    long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
+                    info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());;
+
                     // Bluray-specific options
                     if (Type == MediaType.BluRay)
                     {
@@ -1754,6 +1758,50 @@ namespace MPF.Processors
             {
                 // We don't care what the exception is right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the SCSI error count from the input files, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>SCSI error count on success, -1 on error</returns>
+        /// TODO: Remove when Redumper adds this to normal errors
+        internal static long GetSCSIErrorCount(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return -1;
+            if (!File.Exists(log))
+                return -1;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+
+                // Find the error counts
+                while (!sr.EndOfStream)
+                {
+                    var line = sr.ReadLine()?.Trim();
+                    if (line == null)
+                        break;
+
+                    // SCSI: <error count>
+                    if (line.StartsWith("SCSI: ") && !line.EndsWith("samples"))
+                    {
+                        string[] parts = line.Split(' ');
+                        if (long.TryParse(parts[1], out long scsiErrors))
+                            return scsiErrors;
+                    }
+                }
+
+                // We couldn't detect it then
+                return -1;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return -1;
             }
         }
 
