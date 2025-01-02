@@ -135,10 +135,10 @@ namespace MPF.ExecutionContexts.Test
         #region CompactDisc
 
         [Theory]
-        [InlineData("cd f filename.bin 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx")]
+        [InlineData("cd f filename.bin 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx")]
         public void CompactDiscTest(string parameters)
         {
-            string? expected = "cd f \"filename.bin\" 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx";
+            string? expected = "cd f \"filename.bin\" 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);

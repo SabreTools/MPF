@@ -225,6 +225,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.DisableBeep,
                     FlagStrings.ExtractMicroSoftCabFile,
                     FlagStrings.ForceUnitAccess,
+                    FlagStrings.FullToc,
                     FlagStrings.MultiSectorRead,
                     FlagStrings.NoFixSubP,
                     FlagStrings.NoFixSubQ,
@@ -236,6 +237,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SeventyFour,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.Toc,
                     FlagStrings.TryReadingPregap,
                     FlagStrings.VideoNow,
                     FlagStrings.VideoNowColor,
@@ -662,6 +664,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 }
             }
 
+            // Full TOC
+            if (IsFlagSupported(FlagStrings.FullToc))
+            {
+                if (this[FlagStrings.FullToc] == true)
+                    parameters.Append($"{FlagStrings.FullToc} ");
+            }
+
             // Multi-Sector Read
             if (IsFlagSupported(FlagStrings.MultiSectorRead))
             {
@@ -859,6 +868,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (this[FlagStrings.Tages] == true)
                     parameters.Append($"{FlagStrings.Tages} ");
+            }
+
+            // TOC
+            if (IsFlagSupported(FlagStrings.Toc))
+            {
+                if (this[FlagStrings.Toc] == true)
+                    parameters.Append($"{FlagStrings.Toc} ");
             }
 
             // Try Reading Pregap
@@ -1545,6 +1561,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     if (intValue != null && intValue != int.MinValue && intValue >= 0)
                         ForceUnitAccessValue = intValue;
 
+                    // Full TOC
+                    ProcessFlagParameter(parts, FlagStrings.FullToc, ref i);
+
                     // Multi-Sector Read
                     intValue = ProcessInt32Parameter(parts, FlagStrings.MultiSectorRead, ref i, missingAllowed: true);
                     if (intValue != null && intValue != int.MinValue && intValue >= 0)
@@ -1670,6 +1689,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Tages
                     ProcessFlagParameter(parts, FlagStrings.Tages, ref i);
+
+                    // TOC
+                    ProcessFlagParameter(parts, FlagStrings.Toc, ref i);
 
                     // TryReadingPregap
                     ProcessFlagParameter(parts, FlagStrings.TryReadingPregap, ref i);

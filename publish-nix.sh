@@ -212,8 +212,8 @@ if [ $NO_ARCHIVE = false ]; then
         # --- Skipped for now ---
 
         # DiscImageCreator
-        wget https://github.com/user-attachments/files/17211434/DiscImageCreator_20241001.zip
-        unzip -u DiscImageCreator_20241001.zip
+        wget https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip
+        unzip -u DiscImageCreator_20250101.zip
 
         # Redumper
         wget https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip
@@ -238,8 +238,8 @@ if [ $NO_ARCHIVE = false ]; then
             done
         done
 
-        # Clean up the odownloaded files and directories
-        rm DiscImageCreator_20241001.zip
+        # Clean up the downloaded files and directories
+        rm DiscImageCreator_20250101.zip
         rm -r Release_ANSI
         rm redumper-2024.11.03_build438-win64.zip
         rm -r redumper-2024.11.03_build438-win64

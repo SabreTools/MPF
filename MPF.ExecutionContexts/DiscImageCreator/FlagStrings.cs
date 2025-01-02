@@ -18,6 +18,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public const string ExtractMicroSoftCabFile = "/mscf";
         public const string Fix = "/fix";
         public const string ForceUnitAccess = "/f";
+        public const string FullToc = "/fulltoc";
         public const string MultiSectorRead = "/mr";
         public const string NoFixSubP = "/np";
         public const string NoFixSubQ = "/nq";
@@ -37,6 +38,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
         public const string Tages = "/t";
+        public const string Toc = "/toc";
         public const string TryReadingPregap = "/trp";
         public const string UseAnchorVolumeDescriptorPointer = "/avdp";
         public const string VideoNow = "/vn";

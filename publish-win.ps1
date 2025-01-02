@@ -193,8 +193,8 @@ if (!$NO_ARCHIVE.IsPresent) {
         # --- Skipped for now ---
 
         # DiscImageCreator
-        Invoke-WebRequest -Uri https://github.com/user-attachments/files/17211434/DiscImageCreator_20241001.zip -OutFile DiscImageCreator_20241001.zip
-        Expand-Archive -LiteralPath "DiscImageCreator_20241001.zip" -DestinationPath "$BUILD_FOLDER/Creator"
+        Invoke-WebRequest -Uri https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip -OutFile DiscImageCreator_20250101.zip
+        Expand-Archive -LiteralPath "DiscImageCreator_20250101.zip" -DestinationPath "$BUILD_FOLDER/Creator"
 
         # Redumper
         Invoke-WebRequest -Uri https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip -OutFile redumper-2024.11.03_build438-win64.zip
@@ -219,8 +219,8 @@ if (!$NO_ARCHIVE.IsPresent) {
             }
         }
 
-        # Clean up the odownloaded files and directories
-        Remove-Item -Path "DiscImageCreator_20241001.zip"
+        # Clean up the downloaded files and directories
+        Remove-Item -Path "DiscImageCreator_20250101.zip"
         Remove-Item -Path "Creator" -Recurse
         Remove-Item -Path "redumper-2024.11.03_build438-win64.zip"
         Remove-Item -Path "Redumper" -Recurse
