@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.3.0 (2025-01-03)
 
 - Update packages
 - Add skeleton test projects for individual libraries
