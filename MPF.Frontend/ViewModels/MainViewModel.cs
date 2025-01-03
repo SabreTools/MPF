@@ -1261,7 +1261,8 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
-                VerboseLogLn(currentSystem == null ? $"unable to detect, defaulting to {Options.DefaultSystem.LongName()}" : ($"detected {currentSystem.LongName()}."));
+                if (currentSystem != null)
+                    VerboseLogLn($"detected {currentSystem.LongName()}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
                 if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
@@ -1270,14 +1271,20 @@ namespace MPF.Frontend.ViewModels
                     {
                         // If disc is readable on inactive drive, assume it is a Mac disc
                         if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
+                        {
                             currentSystem = RedumpSystem.AppleMacintosh;
+                            VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
+                        }
                     }
-                    catch {}
+                    catch { }
                 }
 
                 // Fallback to default system only if drive is active
                 if (currentSystem == null && CurrentDrive.MarkedActive)
+                {
                     currentSystem = Options.DefaultSystem;
+                    VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
+                }
 
                 if (currentSystem != null)
                 {
@@ -1500,7 +1507,7 @@ namespace MPF.Frontend.ViewModels
                         return detectedSegaSystem;
                     }
                 }
-                catch {}
+                catch { }
 
                 // Otherwise, return null
                 return null;
@@ -1651,8 +1658,8 @@ namespace MPF.Frontend.ViewModels
                     return segaSystem;
                 }
             }
-            catch {}
-            
+            catch { }
+
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
             {
