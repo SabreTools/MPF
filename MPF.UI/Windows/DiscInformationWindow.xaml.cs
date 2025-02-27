@@ -306,7 +306,7 @@ namespace MPF.UI.Windows
                     L1Info!.Header = "Label Side";
                     L1MasteringRing!.Label = "Mastering Ring";
                     L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Mastering SID";
+                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
                     L1MouldSID!.Label = "Mould SID";
                     L1AdditionalMould!.Label = "Additional Mould";
                     break;
