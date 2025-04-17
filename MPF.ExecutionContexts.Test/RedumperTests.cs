@@ -124,6 +124,22 @@ namespace MPF.ExecutionContexts.Test
 
         #endregion
 
+        #region DumpExtra
+
+        [Theory]
+        [InlineData("dump::extra -h --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        [InlineData("dump::extra --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        public void DumpTest(string parameters)
+        {
+            string? expected = "dump::extra --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=\"path\" --image-name=\"image\" --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+            Assert.False(context.IsDumpingCommand());
+        }
+
+        #endregion
+
         #region Refine
 
         [Theory]
@@ -284,6 +300,22 @@ namespace MPF.ExecutionContexts.Test
 
         #endregion
 
+        #region Subchannel
+
+        [Theory]
+        [InlineData("subchannel -h --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        [InlineData("subchannel --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        public void SubchannelTest(string parameters)
+        {
+            string? expected = "subchannel --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=\"path\" --image-name=\"image\" --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+            Assert.False(context.IsDumpingCommand());
+        }
+
+        #endregion
+
         #region Debug
 
         [Theory]
@@ -308,6 +340,36 @@ namespace MPF.ExecutionContexts.Test
         public void FixMSFTest(string parameters)
         {
             string? expected = "fixmsf --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=\"path\" --image-name=\"image\" --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region DebugFlip
+
+        [Theory]
+        [InlineData("debug::flip -h --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        [InlineData("debug::flip --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        public void DebugFlipTest(string parameters)
+        {
+            string? expected = "debug::flip --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=\"path\" --image-name=\"image\" --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region DriveTest
+
+        [Theory]
+        [InlineData("drive::test -h --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        [InlineData("drive::test --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=path --image-name=image --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext")]
+        public void DriveTestTest(string parameters)
+        {
+            string? expected = "drive::test --help --version --verbose --auto-eject --drive=dr --speed=0 --retries=0 --image-path=\"path\" --image-name=\"image\" --overwrite --drive-type=dt --drive-read-offset=0 --drive-c2-shift=0 --drive-pregap-start=0 --drive-read-method=drm --drive-sector-order=dso --plextor-skip-leadin --plextor-leadin-retries=0 --asus-skip-leadout --force-offset=0 --audio-silence-threshold=0 --correct-offset-shift --offset-shift-relocate --force-split --leave-unchanged --force-qtoc --skip-fill=0 --iso9660-trim --lba-start=0 --lba-end=0 --refine-subchannel --skip=0 --dump-write-offset=0 --dump-read-size=0 --overread-leadout --force-unscrambled --legacy-subs --disable-cdtext";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);

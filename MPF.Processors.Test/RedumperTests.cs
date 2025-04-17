@@ -1236,7 +1236,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetWriteOffset_Valid_Filled()
         {
-            string? expected = "offset";
+            string? expected = "+0";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetWriteOffset(log);
             Assert.Equal(expected, actual);
