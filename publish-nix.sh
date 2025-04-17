@@ -227,7 +227,7 @@ if [ $NO_ARCHIVE = false ]; then
                     cp -rfp Release_ANSI/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
 
                     mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
-                    cp -rfp redumper-2025.04.15_build549-Windows64/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                    cp -rfp redumper-2025.04.15_build549-Windows64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
                 fi
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator

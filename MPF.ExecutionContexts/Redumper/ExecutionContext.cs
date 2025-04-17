@@ -268,6 +268,7 @@ namespace MPF.ExecutionContexts.Redumper
             switch (MediaType)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                case SabreTools.RedumpLib.Data.MediaType.SACD:
                     ModeValues = [CommandStrings.Disc, CommandStrings.Skeleton];
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:

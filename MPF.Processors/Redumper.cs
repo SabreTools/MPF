@@ -1629,18 +1629,18 @@ namespace MPF.Processors
             try
             {
                 // If we have a perfect audio offset, return
-                bool perfect_audio_offset_applied = false;
+                bool perfectAudioOffsetApplied = false;
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("Perfect Audio Offset applied") == true)
                     {
-                        perfect_audio_offset_applied = true;
+                        perfectAudioOffsetApplied = true;
                     }
                     else if (line?.StartsWith("disc write offset: +0") == true)
                     {
-                        if (perfect_audio_offset_applied)
+                        if (perfectAudioOffsetApplied)
                             return "+0";
                         else
                             return null;
