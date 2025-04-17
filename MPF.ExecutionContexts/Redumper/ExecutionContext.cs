@@ -274,7 +274,6 @@ namespace MPF.ExecutionContexts.Redumper
                         _ => [CommandStrings.Disc, CommandStrings.Skeleton],
                     };
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.SuperAudioCD:
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
