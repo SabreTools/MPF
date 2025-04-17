@@ -599,12 +599,21 @@ namespace MPF.Frontend
                     else
                         resultProgress.Report(ResultEventArgs.Failure(compressResult));
 
+                    // Delete unnecessary files only after zipping
+                    if (_options.DeleteUnnecessaryFiles)
+                    {
+                        resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
+                        bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
+                        if (deleteSuccess)
+                            resultProgress.Report(ResultEventArgs.Success(deleteResult));
+                        else
+                            resultProgress.Report(ResultEventArgs.Failure(deleteResult));
+                    }
+
                     return compressSuccess;
                 });
             }
-
-            // Delete unnecessary files, if required
-            if (_options.DeleteUnnecessaryFiles)
+            else if (_options.DeleteUnnecessaryFiles)
             {
                 resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
                 bool deleteSuccess = _processor.DeleteUnnecessaryFiles(outputDirectory, outputFilename, out string deleteResult);
