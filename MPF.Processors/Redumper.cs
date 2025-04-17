@@ -91,6 +91,9 @@ namespace MPF.Processors
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
                     info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
                     info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
 
@@ -116,7 +119,7 @@ namespace MPF.Processors
                     info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());;
 
                     // Bluray-specific options
-                    if (Type == MediaType.BluRay)
+                    if (Type == MediaType.BluRay || Type == MediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
                         switch (System)

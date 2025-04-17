@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 #if NET40
 using System.Threading.Tasks;
@@ -74,6 +75,7 @@ namespace MPF.UI.Windows
         {
 #if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
+            this.Closing += MainWindowClosing;
 #endif
 
 #if NET452_OR_GREATER || NETCOREAPP
@@ -208,6 +210,19 @@ namespace MPF.UI.Windows
 
             if (showIfSame || different)
                 CustomMessageBox.Show(this, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Ask to confirm quitting, when an operation is running
+        /// </summary>
+        public void MainWindowClosing(object? sender, CancelEventArgs e)
+        {
+            if (MainViewModel.AskBeforeQuit)
+            {
+                MessageBoxResult result = CustomMessageBox.Show(this, "A dump is still being processed, are you sure you want to quit?", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No)
+                    e.Cancel = true;
+            }
         }
 
         /// <summary>

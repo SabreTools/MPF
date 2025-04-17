@@ -56,7 +56,6 @@ namespace MPF.UI.Windows
             {
                 1 => MessageBoxButton.OK,
                 2 => MessageBoxButton.YesNo,
-                3 => MessageBoxButton.YesNoCancel,
 
                 // This should not happen, but default to "OK"
                 _ => MessageBoxButton.OK,

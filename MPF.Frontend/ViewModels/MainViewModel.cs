@@ -77,6 +77,20 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Indicates the status of the check dump menu item
         /// </summary>
+        public bool AskBeforeQuit
+        {
+            get => _askBeforeQuit;
+            set
+            {
+                _askBeforeQuit = value;
+                TriggerPropertyChanged(nameof(AskBeforeQuit));
+            }
+        }
+        private bool _askBeforeQuit;
+
+        /// <summary>
+        /// Indicates the status of the check dump menu item
+        /// </summary>
         public bool CheckDumpMenuItemEnabled
         {
             get => _checkDumpMenuItemEnabled;
@@ -554,6 +568,7 @@ namespace MPF.Frontend.ViewModels
             _status = string.Empty;
             _systems = [];
 
+            AskBeforeQuit = false;
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
             CreateIRDMenuItemEnabled = true;
@@ -2146,6 +2161,9 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public async void StartDumping()
         {
+            // Ask user to confirm before exiting application during a dump
+            AskBeforeQuit = true;
+            
             // One last check to determine environment, just in case
             _environment = DetermineEnvironment();
 
@@ -2155,17 +2173,16 @@ namespace MPF.Frontend.ViewModels
             // If still in custom parameter mode, check that users meant to continue or not
             if (ParametersCheckBoxEnabled == false && _displayUserMessage != null)
             {
-                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", 3, true);
+                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to dump with these custom parameters?", 2, true);
                 if (result == true)
                 {
                     ParametersCheckBoxEnabled = true;
                     ProcessCustomParameters();
                 }
-                else if (result == null)
+                else
                 {
                     return;
                 }
-                // If false, then we continue with the current known environment
             }
 
             try
@@ -2227,6 +2244,9 @@ namespace MPF.Frontend.ViewModels
             }
             finally
             {
+                // Reallow quick exiting
+                AskBeforeQuit = false;
+
                 // Reset all UI elements
                 EnableAllUIElements();
             }
