@@ -119,7 +119,7 @@ namespace MPF.Processors
                     info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());;
 
                     // Bluray-specific options
-                    if (Type == MediaType.BluRay || Type == NintendoWiiUOpticalDisc)
+                    if (Type == MediaType.BluRay || Type == MediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
                         switch (System)
