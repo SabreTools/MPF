@@ -2173,17 +2173,16 @@ namespace MPF.Frontend.ViewModels
             // If still in custom parameter mode, check that users meant to continue or not
             if (ParametersCheckBoxEnabled == false && _displayUserMessage != null)
             {
-                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", 3, true);
+                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to dump with these custom parameters?", 2, true);
                 if (result == true)
                 {
                     ParametersCheckBoxEnabled = true;
                     ProcessCustomParameters();
                 }
-                else if (result == null)
+                else
                 {
                     return;
                 }
-                // If false, then we continue with the current known environment
             }
 
             try
