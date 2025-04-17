@@ -6,16 +6,11 @@ namespace MPF.ExecutionContexts.Redumper
     public static class CommandStrings
     {
         public const string NONE = "";
-        public const string CD = "cd";
-        public const string DVD = "dvd"; // Synonym for CD
-        public const string BluRay = "bd"; // Synonym for CD
-        public const string SACD = "sacd"; // Synonym for CD
-        public const string New = "new"; // Synonym for CD; Temporary command, to be removed later
+        public const string Disc = "disc";
         public const string Rings = "rings";
         public const string Dump = "dump";
-        public const string DumpNew = "dumpnew"; // Temporary command, to be removed later
+        public const string DumpExtra = "dump::extra";
         public const string Refine = "refine";
-        public const string RefineNew = "refinenew"; // Temporary command, to be removed later
         public const string Verify = "verify";
         public const string DVDKey = "dvdkey";
         public const string Eject = "eject";
@@ -25,7 +20,11 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Hash = "hash";
         public const string Info = "info";
         public const string Skeleton = "skeleton";
+        public const string FlashMT1339 = "flash::mt1339";
+        public const string Subchannel = "subchannel";
         public const string Debug = "debug";
         public const string FixMSF = "fixmsf";
+        public const string DebugFlip = "debug::flip";
+        public const string DriveTest = "drive::test";
     }
 }

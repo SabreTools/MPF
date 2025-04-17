@@ -11,8 +11,10 @@ namespace MPF.ExecutionContexts.Redumper
         public const string HelpShort = "-h";
         public const string Version = "--version";
         public const string Verbose = "--verbose";
+        public const string Continue = "--continue";
         public const string AutoEject = "--auto-eject";
         public const string Debug = "--debug";
+        public const string DiscType = "--disc-type";
         public const string Drive = "--drive";
         public const string Speed = "--speed";
         public const string Retries = "--retries";
@@ -37,7 +39,9 @@ namespace MPF.ExecutionContexts.Redumper
 
         public const string PlextorSkipLeadin = "--plextor-skip-leadin";
         public const string PlextorLeadinRetries = "--plextor-leadin-retries";
+        public const string PlextorLeadinForceStore = "--plextor-leadin-force-store";
         public const string AsusSkipLeadout = "--asus-skip-leadout";
+        public const string AsusLeadoutRetries = "--asus-leadout-retries";
 
         #endregion
 
@@ -70,8 +74,13 @@ namespace MPF.ExecutionContexts.Redumper
         public const string DumpReadSize = "--dump-read-size";
         public const string OverreadLeadout = "--overread-leadout";
         public const string ForceUnscrambled = "--force-unscrambled";
+        public const string ForceRefine = "--force-refine";
         public const string LegacySubs = "--legacy-subs";
         public const string DisableCDText = "--disable-cdtext";
+        public const string SkipSubcodeDesync = "--skip-subcode-desync";
+        public const string DriveTestSkipPlextorLeadin = "--drive-test-skip-plextor-leadin";
+        public const string DriveTestSkipCacheRead = "--drive-test-skip-cache-read";
+        public const string Firmware = "--firmware";
 
         #endregion
     }

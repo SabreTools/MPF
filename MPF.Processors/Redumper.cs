@@ -1624,12 +1624,22 @@ namespace MPF.Processors
             try
             {
                 // If we have a perfect audio offset, return
+                perfect_audio_offset_applied = false;
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("Perfect Audio Offset applied") == true)
-                        return "+0";
+                    {
+                        perfect_audio_offset_applied = true;
+                    }
+                    else if (line?.StartsWith("disc write offset: +0") == true)
+                    {
+                        if (perfect_audio_offset_applied)
+                            return "+0";
+                        else
+                            return null;
+                    }
                 }
 
                 // We couldn't detect it then
@@ -1987,6 +1997,7 @@ namespace MPF.Processors
             // Samples:
             // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
             // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
+            // redumper v2025.03.29 build_481
 
             try
             {
@@ -2001,7 +2012,7 @@ namespace MPF.Processors
 
                 // Generate regex
                 // Permissive
-                var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
+                var regex = new Regex(@"^redumper (v.+)", RegexOptions.Compiled);
                 // Strict
                 //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
 
