@@ -1170,7 +1170,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetVersion_Valid_Filled()
         {
-            string? expected = "v1980.01.01 build_00";
+            string? expected = "v1980.01.01 build_000";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetVersion(log);
             Assert.Equal(expected, actual);
