@@ -289,9 +289,12 @@ namespace MPF.ExecutionContexts.Redumper
 
             this[FlagStrings.Drive] = true;
             (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath ?? string.Empty);
-
-            this[FlagStrings.Speed] = true;
-            (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
+            
+            if (driveSpeed != null && driveSpeed > 0)
+            {
+                this[FlagStrings.Speed] = true;
+                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
+            }
 
             // Set user-defined options
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))

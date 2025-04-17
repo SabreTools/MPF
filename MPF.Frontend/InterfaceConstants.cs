@@ -11,7 +11,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Set of all accepted speed values
         /// </summary>
-        private static readonly List<int> _speedValues = [1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72];
+        private static readonly List<int> _speedValues = [0, 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72];
 
         /// <summary>
         /// Set of accepted speeds for CD and GD media
@@ -36,7 +36,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Set of accepted speeds for all other media
         /// </summary>
-        public static List<int> Unknown => _speedValues.FindAll(s => s <= 1);
+        public static List<int> Unknown => _speedValues.FindAll(s => s <= 0);
 
         /// <summary>
         /// Get list of all drive speeds for a given MediaType
