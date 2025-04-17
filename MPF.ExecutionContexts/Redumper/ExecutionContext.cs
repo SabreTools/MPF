@@ -109,7 +109,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
             [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
             [FlagStrings.DriveTestSkipCacheRead] = new FlagInput(FlagStrings.DriveTestSkipCacheRead),
-            //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware),
+            //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
         };
 
         #endregion
@@ -244,7 +244,7 @@ namespace MPF.ExecutionContexts.Redumper
         public override bool IsDumpingCommand()
         {
             return ModeValues?.Contains(CommandStrings.Disc) == true
-                || ModeValues?.Contains(CommandStrings.Dump) == true
+                || ModeValues?.Contains(CommandStrings.Dump) == true;
         }
 
         /// <inheritdoc/>

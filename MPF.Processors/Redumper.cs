@@ -446,6 +446,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
+                        new([$"{outputFilename}.flip"], OutputFileFlags.None),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
                         new($"{outputFilename}.state", OutputFileFlags.Required
@@ -511,9 +512,13 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
+                        // .asus is obsolete: newer redumper produces .cache instead
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
+                        new($"{outputFilename}.cache", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "cache"),
                         new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
