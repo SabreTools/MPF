@@ -1794,6 +1794,8 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(log);
 
+                long errorCount = -1;
+
                 // Find the error counts
                 while (!sr.EndOfStream)
                 {
@@ -1806,12 +1808,12 @@ namespace MPF.Processors
                     {
                         string[] parts = line.Split(' ');
                         if (long.TryParse(parts[1], out long scsiErrors))
-                            return scsiErrors;
+                            errorCount = scsiErrors;
                     }
                 }
 
-                // We couldn't detect it then
-                return -1;
+                // Return error count, default -1 if no SCSI error count found
+                return errorCount;
             }
             catch
             {
