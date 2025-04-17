@@ -214,15 +214,14 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Ask to confirm quitting, when an operation is running
         /// </summary>
-        public void MainWindowClosing()
+        public void MainWindowClosing(object sender, CancelEventArgs e)
         {
-            if (AskBeforeQuit)
+            if (MainViewModel.AskBeforeQuit)
             {
                 MessageBoxResult result = CustomMessageBox.Show(this, "A dump is still being processed, are you sure you want to quit?", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result = MessageBoxResult.Yes)
-                    this.Close();
+                if (result == MessageBoxResult.No)
+                    e.Cancel = true;
             }
-            this.Close();
         }
 
         /// <summary>
