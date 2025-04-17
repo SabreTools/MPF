@@ -1624,7 +1624,7 @@ namespace MPF.Processors
             try
             {
                 // If we have a perfect audio offset, return
-                perfect_audio_offset_applied = false;
+                bool perfect_audio_offset_applied = false;
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream)
                 {
