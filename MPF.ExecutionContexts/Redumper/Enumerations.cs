@@ -9,7 +9,7 @@ namespace MPF.ExecutionContexts.Redumper
 
         BE,
         D8,
-        BE_CDDA,
+        BE_CDDA, // Currently an alias for BE
     }
 
     /// <summary>

@@ -199,14 +199,34 @@ namespace MPF.Frontend.Tools
                 }
 
                 // If the line ends in a known extra track names, skip them for checking
-                if (hashData.Contains("(Track 0).bin")
+                // TODO: Smarter method to ignore all tracks that start with 0. 00. A. or AA.
+                if (hashData.Contains(".dmi")
+                    || hashData.Contains(".pfi")
+                    || hashData.Contains(".ss")
+                    || hashData.Contains("(Track 0).bin")
+                    || hashData.Contains("(Track 0.1).bin")
                     || hashData.Contains("(Track 0.2).bin")
+                    || hashData.Contains("(Track 0.3).bin")
+                    || hashData.Contains("(Track 0.4).bin")
+                    || hashData.Contains("(Track 0.5).bin")
                     || hashData.Contains("(Track 00).bin")
+                    || hashData.Contains("(Track 00.1).bin")
                     || hashData.Contains("(Track 00.2).bin")
+                    || hashData.Contains("(Track 00.3).bin")
+                    || hashData.Contains("(Track 00.4).bin")
+                    || hashData.Contains("(Track 00.5).bin")
                     || hashData.Contains("(Track A).bin")
+                    || hashData.Contains("(Track A.1).bin")
                     || hashData.Contains("(Track A.2).bin")
+                    || hashData.Contains("(Track A.3).bin")
+                    || hashData.Contains("(Track A.4).bin")
+                    || hashData.Contains("(Track A.5).bin")
                     || hashData.Contains("(Track AA).bin")
-                    || hashData.Contains("(Track AA.2).bin"))
+                    || hashData.Contains("(Track AA.1).bin")
+                    || hashData.Contains("(Track AA.2).bin")
+                    || hashData.Contains("(Track AA.3).bin")
+                    || hashData.Contains("(Track AA.4).bin")
+                    || hashData.Contains("(Track AA.5).bin"))
                 {
                     trackCount--;
                     resultProgress?.Report(ResultEventArgs.Success("Extra track found, skipping!"));

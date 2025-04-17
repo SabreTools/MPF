@@ -216,8 +216,8 @@ if [ $NO_ARCHIVE = false ]; then
         unzip -u DiscImageCreator_20250101.zip
 
         # Redumper
-        wget https://github.com/superg/redumper/releases/download/build_438/redumper-2024.11.03_build438-win64.zip
-        unzip redumper-2024.11.03_build438-win64.zip
+        wget https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip
+        unzip redumper-2025.04.15_build549-Windows64.zip
 
         # Create directories and copy data
         for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
@@ -227,22 +227,22 @@ if [ $NO_ARCHIVE = false ]; then
                     cp -rfp Release_ANSI/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
 
                     mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
-                    cp -rfp redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                    cp -rfp redumper-2025.04.15_build549-Windows64/bin/redumper.exe MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
                 fi
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator
                 cp -rfp Release_ANSI/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper
-                cp -rfp redumper-2024.11.03_build438-win64/bin/redumper.exe MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
+                cp -rfp redumper-2025.04.15_build549-Windows64/bin/redumper.exe MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/
             done
         done
 
         # Clean up the downloaded files and directories
         rm DiscImageCreator_20250101.zip
         rm -r Release_ANSI
-        rm redumper-2024.11.03_build438-win64.zip
-        rm -r redumper-2024.11.03_build438-win64
+        rm redumper-2025.04.15_build549-Windows64.zip
+        rm -r redumper-2025.04.15_build549-Windows64
     fi
 
     # Create UI archives

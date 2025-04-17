@@ -54,8 +54,10 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.HelpLong] = new FlagInput(FlagStrings.HelpShort, FlagStrings.HelpLong),
             [FlagStrings.Version] = new FlagInput(FlagStrings.Version),
             [FlagStrings.Verbose] = new FlagInput(FlagStrings.Verbose),
+            [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
             [FlagStrings.AutoEject] = new FlagInput(FlagStrings.AutoEject),
             [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
+            [FlagStrings.DiscType] = new StringInput(FlagStrings.DiscType),
             [FlagStrings.Drive] = new StringInput(FlagStrings.Drive),
             [FlagStrings.Speed] = new Int32Input(FlagStrings.Speed),
             [FlagStrings.Retries] = new Int32Input(FlagStrings.Retries),
@@ -75,7 +77,9 @@ namespace MPF.ExecutionContexts.Redumper
             // Drive Specific
             [FlagStrings.PlextorSkipLeadin] = new FlagInput(FlagStrings.PlextorSkipLeadin),
             [FlagStrings.PlextorLeadinRetries] = new Int32Input(FlagStrings.PlextorLeadinRetries),
+            [FlagStrings.PlextorLeadinForceStore] = new FlagInput(FlagStrings.PlextorLeadinForceStore),
             [FlagStrings.AsusSkipLeadout] = new FlagInput(FlagStrings.AsusSkipLeadout),
+            [FlagStrings.AsusLeadoutRetries] = new Int32Input(FlagStrings.AsusLeadoutRetries),
 
             // Offset
             [FlagStrings.ForceOffset] = new Int32Input(FlagStrings.ForceOffset),
@@ -99,8 +103,13 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.DumpReadSize] = new Int32Input(FlagStrings.DumpReadSize),
             [FlagStrings.OverreadLeadout] = new FlagInput(FlagStrings.OverreadLeadout),
             [FlagStrings.ForceUnscrambled] = new FlagInput(FlagStrings.ForceUnscrambled),
+            [FlagStrings.ForceRefine] = new FlagInput(FlagStrings.ForceRefine),
             [FlagStrings.LegacySubs] = new FlagInput(FlagStrings.LegacySubs),
             [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
+            [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
+            [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
+            [FlagStrings.DriveTestSkipCacheRead] = new FlagInput(FlagStrings.DriveTestSkipCacheRead),
+            //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
         };
 
         #endregion
@@ -134,8 +143,10 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.HelpShort,
                     FlagStrings.Version,
                     FlagStrings.Verbose,
+                    FlagStrings.Continue,
                     FlagStrings.AutoEject,
                     FlagStrings.Debug,
+                    FlagStrings.DiscType,
                     FlagStrings.Drive,
                     FlagStrings.Speed,
                     FlagStrings.Retries,
@@ -154,7 +165,9 @@ namespace MPF.ExecutionContexts.Redumper
                     // Drive Specific
                     FlagStrings.PlextorSkipLeadin,
                     FlagStrings.PlextorLeadinRetries,
+                    FlagStrings.PlextorLeadinForceStore,
                     FlagStrings.AsusSkipLeadout,
+                    FlagStrings.AsusLeadoutRetries,
 
                     // Offset
                     FlagStrings.ForceOffset,
@@ -178,8 +191,13 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.DumpReadSize,
                     FlagStrings.OverreadLeadout,
                     FlagStrings.ForceUnscrambled,
+                    FlagStrings.ForceRefine,
                     FlagStrings.LegacySubs,
                     FlagStrings.DisableCDText,
+                    FlagStrings.SkipSubcodeDesync,
+                    FlagStrings.DriveTestSkipPlextorLeadin,
+                    FlagStrings.DriveTestSkipCacheRead,
+                    //FlagStrings.Firmware,
                 ],
             };
         }
@@ -225,13 +243,8 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            return ModeValues?.Contains(CommandStrings.CD) == true
-                || ModeValues?.Contains(CommandStrings.DVD) == true
-                || ModeValues?.Contains(CommandStrings.BluRay) == true
-                || ModeValues?.Contains(CommandStrings.SACD) == true
-                || ModeValues?.Contains(CommandStrings.New) == true
-                || ModeValues?.Contains(CommandStrings.Dump) == true
-                || ModeValues?.Contains(CommandStrings.DumpNew) == true;
+            return ModeValues?.Contains(CommandStrings.Disc) == true
+                || ModeValues?.Contains(CommandStrings.Dump) == true;
         }
 
         /// <inheritdoc/>
@@ -257,21 +270,17 @@ namespace MPF.ExecutionContexts.Redumper
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
                     ModeValues = RedumpSystem switch
                     {
-                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.SACD],
-                        _ => [CommandStrings.CD, CommandStrings.Skeleton],
+                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.Disc],
+                        _ => [CommandStrings.Disc, CommandStrings.Skeleton],
                     };
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
-                    ModeValues = [CommandStrings.DVD];
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.HDDVD: // TODO: Keep in sync if another command string shows up
-                    ModeValues = [CommandStrings.DVD];
-                    break;
+                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValues = [CommandStrings.BluRay];
+                    ModeValues = [CommandStrings.Disc];
                     break;
                 default:
                     BaseCommand = null;
@@ -341,7 +350,7 @@ namespace MPF.ExecutionContexts.Redumper
             if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, SettingConstants.EnableLeadinRetryDefault))
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault));
+                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault));
             }
         }
 
@@ -370,16 +379,11 @@ namespace MPF.ExecutionContexts.Redumper
                 string part = parts[index];
                 switch (part)
                 {
-                    case CommandStrings.CD:
-                    case CommandStrings.DVD:
-                    case CommandStrings.BluRay:
-                    case CommandStrings.SACD:
-                    case CommandStrings.New: // Temporary command, to be removed later
+                    case CommandStrings.Disc:
                     case CommandStrings.Rings:
                     case CommandStrings.Dump:
-                    case CommandStrings.DumpNew: // Temporary command, to be removed later
+                    case CommandStrings.DumpExtra:
                     case CommandStrings.Refine:
-                    case CommandStrings.RefineNew: // Temporary command, to be removed later
                     case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
                     case CommandStrings.Eject:
@@ -389,8 +393,12 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Hash:
                     case CommandStrings.Info:
                     case CommandStrings.Skeleton:
+                    //case CommandStrings.FlashMT1339:
+                    case CommandStrings.Subchannel:
                     case CommandStrings.Debug:
-                        //case CommandStrings.FixMSF:
+                    case CommandStrings.FixMSF:
+                    case CommandStrings.DebugFlip:
+                    case CommandStrings.DriveTest:
                         ModeValues.Add(part);
                         break;
 

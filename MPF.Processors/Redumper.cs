@@ -446,6 +446,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
+                        new([$"{outputFilename}.flip"], OutputFileFlags.None),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
                         new($"{outputFilename}.state", OutputFileFlags.Required
@@ -511,9 +512,13 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
+                        // .asus is obsolete: newer redumper produces .cache instead
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
+                        new($"{outputFilename}.cache", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "cache"),
                         new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
@@ -1624,12 +1629,22 @@ namespace MPF.Processors
             try
             {
                 // If we have a perfect audio offset, return
+                bool perfectAudioOffsetApplied = false;
                 using var sr = File.OpenText(log);
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("Perfect Audio Offset applied") == true)
-                        return "+0";
+                    {
+                        perfectAudioOffsetApplied = true;
+                    }
+                    else if (line?.StartsWith("disc write offset: +0") == true)
+                    {
+                        if (perfectAudioOffsetApplied)
+                            return "+0";
+                        else
+                            return null;
+                    }
                 }
 
                 // We couldn't detect it then
@@ -1779,6 +1794,8 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(log);
 
+                long errorCount = -1;
+
                 // Find the error counts
                 while (!sr.EndOfStream)
                 {
@@ -1791,12 +1808,12 @@ namespace MPF.Processors
                     {
                         string[] parts = line.Split(' ');
                         if (long.TryParse(parts[1], out long scsiErrors))
-                            return scsiErrors;
+                            errorCount = scsiErrors;
                     }
                 }
 
-                // We couldn't detect it then
-                return -1;
+                // Return error count, default -1 if no SCSI error count found
+                return errorCount;
             }
             catch
             {
@@ -1987,6 +2004,7 @@ namespace MPF.Processors
             // Samples:
             // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
             // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
+            // redumper v2025.03.29 build_481
 
             try
             {
@@ -2001,7 +2019,7 @@ namespace MPF.Processors
 
                 // Generate regex
                 // Permissive
-                var regex = new Regex(@"^redumper (v.+) \[.+\]", RegexOptions.Compiled);
+                var regex = new Regex(@"^redumper (v.+)", RegexOptions.Compiled);
                 // Strict
                 //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
 

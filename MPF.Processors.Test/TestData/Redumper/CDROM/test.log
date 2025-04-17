@@ -1,5 +1,5 @@
 DUMPING DATE (DateTime.Now)
-redumper v1980.01.01 build_00 [Jan 01 1980, 00:00:00]
+redumper v1980.01.01 build_000
 << GetVersion (above) >>
 
 << GetParameters >>
@@ -162,4 +162,4 @@ Universal Hash (SHA-1): da39a3ee5e6b4b0d3255bfef95601890afd80709
 volume identifier: label
 
 << GetWriteOffset >>
-disc write offset: offset
+disc write offset: +0

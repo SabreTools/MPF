@@ -29,7 +29,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
 
             var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
-            Assert.Equal(14, actual.Count);
+            Assert.Equal(15, actual.Count);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.DVD);
 
             var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
-            Assert.Equal(16, actual.Count);
+            Assert.Equal(17, actual.Count);
         }
 
         [Fact]
@@ -1170,7 +1170,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetVersion_Valid_Filled()
         {
-            string? expected = "v1980.01.01 build_00";
+            string? expected = "v1980.01.01 build_000";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetVersion(log);
             Assert.Equal(expected, actual);
@@ -1236,7 +1236,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetWriteOffset_Valid_Filled()
         {
-            string? expected = "offset";
+            string? expected = "+0";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetWriteOffset(log);
             Assert.Equal(expected, actual);
