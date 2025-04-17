@@ -271,7 +271,7 @@ namespace MPF.ExecutionContexts.Redumper
                     ModeValues = RedumpSystem switch
                     {
                         SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.Disc],
-                        _ => [CommandStrings.Disc, CommandStrings.Skeleton],
+                        _ => [CommandStrings.Disc],
                     };
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
