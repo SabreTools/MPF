@@ -346,7 +346,7 @@ namespace MPF.ExecutionContexts.Redumper
             if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, SettingConstants.EnableLeadinRetryDefault))
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault));
+                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault));
             }
         }
 
