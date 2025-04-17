@@ -199,8 +199,11 @@ namespace MPF.Frontend.Tools
                 }
 
                 // If the line ends in a known extra track names, skip them for checking
-                // TODO: Ignore all tracks that start with 0. 00. A. or AA.
-                if (hashData.Contains("(Track 0).bin")
+                // TODO: Smarter method to ignore all tracks that start with 0. 00. A. or AA.
+                if (hashData.Contains(".dmi")
+                    || hashData.Contains(".pfi")
+                    || hashData.Contains(".ss")
+                    || hashData.Contains("(Track 0).bin")
                     || hashData.Contains("(Track 0.1).bin")
                     || hashData.Contains("(Track 0.2).bin")
                     || hashData.Contains("(Track 0.3).bin")
