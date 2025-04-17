@@ -2246,6 +2246,7 @@ namespace MPF.Frontend.ViewModels
             {
                 // Reallow quick exiting
                 AskBeforeQuit = false;
+
                 // Reset all UI elements
                 EnableAllUIElements();
             }
