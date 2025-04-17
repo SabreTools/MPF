@@ -215,7 +215,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Ask to confirm quitting, when an operation is running
         /// </summary>
-        public void MainWindowClosing(object sender, CancelEventArgs e)
+        public void MainWindowClosing(object? sender, CancelEventArgs e)
         {
             if (MainViewModel.AskBeforeQuit)
             {
