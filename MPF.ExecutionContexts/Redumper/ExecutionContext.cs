@@ -54,7 +54,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.HelpLong] = new FlagInput(FlagStrings.HelpShort, FlagStrings.HelpLong),
             [FlagStrings.Version] = new FlagInput(FlagStrings.Version),
             [FlagStrings.Verbose] = new FlagInput(FlagStrings.Verbose),
-            [FlagStrings.Continue] = new StringInput(FlagStrings.Cotinue),
+            [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
             [FlagStrings.AutoEject] = new FlagInput(FlagStrings.AutoEject),
             [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
             [FlagStrings.DiscType] = new StringInput(FlagStrings.DiscType),
@@ -269,6 +269,7 @@ namespace MPF.ExecutionContexts.Redumper
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
                     ModeValues = [CommandStrings.Disc, CommandStrings.Skeleton];
+                    break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
