@@ -244,7 +244,8 @@ namespace MPF.ExecutionContexts.Redumper
         public override bool IsDumpingCommand()
         {
             // `dump` command does not provide hashes so will error out after dump if run via MPF
-            return ModeValues?.Contains(CommandStrings.Disc) == true;
+            return ModeValues?.Contains(CommandStrings.None) == true
+                || ModeValues?.Contains(CommandStrings.Disc) == true;
         }
 
         /// <inheritdoc/>
