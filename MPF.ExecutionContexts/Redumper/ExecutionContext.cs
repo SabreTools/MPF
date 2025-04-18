@@ -41,9 +41,9 @@ namespace MPF.ExecutionContexts.Redumper
         #region Flag Values
 
         /// <summary>
-        /// List of all modes being run
+        /// Mode being run
         /// </summary>
-        public List<string>? ModeValues { get; set; }
+        public string? ModeValue { get; set; }
 
         /// <summary>
         /// Set of all command flags
@@ -212,12 +212,10 @@ namespace MPF.ExecutionContexts.Redumper
         {
             var parameters = new StringBuilder();
 
-            ModeValues ??= [CommandStrings.NONE];
-
-            // Modes
-            string modes = string.Join(" ", [.. ModeValues]);
-            if (modes.Length > 0)
-                parameters.Append($"{modes} ");
+            // Command Mode
+            ModeValue ??= CommandStrings.NONE;
+            if (ModeValue != CommandStrings.NONE)
+                parameters.Append($"{ModeValue} ");
 
             // Loop though and append all existing
             foreach (var kvp in _inputs)
@@ -244,8 +242,8 @@ namespace MPF.ExecutionContexts.Redumper
         public override bool IsDumpingCommand()
         {
             // `dump` command does not provide hashes so will error out after dump if run via MPF
-            return ModeValues?.Contains(CommandStrings.None) == true
-                || ModeValues?.Contains(CommandStrings.Disc) == true;
+            return ModeValue == CommandStrings.None
+                || ModeValue == CommandStrings.Disc;
         }
 
         /// <inheritdoc/>
@@ -269,10 +267,10 @@ namespace MPF.ExecutionContexts.Redumper
             switch (MediaType)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    ModeValues = RedumpSystem switch
+                    ModeValue = RedumpSystem switch
                     {
-                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.NONE],
-                        _ => [CommandStrings.NONE],
+                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => CommandStrings.NONE,
+                        _ => CommandStrings.NONE,
                     };
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
@@ -281,7 +279,7 @@ namespace MPF.ExecutionContexts.Redumper
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValues = [CommandStrings.NONE];
+                    ModeValue = CommandStrings.NONE;
                     break;
                 default:
                     BaseCommand = null;
@@ -371,7 +369,7 @@ namespace MPF.ExecutionContexts.Redumper
             string[] parts = SplitParameterString(parameters!);
 
             // Setup the modes
-            ModeValues = [];
+            ModeValue = null;
 
             // All modes should be cached separately
             int index = 0;
@@ -397,13 +395,16 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Hash:
                     case CommandStrings.Info:
                     case CommandStrings.Skeleton:
-                    //case CommandStrings.FlashMT1339:
+                    case CommandStrings.FlashMT1339:
                     case CommandStrings.Subchannel:
                     case CommandStrings.Debug:
                     case CommandStrings.FixMSF:
                     case CommandStrings.DebugFlip:
                     case CommandStrings.DriveTest:
-                        ModeValues.Add(part);
+                        // Only allow one mode per command
+                        if (ModeValue != null)
+                            return false;
+                        ModeValue = part;
                         break;
 
                     // Default is either a flag or an invalid mode
