@@ -267,19 +267,13 @@ namespace MPF.ExecutionContexts.Redumper
             switch (MediaType)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    ModeValue = RedumpSystem switch
-                    {
-                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => CommandStrings.NONE,
-                        _ => CommandStrings.NONE,
-                    };
-                    break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValue = CommandStrings.NONE;
+                    ModeValue = CommandStrings.Disc;
                     break;
                 default:
                     BaseCommand = null;
@@ -403,7 +397,8 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.DriveTest:
                         // Only allow one mode per command
                         if (ModeValue != null)
-                            return false;
+                            continue;
+                        
                         ModeValue = part;
                         break;
 
