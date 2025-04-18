@@ -41,9 +41,9 @@ namespace MPF.ExecutionContexts.Redumper
         #region Flag Values
 
         /// <summary>
-        /// List of all modes being run
+        /// Mode being run
         /// </summary>
-        public List<string>? ModeValues { get; set; }
+        public string? ModeValue { get; set; }
 
         /// <summary>
         /// Set of all command flags
@@ -212,12 +212,10 @@ namespace MPF.ExecutionContexts.Redumper
         {
             var parameters = new StringBuilder();
 
-            ModeValues ??= [CommandStrings.NONE];
-
-            // Modes
-            string modes = string.Join(" ", [.. ModeValues]);
-            if (modes.Length > 0)
-                parameters.Append($"{modes} ");
+            // Command Mode
+            ModeValue ??= CommandStrings.NONE;
+            if (ModeValue != CommandStrings.NONE)
+                parameters.Append($"{ModeValue} ");
 
             // Loop though and append all existing
             foreach (var kvp in _inputs)
@@ -243,8 +241,9 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            return ModeValues?.Contains(CommandStrings.Disc) == true
-                || ModeValues?.Contains(CommandStrings.Dump) == true;
+            // `dump` command does not provide hashes so will error out after dump if run via MPF
+            return ModeValue == CommandStrings.NONE
+                || ModeValue == CommandStrings.Disc;
         }
 
         /// <inheritdoc/>
@@ -268,19 +267,13 @@ namespace MPF.ExecutionContexts.Redumper
             switch (MediaType)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    ModeValues = RedumpSystem switch
-                    {
-                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.Disc],
-                        _ => [CommandStrings.Disc, CommandStrings.Skeleton],
-                    };
-                    break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValues = [CommandStrings.Disc];
+                    ModeValue = CommandStrings.Disc;
                     break;
                 default:
                     BaseCommand = null;
@@ -289,9 +282,12 @@ namespace MPF.ExecutionContexts.Redumper
 
             this[FlagStrings.Drive] = true;
             (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath ?? string.Empty);
-
-            this[FlagStrings.Speed] = true;
-            (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
+            
+            if (driveSpeed != null && driveSpeed > 0)
+            {
+                this[FlagStrings.Speed] = true;
+                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
+            }
 
             // Set user-defined options
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
@@ -367,7 +363,7 @@ namespace MPF.ExecutionContexts.Redumper
             string[] parts = SplitParameterString(parameters!);
 
             // Setup the modes
-            ModeValues = [];
+            ModeValue = null;
 
             // All modes should be cached separately
             int index = 0;
@@ -393,13 +389,17 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Hash:
                     case CommandStrings.Info:
                     case CommandStrings.Skeleton:
-                    //case CommandStrings.FlashMT1339:
+                    case CommandStrings.FlashMT1339:
                     case CommandStrings.Subchannel:
                     case CommandStrings.Debug:
                     case CommandStrings.FixMSF:
                     case CommandStrings.DebugFlip:
                     case CommandStrings.DriveTest:
-                        ModeValues.Add(part);
+                        // Only allow one mode per command
+                        if (ModeValue != null)
+                            continue;
+                        
+                        ModeValue = part;
                         break;
 
                     // Default is either a flag or an invalid mode

@@ -2181,6 +2181,8 @@ namespace MPF.Frontend.ViewModels
                 }
                 else
                 {
+                    // Re-allow quick exiting
+                    AskBeforeQuit = false;
                     return;
                 }
             }
@@ -2189,7 +2191,11 @@ namespace MPF.Frontend.ViewModels
             {
                 // Run pre-dumping validation checks
                 if (!ValidateBeforeDumping())
+                {
+                    // Re-allow quick exiting
+                    AskBeforeQuit = false;
                     return;
+                }
 
                 // Disable all UI elements apart from dumping button
                 DisableAllUIElements();
@@ -2218,6 +2224,9 @@ namespace MPF.Frontend.ViewModels
                     LogLn("No dumping command was run, submission information will not be gathered.");
                     Status = "Execution complete!";
 
+                    // Re-allow quick exiting
+                    AskBeforeQuit = false;
+
                     // Reset all UI elements
                     EnableAllUIElements();
                     return;
@@ -2244,7 +2253,7 @@ namespace MPF.Frontend.ViewModels
             }
             finally
             {
-                // Reallow quick exiting
+                // Re-allow quick exiting
                 AskBeforeQuit = false;
 
                 // Reset all UI elements
