@@ -243,8 +243,8 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            return ModeValues?.Contains(CommandStrings.Disc) == true
-                || ModeValues?.Contains(CommandStrings.Dump) == true;
+            // `dump` command does not provide hashes so will error out after dump if run via MPF
+            return ModeValues?.Contains(CommandStrings.Disc) == true;
         }
 
         /// <inheritdoc/>
@@ -270,8 +270,8 @@ namespace MPF.ExecutionContexts.Redumper
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
                     ModeValues = RedumpSystem switch
                     {
-                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.Disc],
-                        _ => [CommandStrings.Disc],
+                        SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD => [CommandStrings.NONE],
+                        _ => [CommandStrings.NONE],
                     };
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
@@ -280,7 +280,7 @@ namespace MPF.ExecutionContexts.Redumper
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:
                 case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValues = [CommandStrings.Disc];
+                    ModeValues = [CommandStrings.NONE];
                     break;
                 default:
                     BaseCommand = null;

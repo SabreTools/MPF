@@ -36,7 +36,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Set of accepted speeds for all other media
         /// </summary>
-        public static List<int> Unknown => [1]
+        public static List<int> Unknown => [1];
 
         /// <summary>
         /// Get list of all drive speeds for a given MediaType
