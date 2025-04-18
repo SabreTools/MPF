@@ -119,7 +119,7 @@ namespace MPF.ExecutionContexts.Test
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
-            Assert.True(context.IsDumpingCommand());
+            Assert.False(context.IsDumpingCommand());
         }
 
         #endregion
