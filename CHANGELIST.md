@@ -7,6 +7,7 @@
 - Always write full configuration file
 - Short-circuit CLI first-run experience
 - Start defining all download URLs
+- Add all separate downloads
 
 ### 3.3.0 (2025-01-03)
 

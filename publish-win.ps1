@@ -345,6 +345,21 @@ function Download-Programs {
     $DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
     $DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
 
+    #Invoke-WebRequest -Uri $DIC_LINUX_ARM64_URL -OutFile creator_linux-arm64.zip
+    #Expand-Archive -LiteralPath -u creator_linux-arm64.zip -DestinationPath "$BUILD_FOLDER/creator_linux-arm64"
+    Invoke-WebRequest -Uri $DIC_LINUX_X64_URL -OutFile creator_linux-x64.zip
+    Expand-Archive -LiteralPath -u creator_linux-x64.zip -DestinationPath "$BUILD_FOLDER/creator_linux-x64"
+    Invoke-WebRequest -Uri $DIC_MACOS_ARM64_URL -OutFile creator_macos-arm64.zip
+    Expand-Archive -LiteralPath -u creator_macos-arm64.zip -DestinationPath "$BUILD_FOLDER/creator_macos-arm64"
+    Invoke-WebRequest -Uri $DIC_MACOS_X64_URL -OutFile creator_macos-x64.zip
+    Expand-Archive -LiteralPath -u creator_macos-x64.zip -DestinationPath "$BUILD_FOLDER/creator_macos-x64"
+    #Invoke-WebRequest -Uri $DIC_WIN_ARM64_URL -OutFile creator_win-arm64.zip
+    #Expand-Archive -LiteralPath -u creator_win-arm64.zip -DestinationPath "$BUILD_FOLDER/creator_win-arm64"
+    Invoke-WebRequest -Uri $DIC_WIN_X86_URL -OutFile creator_win-x86.zip
+    Expand-Archive -LiteralPath -u creator_win-x86.zip -DestinationPath "$BUILD_FOLDER/creator_win-x86"
+    Invoke-WebRequest -Uri $DIC_WIN_X64_URL -OutFile creator_win-x64.zip
+    Expand-Archive -LiteralPath -u creator_win-x64.zip -DestinationPath "$BUILD_FOLDER/creator_win-x64"
+
     # Redumper
     $REDUMPER_LINUX_ARM64_URL=""
     $REDUMPER_LINUX_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
@@ -353,4 +368,19 @@ function Download-Programs {
     $REDUMPER_WIN_ARM64_URL=""
     $REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
     $REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+
+    #Invoke-WebRequest -Uri $REDUMPER_LINUX_ARM64_URL -OutFile redumper_linux-arm64.zip
+    #Expand-Archive -LiteralPath -u redumper_linux-arm64.zip -DestinationPath "$BUILD_FOLDER/redumper_linux-arm64"
+    Invoke-WebRequest -Uri $REDUMPER_LINUX_X64_URL -OutFile redumper_linux-x64.zip
+    Expand-Archive -LiteralPath -u redumper_linux-x64.zip -DestinationPath "$BUILD_FOLDER/redumper_linux-x64"
+    Invoke-WebRequest -Uri $REDUMPER_MACOS_ARM64_URL -OutFile redumper_macos-arm64.zip
+    Expand-Archive -LiteralPath -u redumper_macos-arm64.zip -DestinationPath "$BUILD_FOLDER/redumper_macos-arm64"
+    Invoke-WebRequest -Uri $REDUMPER_MACOS_X64_URL -OutFile redumper_macos-x64.zip
+    Expand-Archive -LiteralPath -u redumper_macos-x64.zip -DestinationPath "$BUILD_FOLDER/redumper_macos-x64"
+    #Invoke-WebRequest -Uri $REDUMPER_WIN_ARM64_URL -OutFile redumper_win-arm64.zip
+    #Expand-Archive -LiteralPath -u redumper_win-arm64.zip -DestinationPath "$BUILD_FOLDER/redumper_win-arm64"
+    Invoke-WebRequest -Uri $REDUMPER_WIN_X86_URL -OutFile redumper_win-x86.zip
+    Expand-Archive -LiteralPath -u redumper_win-x86.zip -DestinationPath "$BUILD_FOLDER/redumper_win-x86"
+    Invoke-WebRequest -Uri $REDUMPER_WIN_X64_URL -OutFile redumper_win-x64.zip
+    Expand-Archive -LiteralPath -u redumper_win-x64.zip -DestinationPath "$BUILD_FOLDER/redumper_win-x64"
 }

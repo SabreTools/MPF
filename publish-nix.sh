@@ -373,6 +373,21 @@ download_programs() {
     DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
     DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
 
+    #wget $DIC_LINUX_ARM64_URL -O creator_linux-arm64.zip
+    #unzip -u creator_linux-arm64.zip -d creator_linux-arm64
+    wget $DIC_LINUX_X64_URL -O creator_linux-x64.zip
+    unzip -u creator_linux-x64.zip -d creator_linux-x64
+    wget $DIC_MACOS_ARM64_URL -O creator_macos-arm64.zip
+    unzip -u creator_macos-arm64.zip -d creator_macos-arm64
+    wget $DIC_MACOS_X64_URL -O creator_macos-x64.zip
+    unzip -u creator_macos-x64.zip -d creator_macos-x64
+    #wget $DIC_WIN_ARM64_URL -O creator_win-arm64.zip
+    #unzip -u creator_win-arm64.zip -d creator_win-arm64
+    wget $DIC_WIN_X86_URL -O creator_win-x86.zip
+    unzip -u creator_win-x86.zip -d creator_win-x86
+    wget $DIC_WIN_X64_URL -O creator_win-x64.zip
+    unzip -u creator_win-x64.zip -d creator_win-x64
+
     # Redumper
     REDUMPER_LINUX_ARM64_URL=""
     REDUMPER_LINUX_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
@@ -381,4 +396,19 @@ download_programs() {
     REDUMPER_WIN_ARM64_URL=""
     REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
     REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+
+    #wget $REDUMPER_LINUX_ARM64_URL -O redumper_linux-arm64.zip
+    #unzip -u redumper_linux-arm64.zip -d redumper_linux-arm64
+    wget $REDUMPER_LINUX_X64_URL -O redumper_linux-x64.zip
+    unzip -u redumper_linux-x64.zip -d redumper_linux-x64
+    wget $REDUMPER_MACOS_ARM64_URL -O redumper_macos-arm64.zip
+    unzip -u redumper_macos-arm64.zip -d redumper_macos-arm64
+    wget $REDUMPER_MACOS_X64_URL -O redumper_macos-x64.zip
+    unzip -u redumper_macos-x64.zip -d redumper_macos-x64
+    #wget $REDUMPER_WIN_ARM64_URL -O redumper_win-arm64.zip
+    #unzip -u redumper_win-arm64.zip -d redumper_win-arm64
+    wget $REDUMPER_WIN_X86_URL -O redumper_win-x86.zip
+    unzip -u redumper_win-x86.zip -d redumper_win-x86
+    wget $REDUMPER_WIN_X64_URL -O redumper_win-x64.zip
+    unzip -u redumper_win-x64.zip -d redumper_win-x64
 }
