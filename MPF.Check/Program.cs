@@ -190,7 +190,7 @@ namespace MPF.Check
 
         root:
             Console.WriteLine();
-            Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
+            Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
             Console.WriteLine($"1) Set media type (Currently '{mediaType}')");
