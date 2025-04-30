@@ -192,8 +192,11 @@ function download_programs() {
             fi
 
             EXT=${URL##*.}
-            rm $PREFIX"_"$RUNTIME.$EXT
-            rm -rf $PREFIX"_"$RUNTIME-dir
+            OUTNAME=$PREFIX"_"$RUNTIME.$EXT
+            OUTDIR=$PREFIX"_"$RUNTIME-dir
+
+            rm $OUTNAME
+            rm -rf $OUTDIR
         done
     done
 }

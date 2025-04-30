@@ -118,8 +118,7 @@ function Download-Programs {
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
             }
-            else
-            {
+            else {
                 Expand-Archive -LiteralPath $OUTNAME -DestinationPath "$TEMPDIR"
             }
 
