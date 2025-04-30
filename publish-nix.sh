@@ -119,7 +119,7 @@ function download_programs() {
 
             if [[ $URL =~ \.tar\.gz$ ]]; then
                 tar -xvf $PREFIX_$RUNTIME -C $PREFIX_$RUNTIME-dir
-            elif 
+            else 
                 unzip -u $PREFIX_$RUNTIME -d $PREFIX_$RUNTIME-dir
             fi
         done
