@@ -42,33 +42,48 @@ namespace MPF.CLI
                 return;
             }
 
-            // Try processing the common arguments
-            bool success = OptionsLoader.ProcessCommonArguments(args, out MediaType mediaType, out RedumpSystem? knownSystem, out var error);
-            if (!success)
+            // Setup common outputs
+            CommandOptions opts;
+            MediaType mediaType;
+            RedumpSystem? knownSystem;
+
+            // Use interactive mode
+            if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
             {
-                DisplayHelp(error);
-                return;
+                opts = InteractiveMode(options, out mediaType, out knownSystem);
             }
 
-            // Validate the supplied credentials
-            if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
+            // Use normal commandline parameters
+            else
             {
-                bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
-                string message = validated switch
+                // Try processing the common arguments
+                bool success = OptionsLoader.ProcessCommonArguments(args, out mediaType, out knownSystem, out var error);
+                if (!success)
                 {
-                    true => "Redump username and password accepted!",
-                    false => "Redump username and password denied!",
-                    null => "An error occurred validating your credentials!",
-                };
+                    DisplayHelp(error);
+                    return;
+                }
 
-                if (!string.IsNullOrEmpty(message))
-                    Console.WriteLine(message);
+                // Validate the supplied credentials
+                if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
+                {
+                    bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
+                    string message = validated switch
+                    {
+                        true => "Redump username and password accepted!",
+                        false => "Redump username and password denied!",
+                        null => "An error occurred validating your credentials!",
+                    };
+
+                    if (!string.IsNullOrEmpty(message))
+                        Console.WriteLine(message);
+                }
+
+                // Process any custom parameters
+                int startIndex = 2;
+                opts = LoadFromArguments(args, options, ref startIndex);
             }
 
-            // Process any custom parameters
-            int startIndex = 2;
-            CommandOptions opts = LoadFromArguments(args, options, ref startIndex);
-            
             // Validate the internal program
             switch (options.InternalProgram)
             {
@@ -132,6 +147,7 @@ namespace MPF.CLI
                 DisplayHelp("No valid environment could be created, exiting...");
                 return;
             }
+
             env.SetExecutionContext(paramStr);
 
             // Invoke the dumping program
@@ -185,6 +201,7 @@ namespace MPF.CLI
             Console.WriteLine("-lm, --listmedia        List supported media types");
             Console.WriteLine("-ls, --listsystems      List supported system types");
             Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
+            Console.WriteLine("-i, --interactive       Enable interactive mode");
             Console.WriteLine();
 
             Console.WriteLine("CLI Options:");
@@ -204,6 +221,131 @@ namespace MPF.CLI
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Enable interactive mode for entering information
+        /// </summary>
+        private static CommandOptions InteractiveMode(Frontend.Options options, out MediaType mediaType, out RedumpSystem? system)
+        {
+            // Create return values
+            var opts = new CommandOptions();
+            mediaType = MediaType.NONE;
+            system = null;
+
+            // Create state values
+            string? result = string.Empty;
+
+        root:
+            Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine();
+            Console.WriteLine($"1) Set media type (Currently '{mediaType}')");
+            Console.WriteLine($"2) Set system (Currently '{system}')");
+            Console.WriteLine($"3) Set dumping program (Currently '{options.InternalProgram}')");
+            Console.WriteLine($"4) Set device path (Currently '{opts.DevicePath}')");
+            Console.WriteLine($"5) Set mounted path (Currently '{opts.MountedPath}')");
+            Console.WriteLine($"6) Set file path (Currently '{opts.FilePath}')");
+            Console.WriteLine($"7) Set override speed (Currently '{opts.DriveSpeed}')");
+            Console.WriteLine($"8) Set custom parameters (Currently '{opts.CustomParams}')");
+            Console.WriteLine($"X) Start dumping");
+            Console.Write("> ");
+
+            result = Console.ReadLine();
+            switch (result)
+            {
+                case "1":
+                    goto mediaType;
+                case "2":
+                    goto system;
+                case "3":
+                    goto dumpingProgram;
+                case "4":
+                    goto devicePath;
+                case "5":
+                    goto mountedPath;
+                case "6":
+                    goto filePath;
+                case "7":
+                    goto overrideSpeed;
+                case "8":
+                    goto customParams;
+                case "x":
+                case "X":
+                    Console.WriteLine();
+                    goto exit;
+                default:
+                    Console.WriteLine($"Invalid selection: {result}");
+                    Console.WriteLine();
+                    goto root;
+            }
+
+        mediaType:
+            Console.WriteLine();
+            Console.WriteLine("Enter the media type and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            mediaType = OptionsLoader.ToMediaType(result);
+            goto root;
+
+        system:
+            Console.WriteLine();
+            Console.WriteLine("Enter the system and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            system = Extensions.ToRedumpSystem(result);
+            goto root;
+
+        dumpingProgram:
+            Console.WriteLine();
+            Console.WriteLine("Enter the dumping program and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            options.InternalProgram = result.ToInternalProgram();
+            goto root;
+
+        devicePath:
+            Console.WriteLine();
+            Console.WriteLine("Enter the device path and press Enter:");
+            Console.Write("> ");
+            opts.DevicePath = Console.ReadLine();
+            goto root;
+
+        mountedPath:
+            Console.WriteLine();
+            Console.WriteLine("Enter the mounted path and press Enter:");
+            Console.Write("> ");
+            opts.MountedPath = Console.ReadLine();
+            goto root;
+
+        filePath:
+            Console.WriteLine();
+            Console.WriteLine("Enter the file path and press Enter:");
+            Console.Write("> ");
+            opts.FilePath = Console.ReadLine();
+            goto root;
+
+        overrideSpeed:
+            Console.WriteLine();
+            Console.WriteLine("Enter the override speed and press Enter:");
+            Console.Write("> ");
+
+            result = Console.ReadLine();
+            if (!int.TryParse(result, out int speed))
+                speed = -1;
+
+            opts.DriveSpeed = speed;
+            goto root;
+
+        customParams:
+            Console.WriteLine();
+            Console.WriteLine("Enter the custom parameters and press Enter:");
+            Console.Write("> ");
+            opts.CustomParams = Console.ReadLine();
+            goto root;
+
+        exit:
+            return opts;
         }
 
         /// <summary>

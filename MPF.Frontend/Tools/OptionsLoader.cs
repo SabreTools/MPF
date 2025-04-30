@@ -124,31 +124,13 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// List all programs with their short usable names
-        /// </summary>
-        private static List<string> ListPrograms()
-        {
-            var programs = new List<string>();
-
-            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
-            {
-                if (((InternalProgram)val!) == InternalProgram.NONE)
-                    continue;
-
-                programs.Add($"{((InternalProgram?)val).ShortName()} - {((InternalProgram?)val).LongName()}");
-            }
-
-            return programs;
-        }
-
-        /// <summary>
         /// Get the MediaType enum value for a given string
         /// </summary>
         /// <param name="type">String value to convert</param>
         /// <returns>MediaType represented by the string, if possible</returns>
-        private static MediaType ToMediaType(string type)
+        public static MediaType ToMediaType(string? type)
         {
-            return (type.ToLowerInvariant()) switch
+            return (type?.ToLowerInvariant()) switch
             {
                 #region Punched Media
 
@@ -282,6 +264,24 @@ namespace MPF.Frontend.Tools
 
                 _ => MediaType.NONE,
             };
+        }
+
+        /// <summary>
+        /// List all programs with their short usable names
+        /// </summary>
+        private static List<string> ListPrograms()
+        {
+            var programs = new List<string>();
+
+            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
+            {
+                if (((InternalProgram)val!) == InternalProgram.NONE)
+                    continue;
+
+                programs.Add($"{((InternalProgram?)val).ShortName()} - {((InternalProgram?)val).LongName()}");
+            }
+
+            return programs;
         }
 
         #endregion
