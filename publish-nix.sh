@@ -132,11 +132,12 @@ function download_programs() {
 
             mkdir $OUTDIR
             mv $TEMPDIR/*/** $OUTDIR/
-            rm -r $TEMPDIR
+            mv $TEMPDIR/** $OUTDIR/
+            rm -rf $TEMPDIR
 
             if [ -d "$OUTDIR/bin" ]; then
                 mv $OUTDIR/bin/* $OUTDIR/
-                rm -r $OUTDIR/bin
+                rm -rf $OUTDIR/bin
             fi
         done
     done
@@ -192,7 +193,7 @@ function download_programs() {
 
             EXT=${URL##*.}
             rm $PREFIX"_"$RUNTIME.$EXT
-            rm -r $PREFIX"_"$RUNTIME-dir
+            rm -rf $PREFIX"_"$RUNTIME-dir
         done
     done
 }

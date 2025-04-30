@@ -17,6 +17,7 @@
 - Add initial extraction to new functions
 - Add cleanup to download functions
 - Fix most issues in new download code
+- Fix issue with some downloads
 
 ### 3.3.0 (2025-01-03)
 
