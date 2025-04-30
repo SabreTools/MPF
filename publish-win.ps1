@@ -317,43 +317,7 @@ if (!$NO_BUILD.IsPresent) {
 if (!$NO_ARCHIVE.IsPresent) {
     # Download and extract, if needed
     if ($INCLUDE_PROGRAMS.IsPresent) {
-        Write-Host "===== Downloading Required Programs ====="
-
-        # Aaru
-        # --- Skipped for now ---
-
-        # DiscImageCreator
-        Invoke-WebRequest -Uri https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip -OutFile DiscImageCreator_20250101.zip
-        Expand-Archive -LiteralPath "DiscImageCreator_20250101.zip" -DestinationPath "$BUILD_FOLDER/Creator"
-
-        # Redumper
-        Invoke-WebRequest -Uri https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip -OutFile redumper-2025.04.15_build549-Windows64.zip
-        Expand-Archive -LiteralPath "redumper-2025.04.15_build549-Windows64.zip" -DestinationPath "$BUILD_FOLDER/Redumper"
-
-        # Create directories and copy data
-        foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
-            foreach ($RUNTIME in $UI_RUNTIMES) {
-                if ($INCLUDE_DEBUG.IsPresent) {
-                    New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator" -Type Directory -ErrorAction SilentlyContinue
-                    Copy-Item -Path "Creator/Release_ANSI/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/" -Recurse -Force
-
-                    New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper" -Type Directory -ErrorAction SilentlyContinue
-                    Copy-Item -Path "Redumper/redumper-2025.04.15_build549-Windows64/bin/redumper.exe" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/" -Force
-                }
-
-                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "Creator/Release_ANSI/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Creator/" -Recurse -Force
-
-                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "Redumper/redumper-2025.04.15_build549-Windows64/bin/redumper.exe" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/Redumper/" -Force
-            }
-        }
-
-        # Clean up the downloaded files and directories
-        Remove-Item -Path "DiscImageCreator_20250101.zip"
-        Remove-Item -Path "Creator" -Recurse
-        Remove-Item -Path "redumper-2025.04.15_build549-Windows64.zip"
-        Remove-Item -Path "Redumper" -Recurse
+        Download-Programs
     }
 
     # Create UI archives
