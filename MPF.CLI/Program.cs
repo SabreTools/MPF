@@ -237,6 +237,7 @@ namespace MPF.CLI
             string? result = string.Empty;
 
         root:
+            Console.WriteLine();
             Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
