@@ -67,34 +67,34 @@ $VALID_CROSS_PLATFORM_RUNTIMES = @('win-arm64', 'linux-x64', 'linux-arm64', 'osx
 # Download programs step
 function Download-Programs {
     # Define download constants
-    $DL_PREFIXES = ("aaru", "creator", "redumper")
+    $DL_PREFIXES = ("Aaru", "Creator", "Redumper")
     $DL_MAP = @{
         # Aaru - Skipped for now
-        "aaru_linux-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
-        "aaru_linux-amd64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
-        "aaru_macos-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-        "aaru_macos-x64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-        "aaru_win-arm64"       = "" #https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
-        "aaru_win-x86"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
-        "aaru_win-x64"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
+        "Aaru_linux-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
+        "Aaru_linux-amd64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+        "Aaru_macos-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        "Aaru_macos-x64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        "Aaru_win-arm64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
+        "Aaru_win-x86"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
+        "Aaru_win-x64"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
 
         # DiscImageCreator
-        "creator_linux-arm64"  = ""
-        "creator_linux-amd64"  = "https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-        "creator_macos-arm64"  = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        "creator_macos-x64"    = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        "creator_win-arm64"    = ""
-        "creator_win-x86"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-        "creator_win-x64"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+        "Creator_linux-arm64"  = ""
+        "Creator_linux-amd64"  = "https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
+        "Creator_macos-arm64"  = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        "Creator_macos-x64"    = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        "Creator_win-arm64"    = ""
+        "Creator_win-x86"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+        "Creator_win-x64"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
 
         # Redumper
-        "redumper_linux-arm64" = ""
-        "redumper_linux-amd64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
-        "redumper_macos-arm64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-        "redumper_macos-x64"   = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-        "redumper_win-arm64"   = ""
-        "redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
-        "redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+        "Redumper_linux-arm64" = ""
+        "Redumper_linux-amd64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
+        "Redumper_macos-arm64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        "Redumper_macos-x64"   = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        "Redumper_win-arm64"   = ""
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
     }
 
     # Download and extract files
@@ -109,6 +109,38 @@ function Download-Programs {
             $EXT=[System.IO.Path]::GetExtension($URL)
             Invoke-WebRequest -Uri $URL -OutFile $PREFIX_$RUNTIME.$EXT
             Expand-Archive -LiteralPath -u $PREFIX_$RUNTIME.$EXT -DestinationPath "$BUILD_FOLDER/$PREFIX_$RUNTIME-dir"
+        }
+    }
+
+    # Create UI directories and copy data
+    foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
+        foreach ($RUNTIME in $UI_RUNTIMES) {
+            foreach ($PREFIX in $DL_PREFIXES) {
+                if ($INCLUDE_DEBUG.IsPresent) {
+                    New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$PREFIX/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                }
+
+                New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                Copy-Item -Path "$PREFIX/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+
+            }
+        }
+    }
+
+    # Create CLI directories and copy data
+    foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
+        foreach ($RUNTIME in $CHECK_RUNTIMES) {
+            foreach ($PREFIX in $DL_PREFIXES) {
+                if ($INCLUDE_DEBUG.IsPresent) {
+                    New-Item -Name "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                    Copy-Item -Path "$PREFIX/*" -Destination "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                }
+
+                New-Item -Name "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
+                Copy-Item -Path "$PREFIX/*" -Destination "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+
+            }
         }
     }
 }

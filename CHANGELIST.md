@@ -14,6 +14,7 @@
 - Smarter mapping of URLs to runtimes
 - Unify download maps
 - Trailing commas caused issues
+- Add initial extraction to new functions
 
 ### 3.3.0 (2025-01-03)
 
