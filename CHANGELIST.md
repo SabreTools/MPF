@@ -6,6 +6,7 @@
 - Normalize file path in CLI
 - Always write full configuration file
 - Short-circuit CLI first-run experience
+- Start defining all download URLs
 
 ### 3.3.0 (2025-01-03)
 

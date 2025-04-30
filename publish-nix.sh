@@ -352,3 +352,33 @@ if [ $NO_ARCHIVE = false ]; then
     # Reset the directory
     cd $BUILD_FOLDER
 fi
+
+# Function to download programs
+download_programs() {
+    # Aaru - Skipped for now
+    AARU_LINUX_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
+    AARU_LINUX_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+    AARU_MACOS_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    AARU_MACOS_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    AARU_WIN_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
+    AARU_WIN_X86_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
+    AARU_WIN_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
+
+    # DiscImageCreator
+    DIC_LINUX_ARM64_URL=""
+    DIC_LINUX_X64_URL="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
+    DIC_MACOS_ARM64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DIC_MACOS_X64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DIC_WIN_ARM64_URL=""
+    DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+
+    # Redumper
+    REDUMPER_LINUX_ARM64_URL=""
+    REDUMPER_LINUX_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
+    REDUMPER_MACOS_ARM64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    REDUMPER_MACOS_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    REDUMPER_WIN_ARM64_URL=""
+    REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
+    REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+}
