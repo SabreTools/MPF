@@ -380,10 +380,21 @@ if (!$NO_ARCHIVE.IsPresent) {
             # Only include Debug if set
             if ($INCLUDE_DEBUG.IsPresent) {
                 Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
-                7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                if ($INCLUDE_PROGRAMS.IsPresent) {
+                    7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
+                else {
+                    7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_debug.zip *
+                }
             }
+            
             Set-Location -Path $BUILD_FOLDER/MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
-            7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+            if ($INCLUDE_PROGRAMS.IsPresent) {
+                7z a -tzip $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
+            else {
+                7z a -tzip -x!Programs/* $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip *
+            }
         }
     }
 

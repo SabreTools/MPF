@@ -19,6 +19,7 @@
 - Fix most issues in new download code
 - Fix issue with some downloads
 - Replace old download implementations
+- Enable packing programs for CLI
 
 ### 3.3.0 (2025-01-03)
 
