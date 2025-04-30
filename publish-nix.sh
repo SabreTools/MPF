@@ -80,34 +80,35 @@ function download_programs() {
     DL_PREFIXES=("aaru" "creator" "redumper")
     DL_MAP=(
         # Aaru - Skipped for now
-        ["aaru_linux-arm64"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz",
-        ["aaru_linux-amd64"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz",
-        ["aaru_macos-arm64"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip",
-        ["aaru_macos-x64"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip",
-        ["aaru_win-arm64"]="", #https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip",
-        ["aaru_win-x86"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip",
-        ["aaru_win-x64"]="", #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip",
+        ["aaru_linux-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
+        ["aaru_linux-amd64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+        ["aaru_macos-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        ["aaru_macos-x64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        ["aaru_win-arm64"]="" #https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
+        ["aaru_win-x86"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
+        ["aaru_win-x64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
 
         # DiscImageCreator
-        ["creator_linux-arm64"]="",
-        ["creator_linux-amd64"]="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz",
-        ["creator_macos-arm64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip",
-        ["creator_macos-x64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip",
-        ["creator_win-arm64"]="",
-        ["creator_win-x86"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip",
-        ["creator_win-x64"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip",
+        ["creator_linux-arm64"]=""
+        ["creator_linux-amd64"]="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
+        ["creator_macos-arm64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        ["creator_macos-x64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        ["creator_win-arm64"]=""
+        ["creator_win-x86"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+        ["creator_win-x64"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
 
         # Redumper
-        ["redumper_linux-arm64"]="",
-        ["redumper_linux-amd64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip",
-        ["redumper_macos-arm64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip",
-        ["redumper_macos-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip",
-        ["redumper_win-arm64"]="",
-        ["redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip",
-        ["redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip",
+        ["redumper_linux-arm64"]=""
+        ["redumper_linux-amd64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
+        ["redumper_macos-arm64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        ["redumper_macos-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        ["redumper_win-arm64"]=""
+        ["redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
+        ["redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
     )
 
     # Download and extract files
+    echo "===== Downloading Required Programs ====="
     for PREFIX in "${DL_PREFIXES[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
             URL=${DL_MAP["$PREFIX_$RUNTIME"]}
@@ -115,12 +116,13 @@ function download_programs() {
                 continue
             fi
 
-            wget $URL -O $PREFIX_$RUNTIME
+            EXT=${URL##*.}
+            wget $URL -O $PREFIX_$RUNTIME.$EXT
 
             if [[ $URL =~ \.tar\.gz$ ]]; then
-                tar -xvf $PREFIX_$RUNTIME -C $PREFIX_$RUNTIME-dir
+                tar -xvf $PREFIX_$RUNTIME.$EXT -C $PREFIX_$RUNTIME-dir
             else 
-                unzip -u $PREFIX_$RUNTIME -d $PREFIX_$RUNTIME-dir
+                unzip -u $PREFIX_$RUNTIME.$EXT -d $PREFIX_$RUNTIME-dir
             fi
         done
     done

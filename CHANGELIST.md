@@ -13,6 +13,7 @@
 - Move function definitions
 - Smarter mapping of URLs to runtimes
 - Unify download maps
+- Trailing commas caused issues
 
 ### 3.3.0 (2025-01-03)
 

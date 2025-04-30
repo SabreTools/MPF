@@ -98,6 +98,7 @@ function Download-Programs {
     }
 
     # Download and extract files
+    Write-Host "===== Downloading Required Programs ====="
     foreach ($PREFIX in $DL_PREFIXES) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
             $URL = $DL_MAP["$PREFIX_$RUNTIME"]
@@ -105,8 +106,9 @@ function Download-Programs {
                 continue
             }
 
-            wget $URL -O $PREFIX_$RUNTIME
-            Expand-Archive -LiteralPath -u $PREFIX_$RUNTIME -DestinationPath "$BUILD_FOLDER/$PREFIX_$RUNTIME-dir"
+            $EXT=[System.IO.Path]::GetExtension($URL)
+            Invoke-WebRequest -Uri $URL -OutFile $PREFIX_$RUNTIME.$EXT
+            Expand-Archive -LiteralPath -u $PREFIX_$RUNTIME.$EXT -DestinationPath "$BUILD_FOLDER/$PREFIX_$RUNTIME-dir"
         }
     }
 }
