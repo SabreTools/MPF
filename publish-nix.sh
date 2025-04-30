@@ -357,58 +357,85 @@ fi
 download_programs() {
     # Aaru - Skipped for now
     AARU_LINUX_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
+    AARU_LINUX_ARM64_LOCAL="aaru_linux-arm64"
     AARU_LINUX_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+    AARU_LINUX_X64_LOCAL="aaru_linux-amd64"
+
     AARU_MACOS_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    AARU_MACOS_ARM64_LOCAL="aaru_macos-arm64"
     AARU_MACOS_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    AARU_MACOS_X64_LOCAL="aaru_macos-x64"
+
     AARU_WIN_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
+    AARU_WIN_ARM64_LOCAL="aaru_win-arm64"
     AARU_WIN_X86_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
+    AARU_WIN_X86_LOCAL="aaru_win-x86"
     AARU_WIN_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
+    AARU_WIN_X64_LOCAL="aaru_win-x64"
 
     # DiscImageCreator
     DIC_LINUX_ARM64_URL=""
+    DIC_LINUX_ARM64_LOCAL="creator_linux-arm64"
     DIC_LINUX_X64_URL="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-    DIC_MACOS_ARM64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-    DIC_MACOS_X64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-    DIC_WIN_ARM64_URL=""
-    DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-    DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    DIC_LINUX_X64_LOCAL="creator_linux-x64"
 
-    #wget $DIC_LINUX_ARM64_URL -O creator_linux-arm64.zip
-    #unzip -u creator_linux-arm64.zip -d creator_linux-arm64
-    wget $DIC_LINUX_X64_URL -O creator_linux-x64.zip
-    unzip -u creator_linux-x64.zip -d creator_linux-x64
-    wget $DIC_MACOS_ARM64_URL -O creator_macos-arm64.zip
-    unzip -u creator_macos-arm64.zip -d creator_macos-arm64
-    wget $DIC_MACOS_X64_URL -O creator_macos-x64.zip
-    unzip -u creator_macos-x64.zip -d creator_macos-x64
-    #wget $DIC_WIN_ARM64_URL -O creator_win-arm64.zip
-    #unzip -u creator_win-arm64.zip -d creator_win-arm64
-    wget $DIC_WIN_X86_URL -O creator_win-x86.zip
-    unzip -u creator_win-x86.zip -d creator_win-x86
-    wget $DIC_WIN_X64_URL -O creator_win-x64.zip
-    unzip -u creator_win-x64.zip -d creator_win-x64
+    DIC_MACOS_ARM64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DIC_MACOS_ARM64_LOCAL="creator_macos-arm64"
+    DIC_MACOS_X64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DIC_MACOS_X64_LOCAL="creator_macos-x64"
+
+    DIC_WIN_ARM64_URL=""
+    DIC_WIN_ARM64_LOCAL="creator_win-arm64"
+    DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    DIC_WIN_X86_LOCAL="creator_win-x86"
+    DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    DIC_WIN_X64_LOCAL="creator_win-x64"
+
+    #wget $DIC_LINUX_ARM64_URL -O $DIC_LINUX_ARM64_LOCAL.tar.gz
+    #tar -xvf $DIC_LINUX_ARM64_LOCAL.tar.gz -C $DIC_LINUX_ARM64_LOCAL
+    wget $DIC_LINUX_X64_URL -O $DIC_LINUX_X64_LOCAL.tar.gz
+    tar -xvf $DIC_LINUX_X64_LOCAL.tar.gz -C $DIC_LINUX_X64_LOCAL
+    wget $DIC_MACOS_ARM64_URL -O $DIC_MACOS_ARM64_LOCAL.zip
+    unzip -u $DIC_MACOS_ARM64_LOCAL.zip -d $DIC_MACOS_ARM64_LOCAL
+    wget $DIC_MACOS_X64_URL -O $DIC_MACOS_X64_LOCAL.zip
+    unzip -u $DIC_MACOS_X64_LOCAL.zip -d $DIC_MACOS_X64_LOCAL
+    #wget $DIC_WIN_ARM64_URL -O $DIC_WIN_ARM64_LOCAL.zip
+    #unzip -u $DIC_WIN_ARM64_LOCAL.zip -d $DIC_WIN_ARM64_LOCAL
+    wget $DIC_WIN_X86_URL -O $DIC_WIN_X86_LOCAL.zip
+    unzip -u $DIC_WIN_X86_LOCAL.zip -d $DIC_WIN_X86_LOCAL
+    wget $DIC_WIN_X64_URL -O $DIC_WIN_X64_LOCAL.zip
+    unzip -u $DIC_WIN_X64_LOCAL.zip -d $DIC_WIN_X64_LOCAL
 
     # Redumper
     REDUMPER_LINUX_ARM64_URL=""
+    REDUMPER_LINUX_ARM64_LOCAL="redumper_linux-arm64"
     REDUMPER_LINUX_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
-    REDUMPER_MACOS_ARM64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-    REDUMPER_MACOS_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-    REDUMPER_WIN_ARM64_URL=""
-    REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
-    REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+    REDUMPER_LINUX_X64_LOCAL="redumper_linux-x64"
 
-    #wget $REDUMPER_LINUX_ARM64_URL -O redumper_linux-arm64.zip
-    #unzip -u redumper_linux-arm64.zip -d redumper_linux-arm64
-    wget $REDUMPER_LINUX_X64_URL -O redumper_linux-x64.zip
-    unzip -u redumper_linux-x64.zip -d redumper_linux-x64
-    wget $REDUMPER_MACOS_ARM64_URL -O redumper_macos-arm64.zip
-    unzip -u redumper_macos-arm64.zip -d redumper_macos-arm64
-    wget $REDUMPER_MACOS_X64_URL -O redumper_macos-x64.zip
-    unzip -u redumper_macos-x64.zip -d redumper_macos-x64
-    #wget $REDUMPER_WIN_ARM64_URL -O redumper_win-arm64.zip
-    #unzip -u redumper_win-arm64.zip -d redumper_win-arm64
-    wget $REDUMPER_WIN_X86_URL -O redumper_win-x86.zip
-    unzip -u redumper_win-x86.zip -d redumper_win-x86
-    wget $REDUMPER_WIN_X64_URL -O redumper_win-x64.zip
-    unzip -u redumper_win-x64.zip -d redumper_win-x64
+    REDUMPER_MACOS_ARM64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    REDUMPER_MACOS_ARM64_LOCAL="redumper_macos-arm64"
+    REDUMPER_MACOS_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    REDUMPER_MACOS_X64_LOCAL="redumper_macos-x64"
+
+    REDUMPER_WIN_ARM64_URL=""
+    REDUMPER_WIN_ARM64_LOCAL="redumper_win-arm64"
+    REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
+    REDUMPER_WIN_X86_LOCAL="redumper_win-x86"
+    REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
+    REDUMPER_WIN_X64_LOCAL="redumper_win-x64"
+
+    #wget $REDUMPER_LINUX_ARM64_URL -O $REDUMPER_LINUX_ARM64_LOCAL.zip
+    #unzip -u $REDUMPER_LINUX_ARM64_LOCAL.zip -d $REDUMPER_LINUX_ARM64_LOCAL
+    wget $REDUMPER_LINUX_X64_URL -O $REDUMPER_LINUX_X64_LOCAL.zip
+    unzip -u $REDUMPER_LINUX_X64_LOCAL.zip -d $REDUMPER_LINUX_X64_LOCAL
+    wget $REDUMPER_MACOS_ARM64_URL -O $REDUMPER_MACOS_ARM64_LOCAL.zip
+    unzip -u $REDUMPER_MACOS_ARM64_LOCAL.zip -d $REDUMPER_MACOS_ARM64_LOCAL
+    wget $REDUMPER_MACOS_X64_URL -O $REDUMPER_MACOS_X64_LOCAL.zip
+    unzip -u $REDUMPER_MACOS_X64_LOCAL.zip -d $REDUMPER_MACOS_X64_LOCAL
+    #wget $REDUMPER_WIN_ARM64_URL -O $REDUMPER_WIN_ARM64_LOCAL.zip
+    #unzip -u $REDUMPER_WIN_ARM64_LOCAL.zip -d $REDUMPER_WIN_ARM64_LOCAL
+    wget $REDUMPER_WIN_X86_URL -O $REDUMPER_WIN_X86_LOCAL.zip
+    unzip -u $REDUMPER_WIN_X86_LOCAL.zip -d $REDUMPER_WIN_X86_LOCAL
+    wget $REDUMPER_WIN_X64_URL -O $REDUMPER_WIN_X64_LOCAL.zip
+    unzip -u $REDUMPER_WIN_X64_LOCAL.zip -d $REDUMPER_WIN_X64_LOCAL
 }

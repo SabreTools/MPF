@@ -8,6 +8,7 @@
 - Short-circuit CLI first-run experience
 - Start defining all download URLs
 - Add all separate downloads
+- Make more paths configurable
 
 ### 3.3.0 (2025-01-03)
 
