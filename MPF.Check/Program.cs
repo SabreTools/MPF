@@ -51,17 +51,35 @@ namespace MPF.Check
                 return;
             }
 
-            // Try processing the common arguments
-            bool success = OptionsLoader.ProcessCommonArguments(args, out MediaType mediaType, out RedumpSystem? knownSystem, out var error);
-            if (!success)
+            // Setup common outputs
+            CommandOptions opts;
+            MediaType mediaType;
+            RedumpSystem? knownSystem;
+            int startIndex;
+
+            // Use interactive mode
+            if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
             {
-                DisplayHelp(error);
-                return;
+                startIndex = 1;
+                opts = InteractiveMode(options, out mediaType, out knownSystem);
             }
 
-            // Loop through and process options
-            int startIndex = 2;
-            CommandOptions opts = LoadFromArguments(args, options, ref startIndex);
+            // Use normal commandline parameters
+            else
+            {
+                // Try processing the common arguments
+                bool success = OptionsLoader.ProcessCommonArguments(args, out mediaType, out knownSystem, out var error);
+                if (!success)
+                {
+                    DisplayHelp(error);
+                    return;
+                }
+
+                // Loop through and process options
+                startIndex = 2;
+                opts = LoadFromArguments(args, options, ref startIndex);
+            }
+
             if (options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");
@@ -128,6 +146,7 @@ namespace MPF.Check
             Console.WriteLine("-lm, --listmedia        List supported media types");
             Console.WriteLine("-ls, --listsystems      List supported system types");
             Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
+            Console.WriteLine("-i, --interactive       Enable interactive mode");
             Console.WriteLine();
 
             Console.WriteLine("Check Options:");
@@ -148,6 +167,194 @@ namespace MPF.Check
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Enable interactive mode for entering information
+        /// </summary>
+        private static CommandOptions InteractiveMode(Frontend.Options options, out MediaType mediaType, out RedumpSystem? system)
+        {
+            // Create return values
+            var opts = new CommandOptions();
+            mediaType = MediaType.NONE;
+            system = null;
+
+            // These values require multiple parts to be active
+            bool scan = false,
+                enableArchives = true,
+                enableDebug = false,
+                hideDriveLetters = false;
+
+            // Create state values
+            string? result = string.Empty;
+
+        root:
+            Console.WriteLine();
+            Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine();
+            Console.WriteLine($"1) Set media type (Currently '{mediaType}')");
+            Console.WriteLine($"2) Set system (Currently '{system}')");
+            Console.WriteLine($"3) Set dumping program (Currently '{options.InternalProgram}')");
+            Console.WriteLine($"4) Set seed path (Currently '{opts.Seed}')");
+            Console.WriteLine($"5) Add placeholders (Currently '{options.AddPlaceholders}')");
+            Console.WriteLine($"6) Create IRD (Currently '{options.CreateIRDAfterDumping}')");
+            Console.WriteLine($"7) Redump credentials (Currently '{options.RedumpUsername}')");
+            Console.WriteLine($"8) Pull all information (Currently '{options.PullAllInformation}')");
+            Console.WriteLine($"9) Set device path (Currently '{opts.DevicePath}')");
+            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"E) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
+            Console.WriteLine($"F) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
+            Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
+            Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
+            Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"X) Start dumping");
+            Console.Write("> ");
+
+            result = Console.ReadLine();
+            switch (result)
+            {
+                case "1":
+                    goto mediaType;
+                case "2":
+                    goto system;
+                case "3":
+                    goto dumpingProgram;
+                case "4":
+                    goto seedPath;
+                case "5":
+                    options.AddPlaceholders = !options.AddPlaceholders;
+                    goto root;
+                case "6":
+                    options.CreateIRDAfterDumping = !options.CreateIRDAfterDumping;
+                    goto root;
+                case "7":
+                    goto redumpCredentials;
+                case "8":
+                    options.PullAllInformation = !options.PullAllInformation;
+                    goto root;
+                case "9":
+                    goto devicePath;
+                case "a":
+                case "A":
+                    scan = !scan;
+                    goto root;
+                case "b":
+                case "B":
+                    enableArchives = !enableArchives;
+                    goto root;
+                case "c":
+                case "C":
+                    enableDebug = !enableDebug;
+                    goto root;
+                case "d":
+                case "D":
+                    hideDriveLetters = !hideDriveLetters;
+                    goto root;
+                case "e":
+                case "E":
+                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
+                    goto root;
+                case "f":
+                case "F":
+                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
+                    goto root;
+                case "g":
+                case "G":
+                    options.IncludeArtifacts = !options.IncludeArtifacts;
+                    goto root;
+                case "h":
+                case "H":
+                    options.CompressLogFiles = !options.CompressLogFiles;
+                    goto root;
+                case "i":
+                case "I":
+                    options.DeleteUnnecessaryFiles = !options.DeleteUnnecessaryFiles;
+                    goto root;
+
+                case "x":
+                case "X":
+                    Console.WriteLine();
+                    goto exit;
+                case "z":
+                case "Z":
+                    Console.WriteLine("It is pitch black. You are likely to be eaten by a grue.");
+                    goto root;
+                default:
+                    Console.WriteLine($"Invalid selection: {result}");
+                    goto root;
+            }
+
+        mediaType:
+            Console.WriteLine();
+            Console.WriteLine("Enter the media type and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            mediaType = OptionsLoader.ToMediaType(result);
+            goto root;
+
+        system:
+            Console.WriteLine();
+            Console.WriteLine("Enter the system and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            system = Extensions.ToRedumpSystem(result);
+            goto root;
+
+        dumpingProgram:
+            Console.WriteLine();
+            Console.WriteLine("Enter the dumping program and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            options.InternalProgram = result.ToInternalProgram();
+            goto root;
+
+        seedPath:
+            Console.WriteLine();
+            Console.WriteLine("Enter the seed path and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            opts.Seed = Builder.CreateFromFile(result);
+            goto root;
+
+        redumpCredentials:
+            Console.WriteLine();
+            Console.WriteLine("Enter your Redumper username and press Enter:");
+            Console.Write("> ");
+            options.RedumpUsername = Console.ReadLine();
+
+            Console.WriteLine("Enter your Redumper password (hidden) and press Enter:");
+            Console.Write("> ");
+            options.RedumpPassword = string.Empty;
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+
+                options.RedumpPassword += key.KeyChar;
+            }
+
+            goto root;
+
+        devicePath:
+            Console.WriteLine();
+            Console.WriteLine("Enter the device path and press Enter:");
+            Console.Write("> ");
+            opts.DevicePath = Console.ReadLine();
+            goto root;
+
+        exit:
+            // Now deal with the complex options
+            options.ScanForProtection = scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(opts.DevicePath);
+            options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
+
+            return opts;
         }
 
         /// <summary>
@@ -283,7 +490,7 @@ namespace MPF.Check
                     options.OutputSubmissionJSON = true;
                 }
 
-                // Output submission JSON
+                // Include JSON artifacts
                 else if (args[startIndex].Equals("--include-artifacts"))
                 {
                     options.IncludeArtifacts = true;
@@ -295,7 +502,7 @@ namespace MPF.Check
                     options.CompressLogFiles = true;
                 }
 
-                // Delete unnecessary files files
+                // Delete unnecessary files
                 else if (args[startIndex].Equals("-d") || args[startIndex].Equals("--delete"))
                 {
                     options.DeleteUnnecessaryFiles = true;
