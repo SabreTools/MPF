@@ -275,9 +275,12 @@ namespace MPF.CLI
                 case "X":
                     Console.WriteLine();
                     goto exit;
+                case "z":
+                case "Z":
+                    Console.WriteLine("It is pitch black. You are likely to be eaten by a grue.");
+                    goto root;
                 default:
                     Console.WriteLine($"Invalid selection: {result}");
-                    Console.WriteLine();
                     goto root;
             }
 
