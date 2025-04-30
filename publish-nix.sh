@@ -373,6 +373,21 @@ download_programs() {
     AARU_WIN_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
     AARU_WIN_X64_LOCAL="aaru_win-x64"
 
+    #wget $AARU_LINUX_ARM64_URL -O $AARU_LINUX_ARM64_LOCAL.tar.gz
+    #tar -xvf $AARU_LINUX_ARM64_LOCAL.tar.gz -C $AARU_LINUX_ARM64_LOCAL
+    #wget $AARU_LINUX_X64_URL -O $AARU_LINUX_X64_LOCAL.tar.gz
+    #tar -xvf $AARU_LINUX_X64_LOCAL.tar.gz -C $AARU_LINUX_X64_LOCAL
+    #wget $AARU_MACOS_ARM64_URL -O $AARU_MACOS_ARM64_LOCAL.zip
+    #unzip -u $AARU_MACOS_ARM64_LOCAL.zip -d $AARU_MACOS_ARM64_LOCAL
+    #wget $AARU_MACOS_X64_URL -O $AARU_MACOS_X64_LOCAL.zip
+    #unzip -u $AARU_MACOS_X64_LOCAL.zip -d $AARU_MACOS_X64_LOCAL
+    #wget $AARU_WIN_ARM64_URL -O $AARU_WIN_ARM64_LOCAL.zip
+    #unzip -u $AARU_WIN_ARM64_LOCAL.zip -d $AARU_WIN_ARM64_LOCAL
+    #wget $AARU_WIN_X86_URL -O $AARU_WIN_X86_LOCAL.zip
+    #unzip -u $AARU_WIN_X86_LOCAL.zip -d $AARU_WIN_X86_LOCAL
+    #wget $AARU_WIN_X64_URL -O $AARU_WIN_X64_LOCAL.zip
+    #unzip -u $AARU_WIN_X64_LOCAL.zip -d $AARU_WIN_X64_LOCAL
+
     # DiscImageCreator
     DIC_LINUX_ARM64_URL=""
     DIC_LINUX_ARM64_LOCAL="creator_linux-arm64"

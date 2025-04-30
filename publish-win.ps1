@@ -345,6 +345,21 @@ function Download-Programs {
     $AARU_WIN_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
     $AARU_WIN_X64_LOCAL="aaru_win-x64"
 
+    #Invoke-WebRequest -Uri $AARU_LINUX_ARM64_URL -OutFile $AARU_LINUX_ARM64_LOCAL.tar.gz
+    #Expand-Archive -LiteralPath -u $AARU_LINUX_ARM64_LOCAL.tar.gz -DestinationPath "$BUILD_FOLDER/$AARU_LINUX_ARM64_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_LINUX_X64_URL -OutFile $AARU_LINUX_X64_LOCAL.tar.gz
+    #Expand-Archive -LiteralPath -u $AARU_LINUX_X64_LOCAL.tar.gz -DestinationPath "$BUILD_FOLDER/$AARU_LINUX_X64_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_MACOS_ARM64_URL -OutFile $AARU_MACOS_ARM64_LOCAL.zip
+    #Expand-Archive -LiteralPath -u $AARU_MACOS_ARM64_LOCAL.zip -DestinationPath "$BUILD_FOLDER/$AARU_MACOS_ARM64_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_MACOS_X64_URL -OutFile $AARU_MACOS_X64_LOCAL.zip
+    #Expand-Archive -LiteralPath -u $AARU_MACOS_X64_LOCAL.zip -DestinationPath "$BUILD_FOLDER/$AARU_MACOS_X64_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_WIN_ARM64_URL -OutFile $AARU_WIN_ARM64_LOCAL.zip
+    #Expand-Archive -LiteralPath -u $AARU_WIN_ARM64_LOCAL.zip -DestinationPath "$BUILD_FOLDER/$AARU_WIN_ARM64_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_WIN_X86_URL -OutFile $AARU_WIN_X86_LOCAL.zip
+    #Expand-Archive -LiteralPath -u $AARU_WIN_X86_LOCAL.zip -DestinationPath "$BUILD_FOLDER/$AARU_WIN_X86_LOCAL"
+    #Invoke-WebRequest -Uri $AARU_WIN_X64_URL -OutFile $AARU_WIN_X64_LOCAL.zip
+    #Expand-Archive -LiteralPath -u $AARU_WIN_X64_LOCAL.zip -DestinationPath "$BUILD_FOLDER/$AARU_WIN_X64_LOCAL"
+
     # DiscImageCreator
     $DIC_LINUX_ARM64_URL=""
     $DIC_LINUX_ARM64_LOCAL="creator_linux-arm64"

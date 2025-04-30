@@ -9,6 +9,7 @@
 - Start defining all download URLs
 - Add all separate downloads
 - Make more paths configurable
+- Add commented placeholders instead of omitting
 
 ### 3.3.0 (2025-01-03)
 
