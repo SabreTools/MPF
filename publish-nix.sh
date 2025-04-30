@@ -78,51 +78,65 @@ VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "
 function download_programs() {
     # Define download constants
     DL_PREFIXES=("Aaru" "Creator" "Redumper")
-    DL_MAP=(
-        # Aaru - Skipped for now
-        ["Aaru_linux-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
-        ["Aaru_linux-amd64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
-        ["Aaru_macos-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-        ["Aaru_macos-x64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-        ["Aaru_win-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
-        ["Aaru_win-x86"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
-        ["Aaru_win-x64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
+    declare -A DL_MAP
 
-        # DiscImageCreator
-        ["Creator_linux-arm64"]=""
-        ["Creator_linux-amd64"]="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-        ["Creator_macos-arm64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        ["Creator_macos-x64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        ["Creator_win-arm64"]=""
-        ["Creator_win-x86"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-        ["Creator_win-x64"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    # Aaru - Skipped for now
+    DL_MAP["Aaru_linux-arm64"]="" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
+    DL_MAP["Aaru_linux-x64"]=""   #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+    DL_MAP["Aaru_osx-arm64"]=""   #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    DL_MAP["Aaru_osx-x64"]=""     #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+    DL_MAP["Aaru_win-arm64"]=""   #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
+    DL_MAP["Aaru_win-x86"]=""     #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
+    DL_MAP["Aaru_win-x64"]=""     #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
 
-        # Redumper
-        ["Redumper_linux-arm64"]=""
-        ["Redumper_linux-amd64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
-        ["Redumper_macos-arm64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-        ["Redumper_macos-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-        ["Redumper_win-arm64"]=""
-        ["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
-        ["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
-    )
+    # DiscImageCreator
+    DL_MAP["Creator_linux-arm64"]=""
+    DL_MAP["Creator_linux-x64"]="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
+    DL_MAP["Creator_osx-arm64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DL_MAP["Creator_osx-x64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+    DL_MAP["Creator_win-arm64"]=""
+    DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+    DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+
+    # Redumper
+    DL_MAP["Redumper_linux-arm64"]=""
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+    DL_MAP["Redumper_win-arm64"]=""
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
     for PREFIX in "${DL_PREFIXES[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
-            URL=${DL_MAP["$PREFIX_$RUNTIME"]}
-            if [ $URL = "" ]; then
+            DL_KEY=$PREFIX"_"$RUNTIME
+            URL=${DL_MAP[$DL_KEY]}
+            if [ -z "$URL" ]; then
                 continue
             fi
 
             EXT=${URL##*.}
-            wget $URL -O $PREFIX_$RUNTIME.$EXT
+            OUTNAME=$PREFIX"_"$RUNTIME.$EXT
+            wget $URL -O $OUTNAME
 
+            TEMPDIR=$PREFIX"_"$RUNTIME-temp
+            OUTDIR=$PREFIX"_"$RUNTIME-dir
             if [[ $URL =~ \.tar\.gz$ ]]; then
-                tar -xvf $PREFIX_$RUNTIME.$EXT -C $PREFIX_$RUNTIME-dir
-            else 
-                unzip -u $PREFIX_$RUNTIME.$EXT -d $PREFIX_$RUNTIME-dir
+                mkdir $TEMPDIR
+                tar -xvf $OUTNAME -C $TEMPDIR
+            else
+                unzip -u $OUTNAME -d $TEMPDIR
+            fi
+
+            mkdir $OUTDIR
+            mv $TEMPDIR/*/** $OUTDIR/
+            rm -r $TEMPDIR
+
+            if [ -d "$OUTDIR/bin" ]; then
+                mv $OUTDIR/bin/* $OUTDIR/
+                rm -r $OUTDIR/bin
             fi
         done
     done
@@ -131,13 +145,18 @@ function download_programs() {
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
             for PREFIX in "${DL_PREFIXES[@]}"; do
+                OUTDIR=$PREFIX"_"$RUNTIME-dir
+                if [ ! -d "$OUTDIR" ]; then
+                    continue
+                fi
+
                 if [ $INCLUDE_DEBUG = true ]; then
                     mkdir -p MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
-                    cp -rfp $PREFIX_$RUNTIME-dir/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                    cp -rfp $OUTDIR/* MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
                 fi
 
                 mkdir -p MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
-                cp -rfp $PREFIX_$RUNTIME-dir/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                cp -rfp $OUTDIR/* MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
             done
         done
     done
@@ -146,13 +165,18 @@ function download_programs() {
     for FRAMEWORK in "${CHECK_FRAMEWORKS[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
             for PREFIX in "${DL_PREFIXES[@]}"; do
+                OUTDIR=$PREFIX"_"$RUNTIME-dir
+                if [ ! -d "$OUTDIR" ]; then
+                    continue
+                fi
+
                 if [ $INCLUDE_DEBUG = true ]; then
                     mkdir -p MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
-                    cp -rfp $PREFIX_$RUNTIME-dir/* MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                    cp -rfp $OUTDIR/* MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
                 fi
 
                 mkdir -p MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
-                cp -rfp $PREFIX_$RUNTIME-dir/* MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                cp -rfp $OUTDIR/* MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
             done
         done
     done
@@ -160,14 +184,15 @@ function download_programs() {
     # Clean up the downloaded files and directories
     for PREFIX in "${DL_PREFIXES[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
-            URL=${DL_MAP["$PREFIX_$RUNTIME"]}
-            if [ $URL = "" ]; then
+            DL_KEY=$PREFIX"_"$RUNTIME
+            URL=${DL_MAP[$DL_KEY]}
+            if [ -z "$URL" ]; then
                 continue
             fi
 
             EXT=${URL##*.}
-            rm $PREFIX_$RUNTIME.$EXT
-            rm -r $PREFIX_$RUNTIME-dir
+            rm $PREFIX"_"$RUNTIME.$EXT
+            rm -r $PREFIX"_"$RUNTIME-dir
         done
     done
 }

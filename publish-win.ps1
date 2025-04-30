@@ -71,27 +71,27 @@ function Download-Programs {
     $DL_MAP = @{
         # Aaru - Skipped for now
         "Aaru_linux-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
-        "Aaru_linux-amd64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
-        "Aaru_macos-arm64"     = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-        "Aaru_macos-x64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        "Aaru_linux-x64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
+        "Aaru_osx-arm64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
+        "Aaru_osx-x64"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
         "Aaru_win-arm64"       = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
         "Aaru_win-x86"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
         "Aaru_win-x64"         = "" #"https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
 
         # DiscImageCreator
         "Creator_linux-arm64"  = ""
-        "Creator_linux-amd64"  = "https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-        "Creator_macos-arm64"  = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        "Creator_macos-x64"    = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        "Creator_linux-x64"    = "https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
+        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        "Creator_osx-x64"      = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
         "Creator_win-arm64"    = ""
         "Creator_win-x86"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
         "Creator_win-x64"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
 
         # Redumper
         "Redumper_linux-arm64" = ""
-        "Redumper_linux-amd64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
-        "Redumper_macos-arm64" = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-        "Redumper_macos-x64"   = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
+        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
         "Redumper_win-arm64"   = ""
         "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
         "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
@@ -101,14 +101,35 @@ function Download-Programs {
     Write-Host "===== Downloading Required Programs ====="
     foreach ($PREFIX in $DL_PREFIXES) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
-            $URL = $DL_MAP["$PREFIX_$RUNTIME"]
-            if ( $URL -eq "" ) {
+            $DL_KEY = $PREFIX + "_" + $RUNTIME
+            $URL = $DL_MAP[$DL_KEY]
+            if ( [string]::IsNullOrEmpty($URL) ) {
                 continue
             }
 
-            $EXT=[System.IO.Path]::GetExtension($URL)
-            Invoke-WebRequest -Uri $URL -OutFile $PREFIX_$RUNTIME.$EXT
-            Expand-Archive -LiteralPath -u $PREFIX_$RUNTIME.$EXT -DestinationPath "$BUILD_FOLDER/$PREFIX_$RUNTIME-dir"
+            $EXT = [System.IO.Path]::GetExtension($URL)
+            $OUTNAME = $PREFIX + "_" + $RUNTIME + $EXT
+            Invoke-WebRequest -Uri $URL -OutFile $OUTNAME
+
+            $TEMPDIR = $PREFIX + "_" + $RUNTIME + "-temp"
+            $OUTDIR = $PREFIX + "_" + $RUNTIME + "-dir"
+
+            if ($EXT -eq ".gz") {
+                mkdir $TEMPDIR
+                tar -xvf $OUTNAME -C $TEMPDIR
+            }
+            else
+            {
+                Expand-Archive -LiteralPath $OUTNAME -DestinationPath "$TEMPDIR"
+            }
+
+            Move-Item -Path "$BUILD_FOLDER/$TEMPDIR/*" -Destination "$BUILD_FOLDER/$OUTDIR"
+            Remove-Item -Path "$TEMPDIR" -Recurse -Force
+
+            if ([System.IO.Directory]::Exists("$OUTDIR/bin")) {
+                Move-Item -Path "$BUILD_FOLDER/$OUTDIR/bin/*" -Destination "$BUILD_FOLDER/$OUTDIR"
+                Remove-Item -Path "$OUTDIR/bin" -Recurse -Force
+            }
         }
     }
 
@@ -116,13 +137,18 @@ function Download-Programs {
     foreach ($FRAMEWORK in $UI_FRAMEWORKS) {
         foreach ($RUNTIME in $UI_RUNTIMES) {
             foreach ($PREFIX in $DL_PREFIXES) {
+                $OUTDIR = $BUILD_FOLDER + "/" + $PREFIX + "_" + $RUNTIME + "-dir"
+                if (![System.IO.Directory]::Exists($PREFIX + "_" + $RUNTIME + "-dir")) {
+                    continue
+                }
+
                 if ($INCLUDE_DEBUG.IsPresent) {
                     New-Item -Name "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                    Copy-Item -Path "$PREFIX/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                    Copy-Item -Path "$OUTDIR/*" -Destination "MPF.UI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
                 }
 
                 New-Item -Name "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "$PREFIX/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                Copy-Item -Path "$OUTDIR/*" -Destination "MPF.UI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
 
             }
         }
@@ -132,13 +158,18 @@ function Download-Programs {
     foreach ($FRAMEWORK in $CHECK_FRAMEWORKS) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
             foreach ($PREFIX in $DL_PREFIXES) {
+                $OUTDIR = $BUILD_FOLDER + "/" + $PREFIX + "_" + $RUNTIME + "-dir"
+                if (![System.IO.Directory]::Exists($OUTDIR)) {
+                    continue
+                }
+
                 if ($INCLUDE_DEBUG.IsPresent) {
                     New-Item -Name "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                    Copy-Item -Path "$PREFIX/*" -Destination "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                    Copy-Item -Path "$OUTDIR/*" -Destination "MPF.CLI/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
                 }
 
                 New-Item -Name "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX" -Type Directory -ErrorAction SilentlyContinue
-                Copy-Item -Path "$PREFIX/*" -Destination "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
+                Copy-Item -Path "$OUTDIR/*" -Destination "MPF.CLI/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/$PREFIX/" -Recurse -Force
 
             }
         }
@@ -147,14 +178,18 @@ function Download-Programs {
     # Clean up the downloaded files and directories
     foreach ($PREFIX in $DL_PREFIXES) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
-            $URL = $DL_MAP["$PREFIX_$RUNTIME"]
-            if ( $URL -eq "" ) {
+            $DL_KEY = $PREFIX + "_" + $RUNTIME
+            $URL = $DL_MAP[$DL_KEY]
+            if ( [string]::IsNullOrEmpty($URL) ) {
                 continue
             }
 
-            $EXT=[System.IO.Path]::GetExtension($URL)
-            Remove-Item -Path $PREFIX_$RUNTIME.$EXT
-            Remove-Item -Path $PREFIX_$RUNTIME-dir -Recurse
+            $EXT = [System.IO.Path]::GetExtension($URL)
+            $OUTNAME = $PREFIX + "_" + $RUNTIME + $EXT
+            $OUTDIR = $PREFIX + "_" + $RUNTIME + "-dir"
+
+            Remove-Item -Path $OUTNAME
+            Remove-Item -Path $OUTDIR -Recurse -Force
         }
     }
 }
