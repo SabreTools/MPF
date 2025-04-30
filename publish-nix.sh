@@ -77,103 +77,82 @@ VALID_CROSS_PLATFORM_RUNTIMES=("win-arm64" "linux-x64" "linux-arm64" "osx-x64" "
 # Download programs step
 function download_programs() {
     # Aaru - Skipped for now
-    AARU_LINUX_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz"
-    AARU_LINUX_ARM64_LOCAL="aaru_linux-arm64"
-    AARU_LINUX_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz"
-    AARU_LINUX_X64_LOCAL="aaru_linux-amd64"
+    AARU_MAP=(
+        ["linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_arm64.tar.gz",
+        ["linux-amd64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_linux_amd64.tar.gz",
+        ["macos-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip",
+        ["macos-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip",
+        ["win-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip",
+        ["win-x86"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip",
+        ["win-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip",
+    )
 
-    AARU_MACOS_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-    AARU_MACOS_ARM64_LOCAL="aaru_macos-arm64"
-    AARU_MACOS_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_macos.zip"
-    AARU_MACOS_X64_LOCAL="aaru_macos-x64"
+    # for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+    #     URL=${AARU_MAP[$RUNTIME]}
+    #     if [ $URL = "" ]; then
+    #         continue
+    #     fi
 
-    AARU_WIN_ARM64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_aarch64.zip"
-    AARU_WIN_ARM64_LOCAL="aaru_win-arm64"
-    AARU_WIN_X86_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x86.zip"
-    AARU_WIN_X86_LOCAL="aaru_win-x86"
-    AARU_WIN_X64_URL="https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip"
-    AARU_WIN_X64_LOCAL="aaru_win-x64"
+    #     wget $URL -O aaru-$RUNTIME
 
-    #wget $AARU_LINUX_ARM64_URL -O $AARU_LINUX_ARM64_LOCAL.tar.gz
-    #tar -xvf $AARU_LINUX_ARM64_LOCAL.tar.gz -C $AARU_LINUX_ARM64_LOCAL
-    #wget $AARU_LINUX_X64_URL -O $AARU_LINUX_X64_LOCAL.tar.gz
-    #tar -xvf $AARU_LINUX_X64_LOCAL.tar.gz -C $AARU_LINUX_X64_LOCAL
-    #wget $AARU_MACOS_ARM64_URL -O $AARU_MACOS_ARM64_LOCAL.zip
-    #unzip -u $AARU_MACOS_ARM64_LOCAL.zip -d $AARU_MACOS_ARM64_LOCAL
-    #wget $AARU_MACOS_X64_URL -O $AARU_MACOS_X64_LOCAL.zip
-    #unzip -u $AARU_MACOS_X64_LOCAL.zip -d $AARU_MACOS_X64_LOCAL
-    #wget $AARU_WIN_ARM64_URL -O $AARU_WIN_ARM64_LOCAL.zip
-    #unzip -u $AARU_WIN_ARM64_LOCAL.zip -d $AARU_WIN_ARM64_LOCAL
-    #wget $AARU_WIN_X86_URL -O $AARU_WIN_X86_LOCAL.zip
-    #unzip -u $AARU_WIN_X86_LOCAL.zip -d $AARU_WIN_X86_LOCAL
-    #wget $AARU_WIN_X64_URL -O $AARU_WIN_X64_LOCAL.zip
-    #unzip -u $AARU_WIN_X64_LOCAL.zip -d $AARU_WIN_X64_LOCAL
+    #     if [[ $URL =~ \.tar\.gz$ ]]; then
+    #         tar -xvf aaru-$RUNTIME -C aaru-$RUNTIME-dir
+    #     elif 
+    #         unzip -u aaru-$RUNTIME -d aaru-$RUNTIME-dir
+    #     fi
+    # done
 
     # DiscImageCreator
-    DIC_LINUX_ARM64_URL=""
-    DIC_LINUX_ARM64_LOCAL="creator_linux-arm64"
-    DIC_LINUX_X64_URL="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-    DIC_LINUX_X64_LOCAL="creator_linux-x64"
+    DIC_MAP=(
+        ["linux-arm64"]="",
+        ["linux-amd64"]="https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz",
+        ["macos-arm64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip",
+        ["macos-x64"]="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip",
+        ["win-arm64"]="",
+        ["win-x86"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip",
+        ["win-x64"]="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip",
+    )
 
-    DIC_MACOS_ARM64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-    DIC_MACOS_ARM64_LOCAL="creator_macos-arm64"
-    DIC_MACOS_X64_URL="https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-    DIC_MACOS_X64_LOCAL="creator_macos-x64"
+    for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+        URL=${DIC_MAP[$RUNTIME]}
+        if [ $URL = "" ]; then
+            continue
+        fi
 
-    DIC_WIN_ARM64_URL=""
-    DIC_WIN_ARM64_LOCAL="creator_win-arm64"
-    DIC_WIN_X86_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-    DIC_WIN_X86_LOCAL="creator_win-x86"
-    DIC_WIN_X64_URL="https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-    DIC_WIN_X64_LOCAL="creator_win-x64"
+        wget $URL -O creator-$RUNTIME
 
-    #wget $DIC_LINUX_ARM64_URL -O $DIC_LINUX_ARM64_LOCAL.tar.gz
-    #tar -xvf $DIC_LINUX_ARM64_LOCAL.tar.gz -C $DIC_LINUX_ARM64_LOCAL
-    wget $DIC_LINUX_X64_URL -O $DIC_LINUX_X64_LOCAL.tar.gz
-    tar -xvf $DIC_LINUX_X64_LOCAL.tar.gz -C $DIC_LINUX_X64_LOCAL
-    wget $DIC_MACOS_ARM64_URL -O $DIC_MACOS_ARM64_LOCAL.zip
-    unzip -u $DIC_MACOS_ARM64_LOCAL.zip -d $DIC_MACOS_ARM64_LOCAL
-    wget $DIC_MACOS_X64_URL -O $DIC_MACOS_X64_LOCAL.zip
-    unzip -u $DIC_MACOS_X64_LOCAL.zip -d $DIC_MACOS_X64_LOCAL
-    #wget $DIC_WIN_ARM64_URL -O $DIC_WIN_ARM64_LOCAL.zip
-    #unzip -u $DIC_WIN_ARM64_LOCAL.zip -d $DIC_WIN_ARM64_LOCAL
-    wget $DIC_WIN_X86_URL -O $DIC_WIN_X86_LOCAL.zip
-    unzip -u $DIC_WIN_X86_LOCAL.zip -d $DIC_WIN_X86_LOCAL
-    wget $DIC_WIN_X64_URL -O $DIC_WIN_X64_LOCAL.zip
-    unzip -u $DIC_WIN_X64_LOCAL.zip -d $DIC_WIN_X64_LOCAL
+        if [[ $URL =~ \.tar\.gz$ ]]; then
+            tar -xvf creator-$RUNTIME -C creator-$RUNTIME-dir
+        elif 
+            unzip -u creator-$RUNTIME -d creator-$RUNTIME-dir
+        fi
+    done
 
     # Redumper
-    REDUMPER_LINUX_ARM64_URL=""
-    REDUMPER_LINUX_ARM64_LOCAL="redumper_linux-arm64"
-    REDUMPER_LINUX_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip"
-    REDUMPER_LINUX_X64_LOCAL="redumper_linux-x64"
+    REDUMPER_MAP=(
+        ["linux-arm64"]="",
+        ["linux-amd64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Linux64.zip",
+        ["macos-arm64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip",
+        ["macos-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip",
+        ["win-arm64"]="",
+        ["win-x86"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip",
+        ["win-x64"]="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip",
+    )
 
-    REDUMPER_MACOS_ARM64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-    REDUMPER_MACOS_ARM64_LOCAL="redumper_macos-arm64"
-    REDUMPER_MACOS_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Darwin64.zip"
-    REDUMPER_MACOS_X64_LOCAL="redumper_macos-x64"
+    for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+        URL=${REDUMPER_MAP[$RUNTIME]}
+        if [ $URL = "" ]; then
+            continue
+        fi
 
-    REDUMPER_WIN_ARM64_URL=""
-    REDUMPER_WIN_ARM64_LOCAL="redumper_win-arm64"
-    REDUMPER_WIN_X86_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows32.zip"
-    REDUMPER_WIN_X86_LOCAL="redumper_win-x86"
-    REDUMPER_WIN_X64_URL="https://github.com/superg/redumper/releases/download/build_549/redumper-2025.04.15_build549-Windows64.zip"
-    REDUMPER_WIN_X64_LOCAL="redumper_win-x64"
+        wget $URL -O redumper-$RUNTIME
 
-    #wget $REDUMPER_LINUX_ARM64_URL -O $REDUMPER_LINUX_ARM64_LOCAL.zip
-    #unzip -u $REDUMPER_LINUX_ARM64_LOCAL.zip -d $REDUMPER_LINUX_ARM64_LOCAL
-    wget $REDUMPER_LINUX_X64_URL -O $REDUMPER_LINUX_X64_LOCAL.zip
-    unzip -u $REDUMPER_LINUX_X64_LOCAL.zip -d $REDUMPER_LINUX_X64_LOCAL
-    wget $REDUMPER_MACOS_ARM64_URL -O $REDUMPER_MACOS_ARM64_LOCAL.zip
-    unzip -u $REDUMPER_MACOS_ARM64_LOCAL.zip -d $REDUMPER_MACOS_ARM64_LOCAL
-    wget $REDUMPER_MACOS_X64_URL -O $REDUMPER_MACOS_X64_LOCAL.zip
-    unzip -u $REDUMPER_MACOS_X64_LOCAL.zip -d $REDUMPER_MACOS_X64_LOCAL
-    #wget $REDUMPER_WIN_ARM64_URL -O $REDUMPER_WIN_ARM64_LOCAL.zip
-    #unzip -u $REDUMPER_WIN_ARM64_LOCAL.zip -d $REDUMPER_WIN_ARM64_LOCAL
-    wget $REDUMPER_WIN_X86_URL -O $REDUMPER_WIN_X86_LOCAL.zip
-    unzip -u $REDUMPER_WIN_X86_LOCAL.zip -d $REDUMPER_WIN_X86_LOCAL
-    wget $REDUMPER_WIN_X64_URL -O $REDUMPER_WIN_X64_LOCAL.zip
-    unzip -u $REDUMPER_WIN_X64_LOCAL.zip -d $REDUMPER_WIN_X64_LOCAL
+        if [[ $URL =~ \.tar\.gz$ ]]; then
+            tar -xvf redumper-$RUNTIME -C redumper-$RUNTIME-dir
+        elif 
+            unzip -u redumper-$RUNTIME -d redumper-$RUNTIME-dir
+        fi
+    done
 }
 
 # Only build if requested
