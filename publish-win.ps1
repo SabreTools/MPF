@@ -101,12 +101,14 @@ function Download-Programs {
     Write-Host "===== Downloading Required Programs ====="
     foreach ($PREFIX in $DL_PREFIXES) {
         foreach ($RUNTIME in $CHECK_RUNTIMES) {
+            # Check for a valid URL
             $DL_KEY = $PREFIX + "_" + $RUNTIME
             $URL = $DL_MAP[$DL_KEY]
             if ( [string]::IsNullOrEmpty($URL) ) {
                 continue
             }
 
+            # Download the file to a predictable local file
             $EXT = [System.IO.Path]::GetExtension($URL)
             $OUTNAME = $PREFIX + "_" + $RUNTIME + $EXT
             Invoke-WebRequest -Uri $URL -OutFile $OUTNAME
@@ -114,6 +116,7 @@ function Download-Programs {
             $TEMPDIR = $PREFIX + "_" + $RUNTIME + "-temp"
             $OUTDIR = $PREFIX + "_" + $RUNTIME + "-dir"
 
+            # Handle gzipped files separately
             if ($EXT -eq ".gz") {
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
@@ -122,13 +125,17 @@ function Download-Programs {
                 Expand-Archive -LiteralPath $OUTNAME -DestinationPath "$TEMPDIR"
             }
 
+            # Create the proper structure
             Move-Item -Path "$BUILD_FOLDER/$TEMPDIR/*" -Destination "$BUILD_FOLDER/$OUTDIR"
             Remove-Item -Path "$TEMPDIR" -Recurse -Force
 
             if ([System.IO.Directory]::Exists("$OUTDIR/bin")) {
                 Move-Item -Path "$BUILD_FOLDER/$OUTDIR/bin/*" -Destination "$BUILD_FOLDER/$OUTDIR"
-                Remove-Item -Path "$OUTDIR/bin" -Recurse -Force
             }
+
+            # Remove empty subdirectories
+            $EMPTY = Get-ChildItem $OUTDIR -directory -recurse | Where-Object { (Get-ChildItem $_.fullName).count -eq 0 } | Select-Object -expandproperty FullName
+            $EMPTY | Foreach-Object { Remove-Item $_ }
         }
     }
 

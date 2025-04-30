@@ -21,6 +21,7 @@
 - Replace old download implementations
 - Enable packing programs for CLI
 - Fix minor packing issues
+- Comment download scripts more
 
 ### 3.3.0 (2025-01-03)
 

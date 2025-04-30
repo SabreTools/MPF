@@ -111,18 +111,22 @@ function download_programs() {
     echo "===== Downloading Required Programs ====="
     for PREFIX in "${DL_PREFIXES[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+            # Check for a valid URL
             DL_KEY=$PREFIX"_"$RUNTIME
             URL=${DL_MAP[$DL_KEY]}
             if [ -z "$URL" ]; then
                 continue
             fi
 
+            # Download the file to a predictable local file
             EXT=${URL##*.}
             OUTNAME=$PREFIX"_"$RUNTIME.$EXT
             wget $URL -O $OUTNAME
 
             TEMPDIR=$PREFIX"_"$RUNTIME-temp
             OUTDIR=$PREFIX"_"$RUNTIME-dir
+
+            # Handle gzipped files separately
             if [[ $URL =~ \.tar\.gz$ ]]; then
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
@@ -130,6 +134,7 @@ function download_programs() {
                 unzip -u $OUTNAME -d $TEMPDIR
             fi
 
+            # Create the proper structure
             mkdir $OUTDIR
             mv $TEMPDIR/*/** $OUTDIR/
             mv $TEMPDIR/** $OUTDIR/
@@ -137,8 +142,10 @@ function download_programs() {
 
             if [ -d "$OUTDIR/bin" ]; then
                 mv $OUTDIR/bin/* $OUTDIR/
-                rm -rf $OUTDIR/bin
             fi
+
+            # Remove empty subdirectories
+            rm -rd $OUTDIR
         done
     done
 
