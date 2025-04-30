@@ -22,6 +22,7 @@
 - Enable packing programs for CLI
 - Fix minor packing issues
 - Comment download scripts more
+- Fix removing empty subdirectories
 
 ### 3.3.0 (2025-01-03)
 

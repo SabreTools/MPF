@@ -145,7 +145,7 @@ function download_programs() {
             fi
 
             # Remove empty subdirectories
-            rm -rd $OUTDIR
+            find . -empty -type d -delete
         done
     done
 
