@@ -3,6 +3,7 @@
 - Fix typo for L1Toolstamp!.Label (bikerspade)
 - Update redumper to build 549
 - Allow max speed dumping ("0")
+- Normalize file path in CLI
 
 ### 3.3.0 (2025-01-03)
 

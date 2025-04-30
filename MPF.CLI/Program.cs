@@ -104,6 +104,10 @@ namespace MPF.CLI
                 return;
             }
 
+            // Normalize the file path
+            if (opts.FilePath != null)
+                opts.FilePath = Path.GetFullPath(opts.FilePath);
+
             // Get the speed from the options
             int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
 
