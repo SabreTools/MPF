@@ -156,10 +156,21 @@ function download_programs() {
             done
         done
     done
-}
 
-#TEMP INVOCATION OF THE ABOVE
-download_programs
+    # Clean up the downloaded files and directories
+    for PREFIX in "${DL_PREFIXES[@]}"; do
+        for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
+            URL=${DL_MAP["$PREFIX_$RUNTIME"]}
+            if [ $URL = "" ]; then
+                continue
+            fi
+
+            EXT=${URL##*.}
+            rm $PREFIX_$RUNTIME.$EXT
+            rm -r $PREFIX_$RUNTIME-dir
+        done
+    done
+}
 
 # Only build if requested
 if [ $NO_BUILD = false ]; then

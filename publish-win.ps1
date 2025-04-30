@@ -143,6 +143,20 @@ function Download-Programs {
             }
         }
     }
+
+    # Clean up the downloaded files and directories
+    foreach ($PREFIX in $DL_PREFIXES) {
+        foreach ($RUNTIME in $CHECK_RUNTIMES) {
+            $URL = $DL_MAP["$PREFIX_$RUNTIME"]
+            if ( $URL -eq "" ) {
+                continue
+            }
+
+            $EXT=[System.IO.Path]::GetExtension($URL)
+            Remove-Item -Path $PREFIX_$RUNTIME.$EXT
+            Remove-Item -Path $PREFIX_$RUNTIME-dir -Recurse
+        }
+    }
 }
 
 # Only build if requested

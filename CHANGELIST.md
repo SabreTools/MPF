@@ -15,6 +15,7 @@
 - Unify download maps
 - Trailing commas caused issues
 - Add initial extraction to new functions
+- Add cleanup to download functions
 
 ### 3.3.0 (2025-01-03)
 
