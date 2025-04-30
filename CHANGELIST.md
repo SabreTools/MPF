@@ -5,6 +5,7 @@
 - Allow max speed dumping ("0")
 - Normalize file path in CLI
 - Always write full configuration file
+- Short-circuit CLI first-run experience
 
 ### 3.3.0 (2025-01-03)
 

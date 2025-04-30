@@ -27,6 +27,10 @@ namespace MPF.CLI
                 // Reset first run
                 options.FirstRun = false;
                 OptionsLoader.SaveToConfig(options);
+
+                // Display non-error message
+                DisplayHelp("First-run detected! Please fill out config.json and run again.");
+                return;
             }
 
             // Try processing the standalone arguments
