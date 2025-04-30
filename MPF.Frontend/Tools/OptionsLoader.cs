@@ -315,29 +315,26 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfig(Options options, bool saveDefault = false)
+        public static void SaveToConfig(Options options)
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
 
-            // If default values should be saved as well
-            if (saveDefault)
+            // Ensure default values are included
+            PropertyInfo[] properties = typeof(Options).GetProperties();
+            foreach (var property in properties)
             {
-                PropertyInfo[] properties = typeof(Options).GetProperties();
-                foreach (var property in properties)
-                {
-                    // Skip dictionary properties
-                    if (property.Name == "Item")
-                        continue;
+                // Skip dictionary properties
+                if (property.Name == "Item")
+                    continue;
 
-                    // Skip non-option properties
-                    if (property.Name == "Settings" || property.Name == "HasRedumpLogin")
-                        continue;
+                // Skip non-option properties
+                if (property.Name == "Settings" || property.Name == "HasRedumpLogin")
+                    continue;
 
-                    var val = property.GetValue(options, null);
-                    property.SetValue(options, val, null);
-                }
+                var val = property.GetValue(options, null);
+                property.SetValue(options, val, null);
             }
 
             // Handle a very strange edge case
@@ -368,7 +365,7 @@ namespace MPF.Frontend.Tools
 
             // Local folder
 #if NET20 || NET35 || NET40 || NET452
-            string runtimeDir =  Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string runtimeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 #else
             string runtimeDir = AppContext.BaseDirectory;
 #endif

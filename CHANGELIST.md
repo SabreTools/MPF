@@ -4,6 +4,7 @@
 - Update redumper to build 549
 - Allow max speed dumping ("0")
 - Normalize file path in CLI
+- Always write full configuration file
 
 ### 3.3.0 (2025-01-03)
 

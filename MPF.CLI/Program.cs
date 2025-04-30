@@ -26,7 +26,7 @@ namespace MPF.CLI
 
                 // Reset first run
                 options.FirstRun = false;
-                OptionsLoader.SaveToConfig(options, saveDefault: true);
+                OptionsLoader.SaveToConfig(options);
             }
 
             // Try processing the standalone arguments
