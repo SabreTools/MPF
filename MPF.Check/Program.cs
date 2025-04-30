@@ -211,7 +211,7 @@ namespace MPF.Check
             Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
             Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
             Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
-            Console.WriteLine($"X) Start dumping");
+            Console.WriteLine($"X) Start checking");
             Console.Write("> ");
 
             result = Console.ReadLine();

@@ -23,6 +23,12 @@
 - Fix minor packing issues
 - Comment download scripts more
 - Fix removing empty subdirectories
+- Add interactive mode to CLI
+- Add padding above root interactive node label
+- Clean up case-sensitivity
+- Add interactive mode to Check
+- Fix menu title in Check interactive
+- It's not dumping, it's checking
 
 ### 3.3.0 (2025-01-03)
 
