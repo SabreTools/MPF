@@ -31,6 +31,7 @@
 - It's not dumping, it's checking
 - Make interactive mode cleaner
 - Avoid redundant redundancy
+- Allow exiting from interactive modes
 
 ### 3.3.0 (2025-01-03)
 

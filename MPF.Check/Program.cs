@@ -211,6 +211,8 @@ namespace MPF.Check
             Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
             Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
             Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine();
+            Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
             Console.Write("> ");
 
@@ -275,9 +277,13 @@ namespace MPF.Check
                     options.DeleteUnnecessaryFiles = !options.DeleteUnnecessaryFiles;
                     goto root;
 
+                case "q":
+                case "Q":
+                    Environment.Exit(0);
+                    break;
                 case "x":
                 case "X":
-                    Console.WriteLine();
+                    Console.Clear();
                     goto exit;
                 case "z":
                 case "Z":

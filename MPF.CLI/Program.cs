@@ -249,6 +249,8 @@ namespace MPF.CLI
             Console.WriteLine($"6) Set file path (Currently '{opts.FilePath}')");
             Console.WriteLine($"7) Set override speed (Currently '{opts.DriveSpeed}')");
             Console.WriteLine($"8) Set custom parameters (Currently '{opts.CustomParams}')");
+            Console.WriteLine();
+            Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start dumping");
             Console.Write("> ");
 
@@ -271,9 +273,14 @@ namespace MPF.CLI
                     goto overrideSpeed;
                 case "8":
                     goto customParams;
+
+                case "q":
+                case "Q":
+                    Environment.Exit(0);
+                    break;
                 case "x":
                 case "X":
-                    Console.WriteLine();
+                    Console.Clear();
                     goto exit;
                 case "z":
                 case "Z":
