@@ -37,6 +37,7 @@
 - Update Nuget packages
 - Normalize Shift-JIS characters, when possible
 - Update to DIC 20250501
+- Update RedumpLib to 1.6.6
 
 ### 3.3.0 (2025-01-03)
 
