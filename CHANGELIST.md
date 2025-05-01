@@ -32,6 +32,7 @@
 - Make interactive mode cleaner
 - Avoid redundant redundancy
 - Allow exiting from interactive modes
+- Update RedumpLib to 1.6.5
 
 ### 3.3.0 (2025-01-03)
 
