@@ -189,7 +189,7 @@ namespace MPF.Check
             string? result = string.Empty;
 
         root:
-            Console.WriteLine();
+            Console.Clear();
             Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();

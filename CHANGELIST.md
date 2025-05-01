@@ -29,6 +29,7 @@
 - Add interactive mode to Check
 - Fix menu title in Check interactive
 - It's not dumping, it's checking
+- Make interactive mode cleaner
 
 ### 3.3.0 (2025-01-03)
 
