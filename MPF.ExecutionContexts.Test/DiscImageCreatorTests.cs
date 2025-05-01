@@ -90,10 +90,10 @@ namespace MPF.ExecutionContexts.Test
         #region Audio
 
         [Theory]
-        [InlineData("audio F filename.bin 0 1 2 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t")]
+        [InlineData("audio F filename.bin 0 1 2 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t")]
         public void AudioTest(string parameters)
         {
-            string? expected = "audio F \"filename.bin\" 0 1 2 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t";
+            string? expected = "audio F \"filename.bin\" 0 1 2 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -135,10 +135,10 @@ namespace MPF.ExecutionContexts.Test
         #region CompactDisc
 
         [Theory]
-        [InlineData("cd f filename.bin 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx")]
+        [InlineData("cd f filename.bin 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /mscf /fdesc sync edc /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx")]
         public void CompactDiscTest(string parameters)
         {
-            string? expected = "cd f \"filename.bin\" 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /d8 /d /q /mscf /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx";
+            string? expected = "cd f \"filename.bin\" 0 /a 0 /p /aj /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /mscf /fdesc sync edc /f 0 /fulltoc /mr 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /toc /trp /vn 0 /vnc /vnx";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -150,10 +150,10 @@ namespace MPF.ExecutionContexts.Test
         #region Data
 
         [Theory]
-        [InlineData("data F filename.bin 0 1 2 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t")]
+        [InlineData("data F filename.bin 0 1 2 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t")]
         public void DataTest(string parameters)
         {
-            string? expected = "data F \"filename.bin\" 0 1 2 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t";
+            string? expected = "data F \"filename.bin\" 0 1 2 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /r /am /sf 1 /ss /sk 1 0 /s 0 /t";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -240,10 +240,10 @@ namespace MPF.ExecutionContexts.Test
         #region GDROM
 
         [Theory]
-        [InlineData("gd f filename.bin 0 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /s 0")]
+        [InlineData("gd f filename.bin 0 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /s 0")]
         public void GDROMTest(string parameters)
         {
-            string? expected = "gd f \"filename.bin\" 0 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nr /s 0";
+            string? expected = "gd f \"filename.bin\" 0 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nr /s 0";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);
@@ -360,10 +360,10 @@ namespace MPF.ExecutionContexts.Test
         #region Swap
 
         [Theory]
-        [InlineData("swap f filename.bin 0 /a 0 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx")]
+        [InlineData("swap f filename.bin 0 /a 0 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx")]
         public void SwapTest(string parameters)
         {
-            string? expected = "swap f \"filename.bin\" 0 /a 0 /be raw /c2 1 2 3 1 5 6 /d8 /d /q /f 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx";
+            string? expected = "swap f \"filename.bin\" 0 /a 0 /be raw /c2 1 2 3 1 5 6 /c2new 1 /d8 /d /q /f 0 /np /nq /nl /ns /nr /am /sf 1 /ss /74 /s 0 /trp /vn 0 /vnc /vnx";
             var context = new ExecutionContext(parameters);
             string? actual = context.GenerateParameters();
             Assert.Equal(expected, actual);

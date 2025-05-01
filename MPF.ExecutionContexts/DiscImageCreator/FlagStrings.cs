@@ -10,6 +10,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public const string AtariJaguar = "/aj";
         public const string BEOpcode = "/be";
         public const string C2Opcode = "/c2";
+        public const string C2OpcodeNew = "/c2new";
         public const string CopyrightManagementInformation = "/c";
         public const string D8Opcode = "/d8";
         public const string DatExpand = "/d";
@@ -17,6 +18,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public const string DVDReread = "/rr";
         public const string ExtractMicroSoftCabFile = "/mscf";
         public const string Fix = "/fix";
+        public const string ForceDescrambleSector = "/fdesc";
         public const string ForceUnitAccess = "/f";
         public const string FullToc = "/fulltoc";
         public const string MultiSectorRead = "/mr";

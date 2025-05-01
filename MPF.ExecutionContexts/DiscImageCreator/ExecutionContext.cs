@@ -98,6 +98,13 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public int? FixValue { get; set; }
 
         /// <summary>
+        /// Force descramble value
+        /// Possible values: sync, edc, sync edc, ecc, sync ecc, edc ecc
+        /// </summary>
+        /// TODO: Make this an enum
+        public string? ForceDescrambleSectorValue { get; set; }
+
+        /// <summary>
         /// Set the force unit access flag value (default 1)
         /// </summary>
         public int? ForceUnitAccessValue { get; set; }
@@ -185,6 +192,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 [
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
+                    FlagStrings.C2OpcodeNew,
                     FlagStrings.D8Opcode,
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
@@ -220,10 +228,12 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.AtariJaguar,
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
+                    FlagStrings.C2OpcodeNew,
                     FlagStrings.D8Opcode,
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ExtractMicroSoftCabFile,
+                    FlagStrings.ForceDescrambleSector,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.FullToc,
                     FlagStrings.MultiSectorRead,
@@ -248,6 +258,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 [
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
+                    FlagStrings.C2OpcodeNew,
                     FlagStrings.D8Opcode,
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
@@ -300,6 +311,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 [
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
+                    FlagStrings.C2OpcodeNew,
                     FlagStrings.D8Opcode,
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
@@ -333,6 +345,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.AddOffset,
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
+                    FlagStrings.C2OpcodeNew,
                     FlagStrings.D8Opcode,
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
@@ -594,6 +607,22 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 }
             }
 
+            // C2 Opcode New
+            if (IsFlagSupported(FlagStrings.C2OpcodeNew))
+            {
+                if (this[FlagStrings.C2OpcodeNew] == true)
+                {
+                    parameters.Append($"{FlagStrings.C2OpcodeNew} ");
+                    if (C2OpcodeValue[0] != null)
+                    {
+                        if (C2OpcodeValue[0] > 0)
+                            parameters.Append($"{C2OpcodeValue[0]} ");
+                        else
+                            return null;
+                    }
+                }
+            }
+
             // Copyright Management Information
             if (IsFlagSupported(FlagStrings.CopyrightManagementInformation))
             {
@@ -648,6 +677,19 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     parameters.Append($"{FlagStrings.Fix} ");
                     if (FixValue != null)
                         parameters.Append($"{FixValue} ");
+                    else
+                        return null;
+                }
+            }
+
+            // Force Descramble Sector
+            if (IsFlagSupported(FlagStrings.ForceDescrambleSector))
+            {
+                if (this[FlagStrings.ForceDescrambleSector] == true)
+                {
+                    parameters.Append($"{FlagStrings.ForceDescrambleSector} ");
+                    if (ForceDescrambleSectorValue != null)
+                        parameters.Append($"{ForceDescrambleSectorValue} ");
                     else
                         return null;
                 }
@@ -974,6 +1016,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             C2OpcodeValue = new int?[6];
             DVDRereadValue = null;
             FixValue = null;
+            ForceDescrambleSectorValue = null;
             ForceUnitAccessValue = null;
             NoSkipSecuritySectorValue = null;
             ScanFileProtectValue = null;
@@ -1531,6 +1574,25 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         }
                     }
 
+                    // C2 Opcode New
+                    if (parts[i] == FlagStrings.C2OpcodeNew && IsFlagSupported(FlagStrings.C2OpcodeNew))
+                    {
+                        this[FlagStrings.C2OpcodeNew] = true;
+                        if (!DoesExist(parts, i + 1))
+                        {
+                            return false;
+                        }
+                        else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            C2OpcodeValue[0] = int.Parse(parts[i + 1]);
+                            i++;
+                        }
+                    }
+
                     // Copyright Management Information
                     ProcessFlagParameter(parts, FlagStrings.CopyrightManagementInformation, ref i);
 
@@ -1555,6 +1617,63 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     intValue = ProcessInt32Parameter(parts, FlagStrings.Fix, ref i);
                     if (intValue != null && intValue != int.MinValue)
                         FixValue = intValue;
+
+                    // Force Descramble Sector
+                    stringValue = ProcessStringParameter(parts, FlagStrings.ForceDescrambleSector, ref i);
+                    if (!string.IsNullOrEmpty(stringValue))
+                    {
+                        if (string.Equals(stringValue, "sync"))
+                        {
+                            if (DoesExist(parts, i + 1))
+                            {
+                                if (parts[i + 1] == "edc")
+                                {
+                                    ForceDescrambleSectorValue = "sync edc";
+                                    i++;
+                                }
+                                else if (parts[i + 1] == "ecc")
+                                {
+                                    ForceDescrambleSectorValue = "sync ecc";
+                                    i++;
+                                }
+                                else
+                                {
+                                    ForceDescrambleSectorValue = "sync";
+                                }
+                            }
+                            else
+                            {
+                                ForceDescrambleSectorValue = "sync";
+                            }
+                        }
+                        else if (string.Equals(stringValue, "edc"))
+                        {
+                            if (DoesExist(parts, i + 1))
+                            {
+                                if (parts[i + 1] == "ecc")
+                                {
+                                    ForceDescrambleSectorValue = "edc ecc";
+                                    i++;
+                                }
+                                else
+                                {
+                                    ForceDescrambleSectorValue = "edc";
+                                }
+                            }
+                            else
+                            {
+                                ForceDescrambleSectorValue = "edc";
+                            }
+                        }
+                        else if (string.Equals(stringValue, "ecc"))
+                        {
+                            ForceDescrambleSectorValue = "ecc";
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
 
                     // Force Unit Access
                     intValue = ProcessInt32Parameter(parts, FlagStrings.ForceUnitAccess, ref i, missingAllowed: true);

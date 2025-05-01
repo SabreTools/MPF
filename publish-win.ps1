@@ -80,12 +80,12 @@ function Download-Programs {
 
         # DiscImageCreator
         "Creator_linux-arm64"  = ""
-        "Creator_linux-x64"    = "https://github.com/user-attachments/files/18285720/DiscImageCreator_20250101.tar.gz"
-        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
-        "Creator_osx-x64"      = "https://github.com/user-attachments/files/18285727/DiscImageCreator_20250101.zip"
+        "Creator_linux-x64"    = "https://github.com/user-attachments/files/20000183/DiscImageCreator_20250501.tar.gz"
+        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
+        "Creator_osx-x64"      = "https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
         "Creator_win-arm64"    = ""
-        "Creator_win-x86"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
-        "Creator_win-x64"      = "https://github.com/user-attachments/files/18287520/DiscImageCreator_20250101.zip"
+        "Creator_win-x86"      = "https://github.com/user-attachments/files/20000181/DiscImageCreator_20250501.zip"
+        "Creator_win-x64"      = "https://github.com/user-attachments/files/20000181/DiscImageCreator_20250501.zip"
 
         # Redumper
         "Redumper_linux-arm64" = ""
