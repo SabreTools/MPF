@@ -32,19 +32,14 @@
         <None Include="README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 
-    <!-- Support for old .NET versions -->
-    <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))">
-        <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    </ItemGroup>
-    <ItemGroup Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))">
-        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="SabreTools.Hashing" Version="1.4.1" />
         <PackageReference Include="SabreTools.Models" Version="1.5.8" />
         <PackageReference Include="SabreTools.RedumpLib" Version="1.6.5" />
         <PackageReference Include="SabreTools.Serialization" Version="1.8.6" />
+        <PackageReference Include="System.IO.Compression" Version="4.3.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))" />
+        <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.2" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
     </ItemGroup>
 
 </Project>
