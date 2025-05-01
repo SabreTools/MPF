@@ -35,6 +35,7 @@
 - Update RedumpLib to 1.6.5
 - Fix package reference layout
 - Update Nuget packages
+- Normalize Shift-JIS characters, when possible
 
 ### 3.3.0 (2025-01-03)
 

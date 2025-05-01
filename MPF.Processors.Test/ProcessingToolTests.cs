@@ -426,6 +426,46 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region NormalizeShiftJIS
+
+        [Fact]
+        public void NormalizeShiftJIS_Null_Empty()
+        {
+            byte[]? contents = null;
+            string? actual = ProcessingTool.NormalizeShiftJIS(contents);
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void NormalizeShiftJIS_Empty_Empty()
+        {
+            byte[]? contents = [];
+            string? actual = ProcessingTool.NormalizeShiftJIS(contents);
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void NormalizeShiftJIS_NoShiftJIS_Valid()
+        {
+            string? expected = "ABCDE";
+            byte[]? contents = [0x41, 0x42, 0x43, 0x44, 0x45];
+            string? actual = ProcessingTool.NormalizeShiftJIS(contents);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void NormalizeShiftJIS_ShiftJIS_Valid()
+        {
+            string? expected = "ABCDE ひらがな";
+            byte[]? contents = [0x41, 0x42, 0x43, 0x44, 0x45, 0x20, 0x82, 0xD0, 0x82, 0xE7, 0x82, 0xAA, 0x82, 0xC8];
+            string? actual = ProcessingTool.NormalizeShiftJIS(contents);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
         #region GetUMDCategory
 
         [Theory]

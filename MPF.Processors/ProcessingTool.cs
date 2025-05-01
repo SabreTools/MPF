@@ -22,6 +22,15 @@ namespace MPF.Processors
     /// </summary>
     public static class ProcessingTool
     {
+        #region Constants
+
+        /// <summary>
+        /// Shift-JIS encoding for detection and conversion
+        /// </summary>
+        private static readonly Encoding ShiftJIS = Encoding.GetEncoding(932);
+
+        #endregion
+
         #region Information Extraction
 
         /// <summary>
@@ -163,14 +172,15 @@ namespace MPF.Processors
             if (!File.Exists(filename))
                 return null;
 
+            // Read the entire file as bytes
+            byte[] bytes = File.ReadAllBytes(filename);
+
             // If we're reading as binary
             if (binary)
-            {
-                byte[] bytes = File.ReadAllBytes(filename);
                 return BitConverter.ToString(bytes).Replace("-", string.Empty);
-            }
 
-            return File.ReadAllText(filename);
+            // If we're reading as text
+            return NormalizeShiftJIS(bytes);
         }
 
         /// <summary>
@@ -290,6 +300,66 @@ namespace MPF.Processors
 
             // We assume the identifier is consistent across all units
             return di.Units[0]?.Body?.DiscTypeIdentifier;
+        }
+
+        /// <summary>
+        /// Normalize a byte array that may contain Shift-JIS characters
+        /// </summary>
+        /// <param name="contents">String as a byte array to normalize</param>
+        /// <returns>Normalized version of a string</returns>
+        public static string NormalizeShiftJIS(byte[]? contents)
+        {
+            // Invalid arrays are passed as-is
+            if (contents == null || contents.Length == 0)
+                return string.Empty;
+
+#if NET462_OR_GREATER || NETCOREAPP
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
+
+            // If the line contains Shift-JIS characters
+            if (BytesContainsShiftJIS(contents))
+                return ShiftJIS.GetString(contents);
+
+            return Encoding.UTF8.GetString(contents);
+        }
+
+        /// <summary>
+        /// Determine if a byte array contains Shift-JIS encoded characters
+        /// </summary>
+        /// <param name="line">Byte array to check for Shift-JIS encoding</param>
+        /// <returns>True if the byte array contains Shift-JIS characters, false otherwise</returns>
+        /// <see href="https://www.lemoda.net/c/detect-shift-jis/"/> 
+        internal static bool BytesContainsShiftJIS(byte[] bytes)
+        {
+            // Invalid arrays do not count
+            if (bytes == null || bytes.Length == 0)
+                return false;
+
+            // Loop through and check each pair of bytes
+            for (int i = 0; i < bytes.Length - 1; i++)
+            {
+                byte first = bytes[i];
+                byte second = bytes[i + 1];
+
+                if ((first >= 0x81 && first <= 0x84) ||
+                    (first >= 0x87 && first <= 0x9F))
+                {
+                    if (second >= 0x40 && second <= 0x9E)
+                        return true;
+                    else if (second >= 0x9F && second <= 0xFC)
+                        return true;
+                }
+                else if (first >= 0xE0 && first <= 0xEF)
+                {
+                    if (second >= 0x40 && second <= 0x9E)
+                        return true;
+                    else if (second >= 0x9F && second <= 0xFC)
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion

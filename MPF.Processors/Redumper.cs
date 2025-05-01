@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;
@@ -116,7 +117,7 @@ namespace MPF.Processors
 
                     // Attempt to get the error count
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
-                    info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());;
+                    info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());
 
                     // Bluray-specific options
                     if (Type == MediaType.BluRay || Type == MediaType.NintendoWiiUOpticalDisc)
@@ -376,7 +377,7 @@ namespace MPF.Processors
                     string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
                     if (ps2Protection != null)
                         info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}" + Environment.NewLine;
-                    
+
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -736,14 +737,16 @@ namespace MPF.Processors
                     return null;
 
                 // Now that we're at the relevant entries, read each line in and concatenate
-                string? cueString = string.Empty, line = sr.ReadLine()?.Trim();
+                var sb = new StringBuilder();
+                string? line = sr.ReadLine()?.Trim();
                 while (!string.IsNullOrEmpty(line))
                 {
-                    cueString += line + "\n";
+                    // TODO: Figure out how to use NormalizeShiftJIS here
+                    sb.AppendLine(line);
                     line = sr.ReadLine()?.Trim();
                 }
 
-                return cueString.TrimEnd('\n');
+                return sb.ToString().TrimEnd('\n');
             }
             catch
             {
