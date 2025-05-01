@@ -290,7 +290,7 @@ namespace MPF.Check
 
         mediaType:
             Console.WriteLine();
-            Console.WriteLine("Enter the media type and press Enter:");
+            Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             mediaType = OptionsLoader.ToMediaType(result);
@@ -298,7 +298,7 @@ namespace MPF.Check
 
         system:
             Console.WriteLine();
-            Console.WriteLine("Enter the system and press Enter:");
+            Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             system = Extensions.ToRedumpSystem(result);
@@ -306,7 +306,7 @@ namespace MPF.Check
 
         dumpingProgram:
             Console.WriteLine();
-            Console.WriteLine("Enter the dumping program and press Enter:");
+            Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             options.InternalProgram = result.ToInternalProgram();
@@ -314,7 +314,7 @@ namespace MPF.Check
 
         seedPath:
             Console.WriteLine();
-            Console.WriteLine("Enter the seed path and press Enter:");
+            Console.WriteLine("Input the seed path and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             opts.Seed = Builder.CreateFromFile(result);
@@ -342,7 +342,7 @@ namespace MPF.Check
 
         devicePath:
             Console.WriteLine();
-            Console.WriteLine("Enter the device path and press Enter:");
+            Console.WriteLine("Input the device path and press Enter:");
             Console.Write("> ");
             opts.DevicePath = Console.ReadLine();
             goto root;

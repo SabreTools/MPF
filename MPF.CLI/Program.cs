@@ -286,7 +286,7 @@ namespace MPF.CLI
 
         mediaType:
             Console.WriteLine();
-            Console.WriteLine("Enter the media type and press Enter:");
+            Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             mediaType = OptionsLoader.ToMediaType(result);
@@ -294,7 +294,7 @@ namespace MPF.CLI
 
         system:
             Console.WriteLine();
-            Console.WriteLine("Enter the system and press Enter:");
+            Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             system = Extensions.ToRedumpSystem(result);
@@ -302,7 +302,7 @@ namespace MPF.CLI
 
         dumpingProgram:
             Console.WriteLine();
-            Console.WriteLine("Enter the dumping program and press Enter:");
+            Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
             options.InternalProgram = result.ToInternalProgram();
@@ -310,28 +310,28 @@ namespace MPF.CLI
 
         devicePath:
             Console.WriteLine();
-            Console.WriteLine("Enter the device path and press Enter:");
+            Console.WriteLine("Input the device path and press Enter:");
             Console.Write("> ");
             opts.DevicePath = Console.ReadLine();
             goto root;
 
         mountedPath:
             Console.WriteLine();
-            Console.WriteLine("Enter the mounted path and press Enter:");
+            Console.WriteLine("Input the mounted path and press Enter:");
             Console.Write("> ");
             opts.MountedPath = Console.ReadLine();
             goto root;
 
         filePath:
             Console.WriteLine();
-            Console.WriteLine("Enter the file path and press Enter:");
+            Console.WriteLine("Input the file path and press Enter:");
             Console.Write("> ");
             opts.FilePath = Console.ReadLine();
             goto root;
 
         overrideSpeed:
             Console.WriteLine();
-            Console.WriteLine("Enter the override speed and press Enter:");
+            Console.WriteLine("Input the override speed and press Enter:");
             Console.Write("> ");
 
             result = Console.ReadLine();
@@ -343,7 +343,7 @@ namespace MPF.CLI
 
         customParams:
             Console.WriteLine();
-            Console.WriteLine("Enter the custom parameters and press Enter:");
+            Console.WriteLine("Input the custom parameters and press Enter:");
             Console.Write("> ");
             opts.CustomParams = Console.ReadLine();
             goto root;
