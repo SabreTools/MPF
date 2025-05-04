@@ -285,9 +285,12 @@ namespace MPF.CLI
                 case "z":
                 case "Z":
                     Console.WriteLine("It is pitch black. You are likely to be eaten by a grue.");
+                    Console.Write("> ");
+                    Console.ReadLine();
                     goto root;
                 default:
                     Console.WriteLine($"Invalid selection: {result}");
+                    Console.ReadLine();
                     goto root;
             }
 
@@ -333,7 +336,12 @@ namespace MPF.CLI
             Console.WriteLine();
             Console.WriteLine("Input the file path and press Enter:");
             Console.Write("> ");
-            opts.FilePath = Console.ReadLine();
+
+            result = Console.ReadLine();
+            if (!string.IsNullOrEmpty(result))
+                result = Path.GetFullPath(result!);
+
+            opts.FilePath = result;
             goto root;
 
         overrideSpeed:
