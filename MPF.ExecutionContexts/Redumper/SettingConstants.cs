@@ -8,6 +8,9 @@ namespace MPF.ExecutionContexts.Redumper
         public const string EnableLeadinRetry = "RedumperEnableLeadinRetry";
         public const bool EnableLeadinRetryDefault = false;
 
+        public const string EnableSkeleton = "RedumperEnableSkeleton";
+        public const bool EnableSkeletonDefault = true;
+
         public const string EnableVerbose = "RedumperEnableVerbose";
         public const bool EnableVerboseDefault = true;
 

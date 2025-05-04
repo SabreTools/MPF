@@ -38,6 +38,7 @@
 - Normalize Shift-JIS characters, when possible
 - Update to DIC 20250501
 - Update RedumpLib to 1.6.6
+- Update redumper to build 565
 
 ### 3.3.0 (2025-01-03)
 
