@@ -333,7 +333,12 @@ namespace MPF.CLI
             Console.WriteLine();
             Console.WriteLine("Input the file path and press Enter:");
             Console.Write("> ");
-            opts.FilePath = Console.ReadLine();
+
+            result = Console.ReadLine();
+            if (result.Length > 0)
+                result = Path.GetFullPath(result);
+
+            opts.FilePath = result;
             goto root;
 
         overrideSpeed:
