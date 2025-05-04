@@ -40,6 +40,7 @@
 - Update RedumpLib to 1.6.6
 - Pre-clean file path in CLI interactive mode
 - Tweak to previous commit for some build versions
+- Fix lines wiped before displayed
 
 ### 3.3.0 (2025-01-03)
 
