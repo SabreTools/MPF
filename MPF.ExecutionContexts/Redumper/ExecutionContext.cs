@@ -56,6 +56,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.Verbose] = new FlagInput(FlagStrings.Verbose),
             [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
             [FlagStrings.AutoEject] = new FlagInput(FlagStrings.AutoEject),
+            [FlagStrings.Skeleton] = new FlagInput(FlagStrings.Skeleton),
             [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
             [FlagStrings.DiscType] = new StringInput(FlagStrings.DiscType),
             [FlagStrings.Drive] = new StringInput(FlagStrings.Drive),
@@ -145,6 +146,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.Verbose,
                     FlagStrings.Continue,
                     FlagStrings.AutoEject,
+                    FlagStrings.Skeleton,
                     FlagStrings.Debug,
                     FlagStrings.DiscType,
                     FlagStrings.Drive,
@@ -294,6 +296,26 @@ namespace MPF.ExecutionContexts.Redumper
             {
                 this[FlagStrings.Verbose] = true;
                 (_inputs[FlagStrings.Verbose] as FlagInput)?.SetValue(true);
+            }
+            if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
+            {
+                // Enable skeleton for CD dumps only by default
+                switch (MediaType)
+                {
+                    case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                        switch (RedumpSystem)
+                        {
+                            case SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD:
+                                break;
+                            default:
+                                    this[FlagStrings.Skeleton] = true;
+                                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
             if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
             {

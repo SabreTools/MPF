@@ -13,6 +13,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Verbose = "--verbose";
         public const string Continue = "--continue";
         public const string AutoEject = "--auto-eject";
+        public const string Skeleton = "--skeleton";
         public const string Debug = "--debug";
         public const string DiscType = "--disc-type";
         public const string Drive = "--drive";

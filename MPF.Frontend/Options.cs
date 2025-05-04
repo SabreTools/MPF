@@ -348,6 +348,15 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Enable skeleton output while dumping by default
+        /// </summary>
+        public bool RedumperEnableSkeleton
+        {
+            get { return GetBooleanSetting(Settings, RedumperSettings.EnableSkeleton, RedumperSettings.EnableSkeletonDefault); }
+            set { Settings[RedumperSettings.EnableSkeleton] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Enable verbose output while dumping by default
         /// </summary>
         public bool RedumperEnableVerbose
