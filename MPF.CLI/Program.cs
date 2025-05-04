@@ -335,8 +335,8 @@ namespace MPF.CLI
             Console.Write("> ");
 
             result = Console.ReadLine();
-            if (result.Length > 0)
-                result = Path.GetFullPath(result);
+            if (!string.IsNullOrEmpty(result))
+                result = Path.GetFullPath(result!);
 
             opts.FilePath = result;
             goto root;

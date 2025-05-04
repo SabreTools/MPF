@@ -39,6 +39,7 @@
 - Update to DIC 20250501
 - Update RedumpLib to 1.6.6
 - Pre-clean file path in CLI interactive mode
+- Tweak to previous commit for some build versions
 
 ### 3.3.0 (2025-01-03)
 
