@@ -44,6 +44,7 @@
 - Update redumper to build 565
 - Close the log archive, if it exists
 - Support checking Redumper DAT from zip; add tests
+- Add Check warnings around overwriting and parsing
 
 ### 3.3.0 (2025-01-03)
 

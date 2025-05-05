@@ -54,6 +54,10 @@ The main CLI has some known limitations that are documented in code and in some 
 
 MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
 
+**WARNING:** Both the standalone Check executable and the Check functionality in the UI will overwrite both any existing submission information files as well as any log archives. Please make backups of those if you need to before running Check.
+
+**WARNING:** Both the standalone Check executable and the Check functionality in the UI assume that the output files are what were output by the original dumping program. If you need to reparse any outputs that have already been processed by MPF, you will need to unzip all files as if it were the original folder layout.
+
 ## System Requirements
 
 MPF.UI, MPF.CLI, and MPF.Check have the same system requirements for running, with the exception that MPF.UI is Windows-only.

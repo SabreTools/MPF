@@ -167,6 +167,9 @@ namespace MPF.Check
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine();
+            Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
+            Console.WriteLine("as any log archives. Please make backups of those if you need to before running Check.");
+            Console.WriteLine();
         }
 
         /// <summary>

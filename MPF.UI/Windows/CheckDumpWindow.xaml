@@ -110,6 +110,24 @@
                 </Grid>
             </GroupBox>
 
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <GroupBox.Template>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </GroupBox.Template>
+                <Label>
+                    <Label.Content>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
+                            <Run Text="Check will overwrite both any existing submission information files as well as any log archives. Please make backups of those if you need to before running Check." />
+                        </TextBlock>
+                    </Label.Content>
+                </Label>
+            </GroupBox>
+
             <!-- Check Dump / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <GroupBox.Template>
