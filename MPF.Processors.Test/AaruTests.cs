@@ -127,6 +127,16 @@ namespace MPF.Processors.Test
             Assert.True(actual);
         }
 
+        [Fact]
+        public void FoundAnyFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM-zip");
+            string outputFilename = "test.aaruf";
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            Assert.True(actual);
+        }
+
         #endregion
 
         #region GenerateArtifacts

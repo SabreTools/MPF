@@ -112,6 +112,16 @@ namespace MPF.Processors.Test
             Assert.True(actual);
         }
 
+        [Fact]
+        public void FoundAnyFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD-zip");
+            string outputFilename = "test.iso";
+            var processor = new CleanRip(RedumpSystem.NintendoGameCube, MediaType.DVD);
+            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            Assert.True(actual);
+        }
+
         #endregion
 
         #region GenerateArtifacts

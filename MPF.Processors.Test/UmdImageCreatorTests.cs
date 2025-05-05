@@ -67,6 +67,16 @@ namespace MPF.Processors.Test
             Assert.Empty(actual);
         }
 
+        [Fact]
+        public void FoundAllFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD-zip");
+            string outputFilename = "test.iso";
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
         #endregion
 
         #region FoundAnyFiles

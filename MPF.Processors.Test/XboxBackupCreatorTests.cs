@@ -67,6 +67,16 @@ namespace MPF.Processors.Test
             Assert.Empty(actual);
         }
 
+        [Fact]
+        public void FoundAllFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD-zip");
+            string outputFilename = "test.iso";
+            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox, MediaType.DVD);
+            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
         #endregion
 
         #region FoundAnyFiles

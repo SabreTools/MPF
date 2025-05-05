@@ -1,0 +1,3 @@
+<< GetDVDProtection >>
+DecryptedDiscKey[020]: No Key
+LBA: 0, Filename: FILE, No TitleKey

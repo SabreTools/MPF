@@ -181,6 +181,16 @@ namespace MPF.Processors.Test
             Assert.True(actual);
         }
 
+        [Fact]
+        public void FoundAnyFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM-zip");
+            string outputFilename = "test.cue";
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            Assert.True(actual);
+        }
+
         #endregion
 
         #region GenerateArtifacts

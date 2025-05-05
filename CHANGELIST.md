@@ -43,6 +43,7 @@
 - Fix lines wiped before displayed
 - Update redumper to build 565
 - Close the log archive, if it exists
+- Support checking Redumper DAT from zip; add tests
 
 ### 3.3.0 (2025-01-03)
 

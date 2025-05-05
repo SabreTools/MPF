@@ -29,7 +29,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
 
             var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
-            Assert.Equal(15, actual.Count);
+            Assert.Equal(16, actual.Count);
         }
 
         [Fact]
@@ -100,6 +100,16 @@ namespace MPF.Processors.Test
             Assert.Empty(actual);
         }
 
+        [Fact]
+        public void FoundAllFiles_ValidZip_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM-zip");
+            string outputFilename = "test.cue";
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
         #endregion
 
         #region FoundAnyFiles
@@ -145,7 +155,7 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
             var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
-            Assert.Equal(9, actual.Count);
+            Assert.Equal(10, actual.Count);
         }
 
         #endregion
@@ -193,7 +203,7 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
             var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
-            Assert.Equal(9, actual.Count);
+            Assert.Equal(10, actual.Count);
         }
 
         #endregion

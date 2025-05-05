@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET452_OR_GREATER || NETCOREAPP
+using System.IO.Compression;
+using System.Linq;
+#endif
 using System.Text;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
@@ -427,16 +431,21 @@ namespace MPF.Processors
                 case MediaType.CDROM:
                 case MediaType.GDROM:
                     List<OutputFile> cdrom = [
+                        // .asus is obsolete: newer redumper produces .cache instead
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
                         new($"{outputFilename}.atip", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "atip"),
+                        new($"{outputFilename}.cache", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "cache"),
                         new($"{outputFilename}.cdtext", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "cdtext"),
                         new($"{outputFilename}.cue", OutputFileFlags.Required),
+                        new($"{outputFilename}.flip", OutputFileFlags.None),
                         new($"{outputFilename}.fulltoc", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -450,7 +459,6 @@ namespace MPF.Processors
                         new($"{outputFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
-                        new([$"{outputFilename}.flip"], OutputFileFlags.None),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
                         new($"{outputFilename}.state", OutputFileFlags.Required
@@ -625,7 +633,45 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         private static bool DatfileExists(string log)
-            => GetDatfile(log) != null;
+        {
+            // Uncompressed outputs
+            if (GetDatfile(log) != null)
+                return true;
+
+            // Check for the log file
+            string outputFilename = Path.GetFileName(log);
+            string? outputDirectory = Path.GetDirectoryName(log);
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
+
+#if NET20 || NET35 || NET40
+            // Assume the zipfile has the file in it
+            return File.Exists($"{basePath}_logs.zip");
+#else
+            // If the zipfile doesn't exist
+            if (!File.Exists($"{basePath}_logs.zip"))
+                return false;
+
+            try
+            {
+                // Try to open the archive
+                using ZipArchive archive = ZipFile.OpenRead($"{basePath}_logs.zip");
+
+                // Get the log entry and check it, if possible
+                var entry = archive.GetEntry(outputFilename);
+                if (entry == null)
+                    return false;
+
+                using var sr = new StreamReader(entry.Open());
+                return GetDatfile(sr) != null;
+            }
+            catch
+            {
+                return false;
+            }
+#endif
+        }
 
         /// <summary>
         /// Copies a file with the header removed
@@ -769,6 +815,24 @@ namespace MPF.Processors
             try
             {
                 using var sr = File.OpenText(log);
+                return GetDatfile(sr);
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the datfile from the input file, if possible
+        /// </summary>
+        /// <param name="sr">StreamReader representing the input file</param>
+        /// <returns>Newline-delimited datfile if possible, null on error</returns>
+        internal static string? GetDatfile(StreamReader sr)
+        {
+            try
+            {
                 string? datString = null;
 
                 // Find all occurrences of the hash information 
