@@ -42,6 +42,7 @@
 - Tweak to previous commit for some build versions
 - Fix lines wiped before displayed
 - Update redumper to build 565
+- Close the log archive, if it exists
 
 ### 3.3.0 (2025-01-03)
 

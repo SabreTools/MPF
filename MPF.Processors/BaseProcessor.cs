@@ -239,6 +239,11 @@ namespace MPF.Processors
 #endif
             }
 
+#if NET452_OR_GREATER || NETCOREAPP
+            // Close the log archive, if it exists
+            logArchive?.Dispose();
+#endif
+
             return missingFiles;
         }
 
