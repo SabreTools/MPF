@@ -45,6 +45,7 @@
 - Close the log archive, if it exists
 - Support checking Redumper DAT from zip; add tests
 - Add Check warnings around overwriting and parsing
+- Clarification on some options
 
 ### 3.3.0 (2025-01-03)
 

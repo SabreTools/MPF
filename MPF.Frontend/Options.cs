@@ -86,6 +86,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Enable purple mode for UI elements
         /// </summary>
+        /// <remarks>This is a hidden setting</remarks>
         public bool EnablePurpMode
         {
             get { return GetBooleanSetting(Settings, "EnablePurpMode", false); }
@@ -95,6 +96,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Custom color setting
         /// </summary>
+        /// <remarks>This is a hidden setting</remarks>
         public string? CustomBackgroundColor
         {
             get { return GetStringSetting(Settings, "CustomBackgroundColor", null); }
@@ -104,6 +106,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Custom color setting
         /// </summary>
+        /// <remarks>This is a hidden setting</remarks>
         public string? CustomTextColor
         {
             get { return GetStringSetting(Settings, "CustomTextColor", null); }
@@ -155,7 +158,7 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Default output path for dumps
+        /// Show the debug menu item
         /// </summary>
         /// <remarks>This is a hidden setting</remarks>
         public bool ShowDebugViewMenuItem
