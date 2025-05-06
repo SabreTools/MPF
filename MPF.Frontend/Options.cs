@@ -353,6 +353,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Enable skeleton output while dumping by default
         /// </summary>
+        /// <remarks>This is a hidden setting</remarks>
         public bool RedumperEnableSkeleton
         {
             get { return GetBooleanSetting(Settings, RedumperSettings.EnableSkeleton, RedumperSettings.EnableSkeletonDefault); }

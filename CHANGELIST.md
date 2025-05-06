@@ -46,6 +46,7 @@
 - Support checking Redumper DAT from zip; add tests
 - Add Check warnings around overwriting and parsing
 - Clarification on some options
+- One more note about hidden settings
 
 ### 3.3.0 (2025-01-03)
 
