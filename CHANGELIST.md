@@ -47,6 +47,7 @@
 - Add Check warnings around overwriting and parsing
 - Clarification on some options
 - One more note about hidden settings
+- Explicitly unset Redumper speed, if needed
 
 ### 3.3.0 (2025-01-03)
 

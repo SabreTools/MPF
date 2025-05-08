@@ -290,6 +290,11 @@ namespace MPF.ExecutionContexts.Redumper
                 this[FlagStrings.Speed] = true;
                 (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
             }
+            else
+            {
+                this[FlagStrings.Speed] = false;
+                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(0);
+            }
 
             // Set user-defined options
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
