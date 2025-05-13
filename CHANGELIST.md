@@ -49,6 +49,7 @@
 - One more note about hidden settings
 - Explicitly unset Redumper speed, if needed
 - Simplify WriteOutputData path handling
+- Serialize JSON a slightly different way
 
 ### 3.3.0 (2025-01-03)
 

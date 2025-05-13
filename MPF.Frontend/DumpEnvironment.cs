@@ -743,10 +743,6 @@ namespace MPF.Frontend
 
             try
             {
-                // Serialize the JSON and get it writable
-                string json = JsonConvert.SerializeObject(info, Formatting.Indented);
-                byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-
                 // Get the output path
                 var path = string.Empty;
                 if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
@@ -765,15 +761,20 @@ namespace MPF.Frontend
                 // Create and open the output file
                 using var fs = File.Create(path);
 
+                // Create the JSON serializer
+                var serializer = new JsonSerializer { Formatting = Formatting.Indented };
+
                 // If we included artifacts, write to a GZip-compressed file
                 if (includedArtifacts)
                 {
                     using var gs = new GZipStream(fs, CompressionMode.Compress);
-                    gs.Write(jsonBytes, 0, jsonBytes.Length);
+                    using var sw = new StreamWriter(gs, Encoding.UTF8);
+                    serializer.Serialize(sw, info);
                 }
                 else
                 {
-                    fs.Write(jsonBytes, 0, jsonBytes.Length);
+                    using var sw = new StreamWriter(fs, Encoding.UTF8);
+                    serializer.Serialize(sw, info);
                 }
             }
             catch
