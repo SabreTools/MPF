@@ -48,6 +48,7 @@
 - Clarification on some options
 - One more note about hidden settings
 - Explicitly unset Redumper speed, if needed
+- Simplify WriteOutputData path handling
 
 ### 3.3.0 (2025-01-03)
 

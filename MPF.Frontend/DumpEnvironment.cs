@@ -747,38 +747,32 @@ namespace MPF.Frontend
                 string json = JsonConvert.SerializeObject(info, Formatting.Indented);
                 byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
 
+                // Get the output path
+                var path = string.Empty;
+                if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = "!submissionInfo.json";
+                else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = $"!submissionInfo_{filenameSuffix}.json";
+                else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, "!submissionInfo.json");
+                else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
+                    path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
+
+                // Ensure the extension is correct for the output
+                if (includedArtifacts)
+                    path += ".gz";
+
+                // Create and open the output file
+                using var fs = File.Create(path);
+
                 // If we included artifacts, write to a GZip-compressed file
                 if (includedArtifacts)
                 {
-                    var path = string.Empty;
-                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                        path = "!submissionInfo.json.gz";
-                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                        path = $"!submissionInfo_{filenameSuffix}.json.gz";
-                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                        path = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
-                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json.gz");
-
-                    using var fs = File.Create(path);
                     using var gs = new GZipStream(fs, CompressionMode.Compress);
                     gs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
-
-                // Otherwise, write out to a normal JSON
                 else
                 {
-                    var path = string.Empty;
-                    if (string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                        path = "!submissionInfo.json";
-                    else if (string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                        path = $"!submissionInfo_{filenameSuffix}.json";
-                    else if (!string.IsNullOrEmpty(outputDirectory) && string.IsNullOrEmpty(filenameSuffix))
-                        path = Path.Combine(outputDirectory, "!submissionInfo.json");
-                    else if (!string.IsNullOrEmpty(outputDirectory) && !string.IsNullOrEmpty(filenameSuffix))
-                        path = Path.Combine(outputDirectory, $"!submissionInfo_{filenameSuffix}.json");
-
-                    using var fs = File.Create(path);
                     fs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
             }
