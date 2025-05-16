@@ -50,6 +50,7 @@
 - Explicitly unset Redumper speed, if needed
 - Simplify WriteOutputData path handling
 - Serialize JSON a slightly different way
+- Add newlines to pkg info printing
 
 ### 3.3.0 (2025-01-03)
 
