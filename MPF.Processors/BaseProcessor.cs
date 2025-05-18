@@ -640,6 +640,36 @@ namespace MPF.Processors
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Returns true if a Cuesheet consists of only Audio tracks, false otherwise 
+        /// </summary>
+        internal static bool IsAudio(string? cue)
+        {
+            // Ignore invalid inputs
+            if (string.IsNullOrEmpty(cue))
+                return false;
+
+            bool tracksExist = false;
+            foreach (string cueLine in cue.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None))
+            {
+                string line = cueLine.Trim();
+                if (line.Length == 0)
+                    continue;
+
+                string[] tokens = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (tokens.Length < 3 || !tokens[0].Equals("TRACK", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                tracksExist = true;
+                string trackType = tokens[2].ToUpperInvariant();
+                if (trackType != "AUDIO" && trackType != "CDG")
+                    return false;
+            }
+
+            return tracksExist;
+        }
+
         #endregion
     }
 }

@@ -75,16 +75,11 @@ namespace MPF.Processors
                     if (!string.IsNullOrEmpty(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 
-                    // Attempt to get the universal hash, if it's an audio disc
-                    if (System.IsAudio())
+                    // Attempt to get extra metadata if it's an audio disc
+                    if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
                         string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
-                    }
-
-                    // Attempt to get the non-zero data start, if it's an audio disc
-                    if (System.IsAudio())
-                    {
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
                         string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
