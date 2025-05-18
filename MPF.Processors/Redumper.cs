@@ -79,11 +79,14 @@ namespace MPF.Processors
                     if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
                         string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
+                        if (!string.IsNullOrEmpty(universalHash))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+                        if (!string.IsNullOrEmpty(ringNonZeroDataStart))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
                         string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset;
+                        if (!string.IsNullOrEmpty(ringPerfectAudioOffset))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset;
                     }
 
                     break;
