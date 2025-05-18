@@ -51,6 +51,7 @@
 - Simplify WriteOutputData path handling
 - Serialize JSON a slightly different way
 - Add newlines to pkg info printing
+- Better audio-only check
 
 ### 3.3.0 (2025-01-03)
 
