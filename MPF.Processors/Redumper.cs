@@ -71,20 +71,20 @@ namespace MPF.Processors
                     }
 
                     // Attempt to get multisession data
-                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
+                    string? cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log");
                     if (!string.IsNullOrEmpty(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get extra metadata if it's an audio disc
                     if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
-                        string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
+                        string? universalHash = GetUniversalHash($"{basePath}.log");
                         if (!string.IsNullOrEmpty(universalHash))
                             info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
-                        string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
+                        string? ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log");
                         if (!string.IsNullOrEmpty(ringNonZeroDataStart))
                             info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
-                        string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
+                        string? ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log");
                         if (!string.IsNullOrEmpty(ringPerfectAudioOffset))
                             info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset;
                     }
