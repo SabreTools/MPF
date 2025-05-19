@@ -61,6 +61,8 @@ namespace MPF.Processors
                 getKeyPath = $"{basePath}.getkey.log";
             else if (File.Exists(Path.Combine(baseDir, "getkey.log")))
                 getKeyPath = Path.Combine(baseDir, "getkey.log");
+            else
+                getKeyPath = Directory.EnumerateFiles(baseDir, "*.getkey.log").FirstOrDefault();
 
             // Get dumping date from GetKey log date
             if (!string.IsNullOrEmpty(getKeyPath))
@@ -71,6 +73,12 @@ namespace MPF.Processors
                 info.Extras!.PIC = GetPIC($"{basePath}.disc.pic", 264);
             else if (File.Exists(Path.Combine(baseDir, "disc.pic")))
                 info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
+            else
+            {
+                string? discPicPath = Directory.EnumerateFiles(baseDir, "*.disc.pic").FirstOrDefault();
+                if (!string.IsNullOrEmpty)
+                    info.Extras!.PIC = GetPIC(discPicPath, 264);
+            }
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
             if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))
@@ -96,11 +104,11 @@ namespace MPF.Processors
                     return [
                         new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
                         new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
-                        new([$"{outputFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
+                        new RegexOutputFile([$"*getkey.log"], OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new([$"{outputFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
+                        new RegexOutputFile([$"*.disc.pic"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
