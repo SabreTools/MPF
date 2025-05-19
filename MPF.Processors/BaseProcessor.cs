@@ -657,7 +657,7 @@ namespace MPF.Processors
                 if (line.Length == 0)
                     continue;
 
-                string[] separators = [' ', '\t'];
+                string[] separators = [" ", "\t"];
                 string[] tokens = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                 if (tokens.Length < 3 || !tokens[0].Equals("TRACK", StringComparison.OrdinalIgnoreCase))
