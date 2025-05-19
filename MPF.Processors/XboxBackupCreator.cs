@@ -165,7 +165,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
-                        new RegexOutputFile("[lL]og.txt", OutputFileFlags.Required
+                        new RegexOutputFile("[lL]og\\.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "log"),

@@ -53,6 +53,7 @@
 - Add newlines to pkg info printing
 - Better audio-only check
 - Minor cleanup from last commit
+- Relax PS3CFW output filename requirements
 
 ### 3.3.0 (2025-01-03)
 

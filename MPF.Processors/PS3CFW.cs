@@ -61,6 +61,12 @@ namespace MPF.Processors
                 getKeyPath = $"{basePath}.getkey.log";
             else if (File.Exists(Path.Combine(baseDir, "getkey.log")))
                 getKeyPath = Path.Combine(baseDir, "getkey.log");
+            else
+            {
+                string[] getKeyFiles = Directory.GetFiles(baseDir, "*.getkey.log");
+                if (getKeyFiles.Length > 0)
+                    getKeyPath = getKeyFiles[0];
+            }
 
             // Get dumping date from GetKey log date
             if (!string.IsNullOrEmpty(getKeyPath))
@@ -71,6 +77,12 @@ namespace MPF.Processors
                 info.Extras!.PIC = GetPIC($"{basePath}.disc.pic", 264);
             else if (File.Exists(Path.Combine(baseDir, "disc.pic")))
                 info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
+            else
+            {
+                string[] discPicFiles = Directory.GetFiles(baseDir, "*.disc.pic");
+                if (discPicFiles.Length > 0)
+                    info.Extras!.PIC = GetPIC(discPicFiles[0], 264);
+            }
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
             if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))
@@ -96,11 +108,11 @@ namespace MPF.Processors
                     return [
                         new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
                         new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
-                        new([$"{outputFilename}.getkey.log", "getkey.log"], OutputFileFlags.Required
+                        new RegexOutputFile($"getkey\\.log$", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new([$"{outputFilename}.disc.pic", "disc.pic"], OutputFileFlags.Required
+                        new RegexOutputFile($"disc\\.pic$", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
