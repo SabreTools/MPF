@@ -140,6 +140,76 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region IsAudio
+
+        [Fact]
+        public void IsAudio_Null_False()
+        {
+            string? cue = null;
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void IsAudio_Empty_False()
+        {
+            string? cue = string.Empty;
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void IsAudio_Invalid_False()
+        {
+            string? cue = @"INVALID";
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void IsAudio_NoAudio_False()
+        {
+            string? cue = @"FILE ""track (Track 1).bin"" BINARY
+  TRACK 01 MODE1/2352
+    INDEX 01 00:00:00
+FILE ""track (Track 2).bin"" BINARY
+  TRACK 02 MODE1/2352
+    INDEX 01 00:00:00";
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void IsAudio_MixedTracks_False()
+        {
+            string? cue = @"FILE ""track (Track 1).bin"" BINARY
+  TRACK 01 MODE1/2352
+    INDEX 01 00:00:00
+FILE ""track (Track 2).bin"" BINARY
+  TRACK 02 AUDIO
+    INDEX 00 00:00:00
+    INDEX 01 00:02:00";
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void IsAudio_AllAudio_True()
+        {
+            string? cue = @"FILE ""track (Track 1).bin"" BINARY
+  TRACK 01 AUDIO
+    INDEX 00 00:00:00
+    INDEX 01 00:02:00
+FILE ""track (Track 2).bin"" BINARY
+  TRACK 02 AUDIO
+    INDEX 00 00:00:00
+    INDEX 01 00:02:00";
+            bool actual = BaseProcessor.IsAudio(cue);
+            Assert.True(actual);
+        }
+
+        #endregion
+
         #region SplitString
 
         [Fact]

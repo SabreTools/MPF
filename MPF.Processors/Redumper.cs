@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 #if NET452_OR_GREATER || NETCOREAPP
 using System.IO.Compression;
-using System.Linq;
 #endif
 using System.Text;
 using System.Text.RegularExpressions;
@@ -78,15 +77,14 @@ namespace MPF.Processors
                     // Attempt to get extra metadata if it's an audio disc
                     if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
-                        string? universalHash = GetUniversalHash($"{basePath}.log");
-                        if (!string.IsNullOrEmpty(universalHash))
-                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash!;
-                        string? ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log");
-                        if (!string.IsNullOrEmpty(ringNonZeroDataStart))
-                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart!;
-                        string? ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log");
-                        if (!string.IsNullOrEmpty(ringPerfectAudioOffset))
-                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;
+                        string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
+
+                        string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart!;
+
+                        string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;
                     }
 
                     break;

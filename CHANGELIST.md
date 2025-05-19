@@ -52,6 +52,7 @@
 - Serialize JSON a slightly different way
 - Add newlines to pkg info printing
 - Better audio-only check
+- Minor cleanup from last commit
 
 ### 3.3.0 (2025-01-03)
 

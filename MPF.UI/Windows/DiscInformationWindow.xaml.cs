@@ -232,7 +232,7 @@ namespace MPF.UI.Windows
                 AntiModchip!.Visibility = Visibility.Collapsed;
             if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
                 DiscOffset!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.DMIHash) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.DMIHash))
                 DMIHash!.Visibility = Visibility.Collapsed;
             if (submissionInfo.EDC?.EDC == null)
                 EDC!.Visibility = Visibility.Collapsed;
@@ -240,45 +240,45 @@ namespace MPF.UI.Windows
                 ErrorsCount!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
                 EXEDateBuildDate!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.Filename) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.Filename))
                 Filename!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.Extras?.Header))
                 Header!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.InternalName) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.InternalName))
                 InternalName!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.InternalSerialName) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.InternalSerialName))
                 InternalSerialName!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.Multisession) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.Multisession))
                 Multisession!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.LibCrypt == null)
                 LibCrypt!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData))
                 LibCryptData!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.PFIHash) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.PFIHash))
                 PFIHash!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.Extras?.PIC))
                 PIC!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.Extras?.PVD))
                 PVD!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingNonZeroDataStart) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart))
                 RingNonZeroDataStart!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingPerfectAudioOffset) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
                 RingPerfectAudioOffset!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData))
                 SecuROMData!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSHash) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.SSHash))
                 SSHash!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.Extras?.SecuritySectorRanges))
                 SecuritySectorRanges!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSVersion) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.SSVersion))
                 SSVersion!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.UniversalHash))
                 UniversalHash!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.VolumeLabel) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.VolumeLabel))
                 VolumeLabel!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.XeMID) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.XeMID))
                 XeMID!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.XMID) != true)
+            if (ShouldCollapseComment(submissionInfo, SiteCode.XMID))
                 XMID!.Visibility = Visibility.Collapsed;
         }
 
@@ -453,6 +453,23 @@ namespace MPF.UI.Windows
                     DiscIDTextBox!.Visibility = Visibility.Visible;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Determine if a comment field should be collapsed in read-only view
+        /// </summary>
+        private static bool ShouldCollapseComment(SubmissionInfo? submissionInfo, SiteCode siteCode)
+        {
+            // If the special fields don't exist
+            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields == null)
+                return true;
+
+            // If the key doesn't exist
+            if (!submissionInfo.CommonDiscInfo.CommentsSpecialFields.TryGetValue(siteCode, out string? value))
+                return true;
+
+            // Collapse if the value doesn't exist
+            return string.IsNullOrEmpty(value);
         }
 
         #endregion
