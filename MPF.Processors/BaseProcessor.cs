@@ -650,8 +650,7 @@ namespace MPF.Processors
                 return false;
 
             bool tracksExist = false;
-            string[] endOfLine = ["\r\n", "\n", "\r"];
-            foreach (string cueLine in cue!.Split(endOfLine))
+            foreach (string cueLine in cue!.Split(new[] { "\r\n", "\n", "\r" }))
             {
                 string line = cueLine.Trim();
                 if (line.Length == 0)
