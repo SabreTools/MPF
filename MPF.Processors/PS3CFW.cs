@@ -80,11 +80,8 @@ namespace MPF.Processors
             else
             {
                 string[] discPicFiles = Directory.GetFiles(baseDir, "*.disc.pic");
-                string discPicPath = string.Empty;
                 if (discPicFiles.Length > 0)
-                    discPicPath = discPicFiles[0];
-                if (!string.IsNullOrEmpty(discPicPath))
-                    info.Extras!.PIC = GetPIC(discPicPath, 264);
+                    info.Extras!.PIC = GetPIC(discPicFiles[0], 264);
             }
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
