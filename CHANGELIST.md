@@ -54,6 +54,7 @@
 - Better audio-only check
 - Minor cleanup from last commit
 - Relax PS3CFW output filename requirements
+- Fix bracket formatting from last commit
 
 ### 3.3.0 (2025-01-03)
 

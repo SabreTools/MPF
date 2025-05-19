@@ -58,9 +58,13 @@ namespace MPF.Processors
             // Try to determine the name of the GetKey file
             string getKeyPath = string.Empty;
             if (File.Exists($"{basePath}.getkey.log"))
+            {
                 getKeyPath = $"{basePath}.getkey.log";
+            }
             else if (File.Exists(Path.Combine(baseDir, "getkey.log")))
+            {
                 getKeyPath = Path.Combine(baseDir, "getkey.log");
+            }
             else
             {
                 string[] getKeyFiles = Directory.GetFiles(baseDir, "*.getkey.log");
@@ -74,9 +78,13 @@ namespace MPF.Processors
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
             if (File.Exists($"{basePath}.disc.pic"))
+            {
                 info.Extras!.PIC = GetPIC($"{basePath}.disc.pic", 264);
+            }
             else if (File.Exists(Path.Combine(baseDir, "disc.pic")))
+            {
                 info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
+            }
             else
             {
                 string[] discPicFiles = Directory.GetFiles(baseDir, "*.disc.pic");
