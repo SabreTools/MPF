@@ -80,7 +80,7 @@ namespace MPF.Processors
             else
             {
                 string[] discPicFiles = Directory.GetFiles(baseDir, "*.disc.pic");
-                string? discPicPath;
+                string discPicPath = string.Empty;
                 if (discPicFiles.Length > 0)
                     discPicPath = discPicFiles[0];
                 if (!string.IsNullOrEmpty(discPicPath))
