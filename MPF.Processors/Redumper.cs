@@ -71,24 +71,22 @@ namespace MPF.Processors
                     }
 
                     // Attempt to get multisession data
-                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
+                    string? cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log");
                     if (!string.IsNullOrEmpty(cdMultiSessionInfo))
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo!;
 
-                    // Attempt to get the universal hash, if it's an audio disc
-                    if (System.IsAudio())
+                    // Attempt to get extra metadata if it's an audio disc
+                    if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
-                        string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash;
-                    }
-
-                    // Attempt to get the non-zero data start, if it's an audio disc
-                    if (System.IsAudio())
-                    {
-                        string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
-                        string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset;
+                        string? universalHash = GetUniversalHash($"{basePath}.log");
+                        if (!string.IsNullOrEmpty(universalHash))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.UniversalHash] = universalHash!;
+                        string? ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log");
+                        if (!string.IsNullOrEmpty(ringNonZeroDataStart))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart!;
+                        string? ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log");
+                        if (!string.IsNullOrEmpty(ringPerfectAudioOffset))
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;
                     }
 
                     break;
