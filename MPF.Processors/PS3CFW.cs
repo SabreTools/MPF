@@ -62,7 +62,7 @@ namespace MPF.Processors
             else if (File.Exists(Path.Combine(baseDir, "getkey.log")))
                 getKeyPath = Path.Combine(baseDir, "getkey.log");
             else
-                getKeyPath = Directory.EnumerateFiles(baseDir, "*.getkey.log").FirstOrDefault();
+                getKeyPath = Directory.GetFiles(baseDir, "*.getkey.log")[0];
 
             // Get dumping date from GetKey log date
             if (!string.IsNullOrEmpty(getKeyPath))
@@ -75,8 +75,8 @@ namespace MPF.Processors
                 info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
             else
             {
-                string? discPicPath = Directory.EnumerateFiles(baseDir, "*.disc.pic").FirstOrDefault();
-                if (!string.IsNullOrEmpty)
+                string? discPicPath = Directory.GetFiles(baseDir, "*.disc.pic")[0];
+                if (!string.IsNullOrEmpty(discPicPath))
                     info.Extras!.PIC = GetPIC(discPicPath, 264);
             }
 
