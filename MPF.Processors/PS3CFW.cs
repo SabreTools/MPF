@@ -104,11 +104,11 @@ namespace MPF.Processors
                     return [
                         new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
                         new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
-                        new RegexOutputFile([$"*getkey.log"], OutputFileFlags.Required
+                        new RegexOutputFile($"getkey\.log$", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "getkey_log"),
-                        new RegexOutputFile([$"*.disc.pic"], OutputFileFlags.Required
+                        new RegexOutputFile($"disc\.pic$", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "disc_pic"),
