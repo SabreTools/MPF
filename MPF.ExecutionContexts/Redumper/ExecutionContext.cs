@@ -32,7 +32,10 @@ namespace MPF.ExecutionContexts.Redumper
             }
             set
             {
-                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(value);
+                if (value != null && value > 0)
+                    (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(value);
+                else
+                    _inputs.Remove(FlagStrings.Speed);
             }
         }
 
