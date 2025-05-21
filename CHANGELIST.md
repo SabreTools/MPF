@@ -56,6 +56,7 @@
 - Relax PS3CFW output filename requirements
 - Fix bracket formatting from last commit
 - Fix speed dropdown with Redumper
+- Update redumper to build 585
 
 ### 3.3.0 (2025-01-03)
 

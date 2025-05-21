@@ -100,12 +100,12 @@ function download_programs() {
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]=""
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/build_565/redumper-2025.05.04_build565-Linux64.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/build_565/redumper-2025.05.04_build565-Darwin64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/build_565/redumper-2025.05.04_build565-Darwin64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/build_585/redumper-2025.05.21_build585-Linux64.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/build_585/redumper-2025.05.21_build585-Darwin64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/build_585/redumper-2025.05.21_build585-Darwin64.zip"
     DL_MAP["Redumper_win-arm64"]=""
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_565/redumper-2025.05.04_build565-Windows32.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_565/redumper-2025.05.04_build565-Windows64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/build_585/redumper-2025.05.21_build585-Windows32.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/build_585/redumper-2025.05.21_build585-Windows64.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
