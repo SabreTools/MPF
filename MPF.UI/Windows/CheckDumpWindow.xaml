@@ -113,6 +113,7 @@
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
                 <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
                     <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               ToolTipService.ToolTip="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </UniformGrid>
             </GroupBox>
