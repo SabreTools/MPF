@@ -508,7 +508,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            Status = value?.Message;
+            Status = value?.Message ?? string.Empty;
         }
 
         /// <summary>
