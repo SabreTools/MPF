@@ -191,7 +191,7 @@ namespace MPF.Frontend.ViewModels
 
                 var statusLines = Status.Split('\n');
                 if (statusLines.Length > 1)
-                    statusLines[0] + " (...)";
+                    return statusLines[0] + " (...)";
 
                 return statusLines[0];
             }
