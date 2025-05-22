@@ -1914,7 +1914,7 @@ namespace MPF.Processors
 
                     // SCSI: <error count>
                     // SCSI: <error count> samples
-                    if (line.StartsWith("SCSI: ") && !line.EndsWith("samples"))
+                    if (line.StartsWith("SCSI: "))
                     {
                         // Ensure there are the correct number of parts
                         string[] parts = line.Split(' ');
