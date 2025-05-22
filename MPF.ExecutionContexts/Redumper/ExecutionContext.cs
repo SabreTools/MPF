@@ -40,7 +40,7 @@ namespace MPF.ExecutionContexts.Redumper
                 else
                 {
                     this[FlagStrings.Speed] = false;
-                    (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(0);
+                    (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(null);
                 }
             }
         }
@@ -302,7 +302,7 @@ namespace MPF.ExecutionContexts.Redumper
             else
             {
                 this[FlagStrings.Speed] = false;
-                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(0);
+                (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(null);
             }
 
             // Set user-defined options
