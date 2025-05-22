@@ -58,6 +58,7 @@
 - Fix speed dropdown with Redumper
 - Update redumper to build 585
 - Further fix speed dropdown with Redumper
+- Don't hash bad SS
 
 ### 3.3.0 (2025-01-03)
 

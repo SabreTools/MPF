@@ -187,9 +187,9 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox:
                     // If .dmi / .pfi / .ss don't already exist, create them
                     if (!File.Exists($"{basePath}.dmi"))
-                        RemoveHeader($"{basePath}.manufacturer", $"{basePath}.dmi");
+                        RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
                     if (!File.Exists($"{basePath}.pfi"))
-                        RemoveHeader($"{basePath}.physical", $"{basePath}.pfi");
+                        RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
                     if (!File.Exists($"{basePath}.ss"))
                         ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
 
@@ -212,9 +212,12 @@ namespace MPF.Processors
                     string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
-                    string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                    if (ss1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc.ToUpperInvariant();
+                    if(IsValidSS($"{basePath}.ss"))
+                    {
+                        string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                        if (ss1Crc != null)
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc.ToUpperInvariant();
+                    }
 
                     string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
                     if (!string.IsNullOrEmpty(ranges1))
@@ -225,9 +228,9 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox360:
                     // If .dmi / .pfi / .ss don't already exist, create them
                     if (!File.Exists($"{basePath}.dmi"))
-                        RemoveHeader($"{basePath}.manufacturer", $"{basePath}.dmi");
+                        RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
                     if (!File.Exists($"{basePath}.pfi"))
-                        RemoveHeader($"{basePath}.physical", $"{basePath}.pfi");
+                        RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
                     if (!File.Exists($"{basePath}.ss"))
                         ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
 
@@ -249,9 +252,12 @@ namespace MPF.Processors
                     string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
-                    string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                    if (ss23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc.ToUpperInvariant();
+                    if(IsValidSS($"{basePath}.ss"))
+                    {
+                        string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                        if (ss23Crc != null)
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc.ToUpperInvariant();
+                    }
 
                     string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
                     if (!string.IsNullOrEmpty(ranges23))
@@ -670,12 +676,13 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Copies a file with the header removed
+        /// Copies a file with the header removed and filesize trimmed
         /// </summary>
         /// <param name="inputFilename">Filename of file to copy from</param>
         /// <param name="outputFilename">Filename of file to copy to</param>
         /// <param name="headerLength">Length of header to remove</param>
-        private static bool RemoveHeader(string inputFilename, string outputFilename, int headerLength = 4)
+        /// <param name="headerLength">Length of file to trim to</param>
+        private static bool RemoveHeaderAndTrim(string inputFilename, string outputFilename, int headerLength = 4, int trimLength = 2048)
         {
             // If the file doesn't exist, we can't copy
             if (!File.Exists(inputFilename))
@@ -698,13 +705,9 @@ namespace MPF.Processors
                 // Skip the header
                 inputStream.Seek(headerLength, SeekOrigin.Begin);
 
-                // inputStream.CopyTo(outputStream);
-                byte[] buffer = new byte[4096];
-                int count;
-                while ((count = inputStream.Read(buffer, 0, buffer.Length)) != 0)
-                {
-                    outputStream.Write(buffer, 0, count);
-                }
+                byte[] buffer = new byte[trimLength];
+                int count = inputStream.Read(buffer, 0, buffer.Length)
+                outputStream.Write(buffer, 0, count);
 
                 return true;
             }
