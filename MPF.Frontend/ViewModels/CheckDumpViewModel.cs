@@ -178,6 +178,8 @@ namespace MPF.Frontend.ViewModels
         }
         private string _status;
 
+        public string StatusFirstLine => string.IsNullOrEmpty(Status) ? string.Empty : Status.Split('\n')[0];
+
         /// <summary>
         /// Indicates the status of the check dump button
         /// </summary>
@@ -506,13 +508,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            var message = value?.Message;
-
-            // Update the label with only the first line of output
-            if (message != null && message.Contains("\n"))
-                Status = message.Split('\n')[0] + " (...)";
-            else
-                Status = message ?? string.Empty;
+            Status = value?.Message;
         }
 
         /// <summary>
