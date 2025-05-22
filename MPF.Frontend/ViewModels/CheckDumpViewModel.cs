@@ -174,6 +174,7 @@ namespace MPF.Frontend.ViewModels
             {
                 _status = value;
                 TriggerPropertyChanged(nameof(Status));
+                TriggerPropertyChanged(nameof(StatusFirstLine));
             }
         }
         private string _status;
