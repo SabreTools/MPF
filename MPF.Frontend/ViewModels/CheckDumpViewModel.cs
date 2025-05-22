@@ -179,7 +179,23 @@ namespace MPF.Frontend.ViewModels
         }
         private string _status;
 
-        public string StatusFirstLine => string.IsNullOrEmpty(Status) ? string.Empty : Status.Split('\n')[0] + " (...)";
+        /// <summary>
+        /// Currently displayed status trimmed to one line
+        /// </summary>
+        public string StatusFirstLine
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Status))
+                    return string.Empty;
+
+                var statusLines = Status.Split('\n');
+                if (statusLines.Length > 1)
+                    statusLines[0] + " (...)";
+
+                return statusLines[0];
+            }
+        }
 
         /// <summary>
         /// Indicates the status of the check dump button
