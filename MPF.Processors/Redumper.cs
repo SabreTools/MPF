@@ -706,7 +706,7 @@ namespace MPF.Processors
                 inputStream.Seek(headerLength, SeekOrigin.Begin);
 
                 byte[] buffer = new byte[trimLength];
-                int count = inputStream.Read(buffer, 0, buffer.Length)
+                int count = inputStream.Read(buffer, 0, buffer.Length);
                 outputStream.Write(buffer, 0, count);
 
                 return true;
