@@ -212,7 +212,7 @@ namespace MPF.Processors
                     string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
-                    if(IsValidSS($"{basePath}.ss"))
+                    if(ProcessingTool.IsValidSS($"{basePath}.ss"))
                     {
                         string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                         if (ss1Crc != null)
@@ -252,7 +252,7 @@ namespace MPF.Processors
                     string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
-                    if(IsValidSS($"{basePath}.ss"))
+                    if(ProcessingTool.IsValidSS($"{basePath}.ss"))
                     {
                         string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                         if (ss23Crc != null)
