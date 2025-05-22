@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
@@ -163,6 +165,20 @@ namespace MPF.Frontend.ViewModels
         private bool _dumpingProgramComboBoxEnabled;
 
         /// <summary>
+        /// Currently displayed status
+        /// </summary>
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                TriggerPropertyChanged(nameof(Status));
+            }
+        }
+        private string _status;
+
+        /// <summary>
         /// Indicates the status of the check dump button
         /// </summary>
         public bool CheckDumpButtonEnabled
@@ -247,6 +263,7 @@ namespace MPF.Frontend.ViewModels
             _internalPrograms = [];
             _inputPath = string.Empty;
             _systems = [];
+            _status = string.Empty;
 
             SystemTypeComboBoxEnabled = true;
             InputPathTextBoxEnabled = true;
@@ -455,6 +472,12 @@ namespace MPF.Frontend.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
+            // Get progress indicators
+            var resultProgress = new Progress<ResultEventArgs>();
+            resultProgress.ProgressChanged += ProgressUpdated;
+            var protectionProgress = new Progress<ProtectionProgress>();
+            protectionProgress.ProgressChanged += ProgressUpdated;
+
             // Populate an environment
             var env = new DumpEnvironment(Options,
                 Path.GetFullPath(InputPath.Trim('"')),
@@ -465,7 +488,10 @@ namespace MPF.Frontend.ViewModels
                 parameters: null);
 
             // Finally, attempt to do the output dance
-            var result = await env.VerifyAndSaveDumpOutput(processUserInfo: processUserInfo);
+            var result = await env.VerifyAndSaveDumpOutput(
+                resultProgress: resultProgress,
+                protectionProgress: protectionProgress,
+                processUserInfo: processUserInfo);
 
             // Reenable UI and event handlers, if necessary
             EnableUIElements();
@@ -473,6 +499,29 @@ namespace MPF.Frontend.ViewModels
                 EnableEventHandlers();
 
             return result.Message;
+        }
+
+        /// <summary>
+        /// Handler for Result ProgressChanged event
+        /// </summary>
+        private void ProgressUpdated(object? sender, ResultEventArgs value)
+        {
+            var message = value?.Message;
+
+            // Update the label with only the first line of output
+            if (message != null && message.Contains("\n"))
+                Status = message.Split('\n')[0] + " (...)";
+            else
+                Status = message ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Handler for ProtectionProgress ProgressChanged event
+        /// </summary>
+        private void ProgressUpdated(object? sender, ProtectionProgress value)
+        {
+            string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
+            Status = message;
         }
 
         #endregion

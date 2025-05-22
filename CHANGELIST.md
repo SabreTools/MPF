@@ -60,6 +60,7 @@
 - Further fix speed dropdown with Redumper
 - Use null for 0 speed internally
 - Don't hash bad SS
+- Add and use status label for Check window
 
 ### 3.3.0 (2025-01-03)
 
