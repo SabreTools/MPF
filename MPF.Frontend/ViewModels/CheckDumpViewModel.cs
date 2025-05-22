@@ -174,9 +174,28 @@ namespace MPF.Frontend.ViewModels
             {
                 _status = value;
                 TriggerPropertyChanged(nameof(Status));
+                TriggerPropertyChanged(nameof(StatusFirstLine));
             }
         }
         private string _status;
+
+        /// <summary>
+        /// Currently displayed status trimmed to one line
+        /// </summary>
+        public string StatusFirstLine
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Status))
+                    return string.Empty;
+
+                var statusLines = Status.Split('\n');
+                if (statusLines.Length > 1)
+                    return statusLines[0] + " (...)";
+
+                return statusLines[0];
+            }
+        }
 
         /// <summary>
         /// Indicates the status of the check dump button
@@ -506,13 +525,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            var message = value?.Message;
-
-            // Update the label with only the first line of output
-            if (message != null && message.Contains("\n"))
-                Status = message.Split('\n')[0] + " (...)";
-            else
-                Status = message ?? string.Empty;
+            Status = value?.Message ?? string.Empty;
         }
 
         /// <summary>
