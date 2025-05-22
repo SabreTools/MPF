@@ -31,6 +31,8 @@ REDUMP.ORG errors: 12345
 C2: 1
 REDUMP.ORG errors: 2
 
+C2: 12 samples
+
 << GetGDROMHeader >>
 DC [
     build date: date
@@ -127,8 +129,8 @@ SS [
         00F0 TEST DATA
 
 << GetSCSIErrorCount >>
-SCSI: 23456 samples
-SCSI: 12345
+SCSI: 23456
+SCSI: 12345 samples
 
 << GetSecuROMData >>
 SecuROM [

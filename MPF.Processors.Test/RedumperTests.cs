@@ -1007,7 +1007,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetSCSIErrorCount_Valid_Filled()
         {
-            long expected = 12345;
+            long expected = 23456;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             long actual = Redumper.GetSCSIErrorCount(log);
             Assert.Equal(expected, actual);

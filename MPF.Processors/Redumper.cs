@@ -212,7 +212,7 @@ namespace MPF.Processors
                     string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi1Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
-                    if(ProcessingTool.IsValidSS($"{basePath}.ss"))
+                    if (ProcessingTool.IsValidSS($"{basePath}.ss"))
                     {
                         string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                         if (ss1Crc != null)
@@ -252,7 +252,7 @@ namespace MPF.Processors
                     string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfi23Crc != null)
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
-                    if(ProcessingTool.IsValidSS($"{basePath}.ss"))
+                    if (ProcessingTool.IsValidSS($"{basePath}.ss"))
                     {
                         string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                         if (ss23Crc != null)
@@ -1040,33 +1040,62 @@ namespace MPF.Processors
                         break;
 
                     // C2: <error count>
+                    // C2: <error count> samples
                     if (line.StartsWith("C2:"))
                     {
+                        // Ensure there are the correct number of parts
                         string[] parts = line.Split(' ');
-                        if (long.TryParse(parts[1], out long c2TrackErrors))
-                        {
-                            c2Errors += c2TrackErrors;
-                        }
-                        else
+                        if (parts.Length < 2)
                         {
                             c2Errors = -1;
                             break;
+                        }
+
+                        // If there is a parsing error, return
+                        if (!long.TryParse(parts[1], out long c2TrackErrors))
+                        {
+                            c2Errors = -1;
+                            break;
+                        }
+
+                        // Standard error counts always add sectors
+                        if (parts.Length == 2)
+                        {
+                            c2Errors += c2TrackErrors;
+                        }
+                        // Correction counts are ignored for now
+                        else if (parts.Length > 2)
+                        {
+                            // No-op
                         }
                     }
 
                     // REDUMP.ORG errors: <error count>
                     else if (line.StartsWith("REDUMP.ORG errors:"))
                     {
+                        // Ensure there are the correct number of parts
                         string[] parts = line!.Split(' ');
-                        if (long.TryParse(parts[2], out long redumpTrackErrors))
-                        {
-                            redumpErrors += redumpTrackErrors;
-                        }
-                        else
+                        if (parts.Length < 3)
                         {
                             redumpErrors = -1;
                             break;
                         }
+
+                        // If there is a parsing error, return
+                        if (!long.TryParse(parts[2], out long redumpTrackErrors))
+                        {
+                            redumpErrors = -1;
+                            break;
+                        }
+
+                        // Always add Redump errors
+                        redumpErrors += redumpTrackErrors;
+                    }
+
+                    // Reset C2 errors when a media errors section is found
+                    else if (line.StartsWith("media errors:"))
+                    {
+                        c2Errors = 0;
                     }
 
                     // Reset Redump errors when an INFO block is found
@@ -1873,9 +1902,8 @@ namespace MPF.Processors
 
             try
             {
+                long errorCount = 0;
                 using var sr = File.OpenText(log);
-
-                long errorCount = -1;
 
                 // Find the error counts
                 while (!sr.EndOfStream)
@@ -1885,11 +1913,40 @@ namespace MPF.Processors
                         break;
 
                     // SCSI: <error count>
+                    // SCSI: <error count> samples
                     if (line.StartsWith("SCSI: ") && !line.EndsWith("samples"))
                     {
+                        // Ensure there are the correct number of parts
                         string[] parts = line.Split(' ');
-                        if (long.TryParse(parts[1], out long scsiErrors))
-                            errorCount = scsiErrors;
+                        if (parts.Length < 2)
+                        {
+                            errorCount = -1;
+                            break;
+                        }
+
+                        // If there is a parsing error, return
+                        if (!long.TryParse(parts[1], out long scsiErrors))
+                        {
+                            errorCount = -1;
+                            break;
+                        }
+
+                        // Standard error counts always add sectors
+                        if (parts.Length == 2)
+                        {
+                            errorCount += scsiErrors;
+                        }
+                        // Correction counts are ignored for now
+                        else if (parts.Length > 2)
+                        {
+                            // No-op
+                        }
+                    }
+
+                    // Reset SCSI errors when a media errors section is found
+                    else if (line.StartsWith("media errors:"))
+                    {
+                        errorCount = 0;
                     }
                 }
 

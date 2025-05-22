@@ -63,6 +63,7 @@
 - Add and use status label for Check window
 - Minor Check UI improvements
 - Reset Redump errors when an INFO block is found
+- Handle error count resets in Redumper
 
 ### 3.3.0 (2025-01-03)
 
