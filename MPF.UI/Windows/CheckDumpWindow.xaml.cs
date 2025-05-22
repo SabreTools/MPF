@@ -166,6 +166,8 @@ namespace MPF.UI.Windows
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
                 if (checkAgain == false)
                     Close();
+                else
+                    CheckDumpViewModel.Status = string.Empty;
             }
             else
             {

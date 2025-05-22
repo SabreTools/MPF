@@ -66,6 +66,24 @@
                 </Grid>
             </Grid>
 
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <GroupBox.Template>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </GroupBox.Template>
+                <Label>
+                    <Label.Content>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
+                            <Run Text="Check will overwrite both any existing submission information files as well as any log archives. Please make backups of those if you need to before running Check." />
+                        </TextBlock>
+                    </Label.Content>
+                </Label>
+            </GroupBox>
+
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
@@ -108,24 +126,6 @@
                   ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
                 </Grid>
-            </GroupBox>
-
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <GroupBox.Template>
-                    <ControlTemplate TargetType="GroupBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
-                            <ContentPresenter Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
-                        </Border>
-                    </ControlTemplate>
-                </GroupBox.Template>
-                <Label>
-                    <Label.Content>
-                        <TextBlock TextWrapping="Wrap">
-                            <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
-                            <Run Text="Check will overwrite both any existing submission information files as well as any log archives. Please make backups of those if you need to before running Check." />
-                        </TextBlock>
-                    </Label.Content>
-                </Label>
             </GroupBox>
 
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
