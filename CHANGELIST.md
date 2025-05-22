@@ -61,7 +61,8 @@
 - Use null for 0 speed internally
 - Don't hash bad SS
 - Add and use status label for Check window
-- Minor Check UI improvements 
+- Minor Check UI improvements
+- Reset Redump errors when an INFO block is found
 
 ### 3.3.0 (2025-01-03)
 

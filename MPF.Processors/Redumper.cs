@@ -1044,9 +1044,14 @@ namespace MPF.Processors
                     {
                         string[] parts = line.Split(' ');
                         if (long.TryParse(parts[1], out long c2TrackErrors))
+                        {
                             c2Errors += c2TrackErrors;
+                        }
                         else
+                        {
                             c2Errors = -1;
+                            break;
+                        }
                     }
 
                     // REDUMP.ORG errors: <error count>
@@ -1054,14 +1059,21 @@ namespace MPF.Processors
                     {
                         string[] parts = line!.Split(' ');
                         if (long.TryParse(parts[2], out long redumpTrackErrors))
+                        {
                             redumpErrors += redumpTrackErrors;
+                        }
                         else
+                        {
                             redumpErrors = -1;
+                            break;
+                        }
                     }
 
-                    // If either value is -1, exit the loop
-                    if (c2Errors == -1 || redumpErrors == -1)
-                        break;
+                    // Reset Redump errors when an INFO block is found
+                    else if (line.StartsWith("*** INFO"))
+                    {
+                        redumpErrors = 0;
+                    }
                 }
 
                 // If either error count is -1, then an issue occurred
