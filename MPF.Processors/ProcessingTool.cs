@@ -1040,6 +1040,52 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Determine if a given SS.bin is valid (Known XGD type and SSv2 if XGD3)
+        /// </summary>
+        /// <param name="ssPath">Path to the SS file to check</param>
+        /// <returns>True if valid, false otherwise</returns>
+        public static bool IsValidSS(string ssPath)
+        {
+            if (!File.Exists(ssPath))
+                return false;
+
+            byte[] ss = File.ReadAllBytes(ssPath);
+            if (ss.Length != 2048)
+                return false;
+
+            return IsValidSS(ss);
+        }
+
+        /// <summary>
+        /// Determine if a given SS is valid (2048 bytes, known XGD type, and SSv2 if XGD3)
+        /// </summary>
+        /// <param name="ss">Byte array of SS sector</param>
+        /// <returns>True if SS is valid, false otherwise</returns>
+        public static bool IsValidSS(byte[] ss)
+        {
+            // Check 1 sector long
+            if (ss.Length != 2048)
+                return false;
+
+            // Must be a valid XGD type
+            if (!GetXGDType(ss, out int xgdType))
+                return false;
+
+            // Only continue to check SSv2 for XGD3
+            if (xgdType != 3)
+                return true;
+            
+            // Determine if XGD3 SS.bin is SSv1 (Original Kreon) or SSv2 (0800 / Repaired Kreon)
+#if NET20
+            var checkArr = new byte[72];
+            Array.Copy(ss, 32, checkArr, 0, 72);
+            return Array.Exists(checkArr, x => x != 0);
+#else
+            return ss.Skip(32).Take(72).Any(x => x != 0);
+#endif
+        }
+
+        /// <summary>
         /// Determine if a given SS has already been cleaned
         /// </summary>
         /// <param name="ss">Byte array of SS sector</param>
@@ -1178,6 +1224,19 @@ namespace MPF.Processors
             // Determine XGD type
             if (!GetXGDType(ss, out int xgdType))
                 return false;
+            
+            // Determine if XGD3 SS.bin is SSv1 (Original Kreon) or SSv2 (0800 / Repaired Kreon)
+#if NET20
+            var checkArr = new byte[72];
+            Array.Copy(ss, 32, checkArr, 0, 72);
+            bool ssv2 = Array.Exists(checkArr, x => x != 0);
+#else
+            bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
+#endif
+
+            // Do not produce an SS hash for bad SS (SSv1 XGD3 / Unrepaired Kreon SS)
+            if(xgdType == 3 && !ssv2)
+                return false;
 
             switch (xgdType)
             {
@@ -1209,15 +1268,6 @@ namespace MPF.Processors
                     return true;
 
                 case 3:
-                    // Determine if XGD3 SS.bin is SSv1 (Kreon) or SSv2 (0800)
-#if NET20
-                    var checkArr = new byte[72];
-                    Array.Copy(ss, 32, checkArr, 0, 72);
-                    bool ssv2 = Array.Exists(checkArr, x => x != 0);
-#else
-                    bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
-#endif
-
                     if (ssv2)
                     {
                         ss[72] = 1;   // 0x01
