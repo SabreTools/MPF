@@ -57,6 +57,7 @@
 - Fix bracket formatting from last commit
 - Fix speed dropdown with Redumper
 - Update redumper to build 585
+- Further fix speed dropdown with Redumper
 
 ### 3.3.0 (2025-01-03)
 

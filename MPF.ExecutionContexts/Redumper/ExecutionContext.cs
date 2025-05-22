@@ -33,9 +33,15 @@ namespace MPF.ExecutionContexts.Redumper
             set
             {
                 if (value != null && value > 0)
+                {
+                    this[FlagStrings.Speed] = true;
                     (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(value);
+                }
                 else
-                    _inputs.Remove(FlagStrings.Speed);
+                {
+                    this[FlagStrings.Speed] = false;
+                    (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(0);
+                }
             }
         }
 
@@ -287,7 +293,7 @@ namespace MPF.ExecutionContexts.Redumper
 
             this[FlagStrings.Drive] = true;
             (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath ?? string.Empty);
-            
+
             if (driveSpeed != null && driveSpeed > 0)
             {
                 this[FlagStrings.Speed] = true;
@@ -316,8 +322,8 @@ namespace MPF.ExecutionContexts.Redumper
                             case SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD:
                                 break;
                             default:
-                                    this[FlagStrings.Skeleton] = true;
-                                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                                this[FlagStrings.Skeleton] = true;
+                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
                                 break;
                         }
                         break;
@@ -428,7 +434,7 @@ namespace MPF.ExecutionContexts.Redumper
                         // Only allow one mode per command
                         if (ModeValue != null)
                             continue;
-                        
+
                         ModeValue = part;
                         break;
 
