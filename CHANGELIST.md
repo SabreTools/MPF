@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Include Aaru in automatic builds
+
 ### 3.3.1 (2025-05-23)
 
 - Fix typo for L1Toolstamp!.Label (bikerspade)
