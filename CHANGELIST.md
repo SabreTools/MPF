@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.3.1 (2025-05-23)
 
 - Fix typo for L1Toolstamp!.Label (bikerspade)
 - Update redumper to build 549

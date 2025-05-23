@@ -11,7 +11,7 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.3.0</VersionPrefix>
+        <VersionPrefix>3.3.1</VersionPrefix>
         <WarningsNotAsErrors>NU5104</WarningsNotAsErrors>
 
         <!-- Package Properties -->
