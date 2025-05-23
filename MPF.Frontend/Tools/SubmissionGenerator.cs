@@ -81,6 +81,9 @@ namespace MPF.Frontend.Tools
             if (options.IncludeArtifacts)
                 info.Artifacts = processor?.GenerateArtifacts(outputDirectory, outputFilename);
 
+            // Add a placeholder for the logs link
+            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
+
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
                 _ = await FillFromRedump(options, info, resultProgress);

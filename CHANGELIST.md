@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Include Aaru in automatic builds
+- Update RedumpLib to 1.6.7
 
 ### 3.3.1 (2025-05-23)
 

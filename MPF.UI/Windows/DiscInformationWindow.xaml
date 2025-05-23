@@ -85,8 +85,10 @@
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AlternativeForeignTitle], Mode=TwoWay}"/>
                                     <controls:UserInput Label="Disc Number / Letter"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Disc Title"
+                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="Disc Title"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="Disc Title (non-Latin)"
+                                                    Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DiscTitleNonLatin], Mode=TwoWay}"/>
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -157,7 +159,9 @@
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionTextBox" Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="Edition (non-Latin)"
+                                                    Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
