@@ -134,7 +134,7 @@ namespace MPF.Frontend
         /// <returns>String representing the value, if possible</returns>
         public static string LongName(this RedumperDriveType? type)
         {
-            return order switch
+            return type switch
             {
                 RedumperDriveType.GENERIC => "GENERIC",
                 RedumperDriveType.PLEXTOR => "PLEXTOR",
