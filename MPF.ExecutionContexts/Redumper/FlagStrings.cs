@@ -11,17 +11,17 @@ namespace MPF.ExecutionContexts.Redumper
         public const string HelpShort = "-h";
         public const string Version = "--version";
         public const string Verbose = "--verbose";
-        public const string Continue = "--continue";
+        public const string ListRecommendedDrives = "--list-recommended-drives";
+        public const string ListAllDrives = "--list-all-drives";
         public const string AutoEject = "--auto-eject";
         public const string Skeleton = "--skeleton";
-        public const string Debug = "--debug";
-        public const string DiscType = "--disc-type";
         public const string Drive = "--drive";
         public const string Speed = "--speed";
         public const string Retries = "--retries";
         public const string ImagePath = "--image-path";
         public const string ImageName = "--image-name";
         public const string Overwrite = "--overwrite";
+        public const string DiscType = "--disc-type";
 
         #endregion
 
@@ -43,6 +43,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string PlextorLeadinForceStore = "--plextor-leadin-force-store";
         public const string AsusSkipLeadout = "--asus-skip-leadout";
         public const string AsusLeadoutRetries = "--asus-leadout-retries";
+        public const string DisableCDText = "--disable-cdtext";
 
         #endregion
 
@@ -65,8 +66,16 @@ namespace MPF.ExecutionContexts.Redumper
 
         #endregion
 
+        #region Drive Test
+
+        public const string DriveTestSkipPlextorLeadin = "--drive-test-skip-plextor-leadin";
+        public const string DriveTestSkipCacheRead = "--drive-test-skip-cache-read";
+
+        #endregion
+
         #region Miscellaneous
 
+        public const string Continue = "--continue";
         public const string LBAStart = "--lba-start";
         public const string LBAEnd = "--lba-end";
         public const string RefineSubchannel = "--refine-subchannel";
@@ -76,12 +85,16 @@ namespace MPF.ExecutionContexts.Redumper
         public const string OverreadLeadout = "--overread-leadout";
         public const string ForceUnscrambled = "--force-unscrambled";
         public const string ForceRefine = "--force-refine";
-        public const string LegacySubs = "--legacy-subs";
-        public const string DisableCDText = "--disable-cdtext";
-        public const string SkipSubcodeDesync = "--skip-subcode-desync";
-        public const string DriveTestSkipPlextorLeadin = "--drive-test-skip-plextor-leadin";
-        public const string DriveTestSkipCacheRead = "--drive-test-skip-cache-read";
         public const string Firmware = "--firmware";
+        public const string SkipSubcodeDesync = "--skip-subcode-desync";
+        public const string Rings = "--rings";
+
+        #endregion
+
+        #region Undocumented
+
+        public const string Debug = "--debug";
+        public const string LegacySubs = "--legacy-subs";
 
         #endregion
     }

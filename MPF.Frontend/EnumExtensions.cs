@@ -8,7 +8,7 @@ using System.Reflection;
 using SabreTools.RedumpLib.Data;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
-
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 namespace MPF.Frontend
 {
     public static class EnumExtensions
@@ -102,7 +102,6 @@ namespace MPF.Frontend
             {
                 RedumperReadMethod.D8 => "D8",
                 RedumperReadMethod.BE => "BE",
-                RedumperReadMethod.BE_CDDA => "BE_CDDA",
 
                 RedumperReadMethod.NONE => "Default",
                 _ => "Unknown",
@@ -124,6 +123,28 @@ namespace MPF.Frontend
                 RedumperSectorOrder.DATA_C2 => "DATA_C2",
 
                 RedumperSectorOrder.NONE => "Default",
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
+        /// Get the string representation of the RedumperDriveType enum values
+        /// </summary>
+        /// <param name="order">RedumperDriveType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperDriveType? type)
+        {
+            return type switch
+            {
+                RedumperDriveType.GENERIC => "GENERIC",
+                RedumperDriveType.PLEXTOR => "PLEXTOR",
+                RedumperDriveType.LG_ASU8A => "LG_ASU8A",
+                RedumperDriveType.LG_ASU8B => "LG_ASU8B",
+                RedumperDriveType.LG_ASU8C => "LG_ASU8C",
+                RedumperDriveType.LG_ASU3 => "LG_ASU3",
+                RedumperDriveType.LG_ASU2 => "LG_ASU2",
+
+                RedumperDriveType.NONE => "Default",
                 _ => "Unknown",
             };
         }
@@ -221,10 +242,6 @@ namespace MPF.Frontend
             {
                 "d8" => RedumperReadMethod.D8,
                 "be" => RedumperReadMethod.BE,
-                "be_cdda"
-                    or "be cdda"
-                    or "be-cdda"
-                    or "becdda" => RedumperReadMethod.BE_CDDA,
 
                 _ => RedumperReadMethod.NONE,
             };
@@ -257,6 +274,47 @@ namespace MPF.Frontend
                     or "datac2" => RedumperSectorOrder.DATA_C2,
 
                 _ => RedumperSectorOrder.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Get the RedumperDriveType enum value for a given string
+        /// </summary>
+        /// <param name="order">String value to convert</param>
+        /// <returns>RedumperDriveType represented by the string, if possible</returns>
+        public static RedumperDriveType ToRedumperDriveType(this string? type)
+        {
+            return (type?.ToLowerInvariant()) switch
+            {
+                "generic" => RedumperDriveType.GENERIC,
+                "plextor" => RedumperDriveType.PLEXTOR,
+                "lg_asus8a"
+                    or "lg-asus8a"
+                    or "lgasus8a"
+                    or "lg_asus_8a"
+                    or "lg-asus-8a" => RedumperDriveType.LG_ASU8A,
+                "lg_asus8b"
+                    or "lg-asus8b"
+                    or "lgasus8b"
+                    or "lg_asus_8b"
+                    or "lg-asus-8b" => RedumperDriveType.LG_ASU8B,
+                "lg_asus8c"
+                    or "lg-asus8c"
+                    or "lgasus8c"
+                    or "lg_asus_8c"
+                    or "lg-asus-8c" => RedumperDriveType.LG_ASU8C,
+                "lg_asus3"
+                    or "lg-asus3"
+                    or "lgasus3"
+                    or "lg_asus_3"
+                    or "lg-asus-3" => RedumperDriveType.LG_ASU3,
+                "lg_asus2"
+                    or "lg-asus2"
+                    or "lgasus2"
+                    or "lg_asus_2"
+                    or "lg-asus-2" => RedumperDriveType.LG_ASU2,
+
+                _ => RedumperDriveType.NONE,
             };
         }
 

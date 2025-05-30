@@ -70,6 +70,7 @@
 - Reset Redump errors when an INFO block is found
 - Handle error count resets in Redumper
 - Remove unnecessary conditional
+- Update redumper, DriveType option, SS sanity check
 
 ### 3.3.0 (2025-01-03)
 

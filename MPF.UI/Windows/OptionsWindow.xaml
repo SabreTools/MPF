@@ -421,16 +421,9 @@
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Set Default Plextor Lead-in Retries"
-                                          IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
-                                          ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
-                                />
-                                <Label/>
-                                <!-- Empty label for padding -->
-
                                 <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                          ToolTipService.ShowOnDisabled="True"
                                 />
@@ -439,12 +432,8 @@
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
-
-                                <CheckBox VerticalAlignment="Center" Content="Set Generic Drive Type"
-                                          IsChecked="{Binding Options.RedumperUseGenericDriveType}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
-                                          ToolTip="Enable setting drive type to Generic by default"
-                                          ToolTipService.ShowOnDisabled="True" Margin="0,4"
-                                />
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
@@ -455,6 +444,12 @@
                                 <Label VerticalAlignment="Center" Content="Default Sector Order:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
+                                />
+
+                                <Label VerticalAlignment="Center" Content="Default Drive Type:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultRedumperDriveTypeComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding RedumperDriveTypes}" SelectedItem="{Binding Options.RedumperDriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
                             </UniformGrid>

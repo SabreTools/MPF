@@ -4,6 +4,7 @@ using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperSettings = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend
@@ -342,15 +343,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Enable Redumper custom lead-in retries for Plextor drives
-        /// </summary>
-        public bool RedumperEnableLeadinRetry
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableLeadinRetry, RedumperSettings.EnableLeadinRetryDefault); }
-            set { Settings[RedumperSettings.EnableLeadinRetry] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Enable skeleton output while dumping by default
         /// </summary>
         /// <remarks>This is a hidden setting</remarks>
@@ -388,12 +380,19 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Enable generic drive type by default with Redumper
+        /// Currently selected default redumper drive type
         /// </summary>
-        public bool RedumperUseGenericDriveType
+        public RedumperDriveType RedumperDriveType
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.UseGenericDriveType, RedumperSettings.UseGenericDriveTypeDefault); }
-            set { Settings[RedumperSettings.UseGenericDriveType] = value.ToString(); }
+            get
+            {
+                var valueString = GetStringSetting(Settings, RedumperSettings.DriveType, RedumperSettings.DriveTypeDefault);
+                return valueString.ToRedumperDriveType();
+            }
+            set
+            {
+                Settings[RedumperSettings.DriveType] = value.ToString();
+            }
         }
 
         /// <summary>
