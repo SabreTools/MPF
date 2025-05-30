@@ -105,8 +105,7 @@
                                         IsChecked="{Binding Options.IgnoreFixedDrives}"
                                         ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                 />
-                                <Label/>
-                                <!-- Empty label for padding -->
+                                <Label/> <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
@@ -432,8 +431,7 @@
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
-                                <Label/>
-                                <!-- Empty label for padding -->
+                                <Label/> <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
@@ -495,14 +493,12 @@
                     </ControlTemplate>
                 </GroupBox.Template>
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
-                    <Label/>
-                    <!-- Empty label for padding -->
+                    <Label/> <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Label/>
-                    <!-- Empty label for padding -->
+                    <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

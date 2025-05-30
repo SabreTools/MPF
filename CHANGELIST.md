@@ -2,6 +2,8 @@
 
 - Include Aaru in automatic builds
 - Update RedumpLib to 1.6.7
+- Update redumper, DriveType option, SS sanity check
+- Fix issues with last commit
 
 ### 3.3.1 (2025-05-23)
 
@@ -70,7 +72,6 @@
 - Reset Redump errors when an INFO block is found
 - Handle error count resets in Redumper
 - Remove unnecessary conditional
-- Update redumper, DriveType option, SS sanity check
 
 ### 3.3.0 (2025-01-03)
 

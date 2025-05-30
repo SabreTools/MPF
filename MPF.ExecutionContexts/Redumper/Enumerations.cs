@@ -1,6 +1,22 @@
 namespace MPF.ExecutionContexts.Redumper
 {
     /// <summary>
+    /// Drive type option
+    /// </summary>
+    public enum DriveType
+    {
+        NONE = 0,
+
+        GENERIC,
+        PLEXTOR,
+        LG_ASU8A,
+        LG_ASU8B,
+        LG_ASU8C,
+        LG_ASU3,
+        LG_ASU2,
+    }
+
+    /// <summary>
     /// Drive read method option
     /// </summary>
     public enum ReadMethod
@@ -22,21 +38,5 @@ namespace MPF.ExecutionContexts.Redumper
         DATA_SUB_C2,
         DATA_SUB,
         DATA_C2,
-    }
-
-    /// <summary>
-    /// Drive type option
-    /// </summary>
-    public enum DriveType
-    {
-        NONE = 0,
-
-        GENERIC,
-        PLEXTOR,
-        LG_ASU8A,
-        LG_ASU8B,
-        LG_ASU8C,
-        LG_ASU3,
-        LG_ASU2,
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using SabreTools.RedumpLib.Data;
 using Xunit;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
-using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 
 namespace MPF.Frontend.Test
 {
