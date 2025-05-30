@@ -369,7 +369,7 @@ namespace MPF.ExecutionContexts.Redumper
             if (!string.IsNullOrEmpty(driveType) && driveType != DriveType.NONE.ToString())
             {
                 this[FlagStrings.DriveType] = true;
-                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue(driveType);
+                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue(driveType!);
             }
 
             // Set the output paths

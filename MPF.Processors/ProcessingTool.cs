@@ -1221,6 +1221,10 @@ namespace MPF.Processors
             if (ss.Length != 2048)
                 return false;
 
+            // Must be a valid SS file
+            if (!IsValidSS(ss))
+                return false;
+
             // Determine XGD type
             if (!GetXGDType(ss, out int xgdType))
                 return false;
