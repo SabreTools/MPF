@@ -3,6 +3,7 @@ using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 
 namespace MPF.Frontend.ViewModels
 {
@@ -60,6 +61,11 @@ namespace MPF.Frontend.ViewModels
         public static List<Element<RedumperSectorOrder>> RedumperSectorOrders => PopulateRedumperSectorOrders();
 
         /// <summary>
+        /// Current list of supported Redumper drive types
+        /// </summary>
+        public static List<Element<RedumperDriveType>> RedumperDriveTypes => PopulateRedumperRedumperDriveTypes();
+
+        /// <summary>
         /// Current list of supported system profiles
         /// </summary>
         public static List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements();
@@ -111,6 +117,15 @@ namespace MPF.Frontend.ViewModels
             return sectorOrders.ConvertAll(so => new Element<RedumperSectorOrder>(so));
         }
 
+        /// <summary>
+        /// Get a complete list of supported redumper drive types
+        /// </summary>
+        private static List<Element<RedumperDriveType>> PopulateRedumperDriveTypes()
+        {
+            var driveTypes = new List<RedumperDriveType> { RedumperDriveType.NONE, RedumperDriveType.GENERIC, RedumperDriveType.PLEXTOR, RedumperDriveType.LG_ASU8A, RedumperDriveType.LG_ASU8B, RedumperDriveType.LG_ASU8C, RedumperDriveType.LG_ASU3, RedumperDriveType.LG_ASU2 };
+            return driveTypes.ConvertAll(dt => new Element<RedumperDriveType>(dt));
+        }
+
         #endregion
 
         #region UI Commands
@@ -135,7 +150,7 @@ namespace MPF.Frontend.ViewModels
         {
             Options.RedumperReadMethod = RedumperReadMethod.NONE;
             Options.RedumperSectorOrder = RedumperSectorOrder.NONE;
-            Options.RedumperUseGenericDriveType = false;
+            Options.RedumperDriveType = RedumperDriveType.NONE;
             TriggerPropertyChanged(nameof(Options));
         }
 

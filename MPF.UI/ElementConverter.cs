@@ -6,6 +6,7 @@ using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 
 namespace MPF.UI
 {
@@ -20,6 +21,7 @@ namespace MPF.UI
                 MediaType mediaType => new Element<MediaType>(mediaType),
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
+                RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
                 RedumpSystem redumpSystem => new RedumpSystemComboBoxItem(redumpSystem),
                 Region region => new Element<Region>(region),
 
@@ -41,6 +43,7 @@ namespace MPF.UI
                 Element<MediaType> mtElement => mtElement.Value,
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,
+                Element<RedumperDriveType> dtElement => dtElement.Value,
                 RedumpSystemComboBoxItem rsElement => rsElement.Value,
                 Element<Region> reValue => reValue.Value,
                 _ => null,

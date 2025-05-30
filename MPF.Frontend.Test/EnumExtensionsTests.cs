@@ -5,6 +5,7 @@ using SabreTools.RedumpLib.Data;
 using Xunit;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 
 namespace MPF.Frontend.Test
 {
@@ -50,6 +51,22 @@ namespace MPF.Frontend.Test
         public void LongName_RedumperSectorOrder(RedumperSectorOrder? order, string? expected)
         {
             string? actual = order.LongName();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, "Unknown")]
+        [InlineData(RedumperDriveType.NONE, "Default")]
+        [InlineData(RedumperDriveType.GENERIC, "GENERIC")]
+        [InlineData(RedumperDriveType.PLEXTOR, "PLEXTOR")]
+        [InlineData(RedumperDriveType.LG_ASU8A, "LG_ASU8A")]
+        [InlineData(RedumperDriveType.LG_ASU8B, "LG_ASU8B")]
+        [InlineData(RedumperDriveType.LG_ASU8C, "LG_ASU8C")]
+        [InlineData(RedumperDriveType.LG_ASU3, "LG_ASU3")]
+        [InlineData(RedumperDriveType.LG_ASU2, "LG_ASU2")]
+        public void LongName_RedumperDriveType(RedumperDriveType? type, string? expected)
+        {
+            string? actual = type.LongName();
             Assert.Equal(expected, actual);
         }
 

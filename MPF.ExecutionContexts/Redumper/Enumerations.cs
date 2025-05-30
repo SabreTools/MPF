@@ -9,7 +9,6 @@ namespace MPF.ExecutionContexts.Redumper
 
         BE,
         D8,
-        BE_CDDA, // Currently an alias for BE
     }
 
     /// <summary>
@@ -23,5 +22,21 @@ namespace MPF.ExecutionContexts.Redumper
         DATA_SUB_C2,
         DATA_SUB,
         DATA_C2,
+    }
+
+    /// <summary>
+    /// Drive type option
+    /// </summary>
+    public enum DriveType
+    {
+        NONE = 0,
+
+        GENERIC,
+        PLEXTOR,
+        LG_ASU8A,
+        LG_ASU8B,
+        LG_ASU8C,
+        LG_ASU3,
+        LG_ASU2,
     }
 }

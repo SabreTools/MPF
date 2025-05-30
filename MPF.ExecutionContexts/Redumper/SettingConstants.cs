@@ -2,6 +2,9 @@ namespace MPF.ExecutionContexts.Redumper
 {
     public static class SettingConstants
     {
+        public const string DriveType = "RedumperDriveType";
+        public static readonly string DriveTypeDefault = Redumper.DriveType.NONE.ToString();
+
         public const string EnableDebug = "RedumperEnableDebug";
         public const bool EnableDebugDefault = false;
 
@@ -25,8 +28,5 @@ namespace MPF.ExecutionContexts.Redumper
 
         public const string SectorOrder = "RedumperSectorOrder";
         public static readonly string SectorOrderDefault = Redumper.SectorOrder.NONE.ToString();
-
-        public const string UseGenericDriveType = "RedumperUseGenericDriveType";
-        public const bool UseGenericDriveTypeDefault = false;
     }
 }

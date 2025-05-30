@@ -63,20 +63,19 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.HelpLong] = new FlagInput(FlagStrings.HelpShort, FlagStrings.HelpLong),
             [FlagStrings.Version] = new FlagInput(FlagStrings.Version),
             [FlagStrings.Verbose] = new FlagInput(FlagStrings.Verbose),
-            [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
+            [FlagStrings.ListRecommendedDrives] = new FlagInput(FlagStrings.ListRecommendedDrives),
+            [FlagStrings.ListAllDrives] = new FlagInput(FlagStrings.ListAllDrives),
             [FlagStrings.AutoEject] = new FlagInput(FlagStrings.AutoEject),
             [FlagStrings.Skeleton] = new FlagInput(FlagStrings.Skeleton),
-            [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
-            [FlagStrings.DiscType] = new StringInput(FlagStrings.DiscType),
             [FlagStrings.Drive] = new StringInput(FlagStrings.Drive),
             [FlagStrings.Speed] = new Int32Input(FlagStrings.Speed),
             [FlagStrings.Retries] = new Int32Input(FlagStrings.Retries),
             [FlagStrings.ImagePath] = new StringInput(FlagStrings.ImagePath) { Quotes = true },
             [FlagStrings.ImageName] = new StringInput(FlagStrings.ImageName) { Quotes = true },
             [FlagStrings.Overwrite] = new FlagInput(FlagStrings.Overwrite),
+            [FlagStrings.DiscType] = new StringInput(FlagStrings.DiscType),
 
             // Drive Configuration
-            [FlagStrings.Overwrite] = new FlagInput(FlagStrings.Overwrite),
             [FlagStrings.DriveType] = new StringInput(FlagStrings.DriveType),
             [FlagStrings.DriveReadOffset] = new Int32Input(FlagStrings.DriveReadOffset),
             [FlagStrings.DriveC2Shift] = new Int32Input(FlagStrings.DriveC2Shift),
@@ -90,6 +89,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.PlextorLeadinForceStore] = new FlagInput(FlagStrings.PlextorLeadinForceStore),
             [FlagStrings.AsusSkipLeadout] = new FlagInput(FlagStrings.AsusSkipLeadout),
             [FlagStrings.AsusLeadoutRetries] = new Int32Input(FlagStrings.AsusLeadoutRetries),
+            [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
 
             // Offset
             [FlagStrings.ForceOffset] = new Int32Input(FlagStrings.ForceOffset),
@@ -104,7 +104,12 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.SkipFill] = new UInt8Input(FlagStrings.SkipFill),
             [FlagStrings.ISO9660Trim] = new FlagInput(FlagStrings.ISO9660Trim),
 
+            // Drive Test
+            [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
+            [FlagStrings.DriveTestSkipCacheRead] = new FlagInput(FlagStrings.DriveTestSkipCacheRead),
+
             // Miscellaneous
+            [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
             [FlagStrings.LBAStart] = new Int32Input(FlagStrings.LBAStart),
             [FlagStrings.LBAEnd] = new Int32Input(FlagStrings.LBAEnd),
             [FlagStrings.RefineSubchannel] = new FlagInput(FlagStrings.RefineSubchannel),
@@ -114,12 +119,13 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.OverreadLeadout] = new FlagInput(FlagStrings.OverreadLeadout),
             [FlagStrings.ForceUnscrambled] = new FlagInput(FlagStrings.ForceUnscrambled),
             [FlagStrings.ForceRefine] = new FlagInput(FlagStrings.ForceRefine),
-            [FlagStrings.LegacySubs] = new FlagInput(FlagStrings.LegacySubs),
-            [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
-            [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
-            [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
-            [FlagStrings.DriveTestSkipCacheRead] = new FlagInput(FlagStrings.DriveTestSkipCacheRead),
             //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
+            [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
+            [FlagStrings.Rings] = new FlagInput(FlagStrings.Rings),
+
+            // Undocumented
+            [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
+            [FlagStrings.LegacySubs] = new FlagInput(FlagStrings.LegacySubs),
         };
 
         #endregion
@@ -153,17 +159,17 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.HelpShort,
                     FlagStrings.Version,
                     FlagStrings.Verbose,
-                    FlagStrings.Continue,
+                    FlagStrings.ListRecommendedDrives,
+                    FlagStrings.ListAllDrives,
                     FlagStrings.AutoEject,
                     FlagStrings.Skeleton,
-                    FlagStrings.Debug,
-                    FlagStrings.DiscType,
                     FlagStrings.Drive,
                     FlagStrings.Speed,
                     FlagStrings.Retries,
                     FlagStrings.ImagePath,
                     FlagStrings.ImageName,
                     FlagStrings.Overwrite,
+                    FlagStrings.DiscType,
 
                     // Drive Configuration
                     FlagStrings.DriveType,
@@ -179,6 +185,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.PlextorLeadinForceStore,
                     FlagStrings.AsusSkipLeadout,
                     FlagStrings.AsusLeadoutRetries,
+                    FlagStrings.DisableCDText,
 
                     // Offset
                     FlagStrings.ForceOffset,
@@ -193,7 +200,12 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.SkipFill,
                     FlagStrings.ISO9660Trim,
 
+                    // Drive Test
+                    FlagStrings.DriveTestSkipPlextorLeadin,
+                    FlagStrings.DriveTestSkipCacheRead,
+
                     // Miscellaneous
+                    FlagStrings.Continue,
                     FlagStrings.LBAStart,
                     FlagStrings.LBAEnd,
                     FlagStrings.RefineSubchannel,
@@ -203,12 +215,13 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.OverreadLeadout,
                     FlagStrings.ForceUnscrambled,
                     FlagStrings.ForceRefine,
-                    FlagStrings.LegacySubs,
-                    FlagStrings.DisableCDText,
-                    FlagStrings.SkipSubcodeDesync,
-                    FlagStrings.DriveTestSkipPlextorLeadin,
-                    FlagStrings.DriveTestSkipCacheRead,
                     //FlagStrings.Firmware,
+                    FlagStrings.SkipSubcodeDesync,
+                    FlagStrings.Rings,
+
+                    // Undocumented
+                    FlagStrings.Debug,
+                    FlagStrings.LegacySubs,
                 ],
             };
         }
@@ -352,10 +365,11 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.DriveSectorOrder] as StringInput)?.SetValue(sectorOrder!);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.UseGenericDriveType, SettingConstants.UseGenericDriveTypeDefault))
+            string? driveType = GetStringSetting(options, SettingsConstants.DriveType, SettingsConstants.DriveTypeDefault);
+            if (!string.IsNullOrEmpty(driveType) && driveType != DriveType.NONE.ToString())
             {
                 this[FlagStrings.DriveType] = true;
-                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue("GENERIC");
+                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue(driveType);
             }
 
             // Set the output paths

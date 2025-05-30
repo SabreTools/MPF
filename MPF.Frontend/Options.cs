@@ -4,6 +4,7 @@ using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
+using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperSettings = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend
@@ -388,12 +389,19 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Enable generic drive type by default with Redumper
+        /// Currently selected default redumper drive type
         /// </summary>
-        public bool RedumperUseGenericDriveType
+        public RedumperDriveType RedumperDriveType
         {
-            get { return GetBooleanSetting(Settings, RedumperSettings.UseGenericDriveType, RedumperSettings.UseGenericDriveTypeDefault); }
-            set { Settings[RedumperSettings.UseGenericDriveType] = value.ToString(); }
+            get
+            {
+                var valueString = GetStringSetting(Settings, RedumperSettings.DriveType, RedumperSettings.DriveTypeDefault);
+                return valueString.ToRedumperDriveType();
+            }
+            set
+            {
+                Settings[RedumperSettings.DriveType] = value.ToString();
+            }
         }
 
         /// <summary>

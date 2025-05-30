@@ -39,7 +39,7 @@ namespace MPF.ExecutionContexts.Test
             [SettingConstants.ReadMethod] = "BE",
             [SettingConstants.RereadCount] = "1000",
             [SettingConstants.SectorOrder] = "DATA_C2_SUB",
-            [SettingConstants.UseGenericDriveType] = "true",
+            [SettingConstants.DriveType] = "GENERIC",
         };
 
         [Theory]

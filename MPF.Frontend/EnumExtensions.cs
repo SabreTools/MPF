@@ -221,10 +221,6 @@ namespace MPF.Frontend
             {
                 "d8" => RedumperReadMethod.D8,
                 "be" => RedumperReadMethod.BE,
-                "be_cdda"
-                    or "be cdda"
-                    or "be-cdda"
-                    or "becdda" => RedumperReadMethod.BE_CDDA,
 
                 _ => RedumperReadMethod.NONE,
             };
@@ -257,6 +253,47 @@ namespace MPF.Frontend
                     or "datac2" => RedumperSectorOrder.DATA_C2,
 
                 _ => RedumperSectorOrder.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Get the RedumperDriveType enum value for a given string
+        /// </summary>
+        /// <param name="order">String value to convert</param>
+        /// <returns>RedumperDriveType represented by the string, if possible</returns>
+        public static RedumperDriveType ToRedumperDriveType(this string? type)
+        {
+            return (type?.ToLowerInvariant()) switch
+            {
+                "generic" => RedumperDriveType.GENERIC,
+                "plextor" => RedumperDriveType.PLEXTOR,
+                "lg_asus8a"
+                    or "lg-asus8a"
+                    or "lgasus8a"
+                    or "lg_asus_8a"
+                    or "lg-asus-8a" => RedumperDriveType.LG_ASU8A,
+                "lg_asus8b"
+                    or "lg-asus8b"
+                    or "lgasus8b"
+                    or "lg_asus_8b"
+                    or "lg-asus-8b" => RedumperDriveType.LG_ASU8B,
+                "lg_asus8c"
+                    or "lg-asus8c"
+                    or "lgasus8c"
+                    or "lg_asus_8c"
+                    or "lg-asus-8c" => RedumperDriveType.LG_ASU8C,
+                "lg_asus3"
+                    or "lg-asus3"
+                    or "lgasus3"
+                    or "lg_asus_3"
+                    or "lg-asus-3" => RedumperDriveType.LG_ASU3,
+                "lg_asus2"
+                    or "lg-asus2"
+                    or "lgasus2"
+                    or "lg_asus_2"
+                    or "lg-asus-2" => RedumperDriveType.LG_ASU2,
+
+                _ => RedumperDriveType.NONE,
             };
         }
 
