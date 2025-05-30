@@ -365,7 +365,7 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.DriveSectorOrder] as StringInput)?.SetValue(sectorOrder!);
             }
 
-            string? driveType = GetStringSetting(options, SettingsConstants.DriveType, SettingsConstants.DriveTypeDefault);
+            string? driveType = GetStringSetting(options, SettingConstants.DriveType, SettingConstants.DriveTypeDefault);
             if (!string.IsNullOrEmpty(driveType) && driveType != DriveType.NONE.ToString())
             {
                 this[FlagStrings.DriveType] = true;
