@@ -390,13 +390,18 @@ namespace MPF.ExecutionContexts.Redumper
                 }
             }
 
-            this[FlagStrings.Retries] = true;
-            (_inputs[FlagStrings.Retries] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault));
+            int retries = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
+            if(retries > 0)
+            {
+                this[FlagStrings.Retries] = true;
+                (_inputs[FlagStrings.Retries] as Int32Input)?.SetValue(retries);
+            }
 
-            if (GetBooleanSetting(options, SettingConstants.EnableLeadinRetry, SettingConstants.EnableLeadinRetryDefault))
+            int leadinRetries = GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault)
+            if (leadinRetries != SettingConstants.LeadinRetryCountDefault)
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault));
+                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(leadinRetries);
             }
         }
 

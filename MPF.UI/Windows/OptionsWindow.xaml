@@ -421,16 +421,9 @@
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Set Default Plextor Lead-in Retries"
-                                          IsChecked="{Binding Options.RedumperEnableLeadinRetry}"
-                                          ToolTip="Enable custom lead-in retries for Plextor drives" Margin="0,4"
-                                />
-                                <Label/>
-                                <!-- Empty label for padding -->
-
                                 <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
-                                         Text="{Binding Options.RedumperLeadinRetryCount}" IsEnabled ="{Binding Options.RedumperEnableLeadinRetry}"
+                                         Text="{Binding Options.RedumperLeadinRetryCount}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                          ToolTipService.ShowOnDisabled="True"
                                 />
@@ -439,6 +432,8 @@
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
+                                <Label/>
+                                <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"

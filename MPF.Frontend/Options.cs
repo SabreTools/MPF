@@ -343,15 +343,6 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Enable Redumper custom lead-in retries for Plextor drives
-        /// </summary>
-        public bool RedumperEnableLeadinRetry
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableLeadinRetry, RedumperSettings.EnableLeadinRetryDefault); }
-            set { Settings[RedumperSettings.EnableLeadinRetry] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Enable skeleton output while dumping by default
         /// </summary>
         /// <remarks>This is a hidden setting</remarks>
