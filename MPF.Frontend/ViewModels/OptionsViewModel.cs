@@ -63,7 +63,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported Redumper drive types
         /// </summary>
-        public static List<Element<RedumperDriveType>> RedumperDriveTypes => PopulateRedumperRedumperDriveTypes();
+        public static List<Element<RedumperDriveType>> RedumperDriveTypes => PopulateRedumperDriveTypes();
 
         /// <summary>
         /// Current list of supported system profiles
@@ -104,7 +104,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static List<Element<RedumperReadMethod>> PopulateRedumperReadMethods()
         {
-            var readMethods = new List<RedumperReadMethod> { RedumperReadMethod.NONE, RedumperReadMethod.D8, RedumperReadMethod.BE, RedumperReadMethod.BE_CDDA };
+            var readMethods = new List<RedumperReadMethod> { RedumperReadMethod.NONE, RedumperReadMethod.D8, RedumperReadMethod.BE };
             return readMethods.ConvertAll(rm => new Element<RedumperReadMethod>(rm));
         }
 
