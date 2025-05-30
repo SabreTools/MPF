@@ -34,7 +34,6 @@ namespace MPF.Frontend.Test
         [InlineData(RedumperReadMethod.NONE, "Default")]
         [InlineData(RedumperReadMethod.D8, "D8")]
         [InlineData(RedumperReadMethod.BE, "BE")]
-        [InlineData(RedumperReadMethod.BE_CDDA, "BE_CDDA")]
         public void LongName_RedumperReadMethod(RedumperReadMethod? method, string? expected)
         {
             string? actual = method.LongName();
