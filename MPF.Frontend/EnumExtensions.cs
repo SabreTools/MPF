@@ -102,7 +102,6 @@ namespace MPF.Frontend
             {
                 RedumperReadMethod.D8 => "D8",
                 RedumperReadMethod.BE => "BE",
-                RedumperReadMethod.BE_CDDA => "BE_CDDA",
 
                 RedumperReadMethod.NONE => "Default",
                 _ => "Unknown",
@@ -124,6 +123,28 @@ namespace MPF.Frontend
                 RedumperSectorOrder.DATA_C2 => "DATA_C2",
 
                 RedumperSectorOrder.NONE => "Default",
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
+        /// Get the string representation of the RedumperDriveType enum values
+        /// </summary>
+        /// <param name="order">RedumperDriveType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperDriveType? type)
+        {
+            return order switch
+            {
+                RedumperDriveType.GENERIC => "GENERIC",
+                RedumperDriveType.PLEXTOR => "PLEXTOR",
+                RedumperDriveType.LG_ASU8A => "LG_ASU8A",
+                RedumperDriveType.LG_ASU8B => "LG_ASU8B",
+                RedumperDriveType.LG_ASU8C => "LG_ASU8C",
+                RedumperDriveType.LG_ASU3 => "LG_ASU3",
+                RedumperDriveType.LG_ASU2 => "LG_ASU2",
+
+                RedumperDriveType.NONE => "Default",
                 _ => "Unknown",
             };
         }
