@@ -4,6 +4,7 @@
 - Update RedumpLib to 1.6.7
 - Update redumper, DriveType option, SS sanity check
 - Fix issues with last commit
+- Update tooltips/labels for controversial options
 
 ### 3.3.1 (2025-05-23)
 

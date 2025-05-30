@@ -200,7 +200,7 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Pull All Information"
                                      IsChecked="{Binding Options.PullAllInformation}"
-                                     ToolTip="Enable pulling all comment and content data after dumping" Margin="0,4"
+                                     ToolTip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" Margin="0,4"
                                       />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Tab Input"
@@ -233,9 +233,9 @@
                                      ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Include Artifacts"
+                                <CheckBox VerticalAlignment="Center" Content="[DEBUG] Include Artifacts"
                                      IsChecked="{Binding Options.IncludeArtifacts}" IsEnabled="{Binding Options.OutputSubmissionJSON}"
-                                     ToolTip="Include log files in serialized JSON data"
+                                     ToolTip="Include log files in serialized JSON data [NOT RECOMMENDED TO USE]"
                                      ToolTipService.ShowOnDisabled="True" Margin="0,4"
                                      />
 
