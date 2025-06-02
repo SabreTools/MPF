@@ -16,7 +16,7 @@ namespace MPF.Check
         public static void Main(string[] args)
         {
             // Create a default options object
-            var options = new Frontend.Options()
+            var options = new Options()
             {
                 // Internal Program
                 InternalProgram = InternalProgram.NONE,
@@ -178,7 +178,7 @@ namespace MPF.Check
         /// <summary>
         /// Enable interactive mode for entering information
         /// </summary>
-        private static CommandOptions InteractiveMode(Frontend.Options options, out MediaType mediaType, out RedumpSystem? system)
+        private static CommandOptions InteractiveMode(Options options, out MediaType mediaType, out RedumpSystem? system)
         {
             // Create return values
             var opts = new CommandOptions();
@@ -380,7 +380,7 @@ namespace MPF.Check
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
-        private static CommandOptions LoadFromArguments(string[] args, Frontend.Options options, ref int startIndex)
+        private static CommandOptions LoadFromArguments(string[] args, Options options, ref int startIndex)
         {
             // Create return values
             var opts = new CommandOptions();

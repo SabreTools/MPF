@@ -10,6 +10,7 @@
 - Fix tests from last commit
 - Remove unnecessary options property
 - Decouple retieval from login
+- Simplify Options naming where possible
 
 ### 3.3.1 (2025-05-23)
 
