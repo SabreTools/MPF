@@ -334,15 +334,6 @@ namespace MPF.Frontend
         #region Redumper
 
         /// <summary>
-        /// Enable debug output while dumping by default
-        /// </summary>
-        public bool RedumperEnableDebug
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableDebug, RedumperSettings.EnableDebugDefault); }
-            set { Settings[RedumperSettings.EnableDebug] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Enable skeleton output while dumping by default
         /// </summary>
         /// <remarks>This is a hidden setting</remarks>

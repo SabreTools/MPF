@@ -404,15 +404,11 @@
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
                             <UniformGrid Columns="2" Rows="7">
-                                <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
-                                          IsChecked="{Binding Options.RedumperEnableDebug}"
-                                          ToolTip="Enable debug output in logs" Margin="0,4"
-                                />
-
                                 <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
                                           IsChecked="{Binding Options.RedumperEnableVerbose}"
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
+                                <Label/> <!-- Empty label for padding -->
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"

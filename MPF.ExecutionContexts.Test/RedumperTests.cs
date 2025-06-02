@@ -32,7 +32,6 @@ namespace MPF.ExecutionContexts.Test
 
         private static Dictionary<string, string?> AllOptions = new()
         {
-            [SettingConstants.EnableDebug] = "true",
             [SettingConstants.EnableVerbose] = "true",
             [SettingConstants.LeadinRetryCount] = "1000",
             [SettingConstants.ReadMethod] = "BE",

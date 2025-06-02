@@ -344,11 +344,6 @@ namespace MPF.ExecutionContexts.Redumper
                         break;
                 }
             }
-            if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
-            {
-                this[FlagStrings.Debug] = true;
-                (_inputs[FlagStrings.Debug] as FlagInput)?.SetValue(true);
-            }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
 

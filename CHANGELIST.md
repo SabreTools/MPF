@@ -6,6 +6,7 @@
 - Fix issues with last commit
 - Update tooltips/labels for controversial options
 - Add currently-hidden RetrieveMatchInformation option
+- Fix Redump default options
 
 ### 3.3.1 (2025-05-23)
 

@@ -5,14 +5,11 @@ namespace MPF.ExecutionContexts.Redumper
         public const string DriveType = "RedumperDriveType";
         public static readonly string DriveTypeDefault = Redumper.DriveType.NONE.ToString();
 
-        public const string EnableDebug = "RedumperEnableDebug";
-        public const bool EnableDebugDefault = false;
-
         public const string EnableSkeleton = "RedumperEnableSkeleton";
         public const bool EnableSkeletonDefault = true;
 
         public const string EnableVerbose = "RedumperEnableVerbose";
-        public const bool EnableVerboseDefault = true;
+        public const bool EnableVerboseDefault = false;
 
         public const string LeadinRetryCount = "RedumperLeadinRetryCount";
         public const int LeadinRetryCountDefault = 4;
