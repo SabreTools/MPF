@@ -85,7 +85,7 @@ namespace MPF.Frontend.Tools
             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
 
             // Get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData) && options.HasRedumpLogin)
+            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData))
                 _ = await FillFromRedump(options, info, resultProgress);
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro

@@ -654,17 +654,9 @@ namespace MPF.Frontend
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
         public string? RedumpPassword
         {
-            get
-            {
-                return GetStringSetting(Settings, "RedumpPassword", "");
-            }
+            get { return GetStringSetting(Settings, "RedumpPassword", ""); }
             set { Settings["RedumpPassword"] = value; }
         }
-
-        /// <summary>
-        /// Determine if a complete set of Redump credentials might exist
-        /// </summary>
-        public bool HasRedumpLogin { get => !string.IsNullOrEmpty(RedumpUsername) && !string.IsNullOrEmpty(RedumpPassword); }
 
         #endregion
 
