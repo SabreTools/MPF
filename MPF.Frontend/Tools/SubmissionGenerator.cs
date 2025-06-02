@@ -160,7 +160,11 @@ namespace MPF.Frontend.Tools
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {
-            // If no username is provided
+            // If information should not be pulled at all
+            if (!options.RetrieveMatchInformation)
+                return false;
+
+            // If credentials are not provided or incomplete
             if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
                 return false;
 

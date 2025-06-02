@@ -5,6 +5,7 @@
 - Update redumper, DriveType option, SS sanity check
 - Fix issues with last commit
 - Update tooltips/labels for controversial options
+- Add currently-hidden RetrieveMatchInformation option
 
 ### 3.3.1 (2025-05-23)
 

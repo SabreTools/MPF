@@ -65,7 +65,9 @@ namespace MPF.CLI
                 }
 
                 // Validate the supplied credentials
-                if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
+                if (options.RetrieveMatchInformation
+                    && !string.IsNullOrEmpty(options.RedumpUsername)
+                    && !string.IsNullOrEmpty(options.RedumpPassword))
                 {
                     bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
                     string message = validated switch
@@ -75,8 +77,7 @@ namespace MPF.CLI
                         null => "An error occurred validating your credentials!",
                     };
 
-                    if (!string.IsNullOrEmpty(message))
-                        Console.WriteLine(message);
+                    Console.WriteLine(message);
                 }
 
                 // Process any custom parameters

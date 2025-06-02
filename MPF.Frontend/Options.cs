@@ -645,6 +645,15 @@ namespace MPF.Frontend
 
         #region Redump Login Information
 
+        /// <summary>
+        /// Enable retrieving match information from Redump
+        /// </summary>
+        public bool RetrieveMatchInformation
+        {
+            get { return GetBooleanSetting(Settings, "RetrieveMatchInformation", true); }
+            set { Settings["RetrieveMatchInformation"] = value.ToString(); }
+        }
+
         public string? RedumpUsername
         {
             get { return GetStringSetting(Settings, "RedumpUsername", ""); }
