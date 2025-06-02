@@ -38,6 +38,7 @@ namespace MPF.Check
                 HideDriveLetters = false,
 
                 // Redump Login Information
+                RetrieveMatchInformation = true,
                 RedumpUsername = null,
                 RedumpPassword = null,
             };
@@ -155,7 +156,8 @@ namespace MPF.Check
             Console.WriteLine("    --load-seed <path>         Load a seed submission JSON for user information");
             Console.WriteLine("    --no-placeholders          Disable placeholder values in submission info");
             Console.WriteLine("    --create-ird               Create IRD from output files (PS3 only)");
-            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password");
+            Console.WriteLine("    --no-retrieve              Disable retrieving match information from Redump");
+            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password (incompatible with --no-retrieve)");
             Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --credentials)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
@@ -203,18 +205,19 @@ namespace MPF.Check
             Console.WriteLine($"4) Set seed path (Currently '{opts.Seed}')");
             Console.WriteLine($"5) Add placeholders (Currently '{options.AddPlaceholders}')");
             Console.WriteLine($"6) Create IRD (Currently '{options.CreateIRDAfterDumping}')");
-            Console.WriteLine($"7) Redump credentials (Currently '{options.RedumpUsername}')");
-            Console.WriteLine($"8) Pull all information (Currently '{options.PullAllInformation}')");
-            Console.WriteLine($"9) Set device path (Currently '{opts.DevicePath}')");
-            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"E) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
-            Console.WriteLine($"F) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
-            Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
-            Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
-            Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"7) Attempt Redump matches (Currently '{options.RetrieveMatchInformation}')");
+            Console.WriteLine($"8) Redump credentials (Currently '{options.RedumpUsername}')");
+            Console.WriteLine($"9) Pull all information (Currently '{options.PullAllInformation}')");
+            Console.WriteLine($"A) Set device path (Currently '{opts.DevicePath}')");
+            Console.WriteLine($"B) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"C) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"D) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"E) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"F) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
+            Console.WriteLine($"G) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
+            Console.WriteLine($"H) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
+            Console.WriteLine($"I) Compress logs (Currently '{options.CompressLogFiles}')");
+            Console.WriteLine($"J) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -238,46 +241,50 @@ namespace MPF.Check
                     options.CreateIRDAfterDumping = !options.CreateIRDAfterDumping;
                     goto root;
                 case "7":
-                    goto redumpCredentials;
+                    options.RetrieveMatchInformation = !options.RetrieveMatchInformation;
+                    goto root;
                 case "8":
+                    goto redumpCredentials;
+                case "9":
                     options.PullAllInformation = !options.PullAllInformation;
                     goto root;
-                case "9":
-                    goto devicePath;
                 case "a":
                 case "A":
-                    scan = !scan;
-                    goto root;
+                    goto devicePath;
                 case "b":
                 case "B":
-                    enableArchives = !enableArchives;
+                    scan = !scan;
                     goto root;
                 case "c":
                 case "C":
-                    enableDebug = !enableDebug;
+                    enableArchives = !enableArchives;
                     goto root;
                 case "d":
                 case "D":
-                    hideDriveLetters = !hideDriveLetters;
+                    enableDebug = !enableDebug;
                     goto root;
                 case "e":
                 case "E":
-                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
+                    hideDriveLetters = !hideDriveLetters;
                     goto root;
                 case "f":
                 case "F":
-                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
+                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
                     goto root;
                 case "g":
                 case "G":
-                    options.IncludeArtifacts = !options.IncludeArtifacts;
+                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
                     goto root;
                 case "h":
                 case "H":
-                    options.CompressLogFiles = !options.CompressLogFiles;
+                    options.IncludeArtifacts = !options.IncludeArtifacts;
                     goto root;
                 case "i":
                 case "I":
+                    options.CompressLogFiles = !options.CompressLogFiles;
+                    goto root;
+                case "j":
+                case "J":
                     options.DeleteUnnecessaryFiles = !options.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -434,6 +441,12 @@ namespace MPF.Check
                 else if (args[startIndex].Equals("--create-ird"))
                 {
                     options.CreateIRDAfterDumping = true;
+                }
+
+                // Retrieve Redump match information
+                else if (args[startIndex] == "--no-retrieve")
+                {
+                    options.RetrieveMatchInformation = false;
                 }
 
                 // Redump login

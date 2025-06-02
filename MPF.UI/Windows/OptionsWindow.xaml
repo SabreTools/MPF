@@ -453,17 +453,30 @@
 
                 <TabItem Header="Login Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Retrieval">
+                            <UniformGrid Columns="2" Rows="1">
+                                <CheckBox VerticalAlignment="Center" Content="Retrieve Match Information"
+                                          IsChecked="{Binding Options.RetrieveMatchInformation}"
+                                          ToolTip="Attempts to retrieve match information from Redump"
+                                          Margin="0,4"
+                                />
+                                <Label/> <!-- Empty label for padding -->
+                            </UniformGrid>
+                        </GroupBox>
+
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump">
                             <UniformGrid Columns="5">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
-                                    Text="{Binding Options.RedumpUsername}" />
+                                    Text="{Binding Options.RedumpUsername}"
+                                    IsEnabled="{Binding Options.RetrieveMatchInformation}" />
 
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
                                 <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*" />
 
                                 <Button x:Name="RedumpLoginTestButton" Height="22" Width="80" Content="Test Login"
-                                        Style="{DynamicResource CustomButtonStyle}" />
+                                        Style="{DynamicResource CustomButtonStyle}"
+                                         IsEnabled="{Binding Options.RetrieveMatchInformation}" />
                             </UniformGrid>
                         </GroupBox>
 

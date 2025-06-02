@@ -9,6 +9,7 @@
 - Fix Redump default options
 - Fix tests from last commit
 - Remove unnecessary options property
+- Decouple retieval from login
 
 ### 3.3.1 (2025-05-23)
 

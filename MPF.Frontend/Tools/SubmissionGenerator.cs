@@ -164,27 +164,25 @@ namespace MPF.Frontend.Tools
             if (!options.RetrieveMatchInformation)
                 return false;
 
-            // If credentials are not provided or incomplete
-            if (string.IsNullOrEmpty(options.RedumpUsername) || string.IsNullOrEmpty(options.RedumpPassword))
-                return false;
-
             // Set the current dumper based on username
             info.DumpersAndStatus ??= new DumpersAndStatusSection();
-            info.DumpersAndStatus.Dumpers = [options.RedumpUsername!];
+            info.DumpersAndStatus.Dumpers = [options.RedumpUsername ?? "Anonymous User"];
             info.PartiallyMatchedIDs = [];
 
-            // Login to Redump
+            // Login to Redump, if possible
             var wc = new RedumpClient();
-            bool? loggedIn = await wc.Login(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty);
-            if (loggedIn == null)
+            if (options.RedumpUsername != null && options.RedumpPassword != null)
             {
-                resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump"));
-                return false;
-            }
-            else if (loggedIn == false)
-            {
-                // Don't log the as a failure or error
-                return false;
+                bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+                if (loggedIn == null)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
+                    return false;
+                }
+                else if (loggedIn == false)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure("Provided Redump credentials were invalid, not using..."));
+                }
             }
 
             // Setup the checks
