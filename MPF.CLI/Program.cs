@@ -89,7 +89,7 @@ namespace MPF.CLI
             switch (options.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    if (!File.Exists(options.AaruPath))
+                    if ((options.AaruPath = ResolveBinary("aaru", options.AaruPath)) == null)
                     {
                         DisplayHelp("A path needs to be supplied for Aaru, exiting...");
                         return;
@@ -97,7 +97,8 @@ namespace MPF.CLI
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    if (!File.Exists(options.DiscImageCreatorPath))
+                    if ((options.DiscImageCreatorPath =
+                            ResolveBinary("DiscImageCreator", options.DiscImageCreatorPath)) == null)
                     {
                         DisplayHelp("A path needs to be supplied for DIC, exiting...");
                         return;
@@ -105,7 +106,7 @@ namespace MPF.CLI
                     break;
 
                 case InternalProgram.Redumper:
-                    if (!File.Exists(options.RedumperPath))
+                    if ((options.RedumperPath = ResolveBinary("redumper", options.RedumperPath)) == null)
                     {
                         DisplayHelp("A path needs to be supplied for Redumper, exiting...");
                         return;
@@ -472,6 +473,23 @@ namespace MPF.CLI
             }
 
             return opts;
+        }
+
+        private static string? ResolveBinary(string name, string? option)
+        {
+            if (option != null && File.Exists(option)) return option;
+
+            var pathEnv = Environment.GetEnvironmentVariable("PATH");
+            if (pathEnv == null) return option;
+
+            foreach (var p in pathEnv.Split(Path.PathSeparator))
+            {
+                var candidate = Path.Combine(p, name);
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+
+            return null;
         }
 
         /// <summary>
