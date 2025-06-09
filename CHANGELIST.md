@@ -12,6 +12,7 @@
 - Decouple retieval from login
 - Simplify Options naming where possible
 - Create multi-size icon
+- Fix size retrieval for Aaru
 
 ### 3.3.1 (2025-05-23)
 
