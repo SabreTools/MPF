@@ -18,7 +18,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
-        <VersionPrefix>3.3.1</VersionPrefix>
+        <VersionPrefix>3.3.2</VersionPrefix>
 
         <!-- Package Properties -->
         <AssemblyName>MPF</AssemblyName>
