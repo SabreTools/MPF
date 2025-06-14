@@ -76,21 +76,49 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(getKeyPath))
                 info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(getKeyPath)?.ToString("yyyy-MM-dd HH:mm:ss");
 
-            // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
+            // Try to determine the name of the PIC
+            string? picPath = null;
             if (File.Exists($"{basePath}.disc.pic"))
             {
-                info.Extras!.PIC = GetPIC($"{basePath}.disc.pic", 264);
+                picPath = $"{basePath}.disc.pic";
             }
             else if (File.Exists(Path.Combine(baseDir, "disc.pic")))
             {
-                info.Extras!.PIC = GetPIC(Path.Combine(baseDir, "disc.pic"), 264);
+                picPath = Path.Combine(baseDir, "disc.pic");
             }
             else
             {
                 string[] discPicFiles = Directory.GetFiles(baseDir, "*.disc.pic");
                 if (discPicFiles.Length > 0)
-                    info.Extras!.PIC = GetPIC(discPicFiles[0], 264);
+                    picPath = discPicFiles[0];
             }
+
+            // Get the layerbreak information from the PIC
+            var di = ProcessingTool.GetDiscInformation(picPath);
+            info.SizeAndChecksums!.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
+            if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+            {
+                if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                    info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
+
+                if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                    info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+
+                if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                    info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+            }
+
+            // Set the trim length based on the layer count
+            int trimLength;
+            if (info.SizeAndChecksums!.Layerbreak3 != default)
+                trimLength = 520;
+            else if (info.SizeAndChecksums!.Layerbreak2 != default)
+                trimLength = 392;
+            else
+                trimLength = 264;
+
+            // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
+            info.Extras!.PIC = GetPIC(picPath, trimLength);
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
             if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))

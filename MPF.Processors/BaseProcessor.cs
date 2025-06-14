@@ -527,8 +527,12 @@ namespace MPF.Processors
         /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        internal static string? GetPIC(string picPath, int trimLength = -1)
+        internal static string? GetPIC(string? picPath, int trimLength = -1)
         {
+            // If the file is invalid
+            if (picPath == null)
+                return null;
+
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
                 return null;

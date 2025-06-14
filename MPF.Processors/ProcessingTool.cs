@@ -129,7 +129,7 @@ namespace MPF.Processors
         /// <param name="pic">Path to a PIC.bin file</param>
         /// <returns>Filled DiscInformation on success, null on error</returns>
         /// <remarks>This omits the emergency brake information, if it exists</remarks>
-        public static DiscInformation? GetDiscInformation(string pic)
+        public static DiscInformation? GetDiscInformation(string? pic)
         {
             try
             {
