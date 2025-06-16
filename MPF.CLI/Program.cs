@@ -91,7 +91,7 @@ namespace MPF.CLI
                 case InternalProgram.Aaru:
                     if (!File.Exists(options.AaruPath))
                     {
-                        DisplayHelp("A path needs to be supplied for Aaru, exiting...");
+                        DisplayHelp("A path needs to be supplied in config.json for Aaru, exiting...");
                         return;
                     }
                     break;
@@ -99,7 +99,7 @@ namespace MPF.CLI
                 case InternalProgram.DiscImageCreator:
                     if (!File.Exists(options.DiscImageCreatorPath))
                     {
-                        DisplayHelp("A path needs to be supplied for DIC, exiting...");
+                        DisplayHelp("A path needs to be supplied in config.json for DIC, exiting...");
                         return;
                     }
                     break;
@@ -107,7 +107,7 @@ namespace MPF.CLI
                 case InternalProgram.Redumper:
                     if (!File.Exists(options.RedumperPath))
                     {
-                        DisplayHelp("A path needs to be supplied for Redumper, exiting...");
+                        DisplayHelp("A path needs to be supplied in config.json for Redumper, exiting...");
                         return;
                     }
                     break;
@@ -206,12 +206,17 @@ namespace MPF.CLI
             Console.WriteLine();
 
             Console.WriteLine("CLI Options:");
-            Console.WriteLine("-u, --use <program>            Override default dumping program");
+            Console.WriteLine("-u, --use <program>            Override configured dumping program name");
             Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
             Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
             Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
             Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
             Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
+            Console.WriteLine();
+
+            Console.WriteLine("Dumping program paths and other settings can be found in the config.json file");
+            Console.WriteLine("generated next to the program by default. Ensure that all settings are to user");
+            Console.WriteLine("preference before running MPF.CLI.");
             Console.WriteLine();
 
             Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
