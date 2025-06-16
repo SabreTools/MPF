@@ -459,6 +459,11 @@ namespace MPF.Frontend.Tools
             if (driveLabel != null && driveLabel.Length == 0)
                 driveLabel = null;
 
+            // Treat "path" labels as null -- Indicates a mounted path
+            // This can over-match if a label contains a directory separator somehow
+            if (driveLabel != null && (driveLabel.Contains("/") || driveLabel.Contains("\\")))
+                driveLabel = null;
+
             // Must have at least one label to format
             if (driveLabel == null && (labels == null || labels.Count == 0))
                 return null;

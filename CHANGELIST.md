@@ -2,6 +2,7 @@
 
 - Handle layers for PS3CFW
 - Further clarify configuration requirements for CLI
+- Ignore volume labels with path separators
 
 ### 3.3.2 (2025-06-12)
 
