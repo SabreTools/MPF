@@ -8,6 +8,37 @@ namespace MPF.Processors.Test
 {
     public class UmdImageCreatorTests
     {
+        #region DetermineMediaType
+
+        [Fact]
+        public void DetermineMediaType_Null_DVD()
+        {
+            string? basePath = null;
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.UMD, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Invalid_DVD()
+        {
+            string? basePath = "INVALID";
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.UMD, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Valid_DVD()
+        {
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test");
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.UMD, actual);
+        }
+
+        #endregion
+
         #region GetOutputFiles
 
         [Fact]
@@ -289,7 +320,7 @@ namespace MPF.Processors.Test
         {
             string volDesc = string.Empty;
             bool actual = UmdImageCreator.GetVolumeLabels(volDesc, out Dictionary<string, List<string>> volLabels);
-            
+
             Assert.False(actual);
             Assert.Empty(volLabels);
         }
@@ -299,7 +330,7 @@ namespace MPF.Processors.Test
         {
             string volDesc = "INVALID";
             bool actual = UmdImageCreator.GetVolumeLabels(volDesc, out Dictionary<string, List<string>> volLabels);
-            
+
             Assert.False(actual);
             Assert.Empty(volLabels);
         }

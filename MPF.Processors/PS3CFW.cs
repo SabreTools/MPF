@@ -17,6 +17,10 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
+        public override MediaType? DetermineMediaType(string? basePath)
+            => MediaType.BluRay;
+
+        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist

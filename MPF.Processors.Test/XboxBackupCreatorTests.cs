@@ -8,6 +8,37 @@ namespace MPF.Processors.Test
     // TODO: Add tests for RecreateSS
     public class XboxBackupCreatorTests
     {
+        #region DetermineMediaType
+
+        [Fact]
+        public void DetermineMediaType_Null_DVD()
+        {
+            string? basePath = null;
+            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox, MediaType.DVD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.DVD, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Invalid_DVD()
+        {
+            string? basePath = "INVALID";
+            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox, MediaType.DVD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.DVD, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Valid_DVD()
+        {
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD", "test");
+            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox, MediaType.DVD);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.DVD, actual);
+        }
+
+        #endregion
+
         #region GetOutputFiles
 
         [Fact]

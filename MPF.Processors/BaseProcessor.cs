@@ -46,6 +46,13 @@ namespace MPF.Processors
         #region Abstract Methods
 
         /// <summary>
+        /// Determine the media type based on the provided files
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>MediaType that was determined, if possible</returns>
+        public abstract MediaType? DetermineMediaType(string? basePath);
+
+        /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SabreTools.Hashing;
@@ -17,6 +18,17 @@ namespace MPF.Processors
         public CleanRip(RedumpSystem? system, MediaType? type) : base(system, type) { }
 
         #region BaseProcessor Implementations
+
+        /// <inheritdoc/>
+        public override MediaType? DetermineMediaType(string? basePath)
+        {
+            return System switch
+            {
+                RedumpSystem.NintendoGameCube => MediaType.NintendoGameCubeGameDisc,
+                RedumpSystem.NintendoWii => MediaType.NintendoWiiOpticalDisc,
+                _ => null,
+            };
+        }
 
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)

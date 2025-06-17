@@ -4,6 +4,7 @@
 - Further clarify configuration requirements for CLI
 - Ignore volume labels with path separators
 - Reduce media-specific checks where unnecessary
+- Add DetermineMediaType scaffolding and tests
 
 ### 3.3.2 (2025-06-12)
 

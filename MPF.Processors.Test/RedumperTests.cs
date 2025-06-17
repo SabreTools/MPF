@@ -8,6 +8,34 @@ namespace MPF.Processors.Test
 {
     public class RedumperTests
     {
+        #region DetermineMediaType
+
+        [Fact]
+        public void DetermineMediaType_Null_Throws()
+        {
+            string? basePath = null;
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        [Fact]
+        public void DetermineMediaType_Invalid_Throws()
+        {
+            string? basePath = "INVALID";
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        [Fact]
+        public void DetermineMediaType_Valid_Throws()
+        {
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        #endregion
+
         #region GetOutputFiles
 
         [Fact]

@@ -11,6 +11,34 @@ namespace MPF.Processors.Test
     // TODO: Add tests around remaining helper methods
     public class AaruTests
     {
+        #region DetermineMediaType
+
+        [Fact]
+        public void DetermineMediaType_Null_Throws()
+        {
+            string? basePath = null;
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        [Fact]
+        public void DetermineMediaType_Invalid_Throws()
+        {
+            string? basePath = "INVALID";
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        [Fact]
+        public void DetermineMediaType_Valid_Throws()
+        {
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM", "test");
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+        }
+
+        #endregion
+
         #region GetOutputFiles
 
         [Fact]

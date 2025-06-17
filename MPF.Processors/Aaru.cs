@@ -27,6 +27,12 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
+        public override MediaType? DetermineMediaType(string? basePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
         {
             // TODO: Fill in submission info specifics for Aaru

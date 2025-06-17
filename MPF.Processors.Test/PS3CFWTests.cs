@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -8,6 +7,37 @@ namespace MPF.Processors.Test
 {
     public class PS3CFWTests
     {
+        #region DetermineMediaType
+
+        [Fact]
+        public void DetermineMediaType_Null_BluRay()
+        {
+            string? basePath = null;
+            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.BluRay, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Invalid_BluRay()
+        {
+            string? basePath = "INVALID";
+            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.BluRay, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_Valid_BluRay()
+        {
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay", "test");
+            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3, MediaType.BluRay);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(MediaType.BluRay, actual);
+        }
+
+        #endregion
+
         #region GetOutputFiles
 
         [Fact]
