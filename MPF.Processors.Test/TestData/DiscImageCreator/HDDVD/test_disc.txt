@@ -1,0 +1,2 @@
+<< GetDiscType >>
+BookType: HD DVD-ROM

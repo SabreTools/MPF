@@ -13,27 +13,61 @@ namespace MPF.Processors.Test
         #region DetermineMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_Throws()
+        public void DetermineMediaType_Null_Null()
         {
             string? basePath = null;
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_Throws()
+        public void DetermineMediaType_Invalid_Null()
         {
             string? basePath = "INVALID";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Valid_Throws()
+        public void DetermineMediaType_BD_Filled()
         {
+            MediaType? expected = MediaType.BluRay;
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "BluRay", "test");
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_CD_Filled()
+        {
+            MediaType? expected = MediaType.CDROM;
             string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test");
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_DVD_Filled()
+        {
+            MediaType? expected = MediaType.DVD;
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "DVD", "test");
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_HDDVD_Filled()
+        {
+            MediaType? expected = MediaType.HDDVD;
+            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "HDDVD", "test");
+            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
         }
 
         #endregion
@@ -379,10 +413,40 @@ namespace MPF.Processors.Test
         }
 
         [Fact]
-        public void GetDiscType_Valid_Filled()
+        public void GetDiscType_BD_Filled()
         {
-            string? expected = "CD-ROM, GD-ROM, DVD-ROM, BD-ROM";
+            string? expected = "BDO";
+            string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "BluRay", "test_disc.txt");
+            bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
+            Assert.True(actual);
+            Assert.Equal(expected, discTypeOrBookType);
+        }
+
+        [Fact]
+        public void GetDiscType_CD_Filled()
+        {
+            string? expected = "CD-ROM";
             string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test_disc.txt");
+            bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
+            Assert.True(actual);
+            Assert.Equal(expected, discTypeOrBookType);
+        }
+
+        [Fact]
+        public void GetDiscType_DVD_Filled()
+        {
+            string? expected = "DVD-ROM";
+            string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "DVD", "test_disc.txt");
+            bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
+            Assert.True(actual);
+            Assert.Equal(expected, discTypeOrBookType);
+        }
+
+        [Fact]
+        public void GetDiscType_HDDVD_Filled()
+        {
+            string? expected = "HD DVD-ROM";
+            string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "HDDVD", "test_disc.txt");
             bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
             Assert.True(actual);
             Assert.Equal(expected, discTypeOrBookType);

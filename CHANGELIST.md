@@ -7,6 +7,7 @@
 - Add DetermineMediaType scaffolding and tests
 - Fill out DetermineMediaType for Redumper
 - Fill out DetermineMediaType for Aaru
+- Fill out DetermineMediaType for DiscImageCreator
 
 ### 3.3.2 (2025-06-12)
 

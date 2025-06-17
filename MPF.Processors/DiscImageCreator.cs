@@ -70,7 +70,75 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override MediaType? DetermineMediaType(string? basePath)
         {
-            throw new NotImplementedException();
+            // If the base path is invalid
+            if (string.IsNullOrEmpty(basePath))
+                return null;
+
+            // Get the comma-separated list of values
+            if (GetDiscType($"{basePath}_disc.txt", out var discType) && discType != null)
+            {
+                // CD-ROM
+                if (discType.Contains("CD-DA or CD-ROM Disc"))
+                    return MediaType.CDROM;
+                else if (discType.Contains("CD-I Disc"))
+                    return MediaType.CDROM;
+                else if (discType.Contains("CD-ROM XA Disc"))
+                    return MediaType.CDROM;
+
+                // HD-DVD
+                if (discType.Contains("HD DVD-ROM"))
+                    return MediaType.HDDVD;
+                else if (discType.Contains("HD DVD-RAM"))
+                    return MediaType.HDDVD;
+                else if (discType.Contains("HD DVD-R"))
+                    return MediaType.HDDVD;
+
+                // DVD
+                if (discType.Contains("DVD-ROM"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD-RAM"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD-R"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD-RW"))
+                    return MediaType.DVD;
+                else if (discType.Contains("Reserved1"))
+                    return MediaType.DVD;
+                else if (discType.Contains("Reserved2"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD+RW"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD+R"))
+                    return MediaType.DVD;
+                else if (discType.Contains("Reserved3"))
+                    return MediaType.DVD;
+                else if (discType.Contains("Reserved4"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD+RW DL"))
+                    return MediaType.DVD;
+                else if (discType.Contains("DVD+R DL"))
+                    return MediaType.DVD;
+                else if (discType.Contains("Reserved5"))
+                    return MediaType.NintendoWiiOpticalDisc;
+
+                // Blu-ray
+                if (discType.Contains("BDO"))
+                    return MediaType.BluRay;
+                else if (discType.Contains("BDU"))
+                    return MediaType.BluRay;
+                else if (discType.Contains("BDW"))
+                    return MediaType.BluRay;
+                else if (discType.Contains("BDR"))
+                    return MediaType.BluRay;
+                else if (discType.Contains("XG4"))
+                    return MediaType.BluRay;
+
+                // Assume CD-ROM for everything else
+                return MediaType.CDROM;
+            }
+
+            // The type could not be determined
+            return null;
         }
 
         /// <inheritdoc/>

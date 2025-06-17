@@ -1,8 +1,5 @@
 << GetDiscType >>
 DiscType: CD-ROM
-DiscTypeIdentifier: GD-ROM
-DiscTypeSpecific: DVD-ROM
-BookType: BD-ROM
 
 << GetDVDProtection >>
 ========== CopyrightInformation ==========
