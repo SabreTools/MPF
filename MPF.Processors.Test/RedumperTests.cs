@@ -11,27 +11,71 @@ namespace MPF.Processors.Test
         #region DetermineMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_Throws()
+        public void DetermineMediaType_Null_Null()
         {
             string? basePath = null;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_Throws()
+        public void DetermineMediaType_Invalid_Null()
         {
             string? basePath = "INVALID";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Valid_Throws()
+        public void DetermineMediaType_BD_Filled()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            MediaType? expected = MediaType.BluRay;
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BluRay", "test");
             var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            Assert.Throws<NotImplementedException>(() => processor.DetermineMediaType(basePath));
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_BDR_Filled()
+        {
+            MediaType? expected = MediaType.BluRay;
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BDR", "test");
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_CD_Filled()
+        {
+            MediaType? expected = MediaType.CDROM;
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test");
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_DVD_Filled()
+        {
+            MediaType? expected = MediaType.DVD;
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test");
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void DetermineMediaType_HDDVD_Filled()
+        {
+            MediaType? expected = MediaType.HDDVD;
+            string basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "HDDVD", "test");
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var actual = processor.DetermineMediaType(basePath);
+            Assert.Equal(expected, actual);
         }
 
         #endregion
@@ -294,32 +338,154 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetDiscProfile
+
+        [Fact]
+        public void GetDiscProfile_Empty_Null()
+        {
+            string log = string.Empty;
+            bool actual = Redumper.GetDiscProfile(log, out string? discProfile);
+            Assert.False(actual);
+            Assert.Null(discProfile);
+        }
+
+        [Fact]
+        public void GetDiscProfile_Invalid_Null()
+        {
+            string log = "INVALID";
+            bool actual = Redumper.GetDiscProfile(log, out string? discProfile);
+            Assert.False(actual);
+            Assert.Null(discProfile);
+        }
+
+        [Fact]
+        public void GetDiscProfile_Valid_Filled()
+        {
+            string? expected = "CD-ROM";
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            bool actual = Redumper.GetDiscProfile(log, out string? discProfile);
+            Assert.True(actual);
+            Assert.Equal(expected, discProfile);
+        }
+
+        #endregion
+
         #region GetDiscType
 
         [Fact]
         public void GetDiscType_Empty_Null()
         {
             string log = string.Empty;
-            bool actual = Redumper.GetDiscType(log, out string? discTypeOrBookType);
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
             Assert.False(actual);
+            Assert.Null(discType);
         }
 
         [Fact]
         public void GetDiscType_Invalid_Null()
         {
             string log = "INVALID";
-            bool actual = Redumper.GetDiscType(log, out string? discTypeOrBookType);
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
             Assert.False(actual);
+            Assert.Null(discType);
         }
 
         [Fact]
-        public void GetDiscType_Valid_Filled()
+        public void GetDiscType_BD_Filled()
         {
-            string? expected = "CD-ROM";
-            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
-            bool actual = Redumper.GetDiscType(log, out string? discTypeOrBookType);
+            MediaType? expected = MediaType.BluRay;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BluRay", "test.log");
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
             Assert.True(actual);
-            Assert.Equal(expected, discTypeOrBookType);
+            Assert.Equal(expected, discType);
+        }
+
+        [Fact]
+        public void GetDiscType_BDR_Filled()
+        {
+            MediaType? expected = MediaType.BluRay;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BDR", "test.log");
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            Assert.True(actual);
+            Assert.Equal(expected, discType);
+        }
+
+        [Fact]
+        public void GetDiscType_CD_Filled()
+        {
+            MediaType? expected = MediaType.CDROM;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            Assert.True(actual);
+            Assert.Equal(expected, discType);
+        }
+
+        [Fact]
+        public void GetDiscType_DVD_Filled()
+        {
+            MediaType? expected = MediaType.DVD;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            Assert.True(actual);
+            Assert.Equal(expected, discType);
+        }
+
+        [Fact]
+        public void GetDiscType_HDDVD_Filled()
+        {
+            MediaType? expected = MediaType.HDDVD;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "HDDVD", "test.log");
+            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            Assert.True(actual);
+            Assert.Equal(expected, discType);
+        }
+
+        #endregion
+
+        #region GetDiscTypeFromProfile
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", null)]
+        [InlineData("INVALID", null)]
+        [InlineData("reserved", null)]
+        [InlineData("non removable disk", null)]
+        [InlineData("removable disk", null)]
+        [InlineData("MO erasable", null)]
+        [InlineData("MO write once", null)]
+        [InlineData("AS MO", null)]
+        [InlineData("CD-ROM", MediaType.CDROM)]
+        [InlineData("CD-R", MediaType.CDROM)]
+        [InlineData("CD-RW", MediaType.CDROM)]
+        [InlineData("DVD-ROM", MediaType.DVD)]
+        [InlineData("DVD-R", MediaType.DVD)]
+        [InlineData("DVD-RAM", MediaType.DVD)]
+        [InlineData("DVD-RW RO", MediaType.DVD)]
+        [InlineData("DVD-RW", MediaType.DVD)]
+        [InlineData("DVD-R DL", MediaType.DVD)]
+        [InlineData("DVD-R DL LJR", MediaType.DVD)]
+        [InlineData("DVD+RW", MediaType.DVD)]
+        [InlineData("DVD+R", MediaType.DVD)]
+        [InlineData("DDCD-ROM", MediaType.CDROM)]
+        [InlineData("DDCD-R", MediaType.CDROM)]
+        [InlineData("DDCD-RW", MediaType.CDROM)]
+        [InlineData("DVD+RW DL", MediaType.DVD)]
+        [InlineData("DVD+R DL", MediaType.DVD)]
+        [InlineData("BD-ROM", MediaType.BluRay)]
+        [InlineData("BD-R", MediaType.BluRay)]
+        [InlineData("BD-R RRM", MediaType.BluRay)]
+        [InlineData("BD-RW", MediaType.BluRay)]
+        [InlineData("HD DVD-ROM", MediaType.HDDVD)]
+        [InlineData("HD DVD-R", MediaType.HDDVD)]
+        [InlineData("HD DVD-RAM", MediaType.HDDVD)]
+        [InlineData("HD DVD-RW", MediaType.HDDVD)]
+        [InlineData("HD DVD-R DL", MediaType.HDDVD)]
+        [InlineData("HD DVD-RW DL", MediaType.HDDVD)]
+        [InlineData("NON STANDARD", null)]
+        public void GetDiscTypeFromProfileTest(string? profile, MediaType? expected)
+        {
+            var actual = Redumper.GetDiscTypeFromProfile(profile);
+            Assert.Equal(expected, actual);
         }
 
         #endregion

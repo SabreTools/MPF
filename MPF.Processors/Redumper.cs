@@ -25,7 +25,20 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override MediaType? DetermineMediaType(string? basePath)
         {
-            throw new NotImplementedException();
+            // If the base path is invalid
+            if (string.IsNullOrEmpty(basePath))
+                return null;
+
+            // Use the log first, if it exists
+            if (GetDiscType($"{basePath}.log", out MediaType? mediaType))
+                return mediaType;
+
+            // Use the profile for older Redumper versions
+            if (GetDiscProfile($"{basePath}.log", out string? discProfile))
+                return GetDiscTypeFromProfile(discProfile);
+
+            // The type could not be determined
+            return null;
         }
 
         /// <inheritdoc/>
@@ -49,7 +62,7 @@ namespace MPF.Processors
             }
 
             // Fill in the disc type data
-            if (GetDiscType($"{basePath}.log", out var discTypeOrBookType))
+            if (GetDiscProfile($"{basePath}.log", out var discTypeOrBookType))
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
             // Get the PVD, if it exists
@@ -873,14 +886,14 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Get reported disc type information, if possible
+        /// Get reported disc profile information, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
-        /// <returns>True if disc type info was set, false otherwise</returns>
-        internal static bool GetDiscType(string log, out string? discTypeOrBookType)
+        /// <returns>True if disc profile information was set, false otherwise</returns>
+        internal static bool GetDiscProfile(string log, out string? discProfile)
         {
             // Set the default values
-            discTypeOrBookType = null;
+            discProfile = null;
 
             // If the file doesn't exist, we can't get the info
             if (string.IsNullOrEmpty(log))
@@ -901,7 +914,7 @@ namespace MPF.Processors
                     if (line.StartsWith("current profile:"))
                     {
                         // current profile: <discType>
-                        discTypeOrBookType = line.Substring("current profile: ".Length);
+                        discProfile = line.Substring("current profile: ".Length);
                     }
 
                     line = sr.ReadLine();
@@ -912,9 +925,119 @@ namespace MPF.Processors
             catch
             {
                 // We don't care what the exception is right now
-                discTypeOrBookType = null;
+                discProfile = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get reported disc type, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if disc type was set, false otherwise</returns>
+        internal static bool GetDiscType(string log, out MediaType? discType)
+        {
+            // Set the default values
+            discType = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.TrimEnd();
+                while (line != null)
+                {
+                    // If the line isn't the non-embedded disc type, skip
+                    if (!line.StartsWith("disc type:"))
+                    {
+                        line = sr.ReadLine()?.TrimEnd();
+                        continue;
+                    }
+
+                    // disc type: <discType>
+                    string discTypeStr = line.Substring("disc type: ".Length);
+
+                    // Set the media type based on the string
+                    discType = discTypeStr switch
+                    {
+                        "CD" => MediaType.CDROM,
+                        "DVD" => MediaType.DVD,
+                        "BLURAY" => MediaType.BluRay,
+                        "BLURAY-R" => MediaType.BluRay,
+                        "HD-DVD" => MediaType.HDDVD,
+                        _ => null,
+                    };
+                    return discType != null;
+                }
+
+                return false;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                discType = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Convert the profile to a media type, if possible
+        /// </summary>
+        /// <param name="profile">Profile string to check</param>
+        /// <returns>Media type on success, null otherwise</returns>
+        internal static MediaType? GetDiscTypeFromProfile(string? profile)
+        {
+            return profile switch
+            {
+                "reserved" => null,
+                "non removable disk" => null,
+                "removable disk" => null,
+                "MO erasable" => null,
+                "MO write once" => null,
+                "AS MO" => null,
+
+                "CD-ROM" => MediaType.CDROM,
+                "CD-R" => MediaType.CDROM,
+                "CD-RW" => MediaType.CDROM,
+
+                "DVD-ROM" => MediaType.DVD,
+                "DVD-R" => MediaType.DVD,
+                "DVD-RAM" => MediaType.DVD,
+                "DVD-RW RO" => MediaType.DVD,
+                "DVD-RW" => MediaType.DVD,
+                "DVD-R DL" => MediaType.DVD,
+                "DVD-R DL LJR" => MediaType.DVD,
+                "DVD+RW" => MediaType.DVD,
+                "DVD+R" => MediaType.DVD,
+
+                "DDCD-ROM" => MediaType.CDROM,
+                "DDCD-R" => MediaType.CDROM,
+                "DDCD-RW" => MediaType.CDROM,
+
+                "DVD+RW DL" => MediaType.DVD,
+                "DVD+R DL" => MediaType.DVD,
+
+                "BD-ROM" => MediaType.BluRay,
+                "BD-R" => MediaType.BluRay,
+                "BD-R RRM" => MediaType.BluRay,
+                "BD-RW" => MediaType.BluRay,
+
+                "HD DVD-ROM" => MediaType.HDDVD,
+                "HD DVD-R" => MediaType.HDDVD,
+                "HD DVD-RAM" => MediaType.HDDVD,
+                "HD DVD-RW" => MediaType.HDDVD,
+                "HD DVD-R DL" => MediaType.HDDVD,
+                "HD DVD-RW DL" => MediaType.HDDVD,
+
+                "NON STANDARD" => null,
+
+                _ => null,
+            };
         }
 
         /// <summary>

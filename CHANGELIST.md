@@ -5,6 +5,7 @@
 - Ignore volume labels with path separators
 - Reduce media-specific checks where unnecessary
 - Add DetermineMediaType scaffolding and tests
+- Fill out DetermineMediaType for Redumper
 
 ### 3.3.2 (2025-06-12)
 
