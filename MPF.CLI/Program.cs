@@ -137,23 +137,23 @@ namespace MPF.CLI
                 opts.FilePath,
                 drive,
                 knownSystem,
-                mediaType,
-                options.InternalProgram,
-                parameters: null);
+                options.InternalProgram);
+            env.SetExecutionContext(mediaType, null);
+            env.SetProcessor();
 
             // Process the parameters
-            string? paramStr = opts.CustomParams ?? env.GetFullParameters(speed);
+            string? paramStr = opts.CustomParams ?? env.GetFullParameters(mediaType, speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 DisplayHelp("No valid environment could be created, exiting...");
                 return;
             }
 
-            env.SetExecutionContext(paramStr);
+            env.SetExecutionContext(mediaType, paramStr);
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run().GetAwaiter().GetResult();
+            var dumpResult = env.Run(mediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return;
@@ -173,13 +173,13 @@ namespace MPF.CLI
                     opts.FilePath,
                     drive,
                     knownSystem,
-                    mediaType,
-                    internalProgram: null,
-                    parameters: null);
+                    internalProgram: null);
+                env.SetExecutionContext(mediaType, null);
+                env.SetProcessor();
             }
 
             // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput()
+            var verifyResult = env.VerifyAndSaveDumpOutput(mediaType: mediaType)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
         }

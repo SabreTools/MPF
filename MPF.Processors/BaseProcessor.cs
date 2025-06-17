@@ -25,22 +25,15 @@ namespace MPF.Processors
         /// </summary>
         public RedumpSystem? System { get; private set; }
 
-        /// <summary>
-        /// Currently represented media type
-        /// </summary>
-        public MediaType? Type { get; private set; }
-
         #endregion
 
         /// <summary>
         /// Generate processor for a system and media type combination
         /// </summary>
         /// <param name="system">RedumpSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
-        public BaseProcessor(RedumpSystem? system, MediaType? type)
+        public BaseProcessor(RedumpSystem? system)
         {
             System = system;
-            Type = type;
         }
 
         #region Abstract Methods
@@ -56,18 +49,20 @@ namespace MPF.Processors
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
+        /// <param name="mediaType">Media type for specific information gathering</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, bool redumpCompat);
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, MediaType? mediaType, string basePath, bool redumpCompat);
 
         // <summary>
         /// Generate a list of all output files generated
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all output files, empty otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        internal abstract List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename);
+        internal abstract List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename);
 
         #endregion
 
@@ -76,13 +71,18 @@ namespace MPF.Processors
         /// <summary>
         /// Compress log files to save space
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="filenameSuffix">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        public bool CompressLogFiles(string? outputDirectory, string outputFilename, string? filenameSuffix, out string status)
+        public bool CompressLogFiles(MediaType? mediaType,
+            string? outputDirectory,
+            string outputFilename,
+            string? filenameSuffix,
+            out string status)
         {
 #if NET20 || NET35 || NET40
             status = "Log compression is not available for this framework version";
@@ -97,7 +97,7 @@ namespace MPF.Processors
             string archiveName = $"{basePath}_logs.zip";
 
             // Get the lists of zippable files
-            var zippableFiles = GetZippableFilePaths(outputDirectory, outputFilename);
+            var zippableFiles = GetZippableFilePaths(mediaType, outputDirectory, outputFilename);
             var generatedFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
 
             // Don't create an archive if there are no paths
@@ -146,15 +146,19 @@ namespace MPF.Processors
         /// <summary>
         /// Compress log files to save space
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        public bool DeleteUnnecessaryFiles(string? outputDirectory, string outputFilename, out string status)
+        public bool DeleteUnnecessaryFiles(MediaType? mediaType,
+            string? outputDirectory,
+            string outputFilename,
+            out string status)
         {
             // Get the list of deleteable files from the parameters object
-            var files = GetDeleteableFilePaths(outputDirectory, outputFilename);
+            var files = GetDeleteableFilePaths(mediaType, outputDirectory, outputFilename);
 
             if (files.Count == 0)
             {
@@ -179,11 +183,12 @@ namespace MPF.Processors
         /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>A list representing missing files, empty if none</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        public List<string> FoundAllFiles(string? outputDirectory, string outputFilename)
+        public List<string> FoundAllFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Assemble a base path
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);
@@ -191,7 +196,7 @@ namespace MPF.Processors
                 basePath = Path.Combine(outputDirectory, basePath);
 
             // Get the list of output files
-            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return ["Media and system combination not supported"];
 
@@ -259,11 +264,12 @@ namespace MPF.Processors
         /// <summary>
         /// Ensures that no potential output files have been created
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>True if any dumping files exist, False if none</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        public bool FoundAnyFiles(string? outputDirectory, string outputFilename)
+        public bool FoundAnyFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Assemble a base path
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);
@@ -271,7 +277,7 @@ namespace MPF.Processors
                 basePath = Path.Combine(outputDirectory, basePath);
 
             // Get the list of output files
-            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return false;
 
@@ -293,14 +299,15 @@ namespace MPF.Processors
         /// <summary>
         /// Generate artifacts and return them as a dictionary
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>Dictiionary of artifact keys to Base64-encoded values, if possible</param>
         /// <remarks>Assumes filename has an extension</remarks>
-        public Dictionary<string, string> GenerateArtifacts(string? outputDirectory, string outputFilename)
+        public Dictionary<string, string> GenerateArtifacts(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Get the list of output files
-            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -416,14 +423,15 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all deleteable file paths
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all deleteable file paths, empty otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        internal List<string> GetDeleteableFilePaths(string? outputDirectory, string outputFilename)
+        internal List<string> GetDeleteableFilePaths(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Get the list of output files
-            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 
@@ -499,14 +507,15 @@ namespace MPF.Processors
         /// <summary>
         /// Generate a list of all zippable file paths
         /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>List of all zippable file paths, empty otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
-        internal List<string> GetZippableFilePaths(string? outputDirectory, string outputFilename)
+        internal List<string> GetZippableFilePaths(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Get the list of output files
-            var outputFiles = GetOutputFiles(outputDirectory, outputFilename);
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return [];
 

@@ -14,7 +14,7 @@ namespace MPF.Processors
     public sealed class UmdImageCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public UmdImageCreator(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public UmdImageCreator(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -23,7 +23,7 @@ namespace MPF.Processors
             => MediaType.UMD;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -77,43 +77,37 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
-            {
-                case MediaType.UMD:
-                    return [
-                        new($"{outputFilename}.iso", OutputFileFlags.Required),
+            return [
+                new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                        new($"{outputFilename}_disc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "disc"),
-                        new($"{outputFilename}_drive.txt", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "drive"),
-                        new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_error"),
-                        new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "main_info"),
-                        new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pfi"),
-                        new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "vol_desc"),
-                    ];
-            }
-
-            return [];
+                new($"{outputFilename}_disc.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "disc"),
+                new($"{outputFilename}_drive.txt", OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "drive"),
+                new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "main_error"),
+                new($"{outputFilename}_mainInfo.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "main_info"),
+                new($"{outputFilename}_PFI.bin", OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "pfi"),
+                new($"{outputFilename}_volDesc.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "vol_desc"),
+            ];
         }
 
         #endregion

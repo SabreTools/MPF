@@ -502,12 +502,12 @@ namespace MPF.Frontend.ViewModels
                 Path.GetFullPath(InputPath.Trim('"')),
                 null,
                 CurrentSystem,
-                CurrentMediaType,
-                CurrentProgram,
-                parameters: null);
+                CurrentProgram);
+            env.SetProcessor();
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(
+                mediaType: CurrentMediaType,
                 resultProgress: resultProgress,
                 protectionProgress: protectionProgress,
                 processUserInfo: processUserInfo);

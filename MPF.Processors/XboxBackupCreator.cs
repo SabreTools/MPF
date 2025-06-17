@@ -14,7 +14,7 @@ namespace MPF.Processors
     public sealed class XboxBackupCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public XboxBackupCreator(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public XboxBackupCreator(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -23,7 +23,7 @@ namespace MPF.Processors
             => MediaType.DVD;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -136,43 +136,37 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
-            {
-                case MediaType.DVD:
-                    return [
-                        new($"{outputFilename}.dvd", OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "dvd"),
-                        new($"{outputFilename}.iso", OutputFileFlags.Required),
+            return [
+                new($"{outputFilename}.dvd", OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "dvd"),
+                new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                        new("DMI.bin", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "dmi"),
-                        new RegexOutputFile("[lL]og\\.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "log"),
-                        new("PFI.bin", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "pfi"),
-                        new("RawSS.bin", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "raw_ss"),
-                        new("SS.bin", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "ss"),
-                    ];
-            }
-
-            return [];
+                new("DMI.bin", OutputFileFlags.Required
+                    | OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "dmi"),
+                new RegexOutputFile("[lL]og\\.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "log"),
+                new("PFI.bin", OutputFileFlags.Required
+                    | OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "pfi"),
+                new("RawSS.bin", OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "raw_ss"),
+                new("SS.bin", OutputFileFlags.Required
+                    | OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "ss"),
+            ];
         }
 
         #endregion

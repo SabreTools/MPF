@@ -14,7 +14,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_Null_DVD()
         {
             string? basePath = null;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Equal(MediaType.UMD, actual);
         }
@@ -23,7 +23,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_Invalid_DVD()
         {
             string? basePath = "INVALID";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Equal(MediaType.UMD, actual);
         }
@@ -32,7 +32,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_Valid_DVD()
         {
             string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test");
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Equal(MediaType.UMD, actual);
         }
@@ -46,9 +46,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, null);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -57,21 +57,21 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
         [Fact]
-        public void GetOutputFiles_Other_Empty()
+        public void GetOutputFiles_Other_Populated()
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.ApertureCard);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
-            Assert.Empty(actual);
+            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            Assert.Equal(7, actual.Count);
         }
 
         #endregion
@@ -83,8 +83,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.FoundAllFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Equal(5, actual.Count);
         }
 
@@ -93,8 +93,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.FoundAllFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -103,8 +103,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD-zip");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.FoundAllFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -117,8 +117,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.FoundAnyFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -127,8 +127,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.FoundAnyFiles(MediaType.UMD, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -141,8 +141,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GenerateArtifacts(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -151,8 +151,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GenerateArtifacts(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Equal(6, actual.Count);
         }
 
@@ -165,8 +165,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetDeleteableFilePaths(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -175,8 +175,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetDeleteableFilePaths(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -189,8 +189,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetZippableFilePaths(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -199,8 +199,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
             string outputFilename = "test.iso";
-            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable, MediaType.UMD);
-            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetZippableFilePaths(MediaType.UMD, outputDirectory, outputFilename);
             Assert.Equal(6, actual.Count);
         }
 

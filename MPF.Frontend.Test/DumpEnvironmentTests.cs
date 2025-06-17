@@ -22,9 +22,15 @@ namespace MPF.Frontend.Test
                 ? Drive.Create(InternalDriveType.Floppy, letter.ToString())
                 : Drive.Create(InternalDriveType.Optical, letter.ToString());
 
-            var env = new DumpEnvironment(options, string.Empty, drive, RedumpSystem.IBMPCcompatible, mediaType, null, parameters);
+            var env = new DumpEnvironment(options,
+                string.Empty,
+                drive,
+                RedumpSystem.IBMPCcompatible,
+                null);
+            env.SetExecutionContext(mediaType, parameters);
+            env.SetProcessor();
 
-            bool actual = env.ParametersValid();
+            bool actual = env.ParametersValid(mediaType);
             Assert.Equal(expected, actual);
         }
     }

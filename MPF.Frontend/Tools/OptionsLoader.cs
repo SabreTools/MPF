@@ -91,6 +91,32 @@ namespace MPF.Frontend.Tools
         /// Process common arguments for all functionality
         /// </summary>
         /// <returns>True if all arguments pass, false otherwise</returns>
+        public static bool ProcessCommonArguments(string[] args, out RedumpSystem? system, out string? message)
+        {
+            // All other use requires at least 3 arguments
+            if (args.Length < 2)
+            {
+                system = null;
+                message = "Invalid number of arguments";
+                return false;
+            }
+
+            // Check the RedumpSystem
+            system = Extensions.ToRedumpSystem(args[0].Trim('"'));
+            if (system == null)
+            {
+                message = $"{args[0]} is not a recognized system";
+                return false;
+            }
+
+            message = null;
+            return true;
+        }
+
+        /// <summary>
+        /// Process common arguments for all functionality
+        /// </summary>
+        /// <returns>True if all arguments pass, false otherwise</returns>
         public static bool ProcessCommonArguments(string[] args, out MediaType mediaType, out RedumpSystem? system, out string? message)
         {
             // All other use requires at least 3 arguments

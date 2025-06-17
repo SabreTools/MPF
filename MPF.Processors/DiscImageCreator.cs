@@ -63,7 +63,7 @@ namespace MPF.Processors
     public sealed class DiscImageCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public DiscImageCreator(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public DiscImageCreator(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -142,7 +142,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             var outputDirectory = Path.GetDirectoryName(basePath);
 
@@ -190,7 +190,7 @@ namespace MPF.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on MediaType
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
@@ -227,12 +227,12 @@ namespace MPF.Processors
                     }
 
                     // Deal with the layerbreaks
-                    if (Type == MediaType.DVD)
+                    if (mediaType == MediaType.DVD)
                     {
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
                         info.SizeAndChecksums!.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? long.Parse(layerbreak) : default;
                     }
-                    else if (Type == MediaType.BluRay)
+                    else if (mediaType == MediaType.BluRay)
                     {
                         var di = ProcessingTool.GetDiscInformation($"{basePath}_PIC.bin");
                         info.SizeAndChecksums!.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
@@ -250,7 +250,7 @@ namespace MPF.Processors
                     }
 
                     // Bluray-specific options
-                    if (Type == MediaType.BluRay)
+                    if (mediaType == MediaType.BluRay)
                     {
                         int trimLength = -1;
                         switch (System)
@@ -390,7 +390,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -429,7 +429,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -452,7 +452,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -475,7 +475,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -498,7 +498,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -565,12 +565,12 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                     return [

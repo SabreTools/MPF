@@ -22,7 +22,7 @@ namespace MPF.Processors
     public sealed class Aaru : BaseProcessor
     {
         /// <inheritdoc/>
-        public Aaru(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public Aaru(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -45,7 +45,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -99,7 +99,7 @@ namespace MPF.Processors
             info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
 
             // Extract info based generically on MediaType
-            switch (Type)
+            switch (mediaType)
             {
                 // TODO: Can this do GD-ROM?
                 case MediaType.CDROM:
@@ -122,9 +122,9 @@ namespace MPF.Processors
                     // TODO: Sync layerbreak finding with other processors
                     // Deal with the layerbreak
                     string? layerbreak = null;
-                    if (Type == MediaType.DVD)
+                    if (mediaType == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
-                    else if (Type == MediaType.BluRay)
+                    else if (mediaType == MediaType.BluRay)
                         layerbreak = info.SizeAndChecksums!.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
@@ -198,12 +198,12 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                     return [

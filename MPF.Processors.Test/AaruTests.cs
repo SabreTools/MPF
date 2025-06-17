@@ -18,7 +18,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_Null_Null()
         {
             string? basePath = null;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Null(actual);
         }
@@ -27,7 +27,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_Invalid_Null()
         {
             string? basePath = "INVALID";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Null(actual);
         }
@@ -36,7 +36,7 @@ namespace MPF.Processors.Test
         public void DetermineMediaType_CD_Valid_CD()
         {
             string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM", "test");
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
             var actual = processor.DetermineMediaType(basePath);
             Assert.Equal(MediaType.CDROM, actual);
         }
@@ -50,9 +50,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, null);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -61,9 +61,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(8, actual.Count);
         }
 
@@ -72,9 +72,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.DVD);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -83,9 +83,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.HDDVD);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -94,9 +94,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.BluRay);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -105,9 +105,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.ApertureCard);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -120,8 +120,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -130,8 +130,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.FoundAllFiles(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -144,8 +144,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -154,8 +154,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -164,8 +164,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM-zip");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.FoundAnyFiles(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -178,8 +178,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -188,8 +188,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GenerateArtifacts(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -202,8 +202,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -212,8 +212,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetDeleteableFilePaths(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -226,8 +226,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -236,8 +236,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible, MediaType.CDROM);
-            var actual = processor.GetZippableFilePaths(outputDirectory, outputFilename);
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 

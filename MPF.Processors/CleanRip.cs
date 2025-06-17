@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SabreTools.Hashing;
@@ -15,7 +14,7 @@ namespace MPF.Processors
     public sealed class CleanRip : BaseProcessor
     {
         /// <inheritdoc/>
-        public CleanRip(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public CleanRip(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -31,7 +30,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -73,31 +72,23 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
-            {
-                case MediaType.DVD: // Only added here to help users; not strictly correct
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return [
-                        new($"{outputFilename}.bca", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "bca"),
-                        new($"{outputFilename}.iso", OutputFileFlags.Required),
+            return [
+                new($"{outputFilename}.bca", OutputFileFlags.Required
+                    | OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "bca"),
+                new($"{outputFilename}.iso", OutputFileFlags.Required),
 
-                        new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "dumpinfo"),
-                    ];
-            }
-
-            return [];
+                new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "dumpinfo"),
+            ];
         }
 
         #endregion

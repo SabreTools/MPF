@@ -18,7 +18,7 @@ namespace MPF.Processors
     public sealed class Redumper : BaseProcessor
     {
         /// <inheritdoc/>
-        public Redumper(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public Redumper(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -42,7 +42,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -86,7 +86,7 @@ namespace MPF.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on MediaType
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
@@ -141,7 +141,7 @@ namespace MPF.Processors
                     info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());
 
                     // Bluray-specific options
-                    if (Type == MediaType.BluRay || Type == MediaType.NintendoWiiUOpticalDisc)
+                    if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
                         switch (System)
@@ -287,7 +287,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -309,7 +309,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -324,7 +324,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -339,7 +339,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -354,7 +354,7 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    if (Type == MediaType.CDROM)
+                    if (mediaType == MediaType.CDROM)
                     {
                         info.Extras!.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -437,7 +437,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -449,7 +449,7 @@ namespace MPF.Processors
             else
                 basePath = Path.Combine(outputDirectory, outputFilename);
 
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:

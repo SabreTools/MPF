@@ -54,7 +54,6 @@ namespace MPF.Check
 
             // Setup common outputs
             CommandOptions opts;
-            MediaType mediaType;
             RedumpSystem? knownSystem;
             int startIndex;
 
@@ -62,14 +61,14 @@ namespace MPF.Check
             if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
             {
                 startIndex = 1;
-                opts = InteractiveMode(options, out mediaType, out knownSystem);
+                opts = InteractiveMode(options, out knownSystem);
             }
 
             // Use normal commandline parameters
             else
             {
                 // Try processing the common arguments
-                bool success = OptionsLoader.ProcessCommonArguments(args, out mediaType, out knownSystem, out var error);
+                bool success = OptionsLoader.ProcessCommonArguments(args, out knownSystem, out var error);
                 if (!success)
                 {
                     DisplayHelp(error);
@@ -121,7 +120,12 @@ namespace MPF.Check
                 if (!string.IsNullOrEmpty(opts.DevicePath))
                     drive = Drive.Create(null, opts.DevicePath!);
 
-                var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, internalProgram: null, parameters: null);
+                var env = new DumpEnvironment(options,
+                    filepath,
+                    drive,
+                    knownSystem,
+                    internalProgram: null);
+                env.SetProcessor();
 
                 // Finally, attempt to do the output dance
                 var result = env.VerifyAndSaveDumpOutput(seedInfo: opts.Seed)
@@ -140,7 +144,7 @@ namespace MPF.Check
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.Check <mediatype> <system> [options] </path/to/output.cue/iso> ...");
+            Console.WriteLine("MPF.Check <system> [options] </path/to/output.cue/iso> ...");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
@@ -178,11 +182,10 @@ namespace MPF.Check
         /// <summary>
         /// Enable interactive mode for entering information
         /// </summary>
-        private static CommandOptions InteractiveMode(Options options, out MediaType mediaType, out RedumpSystem? system)
+        private static CommandOptions InteractiveMode(Options options, out RedumpSystem? system)
         {
             // Create return values
             var opts = new CommandOptions();
-            mediaType = MediaType.NONE;
             system = null;
 
             // These values require multiple parts to be active
@@ -199,25 +202,24 @@ namespace MPF.Check
             Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
-            Console.WriteLine($"1) Set media type (Currently '{mediaType}')");
-            Console.WriteLine($"2) Set system (Currently '{system}')");
-            Console.WriteLine($"3) Set dumping program (Currently '{options.InternalProgram}')");
-            Console.WriteLine($"4) Set seed path (Currently '{opts.Seed}')");
-            Console.WriteLine($"5) Add placeholders (Currently '{options.AddPlaceholders}')");
-            Console.WriteLine($"6) Create IRD (Currently '{options.CreateIRDAfterDumping}')");
-            Console.WriteLine($"7) Attempt Redump matches (Currently '{options.RetrieveMatchInformation}')");
-            Console.WriteLine($"8) Redump credentials (Currently '{options.RedumpUsername}')");
-            Console.WriteLine($"9) Pull all information (Currently '{options.PullAllInformation}')");
-            Console.WriteLine($"A) Set device path (Currently '{opts.DevicePath}')");
-            Console.WriteLine($"B) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"C) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"D) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"E) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"F) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
-            Console.WriteLine($"G) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
-            Console.WriteLine($"H) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
-            Console.WriteLine($"I) Compress logs (Currently '{options.CompressLogFiles}')");
-            Console.WriteLine($"J) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"1) Set system (Currently '{system}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{options.InternalProgram}')");
+            Console.WriteLine($"3) Set seed path (Currently '{opts.Seed}')");
+            Console.WriteLine($"4) Add placeholders (Currently '{options.AddPlaceholders}')");
+            Console.WriteLine($"5) Create IRD (Currently '{options.CreateIRDAfterDumping}')");
+            Console.WriteLine($"6) Attempt Redump matches (Currently '{options.RetrieveMatchInformation}')");
+            Console.WriteLine($"7) Redump credentials (Currently '{options.RedumpUsername}')");
+            Console.WriteLine($"8) Pull all information (Currently '{options.PullAllInformation}')");
+            Console.WriteLine($"9) Set device path (Currently '{opts.DevicePath}')");
+            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"E) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
+            Console.WriteLine($"F) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
+            Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
+            Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
+            Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -227,64 +229,61 @@ namespace MPF.Check
             switch (result)
             {
                 case "1":
-                    goto mediaType;
-                case "2":
                     goto system;
-                case "3":
+                case "2":
                     goto dumpingProgram;
-                case "4":
+                case "3":
                     goto seedPath;
-                case "5":
+                case "4":
                     options.AddPlaceholders = !options.AddPlaceholders;
                     goto root;
-                case "6":
+                case "5":
                     options.CreateIRDAfterDumping = !options.CreateIRDAfterDumping;
                     goto root;
-                case "7":
+                case "6":
                     options.RetrieveMatchInformation = !options.RetrieveMatchInformation;
                     goto root;
-                case "8":
+                case "7":
                     goto redumpCredentials;
-                case "9":
+                case "8":
                     options.PullAllInformation = !options.PullAllInformation;
                     goto root;
+                case "9":
+                    goto devicePath;
                 case "a":
                 case "A":
-                    goto devicePath;
+                    scan = !scan;
+                    goto root;
                 case "b":
                 case "B":
-                    scan = !scan;
+                    enableArchives = !enableArchives;
                     goto root;
                 case "c":
                 case "C":
-                    enableArchives = !enableArchives;
+                    enableDebug = !enableDebug;
                     goto root;
                 case "d":
                 case "D":
-                    enableDebug = !enableDebug;
+                    hideDriveLetters = !hideDriveLetters;
                     goto root;
                 case "e":
                 case "E":
-                    hideDriveLetters = !hideDriveLetters;
+                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
                     goto root;
                 case "f":
                 case "F":
-                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
+                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
                     goto root;
                 case "g":
                 case "G":
-                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
+                    options.IncludeArtifacts = !options.IncludeArtifacts;
                     goto root;
                 case "h":
                 case "H":
-                    options.IncludeArtifacts = !options.IncludeArtifacts;
+                    options.CompressLogFiles = !options.CompressLogFiles;
                     goto root;
                 case "i":
                 case "I":
-                    options.CompressLogFiles = !options.CompressLogFiles;
-                    goto root;
-                case "j":
-                case "J":
                     options.DeleteUnnecessaryFiles = !options.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -307,14 +306,6 @@ namespace MPF.Check
                     Console.ReadLine();
                     goto root;
             }
-
-        mediaType:
-            Console.WriteLine();
-            Console.WriteLine("Input the media type and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            mediaType = OptionsLoader.ToMediaType(result);
-            goto root;
 
         system:
             Console.WriteLine();

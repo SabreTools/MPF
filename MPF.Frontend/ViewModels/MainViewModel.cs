@@ -1253,14 +1253,15 @@ namespace MPF.Frontend.ViewModels
         /// <returns>Filled DumpEnvironment Parent</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            return new DumpEnvironment(
+            var env = new DumpEnvironment(
                 Options,
                 EvaluateOutputPath(OutputPath),
                 CurrentDrive,
                 CurrentSystem,
-                CurrentMediaType,
-                CurrentProgram,
-                Parameters);
+                CurrentProgram);
+            env.SetExecutionContext(CurrentMediaType, Parameters);
+            env.SetProcessor();
+            return env;
         }
 
         /// <summary>
@@ -1369,7 +1370,7 @@ namespace MPF.Frontend.ViewModels
             _environment = DetermineEnvironment();
 
             // Get the status to write out
-            ResultEventArgs result = _environment.GetSupportStatus();
+            ResultEventArgs result = _environment.GetSupportStatus(CurrentMediaType);
             if (CurrentProgram == InternalProgram.NONE)
                 Status = "No dumping program found";
             else
@@ -1379,12 +1380,12 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            DriveSpeedComboBoxEnabled = _environment.DoesSupportDriveSpeed();
+            DriveSpeedComboBoxEnabled = _environment.DoesSupportDriveSpeed(CurrentMediaType);
 
             // If input params are enabled, generate the full parameters from the environment
             if (ParametersCheckBoxEnabled)
             {
-                var generated = _environment.GetFullParameters(DriveSpeed);
+                var generated = _environment.GetFullParameters(CurrentMediaType, DriveSpeed);
                 if (generated != null)
                     Parameters = generated;
             }
@@ -1882,7 +1883,7 @@ namespace MPF.Frontend.ViewModels
         public void ProcessCustomParameters()
         {
             // Set the execution context and processor
-            if (_environment?.SetExecutionContext(Parameters) != true)
+            if (_environment?.SetExecutionContext(CurrentMediaType, Parameters) != true)
                 return;
             if (_environment?.SetProcessor() != true)
                 return;
@@ -2216,7 +2217,7 @@ namespace MPF.Frontend.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-                ResultEventArgs result = await _environment.Run(resultProgress);
+                ResultEventArgs result = await _environment.Run(CurrentMediaType, resultProgress);
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
@@ -2236,9 +2237,10 @@ namespace MPF.Frontend.ViewModels
                 if (result)
                 {
                     result = await _environment.VerifyAndSaveDumpOutput(
-                        resultProgress,
-                        protectionProgress,
-                        _processUserInfo);
+                        mediaType: CurrentMediaType,
+                        resultProgress: resultProgress,
+                        protectionProgress: protectionProgress,
+                        processUserInfo: _processUserInfo);
                 }
                 else
                 {
@@ -2344,7 +2346,7 @@ namespace MPF.Frontend.ViewModels
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete or partial dump already exists
-            bool foundAllFiles = _environment.FoundAllFiles(outputDirectory, outputFilename);
+            bool foundAllFiles = _environment.FoundAllFiles(CurrentMediaType, outputDirectory, outputFilename);
             if (foundAllFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
@@ -2357,7 +2359,7 @@ namespace MPF.Frontend.ViewModels
             else
             {
                 // If a partial dump exists
-                bool foundAnyFiles = _environment.FoundAnyFiles(outputDirectory, outputFilename);
+                bool foundAnyFiles = _environment.FoundAnyFiles(CurrentMediaType, outputDirectory, outputFilename);
                 if (foundAnyFiles && _displayUserMessage != null)
                 {
                     bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
@@ -2370,7 +2372,7 @@ namespace MPF.Frontend.ViewModels
                 else
                 {
                     // If a complete dump exists from a different program
-                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(outputDirectory, outputFilename);
+                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(CurrentMediaType, outputDirectory, outputFilename);
                     if (completeProgramFound != null && _displayUserMessage != null)
                     {
                         bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
@@ -2383,7 +2385,7 @@ namespace MPF.Frontend.ViewModels
                     else
                     {
                         // If a partial dump exists from a different program
-                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(outputDirectory, outputFilename);
+                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(CurrentMediaType, outputDirectory, outputFilename);
                         if (partialProgramFound != null && _displayUserMessage != null)
                         {
                             bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);

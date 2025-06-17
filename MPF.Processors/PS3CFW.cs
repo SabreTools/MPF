@@ -12,7 +12,7 @@ namespace MPF.Processors
     public sealed class PS3CFW : BaseProcessor
     {
         /// <inheritdoc/>
-        public PS3CFW(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public PS3CFW(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -21,7 +21,7 @@ namespace MPF.Processors
             => MediaType.BluRay;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -134,29 +134,23 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            switch (Type)
-            {
-                case MediaType.BluRay:
-                    return [
-                        new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
-                        new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
-                        new RegexOutputFile($"getkey\\.log$", OutputFileFlags.Required
-                            | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
-                            "getkey_log"),
-                        new RegexOutputFile($"disc\\.pic$", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "disc_pic"),
-                    ];
-            }
-
-            return [];
+            return [
+                new([$"{outputFilename}.iso", $"{outputFilename}.ISO"], OutputFileFlags.Required),
+                new([$"{outputFilename}.cue", $"{outputFilename}.CUE"], OutputFileFlags.Zippable),
+                new RegexOutputFile($"getkey\\.log$", OutputFileFlags.Required
+                    | OutputFileFlags.Artifact
+                    | OutputFileFlags.Zippable,
+                    "getkey_log"),
+                new RegexOutputFile($"disc\\.pic$", OutputFileFlags.Required
+                    | OutputFileFlags.Binary
+                    | OutputFileFlags.Zippable,
+                    "disc_pic"),
+            ];
         }
 
         #endregion

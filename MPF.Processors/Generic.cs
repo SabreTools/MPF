@@ -14,7 +14,7 @@ namespace MPF.Processors
     public sealed class Generic : BaseProcessor
     {
         /// <inheritdoc/>
-        public Generic(RedumpSystem? system, MediaType? type) : base(system, type) { }
+        public Generic(RedumpSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
@@ -25,7 +25,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
@@ -40,7 +40,7 @@ namespace MPF.Processors
                 info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Extract info based generically on MediaType
-            switch (Type)
+            switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
@@ -68,7 +68,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             return [];
         }

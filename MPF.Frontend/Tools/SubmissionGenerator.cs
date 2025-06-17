@@ -60,7 +60,7 @@ namespace MPF.Frontend.Tools
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
-            List<string> missingFiles = processor.FoundAllFiles(outputDirectory, outputFilename);
+            List<string> missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
             if (missingFiles.Count > 0)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
@@ -77,9 +77,9 @@ namespace MPF.Frontend.Tools
             SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, basePath, options.EnableRedumpCompatibility);
+            processor?.GenerateSubmissionInfo(info, mediaType, basePath, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
-                info.Artifacts = processor?.GenerateArtifacts(outputDirectory, outputFilename);
+                info.Artifacts = processor?.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Add a placeholder for the logs link
             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
