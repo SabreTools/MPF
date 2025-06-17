@@ -15,29 +15,32 @@ namespace MPF.Processors.Test
         #region DetermineMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_Null()
+        public void DetermineMediaType_Empty_Null()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_Invalid_Null()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_CD_Valid_CD()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
+            string outputFilename = "test";
             var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.CDROM, actual);
         }
 

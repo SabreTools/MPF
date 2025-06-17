@@ -10,83 +10,92 @@ namespace MPF.Processors.Test
         #region DetermineMediaType
 
         [Fact]
-        public void DetermineMediaType_GC_Null_GC()
+        public void DetermineMediaType_GC_Empty_GC()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Wii_Null_Wii()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Other_Null_Null()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_GC_Invalid_GC()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Wii_Invalid_Wii()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Other_Invalid_Invalid()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_GC_Valid_GC()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
+            string outputFilename = "test";
             var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Wii_Valid_Wii()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
+            string outputFilename = "test";
             var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Other_Valid_Valid()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
+            string outputFilename = "test";
             var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 

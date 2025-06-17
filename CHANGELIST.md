@@ -12,6 +12,7 @@
 - Fix missed test updates
 - Rename disc info to media info
 - Fix start index in Check
+- Use the correct base path for Check
 
 ### 3.3.2 (2025-06-12)
 

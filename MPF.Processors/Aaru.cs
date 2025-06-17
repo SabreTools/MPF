@@ -27,11 +27,16 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? basePath)
+        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
         {
-            // If the base path is invalid
-            if (string.IsNullOrEmpty(basePath))
+            // If the filename is invalid
+            if (string.IsNullOrEmpty(outputFilename))
                 return null;
+
+            // Reassemble the base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar($"{basePath}.cicm.xml");

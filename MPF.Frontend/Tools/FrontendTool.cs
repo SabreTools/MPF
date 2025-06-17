@@ -522,7 +522,6 @@ namespace MPF.Frontend.Tools
         /// <param name="path">Path value to normalize</param>
         public static string NormalizeOutputPaths(string? path, bool getFullPath)
         {
-            // The easy way
             try
             {
                 // If we have an invalid path

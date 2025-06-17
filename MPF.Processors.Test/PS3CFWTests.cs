@@ -12,27 +12,30 @@ namespace MPF.Processors.Test
         [Fact]
         public void DetermineMediaType_Null_BluRay()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.BluRay, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Invalid_BluRay()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.BluRay, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Valid_BluRay()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
+            string outputFilename = "test";
             var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.BluRay, actual);
         }
 

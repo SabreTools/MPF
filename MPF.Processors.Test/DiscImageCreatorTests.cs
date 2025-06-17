@@ -15,59 +15,61 @@ namespace MPF.Processors.Test
         [Fact]
         public void DetermineMediaType_Null_Null()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_Invalid_Null()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
         public void DetermineMediaType_BD_Filled()
         {
-            MediaType? expected = MediaType.BluRay;
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "BluRay", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "BluRay");
+            string outputFilename = "test";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
-            Assert.Equal(expected, actual);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            Assert.Equal(MediaType.BluRay, actual);
         }
 
         [Fact]
         public void DetermineMediaType_CD_Filled()
         {
-            MediaType? expected = MediaType.CDROM;
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
+            string outputFilename = "test";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
-            Assert.Equal(expected, actual);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            Assert.Equal(MediaType.CDROM, actual);
         }
 
         [Fact]
         public void DetermineMediaType_DVD_Filled()
         {
-            MediaType? expected = MediaType.DVD;
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "DVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "DVD");
+            string outputFilename = "test";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
-            Assert.Equal(expected, actual);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            Assert.Equal(MediaType.DVD, actual);
         }
 
         [Fact]
         public void DetermineMediaType_HDDVD_Filled()
         {
-            MediaType? expected = MediaType.HDDVD;
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "HDDVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "HDDVD");
+            string outputFilename = "test";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(basePath);
-            Assert.Equal(expected, actual);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            Assert.Equal(MediaType.HDDVD, actual);
         }
 
         #endregion

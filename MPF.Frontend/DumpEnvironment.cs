@@ -481,12 +481,12 @@ namespace MPF.Frontend
 
             resultProgress.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
 
-            // Determine the media type from the processor, if not provided
-            mediaType ??= _processor.DetermineMediaType(OutputPath);
-
             // Get the output directory and filename separately
             var outputDirectory = Path.GetDirectoryName(OutputPath);
             var outputFilename = Path.GetFileName(OutputPath);
+
+            // Determine the media type from the processor, if not provided
+            mediaType ??= _processor.DetermineMediaType(outputDirectory, outputFilename);
 
             // Check to make sure that the output had all the correct files
             List<string> missingFiles = _processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);

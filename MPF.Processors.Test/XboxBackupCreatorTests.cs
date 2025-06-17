@@ -11,29 +11,32 @@ namespace MPF.Processors.Test
         #region DetermineMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_DVD()
+        public void DetermineMediaType_Empty_DVD()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.DVD, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Invalid_DVD()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.DVD, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Valid_DVD()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
+            string outputFilename = "test";
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.DVD, actual);
         }
 

@@ -19,7 +19,7 @@ namespace MPF.Processors
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? basePath)
+        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
             => MediaType.DVD;
 
         /// <inheritdoc/>

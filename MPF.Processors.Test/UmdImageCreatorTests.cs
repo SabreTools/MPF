@@ -13,27 +13,30 @@ namespace MPF.Processors.Test
         [Fact]
         public void DetermineMediaType_Null_DVD()
         {
-            string? basePath = null;
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
             var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.UMD, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Invalid_DVD()
         {
-            string? basePath = "INVALID";
+            string? outputDirectory = null;
+            string outputFilename = "INVALID";
             var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.UMD, actual);
         }
 
         [Fact]
         public void DetermineMediaType_Valid_DVD()
         {
-            string? basePath = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test");
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
+            string outputFilename = "test";
             var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
-            var actual = processor.DetermineMediaType(basePath);
+            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
             Assert.Equal(MediaType.UMD, actual);
         }
 

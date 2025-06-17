@@ -41,9 +41,10 @@ namespace MPF.Processors
         /// <summary>
         /// Determine the media type based on the provided files
         /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <returns>MediaType that was determined, if possible</returns>
-        public abstract MediaType? DetermineMediaType(string? basePath);
+        public abstract MediaType? DetermineMediaType(string? outputDirectory, string outputFilename);
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files
