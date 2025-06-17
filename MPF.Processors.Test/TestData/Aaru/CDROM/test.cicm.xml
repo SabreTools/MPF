@@ -1,1 +1,6 @@
-TEST DATA
+<CICMMetadata>
+    <OpticalDisc>
+        <DiscType>Compact Disc</DiscType>
+        <DiscSubType>CD-ROM</DiscSubType>
+    </OpticalDisc>
+</CICMMetadata>

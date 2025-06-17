@@ -6,6 +6,7 @@
 - Reduce media-specific checks where unnecessary
 - Add DetermineMediaType scaffolding and tests
 - Fill out DetermineMediaType for Redumper
+- Fill out DetermineMediaType for Aaru
 
 ### 3.3.2 (2025-06-12)
 

@@ -29,7 +29,19 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override MediaType? DetermineMediaType(string? basePath)
         {
-            throw new NotImplementedException();
+            // If the base path is invalid
+            if (string.IsNullOrEmpty(basePath))
+                return null;
+
+            // Deserialize the sidecar, if possible
+            var sidecar = GenerateSidecar($"{basePath}.cicm.xml");
+
+            // Extract the disc type strings, if possible
+            if (GetDiscType(sidecar, out string? discType, out string? discSubType))
+                return GetDiscTypeFromStrings(discType, discSubType);
+
+            // The type could not be determined
+            return null;
         }
 
         /// <inheritdoc/>
@@ -888,6 +900,156 @@ namespace MPF.Processors
             }
 
             return !string.IsNullOrEmpty(discType) || !string.IsNullOrEmpty(discSubType);
+        }
+
+        /// <summary>
+        /// Convert the type and subtype to a media type, if possible
+        /// </summary>
+        /// <param name="discType">Disc type string to check</param>
+        /// <param name="discSubType">Disc subtype string to check</param>
+        /// <returns>Media type on success, null otherwise</returns>
+        internal static MediaType? GetDiscTypeFromStrings(string? discType, string? discSubType)
+        {
+            return discType switch
+            {
+                "3\" floppy" => MediaType.FloppyDisk,
+                "3.5\" floppy" => MediaType.FloppyDisk,
+                "3.5\" magneto-optical" => MediaType.Floptical,
+                "3.5\" SyQuest cartridge" => null,
+                "3.9\" SyQuest cartridge" => null,
+                "5.25\" floppy" => MediaType.FloppyDisk,
+                "5.25\" magneto-optical" => MediaType.Floptical,
+                "5.25\" SyQuest cartridge" => null,
+                "8\" floppy" => MediaType.FloppyDisk,
+                "300mm magneto optical" => MediaType.Floptical,
+                "356mm magneto-optical" => MediaType.Floptical,
+                "Advanced Digital Recording" => null,
+                "Advanced Intelligent Tape" => null,
+                "Archival Disc" => null,
+                "BeeCard" => null,
+                "Blu-ray" => discSubType switch
+                {
+                    "Wii U Optical Disc" => MediaType.NintendoWiiUOpticalDisc,
+                    _ => MediaType.BluRay,
+                },
+                "Borsu" => null,
+                "Compact Cassette" => MediaType.Cassette,
+                "Compact Disc" => MediaType.CDROM,
+                "Compact Flash" => MediaType.CompactFlash,
+                "CompacTape" => null,
+                "CRVdisc" => null,
+                "Data8" => null,
+                "DataPlay" => null,
+                "DataStore" => null,
+                "DDCD" => MediaType.CDROM,
+                "DECtape" => null,
+                "DemiDiskette" => null,
+                "Digital Audio Tape" => null,
+                "Digital Data Storage" => MediaType.DataCartridge,
+                "Digital Linear Tape" => null,
+                "DIR" => null,
+                "DST" => null,
+                "DTF" => null,
+                "DTF2" => null,
+                "DV tape" => null,
+                "DVD" => discSubType switch
+                {
+                    "GameCube Game Disc" => MediaType.NintendoGameCubeGameDisc,
+                    "Wii Optical Disc" => MediaType.NintendoWiiOpticalDisc,
+                    _ => MediaType.DVD,
+                },
+                "EVD" => null,
+                "Exatape" => null,
+                "Express Card" => null,
+                "FDDVD" => null,
+                "Flextra" => null,
+                "Floptical" => MediaType.Floptical,
+                "FVD" => null,
+                "GD" => MediaType.GDROM,
+                "Hard Disk Drive" => MediaType.HardDisk,
+                "HD DVD" => MediaType.HDDVD,
+                "HD VMD" => null,
+                "HiFD" => MediaType.FloppyDisk,
+                "HiTC" => null,
+                "HuCard" => MediaType.Cartridge,
+                "HVD" => null,
+                "HyperFlex" => null,
+                "IBM 3470" => null,
+                "IBM 3480" => null,
+                "IBM 3490" => null,
+                "IBM 3490E" => null,
+                "IBM 3592" => null,
+                "Iomega Bernoulli Box" => MediaType.IomegaBernoulliDisk,
+                "Iomega Bernoulli Box II" => MediaType.IomegaBernoulliDisk,
+                "Iomega Ditto" => null,
+                "Iomega Jaz" => MediaType.IomegaJaz,
+                "Iomega PocketZip" => MediaType.IomegaZip,
+                "Iomega REV" => null,
+                "Iomega ZIP" => MediaType.IomegaZip,
+                "Kodak Verbatim" => null,
+                "LaserDisc" => MediaType.LaserDisc,
+                "Linear Tape-Open" => null,
+                "LT1" => null,
+                "Magneto-optical" => MediaType.Floptical,
+                "Memory Stick" => MediaType.SDCard,
+                "MiniCard" => null,
+                "MiniDisc" => null,
+                "MultiMediaCard" => MediaType.SDCard,
+                "Nintendo 3DS Game Card" => MediaType.Cartridge,
+                "Nintendo 64 Disk" => MediaType.Nintendo64DD,
+                "Nintendo 64 Game Pak" => MediaType.Cartridge,
+                "Nintendo Disk Card" => MediaType.NintendoFamicomDiskSystem,
+                "Nintendo DS Game Card" => MediaType.Cartridge,
+                "Nintendo DSi Game Card" => MediaType.Cartridge,
+                "Nintendo Entertainment System Game Pak" => MediaType.Cartridge,
+                "Nintendo Famicom Game Pak" => MediaType.Cartridge,
+                "Nintendo Game Boy Advance Game Pak" => MediaType.Cartridge,
+                "Nintendo Game Boy Game Pak" => MediaType.Cartridge,
+                "Nintendo Switch Game Card" => MediaType.Cartridge,
+                "Optical Disc Archive" => null,
+                "Orb" => null,
+                "PCMCIA Card" => null,
+                "PD650" => null,
+                "PlayStation Memory Card" => null,
+                "Quarter-inch cartridge" => MediaType.DataCartridge,
+                "Quarter-inch mini cartridge" => MediaType.DataCartridge,
+                "QuickDisk" => null,
+                "RDX" => null,
+                "SACD" => MediaType.DVD,
+                "Scalable Linear Recording" => null,
+                "Secure Digital" => MediaType.SDCard,
+                "SmartMedia" => MediaType.SDCard,
+                "Sony Professional Disc" => null,
+                "Sony Professional Disc for DATA" => null,
+                "STK 4480" => null,
+                "STK 4490" => null,
+                "STK 9490" => null,
+                "STK T-9840" => null,
+                "STK T-9940" => null,
+                "STK T-10000" => null,
+                "Super Advanced Intelligent Tape" => null,
+                "Super Digital Linear Tape" => null,
+                "Super Nintendo Game Pak" => MediaType.Cartridge,
+                "Super Nintendo Game Pak (US)" => MediaType.Cartridge,
+                "SuperDisk" => MediaType.FloppyDisk,
+                "SVOD" => null,
+                "Travan" => null,
+                "UDO" => null,
+                "UHD144" => null,
+                "UMD" => MediaType.UMD,
+                "Unknown" => null,
+                "USB flash drive" => MediaType.FlashDrive,
+                "VCDHD" => null,
+                "VideoFloppy" => null,
+                "VideoNow" => MediaType.CDROM,
+                "VXA" => MediaType.FlashDrive,
+                "Wafer" => null,
+                "xD" => null,
+                "XQD" => null,
+                "Zoned Hard Disk Drive" => MediaType.HardDisk,
+                "ZX Microdrive" => null,
+                _ => null,
+            };
         }
 
         /// <summary>
