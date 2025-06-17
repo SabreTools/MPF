@@ -77,7 +77,7 @@
         <Page Update="UserControls\UserInput.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
-        <Page Update="Windows\DiscInformationWindow.xaml">
+        <Page Update="Windows\MediaInformationWindow.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
         </Page>
         <Page Update="Windows\RingCodeGuideWindow.xaml">

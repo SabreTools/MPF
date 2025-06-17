@@ -6,9 +6,9 @@ using SabreTools.RedumpLib.Data;
 namespace MPF.UI.Windows
 {
     /// <summary>
-    /// Interaction logic for DiscInformationWindow.xaml
+    /// Interaction logic for MediaInformationWindow.xaml
     /// </summary>
-    public partial class DiscInformationWindow : WindowBase
+    public partial class MediaInformationWindow : WindowBase
     {
 #if NET35
 
@@ -102,14 +102,14 @@ namespace MPF.UI.Windows
 #endif
 
         /// <summary>
-        /// Read-only access to the current disc information view model
+        /// Read-only access to the current media information view model
         /// </summary>
-        public DiscInformationViewModel DiscInformationViewModel => DataContext as DiscInformationViewModel ?? new DiscInformationViewModel(new Options(), new SubmissionInfo());
+        public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public DiscInformationWindow(Options options, SubmissionInfo? submissionInfo)
+        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
 #if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
@@ -124,14 +124,14 @@ namespace MPF.UI.Windows
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
 
-            DataContext = new DiscInformationViewModel(options, submissionInfo);
-            DiscInformationViewModel.Load();
+            DataContext = new MediaInformationViewModel(options, submissionInfo);
+            MediaInformationViewModel.Load();
 
             // Limit lists, if necessary
             if (options.EnableRedumpCompatibility)
             {
-                DiscInformationViewModel.SetRedumpRegions();
-                DiscInformationViewModel.SetRedumpLanguages();
+                MediaInformationViewModel.SetRedumpRegions();
+                MediaInformationViewModel.SetRedumpLanguages();
             }
 
             // Add handlers
@@ -481,7 +481,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnAcceptClick(object sender, RoutedEventArgs e)
         {
-            DiscInformationViewModel.Save();
+            MediaInformationViewModel.Save();
             DialogResult = true;
             Close();
         }

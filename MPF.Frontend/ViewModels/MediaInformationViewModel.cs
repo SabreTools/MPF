@@ -6,7 +6,7 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ViewModels
 {
-    public class DiscInformationViewModel
+    public class MediaInformationViewModel
     {
         #region Fields
 
@@ -194,7 +194,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public DiscInformationViewModel(Options options, SubmissionInfo? submissionInfo)
+        public MediaInformationViewModel(Options options, SubmissionInfo? submissionInfo)
         {
             Options = options;
             SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();

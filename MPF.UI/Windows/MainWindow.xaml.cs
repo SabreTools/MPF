@@ -108,7 +108,7 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
 
-            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
+            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -231,22 +231,22 @@ namespace MPF.UI.Windows
         public void ShowDebugDiscInfoWindow()
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
-            _ = ShowDiscInformationWindow(MainViewModel.Options, ref submissionInfo);
+            _ = ShowMediaInformationWindow(MainViewModel.Options, ref submissionInfo);
             Formatter.ProcessSpecialFields(submissionInfo!);
         }
 
         /// <summary>
-        /// Show the disc information window
+        /// Show the media information window
         /// </summary>
         /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowDiscInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
+        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             if (options?.ShowDiscEjectReminder == true)
                 CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            var discInformationWindow = new DiscInformationWindow(options ?? new Options(), submissionInfo)
+            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,
@@ -255,12 +255,12 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            discInformationWindow.Closed += delegate { Activate(); };
-            bool? result = discInformationWindow.ShowDialog();
+            mediaInformationWindow.Closed += delegate { Activate(); };
+            bool? result = mediaInformationWindow.ShowDialog();
 
             // Copy back the submission info changes, if necessary
             if (result == true)
-                submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                submissionInfo = (mediaInformationWindow.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
 
             return result;
         }
@@ -515,7 +515,7 @@ namespace MPF.UI.Windows
         public void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureDiscInformation();
+                MainViewModel.EnsureMediaInformation();
         }
 
         /// <summary>
@@ -557,7 +557,7 @@ namespace MPF.UI.Windows
         public void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e)
         {
             BrowseFile();
-            MainViewModel.EnsureDiscInformation();
+            MainViewModel.EnsureMediaInformation();
         }
 
         /// <summary>
@@ -566,7 +566,7 @@ namespace MPF.UI.Windows
         public void OutputPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.EnsureDiscInformation();
+                MainViewModel.EnsureMediaInformation();
         }
 
         /// <summary>

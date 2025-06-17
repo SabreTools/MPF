@@ -125,14 +125,14 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Show the disc information window
+        /// Show the media information window
         /// </summary>
         /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowDiscInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
+        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            var discInformationWindow = new DiscInformationWindow(options ?? new Options(), submissionInfo)
+            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,
@@ -141,12 +141,12 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            discInformationWindow.Closed += delegate { Activate(); };
-            bool? result = discInformationWindow.ShowDialog();
+            mediaInformationWindow.Closed += delegate { Activate(); };
+            bool? result = mediaInformationWindow.ShowDialog();
 
             // Copy back the submission info changes, if necessary
             if (result == true)
-                submissionInfo = (discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                submissionInfo = (mediaInformationWindow.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
 
             return result;
         }
@@ -160,7 +160,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private async void OnCheckDumpClick(object sender, EventArgs e)
         {
-            string? errorMessage = await CheckDumpViewModel.CheckDump(ShowDiscInformationWindow);
+            string? errorMessage = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);

@@ -195,7 +195,7 @@
                             <UniformGrid Columns="2" Rows="6">
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
-                                     ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
+                                     ToolTip="Enable showing the media information output after dumping" Margin="0,4"
                                       />
 
                                 <CheckBox VerticalAlignment="Center" Content="Pull All Information"

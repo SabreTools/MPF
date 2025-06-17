@@ -450,7 +450,7 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Show the disc information window after dumping
+        /// Show the media information window after dumping
         /// </summary>
         public bool PromptForDiscInformation
         {
@@ -486,7 +486,7 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Show disc eject reminder before the disc information window is shown
+        /// Show disc eject reminder before the media information window is shown
         /// </summary>
         public bool ShowDiscEjectReminder
         {

@@ -770,11 +770,11 @@ namespace MPF.Frontend.ViewModels
         public void ChangeDumpingProgram()
         {
             VerboseLogLn($"Changed dumping program to: {((InternalProgram?)CurrentProgram).LongName()}");
-            EnsureDiscInformation();
+            EnsureMediaInformation();
             // New output name depends on new environment
             GetOutputNames(false);
             // New environment depends on new output name
-            EnsureDiscInformation();
+            EnsureMediaInformation();
         }
 
         /// <summary>
@@ -787,7 +787,7 @@ namespace MPF.Frontend.ViewModels
                 SetSupportedDriveSpeed();
 
             GetOutputNames(false);
-            EnsureDiscInformation();
+            EnsureMediaInformation();
         }
 
         /// <summary>
@@ -798,7 +798,7 @@ namespace MPF.Frontend.ViewModels
             VerboseLogLn($"Changed system to: {CurrentSystem.LongName()}");
             PopulateMediaType();
             GetOutputNames(false);
-            EnsureDiscInformation();
+            EnsureMediaInformation();
         }
 
         /// <summary>
@@ -1063,7 +1063,7 @@ namespace MPF.Frontend.ViewModels
             SetSupportedDriveSpeed();
             _environment = DetermineEnvironment();
             GetOutputNames(true);
-            EnsureDiscInformation();
+            EnsureMediaInformation();
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1100,7 +1100,7 @@ namespace MPF.Frontend.ViewModels
             // Set the initial environment and UI values
             _environment = DetermineEnvironment();
             GetOutputNames(true);
-            EnsureDiscInformation();
+            EnsureMediaInformation();
 
             // Enable event handlers
             EnableEventHandlers();
@@ -1362,9 +1362,9 @@ namespace MPF.Frontend.ViewModels
         }
 
         /// <summary>
-        /// Ensure information is consistent with the currently selected disc type
+        /// Ensure information is consistent with the currently selected media type
         /// </summary>
-        public void EnsureDiscInformation()
+        public void EnsureMediaInformation()
         {
             // Get the current environment information
             _environment = DetermineEnvironment();

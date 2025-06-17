@@ -520,12 +520,12 @@ namespace MPF.Frontend
             // Get user-modifiable information if configured to
             if (_options.PromptForDiscInformation && processUserInfo != null)
             {
-                resultProgress.Report(ResultEventArgs.Success("Waiting for additional disc information..."));
+                resultProgress.Report(ResultEventArgs.Success("Waiting for additional media information..."));
                 bool? filledInfo = processUserInfo.Invoke(_options, ref submissionInfo);
                 if (filledInfo == true)
-                    resultProgress.Report(ResultEventArgs.Success("Additional disc information added!"));
+                    resultProgress.Report(ResultEventArgs.Success("Additional media information added!"));
                 else
-                    resultProgress.Report(ResultEventArgs.Success("Disc information skipped!"));
+                    resultProgress.Report(ResultEventArgs.Success("Media information skipped!"));
             }
 
             // Process special fields for site codes
