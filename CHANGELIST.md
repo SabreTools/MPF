@@ -11,6 +11,7 @@
 - Enable Check to determine media type automatically
 - Fix missed test updates
 - Rename disc info to media info
+- Fix start index in Check
 
 ### 3.3.2 (2025-06-12)
 

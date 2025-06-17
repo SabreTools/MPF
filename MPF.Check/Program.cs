@@ -76,7 +76,7 @@ namespace MPF.Check
                 }
 
                 // Loop through and process options
-                startIndex = 2;
+                startIndex = 1;
                 opts = LoadFromArguments(args, options, ref startIndex);
             }
 
