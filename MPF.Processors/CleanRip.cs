@@ -25,10 +25,10 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a CleanRip version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
-            var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
+            var datafile = GenerateCleanripDatafile($"{basePath}.iso", $"{basePath}-dumpinfo.txt");
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
@@ -44,27 +44,19 @@ namespace MPF.Processors
                     info.SizeAndChecksums.Layerbreak = 2084960;
             }
 
-            // Extract info based generically on MediaType
-            switch (Type)
+            // Get BCA information, if available
+            info.Extras!.BCA = GetBCA(basePath + $"{basePath}.bca");
+
+            // Get internal information
+            if (GetGameCubeWiiInformation(basePath + $"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
             {
-                case MediaType.DVD: // Only added here to help users; not strictly correct
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (File.Exists(basePath + ".bca"))
-                        info.Extras!.BCA = GetBCA(basePath + ".bca");
-
-                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName, out var gcSerial))
-                    {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalName] = gcName ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.VersionAndEditions!.Version = gcVersion ?? info.VersionAndEditions.Version;
-                            info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
-                        }
-                    }
-
-                    break;
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalName] = internalName ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                if (!redumpCompat)
+                {
+                    info.VersionAndEditions!.Version = version ?? info.VersionAndEditions.Version;
+                    info.CommonDiscInfo.Region = region ?? info.CommonDiscInfo.Region;
+                }
             }
         }
 

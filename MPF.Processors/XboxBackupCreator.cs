@@ -38,112 +38,97 @@ namespace MPF.Processors
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(logPath)?.ToString("yyyy-MM-dd HH:mm:ss");
             info.DumpingInfo.Model = GetDrive(logPath) ?? "Unknown Drive";
 
+            // Get the Datafile information
+            Datafile? datafile = GenerateDatafile($"{basePath}.iso");
+            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+
+            // Get the individual hash data, as per internal
+            if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
+            {
+                info.SizeAndChecksums!.Size = size;
+                info.SizeAndChecksums.CRC32 = crc32;
+                info.SizeAndChecksums.MD5 = md5;
+                info.SizeAndChecksums.SHA1 = sha1;
+            }
+
+            // Get Layerbreak from .dvd file if possible
+            if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
+                info.SizeAndChecksums!.Layerbreak = layerbreak;
+
             // Look for read errors
             if (GetReadErrors(logPath, out long readErrors))
                 info.CommonDiscInfo!.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
-            // Extract info based generically on MediaType
-            switch (Type)
+            switch (System)
             {
-                case MediaType.DVD:
-
-                    // Get Layerbreak from .dvd file if possible
-                    if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
-                        info.SizeAndChecksums!.Layerbreak = layerbreak;
-
-                    // Hash data
-                    if (HashTool.GetStandardHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
+                case RedumpSystem.MicrosoftXbox:
+                    string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                    if (xmid != null)
                     {
-                        // Get the Datafile information
-                        var datafile = new Datafile
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                        if (!redumpCompat)
                         {
-                            Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
-                        };
-
-                        // Fill in the hash data
-                        info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
-
-                        info.SizeAndChecksums!.Size = filesize;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
+                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
+                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                        }
                     }
 
-                    switch (System)
+                    break;
+
+                case RedumpSystem.MicrosoftXbox360:
+
+                    // Get PVD from ISO
+                    if (GetPVD($"{basePath}.iso", out string? pvd))
+                        info.Extras!.PVD = pvd;
+
+                    // Parse Media ID
+                    //string? mediaID = GetMediaID(logPath);
+
+                    // Parse DMI.bin
+                    string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                    if (xemid != null)
                     {
-                        case RedumpSystem.MicrosoftXbox:
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                        if (!redumpCompat)
+                            info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
 
-                            // Parse DMI.bin
-                            string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
-                            var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                            if (xmid != null)
-                            {
-                                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                                info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
-                                if (!redumpCompat)
-                                {
-                                    info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
-                                    info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
-                                }
-                            }
-
-                            break;
-
-                        case RedumpSystem.MicrosoftXbox360:
-
-                            // Get PVD from ISO
-                            if (GetPVD(basePath + ".iso", out string? pvd))
-                                info.Extras!.PVD = pvd;
-
-                            // Parse Media ID
-                            //string? mediaID = GetMediaID(logPath);
-
-                            // Parse DMI.bin
-                            string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
-                            var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                            if (xemid != null)
-                            {
-                                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
-                                info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
-                                if (!redumpCompat)
-                                    info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
-
-                                info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
-                            }
-
-                            break;
+                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
                     }
-
-                    // Get the output file paths
-                    string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
-                    string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
-                    string ssPath = Path.Combine(outputDirectory, "SS.bin");
-
-                    // Deal with SS.bin
-                    if (File.Exists(ssPath))
-                    {
-                        // Save security sector ranges
-                        string? ranges = ProcessingTool.GetSSRanges(ssPath);
-                        if (!string.IsNullOrEmpty(ranges))
-                            info.Extras!.SecuritySectorRanges = ranges;
-
-                        // Recreate RawSS.bin
-                        RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
-
-                        // Run ss_sector_range to get repeatable SS hash
-                        ProcessingTool.CleanSS(ssPath, ssPath);
-                    }
-
-                    // DMI/PFI/SS CRC32 hashes
-                    if (File.Exists(dmiPath))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
-                    if (File.Exists(pfiPath))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
-                    if (File.Exists(ssPath))
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
 
                     break;
             }
+
+            // Get the output file paths
+            string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
+            string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
+            string ssPath = Path.Combine(outputDirectory, "SS.bin");
+
+            // Deal with SS.bin
+            if (File.Exists(ssPath))
+            {
+                // Save security sector ranges
+                string? ranges = ProcessingTool.GetSSRanges(ssPath);
+                if (!string.IsNullOrEmpty(ranges))
+                    info.Extras!.SecuritySectorRanges = ranges;
+
+                // Recreate RawSS.bin
+                RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
+
+                // Run ss_sector_range to get repeatable SS hash
+                ProcessingTool.CleanSS(ssPath, ssPath);
+            }
+
+            // DMI/PFI/SS CRC32 hashes
+            if (File.Exists(dmiPath))
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+            if (File.Exists(pfiPath))
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+            if (File.Exists(ssPath))
+                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -160,7 +145,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "dvd"),
                         new($"{outputFilename}.iso", OutputFileFlags.Required),
-                        
+
                         new("DMI.bin", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

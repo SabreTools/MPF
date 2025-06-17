@@ -94,11 +94,22 @@ namespace MPF.Processors
             if (GetDiscType($"{basePath}_disc.txt", out var discTypeOrBookType))
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
+            // Get the PVD, if it exists
+            info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
+
             // Get the Datafile information
             var datafile = ProcessingTool.GetDatafile($"{basePath}.dat");
-
-            // Fill in the hash data
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+
+            // Get the write offset, if it exists
+            string? writeOffset = GetWriteOffset($"{basePath}_disc.txt");
+            info.CommonDiscInfo!.RingWriteOffset = writeOffset;
+            info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
+
+            // Attempt to get multisession data
+            string? multiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt");
+            if (!string.IsNullOrEmpty(multiSessionInfo))
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = multiSessionInfo!;
 
             // Fill in the volume labels
             if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
@@ -109,8 +120,6 @@ namespace MPF.Processors
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD";
-
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
                     if (System.IsAudio())
                     {
@@ -128,18 +137,6 @@ namespace MPF.Processors
                     }
 
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
-                    //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
-
-                    // Attempt to get the write offset
-                    string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? string.Empty;
-                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
-                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
-
-                    // Attempt to get multisession data
-                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
-                    if (!string.IsNullOrEmpty(cdMultiSessionInfo))
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo;
-
                     break;
 
                 case MediaType.DVD:
@@ -177,9 +174,6 @@ namespace MPF.Processors
                                 info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
                         }
                     }
-
-                    // Read the PVD
-                    info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Bluray-specific options
                     if (Type == MediaType.BluRay)

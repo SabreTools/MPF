@@ -25,55 +25,51 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's a UMDImageCreator version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+
+            // Get the PVD, if it exists
+            info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
+
+            // Get the Datafile information
+            if (HashTool.GetStandardHashes($"{basePath}.iso", out long filesize, out var crc32, out var md5, out var sha1))
+            {
+                // Create a Datafile from the hashes
+                var datafile = new Datafile
+                {
+                    Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
+                };
+
+                // Fill in the hash data
+                info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+
+                info.SizeAndChecksums!.Size = filesize;
+                info.SizeAndChecksums.CRC32 = crc32;
+                info.SizeAndChecksums.MD5 = md5;
+                info.SizeAndChecksums.SHA1 = sha1;
+            }
+
+            // Get internal information
+            if (GetUMDAuxInfo($"{basePath}_disc.txt",
+                out var title,
+                out DiscCategory? category,
+                out string? serial,
+                out var version,
+                out var layer,
+                out long size))
+            {
+                info.CommonDiscInfo!.Title = title ?? string.Empty;
+                info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.VersionAndEditions!.Version = version ?? string.Empty;
+                info.SizeAndChecksums!.Size = size;
+
+                if (!string.IsNullOrEmpty(layer))
+                    info.SizeAndChecksums.Layerbreak = long.Parse(layer ?? "-1");
+            }
 
             // Fill in the volume labels
             if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
                 VolumeLabels = volLabels;
-
-            // Extract info based generically on MediaType
-            switch (Type)
-            {
-                case MediaType.UMD:
-                    info.Extras!.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
-
-                    if (HashTool.GetStandardHashes(basePath + ".iso", out long filesize, out var crc32, out var md5, out var sha1))
-                    {
-                        // Get the Datafile information
-                        var datafile = new Datafile
-                        {
-                            Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
-                        };
-
-                        // Fill in the hash data
-                        info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
-
-                        info.SizeAndChecksums!.Size = filesize;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
-                    if (GetUMDAuxInfo(basePath + "_disc.txt",
-                        out var title,
-                        out DiscCategory? category,
-                        out string? serial,
-                        out var version,
-                        out var layer,
-                        out long size))
-                    {
-                        info.CommonDiscInfo!.Title = title ?? string.Empty;
-                        info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
-                        info.VersionAndEditions!.Version = version ?? string.Empty;
-                        info.SizeAndChecksums!.Size = size;
-
-                        if (!string.IsNullOrEmpty(layer))
-                            info.SizeAndChecksums.Layerbreak = long.Parse(layer ?? "-1");
-                    }
-
-                    break;
-            }
         }
 
         /// <inheritdoc/>

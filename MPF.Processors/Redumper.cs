@@ -46,21 +46,31 @@ namespace MPF.Processors
             if (GetDiscType($"{basePath}.log", out var discTypeOrBookType))
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
+            // Get the PVD, if it exists
+            info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
+
+            // Get the Datafile information
+            info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
+
+            // Get the write offset, if it exists
+            string? writeOffset = GetWriteOffset($"{basePath}.log");
+            info.CommonDiscInfo!.RingWriteOffset = writeOffset;
+            info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
+
+            // Attempt to get multisession data
+            string? multiSessionInfo = GetMultisessionInformation($"{basePath}.log");
+            if (!string.IsNullOrEmpty(multiSessionInfo))
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = multiSessionInfo!;
+
             // Fill in the volume labels
             if (GetVolumeLabels($"{basePath}.log", out var volLabels))
                 VolumeLabels = volLabels;
 
+            // Extract info based generically on MediaType
             switch (Type)
             {
                 case MediaType.CDROM:
-                    info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
-                    info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
-
-                    // Attempt to get the write offset
-                    string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;
-                    info.CommonDiscInfo!.RingWriteOffset = cdWriteOffset;
-                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // Attempt to get the error count
                     if (GetErrorCount($"{basePath}.log", out long redumpErrors, out long c2Errors))
@@ -68,11 +78,6 @@ namespace MPF.Processors
                         info.CommonDiscInfo.ErrorsCount = (redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString());
                         info.DumpingInfo.C2ErrorsCount = (c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString());
                     }
-
-                    // Attempt to get multisession data
-                    string? cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log");
-                    if (!string.IsNullOrEmpty(cdMultiSessionInfo))
-                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = cdMultiSessionInfo!;
 
                     // Attempt to get extra metadata if it's an audio disc
                     if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
@@ -95,9 +100,6 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                 case MediaType.NintendoWiiUOpticalDisc:
-                    info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
-                    info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
-
                     // Get the individual hash data, as per internal
                     if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
                     {

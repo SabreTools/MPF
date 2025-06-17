@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 #endif
 using System.Text;
+using SabreTools.Hashing;
+using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -519,6 +521,38 @@ namespace MPF.Processors
         #endregion
 
         #region Shared Methods
+
+        /// <summary>
+        /// Generate a CMP XML datfile string based on a single input file
+        /// </summary>
+        /// <param name="file">File to generate a datfile for</param>
+        /// <returns>Datafile containing the hash information, null on error</returns>
+        internal static Datafile? GenerateDatafile(string file)
+        {
+            // If the file is invalid
+            if (string.IsNullOrEmpty(file))
+                return null;
+            if (!File.Exists(file))
+                return null;
+
+            // Attempt to get the hashes
+            if (!HashTool.GetStandardHashes(file, out long size, out var crc32, out var md5, out var sha1))
+                return null;
+
+            // Generate and return the Datafile
+            var rom = new Rom
+            {
+                Name = string.Empty,
+                Size = size.ToString(),
+                CRC = crc32,
+                MD5 = md5,
+                SHA1 = sha1,
+            };
+            var game = new Game { Rom = [rom] };
+            var datafile = new Datafile { Game = [game] };
+
+            return datafile;
+        }
 
         /// <summary>
         /// Get the hex contents of the PIC file

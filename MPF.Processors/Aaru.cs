@@ -36,10 +36,10 @@ namespace MPF.Processors
             info = Builder.EnsureAllSections(info);
 
             // TODO: Determine if there's an Aaru version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible
-            var sidecar = GenerateSidecar(basePath + ".cicm.xml");
+            var sidecar = GenerateSidecar($"{basePath}.cicm.xml");
 
             // Fill in the hardware data
             if (GetHardwareInfo(sidecar, out var manufacturer, out var model, out var firmware))
@@ -63,31 +63,29 @@ namespace MPF.Processors
                 info.DumpingInfo.ReportedDiscType = fullDiscType;
             }
 
+            // TODO: Re-enable once PVD generation / finding is fixed
+            // Generate / obtain the PVD
+            //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+
             // Get the Datafile information
             var datafile = GenerateDatafile(sidecar, basePath);
-
-            // Fill in the hash data
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
+            // Get the error count
+            long errorCount = GetErrorCount($"{basePath}.resume.xml");
+            info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+
+            // Get the write offset, if it exists
+            string? writeOffset = GetWriteOffset(sidecar);
+            info.CommonDiscInfo.RingWriteOffset = writeOffset;
+            info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
+
+            // Extract info based generically on MediaType
             switch (Type)
             {
                 // TODO: Can this do GD-ROM?
                 case MediaType.CDROM:
-                    // TODO: Re-enable once PVD generation / finding is fixed
-                    // Generate / obtain the PVD
-                    //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
-
-                    long errorCount = -1;
-                    if (File.Exists(basePath + ".resume.xml"))
-                        errorCount = GetErrorCount(basePath + ".resume.xml");
-
-                    info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-
                     info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
-
-                    string cdWriteOffset = GetWriteOffset(sidecar) ?? string.Empty;
-                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
-                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     break;
 
                 case MediaType.DVD:
@@ -103,10 +101,7 @@ namespace MPF.Processors
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    // TODO: Re-enable once PVD generation / finding is fixed
-                    // Generate / obtain the PVD
-                    //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
-
+                    // TODO: Sync layerbreak finding with other processors
                     // Deal with the layerbreak
                     string? layerbreak = null;
                     if (Type == MediaType.DVD)

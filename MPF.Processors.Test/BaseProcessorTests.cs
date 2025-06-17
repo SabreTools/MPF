@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using SabreTools.Models.Logiqx;
 using Xunit;
 
 namespace MPF.Processors.Test
@@ -81,6 +82,43 @@ namespace MPF.Processors.Test
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "BaseProcessor");
             var actual = BaseProcessor.GetGeneratedFilePaths(outputDirectory, filenameSuffix: null);
             Assert.Equal(4, actual.Count);
+        }
+
+        #endregion
+
+        #region GenerateDatafile
+
+        [Fact]
+        public void GenerateDatafile_Empty_Null()
+        {
+            string iso = string.Empty;
+            Datafile? actual = BaseProcessor.GenerateDatafile(iso);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GenerateDatafile_Invalid_Null()
+        {
+            string iso = "INVALID";
+            Datafile? actual = BaseProcessor.GenerateDatafile(iso);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GenerateDatafile_Valid_Filled()
+        {
+            string iso = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay", "test.iso");
+            var actual = BaseProcessor.GenerateDatafile(iso);
+
+            Assert.NotNull(actual);
+            Assert.NotNull(actual.Game);
+            var game = Assert.Single(actual.Game);
+            Assert.NotNull(game.Rom);
+            var rom = Assert.Single(game.Rom);
+            Assert.Equal("9", rom.Size);
+            Assert.Equal("560b9f59", rom.CRC);
+            Assert.Equal("edbb6676247e65c2245dd4883ed9fc24", rom.MD5);
+            Assert.Equal("1b33ad54d78085be5ecb1cf1b3e9da821e708075", rom.SHA1);
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using SabreTools.Hashing;
 using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -34,9 +33,7 @@ namespace MPF.Processors
             info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(isoPath)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
-            Datafile? datafile = GeneratePS3CFWDatafile(isoPath);
-
-            // Fill in the hash data
+            Datafile? datafile = GenerateDatafile(isoPath);
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
@@ -156,41 +153,6 @@ namespace MPF.Processors
             }
 
             return [];
-        }
-
-        #endregion
-
-        #region Information Extraction Methods
-
-        /// <summary>
-        /// Get a formatted datfile from the PS3 CFW output, if possible
-        /// </summary>
-        /// <param name="iso">Path to ISO file</param>
-        /// <returns></returns>
-        internal static Datafile? GeneratePS3CFWDatafile(string iso)
-        {
-            // If the ISO file doesn't exist
-            if (string.IsNullOrEmpty(iso))
-                return null;
-            if (!File.Exists(iso))
-                return null;
-
-            try
-            {
-                if (HashTool.GetStandardHashes(iso, out long size, out string? crc, out string? md5, out string? sha1))
-                {
-                    return new Datafile
-                    {
-                        Game = [new Game { Rom = [new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), CRC = crc, MD5 = md5, SHA1 = sha1 }] }]
-                    };
-                }
-                return null;
-            }
-            catch
-            {
-                // We don't care what the exception is right now
-                return null;
-            }
         }
 
         #endregion
