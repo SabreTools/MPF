@@ -42,14 +42,14 @@ namespace MPF.Processors.Test
         #region GetOutputFiles
 
         [Fact]
-        public void GetOutputFiles_Null_Empty()
+        public void GetOutputFiles_Null_Populated()
         {
             string? outputDirectory = null;
             string outputFilename = "test";
             var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
-            Assert.Empty(actual);
+            Assert.Equal(7, actual.Count);
         }
 
         [Fact]

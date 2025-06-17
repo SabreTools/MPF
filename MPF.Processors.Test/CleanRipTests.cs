@@ -95,14 +95,14 @@ namespace MPF.Processors.Test
         #region GetOutputFiles
 
         [Fact]
-        public void GetOutputFiles_Null_Empty()
+        public void GetOutputFiles_Null_Populated()
         {
             string? outputDirectory = null;
             string outputFilename = "test";
             var processor = new CleanRip(RedumpSystem.NintendoGameCube);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
-            Assert.Empty(actual);
+            Assert.Equal(3, actual.Count);
         }
 
         [Fact]

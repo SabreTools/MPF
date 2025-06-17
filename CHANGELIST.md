@@ -9,6 +9,7 @@
 - Fill out DetermineMediaType for Aaru
 - Fill out DetermineMediaType for DiscImageCreator
 - Enable Check to determine media type automatically
+- Fix missed test updates
 
 ### 3.3.2 (2025-06-12)
 

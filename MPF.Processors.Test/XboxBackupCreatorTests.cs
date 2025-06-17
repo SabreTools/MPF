@@ -42,14 +42,14 @@ namespace MPF.Processors.Test
         #region GetOutputFiles
 
         [Fact]
-        public void GetOutputFiles_Null_Empty()
+        public void GetOutputFiles_Null_Populated()
         {
             string? outputDirectory = null;
             string outputFilename = "test";
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
-            Assert.Empty(actual);
+            Assert.Equal(7, actual.Count);
         }
 
         [Fact]
@@ -64,14 +64,14 @@ namespace MPF.Processors.Test
         }
 
         [Fact]
-        public void GetOutputFiles_Other_Empty()
+        public void GetOutputFiles_Other_Populated()
         {
             string? outputDirectory = null;
             string outputFilename = "test";
             var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
 
             var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
-            Assert.Empty(actual);
+            Assert.Equal(7, actual.Count);
         }
 
         #endregion
