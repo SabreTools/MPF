@@ -15,6 +15,7 @@
 - Use the correct base path for Check
 - Update redumper to build 611
 - IsAudio cleanup
+- IsAudio cleanup cleanup
 
 ### 3.3.2 (2025-06-12)
 
