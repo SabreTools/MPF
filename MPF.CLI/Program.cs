@@ -237,7 +237,7 @@ namespace MPF.CLI
             // Create return values
             var opts = new CommandOptions
             {
-                FilePath = Path.Combine(options.DefaultOutputPath, "track.bin"),
+                FilePath = Path.Combine(options.DefaultOutputPath ?? "ISO", "track.bin"),
             };
             mediaType = MediaType.NONE;
             system = options.DefaultSystem;
