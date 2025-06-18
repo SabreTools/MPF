@@ -199,8 +199,10 @@ namespace MPF.Processors
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (System.IsAudio())
+                    if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
                         info.CommonDiscInfo!.ErrorsCount = "0";
                     }
@@ -215,7 +217,6 @@ namespace MPF.Processors
                         info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
-                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     break;
 
                 case MediaType.DVD:
@@ -575,6 +576,11 @@ namespace MPF.Processors
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
+            // Assemble the base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
+
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -591,13 +597,10 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable),
                         new($"{outputFilename}.img", OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
-                        new([$"{outputFilename}.img_EdcEcc.txt", $"{outputFilename}.img_EccEdc.txt"], System.IsAudio()
-                            ? OutputFileFlags.Artifact | OutputFileFlags.Zippable
-                            : OutputFileFlags.Required | OutputFileFlags.Artifact | OutputFileFlags.Zippable,
+                        new([$"{outputFilename}.img_EdcEcc.txt", $"{outputFilename}.img_EccEdc.txt"], OutputFileFlags.Artifact
+                            | OutputFileFlags.Zippable,
                             "img_edcecc"),
-                        new([$"{outputFilename}.scm", $"{outputFilename}.scmtmp"], System.IsAudio()
-                            ? OutputFileFlags.Deleteable
-                            : OutputFileFlags.Required | OutputFileFlags.Deleteable),
+                        new([$"{outputFilename}.scm", $"{outputFilename}.scmtmp"], OutputFileFlags.Deleteable),
                         new([$"{outputFilename}.sub", $"{outputFilename}.subtmp"], OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

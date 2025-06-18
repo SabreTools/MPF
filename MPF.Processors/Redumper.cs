@@ -447,12 +447,10 @@ namespace MPF.Processors
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            // Get the base path
-            string basePath;
-            if (string.IsNullOrEmpty(outputDirectory))
-                basePath = outputFilename;
-            else
-                basePath = Path.Combine(outputDirectory, outputFilename);
+            // Assemble the base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
             switch (mediaType)
             {
