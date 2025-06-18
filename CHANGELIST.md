@@ -13,6 +13,7 @@
 - Rename disc info to media info
 - Fix start index in Check
 - Use the correct base path for Check
+- Update redumper to build 611
 
 ### 3.3.2 (2025-06-12)
 
