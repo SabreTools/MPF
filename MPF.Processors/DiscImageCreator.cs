@@ -149,8 +149,6 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            var outputDirectory = Path.GetDirectoryName(basePath);
-
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
 
@@ -575,11 +573,6 @@ namespace MPF.Processors
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Assemble the base path
-            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
-            if (!string.IsNullOrEmpty(outputDirectory))
-                basePath = Path.Combine(outputDirectory, basePath);
 
             switch (mediaType)
             {

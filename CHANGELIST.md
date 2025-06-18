@@ -16,6 +16,7 @@
 - Update redumper to build 611
 - IsAudio cleanup
 - IsAudio cleanup cleanup
+- Remove dead code in DIC processor
 
 ### 3.3.2 (2025-06-12)
 
