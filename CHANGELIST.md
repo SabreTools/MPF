@@ -17,6 +17,7 @@
 - IsAudio cleanup
 - IsAudio cleanup cleanup
 - Remove dead code in DIC processor
+- Set some default values for CLI
 
 ### 3.3.2 (2025-06-12)
 

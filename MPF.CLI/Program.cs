@@ -235,9 +235,12 @@ namespace MPF.CLI
         private static CommandOptions InteractiveMode(Options options, out MediaType mediaType, out RedumpSystem? system)
         {
             // Create return values
-            var opts = new CommandOptions();
+            var opts = new CommandOptions
+            {
+                FilePath = Path.Combine(options.DefaultOutputPath, "track.bin"),
+            };
             mediaType = MediaType.NONE;
-            system = null;
+            system = options.DefaultSystem;
 
             // Create state values
             string? result = string.Empty;
