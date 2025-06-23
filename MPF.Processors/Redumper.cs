@@ -225,11 +225,11 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString;
                         var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xmid?.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
-                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
-                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                            info.VersionAndEditions!.Version = xmid?.Version ?? string.Empty;
+                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid?.Model.RegionIdentifier);
                         }
                     }
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
@@ -237,11 +237,11 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString;
                         var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                        info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                        info.CommonDiscInfo.Serial = xemid?.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
-                            info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
-                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                            info.VersionAndEditions!.Version = xemid?.Version ?? string.Empty;
+                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid?.Model.RegionIdentifier);
                         }
                     }
 
