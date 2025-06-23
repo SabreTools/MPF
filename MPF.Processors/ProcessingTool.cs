@@ -1090,7 +1090,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="ssPath">Path to the SS file to check</param>
         /// <returns>True if valid but partial SS.bin, false otherwise</returns>
-        public static bool IsValidSS(string ssPath)
+        public static bool IsValidPartialSS(string ssPath)
         {
             if (!File.Exists(ssPath))
                 return false;
