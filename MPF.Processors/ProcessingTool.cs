@@ -1130,16 +1130,16 @@ namespace MPF.Processors
             int[] entry_lengths = {8, 8, 8, 8, 4, 4, 4, 4};
             for (int i = 0; i < entry_offsets.Length; i++)
             {
-                bool allZero = true;
+                bool emptyResponse = true;
                 for (int b = 0; b < entry_lengths[i]; b++)
                 {
-                    if (arr[ccrt_offset + entry_offsets[i] + b] != 0x00)
+                    if (ss[ccrt_offset + entry_offsets[i] + b] != 0x00)
                     {
-                        allZero = false;
+                        emptyResponse = false;
                         break;
                     }
                 }
-                if (allZero)
+                if (emptyResponse)
                     return true;
             }
 
