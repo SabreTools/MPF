@@ -211,46 +211,6 @@ namespace MPF.Processors
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    // If .dmi / .pfi / .ss don't already exist, create them
-                    if (!File.Exists($"{basePath}.dmi"))
-                        RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
-                    if (!File.Exists($"{basePath}.pfi"))
-                        RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
-                    if (!File.Exists($"{basePath}.ss"))
-                        ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
-
-                    string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi");
-                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                    if (xmid != null)
-                    {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
-                        if (!redumpCompat)
-                        {
-                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
-                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
-                        }
-                    }
-
-                    string? dmi1Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
-                    if (dmi1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi1Crc.ToUpperInvariant();
-                    string? pfi1Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
-                    if (pfi1Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi1Crc.ToUpperInvariant();
-                    if (ProcessingTool.IsValidSS($"{basePath}.ss"))
-                    {
-                        string? ss1Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                        if (ss1Crc != null)
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss1Crc.ToUpperInvariant();
-                    }
-
-                    string? ranges1 = ProcessingTool.GetSSRanges($"{basePath}.ss");
-                    if (!string.IsNullOrEmpty(ranges1))
-                        info.Extras!.SecuritySectorRanges = ranges1;
-
-                    break;
-
                 case RedumpSystem.MicrosoftXbox360:
                     // If .dmi / .pfi / .ss don't already exist, create them
                     if (!File.Exists($"{basePath}.dmi"))
@@ -260,34 +220,47 @@ namespace MPF.Processors
                     if (!File.Exists($"{basePath}.ss"))
                         ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
 
-                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi");
-                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                    if (xemid != null)
+                    string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi").Trim('\0');
+                    if (!string.IsNullOrEmpty(xmidString))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString;
+                        var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                        if (!redumpCompat)
+                        {
+                            info.VersionAndEditions!.Version = xmid.Version ?? string.Empty;
+                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                        }
+                    }
+                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
+                    if (!string.IsNullOrEmpty(xemidString))
+                    {
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString;
+                        var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
                         if (!redumpCompat)
+                        {
                             info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
-
-                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                        }
                     }
 
-                    string? dmi23Crc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
-                    if (dmi23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmi23Crc.ToUpperInvariant();
-                    string? pfi23Crc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
-                    if (pfi23Crc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfi23Crc.ToUpperInvariant();
-                    if (ProcessingTool.IsValidSS($"{basePath}.ss"))
+                    string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
+                    if (dmiCrc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
+                    string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
+                    if (pfiCrc != null)
+                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
+                    if (ProcessingTool.IsValidSS($"{basePath}.ss") && !ProcessingTool.IsValidPartialSS($"{basePath}.ss"))
                     {
-                        string? ss23Crc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                        if (ss23Crc != null)
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ss23Crc.ToUpperInvariant();
+                        string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                        if (ssCrc != null)
+                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }
 
-                    string? ranges23 = ProcessingTool.GetSSRanges($"{basePath}.ss");
-                    if (!string.IsNullOrEmpty(ranges23))
-                        info.Extras!.SecuritySectorRanges = ranges23;
+                    string? ssRanges = ProcessingTool.GetSSRanges($"{basePath}.ss");
+                    if (!string.IsNullOrEmpty(ssRanges))
+                        info.Extras!.SecuritySectorRanges = ssRanges;
 
                     break;
 

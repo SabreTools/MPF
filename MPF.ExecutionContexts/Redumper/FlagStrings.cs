@@ -41,6 +41,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string PlextorSkipLeadin = "--plextor-skip-leadin";
         public const string PlextorLeadinRetries = "--plextor-leadin-retries";
         public const string PlextorLeadinForceStore = "--plextor-leadin-force-store";
+        public const string KreonPartialSS = "--kreon-partial-ss";
         public const string AsusSkipLeadout = "--asus-skip-leadout";
         public const string AsusLeadoutRetries = "--asus-leadout-retries";
         public const string DisableCDText = "--disable-cdtext";
