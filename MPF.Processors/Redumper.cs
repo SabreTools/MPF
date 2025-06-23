@@ -86,9 +86,12 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(multiSessionInfo))
                 info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Multisession] = multiSessionInfo!;
 
-            // Fill in the volume labels
-            if (GetVolumeLabels($"{basePath}.log", out var volLabels))
-                VolumeLabels = volLabels;
+            // Fill in the volume labels (ignore for Xbox/Xbox360)
+            if (System != RedumpSystem.MicrosoftXbox && System != RedumpSystem.MicrosoftXbox360)
+            {
+                if (GetVolumeLabels($"{basePath}.log", out var volLabels))
+                    VolumeLabels = volLabels;
+            }
 
             // Extract info based generically on MediaType
             switch (mediaType)
