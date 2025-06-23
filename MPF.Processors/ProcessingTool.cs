@@ -1086,6 +1086,23 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Determine if a given SS.bin is valid but contains zeroed challenge responses
+        /// </summary>
+        /// <param name="ssPath">Path to the SS file to check</param>
+        /// <returns>True if valid but partial SS.bin, false otherwise</returns>
+        public static bool IsValidSS(string ssPath)
+        {
+            if (!File.Exists(ssPath))
+                return false;
+
+            byte[] ss = File.ReadAllBytes(ssPath);
+            if (ss.Length != 2048)
+                return false;
+
+            return IsValidPartialSS(ss);
+        }
+
+        /// <summary>
         /// Determine if a given SS is valid but contains zeroed challenge responses
         /// </summary>
         /// <param name="ss">Byte array of SS sector</param>
