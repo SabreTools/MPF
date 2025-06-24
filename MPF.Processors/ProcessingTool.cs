@@ -1086,6 +1086,67 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Determine if a given SS.bin is valid but contains zeroed challenge responses
+        /// </summary>
+        /// <param name="ssPath">Path to the SS file to check</param>
+        /// <returns>True if valid but partial SS.bin, false otherwise</returns>
+        public static bool IsValidPartialSS(string ssPath)
+        {
+            if (!File.Exists(ssPath))
+                return false;
+
+            byte[] ss = File.ReadAllBytes(ssPath);
+            if (ss.Length != 2048)
+                return false;
+
+            return IsValidPartialSS(ss);
+        }
+
+        /// <summary>
+        /// Determine if a given SS is valid but contains zeroed challenge responses
+        /// </summary>
+        /// <param name="ss">Byte array of SS sector</param>
+        /// <returns>True if SS is a valid but partial SS, false otherwise</returns>
+        public static bool IsValidPartialSS(byte[] ss)
+        {
+            // Check 1 sector long
+            if (ss.Length != 2048)
+                return false;
+
+            // Must be a valid XGD type
+            if (!GetXGDType(ss, out int xgdType))
+                return false;
+
+            // Determine challenge table offset, XGD1 is never partial
+            int ccrt_offset = 0;
+            if (xgdType == 1)
+                return false;
+            else if (xgdType == 2)
+                ccrt_offset = 0x200;
+            else if (xgdType == 3)
+                ccrt_offset = 0x20;
+
+            int[] entry_offsets = {0, 9, 18, 27, 36, 45, 54, 63};
+            int[] entry_lengths = {8, 8, 8, 8, 4, 4, 4, 4};
+            for (int i = 0; i < entry_offsets.Length; i++)
+            {
+                bool emptyResponse = true;
+                for (int b = 0; b < entry_lengths[i]; b++)
+                {
+                    if (ss[ccrt_offset + entry_offsets[i] + b] != 0x00)
+                    {
+                        emptyResponse = false;
+                        break;
+                    }
+                }
+                if (emptyResponse)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Determine if a given SS has already been cleaned
         /// </summary>
         /// <param name="ss">Byte array of SS sector</param>
