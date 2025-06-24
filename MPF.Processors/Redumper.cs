@@ -235,8 +235,8 @@ namespace MPF.Processors
                             info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid?.Model.RegionIdentifier);
                         }
                     }
-                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
 
+                    string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
                     if (!string.IsNullOrEmpty(xemidString))
                     {
                         info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString;
