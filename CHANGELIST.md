@@ -22,6 +22,7 @@
 - Better handling of Xbox/360, redumper build 613
 - Use reasonable default names for PlayStation systems
 - Swap PS1/2 back to original name handling
+- Only use serial for PS3/4/5 if no custom volume label
 
 ### 3.3.2 (2025-06-12)
 

@@ -2008,8 +2008,11 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static string? GetFormattedVolumeLabel(Drive? drive)
         {
+            // If the drive is invalid
             if (drive == null)
                 return null;
+
+            // If the drive is marked as inactive
             if (!drive.MarkedActive)
                 return DiscNotDetectedValue;
 
@@ -2020,26 +2023,35 @@ namespace MPF.Frontend.ViewModels
                 case RedumpSystem.SonyPlayStation:
                 case RedumpSystem.SonyPlayStation2:
                     string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
-                    volumeLabel = volumeLabel ?? ps12Serial ?? "track";
+                    volumeLabel ??= ps12Serial ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
                     string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
-                    volumeLabel = ps3Serial ?? volumeLabel ?? "track";
+                    if (volumeLabel == "PS3VOLUME")
+                        volumeLabel = ps3Serial ?? volumeLabel ?? "track";
+                    else
+                        volumeLabel ??= ps3Serial ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
                     string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
-                    volumeLabel = ps4Serial ?? volumeLabel ?? "track";
+                    if (volumeLabel == "PS4VOLUME")
+                        volumeLabel = ps4Serial ?? volumeLabel ?? "track";
+                    else
+                        volumeLabel ??= ps4Serial ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
                     string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
-                    volumeLabel = ps5Serial ?? volumeLabel ?? "track";
+                    if (volumeLabel == "PS5VOLUME")
+                        volumeLabel = ps5Serial ?? volumeLabel ?? "track";
+                    else
+                        volumeLabel ??= ps5Serial ?? "track";
                     break;
 
                 default:
-                    volumeLabel = volumeLabel ?? "track";
+                    volumeLabel ??= "track";
                     break;
             }
 
@@ -2171,7 +2183,7 @@ namespace MPF.Frontend.ViewModels
         {
             // Ask user to confirm before exiting application during a dump
             AskBeforeQuit = true;
-            
+
             // One last check to determine environment, just in case
             _environment = DetermineEnvironment();
 
