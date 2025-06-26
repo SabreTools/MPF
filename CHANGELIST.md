@@ -21,6 +21,7 @@
 - Address nullable default value
 - Better handling of Xbox/360, redumper build 613
 - Use reasonable default names for PlayStation systems
+- Swap PS1/2 back to original name handling
 
 ### 3.3.2 (2025-06-12)
 

@@ -2010,37 +2010,36 @@ namespace MPF.Frontend.ViewModels
         {
             if (drive == null)
                 return null;
-
-            string? volumeLabel = DiscNotDetectedValue;
             if (!drive.MarkedActive)
-                return volumeLabel;
+                return DiscNotDetectedValue;
 
-            // Prefer internal serials over volume labels
+            // Use internal serials where appropriate
+            string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel;
             switch (GetRedumpSystem(drive))
             {
                 case RedumpSystem.SonyPlayStation:
                 case RedumpSystem.SonyPlayStation2:
                     string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
-                    volumeLabel = ps12Serial ?? drive.VolumeLabel ?? "track";
+                    volumeLabel = volumeLabel ?? ps12Serial ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
                     string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
-                    volumeLabel = ps3Serial ?? drive.VolumeLabel ?? "track";
+                    volumeLabel = ps3Serial ?? volumeLabel ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
                     string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
-                    volumeLabel = ps4Serial ?? drive.VolumeLabel ?? "track";
+                    volumeLabel = ps4Serial ?? volumeLabel ?? "track";
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
                     string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
-                    volumeLabel = ps5Serial ?? drive.VolumeLabel ?? "track";
+                    volumeLabel = ps5Serial ?? volumeLabel ?? "track";
                     break;
 
                 default:
-                    volumeLabel = drive.VolumeLabel ?? "track";
+                    volumeLabel = volumeLabel ?? "track";
                     break;
             }
 
