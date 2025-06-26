@@ -2015,25 +2015,33 @@ namespace MPF.Frontend.ViewModels
             if (!drive.MarkedActive)
                 return volumeLabel;
 
-            if (!string.IsNullOrEmpty(drive.VolumeLabel))
+            // Prefer internal serials over volume labels
+            switch (GetRedumpSystem(drive))
             {
-                volumeLabel = drive.VolumeLabel;
-            }
-            else
-            {
-                // No Volume Label found, fallback to something sensible
-                switch (GetRedumpSystem(drive))
-                {
-                    case RedumpSystem.SonyPlayStation:
-                    case RedumpSystem.SonyPlayStation2:
-                        string? serial = PhysicalTool.GetPlayStationSerial(drive);
-                        volumeLabel = serial ?? "track";
-                        break;
+                case RedumpSystem.SonyPlayStation:
+                case RedumpSystem.SonyPlayStation2:
+                    string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
+                    volumeLabel = ps12Serial ?? drive.VolumeLabel ?? "track";
+                    break;
 
-                    default:
-                        volumeLabel = "track";
-                        break;
-                }
+                case RedumpSystem.SonyPlayStation3:
+                    string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
+                    volumeLabel = ps3Serial ?? drive.VolumeLabel ?? "track";
+                    break;
+
+                case RedumpSystem.SonyPlayStation4:
+                    string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
+                    volumeLabel = ps4Serial ?? drive.VolumeLabel ?? "track";
+                    break;
+
+                case RedumpSystem.SonyPlayStation5:
+                    string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
+                    volumeLabel = ps5Serial ?? drive.VolumeLabel ?? "track";
+                    break;
+
+                default:
+                    volumeLabel = drive.VolumeLabel ?? "track";
+                    break;
             }
 
             foreach (char c in Path.GetInvalidFileNameChars())
