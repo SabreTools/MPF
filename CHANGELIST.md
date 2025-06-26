@@ -23,6 +23,7 @@
 - Use reasonable default names for PlayStation systems
 - Swap PS1/2 back to original name handling
 - Only use serial for PS3/4/5 if no custom volume label
+- Fix unnecessary null assignment
 
 ### 3.3.2 (2025-06-12)
 

@@ -2029,7 +2029,7 @@ namespace MPF.Frontend.ViewModels
                 case RedumpSystem.SonyPlayStation3:
                     string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
                     if (volumeLabel == "PS3VOLUME")
-                        volumeLabel = ps3Serial ?? volumeLabel ?? "track";
+                        volumeLabel = ps3Serial ?? volumeLabel;
                     else
                         volumeLabel ??= ps3Serial ?? "track";
                     break;
@@ -2037,7 +2037,7 @@ namespace MPF.Frontend.ViewModels
                 case RedumpSystem.SonyPlayStation4:
                     string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
                     if (volumeLabel == "PS4VOLUME")
-                        volumeLabel = ps4Serial ?? volumeLabel ?? "track";
+                        volumeLabel = ps4Serial ?? volumeLabel;
                     else
                         volumeLabel ??= ps4Serial ?? "track";
                     break;
@@ -2045,7 +2045,7 @@ namespace MPF.Frontend.ViewModels
                 case RedumpSystem.SonyPlayStation5:
                     string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
                     if (volumeLabel == "PS5VOLUME")
-                        volumeLabel = ps5Serial ?? volumeLabel ?? "track";
+                        volumeLabel = ps5Serial ?? volumeLabel;
                     else
                         volumeLabel ??= ps5Serial ?? "track";
                     break;
