@@ -2176,7 +2176,7 @@ namespace MPF.Processors
 #endif
 
                 // Now that we're at the offsets, attempt to get the sample offset
-                return string.Join("; ", [.. offsets]);
+                return offsets.Count == 0 ? null : string.Join("; ", [.. offsets]);
             }
             catch
             {
