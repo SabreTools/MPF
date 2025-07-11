@@ -296,7 +296,7 @@
                                 <controls:UserInput x:Name="GamesTextBox" Label="Games" TextHeight="50"
                                                     Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[(redump:SiteCode)Games], Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50"
+                                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" Visibility="Collapsed" TextHeight="50"
                                                     Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[(redump:SiteCode)NetYarozeGames], Mode=TwoWay}"/>
                                 

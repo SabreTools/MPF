@@ -25,6 +25,12 @@ namespace MPF.UI.Windows
 
         #endregion
 
+        #region Contents
+
+        private UserInput? NetYarozeGamesTextBox => ItemHelper.FindChild<UserInput>(this, "NetYarozeGamesTextBox");
+
+        #endregion
+
         #region Ringcodes
 
         private GroupBox? L0Info => ItemHelper.FindChild<GroupBox>(this, "L0Info");
@@ -442,6 +448,10 @@ namespace MPF.UI.Windows
             {
                 case RedumpSystem.NintendoWiiU:
                     DiscKeyTextBox!.Visibility = Visibility.Visible;
+                    break;
+
+                case RedumpSystem.SonyPlayStation:
+                    NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
