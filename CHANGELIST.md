@@ -24,7 +24,8 @@
 - Swap PS1/2 back to original name handling
 - Only use serial for PS3/4/5 if no custom volume label
 - Fix unnecessary null assignment
-- Empty should be null
+- Empty should be null (fuzz6001)
+- Remove legacy codes from info window
 
 ### 3.3.2 (2025-06-12)
 

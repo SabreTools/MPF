@@ -183,33 +183,9 @@
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscKey, Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="GenreTextBox" Label="Genre"
-                                                    Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)Genre], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="ProtectionTextBox" Label="Protection" ToolTip="CAUTION: Only edit if you know what you are doing!"
                                                         Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
                                                         VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="PostgapTypeCheckBox" Content="Postgap type (Form 2)" Margin="0,4"
-                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PostgapType], Mode=TwoWay}"/>
-                                    </Grid>
-                                    <controls:UserInput x:Name="SeriesTextBox" Label="Series"
-                                                        Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)Series], Mode=TwoWay}"/>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="0.75*" />
-                                            <ColumnDefinition Width="1.75*" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="VCDCheckBox" Content="V-CD" Margin="0,4"
-                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)VCD], Mode=TwoWay}"/>
-                                    </Grid>
                                 </StackPanel>
                             </GroupBox>
 
