@@ -27,6 +27,7 @@
 - Empty should be null (fuzz6001)
 - Remove legacy codes from info window
 - Net Yaroze only for PS1
+- Update RedumpLib to 1.6.8
 
 ### 3.3.2 (2025-06-12)
 

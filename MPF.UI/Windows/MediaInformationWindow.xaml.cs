@@ -20,6 +20,7 @@ namespace MPF.UI.Windows
 
         #region Additional Info
         
+        private Grid? PCMacHybridGrid => ItemHelper.FindChild<Grid>(this, "PCMacHybridGrid");
         private UserInput? DiscIDTextBox => ItemHelper.FindChild<UserInput>(this, "DiscIDTextBox");
         private UserInput? DiscKeyTextBox => ItemHelper.FindChild<UserInput>(this, "DiscKeyTextBox");
 
@@ -446,6 +447,14 @@ namespace MPF.UI.Windows
             var system = submissionInfo?.CommonDiscInfo?.System;
             switch (system)
             {
+                case RedumpSystem.AppleMacintosh:
+                    PCMacHybridGrid!.Visibility = Visibility.Visible;
+                    break;
+
+                case RedumpSystem.IBMPCcompatible:
+                    PCMacHybridGrid!.Visibility = Visibility.Visible;
+                    break;
+
                 case RedumpSystem.NintendoWiiU:
                     DiscKeyTextBox!.Visibility = Visibility.Visible;
                     break;

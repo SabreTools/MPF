@@ -174,6 +174,16 @@
                             <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
+                                    <Grid x:Name="PCMacHybridGrid" Visibility="Collapsed">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.75*" />
+                                            <ColumnDefinition Width="1.75*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label/>
+                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" Margin="0,4"
+                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PCMacHybrid], Mode=TwoWay}"/>
+                                    </Grid>
                                     <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
