@@ -39,8 +39,14 @@ namespace MPF.Frontend.Tools
         public static bool? ProcessStandaloneArguments(string[] args)
         {
             // Help options
-            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
+            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?" || args[0] == "--help")
                 return null;
+
+            if (args[0] == "--version")
+            {
+                Console.WriteLine(FrontendTool.GetCurrentVersion() ?? "Unknown version");
+                return true;
+            }
 
             // List options
             if (args[0] == "-lc" || args[0] == "--listcodes")

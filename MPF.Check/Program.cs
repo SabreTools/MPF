@@ -147,7 +147,8 @@ namespace MPF.Check
             Console.WriteLine("MPF.Check <system> [options] </path/to/output.cue/iso> ...");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
-            Console.WriteLine("-h, -?                  Show this help text");
+            Console.WriteLine("-h, -?, --help          Show this help text");
+            Console.WriteLine("--version               Print the program version");
             Console.WriteLine("-lc, --listcodes        List supported comment/content site codes");
             Console.WriteLine("-lm, --listmedia        List supported media types");
             Console.WriteLine("-ls, --listsystems      List supported system types");
