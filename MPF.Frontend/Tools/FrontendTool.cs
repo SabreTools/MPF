@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
@@ -552,12 +553,7 @@ namespace MPF.Frontend.Tools
 
                 // Remove spaces before and after separators
                 if (fullDirectory != null)
-                {
-                    fullDirectory = fullDirectory.Replace("/ ", "/");
-                    fullDirectory = fullDirectory.Replace(" /", "/");
-                    fullDirectory = fullDirectory.Replace("\\ ", "\\");
-                    fullDirectory = fullDirectory.Replace(" \\", "\\");
-                }
+                    fullDirectory = Regex.Replace(fullDirectory, @"\s*([\\|/])\s*", @"$1");
 
                 // Rebuild and return the path
                 if (string.IsNullOrEmpty(fullDirectory))

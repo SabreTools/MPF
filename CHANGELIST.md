@@ -30,6 +30,7 @@
 - Update RedumpLib to 1.6.8
 - Add new help and version flags for CLI and Check
 - Strip errant whitespace during path normalization
+- Simplify code from previous commit
 
 ### 3.3.2 (2025-06-12)
 
