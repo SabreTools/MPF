@@ -29,6 +29,7 @@
 - Net Yaroze only for PS1
 - Update RedumpLib to 1.6.8
 - Add new help and version flags for CLI and Check
+- Strip errant whitespace during path normalization
 
 ### 3.3.2 (2025-06-12)
 

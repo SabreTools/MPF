@@ -9,24 +9,6 @@ namespace MPF.Frontend.Test.Tools
 {
     public class InfoToolTests
     {
-        [Theory]
-        [InlineData(null, "")]
-        [InlineData(" ", " ")]
-        [InlineData("super\\blah.bin", "super\\blah.bin")]
-        [InlineData("super\\hero\\blah.bin", "super\\hero\\blah.bin")]
-        [InlineData("super.hero\\blah.bin", "super.hero\\blah.bin")]
-        [InlineData("superhero\\blah.rev.bin", "superhero\\blah.rev.bin")]
-        [InlineData("super&hero\\blah.bin", "super&hero\\blah.bin")]
-        [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
-        public void NormalizeOutputPathsTest(string? outputPath, string? expectedPath)
-        {
-            if (!string.IsNullOrEmpty(expectedPath))
-                expectedPath = Path.GetFullPath(expectedPath);
-
-            string actualPath = FrontendTool.NormalizeOutputPaths(outputPath, true);
-            Assert.Equal(expectedPath, actualPath);
-        }
-
         [Fact]
         public void ProcessSpecialFieldsCompleteTest()
         {

@@ -535,17 +535,31 @@ namespace MPF.Frontend.Tools
 
                 // Remove invalid path characters
                 foreach (char c in Path.GetInvalidPathChars())
+                {
                     path = path.Replace(c, '_');
+                }
 
                 // Try getting the combined path and returning that directly
                 string fullPath = getFullPath ? Path.GetFullPath(path) : path;
-                var fullDirectory = Path.GetDirectoryName(fullPath);
-                string fullFile = Path.GetFileName(fullPath);
+                var fullDirectory = Path.GetDirectoryName(fullPath)?.Trim();
+                string fullFile = Path.GetFileName(fullPath).Trim();
 
                 // Remove invalid filename characters
                 foreach (char c in Path.GetInvalidFileNameChars())
+                {
                     fullFile = fullFile.Replace(c, '_');
+                }
 
+                // Remove spaces before and after separators
+                if (fullDirectory != null)
+                {
+                    fullDirectory = fullDirectory.Replace("/ ", "/");
+                    fullDirectory = fullDirectory.Replace(" /", "/");
+                    fullDirectory = fullDirectory.Replace("\\ ", "\\");
+                    fullDirectory = fullDirectory.Replace(" \\", "\\");
+                }
+
+                // Rebuild and return the path
                 if (string.IsNullOrEmpty(fullDirectory))
                     return fullFile;
                 else
