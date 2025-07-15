@@ -551,15 +551,12 @@ namespace MPF.Frontend.Tools
                     fullFile = fullFile.Replace(c, '_');
                 }
 
-                // Remove spaces before and after separators
-                if (fullDirectory != null)
-                    fullDirectory = Regex.Replace(fullDirectory, @"\s*([\\|/])\s*", @"$1");
+                // Rebuild the path, if necessary
+                if (!string.IsNullOrEmpty(fullDirectory))
+                    fullFile = Path.Combine(fullDirectory, fullFile);
 
-                // Rebuild and return the path
-                if (string.IsNullOrEmpty(fullDirectory))
-                    return fullFile;
-                else
-                    return Path.Combine(fullDirectory, fullFile);
+                // Remove spaces before and after separators
+                return Regex.Replace(fullFile, @"\s*([\\|/])\s*", @"$1");
             }
             catch { }
 
