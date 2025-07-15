@@ -32,6 +32,7 @@
 - Strip errant whitespace during path normalization
 - Simplify code from previous commit
 - Better handle mixed-separator paths
+- Slightly better IRD organization
 
 ### 3.3.2 (2025-06-12)
 

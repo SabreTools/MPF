@@ -612,7 +612,7 @@ namespace MPF.Frontend
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
                 resultProgress.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
-                bool deleteSuccess = await WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
+                bool deleteSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success("IRD created!"));
                 else
@@ -834,66 +834,6 @@ namespace MPF.Frontend
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Create an IRD and write it to the specified output directory with optional filename suffix
-        /// </summary>
-        /// <param name="outputDirectory">Output folder to use as the base path</param>
-        /// <param name="filenameSuffix">Optional suffix to append to the filename</param>
-        /// <param name="outputFilename">Output filename to use as the base path</param>
-        /// <returns>True on success, false on error</returns>
-        private static async Task<bool> WriteIRD(string isoPath,
-            string? discKeyString,
-            string? discIDString,
-            string? picString,
-            long? layerbreak,
-            string? crc32)
-        {
-            try
-            {
-                // Output IRD file path
-                string irdPath = Path.ChangeExtension(isoPath, ".ird");
-
-                // Parse disc key from submission info (Required)
-                byte[]? discKey = ProcessingTool.ParseHexKey(discKeyString);
-                if (discKey == null)
-                    return false;
-
-                // Parse Disc ID from submission info (Optional)
-                byte[]? discID = ProcessingTool.ParseDiscID(discIDString);
-
-                // Parse PIC from submission info (Optional)
-                byte[]? pic = ProcessingTool.ParsePIC(picString);
-
-                // Parse CRC32 strings into ISO hash for Unique ID field (Optional)
-                uint? uid = ProcessingTool.ParseCRC32(crc32);
-
-                // Ensure layerbreak value is valid (Optional)
-                layerbreak = ProcessingTool.ParseLayerbreak(layerbreak);
-
-                // Create Redump-style reproducible IRD
-#if NET40
-                LibIRD.ReIRD ird = await Task.Factory.StartNew(() =>
-#else
-                LibIRD.ReIRD ird = await Task.Run(() =>
-#endif
-                    new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
-                if (pic != null)
-                    ird.PIC = pic;
-                if (discID != null && ird.DiscID[15] != 0x00)
-                    ird.DiscID = discID;
-
-                // Write IRD to file
-                ird.Write(irdPath);
-
-                return true;
-            }
-            catch (Exception)
-            {
-                // We don't care what the error is
-                return false;
-            }
         }
 
         #endregion
