@@ -33,6 +33,7 @@
 - Simplify code from previous commit
 - Better handle mixed-separator paths
 - Slightly better IRD organization
+- Update redumper to build 631
 
 ### 3.3.2 (2025-06-12)
 

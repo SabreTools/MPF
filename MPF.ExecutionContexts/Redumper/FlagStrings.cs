@@ -80,6 +80,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string LBAStart = "--lba-start";
         public const string LBAEnd = "--lba-end";
         public const string RefineSubchannel = "--refine-subchannel";
+        public const string RefineSectorMode = "--refine-sector-mode";
         public const string Skip = "--skip";
         public const string DumpWriteOffset = "--dump-write-offset";
         public const string DumpReadSize = "--dump-read-size";

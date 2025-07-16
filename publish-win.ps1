@@ -89,12 +89,12 @@ function Download-Programs {
 
         # Redumper
         "Redumper_linux-arm64" = ""
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/build_613/redumper-2025.06.22_build613-Linux64.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/build_613/redumper-2025.06.22_build613-Darwin64.zip"
-        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/build_613/redumper-2025.06.22_build613-Darwin64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Linux64.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Darwin64.zip"
+        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Darwin64.zip"
         "Redumper_win-arm64"   = ""
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_613/redumper-2025.06.22_build613-Windows32.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_6113/redumper-2025.06.22_build613-Windows64.zip"
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Windows32.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Windows64.zip"
     }
 
     # Download and extract files
