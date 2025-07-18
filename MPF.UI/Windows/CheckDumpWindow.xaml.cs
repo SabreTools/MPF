@@ -29,7 +29,6 @@ namespace MPF.UI.Windows
         private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
         private Button? InputPathBrowseButton => ItemHelper.FindChild<Button>(this, "InputPathBrowseButton");
         private TextBox? InputPathTextBox => ItemHelper.FindChild<TextBox>(this, "InputPathTextBox");
-        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
         private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
@@ -89,7 +88,6 @@ namespace MPF.UI.Windows
 
             // User Area SelectionChanged
             SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
 
             // User Area TextChanged
@@ -209,15 +207,6 @@ namespace MPF.UI.Windows
         {
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
                 CheckDumpViewModel.ChangeInputPath();
-        }
-
-        /// <summary>
-        /// Handler for MediaTypeComboBox SelectionChanged event
-        /// </summary>
-        public void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CheckDumpViewModel.CanExecuteSelectionChanged)
-                CheckDumpViewModel.ChangeMediaType();
         }
 
         /// <summary>

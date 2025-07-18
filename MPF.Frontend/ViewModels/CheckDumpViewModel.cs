@@ -67,34 +67,6 @@ namespace MPF.Frontend.ViewModels
         private bool _systemTypeComboBoxEnabled;
 
         /// <summary>
-        /// Currently selected media type value
-        /// </summary>
-        public MediaType? CurrentMediaType
-        {
-            get => _currentMediaType;
-            set
-            {
-                _currentMediaType = value;
-                TriggerPropertyChanged(nameof(CurrentMediaType));
-            }
-        }
-        private MediaType? _currentMediaType;
-
-        /// <summary>
-        /// Indicates the status of the media type combo box
-        /// </summary>
-        public bool MediaTypeComboBoxEnabled
-        {
-            get => _mediaTypeComboBoxEnabled;
-            set
-            {
-                _mediaTypeComboBoxEnabled = value;
-                TriggerPropertyChanged(nameof(MediaTypeComboBoxEnabled));
-            }
-        }
-        private bool _mediaTypeComboBoxEnabled;
-
-        /// <summary>
         /// Currently provided input path
         /// </summary>
         public string? InputPath
@@ -230,20 +202,6 @@ namespace MPF.Frontend.ViewModels
         #region List Properties
 
         /// <summary>
-        /// Current list of supported media types
-        /// </summary>
-        public List<Element<MediaType>>? MediaTypes
-        {
-            get => _mediaTypes;
-            set
-            {
-                _mediaTypes = value;
-                TriggerPropertyChanged(nameof(MediaTypes));
-            }
-        }
-        private List<Element<MediaType>>? _mediaTypes;
-
-        /// <summary>
         /// Current list of supported system profiles
         /// </summary>
         public List<RedumpSystemComboBoxItem> Systems
@@ -287,16 +245,13 @@ namespace MPF.Frontend.ViewModels
             SystemTypeComboBoxEnabled = true;
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
-            MediaTypeComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = true;
 
-            MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
 
-            PopulateMediaType();
             PopulateInternalPrograms();
             EnableEventHandlers();
         }
@@ -327,15 +282,6 @@ namespace MPF.Frontend.ViewModels
         /// Change the currently selected system
         /// </summary>
         public void ChangeSystem()
-        {
-            PopulateMediaType();
-            CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
-        }
-
-        /// <summary>
-        /// Change the currently selected media type
-        /// </summary>
-        public void ChangeMediaType()
         {
             CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
         }
@@ -369,7 +315,6 @@ namespace MPF.Frontend.ViewModels
             InputPathTextBoxEnabled = true;
             InputPathBrowseButtonEnabled = true;
             DumpingProgramComboBoxEnabled = true;
-            PopulateMediaType();
             CheckDumpButtonEnabled = ShouldEnableCheckDumpButton();
             CancelButtonEnabled = true;
         }
@@ -382,7 +327,6 @@ namespace MPF.Frontend.ViewModels
             SystemTypeComboBoxEnabled = false;
             InputPathTextBoxEnabled = false;
             InputPathBrowseButtonEnabled = false;
-            MediaTypeComboBoxEnabled = false;
             DumpingProgramComboBoxEnabled = false;
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = false;
@@ -391,35 +335,6 @@ namespace MPF.Frontend.ViewModels
         #endregion
 
         #region Population
-
-        /// <summary>
-        /// Populate media type according to system type
-        /// </summary>
-        private void PopulateMediaType()
-        {
-            // Disable other UI updates
-            bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
-            DisableEventHandlers();
-
-            if (CurrentSystem != null)
-            {
-                var mediaTypeValues = CurrentSystem.MediaTypes();
-                int index = mediaTypeValues.FindIndex(m => m == CurrentMediaType);
-
-                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<MediaType>(m ?? MediaType.NONE));
-                MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
-                CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
-            }
-            else
-            {
-                MediaTypeComboBoxEnabled = false;
-                MediaTypes = null;
-                CurrentMediaType = null;
-            }
-
-            // Reenable event handlers, if necessary
-            if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
-        }
 
         /// <summary>
         /// Populate media type according to system type
@@ -451,7 +366,7 @@ namespace MPF.Frontend.ViewModels
 
         private bool ShouldEnableCheckDumpButton()
         {
-            return CurrentSystem != null && CurrentMediaType != null && !string.IsNullOrEmpty(InputPath);
+            return CurrentSystem != null && !string.IsNullOrEmpty(InputPath);
         }
 
         /// <summary>
@@ -507,7 +422,7 @@ namespace MPF.Frontend.ViewModels
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(
-                mediaType: CurrentMediaType,
+                mediaType: null,
                 resultProgress: resultProgress,
                 protectionProgress: protectionProgress,
                 processUserInfo: processUserInfo);

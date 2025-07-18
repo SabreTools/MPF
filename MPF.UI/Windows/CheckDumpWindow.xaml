@@ -85,7 +85,7 @@
                     <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
                 IsEnabled="{Binding InputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
+                    <Label x:Name="SystemTypeLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="System Type" />
                     <ComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                   ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
@@ -99,9 +99,6 @@
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
-                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="1" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
-                  ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
                     <Label x:Name="DumpingProgramLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
                     <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"

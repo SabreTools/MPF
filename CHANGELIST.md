@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Remove media type from Check Dump UI
+
 ### 3.3.3 (2025-07-18)
 
 - Handle layers for PS3CFW
