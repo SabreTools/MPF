@@ -2256,7 +2256,6 @@ namespace MPF.Frontend.ViewModels
                 if (result)
                 {
                     result = await _environment.VerifyAndSaveDumpOutput(
-                        mediaType: CurrentMediaType,
                         resultProgress: resultProgress,
                         protectionProgress: protectionProgress,
                         processUserInfo: _processUserInfo);

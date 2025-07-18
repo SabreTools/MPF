@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Remove media type from Check Dump UI
+- Always trust the output files for processing
 
 ### 3.3.3 (2025-07-18)
 

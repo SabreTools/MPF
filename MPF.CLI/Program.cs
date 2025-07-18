@@ -179,7 +179,7 @@ namespace MPF.CLI
             }
 
             // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput(mediaType: mediaType)
+            var verifyResult = env.VerifyAndSaveDumpOutput()
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
         }

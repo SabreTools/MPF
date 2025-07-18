@@ -449,14 +449,12 @@ namespace MPF.Frontend
         /// <summary>
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
-        /// <param name="mediaType">Media type for controlling expected file sets, if available</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<ResultEventArgs> VerifyAndSaveDumpOutput(
-            MediaType? mediaType = null,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
             ProcessUserInfoDelegate? processUserInfo = null,
@@ -485,8 +483,8 @@ namespace MPF.Frontend
             var outputDirectory = Path.GetDirectoryName(OutputPath);
             var outputFilename = Path.GetFileName(OutputPath);
 
-            // Determine the media type from the processor, if not provided
-            mediaType ??= _processor.DetermineMediaType(outputDirectory, outputFilename);
+            // Determine the media type from the processor
+            MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
 
             // Check to make sure that the output had all the correct files
             List<string> missingFiles = _processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);

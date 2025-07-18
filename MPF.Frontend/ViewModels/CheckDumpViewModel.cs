@@ -422,7 +422,6 @@ namespace MPF.Frontend.ViewModels
 
             // Finally, attempt to do the output dance
             var result = await env.VerifyAndSaveDumpOutput(
-                mediaType: null,
                 resultProgress: resultProgress,
                 protectionProgress: protectionProgress,
                 processUserInfo: processUserInfo);
