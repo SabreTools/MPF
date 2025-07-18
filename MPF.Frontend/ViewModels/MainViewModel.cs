@@ -2190,23 +2190,6 @@ namespace MPF.Frontend.ViewModels
             // Force an internal drive refresh in case the user entered things manually
             _environment.RefreshDrive();
 
-            // If still in custom parameter mode, check that users meant to continue or not
-            if (ParametersCheckBoxEnabled == false && _displayUserMessage != null)
-            {
-                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to dump with these custom parameters?", 2, true);
-                if (result == true)
-                {
-                    ParametersCheckBoxEnabled = true;
-                    ProcessCustomParameters();
-                }
-                else
-                {
-                    // Re-allow quick exiting
-                    AskBeforeQuit = false;
-                    return;
-                }
-            }
-
             try
             {
                 // Run pre-dumping validation checks
@@ -2303,6 +2286,7 @@ namespace MPF.Frontend.ViewModels
                 MediaScanButtonEnabled = false;
                 UpdateVolumeLabelEnabled = false;
                 CopyProtectScanButtonEnabled = false;
+                StartStopButtonEnabled = false;
             }
             else
             {
@@ -2323,6 +2307,7 @@ namespace MPF.Frontend.ViewModels
                 MediaScanButtonEnabled = true;
                 UpdateVolumeLabelEnabled = true;
                 CopyProtectScanButtonEnabled = true;
+                StartStopButtonEnabled = true;
             }
         }
 
