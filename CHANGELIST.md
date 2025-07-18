@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.3.3 (2025-07-18)
 
 - Handle layers for PS3CFW
 - Further clarify configuration requirements for CLI
