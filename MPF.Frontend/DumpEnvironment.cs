@@ -486,14 +486,6 @@ namespace MPF.Frontend
             // Determine the media type from the processor
             MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
 
-            // Check to make sure that the output had all the correct files
-            List<string> missingFiles = _processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
-            if (missingFiles.Count > 0)
-            {
-                resultProgress.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
-                return ResultEventArgs.Failure("Error! Please check output directory as dump may be incomplete!");
-            }
-
             // Extract the information from the output files
             resultProgress.Report(ResultEventArgs.Success("Extracting output information from output files..."));
             var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
@@ -505,7 +497,15 @@ namespace MPF.Frontend
                 _processor,
                 resultProgress,
                 protectionProgress);
-            resultProgress.Report(ResultEventArgs.Success("Extracting information complete!"));
+            if (submissionInfo == null)
+            {
+                resultProgress.Report(ResultEventArgs.Failure("There was an issue extracting information!"));
+                return ResultEventArgs.Failure();
+            }
+            else
+            {
+                resultProgress.Report(ResultEventArgs.Success("Extracting information complete!"));
+            }
 
             // Inject seed submission info data, if necessary
             if (seedInfo != null)

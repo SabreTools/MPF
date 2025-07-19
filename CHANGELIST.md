@@ -5,6 +5,7 @@
 - UI consistency when parameters are editable
 - Let the processor always deal with unsupported
 - Put a try/catch around GenerateArtifacts
+- Reduce preprocessing in DumpEnvironment
 
 ### 3.3.3 (2025-07-18)
 
