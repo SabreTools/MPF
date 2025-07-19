@@ -312,42 +312,50 @@ namespace MPF.Processors
             if (outputFiles.Count == 0)
                 return [];
 
-            // Create the artifacts dictionary
-            var artifacts = new Dictionary<string, string>();
-
-            // Only try to create artifacts for files that exist
-            foreach (var outputFile in outputFiles)
+            try
             {
-                // Skip non-artifact files
-                if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
-                    continue;
+                // Create the artifacts dictionary
+                var artifacts = new Dictionary<string, string>();
 
-                // Skip non-existent files
-                if (!outputFile.Exists(outputDirectory ?? string.Empty))
-                    continue;
-
-                // Skip non-existent files
-                foreach (var filePath in outputFile.GetPaths(outputDirectory ?? string.Empty))
+                // Only try to create artifacts for files that exist
+                foreach (var outputFile in outputFiles)
                 {
-                    // Get binary artifacts as a byte array
-                    if (outputFile.IsBinaryArtifact)
-                    {
-                        byte[] data = File.ReadAllBytes(filePath);
-                        string str = Convert.ToBase64String(data);
-                        artifacts[outputFile.ArtifactKey] = str;
-                    }
-                    else
-                    {
-                        string? data = ProcessingTool.GetFullFile(filePath);
-                        string str = ProcessingTool.GetBase64(data) ?? string.Empty;
-                        artifacts[outputFile.ArtifactKey] = str;
-                    }
+                    // Skip non-artifact files
+                    if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
+                        continue;
 
-                    break;
+                    // Skip non-existent files
+                    if (!outputFile.Exists(outputDirectory ?? string.Empty))
+                        continue;
+
+                    // Skip non-existent files
+                    foreach (var filePath in outputFile.GetPaths(outputDirectory ?? string.Empty))
+                    {
+                        // Get binary artifacts as a byte array
+                        if (outputFile.IsBinaryArtifact)
+                        {
+                            byte[] data = File.ReadAllBytes(filePath);
+                            string str = Convert.ToBase64String(data);
+                            artifacts[outputFile.ArtifactKey] = str;
+                        }
+                        else
+                        {
+                            string? data = ProcessingTool.GetFullFile(filePath);
+                            string str = ProcessingTool.GetBase64(data) ?? string.Empty;
+                            artifacts[outputFile.ArtifactKey] = str;
+                        }
+
+                        break;
+                    }
                 }
-            }
 
-            return artifacts;
+                return artifacts;
+            }
+            catch
+            {
+                // Any issues shouldn't stop processing
+                return [];
+            }
         }
 
 #if NET452_OR_GREATER || NETCOREAPP
