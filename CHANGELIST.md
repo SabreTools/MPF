@@ -3,6 +3,7 @@
 - Remove media type from Check Dump UI
 - Always trust the output files for processing
 - UI consistency when parameters are editable
+- Let the processor always deal with unsupported
 
 ### 3.3.3 (2025-07-18)
 

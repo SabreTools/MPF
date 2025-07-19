@@ -51,10 +51,6 @@ namespace MPF.Frontend.Tools
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
         {
-            // Ensure the current disc combination should exist
-            if (!system.MediaTypes().Contains(mediaType))
-                return null;
-
             // Split the output path for easier use
             var outputDirectory = Path.GetDirectoryName(outputPath);
             string outputFilename = Path.GetFileName(outputPath);
@@ -77,9 +73,9 @@ namespace MPF.Frontend.Tools
             SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
 
             // Get specific tool output handling
-            processor?.GenerateSubmissionInfo(info, mediaType, basePath, options.EnableRedumpCompatibility);
+            processor.GenerateSubmissionInfo(info, mediaType, basePath, options.EnableRedumpCompatibility);
             if (options.IncludeArtifacts)
-                info.Artifacts = processor?.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
+                info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Add a placeholder for the logs link
             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
@@ -93,7 +89,7 @@ namespace MPF.Frontend.Tools
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor?.VolumeLabels);
+            string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels != null)
                 info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 
