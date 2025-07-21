@@ -240,6 +240,8 @@
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)FoxInteractiveID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)GTInteractiveID], Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="InterplayIDTextBox" Label="Interplay ID"
+                                                        Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)InterplayID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)JASRACID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"
