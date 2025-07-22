@@ -332,8 +332,6 @@ namespace MPF.UI.Windows
                 case DiscType.NintendoWiiOpticalDiscSL:
                 case DiscType.NintendoWiiOpticalDiscDL:
                 case DiscType.NintendoWiiUOpticalDiscSL:
-                case DiscType.UMDSL:
-                case DiscType.UMDDL:
                     // Quad-layer discs
                     if (submissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
                     {
@@ -426,6 +424,23 @@ namespace MPF.UI.Windows
                         L1AdditionalMould!.Label = "Additional Mould";
                     }
 
+                    break;
+
+                case DiscType.UMDSL:
+                case DiscType.UMDDL:
+                    L0Info!.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                    L0MasteringRing!.Label = "Mastering Ring";
+                    L0MasteringSID!.Label = "Mastering SID";
+                    L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L0MouldSID!.Label = "Data Side Mould SID";
+                    L0AdditionalMould!.Label = "Data Side Additional Mould";
+
+                    L1Info!.Header = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                    L1MasteringRing!.Label = "Mastering Ring";
+                    L1MasteringSID!.Label = "Mastering SID";
+                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L1MouldSID!.Label = "Label Side Mould SID";
+                    L1AdditionalMould!.Label = "Label Side Additional Mould";
                     break;
 
                 // All other media we assume to have no rings
