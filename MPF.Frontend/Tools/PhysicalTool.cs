@@ -549,7 +549,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                        pkgInfo += $"{appPkgHeader.ContentID}" + Environment.NewLine;
+                        pkgInfo += $"{appPkgHeader.ContentID}{Environment.NewLine}";
                 }
 
                 if (pkgInfo == "")
@@ -700,7 +700,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
                     if (appPkgHeader != null)
-                        pkgInfo += $"{appPkgHeader.ContentID}" + Environment.NewLine;
+                        pkgInfo += $"{appPkgHeader.ContentID}{Environment.NewLine}";
                 }
 
                 if (pkgInfo == "")

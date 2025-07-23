@@ -289,7 +289,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyElectronicBook:
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.CommonDiscInfo!.Comments = "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
+                        info.CommonDiscInfo!.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
 
                     // Needed for some odd copy protections
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;

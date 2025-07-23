@@ -9,6 +9,7 @@
 - Update RedumpLib to 1.6.9
 - Treat all UMD as DL visually
 - Add CopyUpdateUrlToClipboard option
+- Fix inconsistency with newlines
 
 ### 3.3.3 (2025-07-18)
 

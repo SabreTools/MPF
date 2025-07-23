@@ -192,7 +192,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyElectronicBook:
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.CommonDiscInfo!.Comments = "Warning: Incorrect SecuROM sector count" + Environment.NewLine;
+                        info.CommonDiscInfo!.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
 
                     // Needed for some odd copy protections
                     info.CopyProtection!.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
@@ -385,7 +385,7 @@ namespace MPF.Processors
 
                     string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
                     if (ps2Protection != null)
-                        info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}" + Environment.NewLine;
+                        info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}{Environment.NewLine}";
 
                     break;
 
