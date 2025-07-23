@@ -82,6 +82,11 @@
                                           ToolTip="Check for updates when the application starts" Margin="0,4"
                                 />
 
+                                <CheckBox VerticalAlignment="Center" Content="Copy Update URL to Clipboard"
+                                          IsChecked="{Binding Options.CopyUpdateUrlToClipboard}"
+                                          ToolTip="If an update is found, try to copy the update URL to the clipboard" Margin="0,4"
+                                />
+
                                 <CheckBox VerticalAlignment="Center" Content="Fast Update Label"
                                           IsChecked="{Binding Options.FastUpdateLabel}"
                                           ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"

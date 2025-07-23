@@ -205,8 +205,14 @@ namespace MPF.UI.Windows
             MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
 
             // If we have a new version, put it in the clipboard
-            if (different && !string.IsNullOrEmpty(url))
-                Clipboard.SetText(url);
+            if (MainViewModel.Options.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
+            {
+                try
+                {
+                    Clipboard.SetText(url);
+                }
+                catch { }
+            }
 
             if (showIfSame || different)
                 CustomMessageBox.Show(this, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);

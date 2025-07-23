@@ -124,6 +124,15 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Try to copy the update URL to the clipboard if one is found
+        /// </summary>
+        public bool CopyUpdateUrlToClipboard
+        {
+            get { return GetBooleanSetting(Settings, "CopyUpdateUrlToClipboard", true); }
+            set { Settings["CopyUpdateUrlToClipboard"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Fast update label - Skips disc checks and updates path only
         /// </summary>
         public bool FastUpdateLabel
