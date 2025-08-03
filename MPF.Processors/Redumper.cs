@@ -1204,7 +1204,7 @@ namespace MPF.Processors
                     }
 
                     // Reset C2 errors when a media errors section is found
-                    else if (line.StartsWith("media errors:"))
+                    else if (line.StartsWith("media errors:") || line.StartsWith("initial dump media errors:"))
                     {
                         c2Errors = 0;
                     }
