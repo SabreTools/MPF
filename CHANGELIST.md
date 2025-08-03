@@ -10,6 +10,7 @@
 - Treat all UMD as DL visually
 - Add CopyUpdateUrlToClipboard option
 - Fix inconsistency with newlines
+- Fix for C2 error doubling issue (fuzz6001)
 
 ### 3.3.3 (2025-07-18)
 
