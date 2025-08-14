@@ -10,6 +10,7 @@
 - Treat all UMD as DL visually
 - Add CopyUpdateUrlToClipboard option
 - Fix inconsistency with newlines
+- Update Aaru to build 5.4.1
 
 ### 3.3.3 (2025-07-18)
 
