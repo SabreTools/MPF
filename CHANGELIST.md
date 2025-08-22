@@ -14,6 +14,7 @@
 - Fix for C2 error doubling issue (fuzz6001)
 - Update RedumpLib and LibIRD
 - Update LibIRD
+- Update redumper to build 653
 
 ### 3.3.3 (2025-07-18)
 

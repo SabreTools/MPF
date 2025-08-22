@@ -88,13 +88,13 @@ function Download-Programs {
         "Creator_win-x64"      = "https://github.com/user-attachments/files/20000181/DiscImageCreator_20250501.zip"
 
         # Redumper
-        "Redumper_linux-arm64" = ""
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Linux64.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Darwin64.zip"
-        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Darwin64.zip"
-        "Redumper_win-arm64"   = ""
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Windows32.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/build_631/redumper-2025.07.14_build631-Windows64.zip"
+        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-linux-arm64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-linux-x64.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-macos-arm64.zip"
+        "Redumper_osx-x64"     = ""
+        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-windows-arm64.zip"
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-windows-x86.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b653/redumper-b653-windows-x64.zip"
     }
 
     # Download and extract files
