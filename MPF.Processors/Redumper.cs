@@ -51,6 +51,7 @@ namespace MPF.Processors
         {
             // Ensure that required sections exist
             info = Builder.EnsureAllSections(info);
+            info.CommonDiscInfo!.Comments = string.Empty;
 
             // Get the dumping program and version
             info.DumpingInfo!.DumpingProgram ??= string.Empty;
@@ -74,14 +75,14 @@ namespace MPF.Processors
             info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
             string? sfsvd = GetSFSVD($"{basePath}.log");
             if (!string.IsNullOrEmpty(sfsvd))
-                info.CommonDiscInfo!.Comments = $"<b>High Sierra Volume Descriptor</b>:{Environment.NewLine}{sfsvd}{Environment.NewLine}";
+                info.CommonDiscInfo.Comments += $"<b>High Sierra Volume Descriptor</b>:{Environment.NewLine}{sfsvd}{Environment.NewLine}";
 
             // Get the Datafile information
             info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset($"{basePath}.log");
-            info.CommonDiscInfo!.RingWriteOffset = writeOffset;
+            info.CommonDiscInfo.RingWriteOffset = writeOffset;
             info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
 
             // Attempt to get multisession data
@@ -149,7 +150,7 @@ namespace MPF.Processors
 
                     // Attempt to get the error count
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
-                    info.CommonDiscInfo!.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());
+                    info.CommonDiscInfo.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());
 
                     // Bluray-specific options
                     if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
@@ -195,7 +196,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyElectronicBook:
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.CommonDiscInfo!.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
+                        info.CommonDiscInfo.Comments += $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
 
                     // Needed for some odd copy protections
                     info.CopyProtection!.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
@@ -209,7 +210,7 @@ namespace MPF.Processors
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
                     {
-                        info.CommonDiscInfo!.EXEDateBuildDate = kp2EXEDate;
+                        info.CommonDiscInfo.EXEDateBuildDate = kp2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = kp2Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = kp2Version ?? string.Empty;
                     }
@@ -229,7 +230,7 @@ namespace MPF.Processors
                     string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi").Trim('\0');
                     if (!string.IsNullOrEmpty(xmidString))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XMID] = xmidString;
                         var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                         info.CommonDiscInfo.Serial = xmid?.Serial ?? string.Empty;
                         if (!redumpCompat)
@@ -242,7 +243,7 @@ namespace MPF.Processors
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}.dmi").Trim('\0');
                     if (!string.IsNullOrEmpty(xemidString))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XeMID] = xemidString;
                         var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                         info.CommonDiscInfo.Serial = xemid?.Serial ?? string.Empty;
                         if (!redumpCompat)
@@ -254,15 +255,15 @@ namespace MPF.Processors
 
                     string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
                     if (dmiCrc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
                     string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfiCrc != null)
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
                     if (ProcessingTool.IsValidSS($"{basePath}.ss") && !ProcessingTool.IsValidPartialSS($"{basePath}.ss"))
                     {
                         string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
                         if (ssCrc != null)
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }
 
                     string? ssRanges = ProcessingTool.GetSSRanges($"{basePath}.ss");
@@ -279,7 +280,7 @@ namespace MPF.Processors
                             out string? serial,
                             out _,
                             out string? version) ?? string.Empty;
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions!.Version = version ?? string.Empty;
@@ -288,7 +289,7 @@ namespace MPF.Processors
 
                 case RedumpSystem.SegaMegaCDSegaCD:
                     info.Extras!.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
                     info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     break;
@@ -301,7 +302,7 @@ namespace MPF.Processors
                             out string? serial,
                             out _,
                             out string? version) ?? string.Empty;
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions!.Version = version ?? string.Empty;
@@ -316,7 +317,7 @@ namespace MPF.Processors
                             out string? serial,
                             out _,
                             out string? version) ?? string.Empty;
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions!.Version = version ?? string.Empty;
@@ -331,7 +332,7 @@ namespace MPF.Processors
                             out string? serial,
                             out _,
                             out string? version) ?? string.Empty;
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions!.Version = version ?? string.Empty;
@@ -346,7 +347,7 @@ namespace MPF.Processors
                             out string? serial,
                             out _,
                             out string? version) ?? string.Empty;
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions!.Version = version ?? string.Empty;
@@ -359,7 +360,7 @@ namespace MPF.Processors
                         out string? saturnSerial,
                         out _,
                         out string? saturnVersion) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
                     info.CommonDiscInfo.EXEDateBuildDate = saturnBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
@@ -368,7 +369,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
                     {
-                        info.CommonDiscInfo!.EXEDateBuildDate = psxEXEDate;
+                        info.CommonDiscInfo.EXEDateBuildDate = psxEXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = psxSerial ?? string.Empty;
                     }
 
@@ -381,21 +382,21 @@ namespace MPF.Processors
                 case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
                     {
-                        info.CommonDiscInfo!.EXEDateBuildDate = ps2EXEDate;
+                        info.CommonDiscInfo.EXEDateBuildDate = ps2EXEDate;
                         info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps2Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps2Version ?? string.Empty;
                     }
 
                     string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
                     if (ps2Protection != null)
-                        info.CommonDiscInfo!.Comments = $"<b>Protection</b>: {ps2Protection}{Environment.NewLine}";
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Protection] = ps2Protection;
 
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps3Version ?? string.Empty;
                     }
 
@@ -404,7 +405,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyPlayStation4:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps4Version ?? string.Empty;
                     }
 
@@ -413,7 +414,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyPlayStation5:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps5Version ?? string.Empty;
                     }
 

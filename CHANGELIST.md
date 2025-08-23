@@ -15,6 +15,7 @@
 - Update RedumpLib and LibIRD
 - Update LibIRD
 - Update redumper to build 653
+- Minor cleanup
 
 ### 3.3.3 (2025-07-18)
 
