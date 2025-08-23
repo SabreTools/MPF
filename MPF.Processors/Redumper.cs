@@ -72,6 +72,9 @@ namespace MPF.Processors
 
             // Get the PVD, if it exists
             info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
+            string? sfsvd = GetSFSVD($"{basePath}.log");
+            if (!string.IsNullOrEmpty(sfsvd))
+                info.CommonDiscInfo!.Comments = $"<b>High Sierra Volume Descriptor</b>:{Environment.NewLine}{sfsvd}{Environment.NewLine}";
 
             // Get the Datafile information
             info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
@@ -1792,6 +1795,44 @@ namespace MPF.Processors
                 }
 
                 return pvdString.TrimEnd('\n');
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the SFSVD from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Newline-delimited SFSVD if possible, null on error</returns>
+        internal static string? GetSFSVD(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return null;
+            if (!File.Exists(log))
+                return null;
+
+            try
+            {
+                // Fast forward to the SFSVD line
+                using var sr = File.OpenText(log);
+                while (!sr.EndOfStream && sr.ReadLine()?.TrimStart()?.StartsWith("SFSVD:") == false) ;
+                if (sr.EndOfStream)
+                    return null;
+
+                // Now that we're at the relevant entries, read each line in and concatenate
+                string? sfsvdString = string.Empty, line = sr.ReadLine();
+                while (line?.StartsWith("03") == true)
+                {
+                    sfsvdString += line + "\n";
+                    line = sr.ReadLine();
+                }
+
+                return sfsvdString.TrimEnd('\n');
             }
             catch
             {
