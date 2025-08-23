@@ -74,7 +74,7 @@ namespace MPF.Processors
             info.Extras!.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD";
             string? sfsvd = GetSFSVD($"{basePath}.log");
             if (!string.IsNullOrEmpty(sfsvd))
-                info.CommonDiscInfo!.Comments = $"<b>High Sierra Volume Descriptor</b>:{Environment.NewLine}" + sfsvd + Environment.NewLine;
+                info.CommonDiscInfo!.Comments = $"<b>High Sierra Volume Descriptor</b>:{Environment.NewLine}{sfsvd}{Environment.NewLine}";
 
             // Get the Datafile information
             info.TracksAndWriteOffsets!.ClrMameProData = GetDatfile($"{basePath}.log");
