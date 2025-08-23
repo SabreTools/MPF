@@ -16,6 +16,7 @@
 - Update LibIRD
 - Update redumper to build 653
 - Minor cleanup
+- Update test Nuget packages
 
 ### 3.3.3 (2025-07-18)
 
