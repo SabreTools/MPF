@@ -17,6 +17,7 @@
 - Update redumper to build 653
 - Minor cleanup
 - Update test Nuget packages
+- Update RedumpLib to 1.7.1
 
 ### 3.3.3 (2025-07-18)
 
