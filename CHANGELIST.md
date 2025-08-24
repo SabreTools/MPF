@@ -18,6 +18,7 @@
 - Minor cleanup
 - Update test Nuget packages
 - Update RedumpLib to 1.7.1
+- Support multisession cache files
 
 ### 3.3.3 (2025-07-18)
 
