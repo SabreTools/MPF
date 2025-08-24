@@ -445,9 +445,12 @@ namespace MPF.Processors
                         new($"{outputFilename}.atip", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "atip"),
-                        new($"{outputFilename}.cache", OutputFileFlags.Binary
+                        new([$"{outputFilename}.cache", $"{outputFilename}.1.cache"], OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "cache"),
+                        new($"{outputFilename}.2.cache", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "cache_2"),
                         new($"{outputFilename}.cdtext", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "cdtext"),
@@ -531,13 +534,6 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
-                        // .asus is obsolete: newer redumper produces .cache instead
-                        new($"{outputFilename}.asus", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "asus"),
-                        new($"{outputFilename}.cache", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
-                            "cache"),
                         new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
@@ -577,6 +573,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.ss", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ss"),
+                        // ssv1 and ssv2 extensions are obsolete
                         new($"{outputFilename}.ssv1", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv1"),
