@@ -91,12 +91,12 @@ function download_programs() {
 
     # DiscImageCreator
     DL_MAP["Creator_linux-arm64"]=""
-    DL_MAP["Creator_linux-x64"]="https://github.com/user-attachments/files/20000183/DiscImageCreator_20250501.tar.gz"
+    DL_MAP["Creator_linux-x64"]="https://github.com/user-attachments/files/22080484/DiscImageCreator_20250901.tar.gz"
     DL_MAP["Creator_osx-arm64"]="https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
     DL_MAP["Creator_osx-x64"]="https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
     DL_MAP["Creator_win-arm64"]=""
-    DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/20000181/DiscImageCreator_20250501.zip"
-    DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/20000181/DiscImageCreator_20250501.zip"
+    DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
+    DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
 
     # Redumper
     DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b653/redumper-b653-linux-arm64.zip"
