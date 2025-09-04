@@ -291,10 +291,10 @@ namespace MPF.Processors.Test
         {
             string? expectedTitle = "title";
             DiscCategory? expectedCategory = DiscCategory.Games;
-            string? expectedSerial = "seri-al";
-            string? expectedVersion = "version";
-            string? expectedLayer = "12345";
-            long expectedSize = 12345;
+            string? expectedSerial = "ABCD-12345";
+            string? expectedVersion = "1.01";
+            string? expectedLayer = "442560";
+            long expectedSize = 1471807488;
 
             string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD", "test_disc.txt");
             bool actual = UmdImageCreator.GetUMDAuxInfo(disc,

@@ -184,13 +184,13 @@ namespace MPF.Processors
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
-                        title = line.Split(' ')[1];
+                        title = line.Substring("TITLE: ".Length);
                     else if (line.StartsWith("DISC_ID") && version == null)
                         serial = line.Split(' ')[1];
                     else if (line.StartsWith("DISC_VERSION") && version == null)
                         version = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
-                        category = ProcessingTool.GetUMDCategory(line.Split(' ')[1]);
+                        category = ProcessingTool.GetUMDCategory(line.Split(' ')[2]);
                     else if (line.StartsWith("L0 length"))
                         layer = line.Split(' ')[2];
                     else if (line.StartsWith("FileSize:"))

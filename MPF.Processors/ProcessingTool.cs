@@ -375,9 +375,9 @@ namespace MPF.Processors
         {
             return category?.ToLowerInvariant() switch
             {
-                "game" => DiscCategory.Games,
-                "video" => DiscCategory.Video,
-                "audio" => DiscCategory.Audio,
+                "(game)" => DiscCategory.Games,
+                "(video)" => DiscCategory.Video,
+                "(audio)" => DiscCategory.Audio,
                 _ => null,
             };
         }

@@ -1,7 +1,21 @@
 << GetUMDAuxInfo >>
-TITLE title
-DISC_ID serial
-DISC_VERSION version
-pspUmdTypes GAME
-L0 length 12345
-FileSize: 12345
+disc0:/PSP_GAME/PARAM.SFO
+	magic: PSF
+	version: 1.01
+	BOOTABLE: 1
+	CATEGORY: UG
+	DISC_ID: ABCD12345
+	DISC_NUMBER: 1
+	DISC_TOTAL: 1
+	DISC_VERSION: 1.01
+	PARENTAL_LEVEL: 1
+	PSP_SYSTEM_VER: 1.00
+	REGION: 32768
+	TITLE: title
+
+pspUmdTypes: 0x10 (GAME)
+  L0 length: 442560 (0x6c0c0)
+  L1 length: 276096 (0x43680)
+  ---------------------------
+      Total: 718656 (0xaf740)
+   FileSize: 1471807488 (0x57ba0000)
