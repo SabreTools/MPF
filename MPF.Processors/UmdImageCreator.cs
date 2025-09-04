@@ -184,7 +184,7 @@ namespace MPF.Processors
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
-                        title = line.Split(' ')[1];
+                        title = line.Substring((line.IndexOf(' ') + 1) % (line.Length + 1));
                     else if (line.StartsWith("DISC_ID") && version == null)
                         serial = line.Split(' ')[1];
                     else if (line.StartsWith("DISC_VERSION") && version == null)

@@ -20,6 +20,7 @@
 - Update RedumpLib to 1.7.1
 - Support multisession cache files
 - Update DIC to 20250901 (Windows/Linux only)
+- Fix UIC title field
 
 ### 3.3.3 (2025-07-18)
 
