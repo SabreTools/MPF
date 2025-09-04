@@ -292,7 +292,7 @@ namespace MPF.Processors.Test
             string? expectedTitle = "title";
             DiscCategory? expectedCategory = DiscCategory.Games;
             string? expectedSerial = "ABCD-12345";
-            string? expectedVersion = "1.00";
+            string? expectedVersion = "1.01";
             string? expectedLayer = "442560";
             long expectedSize = 1471807488;
 
