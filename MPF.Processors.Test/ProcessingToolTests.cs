@@ -471,12 +471,9 @@ namespace MPF.Processors.Test
         [Theory]
         [InlineData(null, null)]
         [InlineData("", null)]
-        [InlineData("GAME", DiscCategory.Games)]
-        [InlineData("game", DiscCategory.Games)]
-        [InlineData("VIDEO", DiscCategory.Video)]
-        [InlineData("video", DiscCategory.Video)]
-        [InlineData("AUDIO", DiscCategory.Audio)]
-        [InlineData("audio", DiscCategory.Audio)]
+        [InlineData("(GAME)", DiscCategory.Games)]
+        [InlineData("(VIDEO)", DiscCategory.Video)]
+        [InlineData("(AUDIO)", DiscCategory.Audio)]
         [InlineData("INVALID", null)]
         public void GetUMDCategoryTest(string? category, DiscCategory? expected)
         {
