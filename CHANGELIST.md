@@ -21,6 +21,7 @@
 - Support multisession cache files
 - Update DIC to 20250901 (Windows/Linux only)
 - Fix UIC processing logic
+- Update RedumpLib, detect Playmaji Polymega system
 
 ### 3.3.3 (2025-07-18)
 
