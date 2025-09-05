@@ -1665,6 +1665,12 @@ namespace MPF.Frontend.ViewModels
             }
             catch { }
 
+            // Playmaji Polymega
+            if (File.Exists(Path.Combine(drive.Name, "Get Polymega App.url")))
+            {
+                return RedumpSystem.PlaymajiPolymega;
+            }
+
             try
             {
                 // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
