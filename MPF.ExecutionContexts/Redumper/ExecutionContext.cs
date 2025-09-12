@@ -445,6 +445,7 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Skeleton:
                     case CommandStrings.FlashMT1339:
                     case CommandStrings.FlashSD616:
+                    case CommandStrings.FlashPlextor:
                     case CommandStrings.Subchannel:
                     case CommandStrings.Debug:
                     case CommandStrings.FixMSF:
