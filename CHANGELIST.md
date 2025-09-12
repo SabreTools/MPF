@@ -22,6 +22,7 @@
 - Update DIC to 20250901 (Windows/Linux only)
 - Fix UIC processing logic
 - Update RedumpLib, detect Playmaji Polymega system
+- Update redumper to b655
 
 ### 3.3.3 (2025-07-18)
 

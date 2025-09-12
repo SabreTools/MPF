@@ -22,6 +22,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Skeleton = "skeleton";
         public const string FlashMT1339 = "flash::mt1339";
         public const string FlashSD616 = "flash::sd616";
+        public const string FlashPlextor = "flash::plextor";
         public const string Subchannel = "subchannel";
         public const string Debug = "debug";
         public const string FixMSF = "fixmsf";
