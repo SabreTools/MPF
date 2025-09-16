@@ -2293,6 +2293,7 @@ namespace MPF.Processors
             // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
             // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
             // redumper v2025.03.29 build_481
+            // redumper (build: b652)
 
             try
             {
@@ -2306,10 +2307,7 @@ namespace MPF.Processors
                     nextLine = sr.ReadLine()?.Trim() ?? string.Empty;
 
                 // Generate regex
-                // Permissive
-                var regex = new Regex(@"^redumper (v.+)", RegexOptions.Compiled);
-                // Strict
-                //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]", RegexOptions.Compiled);
+                var regex = new Regex(@"^redumper (.+)", RegexOptions.Compiled);
 
                 // Extract the version string
                 var match = regex.Match(nextLine);
