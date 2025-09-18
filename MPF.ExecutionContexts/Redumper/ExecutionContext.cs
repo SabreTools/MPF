@@ -350,7 +350,6 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
-
             if (!string.IsNullOrEmpty(readMethod) && readMethod != ReadMethod.NONE.ToString())
             {
                 this[FlagStrings.DriveReadMethod] = true;
@@ -390,7 +389,7 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             int retries = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
-            if(retries > 0)
+            if (retries > 0)
             {
                 this[FlagStrings.Retries] = true;
                 (_inputs[FlagStrings.Retries] as Int32Input)?.SetValue(retries);
@@ -401,6 +400,12 @@ namespace MPF.ExecutionContexts.Redumper
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
                 (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(leadinRetries);
+            }
+
+            if (GetBooleanSetting(options, SettingConstants.RefineSectorMode, SettingConstants.RefineSectorModeDefault))
+            {
+                this[FlagStrings.RefineSectorMode] = true;
+                (_inputs[FlagStrings.RefineSectorMode] as FlagInput)?.SetValue(true);
             }
         }
 

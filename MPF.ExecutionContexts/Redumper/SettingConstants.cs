@@ -17,6 +17,9 @@ namespace MPF.ExecutionContexts.Redumper
         public const string ReadMethod = "RedumperReadMethod";
         public static readonly string ReadMethodDefault = Redumper.ReadMethod.NONE.ToString();
 
+        public const string RefineSectorMode = "RedumperRefineSectorMode";
+        public const bool RefineSectorModeDefault = false;
+
         public const string RereadCount = "RedumperRereadCount";
         public const int RereadCountDefault = 20;
 

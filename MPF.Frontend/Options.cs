@@ -436,6 +436,15 @@ namespace MPF.Frontend
             set { Settings[RedumperSettings.RereadCount] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Enable the refine sector mode flag by default
+        /// </summary>
+        public bool RedumperRefineSectorMode
+        {
+            get { return GetBooleanSetting(Settings, RedumperSettings.RefineSectorMode, RedumperSettings.RefineSectorModeDefault); }
+            set { Settings[RedumperSettings.RefineSectorMode] = value.ToString(); }
+        }
+
         #endregion
 
         #region Extra Dumping Options

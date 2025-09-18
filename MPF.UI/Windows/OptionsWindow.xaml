@@ -408,7 +408,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
-                            <UniformGrid Columns="2" Rows="7">
+                            <UniformGrid Columns="2" Rows="8">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
                                           IsChecked="{Binding Options.RedumperEnableVerbose}"
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
@@ -427,6 +427,12 @@
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                          ToolTipService.ShowOnDisabled="True"
                                 />
+
+                                <CheckBox VerticalAlignment="Center" Content="Enable Refine Sector Mode Flag"
+                                          IsChecked="{Binding Options.RedumperRefineSectorMode}"
+                                          ToolTip="Enable the refine sector mode flag by default" Margin="0,4"
+                                />
+                                <Label/> <!-- Empty label for padding -->
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
