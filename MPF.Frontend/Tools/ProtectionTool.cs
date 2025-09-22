@@ -163,6 +163,9 @@ namespace MPF.Frontend.Tools
                 }
             }
 
+            // Sanitize context-sensitive protections
+            SanitizeContextSensitiveProtections(protections);
+
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
@@ -228,6 +231,36 @@ namespace MPF.Frontend.Tools
 
                 return false;
             });
+        }
+
+        /// <summary>
+        /// Sanitize unnecessary protections where context matters
+        /// </summary>
+        /// <param name="protections">Dictionary of file to list of protection mappings</param>
+        public static void SanitizeContextSensitiveProtections(Dictionary<string, List<string>>? protections)
+        {
+            // Ignore empty dictionaries
+            if (protections == null)
+                return;
+
+            // Setup a list for keys that need additional processing
+            List<string> keys = [];
+
+            // Loop through the keys and add relevant ones
+            foreach (var key in protections.Keys)
+            {
+                // No-op
+            }
+
+            // If there are no keys found
+            if (keys.Count == 0)
+                return;
+
+            // Process the keys as necessary
+            foreach (var key in keys)
+            {
+                // No-op
+            }
         }
 
         /// <summary>
