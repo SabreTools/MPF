@@ -141,7 +141,7 @@ namespace MPF.Frontend.Tools
                 .Distinct()
                 .ToList();
 #endif
-
+            
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(protectionValues);
             if (string.IsNullOrEmpty(protectionString))
@@ -200,11 +200,17 @@ namespace MPF.Frontend.Tools
 
             // Setup a list for keys that need additional processing
             List<string> keys = [];
-
+            
             // Loop through the keys and add relevant ones
             foreach (var key in protections.Keys)
             {
-                // No-op
+                var values = protections[key];
+                if (values.Count == 0)
+                    continue;
+
+                foreach (var value in values)
+                    if (value.Contains("SecuROM Release Control -"))
+                        keys.Add(key);
             }
 
             // If there are no keys found
@@ -213,9 +219,18 @@ namespace MPF.Frontend.Tools
 
             // Process the keys as necessary
             foreach (var key in keys)
-            {
-                // No-op
-            }
+                foreach (var releaseControlValue in protections[key])
+                    if (releaseControlValue.Contains("SecuROM Release Control -"))
+                        foreach (var protection in protections)
+                            if (protection.Key.Contains(key))
+                                foreach (var value in protection.Value)
+                                    if (!value.Contains("GitHub") &&
+                                        (value.Contains("SecuROM 7") ||
+                                         value.Contains("SecuROM 8") ||
+                                         value.Contains("SecuROM Content Activation") ||
+                                         value.Contains("SecuROM Data File Activation") ||
+                                         value.Contains("Unlock")))
+                                        protections.Remove(protection.Key);
         }
 
         /// <summary>
@@ -469,7 +484,14 @@ namespace MPF.Frontend.Tools
 
             // SecuROM
             // TODO: Figure this one out
-
+            
+            // Remove verbose game identification
+            if (foundProtections.Exists(p => p.StartsWith("SecuROM Release Control -")))
+            {
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith("SecuROM Release Control -"));
+                foundProtections.Add("SecuROM Release Control");
+            }
+            
             // SolidShield
             // TODO: Figure this one out
 
