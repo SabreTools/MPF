@@ -119,7 +119,7 @@ namespace MPF.Frontend.Tools
                 return "None found [OMIT FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
-            SanitizeContextSensitiveProtections(protections);
+            protections = SanitizeContextSensitiveProtections(protections);
 
             // Get a list of distinct found protections
 #if NET20
@@ -192,45 +192,60 @@ namespace MPF.Frontend.Tools
         /// Sanitize unnecessary protections where context matters
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
-        public static void SanitizeContextSensitiveProtections(Dictionary<string, List<string>>? protections)
+        /// <returns>Dictionary with all necessary items filtered out</returns>
+        public static Dictionary<string, List<string>> SanitizeContextSensitiveProtections(Dictionary<string, List<string>> protections)
         {
-            // Ignore empty dictionaries
-            if (protections == null)
-                return;
+            // Setup the output dictionary
+            Dictionary<string, List<string>> filtered = [];
 
             // Setup a list for keys that need additional processing
-            List<string> keys = [];
-            
+            List<string> foundKeys = [];
+
             // Loop through the keys and add relevant ones
-            foreach (var key in protections.Keys)
+            string[] paths = [.. protections.Keys];
+            foreach (var path in paths)
             {
-                var values = protections[key];
-                if (values.Count == 0)
+                if (!protections.TryGetValue(path, out var values) || values == null || values.Count == 0)
                     continue;
 
-                foreach (var value in values)
-                    if (value.Contains("SecuROM Release Control -"))
-                        keys.Add(key);
+                // Always copy the values if they're valid
+                filtered[path] = values;
+
+                if (values.Exists(s => s.StartsWith("SecuROM Release Control -")))
+                    foundKeys.Add(path);
             }
 
             // If there are no keys found
-            if (keys.Count == 0)
-                return;
+            if (foundKeys.Count == 0)
+                return filtered;
 
             // Process the keys as necessary
-            foreach (var key in keys)
-                foreach (var releaseControlValue in protections[key])
-                    if (releaseControlValue.Contains("SecuROM Release Control -"))
-                        foreach (var protection in protections)
-                            if (protection.Key.Contains(key))
-                                foreach (var value in protection.Value)
-                                    if (!value.Contains("GitHub") &&
-                                        (value.Contains("SecuROM 7") ||
-                                         value.Contains("SecuROM 8") ||
-                                         value.Contains("SecuROM Content Activation") ||
-                                         value.Contains("SecuROM Data File Activation") ||
-                                         value.Contains("Unlock")))
-                                        protections.Remove(protection.Key);
+            foreach (var key in foundKeys)
+            {
+                // Get all matching paths
+                var matchingPaths = Array.FindAll(paths, s => s != key && s.StartsWith(key));
+                if (matchingPaths.Length == 0)
+                    continue;
+
+                // Loop through the matching paths
+                foreach (var path in matchingPaths)
+                {
+                    if (!filtered.TryGetValue(path, out var values) || values == null || values.Count == 0)
+                        continue;
+
+                    if (values.Exists(s => !s.Contains("GitHub") &&
+                        (s.Contains("SecuROM 7")
+                            || s.Contains("SecuROM 8")
+                            || s.Contains("SecuROM Content Activation")
+                            || s.Contains("SecuROM Data File Activation")
+                            || s.Contains("Unlock"))))
+                    {
+                        filtered.Remove(path);
+                    }
+                }
+            }
+
+            return filtered;
         }
 
         /// <summary>
@@ -483,15 +498,12 @@ namespace MPF.Frontend.Tools
             }
 
             // SecuROM
-            // TODO: Figure this one out
-            
-            // Remove verbose game identification
-            if (foundProtections.Exists(p => p.StartsWith("SecuROM Release Control -")))
+            if (foundProtections.Exists(p => p.StartsWith("SecuROM Release Control")))
             {
-                foundProtections = foundProtections.FindAll(p => !p.StartsWith("SecuROM Release Control -"));
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith("SecuROM Release Control"));
                 foundProtections.Add("SecuROM Release Control");
             }
-            
+
             // SolidShield
             // TODO: Figure this one out
 

@@ -8,6 +8,107 @@ namespace MPF.Frontend.Test.Tools
 {
     public class ProtectionToolTests
     {
+        #region SanitizeContextSensitiveProtections
+
+        [Fact]
+        public void SanitizeContextSensitiveProtections_Empty_NoException()
+        {
+            Dictionary<string, List<string>>? protections = [];
+            var actual = ProtectionTool.SanitizeContextSensitiveProtections(protections);
+            Assert.NotNull(actual);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void SanitizeContextSensitiveProtections_NoMatch_NoChange()
+        {
+            Dictionary<string, List<string>>? protections = [];
+            protections["File1"] = ["Protection 1", "Protection 2"];
+
+            var actual = ProtectionTool.SanitizeContextSensitiveProtections(protections);
+            Assert.NotNull(actual);
+
+            string[] keys = [.. actual.Keys];
+            Assert.Contains("File1", keys);
+        }
+
+        [Fact]
+        public void SanitizeContextSensitiveProtections_Match_NoSub_NoChange()
+        {
+            Dictionary<string, List<string>>? protections = [];
+            protections["File1"] = ["Protection 1", "Protection 2"];
+            protections["File2"] = ["SecuROM Release Control - ANYTHING", "Protection 2"];
+            protections["File3"] = ["Protection 1", "SecuROM Release Control -"];
+
+            var actual = ProtectionTool.SanitizeContextSensitiveProtections(protections);
+            Assert.NotNull(actual);
+
+            string[] keys = [.. actual.Keys];
+            Assert.Contains("File1", keys);
+            Assert.Contains("File2", keys);
+            Assert.Contains("File3", keys);
+        }
+
+        [Fact]
+        public void SanitizeContextSensitiveProtections_Match_Sub_Change()
+        {
+            Dictionary<string, List<string>>? protections = [];
+            protections["File1"] = ["Protection 1", "Protection 2"];
+            protections["File2"] = ["SecuROM Release Control - ANYTHING"];
+            protections["File2/FileA"] = ["ANYTHING GitHub ANYTHING"];
+            protections["File2/FileB"] = ["SecuROM 7"];
+            protections["File2/FileC"] = ["SecuROM 8"];
+            protections["File2/FileD"] = ["SecuROM Content Activation"];
+            protections["File2/FileE"] = ["SecuROM Data File Activation"];
+            protections["File2/FileF"] = ["Unlock"];
+
+            var actual = ProtectionTool.SanitizeContextSensitiveProtections(protections);
+            Assert.NotNull(actual);
+
+            string[] keys = [.. actual.Keys];
+            Assert.Contains("File1", keys);
+            Assert.Contains("File2", keys);
+            Assert.Contains("File2/FileA", keys);
+            Assert.DoesNotContain("File2/FileB", keys);
+            Assert.DoesNotContain("File2/FileC", keys);
+            Assert.DoesNotContain("File2/FileD", keys);
+            Assert.DoesNotContain("File2/FileE", keys);
+            Assert.DoesNotContain("File2/FileF", keys);
+        }
+
+        [Fact]
+        public void SanitizeContextSensitiveProtections_MultiMatch_Sub_Change()
+        {
+            Dictionary<string, List<string>>? protections = [];
+            protections["File1"] = ["Protection 1", "Protection 2"];
+            protections["File2"] = ["SecuROM Release Control - ANYTHING"];
+            protections["File2/FileA"] = ["ANYTHING GitHub ANYTHING"];
+            protections["File2/FileB"] = ["SecuROM 7"];
+            protections["File2/FileC"] = ["SecuROM 8"];
+            protections["File3"] = ["SecuROM Release Control - ANYTHING"];
+            protections["File3/FileD"] = ["SecuROM Content Activation"];
+            protections["File3/FileE"] = ["SecuROM Data File Activation"];
+            protections["File3/FileF"] = ["Unlock"];
+
+            var actual = ProtectionTool.SanitizeContextSensitiveProtections(protections);
+            Assert.NotNull(actual);
+
+            string[] keys = [.. actual.Keys];
+            Assert.Contains("File1", keys);
+            Assert.Contains("File2", keys);
+            Assert.Contains("File2/FileA", keys);
+            Assert.DoesNotContain("File2/FileB", keys);
+            Assert.DoesNotContain("File2/FileC", keys);
+            Assert.Contains("File3", keys);
+            Assert.DoesNotContain("File3/FileD", keys);
+            Assert.DoesNotContain("File3/FileE", keys);
+            Assert.DoesNotContain("File3/FileF", keys);
+        }
+
+        #endregion
+
+        #region SanitizeFoundProtections
+
         [Fact]
         public void SanitizeFoundProtections_Exception()
         {
@@ -616,6 +717,21 @@ namespace MPF.Frontend.Test.Tools
             Assert.Equal(expected, sanitized);
         }
 
+        [Fact]
+        public void SanitizeFoundProtections_SecuROM()
+        {
+            List<string> protections =
+            [
+                "SecuROM Release Control",
+                "SecuROM Release Control - ANYTHING",
+                "SecuROM Release Control - ANYTHING ELSE",
+                "SecuROM Release Control - EVEN MORE",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal("SecuROM Release Control", sanitized);
+        }
+
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
@@ -668,6 +784,8 @@ namespace MPF.Frontend.Test.Tools
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal("XCP v1.2.0", sanitized);
         }
+
+        #endregion
 
         #endregion
     }
