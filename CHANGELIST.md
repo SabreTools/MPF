@@ -26,6 +26,10 @@
 - Support new versioning format in redumper (fuzz6001)
 - Add RedumperRefineSectorMode setting
 - Update BinaryObjectScanner to 3.4.0
+- Add context-sensitive protections helper method
+- Further flesh out framework
+- Add filters to handle Release Control output (Bestest)
+- Cleanup last commits, add tests
 
 ### 3.3.3 (2025-07-18)
 
