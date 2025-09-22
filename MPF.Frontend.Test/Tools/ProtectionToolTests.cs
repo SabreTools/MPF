@@ -14,6 +14,7 @@ namespace MPF.Frontend.Test.Tools
             List<string> protections =
             [
                 "Anything Else Protection",
+                "[Access issue when opening file",
                 "[Exception opening file",
             ];
 

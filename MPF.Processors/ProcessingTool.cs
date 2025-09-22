@@ -133,7 +133,7 @@ namespace MPF.Processors
         {
             try
             {
-                return SabreTools.Serialization.Deserializers.PIC.DeserializeFile(pic);
+                return new SabreTools.Serialization.Deserializers.PIC().Deserialize(pic);
             }
             catch
             {

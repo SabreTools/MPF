@@ -409,7 +409,7 @@ namespace MPF.Processors
             cueSheet.Files = [.. cueFiles];
             if (cueSheet != null && cueSheet != default)
             {
-                var ms = SabreTools.Serialization.Serializers.CueSheet.SerializeStream(cueSheet);
+                var ms = new SabreTools.Serialization.Serializers.CueSheet().Serialize(cueSheet);
                 if (ms == null)
                     return null;
 

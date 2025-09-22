@@ -72,9 +72,13 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<ProtectionDictionary> RunProtectionScanOnPath(string path,
+        public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnPath(string path,
             Options options,
+#if NET20 || NET35 || NET40
+            BinaryObjectScanner.IProgress<ProtectionProgress>? progress = null)
+#else
             IProgress<ProtectionProgress>? progress = null)
+#endif
         {
 #if NET40
             var found = await Task.Factory.StartNew(() =>
@@ -97,9 +101,6 @@ namespace MPF.Frontend.Tools
             if (found == null || found.Count == 0)
                 return [];
 
-            // Filter out any empty protections
-            found.ClearEmptyKeys();
-
             // Return the filtered set of protections
             return found;
         }
@@ -109,7 +110,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
         /// <returns>Detected protections, if any</returns>
-        public static string? FormatProtections(ProtectionDictionary? protections)
+        public static string? FormatProtections(Dictionary<string, List<string>>? protections)
         {
             // If the filtered list is empty in some way, return
             if (protections == null)
@@ -200,7 +201,12 @@ namespace MPF.Frontend.Tools
             // EXCEPTIONS
             if (foundProtections.Exists(p => p.StartsWith("[Exception opening file")))
             {
-                foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file"));
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file") && !p.StartsWith("[Access issue when opening file"));
+                foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
+            }
+            if (foundProtections.Exists(p => p.StartsWith("[Access issue when opening file")))
+            {
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file") && !p.StartsWith("[Access issue when opening file"));
                 foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
             }
 

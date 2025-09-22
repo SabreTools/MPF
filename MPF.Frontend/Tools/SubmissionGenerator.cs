@@ -48,8 +48,13 @@ namespace MPF.Frontend.Tools
             MediaType? mediaType,
             Options options,
             BaseProcessor processor,
+#if NET20 || NET35 || NET40
+            BinaryObjectScanner.IProgress<ResultEventArgs>? resultProgress = null,
+            BinaryObjectScanner.IProgress<ProtectionProgress>? protectionProgress = null)
+#else
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
+#endif
         {
             // Split the output path for easier use
             var outputDirectory = Path.GetDirectoryName(outputPath);
@@ -112,7 +117,7 @@ namespace MPF.Frontend.Tools
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
 
-                ProtectionDictionary? protections = null;
+                Dictionary<string, List<string>>? protections = null;
                 try
                 {
                     if (options.ScanForProtection && drive?.Name != null)
@@ -154,7 +159,11 @@ namespace MPF.Frontend.Tools
         /// <param name="resultProgress">Optional result progress callback</param>
         public async static Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
+#if NET20 || NET35 || NET40
+            BinaryObjectScanner.IProgress<ResultEventArgs>? resultProgress = null)
+#else
             IProgress<ResultEventArgs>? resultProgress = null)
+#endif
         {
             // If information should not be pulled at all
             if (!options.RetrieveMatchInformation)
@@ -998,7 +1007,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a comment field if it doesn't already have a value
         /// </summary>
-        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, System.Func<Drive?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (CommentFieldExists(info, key, out _))
@@ -1032,7 +1041,14 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a content field if it doesn't already have a value
         /// </summary>
-        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetContentFieldIfNotExists(SubmissionInfo info,
+            SiteCode key,
+            Drive? drive,
+#if NET20
+            BinaryObjectScanner.Func<Drive?, string?> valueFunc)
+#else
+            Func<Drive?, string?> valueFunc)
+#endif
         {
             // If the field has a valid value, skip
             if (ContentFieldExists(info, key, out _))
@@ -1047,7 +1063,13 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set the version if it doesn't already have a value
         /// </summary>
-        private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetVersionIfNotExists(SubmissionInfo info,
+            Drive? drive,
+#if NET20
+            BinaryObjectScanner.Func<Drive?, string?> valueFunc)
+#else
+            Func<Drive?, string?> valueFunc)
+#endif
         {
             // If the version already exists, skip
             if (!string.IsNullOrEmpty(info.VersionAndEditions!.Version))
@@ -1062,7 +1084,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="oldDict">ProtectionDictionary to format</param>
         /// <returns>Reformatted dictionary on success, empty on error</returns>
-        private static Dictionary<string, List<string>?> ReformatProtectionDictionary(ProtectionDictionary? oldDict)
+        private static Dictionary<string, List<string>?> ReformatProtectionDictionary(Dictionary<string, List<string>>? oldDict)
         {
             // Null or empty protections return empty
             if (oldDict == null || oldDict.Count == 0)
