@@ -117,51 +117,6 @@ namespace MPF.Frontend.Tools
                 return "(CHECK WITH PROTECTIONID)";
             else if (protections.Count == 0)
                 return "None found [OMIT FROM SUBMISSION]";
-            
-            // Flag Securom-protected Release Control helpers and DFA/CA modules
-
-            string? pathPattern = null;
-            foreach (var line in protections)
-            {
-                var curValue = line.Value;
-                
-                if (curValue == null)
-                    continue;
-
-                if (curValue[0].Contains("SecuROM Release Control -")) // - Needed to avoid RC module
-                {
-                    pathPattern = line.Key;
-                    break;
-                }
-            }
-
-            if (pathPattern != null)
-            {
-                foreach (var line in protections)
-                {
-                    var curKey = line.Key;
-                
-                    if (curKey == null)
-                        continue;
-
-                    if (curKey.Contains(pathPattern)) 
-                    {
-                        var curValue = line.Value;
-                        if (curValue == null)
-                            continue;
-
-                        if (!curValue.Contains("GitHub") && 
-                            (curValue[0].Contains("SecuROM 7") || 
-                            curValue[0].Contains("SecuROM 8") ||
-                            curValue[0].Contains("SecuROM Content Activation") ||
-                            curValue[0].Contains("SecuROM Data File Activation") ||
-                            curValue[0].Contains("Unlock")))
-                        {
-                            protections.Remove(curKey);
-                        }
-                    }
-                }
-            }
 
             // Sanitize context-sensitive protections
             SanitizeContextSensitiveProtections(protections);
@@ -246,10 +201,29 @@ namespace MPF.Frontend.Tools
             // Setup a list for keys that need additional processing
             List<string> keys = [];
 
+            // Setup for the filter that needs to be used for Securom Release Control packages, if any 
+            string? pathPattern = null;
+            
             // Loop through the keys and add relevant ones
             foreach (var key in protections.Keys)
             {
-                // No-op
+                var value = protections[key][0];
+                if (value == null)
+                {
+                    continue;
+                }
+                if (value.Contains("SecuROM Release Control -"))
+                    pathPattern = key;
+                if (!value.Contains("GitHub") && 
+                    (value.Contains("SecuROM 7") || 
+                     value.Contains("SecuROM 8") ||
+                     value.Contains("SecuROM Content Activation") ||
+                     value.Contains("SecuROM Data File Activation") ||
+                     value.Contains("Unlock")))
+                {
+                    keys.Add(key);
+                }
+                
             }
 
             // If there are no keys found
@@ -259,7 +233,8 @@ namespace MPF.Frontend.Tools
             // Process the keys as necessary
             foreach (var key in keys)
             {
-                // No-op
+                if (pathPattern != null && key.Contains(pathPattern) && !key.Equals(pathPattern))
+                    protections.Remove(key);
             }
         }
 
