@@ -118,6 +118,9 @@ namespace MPF.Frontend.Tools
             else if (protections.Count == 0)
                 return "None found [OMIT FROM SUBMISSION]";
 
+            // Sanitize context-sensitive protections
+            SanitizeContextSensitiveProtections(protections);
+
             // Get a list of distinct found protections
 #if NET20
             var protectionValues = new List<string>();
@@ -183,6 +186,15 @@ namespace MPF.Frontend.Tools
 
                 return false;
             });
+        }
+
+        /// <summary>
+        /// Sanitize unnecessary protections where context matters
+        /// </summary>
+        /// <param name="protections">Dictionary of file to list of protection mappings</param>
+        public static void SanitizeContextSensitiveProtections(Dictionary<string, List<string>>? protections)
+        {
+            // No-op
         }
 
         /// <summary>
