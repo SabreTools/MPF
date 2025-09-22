@@ -200,30 +200,17 @@ namespace MPF.Frontend.Tools
 
             // Setup a list for keys that need additional processing
             List<string> keys = [];
-
-            // Setup for the filter that needs to be used for Securom Release Control packages, if any 
-            string? pathPattern = null;
             
             // Loop through the keys and add relevant ones
             foreach (var key in protections.Keys)
             {
-                var value = protections[key][0];
-                if (value == null)
-                {
+                var values = protections[key];
+                if (values.Count == 0)
                     continue;
-                }
-                if (value.Contains("SecuROM Release Control -"))
-                    pathPattern = key;
-                if (!value.Contains("GitHub") && 
-                    (value.Contains("SecuROM 7") || 
-                     value.Contains("SecuROM 8") ||
-                     value.Contains("SecuROM Content Activation") ||
-                     value.Contains("SecuROM Data File Activation") ||
-                     value.Contains("Unlock")))
-                {
-                    keys.Add(key);
-                }
-                
+
+                foreach (var value in values)
+                    if (value.Contains("SecuROM Release Control -"))
+                        keys.Add(key);
             }
 
             // If there are no keys found
@@ -232,10 +219,18 @@ namespace MPF.Frontend.Tools
 
             // Process the keys as necessary
             foreach (var key in keys)
-            {
-                if (pathPattern != null && key.Contains(pathPattern) && !key.Equals(pathPattern))
-                    protections.Remove(key);
-            }
+                foreach (var releaseControlValue in protections[key])
+                    if (releaseControlValue.Contains("SecuROM Release Control -"))
+                        foreach (var protection in protections)
+                            if (protection.Key.Contains(key))
+                                foreach (var value in protection.Value)
+                                    if (!value.Contains("GitHub") &&
+                                        (value.Contains("SecuROM 7") ||
+                                         value.Contains("SecuROM 8") ||
+                                         value.Contains("SecuROM Content Activation") ||
+                                         value.Contains("SecuROM Data File Activation") ||
+                                         value.Contains("Unlock")))
+                                        protections.Remove(protection.Key);
         }
 
         /// <summary>
