@@ -194,7 +194,28 @@ namespace MPF.Frontend.Tools
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
         public static void SanitizeContextSensitiveProtections(Dictionary<string, List<string>>? protections)
         {
-            // No-op
+            // Ignore empty dictionaries
+            if (protections == null)
+                return;
+
+            // Setup a list for keys that need additional processing
+            List<string> keys = [];
+
+            // Loop through the keys and add relevant ones
+            foreach (var key in protections.Keys)
+            {
+                // No-op
+            }
+
+            // If there are no keys found
+            if (keys.Count == 0)
+                return;
+
+            // Process the keys as necessary
+            foreach (var key in keys)
+            {
+                // No-op
+            }
         }
 
         /// <summary>
