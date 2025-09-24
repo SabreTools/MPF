@@ -48,13 +48,8 @@ namespace MPF.Frontend.Tools
             MediaType? mediaType,
             Options options,
             BaseProcessor processor,
-#if NET20 || NET35 || NET40
-            BinaryObjectScanner.IProgress<ResultEventArgs>? resultProgress = null,
-            BinaryObjectScanner.IProgress<ProtectionProgress>? protectionProgress = null)
-#else
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
-#endif
         {
             // Split the output path for easier use
             var outputDirectory = Path.GetDirectoryName(outputPath);
@@ -159,11 +154,7 @@ namespace MPF.Frontend.Tools
         /// <param name="resultProgress">Optional result progress callback</param>
         public async static Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
-#if NET20 || NET35 || NET40
-            BinaryObjectScanner.IProgress<ResultEventArgs>? resultProgress = null)
-#else
             IProgress<ResultEventArgs>? resultProgress = null)
-#endif
         {
             // If information should not be pulled at all
             if (!options.RetrieveMatchInformation)
@@ -1041,14 +1032,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a content field if it doesn't already have a value
         /// </summary>
-        private static void SetContentFieldIfNotExists(SubmissionInfo info,
-            SiteCode key,
-            Drive? drive,
-#if NET20
-            BinaryObjectScanner.Func<Drive?, string?> valueFunc)
-#else
-            Func<Drive?, string?> valueFunc)
-#endif
+        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (ContentFieldExists(info, key, out _))
@@ -1063,13 +1047,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set the version if it doesn't already have a value
         /// </summary>
-        private static void SetVersionIfNotExists(SubmissionInfo info,
-            Drive? drive,
-#if NET20
-            BinaryObjectScanner.Func<Drive?, string?> valueFunc)
-#else
-            Func<Drive?, string?> valueFunc)
-#endif
+        private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
         {
             // If the version already exists, skip
             if (!string.IsNullOrEmpty(info.VersionAndEditions!.Version))

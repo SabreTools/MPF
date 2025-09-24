@@ -410,12 +410,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="mediaType">MediaType for specialized dumping parameters</param>
         /// <param name="progress">Optional result progress callback</param>
-        public async Task<ResultEventArgs> Run(MediaType? mediaType,
-#if NET20 || NET35 || NET40
-            BinaryObjectScanner.IProgress<ResultEventArgs>? progress = null)
-#else
-            IProgress<ResultEventArgs>? progress = null)
-#endif
+        public async Task<ResultEventArgs> Run(MediaType? mediaType, IProgress<ResultEventArgs>? progress = null)
         {
             // If we don't have parameters
             if (_executionContext == null)
@@ -424,15 +419,9 @@ namespace MPF.Frontend
             // Build default console progress indicators if none exist
             if (progress == null)
             {
-#if NET20 || NET35 || NET40
-                var temp = new BinaryObjectScanner.Progress<ResultEventArgs>();
-                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
-                progress = temp;
-#else
                 var temp = new Progress<ResultEventArgs>();
                 temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
                 progress = temp;
-#endif
             }
 
             // Check that we have the basics for dumping
@@ -466,13 +455,8 @@ namespace MPF.Frontend
         /// <param name="seedInfo">A seed SubmissionInfo object that contains user data</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<ResultEventArgs> VerifyAndSaveDumpOutput(
-#if NET20 || NET35 || NET40
-            BinaryObjectScanner.IProgress<ResultEventArgs>? resultProgress = null,
-            BinaryObjectScanner.IProgress<ProtectionProgress>? protectionProgress = null,
-#else
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null,
-#endif
             ProcessUserInfoDelegate? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
@@ -480,20 +464,6 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Build default console progress indicators if none exist
-#if NET20 || NET35 || NET40
-            if (resultProgress == null)
-            {
-                var temp = new BinaryObjectScanner.Progress<ResultEventArgs>();
-                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
-                resultProgress = temp;
-            }
-            if (protectionProgress == null)
-            {
-                var temp = new BinaryObjectScanner.Progress<ProtectionProgress>();
-                temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
-                protectionProgress = temp;
-            }
-#else
             if (resultProgress == null)
             {
                 var temp = new Progress<ResultEventArgs>();
@@ -506,7 +476,6 @@ namespace MPF.Frontend
                 temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
                 protectionProgress = temp;
             }
-#endif
 
             resultProgress.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
 

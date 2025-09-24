@@ -74,11 +74,7 @@ namespace MPF.Frontend.Tools
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnPath(string path,
             Options options,
-#if NET20 || NET35 || NET40
-            BinaryObjectScanner.IProgress<ProtectionProgress>? progress = null)
-#else
             IProgress<ProtectionProgress>? progress = null)
-#endif
         {
 #if NET40
             var found = await Task.Factory.StartNew(() =>

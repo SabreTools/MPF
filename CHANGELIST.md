@@ -30,6 +30,7 @@
 - Further flesh out framework
 - Add filters to handle Release Control output (Bestest)
 - Cleanup last commits, add tests
+- Update BinaryObjectScanner to 3.4.2
 
 ### 3.3.3 (2025-07-18)
 

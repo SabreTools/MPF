@@ -53,11 +53,7 @@ namespace MPF.Frontend.ViewModels
         /// T4 - true for inquiry, false otherwise
         /// TResult - true for positive, false for negative, null for neutral
         /// </remarks>
-#if NET20
-        private BinaryObjectScanner.Func<string, string, int, bool, bool?>? _displayUserMessage;
-#else
         private Func<string, string, int, bool, bool?>? _displayUserMessage;
-#endif
 
         /// <summary>
         /// Detected media type, distinct from the selected one
@@ -599,11 +595,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void Init(
             Action<LogLevel, string> loggerAction,
-#if NET20
-            BinaryObjectScanner.Func<string, string, int, bool, bool?> displayUserMessage,
-#else
             Func<string, string, int, bool, bool?> displayUserMessage,
-#endif
             ProcessUserInfoDelegate processUserInfo)
         {
             // Set the callbacks

@@ -407,17 +407,10 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Get progress indicators
-#if NET20 || NET35 || NET40
-            var resultProgress = new BinaryObjectScanner.Progress<ResultEventArgs>();
-            resultProgress.ProgressChanged += ProgressUpdated;
-            var protectionProgress = new BinaryObjectScanner.Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ProgressUpdated;
-#else
             var resultProgress = new Progress<ResultEventArgs>();
             resultProgress.ProgressChanged += ProgressUpdated;
             var protectionProgress = new Progress<ProtectionProgress>();
             protectionProgress.ProgressChanged += ProgressUpdated;
-#endif
 
             // Populate an environment
             var env = new DumpEnvironment(Options,

@@ -10,7 +10,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Matching;
 using SabreTools.Models.Logiqx;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
@@ -1074,7 +1073,7 @@ namespace MPF.Processors
             // Only continue to check SSv2 for XGD3
             if (xgdType != 3)
                 return true;
-            
+
             // Determine if XGD3 SS.bin is SSv1 (Original Kreon) or SSv2 (0800 / Repaired Kreon)
 #if NET20
             var checkArr = new byte[72];
@@ -1126,8 +1125,8 @@ namespace MPF.Processors
             else if (xgdType == 3)
                 ccrt_offset = 0x20;
 
-            int[] entry_offsets = {0, 9, 18, 27, 36, 45, 54, 63};
-            int[] entry_lengths = {8, 8, 8, 8, 4, 4, 4, 4};
+            int[] entry_offsets = { 0, 9, 18, 27, 36, 45, 54, 63 };
+            int[] entry_lengths = { 8, 8, 8, 8, 4, 4, 4, 4 };
             for (int i = 0; i < entry_offsets.Length; i++)
             {
                 bool emptyResponse = true;
@@ -1289,7 +1288,7 @@ namespace MPF.Processors
             // Determine XGD type
             if (!GetXGDType(ss, out int xgdType))
                 return false;
-            
+
             // Determine if XGD3 SS.bin is SSv1 (Original Kreon) or SSv2 (0800 / Repaired Kreon)
 #if NET20
             var checkArr = new byte[72];
@@ -1300,7 +1299,7 @@ namespace MPF.Processors
 #endif
 
             // Do not produce an SS hash for bad SS (SSv1 XGD3 / Unrepaired Kreon SS)
-            if(xgdType == 3 && !ssv2)
+            if (xgdType == 3 && !ssv2)
                 return false;
 
             switch (xgdType)
