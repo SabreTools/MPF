@@ -36,7 +36,7 @@
         <PackageReference Include="SabreTools.Hashing" Version="1.5.0" />
         <PackageReference Include="SabreTools.IO" Version="1.7.5" />
         <PackageReference Include="SabreTools.Models" Version="1.7.2" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.7.3" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="1.7.4" />
         <PackageReference Include="SabreTools.Serialization" Version="1.9.6" />
         <PackageReference Include="System.IO.Compression" Version="4.3.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`))" />
         <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />

@@ -31,6 +31,7 @@
 - Add filters to handle Release Control output (Bestest)
 - Cleanup last commits, add tests
 - Update BinaryObjectScanner to 3.4.2
+- Update RedumpLib to 1.7.4
 
 ### 3.3.3 (2025-07-18)
 
