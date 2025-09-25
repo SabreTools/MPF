@@ -351,7 +351,22 @@ namespace MPF.UI.Windows
         /// </summary>
         public void SetMediaTypeVisibility()
         {
-            MediaTypeComboBox!.Visibility = MainViewModel.CurrentProgram == InternalProgram.DiscImageCreator
+            // Only DiscImageCreator uses the media type box
+            if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
+            {
+                MediaTypeComboBox!.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            // If there are no media types defined
+            if (MainViewModel.MediaTypes == null)
+            {
+                MediaTypeComboBox!.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            // Only systems with more than one media type should show the box
+            MediaTypeComboBox!.Visibility = MainViewModel.MediaTypes.Count > 1
                 ? Visibility.Visible
                 : Visibility.Hidden;
         }
