@@ -683,9 +683,9 @@ namespace MPF.Frontend.Test.Tools
         [Theory]
         [InlineData(0, "Macrovision Protected Application [SafeDisc 0.00.000], SafeDisc 0.00.000, SafeDisc Lite")]
         [InlineData(1, "Macrovision Protected Application [SafeDisc 0.00.000 / SRV Tool APP], SafeDisc 0.00.000, SafeDisc Lite")]
-        [InlineData(2, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc 0.00.000, SafeDisc 0.00.000-1.11.111, SafeDisc Lite")]
-        [InlineData(3, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc 0.00.000, SafeDisc Lite")]
-        [InlineData(4, "Macrovision Security Driver, Macrovision Security Driver [SafeDisc 1.11.111], SafeDisc Lite")]
+        [InlineData(2, "SafeDisc 0.00.000, SafeDisc 0.00.000-1.11.111, SafeDisc 3+ (DVD), SafeDisc Lite")]
+        [InlineData(3, "SafeDisc 0.00.000, SafeDisc 3+ (DVD), SafeDisc Lite")]
+        [InlineData(4, "SafeDisc 3+ (DVD), SafeDisc Lite")]
         [InlineData(5, "Macrovision Security Driver, SafeDisc Lite")]
         [InlineData(6, "Macrovision Protection File, SafeDisc 2+, SafeDisc 3+ (DVD), SafeDisc Lite")]
         [InlineData(7, "SafeDisc 3+ (DVD)")]
@@ -694,11 +694,11 @@ namespace MPF.Frontend.Test.Tools
         {
             List<string> protections =
            [
-               "Macrovision Protected Application [SafeDisc 0.00.000]",
+                "Macrovision Protected Application [SafeDisc 0.00.000]",
                 "Macrovision Protected Application [SafeDisc 0.00.000 / SRV Tool APP]",
                 "SafeDisc 0.00.000-1.11.111",
                 "SafeDisc 0.00.000",
-                "Macrovision Security Driver [SafeDisc 1.11.111]",
+                "Macrovision Security Driver 1.11.111 / SafeDisc 1.11.111",
                 "Macrovision Security Driver",
                 "SafeDisc Lite",
                 "SafeDisc 3+ (DVD)",
@@ -712,6 +712,23 @@ namespace MPF.Frontend.Test.Tools
 
             // The list is in order of preference
             protections = protections.Skip(skip).ToList();
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal(expected, sanitized);
+        }
+
+        [Fact]
+        public void SanitizeFoundProtectsion_SafeDisc_MacrovisionSecurityDriver()
+        {
+            List<string> protections =
+           [
+                "Macrovision Protection File [Likely indicates either SafeDisc 1.45.011+ (CD) or CDS-300]",
+                "Macrovision Security Driver 4.00.060 / SafeDisc 4.00.000-4.70.000",
+                "SafeDisc 4.00.000-4.00.003",
+                "SafeDisc 4.00.002, Macrovision Protected Application"
+            ];
+
+            string expected = "SafeDisc 4.00.002";
 
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(expected, sanitized);

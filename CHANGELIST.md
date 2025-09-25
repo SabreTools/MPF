@@ -7,6 +7,7 @@
 - Change label with media type visibility
 - Update media type visibility on system change
 - Return full result from dump checks
+- Fix logic from around Macrovision security driver filtering
 
 ### 3.4.0 (2025-09-25)
 
