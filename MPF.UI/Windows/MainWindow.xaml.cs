@@ -628,7 +628,10 @@ namespace MPF.UI.Windows
         public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
+            {
                 MainViewModel.ChangeSystem();
+                SetMediaTypeVisibility();
+            }
         }
 
         /// <summary>

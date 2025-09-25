@@ -5,6 +5,7 @@
 - Limit media type visibility further
 - Set media type visibility when options changed
 - Change label with media type visibility
+- Update media type visibility on system change
 
 ### 3.4.0 (2025-09-25)
 
