@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Experiment with only showing media type box for DIC
+
 ### 3.4.0 (2025-09-25)
 
 - Remove media type from Check Dump UI

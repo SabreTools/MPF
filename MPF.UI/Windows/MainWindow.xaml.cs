@@ -113,6 +113,9 @@ namespace MPF.UI.Windows
             // Set the UI color scheme according to the options
             ApplyTheme();
 
+            // Hide or show the media type box based on program
+            SetMediaTypeVisibility();
+
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
                 CheckForUpdates(showIfSame: false);
@@ -344,6 +347,16 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
+        /// Set media type combo box visibility based on current program
+        /// </summary>
+        public void SetMediaTypeVisibility()
+        {
+            MediaTypeComboBox!.Visibility = MainViewModel.CurrentProgram == InternalProgram.DiscImageCreator
+                ? Visibility.Visible
+                : Visibility.Hidden;
+        }
+
+        /// <summary>
         /// Set the UI color scheme according to the options
         /// </summary>
         private void ApplyTheme()
@@ -530,7 +543,10 @@ namespace MPF.UI.Windows
         public void DumpingProgramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
+            {
                 MainViewModel.ChangeDumpingProgram();
+                SetMediaTypeVisibility();
+            }
         }
 
         /// <summary>
