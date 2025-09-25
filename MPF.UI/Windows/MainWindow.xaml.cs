@@ -47,6 +47,7 @@ namespace MPF.UI.Windows
         private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
         private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
         private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
+        private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
         private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
@@ -354,6 +355,7 @@ namespace MPF.UI.Windows
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
+                SystemMediaTypeLabel!.Content = "System";
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -361,12 +363,17 @@ namespace MPF.UI.Windows
             // If there are no media types defined
             if (MainViewModel.MediaTypes == null)
             {
+                SystemMediaTypeLabel!.Content = "System";
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
 
             // Only systems with more than one media type should show the box
-            MediaTypeComboBox!.Visibility = MainViewModel.MediaTypes.Count > 1
+            bool visible = MainViewModel.MediaTypes.Count > 1;
+            SystemMediaTypeLabel!.Content = visible
+                ? "System/Media Type"
+                : "System";
+            MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
                 : Visibility.Hidden;
         }

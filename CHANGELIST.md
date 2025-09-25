@@ -4,6 +4,7 @@
 - Default media type box to hidden to avoid visual issues
 - Limit media type visibility further
 - Set media type visibility when options changed
+- Change label with media type visibility
 
 ### 3.4.0 (2025-09-25)
 
