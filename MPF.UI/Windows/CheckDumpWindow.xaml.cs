@@ -158,8 +158,8 @@ namespace MPF.UI.Windows
         /// </summary>
         private async void OnCheckDumpClick(object sender, EventArgs e)
         {
-            string? errorMessage = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
-            if (string.IsNullOrEmpty(errorMessage))
+            var result = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
+            if (result)
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
                 if (checkAgain == false)
@@ -169,7 +169,8 @@ namespace MPF.UI.Windows
             }
             else
             {
-                DisplayUserMessage("Check Failed", errorMessage!, 1, false);
+                string? message = result.Message ?? "Please check all files exist and try again!";
+                DisplayUserMessage("Check Failed", message, 1, false);
             }
         }
 

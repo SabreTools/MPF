@@ -393,13 +393,13 @@ namespace MPF.Frontend.ViewModels
         /// Performs MPF.Check functionality
         /// </summary>
         /// <returns>An error message if failed, otherwise string.Empty/null</returns>
-        public async Task<string?> CheckDump(ProcessUserInfoDelegate processUserInfo)
+        public async Task<ResultEventArgs> CheckDump(ProcessUserInfoDelegate processUserInfo)
         {
             if (string.IsNullOrEmpty(InputPath))
-                return "Invalid Input path";
+                return ResultEventArgs.Failure("Invalid Input path");
 
             if (!File.Exists(InputPath!.Trim('"')))
-                return "Input Path is not a valid file";
+                return ResultEventArgs.Failure("Input Path is not a valid file");
 
             // Disable UI while Check is running
             DisableUIElements();
@@ -431,7 +431,7 @@ namespace MPF.Frontend.ViewModels
             if (cachedCanExecuteSelectionChanged)
                 EnableEventHandlers();
 
-            return result.Message;
+            return result;
         }
 
         /// <summary>
