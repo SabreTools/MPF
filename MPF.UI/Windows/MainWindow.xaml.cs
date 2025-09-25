@@ -465,6 +465,9 @@ namespace MPF.UI.Windows
 
             // Set the UI color scheme according to the options
             ApplyTheme();
+
+            // Hide or show the media type box based on program
+            SetMediaTypeVisibility();
         }
 
         #region Menu Bar

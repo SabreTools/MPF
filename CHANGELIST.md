@@ -3,6 +3,7 @@
 - Experiment with only showing media type box for DIC
 - Default media type box to hidden to avoid visual issues
 - Limit media type visibility further
+- Set media type visibility when options changed
 
 ### 3.4.0 (2025-09-25)
 
