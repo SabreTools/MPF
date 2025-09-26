@@ -580,15 +580,6 @@ namespace MPF.Frontend
         #region Skip Options
 
         /// <summary>
-        /// Skip detecting media type on disc scan
-        /// </summary>
-        public bool SkipMediaTypeDetection
-        {
-            get { return GetBooleanSetting(Settings, "SkipMediaTypeDetection", false); }
-            set { Settings["SkipMediaTypeDetection"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Skip detecting known system on disc scan
         /// </summary>
         public bool SkipSystemDetection
