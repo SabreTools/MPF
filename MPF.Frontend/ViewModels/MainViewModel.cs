@@ -1213,14 +1213,8 @@ namespace MPF.Frontend.ViewModels
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 
-            // If we're skipping detection, set the default value
-            if (Options.SkipMediaTypeDetection)
-            {
-                VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
-                CurrentMediaType = defaultMediaType;
-            }
             // If the drive is marked active, try to read from it
-            else if (CurrentDrive.MarkedActive)
+            if (CurrentDrive.MarkedActive)
             {
                 VerboseLog($"Trying to detect media type for drive {CurrentDrive.Name} [{CurrentDrive.DriveFormat}] using size and filesystem.. ");
                 MediaType? detectedMediaType = CurrentDrive.GetMediaType(CurrentSystem);
@@ -1238,8 +1232,7 @@ namespace MPF.Frontend.ViewModels
                     CurrentMediaType = detectedMediaType;
                 }
             }
-
-            // All other cases, just use the default
+            // Otherwise just use the default
             else
             {
                 VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");

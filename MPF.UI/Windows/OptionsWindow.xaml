@@ -95,22 +95,16 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Detection">
-                            <UniformGrid Columns="2" Rows="3">
-                                <CheckBox x:Name="SkipMediaTypeDetectionCheckBox" VerticalAlignment="Center" Content="Skip Type Detect"
-                                          IsChecked="{Binding Options.SkipMediaTypeDetection}"
-                                          ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
-                                />
-
+                            <UniformGrid Columns="2" Rows="2">
                                 <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
                                           IsChecked="{Binding Options.SkipSystemDetection}"
                                           ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                 />
 
                                 <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
-                                        IsChecked="{Binding Options.IgnoreFixedDrives}"
-                                        ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
+                                          IsChecked="{Binding Options.IgnoreFixedDrives}"
+                                          ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                 />
-                                <Label/> <!-- Empty label for padding -->
 
                                 <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
@@ -413,7 +407,11 @@
                                           IsChecked="{Binding Options.RedumperEnableVerbose}"
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
-                                <Label/> <!-- Empty label for padding -->
+
+                                <CheckBox VerticalAlignment="Center" Content="Enable Refine Sector Mode Flag"
+                                          IsChecked="{Binding Options.RedumperRefineSectorMode}"
+                                          ToolTip="Enable the refine sector mode flag by default" Margin="0,4"
+                                />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
@@ -427,12 +425,6 @@
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                          ToolTipService.ShowOnDisabled="True"
                                 />
-
-                                <CheckBox VerticalAlignment="Center" Content="Enable Refine Sector Mode Flag"
-                                          IsChecked="{Binding Options.RedumperRefineSectorMode}"
-                                          ToolTip="Enable the refine sector mode flag by default" Margin="0,4"
-                                />
-                                <Label/> <!-- Empty label for padding -->
 
                                 <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
@@ -483,7 +475,8 @@
                                     IsEnabled="{Binding Options.RetrieveMatchInformation}" />
 
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
-                                <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*" />
+                                <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*"
+                                             IsEnabled="{Binding Options.RetrieveMatchInformation}"/>
 
                                 <Button x:Name="RedumpLoginTestButton" Height="22" Width="80" Content="Test Login"
                                         Style="{DynamicResource CustomButtonStyle}"
