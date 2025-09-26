@@ -95,7 +95,7 @@
                         </GroupBox>
 
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Detection">
-                            <UniformGrid Columns="2" Rows="3">
+                            <UniformGrid Columns="2" Rows="2">
                                 <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
                                           IsChecked="{Binding Options.SkipSystemDetection}"
                                           ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
