@@ -1213,13 +1213,8 @@ namespace MPF.Frontend.ViewModels
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 
-            // Skip detection if not using DIC (only DIC needs to know media type)
-            if (Options.InternalProgram != InternalProgram.DiscImageCreator)
-            {
-                CurrentMediaType = defaultMediaType;
-            }
-            // If using DIC and if the drive is marked active, try to read from it
-            else if (CurrentDrive.MarkedActive)
+            // If the drive is marked active, try to read from it
+            if (CurrentDrive.MarkedActive)
             {
                 VerboseLog($"Trying to detect media type for drive {CurrentDrive.Name} [{CurrentDrive.DriveFormat}] using size and filesystem.. ");
                 MediaType? detectedMediaType = CurrentDrive.GetMediaType(CurrentSystem);
@@ -1237,7 +1232,7 @@ namespace MPF.Frontend.ViewModels
                     CurrentMediaType = detectedMediaType;
                 }
             }
-            // All other cases, just use the default
+            // Otherwise just use the default
             else
             {
                 VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
