@@ -50,11 +50,6 @@ namespace MPF.ExecutionContexts.Redumper
         #region Flag Values
 
         /// <summary>
-        /// Mode being run
-        /// </summary>
-        public string? ModeValue { get; set; }
-
-        /// <summary>
         /// Set of all command flags
         /// </summary>
         private readonly Dictionary<string, Input> _inputs = new()
@@ -241,9 +236,9 @@ namespace MPF.ExecutionContexts.Redumper
             var parameters = new StringBuilder();
 
             // Command Mode
-            ModeValue ??= CommandStrings.NONE;
-            if (ModeValue != CommandStrings.NONE)
-                parameters.Append($"{ModeValue} ");
+            BaseCommand ??= CommandStrings.NONE;
+            if (BaseCommand != CommandStrings.NONE)
+                parameters.Append($"{BaseCommand} ");
 
             // Loop though and append all existing
             foreach (var kvp in _inputs)
@@ -270,8 +265,8 @@ namespace MPF.ExecutionContexts.Redumper
         public override bool IsDumpingCommand()
         {
             // `dump` command does not provide hashes so will error out after dump if run via MPF
-            return ModeValue == CommandStrings.NONE
-                || ModeValue == CommandStrings.Disc;
+            return BaseCommand == CommandStrings.NONE
+                || BaseCommand == CommandStrings.Disc;
         }
 
         /// <inheritdoc/>
@@ -291,25 +286,13 @@ namespace MPF.ExecutionContexts.Redumper
             int? driveSpeed,
             Dictionary<string, string?> options)
         {
-            BaseCommand = CommandStrings.NONE;
-            switch (MediaType)
-            {
-                case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                case SabreTools.RedumpLib.Data.MediaType.DVD:
-                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
-                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
-                case SabreTools.RedumpLib.Data.MediaType.BluRay:
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    ModeValue = CommandStrings.Disc;
-                    break;
-                default:
-                    BaseCommand = null;
-                    return;
-            }
+            BaseCommand = CommandStrings.Disc;
 
-            this[FlagStrings.Drive] = true;
-            (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath ?? string.Empty);
+            if (drivePath != null)
+            {
+                this[FlagStrings.Drive] = true;
+                (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath);
+            }
 
             if (driveSpeed != null && driveSpeed > 0)
             {
@@ -412,8 +395,6 @@ namespace MPF.ExecutionContexts.Redumper
         /// <inheritdoc/>
         protected override bool ValidateAndSetParameters(string? parameters)
         {
-            BaseCommand = CommandStrings.NONE;
-
             // The string has to be valid by itself first
             if (string.IsNullOrEmpty(parameters))
                 return false;
@@ -422,7 +403,7 @@ namespace MPF.ExecutionContexts.Redumper
             string[] parts = SplitParameterString(parameters!);
 
             // Setup the modes
-            ModeValue = null;
+            BaseCommand = null;
 
             // All modes should be cached separately
             int index = 0;
@@ -457,10 +438,10 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.DebugFlip:
                     case CommandStrings.DriveTest:
                         // Only allow one mode per command
-                        if (ModeValue != null)
+                        if (BaseCommand != null)
                             continue;
 
-                        ModeValue = part;
+                        BaseCommand = part;
                         break;
 
                     // Default is either a flag or an invalid mode

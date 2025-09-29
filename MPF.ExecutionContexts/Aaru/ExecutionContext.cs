@@ -638,11 +638,6 @@ namespace MPF.ExecutionContexts.Aaru
                 (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte)driveSpeed);
             }
 
-            // First check to see if the combination of system and MediaType is valid
-            var validTypes = RedumpSystem.MediaTypes();
-            if (!validTypes.Contains(MediaType))
-                return;
-
             // Set retry count
             int rereadCount = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
             if (rereadCount > 0)
@@ -673,57 +668,13 @@ namespace MPF.ExecutionContexts.Aaru
                 (_inputs[FlagStrings.PrivateLong] as BooleanInput)?.SetValue(true);
             }
 
-            // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
-            // Now sort based on disc type
-            switch (MediaType)
-            {
-                case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    // Currently no defaults set
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.DVD:
-                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
-                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
-                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.GDROM:
-                    // Currently no defaults set
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
-                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
-                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
-                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.BluRay:
-                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
-                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
-                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
-                    (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
-                    break;
-
-                // Special Formats
-                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
-                    // Currently no defaults set
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-
-                // Non-optical
-                case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
-                    // Currently no defaults set
-                    break;
-            }
+            // Set generic, sane defaults to cover all bases
+            this[FlagStrings.StoreEncryptedLong] = true;
+            (_inputs[FlagStrings.StoreEncryptedLong] as BooleanInput)?.SetValue(true);
+            this[FlagStrings.TitleKeysLong] = false;
+            (_inputs[FlagStrings.TitleKeysLong] as BooleanInput)?.SetValue(false);
+            this[FlagStrings.TrimLong] = true;
+            (_inputs[FlagStrings.TrimLong] as BooleanInput)?.SetValue(true);
         }
 
         /// <inheritdoc/>

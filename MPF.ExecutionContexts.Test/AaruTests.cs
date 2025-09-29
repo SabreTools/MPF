@@ -40,15 +40,15 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData(null, null, null, "filename.bin", null, null)]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
         [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
         [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
         public void DefaultValueTest(RedumpSystem? system,
             MediaType? type,
             string? drivePath,
