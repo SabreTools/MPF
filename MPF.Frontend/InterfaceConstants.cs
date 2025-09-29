@@ -34,11 +34,6 @@ namespace MPF.Frontend
         public static List<int> BD => _speedValues.FindAll(s => s <= 16);
 
         /// <summary>
-        /// Set of accepted speeds for all other media
-        /// </summary>
-        public static List<int> Unknown => [1];
-
-        /// <summary>
         /// Get list of all drive speeds for a given MediaType
         /// </summary>
         /// <param name="type">MediaType? that represents the current item</param>
@@ -55,7 +50,9 @@ namespace MPF.Frontend
                 MediaType.HDDVD => HDDVD,
                 MediaType.BluRay
                     or MediaType.NintendoWiiUOpticalDisc => BD,
-                _ => Unknown,
+
+                // Default to CD speed range
+                _ => CD,
             };
         }
     }
