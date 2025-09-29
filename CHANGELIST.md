@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.4.1 (2025-09-29)
 
 - Experiment with only showing media type box for DIC
 - Default media type box to hidden to avoid visual issues
