@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 #endif
 using System.Text.RegularExpressions;
-using SabreTools.Models.Logiqx;
+using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 

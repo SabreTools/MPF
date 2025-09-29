@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using SabreTools.Models.Logiqx;
+using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 

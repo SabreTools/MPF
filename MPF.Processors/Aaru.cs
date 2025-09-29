@@ -5,8 +5,8 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using SabreTools.Models.CueSheets;
-using SabreTools.Models.Logiqx;
+using SabreTools.Data.Models.CueSheets;
+using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Schemas;
@@ -409,7 +409,7 @@ namespace MPF.Processors
             cueSheet.Files = [.. cueFiles];
             if (cueSheet != null && cueSheet != default)
             {
-                var ms = new SabreTools.Serialization.Serializers.CueSheet().Serialize(cueSheet);
+                var ms = new SabreTools.Serialization.Writers.CueSheet().SerializeStream(cueSheet);
                 if (ms == null)
                     return null;
 

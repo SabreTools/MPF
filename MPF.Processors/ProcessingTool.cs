@@ -10,8 +10,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Models.Logiqx;
-using SabreTools.Models.PIC;
+using SabreTools.Data.Models.Logiqx;
+using SabreTools.Data.Models.PIC;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -132,7 +132,7 @@ namespace MPF.Processors
         {
             try
             {
-                return new SabreTools.Serialization.Deserializers.PIC().Deserialize(pic);
+                return new SabreTools.Serialization.Readers.PIC().Deserialize(pic);
             }
             catch
             {

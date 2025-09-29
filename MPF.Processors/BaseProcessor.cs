@@ -6,7 +6,7 @@ using System.IO.Compression;
 #endif
 using System.Text;
 using SabreTools.Hashing;
-using SabreTools.Models.Logiqx;
+using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors

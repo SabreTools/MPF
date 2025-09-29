@@ -15,6 +15,7 @@
 - Fix tests
 - Make media type a named parameter for CLI
 - Reduction in media type use for dumping
+- Update BinaryObjectScanner to 3.4.3
 
 ### 3.4.0 (2025-09-25)
 

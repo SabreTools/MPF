@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using SabreTools.Models.Logiqx;
+using SabreTools.Data.Models.Logiqx;
 using Xunit;
 
 namespace MPF.Processors.Test

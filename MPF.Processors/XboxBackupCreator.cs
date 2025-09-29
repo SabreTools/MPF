@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 

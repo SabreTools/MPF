@@ -1,7 +1,7 @@
 using System;
 using System.IO;
-using SabreTools.Models.Logiqx;
-using SabreTools.Models.PIC;
+using SabreTools.Data.Models.Logiqx;
+using SabreTools.Data.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
