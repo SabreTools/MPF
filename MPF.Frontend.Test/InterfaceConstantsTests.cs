@@ -13,8 +13,8 @@ namespace MPF.Frontend.Test
         [InlineData(MediaType.HDDVD, 24)]
         [InlineData(MediaType.BluRay, 16)]
         [InlineData(MediaType.NintendoWiiUOpticalDisc, 16)]
-        [InlineData(MediaType.LaserDisc, 1)]
-        [InlineData(null, 1)]
+        [InlineData(MediaType.LaserDisc, 72)]
+        [InlineData(null, 72)]
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
             var actual = InterfaceConstants.GetSpeedsForMediaType(mediaType);

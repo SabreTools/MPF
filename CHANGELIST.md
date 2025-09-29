@@ -12,6 +12,7 @@
 - Minor tweaks to frontend code
 - Default to CD speed range
 - Skip trying to set speeds if no drives
+- Fix tests
 
 ### 3.4.0 (2025-09-25)
 
