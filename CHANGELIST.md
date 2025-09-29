@@ -13,6 +13,7 @@
 - Default to CD speed range
 - Skip trying to set speeds if no drives
 - Fix tests
+- Make media type a named parameter for CLI
 
 ### 3.4.0 (2025-09-25)
 

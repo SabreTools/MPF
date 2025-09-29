@@ -44,20 +44,19 @@ namespace MPF.CLI
 
             // Setup common outputs
             CommandOptions opts;
-            MediaType mediaType;
             RedumpSystem? knownSystem;
 
             // Use interactive mode
             if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
             {
-                opts = InteractiveMode(options, out mediaType, out knownSystem);
+                opts = InteractiveMode(options, out knownSystem);
             }
 
             // Use normal commandline parameters
             else
             {
                 // Try processing the common arguments
-                bool success = OptionsLoader.ProcessCommonArguments(args, out mediaType, out knownSystem, out var error);
+                bool success = OptionsLoader.ProcessCommonArguments(args, out knownSystem, out var error);
                 if (!success)
                 {
                     DisplayHelp(error);
@@ -123,13 +122,20 @@ namespace MPF.CLI
                 DisplayHelp("Both a device path and file path need to be supplied, exiting...");
                 return;
             }
+            if (options.InternalProgram == InternalProgram.DiscImageCreator
+                && opts.CustomParams == null
+                && (opts.MediaType == null || opts.MediaType == MediaType.NONE))
+            {
+                DisplayHelp("Media type is required for DiscImageCreator, exiting...");
+                return;
+            }
 
             // Normalize the file path
-            if (opts.FilePath != null)
-                opts.FilePath = FrontendTool.NormalizeOutputPaths(opts.FilePath, getFullPath: true);
+                if (opts.FilePath != null)
+                    opts.FilePath = FrontendTool.NormalizeOutputPaths(opts.FilePath, getFullPath: true);
 
             // Get the speed from the options
-            int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
+            int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(opts.MediaType, options);
 
             // Populate an environment
             var drive = Drive.Create(null, opts.DevicePath ?? string.Empty);
@@ -138,22 +144,22 @@ namespace MPF.CLI
                 drive,
                 knownSystem,
                 options.InternalProgram);
-            env.SetExecutionContext(mediaType, null);
+            env.SetExecutionContext(opts.MediaType, null);
             env.SetProcessor();
 
             // Process the parameters
-            string? paramStr = opts.CustomParams ?? env.GetFullParameters(mediaType, speed);
+            string? paramStr = opts.CustomParams ?? env.GetFullParameters(opts.MediaType, speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 DisplayHelp("No valid environment could be created, exiting...");
                 return;
             }
 
-            env.SetExecutionContext(mediaType, paramStr);
+            env.SetExecutionContext(opts.MediaType, paramStr);
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run(mediaType).GetAwaiter().GetResult();
+            var dumpResult = env.Run(opts.MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return;
@@ -174,7 +180,7 @@ namespace MPF.CLI
                     drive,
                     knownSystem,
                     internalProgram: null);
-                env.SetExecutionContext(mediaType, null);
+                env.SetExecutionContext(opts.MediaType, null);
                 env.SetProcessor();
             }
 
@@ -194,7 +200,7 @@ namespace MPF.CLI
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <mediatype> <system> [options]");
+            Console.WriteLine("MPF.CLI <system> [options]");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?, --help          Show this help text");
@@ -208,6 +214,7 @@ namespace MPF.CLI
 
             Console.WriteLine("CLI Options:");
             Console.WriteLine("-u, --use <program>            Override configured dumping program name");
+            Console.WriteLine("-t, --mediatype <mediatype>    Set media type for dumping (Required for DIC)");
             Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
             Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
             Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
@@ -233,14 +240,14 @@ namespace MPF.CLI
         /// <summary>
         /// Enable interactive mode for entering information
         /// </summary>
-        private static CommandOptions InteractiveMode(Options options, out MediaType mediaType, out RedumpSystem? system)
+        private static CommandOptions InteractiveMode(Options options, out RedumpSystem? system)
         {
             // Create return values
             var opts = new CommandOptions
             {
+                MediaType = MediaType.NONE,
                 FilePath = Path.Combine(options.DefaultOutputPath ?? "ISO", "track.bin"),
             };
-            mediaType = MediaType.NONE;
             system = options.DefaultSystem;
 
             // Create state values
@@ -251,9 +258,9 @@ namespace MPF.CLI
             Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
-            Console.WriteLine($"1) Set media type (Currently '{mediaType}')");
-            Console.WriteLine($"2) Set system (Currently '{system}')");
-            Console.WriteLine($"3) Set dumping program (Currently '{options.InternalProgram}')");
+            Console.WriteLine($"1) Set system (Currently '{system}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{options.InternalProgram}')");
+            Console.WriteLine($"3) Set media type (Currently '{opts.MediaType}')");
             Console.WriteLine($"4) Set device path (Currently '{opts.DevicePath}')");
             Console.WriteLine($"5) Set mounted path (Currently '{opts.MountedPath}')");
             Console.WriteLine($"6) Set file path (Currently '{opts.FilePath}')");
@@ -268,11 +275,11 @@ namespace MPF.CLI
             switch (result)
             {
                 case "1":
-                    goto mediaType;
-                case "2":
                     goto system;
-                case "3":
+                case "2":
                     goto dumpingProgram;
+                case "3":
+                    goto mediaType;
                 case "4":
                     goto devicePath;
                 case "5":
@@ -304,14 +311,6 @@ namespace MPF.CLI
                     goto root;
             }
 
-        mediaType:
-            Console.WriteLine();
-            Console.WriteLine("Input the media type and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            mediaType = OptionsLoader.ToMediaType(result);
-            goto root;
-
         system:
             Console.WriteLine();
             Console.WriteLine("Input the system and press Enter:");
@@ -326,6 +325,14 @@ namespace MPF.CLI
             Console.Write("> ");
             result = Console.ReadLine();
             options.InternalProgram = result.ToInternalProgram();
+            goto root;
+
+        mediaType:
+            Console.WriteLine();
+            Console.WriteLine("Input the media type and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            opts.MediaType = OptionsLoader.ToMediaType(result);
             goto root;
 
         devicePath:
@@ -413,6 +420,17 @@ namespace MPF.CLI
                 }
 
                 // Use a device path
+                else if (args[startIndex].StartsWith("-t=") || args[startIndex].StartsWith("--mediatype="))
+                {
+                    opts.MediaType = OptionsLoader.ToMediaType(args[startIndex].Split('=')[1].Trim('"'));
+                }
+                else if (args[startIndex] == "-t" || args[startIndex] == "--mediatype")
+                {
+                    opts.MediaType = OptionsLoader.ToMediaType(args[startIndex + 1].Trim('"'));
+                    startIndex++;
+                }
+
+                // Use a device path
                 else if (args[startIndex].StartsWith("-d=") || args[startIndex].StartsWith("--device="))
                 {
                     opts.DevicePath = args[startIndex].Split('=')[1].Trim('"');
@@ -488,6 +506,12 @@ namespace MPF.CLI
         /// </summary>
         private class CommandOptions
         {
+            /// <summary>
+            /// Media type to dump
+            /// </summary>
+            /// <remarks>Required for DIC and if custom parameters not set</remarks>
+            public MediaType? MediaType { get; set; } = null;
+
             /// <summary>
             /// Path to the device to dump
             /// </summary>

@@ -120,42 +120,6 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Process common arguments for all functionality
-        /// </summary>
-        /// <returns>True if all arguments pass, false otherwise</returns>
-        public static bool ProcessCommonArguments(string[] args, out MediaType mediaType, out RedumpSystem? system, out string? message)
-        {
-            // All other use requires at least 3 arguments
-            if (args.Length < 3)
-            {
-                mediaType = MediaType.NONE;
-                system = null;
-                message = "Invalid number of arguments";
-                return false;
-            }
-
-            // Check the MediaType
-            mediaType = ToMediaType(args[0].Trim('"'));
-            if (mediaType == MediaType.NONE)
-            {
-                system = null;
-                message = $"{args[0]} is not a recognized media type";
-                return false;
-            }
-
-            // Check the RedumpSystem
-            system = Extensions.ToRedumpSystem(args[1].Trim('"'));
-            if (system == null)
-            {
-                message = $"{args[1]} is not a recognized system";
-                return false;
-            }
-
-            message = null;
-            return true;
-        }
-
-        /// <summary>
         /// Get the MediaType enum value for a given string
         /// </summary>
         /// <param name="type">String value to convert</param>
