@@ -2103,6 +2103,10 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void SetSupportedDriveSpeed()
         {
+            // Skip trying to set speeds if no drives
+            if (Drives.Count == 0)
+                return;
+
             // Set the drive speed list that's appropriate
             DriveSpeeds = InterfaceConstants.GetSpeedsForMediaType(CurrentMediaType);
             VerboseLogLn($"Supported media speeds: {string.Join(", ", [.. DriveSpeeds.ConvertAll(ds => ds.ToString())])}");

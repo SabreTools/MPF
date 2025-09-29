@@ -11,6 +11,7 @@
 - Remove SkipMediaTypeDetection option, cleanup options window
 - Minor tweaks to frontend code
 - Default to CD speed range
+- Skip trying to set speeds if no drives
 
 ### 3.4.0 (2025-09-25)
 
