@@ -674,7 +674,7 @@ namespace MPF.Frontend.ViewModels
 
                 // Set the selected index
                 CurrentDrive = (index != -1 ? Drives[index] : Drives[0]);
-                Status = "Valid drive found! Choose your Media Type";
+                Status = "Valid drive found!";
                 CopyProtectScanButtonEnabled = true;
 
                 // Get the current system type
@@ -1359,6 +1359,10 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void EnsureMediaInformation()
         {
+            // If the drive list is empty, ignore updates
+            if (Drives.Count == 0)
+                return;
+
             // Get the current environment information
             _environment = DetermineEnvironment();
 
@@ -2112,8 +2116,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private bool ShouldEnableDumpingButton()
         {
-            return Drives != null
-                && Drives.Count > 0
+            return Drives.Count > 0
                 && CurrentSystem != null
                 && CurrentMediaType != null
                 && ProgramSupportsMedia();
