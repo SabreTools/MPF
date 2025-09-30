@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Fix starting index for CLI
+- Fix missed package update
 
 ### 3.4.1 (2025-09-29)
 
