@@ -31,13 +31,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BinaryObjectScanner" Version="3.4.3" />
-        <PackageReference Include="LibIRD" Version="1.0.0" />
+        <PackageReference Include="BinaryObjectScanner" Version="[3.4.3]" />
+        <PackageReference Include="LibIRD" Version="[1.0.0]" />
         <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
         <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" Condition="$(TargetFramework.StartsWith(`net452`))" />
         <PackageReference Include="MinThreadingBridge" Version="0.11.4" Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net40`))" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="1.7.4" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="[1.7.4]" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
     </ItemGroup>
 

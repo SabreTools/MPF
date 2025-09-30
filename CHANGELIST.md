@@ -2,6 +2,7 @@
 
 - Fix starting index for CLI
 - Fix missed package update
+- Require exact versions for build
 
 ### 3.4.1 (2025-09-29)
 
