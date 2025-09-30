@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.4.2 (2025-09-30)
 
 - Fix starting index for CLI
 - Fix missed package update
