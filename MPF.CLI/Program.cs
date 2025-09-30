@@ -80,7 +80,7 @@ namespace MPF.CLI
                 }
 
                 // Process any custom parameters
-                int startIndex = 2;
+                int startIndex = 1;
                 opts = LoadFromArguments(args, options, ref startIndex);
             }
 

@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix starting index for CLI
+
 ### 3.4.1 (2025-09-29)
 
 - Experiment with only showing media type box for DIC
