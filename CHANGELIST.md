@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add failure if media type could not be determined
+
 ### 3.4.2 (2025-09-30)
 
 - Fix starting index for CLI

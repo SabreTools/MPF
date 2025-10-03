@@ -485,6 +485,8 @@ namespace MPF.Frontend
 
             // Determine the media type from the processor
             MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
+            if (mediaType == null)
+                return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
             // Extract the information from the output files
             resultProgress.Report(ResultEventArgs.Success("Extracting output information from output files..."));
