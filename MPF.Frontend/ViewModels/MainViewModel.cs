@@ -2248,6 +2248,9 @@ namespace MPF.Frontend.ViewModels
                         resultProgress: resultProgress,
                         protectionProgress: protectionProgress,
                         processUserInfo: _processUserInfo);
+
+                    if (!result)
+                        ErrorLogLn(result.Message);
                 }
                 else
                 {

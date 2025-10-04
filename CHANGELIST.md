@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Add failure if media type could not be determined
+- Tweaks to how failure cases are reported
 
 ### 3.4.2 (2025-09-30)
 

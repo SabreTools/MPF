@@ -169,7 +169,7 @@ namespace MPF.UI.Windows
             }
             else
             {
-                string? message = result.Message ?? "Please check all files exist and try again!";
+                string message = result.Message.Length > 0 ? result.Message : "Please check all files exist and try again!";
                 DisplayUserMessage("Check Failed", message, 1, false);
             }
         }

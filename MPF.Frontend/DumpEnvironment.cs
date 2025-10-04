@@ -500,14 +500,9 @@ namespace MPF.Frontend
                 resultProgress,
                 protectionProgress);
             if (submissionInfo == null)
-            {
-                resultProgress.Report(ResultEventArgs.Failure("There was an issue extracting information!"));
-                return ResultEventArgs.Failure();
-            }
+                return ResultEventArgs.Failure("There was an issue extracting information!");
             else
-            {
                 resultProgress.Report(ResultEventArgs.Success("Extracting information complete!"));
-            }
 
             // Inject seed submission info data, if necessary
             if (seedInfo != null)
