@@ -3,6 +3,7 @@
 - Add failure if media type could not be determined
 - Tweaks to how failure cases are reported
 - Rename log zip on collision
+- Update packages
 
 ### 3.4.2 (2025-09-30)
 
