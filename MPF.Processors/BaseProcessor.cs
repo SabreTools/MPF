@@ -108,16 +108,11 @@ namespace MPF.Processors
                 return true;
             }
 
-            // If the file already exists, we want to delete the old one
-            try
+            // If the file already exists, change the archive name
+            if (File.Exists(archiveName))
             {
-                if (File.Exists(archiveName))
-                    File.Delete(archiveName);
-            }
-            catch
-            {
-                status = "Could not delete old archive!";
-                return false;
+                string now = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                archiveName = $"{basePath}_logs_{now}.zip";
             }
 
             // Add the log files to the archive and delete the uncompressed file after
