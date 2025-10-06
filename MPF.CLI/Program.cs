@@ -9,38 +9,12 @@ using MPF.Frontend.Features;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
-using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.CLI
 {
     public class Program
     {
-        #region Inputs
-
-        private const string _customName = "custom";
-        private static readonly StringInput _customInput = new(_customName, ["-c", "--custom"], "Custom parameters to use");
-
-        private const string _deviceName = "device";
-        private static readonly StringInput _deviceInput = new(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)");
-
-        private const string _fileName = "file";
-        private static readonly StringInput _fileInput = new(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)");
-
-        private const string _mediaTypeName = "media-type";
-        private static readonly StringInput _mediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
-
-        private const string _mountedName = "mounted";
-        private static readonly StringInput _mountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
-
-        private const string _speedName = "speed";
-        private static readonly Int32Input _speedInput = new(_speedName, ["-s", "--speed"], "Override default dumping speed");
-
-        private const string _useName = "use";
-        private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
-
-        #endregion
-
         public static void Main(string[] args)
         {
             // Load options from the config file
@@ -63,7 +37,8 @@ namespace MPF.CLI
             }
 
             // Create the command set
-            var commandSet = CreateCommands();
+            var mainFeature = new MainFeature();
+            var commandSet = CreateCommands(mainFeature);
 
             // If we have no args, show the help and quit
             if (args == null || args.Length == 0)
@@ -95,7 +70,6 @@ namespace MPF.CLI
 
                 // Default Behavior
                 default:
-                    var mainFeature = new MainFeature();
                     mainFeature.ProcessArgs(args, 0);
                     mainFeature.Execute();
                     break;
@@ -105,7 +79,7 @@ namespace MPF.CLI
         /// <summary>
         /// Create the command set for the program
         /// </summary>
-        private static CommandSet CreateCommands()
+        private static CommandSet CreateCommands(MainFeature mainFeature)
         {
             List<string> header = [
                 "MPF.CLI [standalone|system] [options] <path> ...",
@@ -141,13 +115,13 @@ namespace MPF.CLI
             commandSet.Add(new InteractiveFeature());
 
             // CLI Options
-            commandSet.Add(_useInput);
-            commandSet.Add(_mediaTypeInput);
-            commandSet.Add(_deviceInput);
-            commandSet.Add(_mountedInput);
-            commandSet.Add(_fileInput);
-            commandSet.Add(_speedInput);
-            commandSet.Add(_customInput);
+            commandSet.Add(mainFeature.UseInput);
+            commandSet.Add(mainFeature.MediaTypeInput);
+            commandSet.Add(mainFeature.DeviceInput);
+            commandSet.Add(mainFeature.MountedInput);
+            commandSet.Add(mainFeature.FileInput);
+            commandSet.Add(mainFeature.SpeedInput);
+            commandSet.Add(mainFeature.CustomInput);
 
             return commandSet;
         }

@@ -7,69 +7,17 @@ using MPF.Check.Features;
 using MPF.Frontend.Features;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
-using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Check
 {
     public class Program
     {
-        #region Inputs
-
-        private const string _createIrdName = "create-ird";
-        private static readonly FlagInput _createIrdInput = new(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)");
-
-        private const string _deleteName = "delete";
-        private static readonly FlagInput _deleteInput = new(_deleteName, ["-d", "--delete"], "Enable unnecessary file deletion");
-
-        private const string _disableArchivesName = "disable-archives";
-        private static readonly FlagInput _disableArchivesInput = new(_disableArchivesName, "--disable-archives", "Disable scanning archives (requires --scan)");
-
-        private const string _enableDebugName = "enable-debug";
-        private static readonly FlagInput _enableDebugInput = new(_enableDebugName, "--enable-debug", "Enable debug protection information (requires --scan)");
-
-        private const string _hideDriveLettersName = "hide-drive-letters";
-        private static readonly FlagInput _hideDriveLettersInput = new(_hideDriveLettersName, "--hide-drive-letters", "Hide drive letters from scan output (requires --scan)");
-
-        private const string _includeArtifactsName = "include-artifacts";
-        private static readonly FlagInput _includeArtifactsInput = new(_includeArtifactsName, "--include-artifacts", "Include artifacts in JSON (requires --json)");
-
-        private const string _jsonName = "json";
-        private static readonly FlagInput _jsonInput = new(_jsonName, ["-j", "--json"], "Enable submission JSON output");
-
-        private const string _loadSeedName = "load-seed";
-        private static readonly StringInput _loadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
-
-        private const string _noPlaceholdersName = "no-placeholders";
-        private static readonly FlagInput _noPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
-
-        private const string _noRetrieveName = "no-retrieve";
-        private static readonly FlagInput _noRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump");
-
-        private const string _pathName = "path";
-        private static readonly StringInput _pathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
-
-        private const string _pullAllName = "pull-all";
-        private static readonly FlagInput _pullAllInput = new(_pullAllName, "--pull-all", "Pull all information from Redump (requires --credentials)");
-
-        private const string _scanName = "scan";
-        private static readonly FlagInput _scanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)");
-
-        private const string _suffixName = "suffix";
-        private static readonly FlagInput _suffixInput = new(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix");
-
-        private const string _useName = "use";
-        private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
-
-        private const string _zipName = "zip";
-        private static readonly FlagInput _zipInput = new(_zipName, ["-z", "--zip"], "Enable log file compression");
-
-        #endregion
-
         public static void Main(string[] args)
         {
             // Create the command set
-            var commandSet = CreateCommands();
+            var mainFeature = new MainFeature();
+            var commandSet = CreateCommands(mainFeature);
 
             // If we have no args, show the help and quit
             if (args == null || args.Length == 0)
@@ -101,7 +49,6 @@ namespace MPF.Check
 
                 // Default Behavior
                 default:
-                    var mainFeature = new MainFeature();
                     mainFeature.ProcessArgs(args, 0);
                     mainFeature.Execute();
                     break;
@@ -111,7 +58,7 @@ namespace MPF.Check
         /// <summary>
         /// Create the command set for the program
         /// </summary>
-        private static CommandSet CreateCommands()
+        private static CommandSet CreateCommands(MainFeature mainFeature)
         {
             List<string> header = [
                 "MPF.CLI [standalone|system] [options] <path> ...",
@@ -137,23 +84,23 @@ namespace MPF.Check
             commandSet.Add(new InteractiveFeature());
 
             // Check Options
-            commandSet.Add(_useInput);
-            commandSet.Add(_loadSeedInput);
-            commandSet.Add(_noPlaceholdersInput);
-            commandSet.Add(_createIrdInput);
-            commandSet.Add(_noRetrieveInput);
+            commandSet.Add(mainFeature.UseInput);
+            commandSet.Add(mainFeature.LoadSeedInput);
+            commandSet.Add(mainFeature.NoPlaceholdersInput);
+            commandSet.Add(mainFeature.CreateIrdInput);
+            commandSet.Add(mainFeature.NoRetrieveInput);
             // TODO: Figure out how to work with the credentials input
-            commandSet.Add(_pullAllInput);
-            commandSet.Add(_pathInput);
-            commandSet.Add(_scanInput);
-            commandSet.Add(_disableArchivesInput);
-            commandSet.Add(_enableDebugInput);
-            commandSet.Add(_hideDriveLettersInput);
-            commandSet.Add(_suffixInput);
-            commandSet.Add(_jsonInput);
-            commandSet.Add(_includeArtifactsInput);
-            commandSet.Add(_zipInput);
-            commandSet.Add(_deleteInput);
+            commandSet.Add(mainFeature.PullAllInput);
+            commandSet.Add(mainFeature.PathInput);
+            commandSet.Add(mainFeature.ScanInput);
+            commandSet.Add(mainFeature.DisableArchivesInput);
+            commandSet.Add(mainFeature.EnableDebugInput);
+            commandSet.Add(mainFeature.HideDriveLettersInput);
+            commandSet.Add(mainFeature.SuffixInput);
+            commandSet.Add(mainFeature.JsonInput);
+            commandSet.Add(mainFeature.IncludeArtifactsInput);
+            commandSet.Add(mainFeature.ZipInput);
+            commandSet.Add(mainFeature.DeleteInput);
 
             return commandSet;
         }

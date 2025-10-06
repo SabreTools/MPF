@@ -13,6 +13,7 @@
 - Create and use base feature in Check
 - Create and use base feature in CLI
 - Assign inputs for interactive modes
+- Remove duplicate input declarations
 
 ### 3.4.2 (2025-09-30)
 

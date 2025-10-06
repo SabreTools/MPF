@@ -16,32 +16,32 @@ namespace MPF.CLI.Features
         private static readonly string[] _flags = [];
 
         /// <remarks>Description is unused</remarks>
-        internal const string _description = "";
+        private const string _description = "";
 
         #endregion
 
         #region Inputs
 
         private const string _customName = "custom";
-        private static readonly StringInput _customInput = new(_customName, ["-c", "--custom"], "Custom parameters to use");
+        internal readonly StringInput CustomInput = new(_customName, ["-c", "--custom"], "Custom parameters to use");
 
         private const string _deviceName = "device";
-        private static readonly StringInput _deviceInput = new(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)");
+        internal readonly StringInput DeviceInput = new(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)");
 
         private const string _fileName = "file";
-        private static readonly StringInput _fileInput = new(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)");
+        internal readonly StringInput FileInput = new(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)");
 
         private const string _mediaTypeName = "media-type";
-        private static readonly StringInput _mediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
+        internal readonly StringInput MediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
 
         private const string _mountedName = "mounted";
-        private static readonly StringInput _mountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
+        internal readonly StringInput MountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
 
         private const string _speedName = "speed";
-        private static readonly Int32Input _speedInput = new(_speedName, ["-s", "--speed"], "Override default dumping speed");
+        internal readonly Int32Input SpeedInput = new(_speedName, ["-s", "--speed"], "Override default dumping speed");
 
         private const string _useName = "use";
-        private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
+        internal readonly StringInput UseInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
 
         #endregion
 
@@ -76,13 +76,13 @@ namespace MPF.CLI.Features
                 RedumpPassword = null,
             };
 
-            Add(_useInput);
-            Add(_mediaTypeInput);
-            Add(_deviceInput);
-            Add(_mountedInput);
-            Add(_fileInput);
-            Add(_speedInput);
-            Add(_customInput);
+            Add(UseInput);
+            Add(MediaTypeInput);
+            Add(DeviceInput);
+            Add(MountedInput);
+            Add(FileInput);
+            Add(SpeedInput);
+            Add(CustomInput);
         }
 
         /// <inheritdoc/>
@@ -99,32 +99,32 @@ namespace MPF.CLI.Features
             for (index = 1; index < args.Length; index++)
             {
                 // Use specific program
-                if (_useInput.ProcessInput(args, ref index))
-                    Options.InternalProgram = _useInput.Value.ToInternalProgram();
+                if (UseInput.ProcessInput(args, ref index))
+                    Options.InternalProgram = UseInput.Value.ToInternalProgram();
 
                 // Set a media type
-                else if (_mediaTypeInput.ProcessInput(args, ref index))
-                    CommandOptions.MediaType = OptionsLoader.ToMediaType(_mediaTypeInput.Value?.Trim('"'));
+                else if (MediaTypeInput.ProcessInput(args, ref index))
+                    CommandOptions.MediaType = OptionsLoader.ToMediaType(MediaTypeInput.Value?.Trim('"'));
 
                 // Use a device path
-                else if (_deviceInput.ProcessInput(args, ref index))
-                    CommandOptions.DevicePath = _deviceInput.Value;
+                else if (DeviceInput.ProcessInput(args, ref index))
+                    CommandOptions.DevicePath = DeviceInput.Value;
 
                 // Use a mounted path for physical checks
-                else if (_mountedInput.ProcessInput(args, ref index))
-                    CommandOptions.MountedPath = _mountedInput.Value;
+                else if (MountedInput.ProcessInput(args, ref index))
+                    CommandOptions.MountedPath = MountedInput.Value;
 
                 // Use a file path
-                else if (_fileInput.ProcessInput(args, ref index))
-                    CommandOptions.FilePath = _fileInput.Value;
+                else if (FileInput.ProcessInput(args, ref index))
+                    CommandOptions.FilePath = FileInput.Value;
 
                 // Set an override speed
-                else if (_speedInput.ProcessInput(args, ref index))
-                    CommandOptions.DriveSpeed = _speedInput.Value;
+                else if (SpeedInput.ProcessInput(args, ref index))
+                    CommandOptions.DriveSpeed = SpeedInput.Value;
 
                 // Use a custom parameters
-                else if (_customInput.ProcessInput(args, ref index))
-                    CommandOptions.CustomParams = _customInput.Value;
+                else if (CustomInput.ProcessInput(args, ref index))
+                    CommandOptions.CustomParams = CustomInput.Value;
 
                 // Default, add to inputs
                 else
