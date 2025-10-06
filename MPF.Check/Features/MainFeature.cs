@@ -74,7 +74,6 @@ namespace MPF.Check.Features
         public MainFeature()
             : base(DisplayName, _flags, _description)
         {
-            CommandOptions = new Program.CommandOptions();
             Options = new Options()
             {
                 // Internal Program
@@ -146,7 +145,7 @@ namespace MPF.Check.Features
 
                 // Include seed info file
                 else if (LoadSeedInput.ProcessInput(args, ref index))
-                    CommandOptions.Seed = Builder.CreateFromFile(LoadSeedInput.Value);
+                    Seed = Builder.CreateFromFile(LoadSeedInput.Value);
 
                 // Disable placeholder values in submission info
                 else if (NoPlaceholdersInput.ProcessInput(args, ref index))
@@ -180,7 +179,7 @@ namespace MPF.Check.Features
 
                 // Use a device path for physical checks
                 else if (PathInput.ProcessInput(args, ref index))
-                    CommandOptions.DevicePath = PathInput.Value;
+                    DevicePath = PathInput.Value;
 
                 // Scan for protection (requires device path)
                 else if (ScanInput.ProcessInput(args, ref index))
@@ -224,10 +223,10 @@ namespace MPF.Check.Features
             }
 
             // Now deal with the complex options
-            Options.ScanForProtection = scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
+            Options.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
+            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
 
             return true;
         }

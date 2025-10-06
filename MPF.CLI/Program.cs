@@ -9,7 +9,6 @@ using MPF.Frontend.Features;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.CLI
 {
@@ -171,46 +170,6 @@ namespace MPF.CLI
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Represents commandline options
-        /// </summary>
-        internal class CommandOptions
-        {
-            /// <summary>
-            /// Media type to dump
-            /// </summary>
-            /// <remarks>Required for DIC and if custom parameters not set</remarks>
-            public MediaType? MediaType { get; set; } = null;
-
-            /// <summary>
-            /// Path to the device to dump
-            /// </summary>
-            /// <remarks>Required if custom parameters are not set</remarks>
-            public string? DevicePath { get; set; } = null;
-
-            /// <summary>
-            /// Path to the mounted filesystem to check
-            /// </summary>
-            /// <remarks>Should only be used when the device path is not readable</remarks>
-            public string? MountedPath { get; set; } = null;
-
-            /// <summary>
-            /// Path to the output file
-            /// </summary>
-            /// <remarks>Required if custom parameters are not set</remarks>
-            public string? FilePath { get; set; } = null;
-
-            /// <summary>
-            /// Override drive speed
-            /// </summary>
-            public int? DriveSpeed { get; set; } = null;
-
-            /// <summary>
-            /// Custom parameters for dumping
-            /// </summary>
-            public string? CustomParams { get; set; } = null;
         }
     }
 }

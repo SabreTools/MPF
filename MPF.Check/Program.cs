@@ -7,7 +7,6 @@ using MPF.Check.Features;
 using MPF.Frontend.Features;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
-using SabreTools.RedumpLib.Data;
 
 namespace MPF.Check
 {
@@ -149,22 +148,6 @@ namespace MPF.Check
             Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
             Console.WriteLine("as any log archives. Please make backups of those if you need to before running Check.");
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Represents commandline options
-        /// </summary>
-        internal class CommandOptions
-        {
-            /// <summary>
-            /// Seed submission info from an input file
-            /// </summary>
-            public SubmissionInfo? Seed { get; set; } = null;
-
-            /// <summary>
-            /// Path to the device to scan
-            /// </summary>
-            public string? DevicePath { get; set; } = null;
         }
     }
 }

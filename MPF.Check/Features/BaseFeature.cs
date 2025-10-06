@@ -15,11 +15,6 @@ namespace MPF.Check.Features
         #region Properties
 
         /// <summary>
-        /// Progrma-specific options
-        /// </summary>
-        public Program.CommandOptions CommandOptions { get; protected set; }
-
-        /// <summary>
         /// User-defined options
         /// </summary>
         public Options Options { get; protected set; }
@@ -29,12 +24,21 @@ namespace MPF.Check.Features
         /// </summary>
         public RedumpSystem? System { get; protected set; }
 
+        /// <summary>
+        /// Seed submission info from an input file
+        /// </summary>
+        public SubmissionInfo? Seed { get; protected set; }
+
+        /// <summary>
+        /// Path to the device to scan
+        /// </summary>
+        public string? DevicePath { get; protected set; }
+
         #endregion
 
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            CommandOptions = new Program.CommandOptions();
             Options = new Options()
             {
                 // Internal Program
@@ -103,8 +107,8 @@ namespace MPF.Check.Features
 
                 // Now populate an environment
                 Drive? drive = null;
-                if (!string.IsNullOrEmpty(CommandOptions.DevicePath))
-                    drive = Drive.Create(null, CommandOptions.DevicePath!);
+                if (!string.IsNullOrEmpty(DevicePath))
+                    drive = Drive.Create(null, DevicePath!);
 
                 var env = new DumpEnvironment(Options,
                     filepath,
@@ -114,7 +118,7 @@ namespace MPF.Check.Features
                 env.SetProcessor();
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(seedInfo: CommandOptions.Seed)
+                var result = env.VerifyAndSaveDumpOutput(seedInfo: Seed)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }

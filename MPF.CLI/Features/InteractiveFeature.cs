@@ -22,7 +22,6 @@ namespace MPF.CLI.Features
         public InteractiveFeature()
             : base(DisplayName, _flags, _description)
         {
-            CommandOptions = new Program.CommandOptions();
             Options = OptionsLoader.LoadFromConfig();
         }
 
@@ -36,11 +35,8 @@ namespace MPF.CLI.Features
             }
 
             // Create return values
-            CommandOptions = new Program.CommandOptions
-            {
-                MediaType = MediaType.NONE,
-                FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", "track.bin"),
-            };
+            MediaType = SabreTools.RedumpLib.Data.MediaType.NONE;
+            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", "track.bin");
             System = Options.DefaultSystem;
 
             // Create state values
@@ -53,12 +49,12 @@ namespace MPF.CLI.Features
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
-            Console.WriteLine($"3) Set media type (Currently '{CommandOptions.MediaType}')");
-            Console.WriteLine($"4) Set device path (Currently '{CommandOptions.DevicePath}')");
-            Console.WriteLine($"5) Set mounted path (Currently '{CommandOptions.MountedPath}')");
-            Console.WriteLine($"6) Set file path (Currently '{CommandOptions.FilePath}')");
-            Console.WriteLine($"7) Set override speed (Currently '{CommandOptions.DriveSpeed}')");
-            Console.WriteLine($"8) Set custom parameters (Currently '{CommandOptions.CustomParams}')");
+            Console.WriteLine($"3) Set media type (Currently '{MediaType}')");
+            Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
+            Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
+            Console.WriteLine($"6) Set file path (Currently '{FilePath}')");
+            Console.WriteLine($"7) Set override speed (Currently '{DriveSpeed}')");
+            Console.WriteLine($"8) Set custom parameters (Currently '{CustomParams}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start dumping");
@@ -125,21 +121,21 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            CommandOptions.MediaType = OptionsLoader.ToMediaType(result);
+            MediaType = OptionsLoader.ToMediaType(result);
             goto root;
 
         devicePath:
             Console.WriteLine();
             Console.WriteLine("Input the device path and press Enter:");
             Console.Write("> ");
-            CommandOptions.DevicePath = Console.ReadLine();
+            DevicePath = Console.ReadLine();
             goto root;
 
         mountedPath:
             Console.WriteLine();
             Console.WriteLine("Input the mounted path and press Enter:");
             Console.Write("> ");
-            CommandOptions.MountedPath = Console.ReadLine();
+            MountedPath = Console.ReadLine();
             goto root;
 
         filePath:
@@ -151,7 +147,7 @@ namespace MPF.CLI.Features
             if (!string.IsNullOrEmpty(result))
                 result = Path.GetFullPath(result!);
 
-            CommandOptions.FilePath = result;
+            FilePath = result;
             goto root;
 
         overrideSpeed:
@@ -163,14 +159,14 @@ namespace MPF.CLI.Features
             if (!int.TryParse(result, out int speed))
                 speed = -1;
 
-            CommandOptions.DriveSpeed = speed;
+            DriveSpeed = speed;
             goto root;
 
         customParams:
             Console.WriteLine();
             Console.WriteLine("Input the custom parameters and press Enter:");
             Console.Write("> ");
-            CommandOptions.CustomParams = Console.ReadLine();
+            CustomParams = Console.ReadLine();
             goto root;
 
         exit:

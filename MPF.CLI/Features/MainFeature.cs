@@ -48,7 +48,6 @@ namespace MPF.CLI.Features
         public MainFeature()
             : base(DisplayName, _flags, _description)
         {
-            CommandOptions = new Program.CommandOptions();
             Options = new Options()
             {
                 // Internal Program
@@ -104,27 +103,27 @@ namespace MPF.CLI.Features
 
                 // Set a media type
                 else if (MediaTypeInput.ProcessInput(args, ref index))
-                    CommandOptions.MediaType = OptionsLoader.ToMediaType(MediaTypeInput.Value?.Trim('"'));
+                    MediaType = OptionsLoader.ToMediaType(MediaTypeInput.Value?.Trim('"'));
 
                 // Use a device path
                 else if (DeviceInput.ProcessInput(args, ref index))
-                    CommandOptions.DevicePath = DeviceInput.Value;
+                    DevicePath = DeviceInput.Value;
 
                 // Use a mounted path for physical checks
                 else if (MountedInput.ProcessInput(args, ref index))
-                    CommandOptions.MountedPath = MountedInput.Value;
+                    MountedPath = MountedInput.Value;
 
                 // Use a file path
                 else if (FileInput.ProcessInput(args, ref index))
-                    CommandOptions.FilePath = FileInput.Value;
+                    FilePath = FileInput.Value;
 
                 // Set an override speed
                 else if (SpeedInput.ProcessInput(args, ref index))
-                    CommandOptions.DriveSpeed = SpeedInput.Value;
+                    DriveSpeed = SpeedInput.Value;
 
                 // Use a custom parameters
                 else if (CustomInput.ProcessInput(args, ref index))
-                    CommandOptions.CustomParams = CustomInput.Value;
+                    CustomParams = CustomInput.Value;
 
                 // Default, add to inputs
                 else

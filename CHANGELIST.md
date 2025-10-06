@@ -15,6 +15,7 @@
 - Assign inputs for interactive modes
 - Remove duplicate input declarations
 - Fix strange invocations of extension methods
+- Remove CommandOptions implementations
 
 ### 3.4.2 (2025-09-30)
 

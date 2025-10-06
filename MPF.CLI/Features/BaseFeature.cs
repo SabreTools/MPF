@@ -16,11 +16,6 @@ namespace MPF.CLI.Features
         #region Properties
 
         /// <summary>
-        /// Progrma-specific options
-        /// </summary>
-        public Program.CommandOptions CommandOptions { get; protected set; }
-
-        /// <summary>
         /// User-defined options
         /// </summary>
         public Options Options { get; protected set; }
@@ -30,12 +25,45 @@ namespace MPF.CLI.Features
         /// </summary>
         public RedumpSystem? System { get; protected set; }
 
+        /// <summary>
+        /// Media type to dump
+        /// </summary>
+        /// <remarks>Required for DIC and if custom parameters not set</remarks>
+        public MediaType? MediaType { get; protected set; }
+
+        /// <summary>
+        /// Path to the device to dump
+        /// </summary>
+        /// <remarks>Required if custom parameters are not set</remarks>
+        public string? DevicePath { get; protected set; }
+
+        /// <summary>
+        /// Path to the mounted filesystem to check
+        /// </summary>
+        /// <remarks>Should only be used when the device path is not readable</remarks>
+        public string? MountedPath { get; protected set; }
+
+        /// <summary>
+        /// Path to the output file
+        /// </summary>
+        /// <remarks>Required if custom parameters are not set</remarks>
+        public string? FilePath { get; protected set; }
+
+        /// <summary>
+        /// Override drive speed
+        /// </summary>
+        public int? DriveSpeed { get; protected set; }
+
+        /// <summary>
+        /// Custom parameters for dumping
+        /// </summary>
+        public string? CustomParams { get; protected set; }
+
         #endregion
 
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            CommandOptions = new Program.CommandOptions();
             Options = new Options()
             {
                 // Internal Program
@@ -116,49 +144,49 @@ namespace MPF.CLI.Features
             }
 
             // Ensure we have the values we need
-            if (CommandOptions.CustomParams == null && (CommandOptions.DevicePath == null || CommandOptions.FilePath == null))
+            if (CustomParams == null && (DevicePath == null || FilePath == null))
             {
                 Program.DisplayHelp("Both a device path and file path need to be supplied, exiting...");
                 return false;
             }
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
-                && CommandOptions.CustomParams == null
-                && (CommandOptions.MediaType == null || CommandOptions.MediaType == MediaType.NONE))
+                && CustomParams == null
+                && (MediaType == null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
                 Program.DisplayHelp("Media type is required for DiscImageCreator, exiting...");
                 return false;
             }
 
             // Normalize the file path
-            if (CommandOptions.FilePath != null)
-                CommandOptions.FilePath = FrontendTool.NormalizeOutputPaths(CommandOptions.FilePath, getFullPath: true);
+            if (FilePath != null)
+                FilePath = FrontendTool.NormalizeOutputPaths(FilePath, getFullPath: true);
 
             // Get the speed from the options
-            int speed = CommandOptions.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(CommandOptions.MediaType, Options);
+            int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(MediaType, Options);
 
             // Populate an environment
-            var drive = Drive.Create(null, CommandOptions.DevicePath ?? string.Empty);
+            var drive = Drive.Create(null, DevicePath ?? string.Empty);
             var env = new DumpEnvironment(Options,
-                CommandOptions.FilePath,
+                FilePath,
                 drive,
                 System,
                 Options.InternalProgram);
-            env.SetExecutionContext(CommandOptions.MediaType, null);
+            env.SetExecutionContext(MediaType, null);
             env.SetProcessor();
 
             // Process the parameters
-            string? paramStr = CommandOptions.CustomParams ?? env.GetFullParameters(CommandOptions.MediaType, speed);
+            string? paramStr = CustomParams ?? env.GetFullParameters(MediaType, speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 Program.DisplayHelp("No valid environment could be created, exiting...");
                 return false;
             }
 
-            env.SetExecutionContext(CommandOptions.MediaType, paramStr);
+            env.SetExecutionContext(MediaType, paramStr);
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run(CommandOptions.MediaType).GetAwaiter().GetResult();
+            var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (!dumpResult)
                 return false;
@@ -171,15 +199,15 @@ namespace MPF.CLI.Features
             }
 
             // If we have a mounted path, replace the environment
-            if (CommandOptions.MountedPath != null && Directory.Exists(CommandOptions.MountedPath))
+            if (MountedPath != null && Directory.Exists(MountedPath))
             {
-                drive = Drive.Create(null, CommandOptions.MountedPath);
+                drive = Drive.Create(null, MountedPath);
                 env = new DumpEnvironment(Options,
-                    CommandOptions.FilePath,
+                    FilePath,
                     drive,
                     System,
                     internalProgram: null);
-                env.SetExecutionContext(CommandOptions.MediaType, null);
+                env.SetExecutionContext(MediaType, null);
                 env.SetProcessor();
             }
 

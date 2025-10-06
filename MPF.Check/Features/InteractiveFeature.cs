@@ -33,7 +33,6 @@ namespace MPF.Check.Features
             }
 
             // Create return values
-            CommandOptions = new Program.CommandOptions();
             System = null;
 
             // These values require multiple parts to be active
@@ -52,13 +51,13 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
-            Console.WriteLine($"3) Set seed path (Currently '{CommandOptions.Seed}')");
+            Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Add placeholders (Currently '{Options.AddPlaceholders}')");
             Console.WriteLine($"5) Create IRD (Currently '{Options.CreateIRDAfterDumping}')");
             Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.RetrieveMatchInformation}')");
             Console.WriteLine($"7) Redump credentials (Currently '{Options.RedumpUsername}')");
             Console.WriteLine($"8) Pull all information (Currently '{Options.PullAllInformation}')");
-            Console.WriteLine($"9) Set device path (Currently '{CommandOptions.DevicePath}')");
+            Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
             Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
             Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
@@ -176,7 +175,7 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the seed path and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            CommandOptions.Seed = Builder.CreateFromFile(result);
+            Seed = Builder.CreateFromFile(result);
             goto root;
 
         redumpCredentials:
@@ -203,15 +202,15 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine("Input the device path and press Enter:");
             Console.Write("> ");
-            CommandOptions.DevicePath = Console.ReadLine();
+            DevicePath = Console.ReadLine();
             goto root;
 
         exit:
             // Now deal with the complex options
-            Options.ScanForProtection = scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
-            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(CommandOptions.DevicePath);
+            Options.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
+            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
 
             return true;
         }
