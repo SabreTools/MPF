@@ -47,7 +47,7 @@ namespace MPF.Check
                         DisplayHelp();
                         return;
                     }
-                    else if (!mainFeature.VerifyInputs())
+                    else if (!interactive.VerifyInputs())
                     {
                         DisplayHelp("At least one input is required");
                         return;
