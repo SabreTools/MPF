@@ -63,13 +63,23 @@ namespace MPF.CLI
 
                 // Interactive Mode
                 case InteractiveFeature interactive:
-                    interactive.ProcessArgs(args, 0);
+                    if (!interactive.ProcessArgs(args, 0))
+                    {
+                        DisplayHelp();
+                        return;
+                    }
+                    
                     interactive.Execute();
                     break;
 
                 // Default Behavior
                 default:
-                    mainFeature.ProcessArgs(args, 0);
+                    if (!mainFeature.ProcessArgs(args, 0))
+                    {
+                        DisplayHelp();
+                        return;
+                    }
+
                     mainFeature.Execute();
                     break;
             }

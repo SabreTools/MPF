@@ -16,6 +16,7 @@
 - Remove duplicate input declarations
 - Fix strange invocations of extension methods
 - Remove CommandOptions implementations
+- Exit early on parsing failures
 
 ### 3.4.2 (2025-09-30)
 

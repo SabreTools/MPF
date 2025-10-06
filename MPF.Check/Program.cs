@@ -42,13 +42,33 @@ namespace MPF.Check
 
                 // Interactive Mode
                 case InteractiveFeature interactive:
-                    interactive.ProcessArgs(args, 0);
+                    if (!interactive.ProcessArgs(args, 0))
+                    {
+                        DisplayHelp();
+                        return;
+                    }
+                    else if (!mainFeature.VerifyInputs())
+                    {
+                        DisplayHelp("At least one input is required");
+                        return;
+                    }
+
                     interactive.Execute();
                     break;
 
                 // Default Behavior
                 default:
-                    mainFeature.ProcessArgs(args, 0);
+                    if (!mainFeature.ProcessArgs(args, 0))
+                    {
+                        DisplayHelp();
+                        return;
+                    }
+                    else if (!mainFeature.VerifyInputs())
+                    {
+                        DisplayHelp("At least one input is required");
+                        return;
+                    }
+
                     mainFeature.Execute();
                     break;
             }
