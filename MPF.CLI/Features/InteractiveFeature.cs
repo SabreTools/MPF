@@ -7,7 +7,7 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.CLI.Features
 {
-    internal sealed class InteractiveFeature : SabreTools.CommandLine.Feature
+    internal sealed class InteractiveFeature : BaseFeature
     {
         #region Feature Definition
 
@@ -19,25 +19,6 @@ namespace MPF.CLI.Features
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Progrma-specific options
-        /// </summary>
-        public Program.CommandOptions CommandOptions { get; private set; }
-
-        /// <summary>
-        /// User-defined options
-        /// </summary>
-        public Options Options { get; }
-
-        /// <summary>
-        /// Currently-selected system
-        /// </summary>
-        public RedumpSystem? System { get; private set; }
-
-        #endregion
-
         public InteractiveFeature()
             : base(DisplayName, _flags, _description)
         {
@@ -46,7 +27,7 @@ namespace MPF.CLI.Features
         }
 
         /// <inheritdoc/>
-        public override bool Execute()
+        public override bool ProcessArgs(string[] args, int index)
         {
             // Create return values
             CommandOptions = new Program.CommandOptions

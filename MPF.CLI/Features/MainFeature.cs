@@ -2,10 +2,11 @@
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine.Inputs;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.CLI.Features
 {
-    internal sealed class MainFeature : SabreTools.CommandLine.Feature
+    internal sealed class MainFeature : BaseFeature
     {
         #region Feature Definition
 
@@ -41,20 +42,6 @@ namespace MPF.CLI.Features
 
         private const string _useName = "use";
         private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Progrma-specific options
-        /// </summary>
-        public Program.CommandOptions CommandOptions { get; private set; }
-
-        /// <summary>
-        /// User-defined options
-        /// </summary>
-        public Options Options { get; }
 
         #endregion
 
@@ -105,12 +92,11 @@ namespace MPF.CLI.Features
             if (args == null || args.Length == 0)
                 return true;
 
-            // If we have an invalid start index, just return
-            if (index < 0 || index >= args.Length)
-                return false;
+            // The first argument is the system type
+            System = Extensions.ToRedumpSystem(args[0].Trim('"'));
 
             // Loop through the arguments and parse out values
-            for (; index < args.Length; index++)
+            for (index = 1; index < args.Length; index++)
             {
                 // Use specific program
                 if (_useInput.ProcessInput(args, ref index))
@@ -147,9 +133,6 @@ namespace MPF.CLI.Features
 
             return true;
         }
-
-        /// <inheritdoc/>
-        public override bool Execute() => true;
 
         /// <inheritdoc/>
         public override bool VerifyInputs() => true;

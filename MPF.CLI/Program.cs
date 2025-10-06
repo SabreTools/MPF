@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
@@ -12,7 +11,6 @@ using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
 using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.Web;
 
 namespace MPF.CLI
 {
@@ -74,10 +72,6 @@ namespace MPF.CLI
                 return;
             }
 
-            // Setup common outputs
-            CommandOptions opts;
-            RedumpSystem? knownSystem;
-
             // Get the first argument as a feature flag
             string featureName = args[0];
 
@@ -95,145 +89,17 @@ namespace MPF.CLI
 
                 // Interactive Mode
                 case InteractiveFeature interactive:
+                    interactive.ProcessArgs(args, 0);
                     interactive.Execute();
-
-                    opts = interactive.CommandOptions;
-                    options = interactive.Options;
-                    knownSystem = interactive.System;
                     break;
 
                 // Default Behavior
                 default:
                     var mainFeature = new MainFeature();
                     mainFeature.ProcessArgs(args, 0);
-
-                    opts = mainFeature.CommandOptions;
-                    options = mainFeature.Options;
-                    knownSystem = Extensions.ToRedumpSystem(featureName.Trim('"'));
-
-                    // Validate the supplied credentials
-                    if (options.RetrieveMatchInformation
-                        && !string.IsNullOrEmpty(options.RedumpUsername)
-                        && !string.IsNullOrEmpty(options.RedumpPassword))
-                    {
-                        bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
-                        string message = validated switch
-                        {
-                            true => "Redump username and password accepted!",
-                            false => "Redump username and password denied!",
-                            null => "An error occurred validating your credentials!",
-                        };
-
-                        Console.WriteLine(message);
-                    }
-
+                    mainFeature.Execute();
                     break;
             }
-
-            // Validate the internal program
-            switch (options.InternalProgram)
-            {
-                case InternalProgram.Aaru:
-                    if (!File.Exists(options.AaruPath))
-                    {
-                        DisplayHelp("A path needs to be supplied in config.json for Aaru, exiting...");
-                        return;
-                    }
-                    break;
-
-                case InternalProgram.DiscImageCreator:
-                    if (!File.Exists(options.DiscImageCreatorPath))
-                    {
-                        DisplayHelp("A path needs to be supplied in config.json for DIC, exiting...");
-                        return;
-                    }
-                    break;
-
-                case InternalProgram.Redumper:
-                    if (!File.Exists(options.RedumperPath))
-                    {
-                        DisplayHelp("A path needs to be supplied in config.json for Redumper, exiting...");
-                        return;
-                    }
-                    break;
-
-                default:
-                    DisplayHelp($"{options.InternalProgram} is not a supported dumping program, exiting...");
-                    break;
-            }
-
-            // Ensure we have the values we need
-            if (opts.CustomParams == null && (opts.DevicePath == null || opts.FilePath == null))
-            {
-                DisplayHelp("Both a device path and file path need to be supplied, exiting...");
-                return;
-            }
-            if (options.InternalProgram == InternalProgram.DiscImageCreator
-                && opts.CustomParams == null
-                && (opts.MediaType == null || opts.MediaType == MediaType.NONE))
-            {
-                DisplayHelp("Media type is required for DiscImageCreator, exiting...");
-                return;
-            }
-
-            // Normalize the file path
-            if (opts.FilePath != null)
-                opts.FilePath = FrontendTool.NormalizeOutputPaths(opts.FilePath, getFullPath: true);
-
-            // Get the speed from the options
-            int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(opts.MediaType, options);
-
-            // Populate an environment
-            var drive = Drive.Create(null, opts.DevicePath ?? string.Empty);
-            var env = new DumpEnvironment(options,
-                opts.FilePath,
-                drive,
-                knownSystem,
-                options.InternalProgram);
-            env.SetExecutionContext(opts.MediaType, null);
-            env.SetProcessor();
-
-            // Process the parameters
-            string? paramStr = opts.CustomParams ?? env.GetFullParameters(opts.MediaType, speed);
-            if (string.IsNullOrEmpty(paramStr))
-            {
-                DisplayHelp("No valid environment could be created, exiting...");
-                return;
-            }
-
-            env.SetExecutionContext(opts.MediaType, paramStr);
-
-            // Invoke the dumping program
-            Console.WriteLine($"Invoking {options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run(opts.MediaType).GetAwaiter().GetResult();
-            Console.WriteLine(dumpResult.Message);
-            if (!dumpResult)
-                return;
-
-            // If it was not a dumping command
-            if (!env.IsDumpingCommand())
-            {
-                Console.WriteLine("Execution not recognized as dumping command, skipping processing...");
-                return;
-            }
-
-            // If we have a mounted path, replace the environment
-            if (opts.MountedPath != null && Directory.Exists(opts.MountedPath))
-            {
-                drive = Drive.Create(null, opts.MountedPath);
-                env = new DumpEnvironment(options,
-                    opts.FilePath,
-                    drive,
-                    knownSystem,
-                    internalProgram: null);
-                env.SetExecutionContext(opts.MediaType, null);
-                env.SetProcessor();
-            }
-
-            // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput()
-                .ConfigureAwait(false).GetAwaiter().GetResult();
-            Console.WriteLine(verifyResult.Message);
         }
 
         /// <summary>
@@ -290,7 +156,7 @@ namespace MPF.CLI
         /// Display help for MPF.CLI
         /// </summary>
         /// <param name="error">Error string to prefix the help text with</param>
-        private static void DisplayHelp(string? error = null)
+        internal static void DisplayHelp(string? error = null)
         {
             if (error != null)
                 Console.WriteLine(error);

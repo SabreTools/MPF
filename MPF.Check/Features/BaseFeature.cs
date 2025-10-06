@@ -121,8 +121,5 @@ namespace MPF.Check.Features
 
             return true;
         }
-
-        /// <inheritdoc/>
-        public override bool VerifyInputs() => Inputs.Count > 0;
     }
 }
