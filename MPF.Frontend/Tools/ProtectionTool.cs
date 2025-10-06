@@ -166,7 +166,7 @@ namespace MPF.Frontend.Tools
                 try
                 {
                     var antiModchip = new BinaryObjectScanner.Protection.PSXAntiModchip();
-                    foreach (string file in IOExtensions.SafeGetFiles(path!, "*", SearchOption.AllDirectories))
+                    foreach (string file in path!.SafeGetFiles("*", SearchOption.AllDirectories))
                     {
                         try
                         {

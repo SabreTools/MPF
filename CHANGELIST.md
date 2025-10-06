@@ -14,6 +14,7 @@
 - Create and use base feature in CLI
 - Assign inputs for interactive modes
 - Remove duplicate input declarations
+- Fix strange invocations of extension methods
 
 ### 3.4.2 (2025-09-30)
 

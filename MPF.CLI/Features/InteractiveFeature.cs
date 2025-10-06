@@ -109,7 +109,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            System = Extensions.ToRedumpSystem(result);
+            System = result.ToRedumpSystem();
             goto root;
 
         dumpingProgram:

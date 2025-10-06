@@ -158,7 +158,7 @@ namespace MPF.Frontend
             get
             {
                 var valueString = GetStringSetting(Settings, "DefaultSystem", RedumpSystem.IBMPCcompatible.LongName());
-                var valueEnum = Extensions.ToRedumpSystem(valueString ?? string.Empty);
+                var valueEnum = (valueString ?? string.Empty).ToRedumpSystem();
                 return valueEnum;
             }
             set

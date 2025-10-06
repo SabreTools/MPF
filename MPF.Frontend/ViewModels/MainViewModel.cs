@@ -1613,7 +1613,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "$SystemUpdate"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "$SystemUpdate")).Length > 0
+                    && Path.Combine(drive.Name, "$SystemUpdate").SafeGetFiles().Length > 0
                     && drive.TotalSize <= 500_000_000)
                 {
                     return RedumpSystem.MicrosoftXbox360;
@@ -1828,13 +1828,13 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "AUDIO_TS"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "AUDIO_TS")).Length > 0)
+                    && Path.Combine(drive.Name, "AUDIO_TS").SafeGetFiles().Length > 0)
                 {
                     return RedumpSystem.DVDAudio;
                 }
 
                 else if (Directory.Exists(Path.Combine(drive.Name, "VIDEO_TS"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "VIDEO_TS")).Length > 0)
+                    && Path.Combine(drive.Name, "VIDEO_TS").SafeGetFiles().Length > 0)
                 {
                     return RedumpSystem.DVDVideo;
                 }
@@ -1845,7 +1845,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "HVDVD_TS"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "HVDVD_TS")).Length > 0)
+                    && Path.Combine(drive.Name, "HVDVD_TS").SafeGetFiles().Length > 0)
                 {
                     return RedumpSystem.HDDVDVideo;
                 }
@@ -1856,7 +1856,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "PHOTO_CD"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "PHOTO_CD")).Length > 0)
+                    && Path.Combine(drive.Name, "PHOTO_CD").SafeGetFiles().Length > 0)
                 {
                     return RedumpSystem.PhotoCD;
                 }
@@ -1867,7 +1867,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 if (Directory.Exists(Path.Combine(drive.Name, "VCD"))
-                    && IOExtensions.SafeGetFiles(Path.Combine(drive.Name, "VCD")).Length > 0)
+                    && Path.Combine(drive.Name, "VCD").SafeGetFiles().Length > 0)
                 {
                     return RedumpSystem.VideoCD;
                 }

@@ -93,7 +93,7 @@ namespace MPF.CLI.Features
                 return true;
 
             // The first argument is the system type
-            System = Extensions.ToRedumpSystem(args[0].Trim('"'));
+            System = args[0].Trim('"').ToRedumpSystem();
 
             // Loop through the arguments and parse out values
             for (index = 1; index < args.Length; index++)
