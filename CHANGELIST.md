@@ -5,6 +5,7 @@
 - Rename log zip on collision
 - Update packages
 - Use CommandLine library for CLI executables
+- Create interactive mode features
 
 ### 3.4.2 (2025-09-30)
 

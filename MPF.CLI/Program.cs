@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using MPF.CLI.Features;
+
 #if NET40
 using System.Threading.Tasks;
 #endif
@@ -47,9 +49,14 @@ namespace MPF.CLI
             RedumpSystem? knownSystem;
 
             // Use interactive mode
-            if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
+            if (args.Length > 0 && (args[0] == "i" || args[0] == "interactive"))
             {
-                opts = InteractiveMode(options, out knownSystem);
+                var interactive = new InteractiveFeature();
+                interactive.Execute();
+
+                opts = interactive.CommandOptions;
+                options = interactive.Options;
+                knownSystem = interactive.System;
             }
 
             // Use normal commandline parameters
@@ -131,8 +138,8 @@ namespace MPF.CLI
             }
 
             // Normalize the file path
-                if (opts.FilePath != null)
-                    opts.FilePath = FrontendTool.NormalizeOutputPaths(opts.FilePath, getFullPath: true);
+            if (opts.FilePath != null)
+                opts.FilePath = FrontendTool.NormalizeOutputPaths(opts.FilePath, getFullPath: true);
 
             // Get the speed from the options
             int speed = opts.DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(opts.MediaType, options);
@@ -209,7 +216,7 @@ namespace MPF.CLI
             Console.WriteLine("lm, listmedia           List supported media types");
             Console.WriteLine("ls, listsystems         List supported system types");
             Console.WriteLine("lp, listprograms        List supported dumping program outputs");
-            Console.WriteLine("-i, --interactive       Enable interactive mode");
+            Console.WriteLine("i, interactive          Enable interactive mode");
             Console.WriteLine();
 
             Console.WriteLine("CLI Options:");
@@ -235,153 +242,6 @@ namespace MPF.CLI
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Enable interactive mode for entering information
-        /// </summary>
-        private static CommandOptions InteractiveMode(Options options, out RedumpSystem? system)
-        {
-            // Create return values
-            var opts = new CommandOptions
-            {
-                MediaType = MediaType.NONE,
-                FilePath = Path.Combine(options.DefaultOutputPath ?? "ISO", "track.bin"),
-            };
-            system = options.DefaultSystem;
-
-            // Create state values
-            string? result = string.Empty;
-
-        root:
-            Console.Clear();
-            Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
-            Console.WriteLine("-------------------------");
-            Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{system}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{options.InternalProgram}')");
-            Console.WriteLine($"3) Set media type (Currently '{opts.MediaType}')");
-            Console.WriteLine($"4) Set device path (Currently '{opts.DevicePath}')");
-            Console.WriteLine($"5) Set mounted path (Currently '{opts.MountedPath}')");
-            Console.WriteLine($"6) Set file path (Currently '{opts.FilePath}')");
-            Console.WriteLine($"7) Set override speed (Currently '{opts.DriveSpeed}')");
-            Console.WriteLine($"8) Set custom parameters (Currently '{opts.CustomParams}')");
-            Console.WriteLine();
-            Console.WriteLine($"Q) Exit the program");
-            Console.WriteLine($"X) Start dumping");
-            Console.Write("> ");
-
-            result = Console.ReadLine();
-            switch (result)
-            {
-                case "1":
-                    goto system;
-                case "2":
-                    goto dumpingProgram;
-                case "3":
-                    goto mediaType;
-                case "4":
-                    goto devicePath;
-                case "5":
-                    goto mountedPath;
-                case "6":
-                    goto filePath;
-                case "7":
-                    goto overrideSpeed;
-                case "8":
-                    goto customParams;
-
-                case "q":
-                case "Q":
-                    Environment.Exit(0);
-                    break;
-                case "x":
-                case "X":
-                    Console.Clear();
-                    goto exit;
-                case "z":
-                case "Z":
-                    Console.WriteLine("It is pitch black. You are likely to be eaten by a grue.");
-                    Console.Write("> ");
-                    Console.ReadLine();
-                    goto root;
-                default:
-                    Console.WriteLine($"Invalid selection: {result}");
-                    Console.ReadLine();
-                    goto root;
-            }
-
-        system:
-            Console.WriteLine();
-            Console.WriteLine("Input the system and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            system = Extensions.ToRedumpSystem(result);
-            goto root;
-
-        dumpingProgram:
-            Console.WriteLine();
-            Console.WriteLine("Input the dumping program and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            options.InternalProgram = result.ToInternalProgram();
-            goto root;
-
-        mediaType:
-            Console.WriteLine();
-            Console.WriteLine("Input the media type and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            opts.MediaType = OptionsLoader.ToMediaType(result);
-            goto root;
-
-        devicePath:
-            Console.WriteLine();
-            Console.WriteLine("Input the device path and press Enter:");
-            Console.Write("> ");
-            opts.DevicePath = Console.ReadLine();
-            goto root;
-
-        mountedPath:
-            Console.WriteLine();
-            Console.WriteLine("Input the mounted path and press Enter:");
-            Console.Write("> ");
-            opts.MountedPath = Console.ReadLine();
-            goto root;
-
-        filePath:
-            Console.WriteLine();
-            Console.WriteLine("Input the file path and press Enter:");
-            Console.Write("> ");
-
-            result = Console.ReadLine();
-            if (!string.IsNullOrEmpty(result))
-                result = Path.GetFullPath(result!);
-
-            opts.FilePath = result;
-            goto root;
-
-        overrideSpeed:
-            Console.WriteLine();
-            Console.WriteLine("Input the override speed and press Enter:");
-            Console.Write("> ");
-
-            result = Console.ReadLine();
-            if (!int.TryParse(result, out int speed))
-                speed = -1;
-
-            opts.DriveSpeed = speed;
-            goto root;
-
-        customParams:
-            Console.WriteLine();
-            Console.WriteLine("Input the custom parameters and press Enter:");
-            Console.Write("> ");
-            opts.CustomParams = Console.ReadLine();
-            goto root;
-
-        exit:
-            return opts;
         }
 
         /// <summary>
@@ -504,7 +364,7 @@ namespace MPF.CLI
         /// <summary>
         /// Represents commandline options
         /// </summary>
-        private class CommandOptions
+        internal class CommandOptions
         {
             /// <summary>
             /// Media type to dump

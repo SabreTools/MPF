@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using MPF.Check.Features;
+
 #if NET40
 using System.Threading.Tasks;
 #endif
@@ -58,10 +60,15 @@ namespace MPF.Check
             int startIndex;
 
             // Use interactive mode
-            if (args.Length > 0 && (args[0] == "-i" || args[0] == "--interactive"))
+            if (args.Length > 0 && (args[0] == "i" || args[0] == "interactive"))
             {
                 startIndex = 1;
-                opts = InteractiveMode(options, out knownSystem);
+                var interactive = new InteractiveFeature();
+                interactive.Execute();
+
+                opts = interactive.CommandOptions;
+                options = interactive.Options;
+                knownSystem = interactive.System;
             }
 
             // Use normal commandline parameters
@@ -153,7 +160,7 @@ namespace MPF.Check
             Console.WriteLine("lm, listmedia           List supported media types");
             Console.WriteLine("ls, listsystems         List supported system types");
             Console.WriteLine("lp, listprograms        List supported dumping program outputs");
-            Console.WriteLine("-i, --interactive       Enable interactive mode");
+            Console.WriteLine("i, interactive          Enable interactive mode");
             Console.WriteLine();
 
             Console.WriteLine("Check Options:");
@@ -178,195 +185,6 @@ namespace MPF.Check
             Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
             Console.WriteLine("as any log archives. Please make backups of those if you need to before running Check.");
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Enable interactive mode for entering information
-        /// </summary>
-        private static CommandOptions InteractiveMode(Options options, out RedumpSystem? system)
-        {
-            // Create return values
-            var opts = new CommandOptions();
-            system = null;
-
-            // These values require multiple parts to be active
-            bool scan = false,
-                enableArchives = true,
-                enableDebug = false,
-                hideDriveLetters = false;
-
-            // Create state values
-            string? result = string.Empty;
-
-        root:
-            Console.Clear();
-            Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
-            Console.WriteLine("-------------------------");
-            Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{system}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{options.InternalProgram}')");
-            Console.WriteLine($"3) Set seed path (Currently '{opts.Seed}')");
-            Console.WriteLine($"4) Add placeholders (Currently '{options.AddPlaceholders}')");
-            Console.WriteLine($"5) Create IRD (Currently '{options.CreateIRDAfterDumping}')");
-            Console.WriteLine($"6) Attempt Redump matches (Currently '{options.RetrieveMatchInformation}')");
-            Console.WriteLine($"7) Redump credentials (Currently '{options.RedumpUsername}')");
-            Console.WriteLine($"8) Pull all information (Currently '{options.PullAllInformation}')");
-            Console.WriteLine($"9) Set device path (Currently '{opts.DevicePath}')");
-            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"E) Hide filename suffix (Currently '{options.AddFilenameSuffix}')");
-            Console.WriteLine($"F) Output submission JSON (Currently '{options.OutputSubmissionJSON}')");
-            Console.WriteLine($"G) Include JSON artifacts (Currently '{options.IncludeArtifacts}')");
-            Console.WriteLine($"H) Compress logs (Currently '{options.CompressLogFiles}')");
-            Console.WriteLine($"I) Delete unnecessary files (Currently '{options.DeleteUnnecessaryFiles}')");
-            Console.WriteLine();
-            Console.WriteLine($"Q) Exit the program");
-            Console.WriteLine($"X) Start checking");
-            Console.Write("> ");
-
-            result = Console.ReadLine();
-            switch (result)
-            {
-                case "1":
-                    goto system;
-                case "2":
-                    goto dumpingProgram;
-                case "3":
-                    goto seedPath;
-                case "4":
-                    options.AddPlaceholders = !options.AddPlaceholders;
-                    goto root;
-                case "5":
-                    options.CreateIRDAfterDumping = !options.CreateIRDAfterDumping;
-                    goto root;
-                case "6":
-                    options.RetrieveMatchInformation = !options.RetrieveMatchInformation;
-                    goto root;
-                case "7":
-                    goto redumpCredentials;
-                case "8":
-                    options.PullAllInformation = !options.PullAllInformation;
-                    goto root;
-                case "9":
-                    goto devicePath;
-                case "a":
-                case "A":
-                    scan = !scan;
-                    goto root;
-                case "b":
-                case "B":
-                    enableArchives = !enableArchives;
-                    goto root;
-                case "c":
-                case "C":
-                    enableDebug = !enableDebug;
-                    goto root;
-                case "d":
-                case "D":
-                    hideDriveLetters = !hideDriveLetters;
-                    goto root;
-                case "e":
-                case "E":
-                    options.AddFilenameSuffix = !options.AddFilenameSuffix;
-                    goto root;
-                case "f":
-                case "F":
-                    options.OutputSubmissionJSON = !options.OutputSubmissionJSON;
-                    goto root;
-                case "g":
-                case "G":
-                    options.IncludeArtifacts = !options.IncludeArtifacts;
-                    goto root;
-                case "h":
-                case "H":
-                    options.CompressLogFiles = !options.CompressLogFiles;
-                    goto root;
-                case "i":
-                case "I":
-                    options.DeleteUnnecessaryFiles = !options.DeleteUnnecessaryFiles;
-                    goto root;
-
-                case "q":
-                case "Q":
-                    Environment.Exit(0);
-                    break;
-                case "x":
-                case "X":
-                    Console.Clear();
-                    goto exit;
-                case "z":
-                case "Z":
-                    Console.WriteLine("It is pitch black. You are likely to be eaten by a grue.");
-                    Console.Write("> ");
-                    Console.ReadLine();
-                    goto root;
-                default:
-                    Console.WriteLine($"Invalid selection: {result}");
-                    Console.ReadLine();
-                    goto root;
-            }
-
-        system:
-            Console.WriteLine();
-            Console.WriteLine("Input the system and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            system = Extensions.ToRedumpSystem(result);
-            goto root;
-
-        dumpingProgram:
-            Console.WriteLine();
-            Console.WriteLine("Input the dumping program and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            options.InternalProgram = result.ToInternalProgram();
-            goto root;
-
-        seedPath:
-            Console.WriteLine();
-            Console.WriteLine("Input the seed path and press Enter:");
-            Console.Write("> ");
-            result = Console.ReadLine();
-            opts.Seed = Builder.CreateFromFile(result);
-            goto root;
-
-        redumpCredentials:
-            Console.WriteLine();
-            Console.WriteLine("Enter your Redumper username and press Enter:");
-            Console.Write("> ");
-            options.RedumpUsername = Console.ReadLine();
-
-            Console.WriteLine("Enter your Redumper password (hidden) and press Enter:");
-            Console.Write("> ");
-            options.RedumpPassword = string.Empty;
-            while (true)
-            {
-                var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                    break;
-
-                options.RedumpPassword += key.KeyChar;
-            }
-
-            goto root;
-
-        devicePath:
-            Console.WriteLine();
-            Console.WriteLine("Input the device path and press Enter:");
-            Console.Write("> ");
-            opts.DevicePath = Console.ReadLine();
-            goto root;
-
-        exit:
-            // Now deal with the complex options
-            options.ScanForProtection = scan && !string.IsNullOrEmpty(opts.DevicePath);
-            options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(opts.DevicePath);
-            options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(opts.DevicePath);
-            options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(opts.DevicePath);
-
-            return opts;
         }
 
         /// <summary>
@@ -545,7 +363,7 @@ namespace MPF.Check
         /// <summary>
         /// Represents commandline options
         /// </summary>
-        private class CommandOptions
+        internal class CommandOptions
         {
             /// <summary>
             /// Seed submission info from an input file
