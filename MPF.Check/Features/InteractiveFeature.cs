@@ -26,6 +26,12 @@ namespace MPF.Check.Features
         /// <inheritdoc/>
         public override bool ProcessArgs(string[] args, int index)
         {
+            // Cache all args as inputs
+            for (int i = 1; i < args.Length; i++)
+            {
+                Inputs.Add(args[i]);
+            }
+
             // Create return values
             CommandOptions = new Program.CommandOptions();
             System = null;
