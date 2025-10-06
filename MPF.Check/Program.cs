@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
 using MPF.Check.Features;
-using MPF.Frontend;
 using MPF.Frontend.Features;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
 using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.Web;
 
 namespace MPF.Check
 {
@@ -81,12 +78,6 @@ namespace MPF.Check
                 return;
             }
 
-            // Setup common outputs
-            Options options;
-            CommandOptions opts;
-            RedumpSystem? knownSystem;
-            int startIndex;
-
             // Get the first argument as a feature flag
             string featureName = args[0];
 
@@ -104,80 +95,16 @@ namespace MPF.Check
 
                 // Interactive Mode
                 case InteractiveFeature interactive:
-                    startIndex = 1;
+                    interactive.ProcessArgs(args, 0);
                     interactive.Execute();
-
-                    opts = interactive.CommandOptions;
-                    options = interactive.Options;
-                    knownSystem = interactive.System;
                     break;
 
                 // Default Behavior
                 default:
-                    startIndex = 0;
-
                     var mainFeature = new MainFeature();
                     mainFeature.ProcessArgs(args, 0);
-
-                    opts = mainFeature.CommandOptions;
-                    options = mainFeature.Options;
-                    knownSystem = Extensions.ToRedumpSystem(featureName.Trim('"'));
-
-                    args = [.. mainFeature.Inputs];
+                    mainFeature.Execute();
                     break;
-            }
-
-            if (options.InternalProgram == InternalProgram.NONE)
-            {
-                DisplayHelp("A program name needs to be provided");
-                return;
-            }
-
-            // Validate the supplied credentials
-            if (options.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(options.RedumpUsername)
-                && !string.IsNullOrEmpty(options.RedumpPassword))
-            {
-                bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
-                string message = validated switch
-                {
-                    true => "Redump username and password accepted!",
-                    false => "Redump username and password denied!",
-                    null => "An error occurred validating your credentials!",
-                };
-
-                Console.WriteLine(message);
-            }
-
-            // Loop through all the rest of the args
-            for (int i = startIndex; i < args.Length; i++)
-            {
-                // Check for a file
-                if (!File.Exists(args[i].Trim('"')))
-                {
-                    DisplayHelp($"{args[i].Trim('"')} does not exist");
-                    return;
-                }
-
-                // Get the full file path
-                string filepath = Path.GetFullPath(args[i].Trim('"'));
-
-                // Now populate an environment
-                Drive? drive = null;
-                if (!string.IsNullOrEmpty(opts.DevicePath))
-                    drive = Drive.Create(null, opts.DevicePath!);
-
-                var env = new DumpEnvironment(options,
-                    filepath,
-                    drive,
-                    knownSystem,
-                    internalProgram: null);
-                env.SetProcessor();
-
-                // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(seedInfo: opts.Seed)
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
-                Console.WriteLine(result.Message);
             }
         }
 
@@ -235,7 +162,7 @@ namespace MPF.Check
         /// Display help for MPF.Check
         /// </summary>
         /// <param name="error">Error string to prefix the help text with</param>
-        private static void DisplayHelp(string? error = null)
+        internal static void DisplayHelp(string? error = null)
         {
             if (error != null)
                 Console.WriteLine(error);

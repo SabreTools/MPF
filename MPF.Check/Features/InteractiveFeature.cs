@@ -6,7 +6,7 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Check.Features
 {
-    internal sealed class InteractiveFeature : SabreTools.CommandLine.Feature
+    internal sealed class InteractiveFeature : BaseFeature
     {
         #region Feature Definition
 
@@ -18,59 +18,13 @@ namespace MPF.Check.Features
 
         #endregion
 
-        #region Properties
-
-        /// <summary>
-        /// Progrma-specific options
-        /// </summary>
-        public Program.CommandOptions CommandOptions { get; private set; }
-
-        /// <summary>
-        /// User-defined options
-        /// </summary>
-        public Options Options { get; }
-
-        /// <summary>
-        /// Currently-selected system
-        /// </summary>
-        public RedumpSystem? System { get; private set; }
-
-        #endregion
-
         public InteractiveFeature()
             : base(DisplayName, _flags, _description)
         {
-            CommandOptions = new Program.CommandOptions();
-            Options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
-
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
-
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
-
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
         }
 
         /// <inheritdoc/>
-        public override bool Execute()
+        public override bool ProcessArgs(string[] args, int index)
         {
             // Create return values
             CommandOptions = new Program.CommandOptions();

@@ -10,6 +10,7 @@
 - Add placeholder command set creation
 - Reduce unnecessary shared code
 - Create and use main features for CLI and Check
+- Create and use base feature in Check
 
 ### 3.4.2 (2025-09-30)
 
