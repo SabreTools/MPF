@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
 using MPF.CLI.Features;
 using MPF.Frontend;
+using MPF.Frontend.Features;
 using MPF.Frontend.Tools;
+using SabreTools.CommandLine;
+using SabreTools.CommandLine.Features;
+using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 
@@ -13,6 +18,18 @@ namespace MPF.CLI
 {
     public class Program
     {
+        #region Constants
+
+        private const string _customName = "custom";
+        private const string _deviceName = "device";
+        private const string _fileName = "file";
+        private const string _mediaTypeName = "media-type";
+        private const string _mountedName = "mounted";
+        private const string _speedName = "speed";
+        private const string _useName = "use";
+
+        #endregion
+
         public static void Main(string[] args)
         {
             // Load options from the config file
@@ -194,6 +211,56 @@ namespace MPF.CLI
             var verifyResult = env.VerifyAndSaveDumpOutput()
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
+        }
+
+        /// <summary>
+        /// Create the command set for the program
+        /// </summary>
+        private static CommandSet CreateCommands()
+        {
+            List<string> header = [
+                "MPF.CLI [standalone|system] [options] <path> ...",
+                string.Empty,
+            ];
+
+            List<string> footer = [
+                string.Empty,
+                "Dumping program paths and other settings can be found in the config.json file",
+                "generated next to the program by default. Ensure that all settings are to user",
+                "preference before running MPF.CLI.",
+                string.Empty,
+
+                "Custom dumping parameters, if used, will fully replace the default parameters.",
+                "All dumping parameters need to be supplied if doing this.",
+                "Otherwise, both a drive path and output file path are required.",
+                string.Empty,
+
+                "Mounted filesystem path is only recommended on OSes that require block",
+                "device dumping, usually Linux and macOS.",
+                string.Empty,
+            ];
+
+            var commandSet = new CommandSet(header, footer);
+
+            // Standalone Options
+            commandSet.Add(new Help());
+            commandSet.Add(new VersionFeature());
+            commandSet.Add(new ListCodesFeature());
+            commandSet.Add(new ListMediaTypesFeature());
+            commandSet.Add(new ListSystemsFeature());
+            commandSet.Add(new ListProgramsFeature());
+            commandSet.Add(new InteractiveFeature());
+
+            // CLI Options
+            commandSet.Add(new StringInput(_useName, ["-u", "--use"], "Override configured dumping program name"));
+            commandSet.Add(new StringInput(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)"));
+            commandSet.Add(new StringInput(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)"));
+            commandSet.Add(new StringInput(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks"));
+            commandSet.Add(new StringInput(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)"));
+            commandSet.Add(new Int32Input(_speedName, ["-s", "--speed"], "Override default dumping speed"));
+            commandSet.Add(new StringInput(_customName, ["-c", "--custom"], "Custom parameters to use"));
+
+            return commandSet;
         }
 
         /// <summary>

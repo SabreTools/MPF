@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 #if NET40
 using System.Threading.Tasks;
 #endif
 using MPF.Check.Features;
 using MPF.Frontend;
+using MPF.Frontend.Features;
 using MPF.Frontend.Tools;
+using SabreTools.CommandLine;
+using SabreTools.CommandLine.Features;
+using SabreTools.CommandLine.Inputs;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
@@ -14,6 +19,27 @@ namespace MPF.Check
 {
     public class Program
     {
+        #region Constants
+
+        private const string _createIrdName = "create-ird";
+        private const string _deleteName = "delete";
+        private const string _disableArchivesName = "disable-archives";
+        private const string _enableDebugName = "enable-debug";
+        private const string _hideDriveLettersName = "hide-drive-letters";
+        private const string _includeArtifactsName = "include-artifacts";
+        private const string _jsonName = "json";
+        private const string _loadSeedName = "load-seed";
+        private const string _noPlaceholdersName = "no-placeholders";
+        private const string _noRetrieveName = "no-retrieve";
+        private const string _pathName = "path";
+        private const string _pullAllName = "pull-all";
+        private const string _scanName = "scan";
+        private const string _suffixName = "suffix";
+        private const string _useName = "use";
+        private const string _zipName = "zip";
+
+        #endregion
+
         public static void Main(string[] args)
         {
             // Try processing the standalone arguments
@@ -139,6 +165,56 @@ namespace MPF.Check
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
+        }
+
+        /// <summary>
+        /// Create the command set for the program
+        /// </summary>
+        private static CommandSet CreateCommands()
+        {
+            List<string> header = [
+                "MPF.CLI [standalone|system] [options] <path> ...",
+                string.Empty,
+            ];
+
+            List<string> footer = [
+                string.Empty,
+                "WARNING: Check will overwrite both any existing submission information files as well",
+                "as any log archives. Please make backups of those if you need to before running Check.",
+                string.Empty,
+            ];
+
+            var commandSet = new CommandSet(header, footer);
+
+            // Standalone Options
+            commandSet.Add(new Help());
+            commandSet.Add(new VersionFeature());
+            commandSet.Add(new ListCodesFeature());
+            commandSet.Add(new ListMediaTypesFeature());
+            commandSet.Add(new ListSystemsFeature());
+            commandSet.Add(new ListProgramsFeature());
+            commandSet.Add(new InteractiveFeature());
+
+            // Check Options
+            commandSet.Add(new StringInput(_useName, ["-u", "--use"], "Override configured dumping program name"));
+            commandSet.Add(new StringInput(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information"));
+            commandSet.Add(new FlagInput(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info"));
+            commandSet.Add(new FlagInput(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)"));
+            commandSet.Add(new FlagInput(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump"));
+            // TODO: Figure out how to work with the credentials input
+            commandSet.Add(new FlagInput(_pullAllName, "--pull-all", "Pull all information from Redump (requires --credentials)"));
+            commandSet.Add(new StringInput(_pathName, ["-p", "--path"], "Physical drive path for additional checks"));
+            commandSet.Add(new FlagInput(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)"));
+            commandSet.Add(new FlagInput(_disableArchivesName, "--disable-archives", "Disable scanning archives (requires --scan)"));
+            commandSet.Add(new FlagInput(_enableDebugName, "--enable-debug", "Enable debug protection information (requires --scan)"));
+            commandSet.Add(new FlagInput(_hideDriveLettersName, "--hide-drive-letters", "Hide drive letters from scan output (requires --scan)"));
+            commandSet.Add(new FlagInput(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix"));
+            commandSet.Add(new FlagInput(_jsonName, ["-j", "--json"], "Enable submission JSON output"));
+            commandSet.Add(new FlagInput(_includeArtifactsName, "--include-artifacts", "Include artifacts in JSON (requires --json)"));
+            commandSet.Add(new FlagInput(_zipName, ["-z", "--zip"], "Enable log file compression"));
+            commandSet.Add(new FlagInput(_deleteName, ["-d", "--delete"], "Enable unnecessary file deletion"));
+
+            return commandSet;
         }
 
         /// <summary>
