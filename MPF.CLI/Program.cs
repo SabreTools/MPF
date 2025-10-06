@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using MPF.CLI.Features;
-
 #if NET40
 using System.Threading.Tasks;
 #endif
+using MPF.CLI.Features;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;

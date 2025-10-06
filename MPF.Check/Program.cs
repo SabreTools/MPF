@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using MPF.Check.Features;
-
 #if NET40
 using System.Threading.Tasks;
 #endif
+using MPF.Check.Features;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib;
@@ -17,34 +16,6 @@ namespace MPF.Check
     {
         public static void Main(string[] args)
         {
-            // Create a default options object
-            var options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
-
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
-
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
-
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
-
             // Try processing the standalone arguments
             bool? standaloneProcessed = OptionsLoader.ProcessStandaloneArguments(args);
             if (standaloneProcessed != false)
@@ -55,6 +26,7 @@ namespace MPF.Check
             }
 
             // Setup common outputs
+            Options options;
             CommandOptions opts;
             RedumpSystem? knownSystem;
             int startIndex;
@@ -74,6 +46,34 @@ namespace MPF.Check
             // Use normal commandline parameters
             else
             {
+                // Create a default options object
+                options = new Options()
+                {
+                    // Internal Program
+                    InternalProgram = InternalProgram.NONE,
+
+                    // Extra Dumping Options
+                    ScanForProtection = false,
+                    AddPlaceholders = true,
+                    PullAllInformation = false,
+                    AddFilenameSuffix = false,
+                    OutputSubmissionJSON = false,
+                    IncludeArtifacts = false,
+                    CompressLogFiles = false,
+                    DeleteUnnecessaryFiles = false,
+                    CreateIRDAfterDumping = false,
+
+                    // Protection Scanning Options
+                    ScanArchivesForProtection = true,
+                    IncludeDebugProtectionInformation = false,
+                    HideDriveLetters = false,
+
+                    // Redump Login Information
+                    RetrieveMatchInformation = true,
+                    RedumpUsername = null,
+                    RedumpPassword = null,
+                };
+
                 // Try processing the common arguments
                 bool success = OptionsLoader.ProcessCommonArguments(args, out knownSystem, out var error);
                 if (!success)
