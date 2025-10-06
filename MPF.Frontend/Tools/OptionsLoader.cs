@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using MPF.Frontend.Features;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 
@@ -32,58 +31,6 @@ namespace MPF.Frontend.Tools
         private static string? _configPath = null;
 
         #region Arguments
-
-        /// <summary>
-        /// Process any standalone arguments for the program
-        /// </summary>
-        /// <returns>True if one of the arguments was processed, false otherwise</returns>
-        public static bool? ProcessStandaloneArguments(string[] args)
-        {
-            // Help options
-            if (args.Length == 0 || args[0] == "?" || args[0] == "h" || args[0] == "help")
-                return null;
-
-            if (args[0] == "version")
-                return new VersionFeature().Execute();
-
-            // List options
-            if (args[0] == "lc" || args[0] == "listcodes")
-                return new ListCodesFeature().Execute();
-            else if (args[0] == "lm" || args[0] == "listmedia")
-                return new ListMediaTypesFeature().Execute();
-            else if (args[0] == "lp" || args[0] == "listprograms")
-                return new ListProgramsFeature().Execute();
-            else if (args[0] == "ls" || args[0] == "listsystems")
-                return new ListSystemsFeature().Execute();
-
-            return false;
-        }
-
-        /// <summary>
-        /// Process common arguments for all functionality
-        /// </summary>
-        /// <returns>True if all arguments pass, false otherwise</returns>
-        public static bool ProcessCommonArguments(string[] args, out RedumpSystem? system, out string? message)
-        {
-            // All other use requires at least 3 arguments
-            if (args.Length < 2)
-            {
-                system = null;
-                message = "Invalid number of arguments";
-                return false;
-            }
-
-            // Check the RedumpSystem
-            system = Extensions.ToRedumpSystem(args[0].Trim('"'));
-            if (system == null)
-            {
-                message = $"{args[0]} is not a recognized system";
-                return false;
-            }
-
-            message = null;
-            return true;
-        }
 
         /// <summary>
         /// Get the MediaType enum value for a given string

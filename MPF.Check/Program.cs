@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using MPF.Check.Features;
 using MPF.Frontend;
 using MPF.Frontend.Features;
-using MPF.Frontend.Tools;
 using SabreTools.CommandLine;
 using SabreTools.CommandLine.Features;
 using SabreTools.CommandLine.Inputs;
@@ -19,35 +18,67 @@ namespace MPF.Check
 {
     public class Program
     {
-        #region Constants
+        #region Inputs
 
         private const string _createIrdName = "create-ird";
+        private static readonly FlagInput _createIrdInput = new(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)");
+
         private const string _deleteName = "delete";
+        private static readonly FlagInput _deleteInput = new(_deleteName, ["-d", "--delete"], "Enable unnecessary file deletion");
+
         private const string _disableArchivesName = "disable-archives";
+        private static readonly FlagInput _disableArchivesInput = new(_disableArchivesName, "--disable-archives", "Disable scanning archives (requires --scan)");
+
         private const string _enableDebugName = "enable-debug";
+        private static readonly FlagInput _enableDebugInput = new(_enableDebugName, "--enable-debug", "Enable debug protection information (requires --scan)");
+
         private const string _hideDriveLettersName = "hide-drive-letters";
+        private static readonly FlagInput _hideDriveLettersInput = new(_hideDriveLettersName, "--hide-drive-letters", "Hide drive letters from scan output (requires --scan)");
+
         private const string _includeArtifactsName = "include-artifacts";
+        private static readonly FlagInput _includeArtifactsInput = new(_includeArtifactsName, "--include-artifacts", "Include artifacts in JSON (requires --json)");
+
         private const string _jsonName = "json";
+        private static readonly FlagInput _jsonInput = new(_jsonName, ["-j", "--json"], "Enable submission JSON output");
+
         private const string _loadSeedName = "load-seed";
+        private static readonly StringInput _loadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
+
         private const string _noPlaceholdersName = "no-placeholders";
+        private static readonly FlagInput _noPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
+
         private const string _noRetrieveName = "no-retrieve";
+        private static readonly FlagInput _noRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump");
+
         private const string _pathName = "path";
+        private static readonly StringInput _pathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
+
         private const string _pullAllName = "pull-all";
+        private static readonly FlagInput _pullAllInput = new(_pullAllName, "--pull-all", "Pull all information from Redump (requires --credentials)");
+
         private const string _scanName = "scan";
+        private static readonly FlagInput _scanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)");
+
         private const string _suffixName = "suffix";
+        private static readonly FlagInput _suffixInput = new(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix");
+
         private const string _useName = "use";
+        private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
+
         private const string _zipName = "zip";
+        private static readonly FlagInput _zipInput = new(_zipName, ["-z", "--zip"], "Enable log file compression");
 
         #endregion
 
         public static void Main(string[] args)
         {
-            // Try processing the standalone arguments
-            bool? standaloneProcessed = OptionsLoader.ProcessStandaloneArguments(args);
-            if (standaloneProcessed != false)
+            // Create the command set
+            var commandSet = CreateCommands();
+
+            // If we have no args, show the help and quit
+            if (args == null || args.Length == 0)
             {
-                if (standaloneProcessed == null)
-                    DisplayHelp();
+                DisplayHelp();
                 return;
             }
 
@@ -57,60 +88,68 @@ namespace MPF.Check
             RedumpSystem? knownSystem;
             int startIndex;
 
-            // Use interactive mode
-            if (args.Length > 0 && (args[0] == "i" || args[0] == "interactive"))
+            // Get the first argument as a feature flag
+            string featureName = args[0];
+
+            // Try processing the standalone arguments
+            var topLevel = commandSet.GetTopLevel(featureName);
+            switch (topLevel)
             {
-                startIndex = 1;
-                var interactive = new InteractiveFeature();
-                interactive.Execute();
+                // Standalone Options
+                case Help: DisplayHelp(); return;
+                case VersionFeature version: version.Execute(); return;
+                case ListCodesFeature lc: lc.Execute(); return;
+                case ListMediaTypesFeature lm: lm.Execute(); return;
+                case ListProgramsFeature lp: lp.Execute(); return;
+                case ListSystemsFeature ls: ls.Execute(); return;
 
-                opts = interactive.CommandOptions;
-                options = interactive.Options;
-                knownSystem = interactive.System;
-            }
+                // Interactive Mode
+                case InteractiveFeature interactive:
+                    startIndex = 1;
+                    interactive.Execute();
 
-            // Use normal commandline parameters
-            else
-            {
-                // Create a default options object
-                options = new Options()
-                {
-                    // Internal Program
-                    InternalProgram = InternalProgram.NONE,
+                    opts = interactive.CommandOptions;
+                    options = interactive.Options;
+                    knownSystem = interactive.System;
+                    break;
 
-                    // Extra Dumping Options
-                    ScanForProtection = false,
-                    AddPlaceholders = true,
-                    PullAllInformation = false,
-                    AddFilenameSuffix = false,
-                    OutputSubmissionJSON = false,
-                    IncludeArtifacts = false,
-                    CompressLogFiles = false,
-                    DeleteUnnecessaryFiles = false,
-                    CreateIRDAfterDumping = false,
+                // Default Behavior
+                default:
+                    // Create a default options object
+                    options = new Options()
+                    {
+                        // Internal Program
+                        InternalProgram = InternalProgram.NONE,
 
-                    // Protection Scanning Options
-                    ScanArchivesForProtection = true,
-                    IncludeDebugProtectionInformation = false,
-                    HideDriveLetters = false,
+                        // Extra Dumping Options
+                        ScanForProtection = false,
+                        AddPlaceholders = true,
+                        PullAllInformation = false,
+                        AddFilenameSuffix = false,
+                        OutputSubmissionJSON = false,
+                        IncludeArtifacts = false,
+                        CompressLogFiles = false,
+                        DeleteUnnecessaryFiles = false,
+                        CreateIRDAfterDumping = false,
 
-                    // Redump Login Information
-                    RetrieveMatchInformation = true,
-                    RedumpUsername = null,
-                    RedumpPassword = null,
-                };
+                        // Protection Scanning Options
+                        ScanArchivesForProtection = true,
+                        IncludeDebugProtectionInformation = false,
+                        HideDriveLetters = false,
 
-                // Try processing the common arguments
-                bool success = OptionsLoader.ProcessCommonArguments(args, out knownSystem, out var error);
-                if (!success)
-                {
-                    DisplayHelp(error);
-                    return;
-                }
+                        // Redump Login Information
+                        RetrieveMatchInformation = true,
+                        RedumpUsername = null,
+                        RedumpPassword = null,
+                    };
 
-                // Loop through and process options
-                startIndex = 1;
-                opts = LoadFromArguments(args, options, ref startIndex);
+                    // Parse the system from the first argument
+                    knownSystem = Extensions.ToRedumpSystem(featureName.Trim('"'));
+
+                    // Loop through and process options
+                    startIndex = 1;
+                    opts = LoadFromArguments(args, options, ref startIndex);
+                    break;
             }
 
             if (options.InternalProgram == InternalProgram.NONE)
@@ -196,23 +235,23 @@ namespace MPF.Check
             commandSet.Add(new InteractiveFeature());
 
             // Check Options
-            commandSet.Add(new StringInput(_useName, ["-u", "--use"], "Override configured dumping program name"));
-            commandSet.Add(new StringInput(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information"));
-            commandSet.Add(new FlagInput(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info"));
-            commandSet.Add(new FlagInput(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)"));
-            commandSet.Add(new FlagInput(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump"));
+            commandSet.Add(_useInput);
+            commandSet.Add(_loadSeedInput);
+            commandSet.Add(_noPlaceholdersInput);
+            commandSet.Add(_createIrdInput);
+            commandSet.Add(_noRetrieveInput);
             // TODO: Figure out how to work with the credentials input
-            commandSet.Add(new FlagInput(_pullAllName, "--pull-all", "Pull all information from Redump (requires --credentials)"));
-            commandSet.Add(new StringInput(_pathName, ["-p", "--path"], "Physical drive path for additional checks"));
-            commandSet.Add(new FlagInput(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)"));
-            commandSet.Add(new FlagInput(_disableArchivesName, "--disable-archives", "Disable scanning archives (requires --scan)"));
-            commandSet.Add(new FlagInput(_enableDebugName, "--enable-debug", "Enable debug protection information (requires --scan)"));
-            commandSet.Add(new FlagInput(_hideDriveLettersName, "--hide-drive-letters", "Hide drive letters from scan output (requires --scan)"));
-            commandSet.Add(new FlagInput(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix"));
-            commandSet.Add(new FlagInput(_jsonName, ["-j", "--json"], "Enable submission JSON output"));
-            commandSet.Add(new FlagInput(_includeArtifactsName, "--include-artifacts", "Include artifacts in JSON (requires --json)"));
-            commandSet.Add(new FlagInput(_zipName, ["-z", "--zip"], "Enable log file compression"));
-            commandSet.Add(new FlagInput(_deleteName, ["-d", "--delete"], "Enable unnecessary file deletion"));
+            commandSet.Add(_pullAllInput);
+            commandSet.Add(_pathInput);
+            commandSet.Add(_scanInput);
+            commandSet.Add(_disableArchivesInput);
+            commandSet.Add(_enableDebugInput);
+            commandSet.Add(_hideDriveLettersInput);
+            commandSet.Add(_suffixInput);
+            commandSet.Add(_jsonInput);
+            commandSet.Add(_includeArtifactsInput);
+            commandSet.Add(_zipInput);
+            commandSet.Add(_deleteInput);
 
             return commandSet;
         }
@@ -292,48 +331,24 @@ namespace MPF.Check
             for (; startIndex < args.Length; startIndex++)
             {
                 // Use specific program
-                if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
-                {
-                    string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = internalProgram.ToInternalProgram();
-                }
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
-                {
-                    string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = internalProgram.ToInternalProgram();
-                    startIndex++;
-                }
+                if (_useInput.ProcessInput(args, ref startIndex))
+                    options.InternalProgram = _useInput.Value.ToInternalProgram();
 
                 // Include seed info file
-                else if (args[startIndex].StartsWith("--load-seed="))
-                {
-                    string seedInfo = args[startIndex].Split('=')[1];
-                    opts.Seed = Builder.CreateFromFile(seedInfo);
-                }
-                else if (args[startIndex] == "--load-seed")
-                {
-                    string seedInfo = args[startIndex + 1];
-                    opts.Seed = Builder.CreateFromFile(seedInfo);
-                    startIndex++;
-                }
+                else if (_loadSeedInput.ProcessInput(args, ref startIndex))
+                    opts.Seed = Builder.CreateFromFile(_loadSeedInput.Value);
 
                 // Disable placeholder values in submission info
-                else if (args[startIndex].Equals("--no-placeholders"))
-                {
+                else if (_noPlaceholdersInput.ProcessInput(args, ref startIndex))
                     options.AddPlaceholders = false;
-                }
 
                 // Create IRD from output files (PS3 only)
-                else if (args[startIndex].Equals("--create-ird"))
-                {
+                else if (_createIrdInput.ProcessInput(args, ref startIndex))
                     options.CreateIRDAfterDumping = true;
-                }
 
                 // Retrieve Redump match information
-                else if (args[startIndex] == "--no-retrieve")
-                {
+                else if (_noRetrieveInput.ProcessInput(args, ref startIndex))
                     options.RetrieveMatchInformation = false;
-                }
 
                 // Redump login
                 else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
@@ -350,81 +365,52 @@ namespace MPF.Check
                 }
 
                 // Pull all information (requires Redump login)
-                else if (args[startIndex].Equals("--pull-all"))
-                {
+                else if (_pullAllInput.ProcessInput(args, ref startIndex))
                     options.PullAllInformation = true;
-                }
 
                 // Use a device path for physical checks
-                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
-                {
-                    opts.DevicePath = args[startIndex].Split('=')[1];
-                }
-                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
-                {
-                    opts.DevicePath = args[startIndex + 1];
-                    startIndex++;
-                }
+                else if (_pathInput.ProcessInput(args, ref startIndex))
+                    opts.DevicePath = _pathInput.Value;
 
                 // Scan for protection (requires device path)
-                else if (args[startIndex].Equals("-s") || args[startIndex].Equals("--scan"))
-                {
+                else if (_scanInput.ProcessInput(args, ref startIndex))
                     scan = true;
-                }
 
                 // Disable scanning archives (requires --scan)
-                else if (args[startIndex].Equals("--disable-archives"))
-                {
+                else if (_scanInput.ProcessInput(args, ref startIndex))
                     enableArchives = false;
-                }
 
                 // Enable debug protection information (requires --scan)
-                else if (args[startIndex].Equals("--enable-debug"))
-                {
+                else if (_enableDebugInput.ProcessInput(args, ref startIndex))
                     enableDebug = true;
-                }
 
                 // Hide drive letters from scan output (requires --scan)
-                else if (args[startIndex].Equals("--hide-drive-letters"))
-                {
+                else if (_hideDriveLettersInput.ProcessInput(args, ref startIndex))
                     hideDriveLetters = true;
-                }
 
                 // Add filename suffix
-                else if (args[startIndex].Equals("-x") || args[startIndex].Equals("--suffix"))
-                {
+                else if (_suffixInput.ProcessInput(args, ref startIndex))
                     options.AddFilenameSuffix = true;
-                }
 
                 // Output submission JSON
-                else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
-                {
+                else if (_jsonInput.ProcessInput(args, ref startIndex))
                     options.OutputSubmissionJSON = true;
-                }
 
                 // Include JSON artifacts
-                else if (args[startIndex].Equals("--include-artifacts"))
-                {
+                else if (_includeArtifactsInput.ProcessInput(args, ref startIndex))
                     options.IncludeArtifacts = true;
-                }
 
                 // Compress log and extraneous files
-                else if (args[startIndex].Equals("-z") || args[startIndex].Equals("--zip"))
-                {
+                else if (_zipInput.ProcessInput(args, ref startIndex))
                     options.CompressLogFiles = true;
-                }
 
                 // Delete unnecessary files
-                else if (args[startIndex].Equals("-d") || args[startIndex].Equals("--delete"))
-                {
+                else if (_deleteInput.ProcessInput(args, ref startIndex))
                     options.DeleteUnnecessaryFiles = true;
-                }
 
                 // Default, we fall out
                 else
-                {
                     break;
-                }
             }
 
             // Now deal with the complex options

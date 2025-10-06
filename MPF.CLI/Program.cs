@@ -18,15 +18,28 @@ namespace MPF.CLI
 {
     public class Program
     {
-        #region Constants
+        #region Inputs
 
         private const string _customName = "custom";
+        private static readonly StringInput _customInput = new(_customName, ["-c", "--custom"], "Custom parameters to use");
+
         private const string _deviceName = "device";
+        private static readonly StringInput _deviceInput = new(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)");
+
         private const string _fileName = "file";
+        private static readonly StringInput _fileInput = new(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)");
+
         private const string _mediaTypeName = "media-type";
+        private static readonly StringInput _mediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
+
         private const string _mountedName = "mounted";
+        private static readonly StringInput _mountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
+
         private const string _speedName = "speed";
+        private static readonly Int32Input _speedInput = new(_speedName, ["-s", "--speed"], "Override default dumping speed");
+
         private const string _useName = "use";
+        private static readonly StringInput _useInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
 
         #endregion
 
@@ -51,12 +64,13 @@ namespace MPF.CLI
                 return;
             }
 
-            // Try processing the standalone arguments
-            bool? standaloneProcessed = OptionsLoader.ProcessStandaloneArguments(args);
-            if (standaloneProcessed != false)
+            // Create the command set
+            var commandSet = CreateCommands();
+
+            // If we have no args, show the help and quit
+            if (args == null || args.Length == 0)
             {
-                if (standaloneProcessed == null)
-                    DisplayHelp();
+                DisplayHelp();
                 return;
             }
 
@@ -64,47 +78,55 @@ namespace MPF.CLI
             CommandOptions opts;
             RedumpSystem? knownSystem;
 
-            // Use interactive mode
-            if (args.Length > 0 && (args[0] == "i" || args[0] == "interactive"))
+            // Get the first argument as a feature flag
+            string featureName = args[0];
+
+            // Try processing the standalone arguments
+            var topLevel = commandSet.GetTopLevel(featureName);
+            switch (topLevel)
             {
-                var interactive = new InteractiveFeature();
-                interactive.Execute();
+                // Standalone Options
+                case Help: DisplayHelp(); return;
+                case VersionFeature version: version.Execute(); return;
+                case ListCodesFeature lc: lc.Execute(); return;
+                case ListMediaTypesFeature lm: lm.Execute(); return;
+                case ListProgramsFeature lp: lp.Execute(); return;
+                case ListSystemsFeature ls: ls.Execute(); return;
 
-                opts = interactive.CommandOptions;
-                options = interactive.Options;
-                knownSystem = interactive.System;
-            }
+                // Interactive Mode
+                case InteractiveFeature interactive:
+                    interactive.Execute();
 
-            // Use normal commandline parameters
-            else
-            {
-                // Try processing the common arguments
-                bool success = OptionsLoader.ProcessCommonArguments(args, out knownSystem, out var error);
-                if (!success)
-                {
-                    DisplayHelp(error);
-                    return;
-                }
+                    opts = interactive.CommandOptions;
+                    options = interactive.Options;
+                    knownSystem = interactive.System;
+                    break;
 
-                // Validate the supplied credentials
-                if (options.RetrieveMatchInformation
-                    && !string.IsNullOrEmpty(options.RedumpUsername)
-                    && !string.IsNullOrEmpty(options.RedumpPassword))
-                {
-                    bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
-                    string message = validated switch
+                // Default Behavior
+                default:
+                    // Parse the system from the first argument
+                    knownSystem = Extensions.ToRedumpSystem(featureName.Trim('"'));
+
+                    // Validate the supplied credentials
+                    if (options.RetrieveMatchInformation
+                        && !string.IsNullOrEmpty(options.RedumpUsername)
+                        && !string.IsNullOrEmpty(options.RedumpPassword))
                     {
-                        true => "Redump username and password accepted!",
-                        false => "Redump username and password denied!",
-                        null => "An error occurred validating your credentials!",
-                    };
+                        bool? validated = RedumpClient.ValidateCredentials(options.RedumpUsername!, options.RedumpPassword!).GetAwaiter().GetResult();
+                        string message = validated switch
+                        {
+                            true => "Redump username and password accepted!",
+                            false => "Redump username and password denied!",
+                            null => "An error occurred validating your credentials!",
+                        };
 
-                    Console.WriteLine(message);
-                }
+                        Console.WriteLine(message);
+                    }
 
-                // Process any custom parameters
-                int startIndex = 1;
-                opts = LoadFromArguments(args, options, ref startIndex);
+                    // Process any custom parameters
+                    int startIndex = 1;
+                    opts = LoadFromArguments(args, options, ref startIndex);
+                    break;
             }
 
             // Validate the internal program
@@ -252,13 +274,13 @@ namespace MPF.CLI
             commandSet.Add(new InteractiveFeature());
 
             // CLI Options
-            commandSet.Add(new StringInput(_useName, ["-u", "--use"], "Override configured dumping program name"));
-            commandSet.Add(new StringInput(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)"));
-            commandSet.Add(new StringInput(_deviceName, ["-d", "--device"], "Physical drive path (Required if no custom parameters set)"));
-            commandSet.Add(new StringInput(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks"));
-            commandSet.Add(new StringInput(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)"));
-            commandSet.Add(new Int32Input(_speedName, ["-s", "--speed"], "Override default dumping speed"));
-            commandSet.Add(new StringInput(_customName, ["-c", "--custom"], "Custom parameters to use"));
+            commandSet.Add(_useInput);
+            commandSet.Add(_mediaTypeInput);
+            commandSet.Add(_deviceInput);
+            commandSet.Add(_mountedInput);
+            commandSet.Add(_fileInput);
+            commandSet.Add(_speedInput);
+            commandSet.Add(_customInput);
 
             return commandSet;
         }
@@ -333,95 +355,36 @@ namespace MPF.CLI
             for (; startIndex < args.Length; startIndex++)
             {
                 // Use specific program
-                if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
-                {
-                    string internalProgram = args[startIndex].Split('=')[1];
-                    options.InternalProgram = internalProgram.ToInternalProgram();
-                }
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
-                {
-                    string internalProgram = args[startIndex + 1];
-                    options.InternalProgram = internalProgram.ToInternalProgram();
-                    startIndex++;
-                }
+                if (_useInput.ProcessInput(args, ref startIndex))
+                    options.InternalProgram = _useInput.Value.ToInternalProgram();
+
+                // Set a media type
+                else if (_mediaTypeInput.ProcessInput(args, ref startIndex))
+                    opts.MediaType = OptionsLoader.ToMediaType(_mediaTypeInput.Value?.Trim('"'));
 
                 // Use a device path
-                else if (args[startIndex].StartsWith("-t=") || args[startIndex].StartsWith("--mediatype="))
-                {
-                    opts.MediaType = OptionsLoader.ToMediaType(args[startIndex].Split('=')[1].Trim('"'));
-                }
-                else if (args[startIndex] == "-t" || args[startIndex] == "--mediatype")
-                {
-                    opts.MediaType = OptionsLoader.ToMediaType(args[startIndex + 1].Trim('"'));
-                    startIndex++;
-                }
-
-                // Use a device path
-                else if (args[startIndex].StartsWith("-d=") || args[startIndex].StartsWith("--device="))
-                {
-                    opts.DevicePath = args[startIndex].Split('=')[1].Trim('"');
-                }
-                else if (args[startIndex] == "-d" || args[startIndex] == "--device")
-                {
-                    opts.DevicePath = args[startIndex + 1].Trim('"');
-                    startIndex++;
-                }
+                else if (_deviceInput.ProcessInput(args, ref startIndex))
+                    opts.DevicePath = _deviceInput.Value;
 
                 // Use a mounted path for physical checks
-                else if (args[startIndex].StartsWith("-m=") || args[startIndex].StartsWith("--mounted="))
-                {
-                    opts.MountedPath = args[startIndex].Split('=')[1];
-                }
-                else if (args[startIndex] == "-m" || args[startIndex] == "--mounted")
-                {
-                    opts.MountedPath = args[startIndex + 1];
-                    startIndex++;
-                }
+                else if (_mountedInput.ProcessInput(args, ref startIndex))
+                    opts.MountedPath = _mountedInput.Value;
 
                 // Use a file path
-                else if (args[startIndex].StartsWith("-f=") || args[startIndex].StartsWith("--file="))
-                {
-                    opts.FilePath = args[startIndex].Split('=')[1].Trim('"');
-                }
-                else if (args[startIndex] == "-f" || args[startIndex] == "--file")
-                {
-                    opts.FilePath = args[startIndex + 1].Trim('"');
-                    startIndex++;
-                }
+                else if (_fileInput.ProcessInput(args, ref startIndex))
+                    opts.FilePath = _fileInput.Value;
 
                 // Set an override speed
-                else if (args[startIndex].StartsWith("-s=") || args[startIndex].StartsWith("--speed="))
-                {
-                    if (!int.TryParse(args[startIndex].Split('=')[1].Trim('"'), out int speed))
-                        speed = -1;
-
-                    opts.DriveSpeed = speed;
-                }
-                else if (args[startIndex] == "-s" || args[startIndex] == "--speed")
-                {
-                    if (!int.TryParse(args[startIndex + 1].Trim('"'), out int speed))
-                        speed = -1;
-
-                    opts.DriveSpeed = speed;
-                    startIndex++;
-                }
+                else if (_speedInput.ProcessInput(args, ref startIndex))
+                    opts.DriveSpeed = _speedInput.Value;
 
                 // Use a custom parameters
-                else if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--custom="))
-                {
-                    opts.CustomParams = args[startIndex].Split('=')[1].Trim('"');
-                }
-                else if (args[startIndex] == "-c" || args[startIndex] == "--custom")
-                {
-                    opts.CustomParams = args[startIndex + 1].Trim('"');
-                    startIndex++;
-                }
+                else if (_customInput.ProcessInput(args, ref startIndex))
+                    opts.CustomParams = _customInput.Value;
 
                 // Default, we fall out
                 else
-                {
                     break;
-                }
             }
 
             return opts;

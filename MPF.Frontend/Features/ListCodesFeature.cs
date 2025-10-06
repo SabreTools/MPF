@@ -24,9 +24,9 @@ namespace MPF.Frontend.Features
         public override bool Execute()
         {
             Console.WriteLine("Supported Site Codes:");
-            foreach (string mediaType in SabreTools.RedumpLib.Data.Extensions.ListMediaTypes())
+            foreach (string siteCode in SabreTools.RedumpLib.Data.Extensions.ListSiteCodes())
             {
-                Console.WriteLine(mediaType);
+                Console.WriteLine(siteCode);
             }
 
             return true;

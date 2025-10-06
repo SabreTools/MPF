@@ -8,6 +8,7 @@
 - Create interactive mode features
 - Minor cleanup around last added
 - Add placeholder command set creation
+- Reduce unnecessary shared code
 
 ### 3.4.2 (2025-09-30)
 
