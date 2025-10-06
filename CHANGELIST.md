@@ -4,6 +4,7 @@
 - Tweaks to how failure cases are reported
 - Rename log zip on collision
 - Update packages
+- Use CommandLine library for CLI executables
 
 ### 3.4.2 (2025-09-30)
 

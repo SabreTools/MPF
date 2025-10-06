@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using MPF.Frontend.Features;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 
@@ -39,56 +40,21 @@ namespace MPF.Frontend.Tools
         public static bool? ProcessStandaloneArguments(string[] args)
         {
             // Help options
-            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?" || args[0] == "--help")
+            if (args.Length == 0 || args[0] == "?" || args[0] == "h" || args[0] == "help")
                 return null;
 
-            if (args[0] == "--version")
-            {
-                Console.WriteLine(FrontendTool.GetCurrentVersion() ?? "Unknown version");
-                return true;
-            }
+            if (args[0] == "version")
+                return new VersionFeature().Execute();
 
             // List options
-            if (args[0] == "-lc" || args[0] == "--listcodes")
-            {
-                Console.WriteLine("Supported Site Codes:");
-                foreach (string siteCode in Extensions.ListSiteCodes())
-                {
-                    Console.WriteLine(siteCode);
-                }
-
-                return true;
-            }
-            else if (args[0] == "-lm" || args[0] == "--listmedia")
-            {
-                Console.WriteLine("Supported Media Types:");
-                foreach (string mediaType in Extensions.ListMediaTypes())
-                {
-                    Console.WriteLine(mediaType);
-                }
-
-                return true;
-            }
-            else if (args[0] == "-lp" || args[0] == "--listprograms")
-            {
-                Console.WriteLine("Supported Programs:");
-                foreach (string program in ListPrograms())
-                {
-                    Console.WriteLine(program);
-                }
-
-                return true;
-            }
-            else if (args[0] == "-ls" || args[0] == "--listsystems")
-            {
-                Console.WriteLine("Supported Systems:");
-                foreach (string system in Extensions.ListSystems())
-                {
-                    Console.WriteLine(system);
-                }
-
-                return true;
-            }
+            if (args[0] == "lc" || args[0] == "listcodes")
+                return new ListCodesFeature().Execute();
+            else if (args[0] == "lm" || args[0] == "listmedia")
+                return new ListMediaTypesFeature().Execute();
+            else if (args[0] == "lp" || args[0] == "listprograms")
+                return new ListProgramsFeature().Execute();
+            else if (args[0] == "ls" || args[0] == "listsystems")
+                return new ListSystemsFeature().Execute();
 
             return false;
         }
@@ -260,24 +226,6 @@ namespace MPF.Frontend.Tools
 
                 _ => MediaType.NONE,
             };
-        }
-
-        /// <summary>
-        /// List all programs with their short usable names
-        /// </summary>
-        private static List<string> ListPrograms()
-        {
-            var programs = new List<string>();
-
-            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
-            {
-                if (((InternalProgram)val!) == InternalProgram.NONE)
-                    continue;
-
-                programs.Add($"{((InternalProgram?)val).ShortName()} - {((InternalProgram?)val).LongName()}");
-            }
-
-            return programs;
         }
 
         #endregion
