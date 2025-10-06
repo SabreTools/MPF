@@ -104,7 +104,11 @@ namespace MPF.CLI
 
                 // Default Behavior
                 default:
-                    // Parse the system from the first argument
+                    var mainFeature = new MainFeature();
+                    mainFeature.ProcessArgs(args, 0);
+
+                    opts = mainFeature.CommandOptions;
+                    options = mainFeature.Options;
                     knownSystem = Extensions.ToRedumpSystem(featureName.Trim('"'));
 
                     // Validate the supplied credentials
@@ -123,9 +127,6 @@ namespace MPF.CLI
                         Console.WriteLine(message);
                     }
 
-                    // Process any custom parameters
-                    int startIndex = 1;
-                    opts = LoadFromArguments(args, options, ref startIndex);
                     break;
             }
 
@@ -330,64 +331,6 @@ namespace MPF.CLI
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Load the current set of options from application arguments
-        /// </summary>
-        private static CommandOptions LoadFromArguments(string[] args, Options options, ref int startIndex)
-        {
-            // Create return values
-            var opts = new CommandOptions();
-
-            // If we have no arguments, just return
-            if (args == null || args.Length == 0)
-            {
-                startIndex = 0;
-                return opts;
-            }
-
-            // If we have an invalid start index, just return
-            if (startIndex < 0 || startIndex >= args.Length)
-                return opts;
-
-            // Loop through the arguments and parse out values
-            for (; startIndex < args.Length; startIndex++)
-            {
-                // Use specific program
-                if (_useInput.ProcessInput(args, ref startIndex))
-                    options.InternalProgram = _useInput.Value.ToInternalProgram();
-
-                // Set a media type
-                else if (_mediaTypeInput.ProcessInput(args, ref startIndex))
-                    opts.MediaType = OptionsLoader.ToMediaType(_mediaTypeInput.Value?.Trim('"'));
-
-                // Use a device path
-                else if (_deviceInput.ProcessInput(args, ref startIndex))
-                    opts.DevicePath = _deviceInput.Value;
-
-                // Use a mounted path for physical checks
-                else if (_mountedInput.ProcessInput(args, ref startIndex))
-                    opts.MountedPath = _mountedInput.Value;
-
-                // Use a file path
-                else if (_fileInput.ProcessInput(args, ref startIndex))
-                    opts.FilePath = _fileInput.Value;
-
-                // Set an override speed
-                else if (_speedInput.ProcessInput(args, ref startIndex))
-                    opts.DriveSpeed = _speedInput.Value;
-
-                // Use a custom parameters
-                else if (_customInput.ProcessInput(args, ref startIndex))
-                    opts.CustomParams = _customInput.Value;
-
-                // Default, we fall out
-                else
-                    break;
-            }
-
-            return opts;
         }
 
         /// <summary>

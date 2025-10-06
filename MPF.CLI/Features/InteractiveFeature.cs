@@ -45,6 +45,7 @@ namespace MPF.CLI.Features
             Options = OptionsLoader.LoadFromConfig();
         }
 
+        /// <inheritdoc/>
         public override bool Execute()
         {
             // Create return values
