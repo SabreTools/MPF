@@ -31,7 +31,8 @@ namespace MPF.CLI
                 OptionsLoader.SaveToConfig(options);
 
                 // Display non-error message
-                DisplayHelp("First-run detected! Please fill out config.json and run again.");
+                Console.WriteLine("First-run detected! Please fill out config.json and run again.");
+                BaseFeature.DisplayHelp();
                 return;
             }
 
@@ -42,7 +43,7 @@ namespace MPF.CLI
             // If we have no args, show the help and quit
             if (args == null || args.Length == 0)
             {
-                DisplayHelp();
+                BaseFeature.DisplayHelp();
                 return;
             }
 
@@ -54,7 +55,7 @@ namespace MPF.CLI
             switch (topLevel)
             {
                 // Standalone Options
-                case Help: DisplayHelp(); return;
+                case Help: BaseFeature.DisplayHelp(); return;
                 case VersionFeature version: version.Execute(); return;
                 case ListCodesFeature lc: lc.Execute(); return;
                 case ListMediaTypesFeature lm: lm.Execute(); return;
@@ -65,22 +66,30 @@ namespace MPF.CLI
                 case InteractiveFeature interactive:
                     if (!interactive.ProcessArgs(args, 0))
                     {
-                        DisplayHelp();
+                        BaseFeature.DisplayHelp();
                         return;
                     }
-                    
-                    interactive.Execute();
+                    if (!interactive.Execute())
+                    {
+                        BaseFeature.DisplayHelp();
+                        return;
+                    }
+
                     break;
 
                 // Default Behavior
                 default:
                     if (!mainFeature.ProcessArgs(args, 0))
                     {
-                        DisplayHelp();
+                        BaseFeature.DisplayHelp();
+                        return;
+                    }
+                    if (!mainFeature.Execute())
+                    {
+                        BaseFeature.DisplayHelp();
                         return;
                     }
 
-                    mainFeature.Execute();
                     break;
             }
         }
@@ -133,53 +142,6 @@ namespace MPF.CLI
             commandSet.Add(mainFeature.CustomInput);
 
             return commandSet;
-        }
-
-        /// <summary>
-        /// Display help for MPF.CLI
-        /// </summary>
-        /// <param name="error">Error string to prefix the help text with</param>
-        internal static void DisplayHelp(string? error = null)
-        {
-            if (error != null)
-                Console.WriteLine(error);
-
-            Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.CLI <system> [options]");
-            Console.WriteLine();
-            Console.WriteLine("Standalone Options:");
-            Console.WriteLine("?, h, help              Show this help text");
-            Console.WriteLine("version                 Print the program version");
-            Console.WriteLine("lc, listcodes           List supported comment/content site codes");
-            Console.WriteLine("lm, listmedia           List supported media types");
-            Console.WriteLine("ls, listsystems         List supported system types");
-            Console.WriteLine("lp, listprograms        List supported dumping program outputs");
-            Console.WriteLine("i, interactive          Enable interactive mode");
-            Console.WriteLine();
-
-            Console.WriteLine("CLI Options:");
-            Console.WriteLine("-u, --use <program>            Override configured dumping program name");
-            Console.WriteLine("-t, --mediatype <mediatype>    Set media type for dumping (Required for DIC)");
-            Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
-            Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
-            Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
-            Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
-            Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
-            Console.WriteLine();
-
-            Console.WriteLine("Dumping program paths and other settings can be found in the config.json file");
-            Console.WriteLine("generated next to the program by default. Ensure that all settings are to user");
-            Console.WriteLine("preference before running MPF.CLI.");
-            Console.WriteLine();
-
-            Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
-            Console.WriteLine("All dumping parameters need to be supplied if doing this.");
-            Console.WriteLine("Otherwise, both a drive path and output file path are required.");
-            Console.WriteLine();
-
-            Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
-            Console.WriteLine("device dumping, usually Linux and macOS.");
-            Console.WriteLine();
         }
     }
 }

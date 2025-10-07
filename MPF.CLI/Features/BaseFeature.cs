@@ -117,7 +117,7 @@ namespace MPF.CLI.Features
                 case InternalProgram.Aaru:
                     if (!File.Exists(Options.AaruPath))
                     {
-                        Program.DisplayHelp("A path needs to be supplied in config.json for Aaru, exiting...");
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
                         return false;
                     }
                     break;
@@ -125,7 +125,7 @@ namespace MPF.CLI.Features
                 case InternalProgram.DiscImageCreator:
                     if (!File.Exists(Options.DiscImageCreatorPath))
                     {
-                        Program.DisplayHelp("A path needs to be supplied in config.json for DIC, exiting...");
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
                         return false;
                     }
                     break;
@@ -133,27 +133,27 @@ namespace MPF.CLI.Features
                 case InternalProgram.Redumper:
                     if (!File.Exists(Options.RedumperPath))
                     {
-                        Program.DisplayHelp("A path needs to be supplied in config.json for Redumper, exiting...");
+                        Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
                         return false;
                     }
                     break;
 
                 default:
-                    Program.DisplayHelp($"{Options.InternalProgram} is not a supported dumping program, exiting...");
+                    Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
                     break;
             }
 
             // Ensure we have the values we need
             if (CustomParams == null && (DevicePath == null || FilePath == null))
             {
-                Program.DisplayHelp("Both a device path and file path need to be supplied, exiting...");
+                Console.Error.WriteLine("Both a device path and file path need to be supplied, exiting...");
                 return false;
             }
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
                 && CustomParams == null
                 && (MediaType == null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
-                Program.DisplayHelp("Media type is required for DiscImageCreator, exiting...");
+                Console.Error.WriteLine("Media type is required for DiscImageCreator, exiting...");
                 return false;
             }
 
@@ -178,7 +178,7 @@ namespace MPF.CLI.Features
             string? paramStr = CustomParams ?? env.GetFullParameters(MediaType, speed);
             if (string.IsNullOrEmpty(paramStr))
             {
-                Program.DisplayHelp("No valid environment could be created, exiting...");
+                Console.Error.WriteLine("No valid environment could be created, exiting...");
                 return false;
             }
 
@@ -194,6 +194,7 @@ namespace MPF.CLI.Features
             // If it was not a dumping command
             if (!env.IsDumpingCommand())
             {
+                Console.Error.WriteLine();
                 Console.WriteLine("Execution not recognized as dumping command, skipping processing...");
                 return true;
             }
@@ -217,6 +218,50 @@ namespace MPF.CLI.Features
             Console.WriteLine(verifyResult.Message);
 
             return true;
+        }
+
+        /// <summary>
+        /// Display help for MPF.CLI
+        /// </summary>
+        /// <param name="error">Error string to prefix the help text with</param>
+        public static void DisplayHelp()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine("MPF.CLI <system> [options]");
+            Console.WriteLine();
+            Console.WriteLine("Standalone Options:");
+            Console.WriteLine("?, h, help              Show this help text");
+            Console.WriteLine("version                 Print the program version");
+            Console.WriteLine("lc, listcodes           List supported comment/content site codes");
+            Console.WriteLine("lm, listmedia           List supported media types");
+            Console.WriteLine("ls, listsystems         List supported system types");
+            Console.WriteLine("lp, listprograms        List supported dumping program outputs");
+            Console.WriteLine("i, interactive          Enable interactive mode");
+            Console.WriteLine();
+
+            Console.WriteLine("CLI Options:");
+            Console.WriteLine("-u, --use <program>            Override configured dumping program name");
+            Console.WriteLine("-t, --mediatype <mediatype>    Set media type for dumping (Required for DIC)");
+            Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
+            Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
+            Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
+            Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
+            Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
+            Console.WriteLine();
+
+            Console.WriteLine("Dumping program paths and other settings can be found in the config.json file");
+            Console.WriteLine("generated next to the program by default. Ensure that all settings are to user");
+            Console.WriteLine("preference before running MPF.CLI.");
+            Console.WriteLine();
+
+            Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
+            Console.WriteLine("All dumping parameters need to be supplied if doing this.");
+            Console.WriteLine("Otherwise, both a drive path and output file path are required.");
+            Console.WriteLine();
+
+            Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
+            Console.WriteLine("device dumping, usually Linux and macOS.");
+            Console.WriteLine();
         }
     }
 }
