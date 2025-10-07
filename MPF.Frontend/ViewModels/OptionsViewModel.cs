@@ -54,7 +54,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available log compression methods
         /// </summary>
-        public static List<Element<LogCompression>> LogCompressions = PopulateLogCompressions();
+        public static List<Element<LogCompression>> LogCompressions => PopulateLogCompressions();
 
         /// <summary>
         /// Current list of supported Redumper read methods

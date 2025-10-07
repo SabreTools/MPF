@@ -191,7 +191,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="6">
+                            <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the media information output after dumping" Margin="0,4"
@@ -242,6 +242,12 @@
                                      IsChecked="{Binding Options.CompressLogFiles}"
                                      ToolTip="Compress output log files to reduce space" Margin="0,4"
                                      />
+
+                                <Label VerticalAlignment="Center" Content="Log Compression:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="LogCompressionComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding LogCompressions}" SelectedItem="{Binding Options.LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.CompressLogFiles}"
+                                />
 
                                 <CheckBox VerticalAlignment="Center" Content="Delete Unnecessary Files"
                                      IsChecked="{Binding Options.DeleteUnnecessaryFiles}"

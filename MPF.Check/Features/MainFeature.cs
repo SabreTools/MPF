@@ -47,6 +47,9 @@ namespace MPF.Check.Features
         private const string _loadSeedName = "load-seed";
         internal readonly StringInput LoadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
 
+        private const string _logCompressionName = "log-compression";
+        internal readonly StringInput LogCompressionInput = new(_logCompressionName, "--log-compression", "Set the log compression type (requires --zip)");
+
         private const string _noPlaceholdersName = "no-placeholders";
         internal readonly FlagInput NoPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
 
@@ -92,6 +95,7 @@ namespace MPF.Check.Features
             Add(JsonInput);
             Add(IncludeArtifactsInput);
             Add(ZipInput);
+            Add(LogCompressionInput);
             Add(DeleteInput);
         }
 
@@ -162,6 +166,10 @@ namespace MPF.Check.Features
                 // Create IRD from output files (PS3 only)
                 else if (CreateIrdInput.ProcessInput(args, ref index))
                     Options.CreateIRDAfterDumping = true;
+
+                // Set the log compression type (requires --zip)
+                else if (LogCompressionInput.ProcessInput(args, ref index))
+                    Options.LogCompression = LogCompressionInput.Value.ToLogCompression();
 
                 // Retrieve Redump match information
                 else if (NoRetrieveInput.ProcessInput(args, ref index))

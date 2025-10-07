@@ -28,6 +28,12 @@ namespace MPF.Frontend.Test
         {
             string? actual = prog.LongName();
             Assert.Equal(expected, actual);
+
+            if (prog != null)
+            {
+                actual = EnumExtensions.GetLongName(prog);
+                Assert.Equal(expected, actual);
+            }
         }
 
         [Theory]
@@ -39,6 +45,12 @@ namespace MPF.Frontend.Test
         {
             string? actual = comp.LongName();
             Assert.Equal(expected, actual);
+
+            if (comp != null)
+            {
+                actual = EnumExtensions.GetLongName(comp);
+                Assert.Equal(expected, actual);
+            }
         }
 
         [Theory]
@@ -50,6 +62,12 @@ namespace MPF.Frontend.Test
         {
             string? actual = method.LongName();
             Assert.Equal(expected, actual);
+
+            if (method != null)
+            {
+                actual = EnumExtensions.GetLongName(method);
+                Assert.Equal(expected, actual);
+            }
         }
 
         [Theory]
@@ -63,6 +81,12 @@ namespace MPF.Frontend.Test
         {
             string? actual = order.LongName();
             Assert.Equal(expected, actual);
+
+            if (order != null)
+            {
+                actual = EnumExtensions.GetLongName(order);
+                Assert.Equal(expected, actual);
+            }
         }
 
         [Theory]
@@ -79,6 +103,12 @@ namespace MPF.Frontend.Test
         {
             string? actual = type.LongName();
             Assert.Equal(expected, actual);
+
+            if (type != null)
+            {
+                actual = EnumExtensions.GetLongName(type);
+                Assert.Equal(expected, actual);
+            }
         }
 
         #endregion

@@ -129,6 +129,7 @@ namespace MPF.Check
             commandSet.Add(mainFeature.JsonInput);
             commandSet.Add(mainFeature.IncludeArtifactsInput);
             commandSet.Add(mainFeature.ZipInput);
+            commandSet.Add(mainFeature.LogCompressionInput);
             commandSet.Add(mainFeature.DeleteInput);
 
             return commandSet;

@@ -67,6 +67,14 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="prog">InternalProgram value to convert</param>
         /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InternalProgram prog)
+            => ((InternalProgram?)prog).LongName();
+
+        /// <summary>
+        /// Get the string representation of the InternalProgram enum values
+        /// </summary>
+        /// <param name="prog">InternalProgram value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
         public static string LongName(this InternalProgram? prog)
         {
             return prog switch
@@ -92,6 +100,14 @@ namespace MPF.Frontend
                 _ => "Unknown",
             };
         }
+
+        /// <summary>
+        /// Get the string representation of the LogCompression enum values
+        /// </summary>
+        /// <param name="comp">LogCompression value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this LogCompression comp)
+            => ((LogCompression?)comp).LongName();
 
         /// <summary>
         /// Get the string representation of the LogCompression enum values

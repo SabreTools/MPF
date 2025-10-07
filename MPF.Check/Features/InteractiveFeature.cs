@@ -101,7 +101,8 @@ namespace MPF.Check.Features
             Console.WriteLine($"F) Output submission JSON (Currently '{Options.OutputSubmissionJSON}')");
             Console.WriteLine($"G) Include JSON artifacts (Currently '{Options.IncludeArtifacts}')");
             Console.WriteLine($"H) Compress logs (Currently '{Options.CompressLogFiles}')");
-            Console.WriteLine($"I) Delete unnecessary files (Currently '{Options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"I) Log compression (Currently '{Options.LogCompression.LongName()}')");
+            Console.WriteLine($"J) Delete unnecessary files (Currently '{Options.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -166,6 +167,9 @@ namespace MPF.Check.Features
                     goto root;
                 case "i":
                 case "I":
+                    goto logCompression;
+                case "j":
+                case "J":
                     Options.DeleteUnnecessaryFiles = !Options.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -191,6 +195,8 @@ namespace MPF.Check.Features
 
         system:
             Console.WriteLine();
+            Console.WriteLine("For possible inputs, use the List Systems commandline option");
+            Console.WriteLine();
             Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
@@ -198,6 +204,13 @@ namespace MPF.Check.Features
             goto root;
 
         dumpingProgram:
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            foreach (var program in (InternalProgram[])Enum.GetValues(typeof(InternalProgram)))
+            {
+                Console.WriteLine($"{program.ToString().ToLowerInvariant().PadRight(15)} => {program.LongName()}");
+            }
+
             Console.WriteLine();
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
@@ -215,11 +228,11 @@ namespace MPF.Check.Features
 
         redumpCredentials:
             Console.WriteLine();
-            Console.WriteLine("Enter your Redumper username and press Enter:");
+            Console.WriteLine("Enter your Redump username and press Enter:");
             Console.Write("> ");
             Options.RedumpUsername = Console.ReadLine();
 
-            Console.WriteLine("Enter your Redumper password (hidden) and press Enter:");
+            Console.WriteLine("Enter your Redump password (hidden) and press Enter:");
             Console.Write("> ");
             Options.RedumpPassword = string.Empty;
             while (true)
@@ -238,6 +251,21 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the device path and press Enter:");
             Console.Write("> ");
             DevicePath = Console.ReadLine();
+            goto root;
+
+        logCompression:
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            foreach (var compressionType in (LogCompression[])Enum.GetValues(typeof(LogCompression)))
+            {
+                Console.WriteLine($"{compressionType.ToString().ToLowerInvariant().PadRight(15)} => {compressionType.LongName()}");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Input the log compression type and press Enter:");
+            Console.Write("> ");
+            result = Console.ReadLine();
+            Options.LogCompression = result.ToLogCompression();
             goto root;
 
         exit:

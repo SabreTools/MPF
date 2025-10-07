@@ -104,6 +104,8 @@ namespace MPF.CLI.Features
 
         system:
             Console.WriteLine();
+            Console.WriteLine("For possible inputs, use the List Systems commandline option");
+            Console.WriteLine();
             Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
@@ -112,6 +114,13 @@ namespace MPF.CLI.Features
 
         dumpingProgram:
             Console.WriteLine();
+            Console.WriteLine("Options:");
+            foreach (var program in (InternalProgram[])Enum.GetValues(typeof(InternalProgram)))
+            {
+                Console.WriteLine($"{program.ToString().ToLowerInvariant().PadRight(15)} => {program.LongName()}");
+            }
+
+            Console.WriteLine();
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
@@ -119,6 +128,8 @@ namespace MPF.CLI.Features
             goto root;
 
         mediaType:
+            Console.WriteLine();
+            Console.WriteLine("For possible inputs, use the List Media commandline option");
             Console.WriteLine();
             Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");

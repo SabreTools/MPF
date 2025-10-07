@@ -164,6 +164,7 @@ namespace MPF.Check.Features
             Console.WriteLine("-j, --json                     Enable submission JSON output");
             Console.WriteLine("    --include-artifacts        Include artifacts in JSON (requires --json)");
             Console.WriteLine("-z, --zip                      Enable log file compression");
+            Console.WriteLine("    --log-compression          Set the log compression type (requires --zip)");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
             Console.WriteLine();
             Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
