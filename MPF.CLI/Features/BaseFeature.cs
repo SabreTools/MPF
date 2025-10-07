@@ -8,6 +8,7 @@ using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
+using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.CLI.Features
 {
@@ -77,6 +78,7 @@ namespace MPF.CLI.Features
                 OutputSubmissionJSON = false,
                 IncludeArtifacts = false,
                 CompressLogFiles = false,
+                LogCompression = LogCompression.DeflateMaximum,
                 DeleteUnnecessaryFiles = false,
                 CreateIRDAfterDumping = false,
 

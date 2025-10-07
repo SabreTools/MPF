@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
+using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -51,6 +52,11 @@ namespace MPF.Frontend.ViewModels
         public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
+        /// List of available log compression methods
+        /// </summary>
+        public static List<Element<LogCompression>> LogCompressions = PopulateLogCompressions();
+
+        /// <summary>
         /// Current list of supported Redumper read methods
         /// </summary>
         public static List<Element<RedumperReadMethod>> RedumperReadMethods => PopulateRedumperReadMethods();
@@ -97,6 +103,16 @@ namespace MPF.Frontend.ViewModels
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
             return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
+        }
+
+        /// <summary>
+        /// Get a complete list of supported log compression methods
+        /// </summary>
+        /// <returns></returns>
+        private static List<Element<LogCompression>> PopulateLogCompressions()
+        {
+            var logCompressions = new List<LogCompression> { LogCompression.DeflateDefault, LogCompression.DeflateMaximum, LogCompression.Zstd19 };
+            return logCompressions.ConvertAll(lc => new Element<LogCompression>(lc));
         }
 
         /// <summary>

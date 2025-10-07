@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 #endif
 using System.Reflection;
 using SabreTools.RedumpLib.Data;
+using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -88,6 +89,23 @@ namespace MPF.Frontend
                 #endregion
 
                 InternalProgram.NONE => "Unknown",
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
+        /// Get the string representation of the LogCompression enum values
+        /// </summary>
+        /// <param name="comp">LogCompression value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this LogCompression? comp)
+        {
+            return comp switch
+            {
+                LogCompression.DeflateDefault => "ZIP using Deflate (Level 5)",
+                LogCompression.DeflateMaximum => "ZIP using Deflate (Level 9)",
+                LogCompression.Zstd19 => "ZIP using Zstd (Level 19)",
+
                 _ => "Unknown",
             };
         }
@@ -229,6 +247,28 @@ namespace MPF.Frontend
                     or "xboxbackupcreator" => InternalProgram.XboxBackupCreator,
 
                 _ => InternalProgram.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Get the LogCompression enum value for a given string
+        /// </summary>
+        /// <param name="logCompression">String value to convert</param>
+        /// <returns>LogCompression represented by teh string, if possible</returns>
+        public static LogCompression ToLogCompression(this string? logCompression)
+        {
+            return (logCompression?.ToLowerInvariant()) switch
+            {
+                "deflate"
+                    or "deflatedefault"
+                    or "zip" => LogCompression.DeflateDefault,
+                "deflatemaximum"
+                    or "max"
+                    or "maximum" => LogCompression.DeflateMaximum,
+                "zstd"
+                    or "zstd19" => LogCompression.Zstd19,
+
+                _ => LogCompression.DeflateDefault,
             };
         }
 

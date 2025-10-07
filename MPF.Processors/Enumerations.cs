@@ -1,5 +1,26 @@
 namespace MPF.Processors
 {
+        /// <summary>
+    /// Indicates the type of compression used for logs
+    /// </summary>
+    public enum LogCompression
+    {
+        /// <summary>
+        /// PKZIP using DEFLATE level 5
+        /// </summary>
+        DeflateDefault,
+
+        /// <summary>
+        /// PKZIP using DEFLATE level 9
+        /// </summary>
+        DeflateMaximum,
+        
+        /// <summary>
+        /// PKZIP using Zstd level 19
+        /// </summary>
+        Zstd19,
+    }
+
     /// <summary>
     /// Enum for SecuROM scheme type
     /// </summary>

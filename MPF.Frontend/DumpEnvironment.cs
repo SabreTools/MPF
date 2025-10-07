@@ -582,7 +582,7 @@ namespace MPF.Frontend
                 await Task.Run(() =>
 #endif
                 {
-                    bool compressSuccess = _processor.CompressLogFiles(mediaType, outputDirectory, outputFilename, filenameSuffix, out string compressResult);
+                    bool compressSuccess = _processor.CompressLogFiles(mediaType, _options.LogCompression, outputDirectory, outputFilename, filenameSuffix, out string compressResult);
                     if (compressSuccess)
                         resultProgress.Report(ResultEventArgs.Success(compressResult));
                     else

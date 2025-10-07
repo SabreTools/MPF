@@ -2,6 +2,7 @@
 using SabreTools.RedumpLib.Data;
 using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
+using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -555,6 +556,22 @@ namespace MPF.Frontend
         {
             get { return GetBooleanSetting(Settings, "CompressLogFiles", true); }
             set { Settings["CompressLogFiles"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Compression type used during log compression
+        /// </summary>
+        public LogCompression LogCompression
+        {
+            get
+            {
+                var valueString = GetStringSetting(Settings, "LogCompression", LogCompression.DeflateMaximum.ToString());
+                return valueString.ToLogCompression();
+            }
+            set
+            {
+                Settings["InternalProgram"] = value.ToString();
+            }
         }
 
         /// <summary>

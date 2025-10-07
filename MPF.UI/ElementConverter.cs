@@ -4,6 +4,7 @@ using System.Windows.Data;
 using MPF.Frontend;
 using MPF.Frontend.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
+using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
 using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
@@ -18,6 +19,7 @@ namespace MPF.UI
             {
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
+                LogCompression logCompression => new Element<LogCompression>(logCompression),
                 MediaType mediaType => new Element<MediaType>(mediaType),
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
@@ -40,6 +42,7 @@ namespace MPF.UI
             {
                 Element<DiscCategory> dcElement => dcElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,
+                Element<LogCompression> lcElement => lcElement.Value,
                 Element<MediaType> mtElement => mtElement.Value,
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,

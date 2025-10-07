@@ -9,7 +9,6 @@ using SabreTools.RedumpLib.Data;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
-using SharpCompress.Compressors.Deflate;
 using SharpCompress.Writers;
 #endif
 
@@ -77,6 +76,7 @@ namespace MPF.Processors
         /// Compress log files to save space
         /// </summary>
         /// <param name="mediaType">Media type for controlling expected file sets</param>
+        /// <param name="logCompression">Compression type to use for logs</param>
         /// <param name="outputDirectory">Output folder to use as the base path</param>
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="filenameSuffix">Output filename to use as the base path</param>
@@ -84,6 +84,7 @@ namespace MPF.Processors
         /// <returns>True if the process succeeded, false otherwise</returns>
         /// <remarks>Assumes filename has an extension</remarks>
         public bool CompressLogFiles(MediaType? mediaType,
+            LogCompression logCompression,
             string? outputDirectory,
             string outputFilename,
             string? filenameSuffix,
@@ -128,7 +129,20 @@ namespace MPF.Processors
                 _ = AddToArchive(zf, zippableFiles, outputDirectory, true);
                 _ = AddToArchive(zf, generatedFiles, outputDirectory, false);
 
-                zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 9));
+                switch (logCompression)
+                {
+                    case LogCompression.DeflateMaximum:
+                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 9));
+                        break;
+                    case LogCompression.Zstd19:
+                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.ZStandard, 19));
+                        break;
+                    case LogCompression.DeflateDefault:
+                    default:
+                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 5));
+                        break;
+                }
+
                 status = "Compression complete!";
                 return true;
             }
