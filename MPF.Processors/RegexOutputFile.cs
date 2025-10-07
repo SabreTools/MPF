@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET452_OR_GREATER || NETCOREAPP
-using System.IO.Compression;
-using System.Linq;
-#endif
 using System.Text.RegularExpressions;
+#if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives.Zip;
+#endif
 
 namespace MPF.Processors
 {
@@ -52,7 +51,7 @@ namespace MPF.Processors
             // Ensure the directory exists
             if (!Directory.Exists(outputDirectory))
                 return false;
-            
+
             // Get list of all files in directory
             var directoryFiles = Directory.GetFiles(outputDirectory);
             foreach (string file in directoryFiles)
@@ -64,7 +63,7 @@ namespace MPF.Processors
             return false;
         }
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
         /// <inheritdoc/>
         public override bool Exists(ZipArchive? archive)
         {
@@ -73,10 +72,12 @@ namespace MPF.Processors
                 return false;
 
             // Get list of all files in archive
-            var archiveFiles = archive.Entries.Select(e => e.Name).ToList();
-            foreach (string file in archiveFiles)
+            foreach (var entry in archive.Entries)
             {
-                if (Array.Exists(Filenames, pattern => Regex.IsMatch(file, pattern)))
+                if (entry.Key == null)
+                    continue;
+
+                if (Array.Exists(Filenames, pattern => Regex.IsMatch(entry.Key, pattern)))
                     return true;
             }
 
@@ -92,7 +93,7 @@ namespace MPF.Processors
                 return [];
 
             List<string> paths = [];
-            
+
             // Get list of all files in directory
             var directoryFiles = Directory.GetFiles(outputDirectory);
             foreach (string file in directoryFiles)

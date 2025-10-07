@@ -21,6 +21,7 @@
 - Allow but do not require config for Check
 - Update packages
 - More consistency in commandline programs
+- Use GC.SharpCompress as archive handling library
 
 ### 3.4.2 (2025-09-30)
 

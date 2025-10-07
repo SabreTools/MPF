@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET452_OR_GREATER || NETCOREAPP
-using System.IO.Compression;
-#endif
 using System.Text;
 using SabreTools.Hashing;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib.Data;
+#if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
+using SharpCompress.Compressors.Deflate;
+using SharpCompress.Writers;
+#endif
 
 namespace MPF.Processors
 {
@@ -85,7 +89,7 @@ namespace MPF.Processors
             string? filenameSuffix,
             out string status)
         {
-#if NET20 || NET35 || NET40
+#if NET20 || NET35 || NET40 || NET452
             status = "Log compression is not available for this framework version";
             return false;
 #else
@@ -119,11 +123,12 @@ namespace MPF.Processors
             ZipArchive? zf = null;
             try
             {
-                zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
+                zf = ZipArchive.Create();
 
                 _ = AddToArchive(zf, zippableFiles, outputDirectory, true);
                 _ = AddToArchive(zf, generatedFiles, outputDirectory, false);
 
+                zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 9));
                 status = "Compression complete!";
                 return true;
             }
@@ -198,17 +203,17 @@ namespace MPF.Processors
 
             // Check for the log file
             bool logArchiveExists = false;
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
             ZipArchive? logArchive = null;
 #endif
             if (File.Exists($"{basePath}_logs.zip"))
             {
                 logArchiveExists = true;
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
                 try
                 {
                     // Try to open the archive
-                    logArchive = ZipFile.OpenRead($"{basePath}_logs.zip");
+                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
                 }
                 catch
                 {
@@ -236,7 +241,7 @@ namespace MPF.Processors
                     continue;
                 }
 
-#if NET20 || NET35 || NET40
+#if NET20 || NET35 || NET40 || NET452
                 // Assume the zipfile has the file in it
                 continue;
 #else
@@ -249,7 +254,7 @@ namespace MPF.Processors
 #endif
             }
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
             // Close the log archive, if it exists
             logArchive?.Dispose();
 #endif
@@ -353,7 +358,7 @@ namespace MPF.Processors
             }
         }
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Try to add a set of files to an existing archive
         /// </summary>
@@ -403,11 +408,7 @@ namespace MPF.Processors
             // Create and add the entry
             try
             {
-#if NETFRAMEWORK || NETCOREAPP3_1 || NET5_0
-                archive.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
-#else
-                archive.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
-#endif
+                archive.AddEntry(entryName, file);
             }
             catch
             {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET452_OR_GREATER || NETCOREAPP
-using System.IO.Compression;
+#if NET462_OR_GREATER || NETCOREAPP
 using System.Linq;
+using SharpCompress.Archives.Zip;
 #endif
 
 namespace MPF.Processors
@@ -218,7 +218,7 @@ namespace MPF.Processors
             return false;
         }
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Indicates if an output file exists in an archive
         /// </summary>
@@ -238,7 +238,7 @@ namespace MPF.Processors
                 try
                 {
                     // Check all entries on filename alone
-                    if (archive.Entries.Any(e => e.Name == filename))
+                    if (archive.Entries.Any(e => e.Key == filename))
                         return true;
                 }
                 catch { }

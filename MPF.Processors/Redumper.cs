@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET452_OR_GREATER || NETCOREAPP
-using System.IO.Compression;
-#endif
 using System.Text;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+#if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives.Zip;
+#endif
 
 namespace MPF.Processors
 {
@@ -649,7 +649,7 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
-#if NET20 || NET35 || NET40
+#if NET20 || NET35 || NET40 || NET452
             // Assume the zipfile has the file in it
             return File.Exists($"{basePath}_logs.zip");
 #else
@@ -660,14 +660,23 @@ namespace MPF.Processors
             try
             {
                 // Try to open the archive
-                using ZipArchive archive = ZipFile.OpenRead($"{basePath}_logs.zip");
+                using ZipArchive archive = ZipArchive.Open($"{basePath}_logs.zip");
 
                 // Get the log entry and check it, if possible
-                var entry = archive.GetEntry(outputFilename);
-                if (entry == null)
+                ZipArchiveEntry? logEntry = null;
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.Key == outputFilename)
+                    {
+                        logEntry = entry;
+                        break;
+                    }
+                }
+
+                if (logEntry == null)
                     return false;
 
-                using var sr = new StreamReader(entry.Open());
+                using var sr = new StreamReader(logEntry.OpenEntryStream());
                 return GetDatfile(sr) != null;
             }
             catch

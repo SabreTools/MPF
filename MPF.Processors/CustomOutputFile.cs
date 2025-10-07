@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET452_OR_GREATER || NETCOREAPP
-using System.IO.Compression;
+#if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives.Zip;
 #endif
 
 namespace MPF.Processors
@@ -78,7 +78,7 @@ namespace MPF.Processors
             return false;
         }
 
-#if NET452_OR_GREATER || NETCOREAPP
+#if NET462_OR_GREATER || NETCOREAPP
         /// <inheritdoc/>
         public override bool Exists(ZipArchive? archive)
         {
