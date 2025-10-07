@@ -23,6 +23,7 @@
 - More consistency in commandline programs
 - Use GC.SharpCompress as archive handling library
 - Start wiring through log compression changes
+- Fix minor issues with options loading
 
 ### 3.4.2 (2025-09-30)
 

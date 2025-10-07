@@ -570,7 +570,7 @@ namespace MPF.Frontend
             }
             set
             {
-                Settings["InternalProgram"] = value.ToString();
+                Settings["LogCompression"] = value.ToString();
             }
         }
 

@@ -188,12 +188,9 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return new Options();
 
-            // Ensure the file exists
+            // If the file does not exist
             if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-            {
-                File.Create(ConfigurationPath).Dispose();
                 return new Options();
-            }
 
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
