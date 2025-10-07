@@ -22,7 +22,6 @@ namespace MPF.CLI.Features
         public InteractiveFeature()
             : base(DisplayName, _flags, _description)
         {
-            Options = OptionsLoader.LoadFromConfig();
         }
 
         /// <inheritdoc/>
@@ -33,6 +32,9 @@ namespace MPF.CLI.Features
             {
                 Inputs.Add(args[i]);
             }
+
+            // Read the options from config, if possible
+            Options = OptionsLoader.LoadFromConfig();
 
             // Create return values
             MediaType = SabreTools.RedumpLib.Data.MediaType.NONE;

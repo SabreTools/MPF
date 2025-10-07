@@ -1,6 +1,7 @@
 
 using System;
 using MPF.Frontend;
+using MPF.Frontend.Tools;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
@@ -30,6 +31,38 @@ namespace MPF.Check.Features
             for (int i = 1; i < args.Length; i++)
             {
                 Inputs.Add(args[i]);
+            }
+
+            // Read the options from config, if possible
+            Options = OptionsLoader.LoadFromConfig();
+            if (Options.FirstRun)
+            {
+                Options = new Options()
+                {
+                    // Internal Program
+                    InternalProgram = InternalProgram.NONE,
+
+                    // Extra Dumping Options
+                    ScanForProtection = false,
+                    AddPlaceholders = true,
+                    PullAllInformation = false,
+                    AddFilenameSuffix = false,
+                    OutputSubmissionJSON = false,
+                    IncludeArtifacts = false,
+                    CompressLogFiles = false,
+                    DeleteUnnecessaryFiles = false,
+                    CreateIRDAfterDumping = false,
+
+                    // Protection Scanning Options
+                    ScanArchivesForProtection = true,
+                    IncludeDebugProtectionInformation = false,
+                    HideDriveLetters = false,
+
+                    // Redump Login Information
+                    RetrieveMatchInformation = true,
+                    RedumpUsername = null,
+                    RedumpPassword = null,
+                };
             }
 
             // Create return values

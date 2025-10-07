@@ -18,6 +18,7 @@
 - Remove CommandOptions implementations
 - Exit early on parsing failures
 - Fix minor typo in verify inputs check
+- Allow but do not require config for Check
 
 ### 3.4.2 (2025-09-30)
 

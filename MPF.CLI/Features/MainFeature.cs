@@ -48,33 +48,6 @@ namespace MPF.CLI.Features
         public MainFeature()
             : base(DisplayName, _flags, _description)
         {
-            Options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
-
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
-
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
-
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
-
             Add(UseInput);
             Add(MediaTypeInput);
             Add(DeviceInput);
@@ -90,6 +63,9 @@ namespace MPF.CLI.Features
             // If we have no arguments, just return
             if (args == null || args.Length == 0)
                 return true;
+
+            // Read the options from config, if possible
+            Options = OptionsLoader.LoadFromConfig();
 
             // The first argument is the system type
             System = args[0].Trim('"').ToRedumpSystem();
