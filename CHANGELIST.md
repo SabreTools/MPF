@@ -29,6 +29,7 @@
 - Add more useful credentials inputs for Check
 - More gracefully handle "missing" media types
 - Use null or empty instead of just null
+- Guard against unzippable files
 
 ### 3.4.2 (2025-09-30)
 

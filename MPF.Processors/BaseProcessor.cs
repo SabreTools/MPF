@@ -422,6 +422,10 @@ namespace MPF.Processors
             // Create and add the entry
             try
             {
+                // Guard against unzippable files
+                if (new FileInfo(file).Length > uint.MaxValue)
+                    return false;
+
                 archive.AddEntry(entryName, file);
             }
             catch
