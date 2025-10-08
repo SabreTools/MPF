@@ -74,7 +74,7 @@ namespace MPF.Check
                         BaseFeature.DisplayHelp();
                         return;
                     }
-                    if (mainFeature.Execute())
+                    if (!mainFeature.Execute())
                     {
                         BaseFeature.DisplayHelp();
                         return;
