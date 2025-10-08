@@ -115,11 +115,9 @@ namespace MPF.CLI.Features
         dumpingProgram:
             Console.WriteLine();
             Console.WriteLine("Options:");
-            foreach (var program in (InternalProgram[])Enum.GetValues(typeof(InternalProgram)))
-            {
-                Console.WriteLine($"{program.ToString().ToLowerInvariant().PadRight(15)} => {program.LongName()}");
-            }
-
+            Console.WriteLine($"{InternalProgram.Redumper.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.Redumper.LongName()}");
+            Console.WriteLine($"{InternalProgram.DiscImageCreator.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.DiscImageCreator.LongName()}");
+            Console.WriteLine($"{InternalProgram.Aaru.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.Aaru.LongName()}");
             Console.WriteLine();
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");

@@ -208,6 +208,10 @@ namespace MPF.Check.Features
             Console.WriteLine("Options:");
             foreach (var program in (InternalProgram[])Enum.GetValues(typeof(InternalProgram)))
             {
+                // Skip the placeholder values
+                if (program == InternalProgram.NONE)
+                    continue;
+
                 Console.WriteLine($"{program.ToString().ToLowerInvariant().PadRight(15)} => {program.LongName()}");
             }
 

@@ -25,6 +25,7 @@
 - Start wiring through log compression changes
 - Fix minor issues with options loading
 - Finalize wire-through and clean up
+- Minor cleanup on interactive modes
 
 ### 3.4.2 (2025-09-30)
 
