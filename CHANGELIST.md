@@ -38,6 +38,7 @@
 - Add preemptive new file support
 - Add preemptive helper for Zstd handling
 - Pre-compress skeleton files with Zstd
+- Fix broken file count tests
 
 ### 3.4.2 (2025-09-30)
 
