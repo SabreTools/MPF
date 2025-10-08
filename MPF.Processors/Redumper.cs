@@ -99,6 +99,10 @@ namespace MPF.Processors
                     VolumeLabels = volLabels;
             }
 
+            // Pre-compress the skeleton using Zstandard
+            if (File.Exists($"{basePath}.skeleton"))
+                _ = CompressZstandard($"{basePath}.skeleton");
+
             // Extract info based generically on MediaType
             switch (mediaType)
             {
@@ -665,14 +669,17 @@ namespace MPF.Processors
             try
             {
                 using var ifs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var ofs = File.Open($"{file}.zst", FileMode.CreateNew, FileAccess.Write, FileShare.None);
+                using var ofs = File.Open($"{file}.zst", FileMode.Create, FileAccess.Write, FileShare.None);
 
-                using var zst = new ZStandardStream(ifs, CompressionMode.Compress, compressionLevel: 19);
-                zst.CopyTo(ofs);
-                ofs.Flush();
+                using var zst = new ZStandardStream(ofs, CompressionMode.Compress, compressionLevel: 19, leaveOpen: true);
+                ifs.CopyTo(zst);
+                zst.Flush();
             }
             catch
             {
+                // Try to delete the incomplete
+                try { File.Delete($"{file}.zst"); } catch { }
+
                 return false;
             }
 
