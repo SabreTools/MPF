@@ -515,6 +515,9 @@ namespace MPF.Processors
                             cdrom.Add(new($"{trackName}.skeleton", OutputFileFlags.Binary
                                 | OutputFileFlags.Zippable,
                                 $"skeleton_{trackNumber}"));
+                            cdrom.Add(new($"{trackName}.skeleton.zst", OutputFileFlags.Binary
+                                | OutputFileFlags.Zippable,
+                                $"skeleton_zst_{trackNumber}"));
                             trackNumber++;
                         }
                     }
@@ -526,6 +529,9 @@ namespace MPF.Processors
                         cdrom.Add(new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"));
+                        cdrom.Add(new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "skeleton_zst"));
                     }
 
                     return cdrom;
@@ -570,6 +576,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
+                        new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "skeleton_zst"),
                         new($"{outputFilename}.ss", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ss"),
@@ -618,6 +627,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
+                        new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "skeleton_zst"),
                         new($"{outputFilename}.state", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
