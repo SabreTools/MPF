@@ -33,6 +33,7 @@
 - Fix incorrect flagging of a failed check
 - Use ZipWriterOptions instead of generic
 - Allow skeleton creation for all media types
+- Fix default value tests
 
 ### 3.4.2 (2025-09-30)
 
