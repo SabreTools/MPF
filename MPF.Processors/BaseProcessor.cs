@@ -9,7 +9,8 @@ using SabreTools.RedumpLib.Data;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
-using SharpCompress.Writers;
+using SharpCompress.Compressors.Deflate;
+using SharpCompress.Writers.Zip;
 #endif
 
 namespace MPF.Processors
@@ -132,14 +133,14 @@ namespace MPF.Processors
                 switch (logCompression)
                 {
                     case LogCompression.DeflateMaximum:
-                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 9));
+                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.BestCompression) { UseZip64 = true });
                         break;
                     case LogCompression.Zstd19:
-                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.ZStandard, 19));
+                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.ZStandard, (CompressionLevel)19) { UseZip64 = true });
                         break;
                     case LogCompression.DeflateDefault:
                     default:
-                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 5));
+                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.Default) { UseZip64 = true });
                         break;
                 }
 
@@ -422,10 +423,6 @@ namespace MPF.Processors
             // Create and add the entry
             try
             {
-                // Guard against unzippable files
-                if (new FileInfo(file).Length > uint.MaxValue)
-                    return false;
-
                 archive.AddEntry(entryName, file);
             }
             catch
