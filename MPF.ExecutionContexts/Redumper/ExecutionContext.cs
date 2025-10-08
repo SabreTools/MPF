@@ -313,8 +313,17 @@ namespace MPF.ExecutionContexts.Redumper
             }
             if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
             {
-                this[FlagStrings.Skeleton] = true;
-                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                // Enable skeleton for CD and DVD only, by default
+                switch (MediaType)
+                {
+                    case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                    case SabreTools.RedumpLib.Data.MediaType.DVD:
+                        this[FlagStrings.Skeleton] = true;
+                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);

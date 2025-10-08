@@ -34,6 +34,7 @@
 - Use ZipWriterOptions instead of generic
 - Allow skeleton creation for all media types
 - Fix default value tests
+- Only allow skeleton creation for CD and DVD
 
 ### 3.4.2 (2025-09-30)
 
