@@ -132,14 +132,14 @@ namespace MPF.Processors
                 switch (logCompression)
                 {
                     case LogCompression.DeflateMaximum:
-                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 9));
+                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate64, 9));
                         break;
                     case LogCompression.Zstd19:
                         zf.SaveTo(archiveName, new WriterOptions(CompressionType.ZStandard, 19));
                         break;
                     case LogCompression.DeflateDefault:
                     default:
-                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate, 5));
+                        zf.SaveTo(archiveName, new WriterOptions(CompressionType.Deflate64, 5));
                         break;
                 }
 
