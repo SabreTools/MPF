@@ -27,6 +27,7 @@
 - Finalize wire-through and clean up
 - Minor cleanup on interactive modes
 - Add more useful credentials inputs for Check
+- More gracefully handle "missing" media types
 
 ### 3.4.2 (2025-09-30)
 

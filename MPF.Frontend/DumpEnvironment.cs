@@ -356,6 +356,9 @@ namespace MPF.Frontend
             // If we're on an unsupported type, update the status accordingly
             return mediaType switch
             {
+                // Null means it will be handled by the program
+                null => ResultEventArgs.Success("Ready to dump"),
+
                 // Fully supported types
                 MediaType.BluRay
                     or MediaType.CDROM
@@ -377,7 +380,7 @@ namespace MPF.Frontend
                 MediaType.UMD => ResultEventArgs.Failure($"{mediaType.LongName()} supported for submission info parsing"),
 
                 // Specifically unknown type
-                MediaType.NONE => ResultEventArgs.Failure($"Please select a valid media type"),
+                MediaType.NONE => ResultEventArgs.Failure("Please select a valid media type"),
 
                 // Undumpable but recognized types
                 _ => ResultEventArgs.Failure($"{mediaType.LongName()} media are not supported for dumping"),
