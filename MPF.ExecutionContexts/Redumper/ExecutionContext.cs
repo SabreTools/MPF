@@ -313,23 +313,8 @@ namespace MPF.ExecutionContexts.Redumper
             }
             if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
             {
-                // Enable skeleton for CD dumps only by default
-                switch (MediaType)
-                {
-                    case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                        switch (RedumpSystem)
-                        {
-                            case SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD:
-                                break;
-                            default:
-                                this[FlagStrings.Skeleton] = true;
-                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                this[FlagStrings.Skeleton] = true;
+                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
