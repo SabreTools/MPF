@@ -56,11 +56,14 @@ namespace MPF.Check.Features
         private const string _noRetrieveName = "no-retrieve";
         internal readonly FlagInput NoRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump");
 
+        private const string _passwordName = "password";
+        internal readonly StringInput PasswordInput = new(_passwordName, ["-P", "--password"], "Redump password (incompatible with --no-retrieve)");
+
         private const string _pathName = "path";
         internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
 
         private const string _pullAllName = "pull-all";
-        internal readonly FlagInput PullAllInput = new(_pullAllName, "--pull-all", "Pull all information from Redump (requires --credentials)");
+        internal readonly FlagInput PullAllInput = new(_pullAllName, "--pull-all", "Pull all information from Redump (requires --username and --password)");
 
         private const string _scanName = "scan";
         internal readonly FlagInput ScanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)");
@@ -70,6 +73,9 @@ namespace MPF.Check.Features
 
         private const string _useName = "use";
         internal readonly StringInput UseInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
+
+        private const string _usernameName = "username";
+        internal readonly StringInput UsernameInput = new(_usernameName, ["-U", "--username"], "Redump username (incompatible with --no-retrieve)");
 
         private const string _zipName = "zip";
         internal readonly FlagInput ZipInput = new(_zipName, ["-z", "--zip"], "Enable log file compression");
@@ -188,6 +194,14 @@ namespace MPF.Check.Features
                     Options.RedumpPassword = args[index + 2];
                     index += 2;
                 }
+
+                // Redump username
+                else if (UsernameInput.ProcessInput(args, ref index))
+                    Options.RedumpUsername = UsernameInput.Value;
+
+                // Redump password
+                else if (PasswordInput.ProcessInput(args, ref index))
+                    Options.RedumpPassword = PasswordInput.Value;
 
                 // Pull all information (requires Redump login)
                 else if (PullAllInput.ProcessInput(args, ref index))

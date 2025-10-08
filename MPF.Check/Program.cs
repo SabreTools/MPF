@@ -118,7 +118,8 @@ namespace MPF.Check
             commandSet.Add(mainFeature.NoPlaceholdersInput);
             commandSet.Add(mainFeature.CreateIrdInput);
             commandSet.Add(mainFeature.NoRetrieveInput);
-            // TODO: Figure out how to work with the credentials input
+            commandSet.Add(mainFeature.UsernameInput);
+            commandSet.Add(mainFeature.PasswordInput);
             commandSet.Add(mainFeature.PullAllInput);
             commandSet.Add(mainFeature.PathInput);
             commandSet.Add(mainFeature.ScanInput);

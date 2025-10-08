@@ -26,6 +26,7 @@
 - Fix minor issues with options loading
 - Finalize wire-through and clean up
 - Minor cleanup on interactive modes
+- Add more useful credentials inputs for Check
 
 ### 3.4.2 (2025-09-30)
 
