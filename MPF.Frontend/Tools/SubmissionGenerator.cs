@@ -167,9 +167,9 @@ namespace MPF.Frontend.Tools
 
             // Login to Redump, if possible
             var wc = new RedumpClient();
-            if (options.RedumpUsername != null && options.RedumpPassword != null)
+            if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
             {
-                bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+                bool? loggedIn = await wc.Login(options.RedumpUsername!, options.RedumpPassword!);
                 if (loggedIn == null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
