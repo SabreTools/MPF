@@ -36,6 +36,7 @@
 - Fix default value tests
 - Only allow skeleton creation for CD and DVD
 - Add preemptive new file support
+- Add preemptive helper for Zstd handling
 
 ### 3.4.2 (2025-09-30)
 

@@ -8,6 +8,8 @@ using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives.Zip;
+using SharpCompress.Compressors;
+using SharpCompress.Compressors.ZStandard;
 #endif
 
 namespace MPF.Processors
@@ -643,6 +645,43 @@ namespace MPF.Processors
         #endregion
 
         #region Private Extra Methods
+
+        /// <summary>
+        /// Attempt to compress a file to Zstandard, removing the original on success
+        /// </summary>
+        /// <param name="file">Full path to an existing file</param>
+        /// <returns>True if the compression was a success, false otherwise</returns>
+        private static bool CompressZstandard(string file)
+        {
+#if NET20 || NET35 || NET40 || NET452
+            // Compression is not available for this framework version
+            return false;
+#else
+            // Ensure the file exists
+            if (!File.Exists(file))
+                return false;
+
+            // Create and write the output
+            try
+            {
+                using var ifs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var ofs = File.Open($"{file}.zst", FileMode.CreateNew, FileAccess.Write, FileShare.None);
+
+                using var zst = new ZStandardStream(ifs, CompressionMode.Compress, compressionLevel: 19);
+                zst.CopyTo(ofs);
+                ofs.Flush();
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Try to delete the file
+            try { File.Delete(file); } catch { }
+
+            return true;
+#endif
+        }
 
         /// <summary>
         /// Get if the datfile exists in the log
