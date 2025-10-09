@@ -42,6 +42,7 @@
 - Pre-compress state files with Zstd
 - Use block-based reading instead of CopyTo
 - Enable skeleton output for all CLI runs
+- Fix test broken by last commit
 
 ### 3.4.2 (2025-09-30)
 

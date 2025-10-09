@@ -41,7 +41,7 @@ namespace MPF.ExecutionContexts.Test
         };
 
         [Theory]
-        [InlineData(null, null, null, "filename.bin", null, "disc --verbose --retries=1000 --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(null, null, null, "filename.bin", null, "disc --verbose --skeleton --retries=1000 --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
         [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
