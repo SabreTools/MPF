@@ -103,7 +103,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(18, actual.Count);
+            Assert.Equal(19, actual.Count);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
-            Assert.Equal(16, actual.Count);
+            Assert.Equal(17, actual.Count);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
-            Assert.Equal(11, actual.Count);
+            Assert.Equal(12, actual.Count);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
-            Assert.Equal(11, actual.Count);
+            Assert.Equal(12, actual.Count);
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace MPF.Processors.Test
             string outputFilename = string.Empty;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
             var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(8, actual.Count);
+            Assert.Equal(7, actual.Count);
         }
 
         [Fact]

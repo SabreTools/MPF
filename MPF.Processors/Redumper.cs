@@ -99,9 +99,11 @@ namespace MPF.Processors
                     VolumeLabels = volLabels;
             }
 
-            // Pre-compress the skeleton using Zstandard
+            // Pre-compress the skeleton and state using Zstandard
             if (File.Exists($"{basePath}.skeleton"))
                 _ = CompressZstandard($"{basePath}.skeleton");
+            if (File.Exists($"{basePath}.state"))
+                _ = CompressZstandard($"{basePath}.state");
 
             // Extract info based generically on MediaType
             switch (mediaType)
@@ -477,10 +479,13 @@ namespace MPF.Processors
                             "pma"),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
                             | OutputFileFlags.Deleteable),
-                        new($"{outputFilename}.state", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        // TODO: Required if Zstandard version doesn't exist
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
+                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "state_zst"),
                         new($"{outputFilename}.subcode", OutputFileFlags.Required
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -595,10 +600,13 @@ namespace MPF.Processors
                         new($"{outputFilename}.ssv2", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv2"),
-                        new($"{outputFilename}.state", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        // TODO: Required if Zstandard version doesn't exist
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
+                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "state_zst"),
                     ];
 
                 case MediaType.HDDVD: // TODO: Confirm that this information outputs
@@ -636,10 +644,13 @@ namespace MPF.Processors
                         new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton_zst"),
-                        new($"{outputFilename}.state", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        // TODO: Required if Zstandard version doesn't exist
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
+                        new($"{outputFilename}.state.zst", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "state_zst"),
                     ];
             }
 
