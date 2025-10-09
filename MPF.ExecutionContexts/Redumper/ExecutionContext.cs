@@ -321,6 +321,13 @@ namespace MPF.ExecutionContexts.Redumper
                         this[FlagStrings.Skeleton] = true;
                         (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
                         break;
+
+                    // If the type is unknown, also enable
+                    case null:
+                        this[FlagStrings.Skeleton] = true;
+                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                        break;
+
                     default:
                         break;
                 }

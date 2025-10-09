@@ -41,6 +41,7 @@
 - Fix broken file count tests
 - Pre-compress state files with Zstd
 - Use block-based reading instead of CopyTo
+- Enable skeleton output for all CLI runs
 
 ### 3.4.2 (2025-09-30)
 
