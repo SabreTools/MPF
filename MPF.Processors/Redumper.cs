@@ -676,15 +676,26 @@ namespace MPF.Processors
             if (!File.Exists(file))
                 return false;
 
-            // Create and write the output
             try
             {
+                // Prepare the input and output streams
                 using var ifs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 using var ofs = File.Open($"{file}.zst", FileMode.Create, FileAccess.Write, FileShare.None);
-
                 using var zst = new ZStandardStream(ofs, CompressionMode.Compress, compressionLevel: 19, leaveOpen: true);
-                ifs.CopyTo(zst);
-                zst.Flush();
+
+                // Compress and write in blocks
+                int read = 0;
+                do
+                {
+                    byte[] buffer = new byte[3 * 1024 * 1024];
+
+                    read = ifs.Read(buffer, 0, buffer.Length);
+                    if (read == 0)
+                        break;
+
+                    zst.Write(buffer, 0, read);
+                    zst.Flush();
+                } while (read > 0);
             }
             catch
             {

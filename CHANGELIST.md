@@ -40,6 +40,7 @@
 - Pre-compress skeleton files with Zstd
 - Fix broken file count tests
 - Pre-compress state files with Zstd
+- Use block-based reading instead of CopyTo
 
 ### 3.4.2 (2025-09-30)
 
