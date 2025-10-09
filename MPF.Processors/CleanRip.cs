@@ -82,7 +82,7 @@ namespace MPF.Processors
                     | OutputFileFlags.Binary
                     | OutputFileFlags.Zippable,
                     "bca"),
-                new($"{outputFilename}.iso", OutputFileFlags.Required),
+                new([$"{outputFilename}.iso", $"{outputFilename}.part0.iso"], OutputFileFlags.Required),
 
                 new($"{outputFilename}-dumpinfo.txt", OutputFileFlags.Required
                     | OutputFileFlags.Artifact
