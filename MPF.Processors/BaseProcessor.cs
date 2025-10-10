@@ -9,7 +9,9 @@ using SabreTools.RedumpLib.Data;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
+using SharpCompress.Compressors;
 using SharpCompress.Compressors.Deflate;
+using SharpCompress.Compressors.ZStandard;
 using SharpCompress.Writers.Zip;
 #endif
 
@@ -562,6 +564,57 @@ namespace MPF.Processors
         #endregion
 
         #region Shared Methods
+
+        /// <summary>
+        /// Attempt to compress a file to Zstandard, removing the original on success
+        /// </summary>
+        /// <param name="file">Full path to an existing file</param>
+        /// <returns>True if the compression was a success, false otherwise</returns>
+        internal static bool CompressZstandard(string file)
+        {
+#if NET20 || NET35 || NET40 || NET452
+            // Compression is not available for this framework version
+            return false;
+#else
+            // Ensure the file exists
+            if (!File.Exists(file))
+                return false;
+
+            try
+            {
+                // Prepare the input and output streams
+                using var ifs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var ofs = File.Open($"{file}.zst", FileMode.Create, FileAccess.Write, FileShare.None);
+                using var zst = new ZStandardStream(ofs, CompressionMode.Compress, compressionLevel: 19, leaveOpen: true);
+
+                // Compress and write in blocks
+                int read = 0;
+                do
+                {
+                    byte[] buffer = new byte[3 * 1024 * 1024];
+
+                    read = ifs.Read(buffer, 0, buffer.Length);
+                    if (read == 0)
+                        break;
+
+                    zst.Write(buffer, 0, read);
+                    zst.Flush();
+                } while (read > 0);
+            }
+            catch
+            {
+                // Try to delete the incomplete
+                try { File.Delete($"{file}.zst"); } catch { }
+
+                return false;
+            }
+
+            // Try to delete the file
+            try { File.Delete(file); } catch { }
+
+            return true;
+#endif
+        }
 
         /// <summary>
         /// Generate a CMP XML datfile string based on a single input file

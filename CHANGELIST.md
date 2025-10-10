@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Add BCA to list of files to select in Check UI
+- Move Zstd compression helper to base processor
 
 ### 3.5.0 (2025-10-10)
 
