@@ -34,6 +34,26 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
+            // Extract log from archive, if it is zipped
+#if NET462_OR_GREATER || NETCOREAPP
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                try
+                {
+                    ZipArchive? logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    var logFile = archive.Entries.FirstOrDefault(e => e.Key == $"{Path.GetFileNameWithoutExtension(outputFilename)}.log");
+                    if (logFile != null && !logFile.IsDirectory)
+                    {
+                        string logPath = Path.Combine(outputDirectory, filename);
+                        using var entryStream = logFile.OpenEntryStream();
+                        using var fileStream = File.Create(logPath);
+                        entryStream.CopyTo(fileStream);
+                    }
+                }
+                catch { }
+            }
+#endif
+
             // Use the log first, if it exists
             if (GetDiscType($"{basePath}.log", out MediaType? mediaType))
                 return mediaType;

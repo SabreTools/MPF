@@ -61,7 +61,7 @@ namespace MPF.Processors
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, MediaType? mediaType, string basePath, bool redumpCompat);
 
-        // <summary>
+        /// <summary>
         /// Generate a list of all output files generated
         /// </summary>
         /// <param name="mediaType">Media type for controlling expected file sets</param>

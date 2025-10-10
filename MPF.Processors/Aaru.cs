@@ -38,6 +38,26 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
+            // Extract sidecar from archive, if it is zipped
+#if NET462_OR_GREATER || NETCOREAPP
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                try
+                {
+                    ZipArchive? logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    var sidecarFile = archive.Entries.FirstOrDefault(e => e.Key == $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml");
+                    if (sidecarFile != null && !sidecarFile.IsDirectory)
+                    {
+                        string sidecarPath = Path.Combine(outputDirectory, filename);
+                        using var entryStream = sidecarFile.OpenEntryStream();
+                        using var fileStream = File.Create(sidecarPath);
+                        entryStream.CopyTo(fileStream);
+                    }
+                }
+                catch { }
+            }
+#endif
+
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar($"{basePath}.cicm.xml");
 
