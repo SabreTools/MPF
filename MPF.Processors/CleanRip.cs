@@ -93,6 +93,64 @@ namespace MPF.Processors
 
         #endregion
 
+        #region Private Extra Methods
+
+        /// <summary>
+        /// Merge all file parts based on a base path
+        /// </summary>
+        /// <param name="basePath">Base path to use for building</param>
+        /// <returns>Filename of the merged parts on success, null otherwise</returns>
+        /// <remarks>This assumes that all file parts are named like $"{basePath}.part{i}.iso"</remarks>
+        internal static string? MergeFileParts(string basePath)
+        {
+            // If the first part does not exist
+            if (!File.Exists($"{basePath}.part0.iso"))
+                return null;
+
+            try
+            {
+                // Try to build the new output file
+                string combined = $"{basePath}.iso";
+                using var ofs = File.Open(combined, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                int i = 0;
+                do
+                {
+                    // Get the next file part
+                    string part = $"{basePath}.part{i++}.iso";
+                    if (!File.Exists(part))
+                        break;
+
+                    // Copy the file part to the output
+                    using var ifs = File.Open(part, FileMode.Open, FileAccess.Read, FileShare.None);
+
+                    // Write in blocks
+                    int read = 0;
+                    do
+                    {
+                        byte[] buffer = new byte[3 * 1024 * 1024];
+
+                        read = ifs.Read(buffer, 0, buffer.Length);
+                        if (read == 0)
+                            break;
+
+                        ofs.Write(buffer, 0, read);
+                        ofs.Flush();
+                    } while (read > 0);
+
+                } while (true);
+
+                return combined;
+            }
+            catch
+            {
+                // We don't care what the error was right now
+                return null;
+            }
+        }
+
+        #endregion
+
         #region Information Extraction Methods
 
         /// <summary>
