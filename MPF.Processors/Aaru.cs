@@ -46,7 +46,7 @@ namespace MPF.Processors
 #if NET462_OR_GREATER || NETCOREAPP
             if (File.Exists($"{basePath}_logs.zip"))
             {
-                ZipArchive? logArchive;
+                ZipArchive? logArchive = null;
                 try
                 {
                     logArchive = ZipArchive.Open($"{basePath}_logs.zip");
