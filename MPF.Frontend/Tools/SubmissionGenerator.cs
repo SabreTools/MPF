@@ -64,6 +64,11 @@ namespace MPF.Frontend.Tools
                 return null;
             }
 
+            // Extract files from existing log archive, if it exists
+#if NET462_OR_GREATER || NETCOREAPP
+            processor.ExtractFromLog(mediaType, outputDirectory, outputFilename);
+#endif
+
             // Assemble a base path
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);
             if (!string.IsNullOrEmpty(outputDirectory))
