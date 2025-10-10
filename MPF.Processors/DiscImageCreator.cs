@@ -89,10 +89,11 @@ namespace MPF.Processors
                 try
                 {
                     ZipArchive? logArchive = ZipArchive.Open($"{basePath}_logs.zip");
-                    var disctxtFile = archive.Entries.FirstOrDefault(e => e.Key == $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt");
+                    string disctxtFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
+                    var disctxtFile = logArchive.Entries.FirstOrDefault(e => e.Key == disctxtFilename);
                     if (disctxtFile != null && !disctxtFile.IsDirectory)
                     {
-                        string disctxtPath = Path.Combine(outputDirectory, filename);
+                        string disctxtPath = Path.Combine(outputDirectory, disctxtFilename);
                         using var entryStream = disctxtFile.OpenEntryStream();
                         using var fileStream = File.Create(disctxtPath);
                         entryStream.CopyTo(fileStream);

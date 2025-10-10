@@ -49,10 +49,11 @@ namespace MPF.Processors
                 try
                 {
                     ZipArchive? logArchive = ZipArchive.Open($"{basePath}_logs.zip");
-                    var sidecarFile = archive.Entries.FirstOrDefault(e => e.Key == $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml");
+                    string sidecarFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml";
+                    var sidecarFile = logArchive.Entries.FirstOrDefault(e => e.Key == sidecarFilename);
                     if (sidecarFile != null && !sidecarFile.IsDirectory)
                     {
-                        string sidecarPath = Path.Combine(outputDirectory, filename);
+                        string sidecarPath = Path.Combine(outputDirectory, sidecarFilename);
                         using var entryStream = sidecarFile.OpenEntryStream();
                         using var fileStream = File.Create(sidecarPath);
                         entryStream.CopyTo(fileStream);
