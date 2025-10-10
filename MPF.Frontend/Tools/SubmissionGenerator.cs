@@ -59,14 +59,13 @@ namespace MPF.Frontend.Tools
             List<string> missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
             if (missingFiles.Count > 0)
             {
-                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}"));
-                resultProgress?.Report(ResultEventArgs.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
-                return null;
+                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}\nThis may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
+                return null;    
             }
 
             // Extract files from existing log archive, if it exists
 #if NET462_OR_GREATER || NETCOREAPP
-            processor.ExtractFromLog(mediaType, outputDirectory, outputFilename);
+            processor.ExtractFromLogs(mediaType, outputDirectory, outputFilename);
 #endif
 
             // Assemble a base path

@@ -299,7 +299,7 @@ namespace MPF.Processors
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <remarks>Assumes filename has an extension</remarks>
 #if NET462_OR_GREATER || NETCOREAPP
-        public void ExtractFromLog(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        public void ExtractFromLogs(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Assemble a base path
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);

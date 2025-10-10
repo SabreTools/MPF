@@ -86,9 +86,10 @@ namespace MPF.Processors
 #if NET462_OR_GREATER || NETCOREAPP
             if (File.Exists($"{basePath}_logs.zip"))
             {
+                ZipArchive? logArchive;
                 try
                 {
-                    ZipArchive? logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
                     string disctxtFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
                     var disctxtFile = logArchive.Entries.FirstOrDefault(e => e.Key == disctxtFilename);
                     if (disctxtFile != null && !disctxtFile.IsDirectory)
@@ -102,6 +103,7 @@ namespace MPF.Processors
                     }
                 }
                 catch { }
+                logArchive?.Dispose();
             }
 #endif
 
