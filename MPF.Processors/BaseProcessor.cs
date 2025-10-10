@@ -123,12 +123,13 @@ namespace MPF.Processors
 
             // Add the log files to the archive and delete the uncompressed file after
             ZipArchive? zf = null;
+            bool disposed = false;
             try
             {
                 zf = ZipArchive.Create();
 
-                _ = AddToArchive(zf, zippableFiles, outputDirectory, true);
-                _ = AddToArchive(zf, generatedFiles, outputDirectory, false);
+                List<string> successful = AddToArchive(zf, zippableFiles, outputDirectory);
+                _ = AddToArchive(zf, generatedFiles, outputDirectory);
 
                 switch (logCompression)
                 {
@@ -144,6 +145,16 @@ namespace MPF.Processors
                         break;
                 }
 
+                // Dispose the archive
+                zf?.Dispose();
+                disposed = true;
+
+                // Delete all successful files
+                foreach (string file in successful)
+                {
+                    try { File.Delete(file); } catch { }
+                }
+
                 status = "Compression complete!";
                 return true;
             }
@@ -154,7 +165,8 @@ namespace MPF.Processors
             }
             finally
             {
-                zf?.Dispose();
+                if (!disposed)
+                    zf?.Dispose();
             }
 #endif
         }
@@ -380,22 +392,22 @@ namespace MPF.Processors
         /// <param name="archive">Archive to add the file to</param>
         /// <param name="files">Full path to a set of existing files</param>
         /// <param name="outputDirectory">Directory that the existing files live in</param>
-        /// <param name="delete">Indicates if the files should be deleted after adding</param>
-        /// <returns>True if all files were added successfully, false otherwise</returns>
-        private static bool AddToArchive(ZipArchive archive, List<string> files, string? outputDirectory, bool delete)
+        /// <returns>List of all files that were successfully added</returns>
+        private static List<string> AddToArchive(ZipArchive archive, List<string> files, string? outputDirectory)
         {
             // An empty list means success
             if (files.Count == 0)
-                return true;
+                return [];
 
             // Loop through and add all files
-            bool allAdded = true;
+            List<string> added = [];
             foreach (string file in files)
             {
-                allAdded &= AddToArchive(archive, file, outputDirectory, delete);
+                if (AddToArchive(archive, file, outputDirectory))
+                    added.Add(file);
             }
 
-            return allAdded;
+            return added;
         }
 
         /// <summary>
@@ -404,9 +416,8 @@ namespace MPF.Processors
         /// <param name="archive">Archive to add the file to</param>
         /// <param name="file">Full path to an existing file</param>
         /// <param name="outputDirectory">Directory that the existing file lives in</param>
-        /// <param name="delete">Indicates if the file should be deleted after adding</param>
         /// <returns>True if the file was added successfully, false otherwise</returns>
-        private static bool AddToArchive(ZipArchive archive, string file, string? outputDirectory, bool delete)
+        private static bool AddToArchive(ZipArchive archive, string file, string? outputDirectory)
         {
             // Check if the file exists
             if (!File.Exists(file))
@@ -428,12 +439,6 @@ namespace MPF.Processors
             catch
             {
                 return false;
-            }
-
-            // Try to delete the file if requested
-            if (delete)
-            {
-                try { File.Delete(file); } catch { }
             }
 
             return true;

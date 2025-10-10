@@ -44,6 +44,7 @@
 - Enable skeleton output for all CLI runs
 - Fix test broken by last commit
 - Support detecting split Wii for CleanRip
+- Try to handle Windows-specific compression issue
 
 ### 3.4.2 (2025-09-30)
 
