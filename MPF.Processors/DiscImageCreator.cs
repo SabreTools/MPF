@@ -93,7 +93,9 @@ namespace MPF.Processors
                     var disctxtFile = logArchive.Entries.FirstOrDefault(e => e.Key == disctxtFilename);
                     if (disctxtFile != null && !disctxtFile.IsDirectory)
                     {
-                        string disctxtPath = Path.Combine(outputDirectory, disctxtFilename);
+                        string disctxtPath = disctxtFilename;
+                        if (!string.IsNullOrEmpty(outputDirectory))
+                            disctxtPath = Path.Combine(outputDirectory, disctxtFilename);
                         using var entryStream = disctxtFile.OpenEntryStream();
                         using var fileStream = File.Create(disctxtPath);
                         entryStream.CopyTo(fileStream);

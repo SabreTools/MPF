@@ -46,7 +46,9 @@ namespace MPF.Processors
                     var logFile = logArchive.Entries.FirstOrDefault(e => e.Key == logFilename);
                     if (logFile != null && !logFile.IsDirectory)
                     {
-                        string logPath = Path.Combine(outputDirectory, logFilename);
+                        string logPath = logFilename;
+                        if (!string.IsNullOrEmpty(outputDirectory))
+                            logPath = Path.Combine(outputDirectory, logFilename);
                         using var entryStream = logFile.OpenEntryStream();
                         using var fileStream = File.Create(logPath);
                         entryStream.CopyTo(fileStream);

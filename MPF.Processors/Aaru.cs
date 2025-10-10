@@ -53,7 +53,9 @@ namespace MPF.Processors
                     var sidecarFile = logArchive.Entries.FirstOrDefault(e => e.Key == sidecarFilename);
                     if (sidecarFile != null && !sidecarFile.IsDirectory)
                     {
-                        string sidecarPath = Path.Combine(outputDirectory, sidecarFilename);
+                        string sidecarPath = sidecarFilename;
+                        if (!string.IsNullOrEmpty(outputDirectory))
+                            sidecarPath = Path.Combine(outputDirectory, sidecarFilename);
                         using var entryStream = sidecarFile.OpenEntryStream();
                         using var fileStream = File.Create(sidecarPath);
                         entryStream.CopyTo(fileStream);
