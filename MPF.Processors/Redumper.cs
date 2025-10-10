@@ -7,6 +7,7 @@ using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
+using System.Linq;
 using SharpCompress.Archives.Zip;
 #endif
 

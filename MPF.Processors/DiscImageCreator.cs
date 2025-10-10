@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+#if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives.Zip;
+#endif
 
 /*
 If there are no external programs, such as error checking, etc., DIC outputs

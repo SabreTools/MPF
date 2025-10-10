@@ -10,6 +10,10 @@ using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Schemas;
+#if NET462_OR_GREATER || NETCOREAPP
+using System.Linq;
+using SharpCompress.Archives.Zip;
+#endif
 
 #pragma warning disable CS0618 // Ignore "Type or member is obsolete"
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
