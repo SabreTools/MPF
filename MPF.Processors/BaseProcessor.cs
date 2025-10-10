@@ -334,7 +334,7 @@ namespace MPF.Processors
 
             // Extract all found output files from the archive
             foreach (var outputFile in outputFiles)
-                outputFile.Extract(logArchive, outputDirectory);
+                outputFile.Extract(logArchive, outputDirectory ?? string.Empty);
 
             // Close the log archive, if it exists
             logArchive?.Dispose();
