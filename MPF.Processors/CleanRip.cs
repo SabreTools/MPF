@@ -38,6 +38,9 @@ namespace MPF.Processors
             // TODO: Determine if there's a CleanRip version anywhere
             info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
+            // Try to merge parts together, if needed
+            _ = MergeFileParts(basePath);
+
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile($"{basePath}.iso", $"{basePath}-dumpinfo.txt");
             info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
@@ -103,6 +106,10 @@ namespace MPF.Processors
         /// <remarks>This assumes that all file parts are named like $"{basePath}.part{i}.iso"</remarks>
         internal static string? MergeFileParts(string basePath)
         {
+            // If the expected output already exists
+            if (File.Exists($"{basePath}.iso"))
+                return $"{basePath}.iso";
+
             // If the first part does not exist
             if (!File.Exists($"{basePath}.part0.iso"))
                 return null;

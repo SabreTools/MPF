@@ -3,6 +3,7 @@
 - Add BCA to list of files to select in Check UI
 - Move Zstd compression helper to base processor
 - Add file merge method in CleanRip
+- Implement file merging in CleanRip
 
 ### 3.5.0 (2025-10-10)
 
