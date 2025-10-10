@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add BCA to list of files to select in Check UI
+
 ### 3.5.0 (2025-10-10)
 
 - Add failure if media type could not be determined
