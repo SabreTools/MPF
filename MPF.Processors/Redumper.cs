@@ -499,9 +499,9 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "pma"),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
-                        // TODO: Required if Zstandard version doesn't exist
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
+                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -620,9 +620,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.ssv2", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv2"),
-                        // TODO: Required if Zstandard version doesn't exist
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
+                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -664,9 +664,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton_zst"),
-                        // TODO: Required if Zstandard version doesn't exist
-                        new($"{outputFilename}.state", OutputFileFlags.Binary
-                            | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
+                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
+                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
