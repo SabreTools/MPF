@@ -7,7 +7,7 @@ using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 #endif
 
-namespace MPF.Processors
+namespace MPF.Processors.OutputFiles
 {
     /// <summary>
     /// Represents a single output file with a Regex-matched name

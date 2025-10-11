@@ -5,7 +5,7 @@ using System.IO;
 using SharpCompress.Archives.Zip;
 #endif
 
-namespace MPF.Processors
+namespace MPF.Processors.OutputFiles
 {
     /// <summary>
     /// Represents a single output file with custom detection rules

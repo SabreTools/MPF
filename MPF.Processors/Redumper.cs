@@ -6,6 +6,7 @@ using System.Linq;
 #endif
 using System.Text;
 using System.Text.RegularExpressions;
+using MPF.Processors.OutputFiles;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;

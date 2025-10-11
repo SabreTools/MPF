@@ -6,6 +6,7 @@
 - Implement file merging in CleanRip
 - Support reparsing of MPF-processed outputs
 - Use WriteToFile extension for zip entries
+- Move output file implementations to separate namespace
 
 ### 3.5.0 (2025-10-10)
 

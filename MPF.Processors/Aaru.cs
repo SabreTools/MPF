@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.CueSheets;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;

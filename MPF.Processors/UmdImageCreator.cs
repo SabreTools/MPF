@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;

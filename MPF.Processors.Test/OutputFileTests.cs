@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using MPF.Processors.OutputFiles;
 using Xunit;
 
 namespace MPF.Processors.Test
