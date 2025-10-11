@@ -57,7 +57,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return null;
             }
         }
@@ -93,7 +93,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return null;
             }
 
@@ -149,7 +149,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -205,7 +205,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is, assume SYSTEM.CNF doesn't exist
+                // Absorb the exception, assume SYSTEM.CNF doesn't exist
             }
 
             // If the SYSTEM.CNF value can't be found, try PSX.EXE
@@ -274,7 +274,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return null;
             }
         }
@@ -306,7 +306,7 @@ namespace MPF.Frontend.Tools
                 }
                 catch
                 {
-                    // We don't care what the error was
+                    // Absorb the exception
                     return null;
                 }
             }
@@ -327,7 +327,7 @@ namespace MPF.Frontend.Tools
                 }
                 catch
                 {
-                    // We don't care what the error was
+                    // Absorb the exception
                     return null;
                 }
             }
@@ -364,7 +364,7 @@ namespace MPF.Frontend.Tools
                 }
                 catch
                 {
-                    // We don't care what the error was
+                    // Absorb the exception
                     return null;
                 }
             }
@@ -385,7 +385,7 @@ namespace MPF.Frontend.Tools
                 }
                 catch
                 {
-                    // We don't care what the error was
+                    // Absorb the exception
                     return null;
                 }
             }
@@ -430,7 +430,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -468,7 +468,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -506,7 +506,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -559,7 +559,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -582,7 +582,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -605,7 +605,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -657,7 +657,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -710,7 +710,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -747,7 +747,7 @@ namespace MPF.Frontend.Tools
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return null;
             }
         }

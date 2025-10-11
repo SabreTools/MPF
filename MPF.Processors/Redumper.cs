@@ -773,7 +773,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -811,7 +811,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -855,7 +855,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -878,7 +878,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -919,7 +919,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -963,7 +963,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 discProfile = null;
                 return false;
             }
@@ -1018,7 +1018,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 discType = null;
                 return false;
             }
@@ -1280,7 +1280,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 redumpErrors = -1; c2Errors = -1;
                 return false;
             }
@@ -1356,7 +1356,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1401,12 +1401,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect it then
+                // Required lines were not found
                 return false;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -1483,7 +1483,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -1537,7 +1537,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1577,7 +1577,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1617,7 +1617,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1700,7 +1700,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -1738,7 +1738,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1778,7 +1778,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1816,7 +1816,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1854,7 +1854,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1892,7 +1892,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1921,12 +1921,12 @@ namespace MPF.Processors
                         return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
                 }
 
-                // We couldn't detect it then
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1965,12 +1965,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect it then
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2003,7 +2003,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -2089,7 +2089,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2163,7 +2163,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return -1;
             }
         }
@@ -2223,7 +2223,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 secuROMScheme = SecuROMScheme.None;
                 return null;
             }
@@ -2295,7 +2295,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2324,12 +2324,12 @@ namespace MPF.Processors
                         return line.Substring("Universal Hash (SHA-1): ".Length).Trim();
                 }
 
-                // We couldn't detect it then
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2374,7 +2374,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2407,12 +2407,12 @@ namespace MPF.Processors
                         return line.Substring("arguments: ".Length).Trim();
                 }
 
-                // We couldn't detect any arguments
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2467,7 +2467,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 volLabels = [];
                 return false;
             }
@@ -2497,12 +2497,12 @@ namespace MPF.Processors
                         return line.Substring("disc write offset: ".Length).Trim();
                 }
 
-                // We couldn't detect it then
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }

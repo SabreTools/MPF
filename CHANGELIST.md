@@ -8,6 +8,7 @@
 - Use WriteToFile extension for zip entries
 - Move output file implementations to separate namespace
 - Conditionally require state
+- Replace "We" comments
 
 ### 3.5.0 (2025-10-10)
 

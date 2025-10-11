@@ -1526,7 +1526,7 @@ namespace MPF.Frontend.ViewModels
                 return null;
             }
 
-            // We're going to assume for floppies, HDDs, and removable drives
+            // Floppies, HDDs, and removable drives are assumed
             if (drive.InternalDriveType != InternalDriveType.Optical)
                 return RedumpSystem.IBMPCcompatible;
 

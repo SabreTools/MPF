@@ -328,7 +328,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return;
             }
             finally
@@ -730,7 +730,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error was right now
+                // Absorb the exception right now
                 return null;
             }
         }
@@ -784,7 +784,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }

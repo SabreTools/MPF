@@ -241,12 +241,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't find a successful dump
+                // Required lines were not found
                 return false;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -280,12 +280,12 @@ namespace MPF.Processors
                         return line.Substring("Xbox Backup Creator ".Length).Trim();
                 }
 
-                // We couldn't detect the version
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -322,12 +322,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect the drive model
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -366,12 +366,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect the Layerbreak
+                // Required lines were not found
                 return false;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -441,12 +441,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect the read error count
+                // Required lines were not found
                 return false;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -486,12 +486,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect the Layerbreak
+                // Required lines were not found
                 return null;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -620,12 +620,12 @@ namespace MPF.Processors
                     }
                 }
 
-                // We couldn't detect the replay table
+                // Required lines were not found
                 return false;
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }

@@ -771,7 +771,7 @@ namespace MPF.Frontend
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
 
@@ -827,7 +827,7 @@ namespace MPF.Frontend
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
 

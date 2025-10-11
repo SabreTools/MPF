@@ -36,7 +36,7 @@ namespace MPF.Frontend.Tools
             }
             catch (Exception)
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -91,7 +91,7 @@ namespace MPF.Frontend.Tools
             }
             catch (Exception)
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }

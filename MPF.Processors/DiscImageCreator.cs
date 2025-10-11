@@ -351,7 +351,7 @@ namespace MPF.Processors
 
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS, out _))
                         {
-                            // We no longer care about SS Version from DIC
+                            // SS Version from DIC is ignored now
                             //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
@@ -363,7 +363,7 @@ namespace MPF.Processors
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                            // We no longer care about SS Version from DIC
+                            // SS Version from DIC is ignored now
                             //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
@@ -397,7 +397,7 @@ namespace MPF.Processors
 
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS, out _))
                         {
-                            // We no longer care about SS Version from DIC
+                            // SS Version from DIC is ignored now
                             //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
@@ -409,7 +409,7 @@ namespace MPF.Processors
                             info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                            // We no longer care about SS Version from DIC
+                            // SS Version from DIC is ignored now
                             //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
@@ -934,7 +934,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1003,7 +1003,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1078,7 +1078,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 discTypeOrBookType = null;
                 return false;
             }
@@ -1257,7 +1257,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return -1;
             }
         }
@@ -1289,7 +1289,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -1343,7 +1343,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -1401,7 +1401,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1582,7 +1582,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1620,7 +1620,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1716,7 +1716,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -1773,7 +1773,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1829,7 +1829,7 @@ namespace MPF.Processors
                 if (line == null)
                     return null;
 
-                // We assume the first non-LBA0/4 sector listed is the proper one
+                // Assume the first non-LBA0/4 sector listed is the proper one
                 // Fast forward to the PVD
                 while ((line = sr.ReadLine())?.StartsWith("0310") == false) ;
 
@@ -1842,7 +1842,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -1874,7 +1874,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -1925,7 +1925,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 secuROMScheme = SecuROMScheme.None;
                 return null;
             }
@@ -1984,7 +1984,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error is
+                // Absorb the exception
                 return false;
             }
         }
@@ -2052,7 +2052,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2136,7 +2136,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 volLabels = [];
                 return false;
             }
@@ -2204,7 +2204,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -2328,7 +2328,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }

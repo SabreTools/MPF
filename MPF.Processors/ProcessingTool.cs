@@ -61,7 +61,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -117,7 +117,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -136,7 +136,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the error was
+                // Absorb the exception
                 return null;
             }
         }
@@ -297,7 +297,7 @@ namespace MPF.Processors
             if (di?.Units == null || di.Units.Length < 1)
                 return null;
 
-            // We assume the identifier is consistent across all units
+            // Assume the identifier is consistent across all units
             return di.Units[0]?.Body?.DiscTypeIdentifier;
         }
 
@@ -584,7 +584,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We are not concerned with the error
+                // Absorb the exception
                 return false;
             }
 
@@ -705,7 +705,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We are not concerned with the error
+                // Absorb the exception
                 return false;
             }
 

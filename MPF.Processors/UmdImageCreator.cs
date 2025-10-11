@@ -146,7 +146,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return null;
             }
         }
@@ -210,7 +210,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return false;
             }
         }
@@ -293,7 +293,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 volLabels = [];
                 return false;
             }

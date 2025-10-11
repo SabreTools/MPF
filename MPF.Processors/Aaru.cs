@@ -1174,7 +1174,7 @@ namespace MPF.Processors
             }
             catch
             {
-                // We don't care what the exception is right now
+                // Absorb the exception
                 return long.MaxValue;
             }
         }
@@ -1317,7 +1317,7 @@ namespace MPF.Processors
                     {
                         foreach (ChecksumType checksum in dmi.Checksums)
                         {
-                            // We only care about the CRC32
+                            // Only CRC is collected
                             if (checksum.type == ChecksumTypeType.crc32)
                             {
                                 dmihash = checksum.Value;
@@ -1335,7 +1335,7 @@ namespace MPF.Processors
                     {
                         foreach (ChecksumType checksum in pfi.Checksums)
                         {
-                            // We only care about the CRC32
+                            // Only CRC is collected
                             if (checksum.type == ChecksumTypeType.crc32)
                             {
                                 pfihash = checksum.Value;
@@ -1355,7 +1355,7 @@ namespace MPF.Processors
                         {
                             foreach (ChecksumType checksum in security.Checksums)
                             {
-                                // We only care about the CRC32
+                            // Only CRC is collected
                                 if (checksum.type == ChecksumTypeType.crc32)
                                 {
                                     // TODO: Validate correctness for all 3 fields
