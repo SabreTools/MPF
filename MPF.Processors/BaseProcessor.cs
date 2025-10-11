@@ -61,7 +61,7 @@ namespace MPF.Processors
         /// <param name="redumpCompat">Determines if outputs are processed according to Redump specifications</param>
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, MediaType? mediaType, string basePath, bool redumpCompat);
 
-        // <summary>
+        /// <summary>
         /// Generate a list of all output files generated
         /// </summary>
         /// <param name="mediaType">Media type for controlling expected file sets</param>
@@ -290,6 +290,59 @@ namespace MPF.Processors
 
             return missingFiles;
         }
+
+        /// <summary>
+        /// Extracts found files from a found archive if it exists
+        /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <remarks>Assumes filename has an extension</remarks>
+#if NET462_OR_GREATER || NETCOREAPP
+        public void ExtractFromLogs(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        {
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
+
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
+            if (outputFiles.Count == 0)
+                return;
+
+            // Check for the log file
+            bool logArchiveExists = false;
+            ZipArchive? logArchive = null;
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                logArchiveExists = true;
+                try
+                {
+                    // Try to open the archive
+                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                }
+                catch
+                {
+                    logArchiveExists = false;
+                }
+            }
+
+            // If no archive exists, do no work
+            if (!logArchiveExists)
+                return;
+
+            // Extract all found output files from the archive
+            foreach (var outputFile in outputFiles)
+            {
+                outputFile.Extract(logArchive, outputDirectory ?? string.Empty);
+            }
+
+            // Close the log archive, if it exists
+            logArchive?.Dispose();
+        }
+#endif
+
 
         /// <summary>
         /// Ensures that no potential output files have been created

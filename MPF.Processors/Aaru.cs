@@ -10,6 +10,10 @@ using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Schemas;
+#if NET462_OR_GREATER || NETCOREAPP
+using System.Linq;
+using SharpCompress.Archives.Zip;
+#endif
 
 #pragma warning disable CS0618 // Ignore "Type or member is obsolete"
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
@@ -37,6 +41,31 @@ namespace MPF.Processors
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
+
+            // Extract sidecar from archive, if it is zipped
+#if NET462_OR_GREATER || NETCOREAPP
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                ZipArchive? logArchive = null;
+                try
+                {
+                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    string sidecarFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml";
+                    var sidecarFile = logArchive.Entries.FirstOrDefault(e => e.Key == sidecarFilename);
+                    if (sidecarFile != null && !sidecarFile.IsDirectory)
+                    {
+                        string sidecarPath = sidecarFilename;
+                        if (!string.IsNullOrEmpty(outputDirectory))
+                            sidecarPath = Path.Combine(outputDirectory, sidecarFilename);
+                        using var entryStream = sidecarFile.OpenEntryStream();
+                        using var fileStream = File.Create(sidecarPath);
+                        entryStream.CopyTo(fileStream);
+                    }
+                }
+                catch { }
+                logArchive?.Dispose();
+            }
+#endif
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar($"{basePath}.cicm.xml");

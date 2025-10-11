@@ -161,7 +161,7 @@ namespace MPF.Processors.Test
             string outputFilename = string.Empty;
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
             var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(7, actual.Count);
+            Assert.Equal(5, actual.Count);
         }
 
         [Fact]

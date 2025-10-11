@@ -7,6 +7,7 @@ using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
+using System.Linq;
 using SharpCompress.Archives.Zip;
 #endif
 
@@ -33,6 +34,31 @@ namespace MPF.Processors
             string basePath = Path.GetFileNameWithoutExtension(outputFilename);
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
+
+            // Extract log from archive, if it is zipped
+#if NET462_OR_GREATER || NETCOREAPP
+            if (File.Exists($"{basePath}_logs.zip"))
+            {
+                ZipArchive? logArchive = null;
+                try
+                {
+                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    string logFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
+                    var logFile = logArchive.Entries.FirstOrDefault(e => e.Key == logFilename);
+                    if (logFile != null && !logFile.IsDirectory)
+                    {
+                        string logPath = logFilename;
+                        if (!string.IsNullOrEmpty(outputDirectory))
+                            logPath = Path.Combine(outputDirectory, logFilename);
+                        using var entryStream = logFile.OpenEntryStream();
+                        using var fileStream = File.Create(logPath);
+                        entryStream.CopyTo(fileStream);
+                    }
+                }
+                catch { }
+                logArchive?.Dispose();
+            }
+#endif
 
             // Use the log first, if it exists
             if (GetDiscType($"{basePath}.log", out MediaType? mediaType))
@@ -462,8 +488,7 @@ namespace MPF.Processors
                             "cdtext"),
                         new($"{outputFilename}.cue", OutputFileFlags.Required),
                         new($"{outputFilename}.flip", OutputFileFlags.None),
-                        new($"{outputFilename}.fulltoc", OutputFileFlags.Required
-                            | OutputFileFlags.Binary
+                        new($"{outputFilename}.fulltoc", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "fulltoc"),
                         new($"{outputFilename}.log", OutputFileFlags.Required
@@ -475,8 +500,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.pma", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "pma"),
-                        new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Required
-                            | OutputFileFlags.Deleteable),
+                        new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
                         // TODO: Required if Zstandard version doesn't exist
                         new($"{outputFilename}.state", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

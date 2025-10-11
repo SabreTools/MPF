@@ -248,6 +248,45 @@ namespace MPF.Processors
         }
 #endif
 
+#if NET462_OR_GREATER || NETCOREAPP
+        /// <summary>
+        /// Extracts an output file from a zip archive
+        /// </summary>
+        /// <param name="archive">Zip archive to check in</param>
+        /// <param name="outputDirectory">Base directory to extract to</param>
+        /// <returns>True if file extracted, False otherwise</returns>
+        public virtual bool Extract(ZipArchive? archive, string outputDirectory)
+        {
+            // If the archive is invalid
+            if (archive == null)
+                return false;
+
+            foreach (string filename in Filenames)
+            {
+                // Check for invalid filenames
+                if (string.IsNullOrEmpty(filename))
+                    continue;
+
+                try
+                {
+                    // Check all entries on filename alone
+                    var outputFile = archive.Entries.FirstOrDefault(e => e.Key == filename);
+                    if (outputFile == null || outputFile.IsDirectory)
+                        continue;
+
+                    string outputPath = Path.Combine(outputDirectory, filename);
+
+                    using var entryStream = outputFile.OpenEntryStream();
+                    using var fileStream = File.Create(outputPath);
+                    entryStream.CopyTo(fileStream);
+                }
+                catch { }
+            }
+
+            return false;
+        }
+#endif
+
         /// <summary>
         /// Get all matching paths for the file
         /// </summary>

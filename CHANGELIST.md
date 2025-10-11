@@ -4,6 +4,7 @@
 - Move Zstd compression helper to base processor
 - Add file merge method in CleanRip
 - Implement file merging in CleanRip
+- Support reparsing of MPF-processed outputs
 
 ### 3.5.0 (2025-10-10)
 
