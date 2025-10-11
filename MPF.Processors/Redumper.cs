@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET462_OR_GREATER || NETCOREAPP
+using System.Linq;
+#endif
 using System.Text;
 using System.Text.RegularExpressions;
 using SabreTools.Hashing;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
-using System.Linq;
+using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
 #endif
 
 namespace MPF.Processors
@@ -35,25 +39,18 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
-            // Extract log from archive, if it is zipped
 #if NET462_OR_GREATER || NETCOREAPP
-            if (File.Exists($"{basePath}_logs.zip"))
+            // Extract log from archive, if it is zipped
+            string logPath = $"{basePath}.log";
+            if (!File.Exists(logPath) && File.Exists($"{basePath}_logs.zip"))
             {
                 ZipArchive? logArchive = null;
                 try
                 {
                     logArchive = ZipArchive.Open($"{basePath}_logs.zip");
-                    string logFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
-                    var logFile = logArchive.Entries.FirstOrDefault(e => e.Key == logFilename);
-                    if (logFile != null && !logFile.IsDirectory)
-                    {
-                        string logPath = logFilename;
-                        if (!string.IsNullOrEmpty(outputDirectory))
-                            logPath = Path.Combine(outputDirectory, logFilename);
-                        using var entryStream = logFile.OpenEntryStream();
-                        using var fileStream = File.Create(logPath);
-                        entryStream.CopyTo(fileStream);
-                    }
+                    string logName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
+                    var logEntry = logArchive.Entries.FirstOrDefault(e => e.Key == logName && !e.IsDirectory);
+                    logEntry?.WriteToFile(logPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
                 logArchive?.Dispose();

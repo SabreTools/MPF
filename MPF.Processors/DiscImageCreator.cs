@@ -9,7 +9,9 @@ using SabreTools.Data.Models.Logiqx;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
 #endif
 
 /*
@@ -82,25 +84,18 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
-            // Extract _disc.txt from archive, if it is zipped
 #if NET462_OR_GREATER || NETCOREAPP
-            if (File.Exists($"{basePath}_logs.zip"))
+            // Extract _disc.txt from archive, if it is zipped
+            string discPath = $"{basePath}_disc.txt";
+            if (!File.Exists(discPath) && File.Exists($"{basePath}_logs.zip"))
             {
                 ZipArchive? logArchive = null;
                 try
                 {
                     logArchive = ZipArchive.Open($"{basePath}_logs.zip");
-                    string disctxtFilename = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
-                    var disctxtFile = logArchive.Entries.FirstOrDefault(e => e.Key == disctxtFilename);
-                    if (disctxtFile != null && !disctxtFile.IsDirectory)
-                    {
-                        string disctxtPath = disctxtFilename;
-                        if (!string.IsNullOrEmpty(outputDirectory))
-                            disctxtPath = Path.Combine(outputDirectory, disctxtFilename);
-                        using var entryStream = disctxtFile.OpenEntryStream();
-                        using var fileStream = File.Create(disctxtPath);
-                        entryStream.CopyTo(fileStream);
-                    }
+                    string discName = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
+                    var discEntry = logArchive.Entries.FirstOrDefault(e => e.Key == discName && !e.IsDirectory);
+                    discEntry?.WriteToFile(discPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
                 logArchive?.Dispose();

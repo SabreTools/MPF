@@ -301,48 +301,41 @@ namespace MPF.Processors
 #if NET462_OR_GREATER || NETCOREAPP
         public void ExtractFromLogs(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
-            // Assemble a base path
-            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
-            if (!string.IsNullOrEmpty(outputDirectory))
-                basePath = Path.Combine(outputDirectory, basePath);
-
             // Get the list of output files
             var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
             if (outputFiles.Count == 0)
                 return;
 
-            // Check for the log file
-            bool logArchiveExists = false;
-            ZipArchive? logArchive = null;
-            if (File.Exists($"{basePath}_logs.zip"))
-            {
-                logArchiveExists = true;
-                try
-                {
-                    // Try to open the archive
-                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
-                }
-                catch
-                {
-                    logArchiveExists = false;
-                }
-            }
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
 
-            // If no archive exists, do no work
-            if (!logArchiveExists)
+            // Check for the log archive
+            if (!File.Exists($"{basePath}_logs.zip"))
                 return;
 
             // Extract all found output files from the archive
-            foreach (var outputFile in outputFiles)
+            ZipArchive? logArchive = null;
+            try
             {
-                outputFile.Extract(logArchive, outputDirectory ?? string.Empty);
+                logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                foreach (var outputFile in outputFiles)
+                {
+                    outputFile.Extract(logArchive, outputDirectory ?? string.Empty);
+                }
             }
-
-            // Close the log archive, if it exists
-            logArchive?.Dispose();
+            catch
+            {
+                // We don't care what the error is
+                return;
+            }
+            finally
+            {
+                logArchive?.Dispose();
+            }
         }
 #endif
-
 
         /// <summary>
         /// Ensures that no potential output files have been created

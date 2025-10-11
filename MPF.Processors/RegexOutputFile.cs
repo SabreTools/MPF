@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 #if NET462_OR_GREATER || NETCOREAPP
+using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 #endif
 
@@ -82,6 +83,34 @@ namespace MPF.Processors
             }
 
             return false;
+        }
+
+        /// <inheritdoc/>
+        public override bool Extract(ZipArchive? archive, string outputDirectory)
+        {
+            // If the archive is invalid
+            if (archive == null)
+                return false;
+
+            // Get list of all files in archive
+            foreach (var entry in archive.Entries)
+            {
+                if (entry.Key == null)
+                    continue;
+
+                var matches = Array.FindAll(Filenames, pattern => Regex.IsMatch(entry.Key, pattern));
+                foreach (string match in matches)
+                {
+                    try
+                    {
+                        string outputPath = Path.Combine(outputDirectory, match);
+                        entry.WriteToFile(outputPath);
+                    }
+                    catch { }
+                }
+            }
+
+            return true;
         }
 #endif
 

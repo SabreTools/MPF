@@ -85,6 +85,13 @@ namespace MPF.Processors
             // Files aren't extracted so this check can't be done
             return false;
         }
+
+        /// <inheritdoc/>
+        public override bool Extract(ZipArchive? archive, string outputDirectory)
+        {
+            // Files aren't extracted so this check can't be done
+            return false;
+        }
 #endif
 
         /// <inheritdoc/>

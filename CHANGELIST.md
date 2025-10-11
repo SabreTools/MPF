@@ -5,6 +5,7 @@
 - Add file merge method in CleanRip
 - Implement file merging in CleanRip
 - Support reparsing of MPF-processed outputs
+- Use WriteToFile extension for zip entries
 
 ### 3.5.0 (2025-10-10)
 

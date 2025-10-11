@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 #if NET462_OR_GREATER || NETCOREAPP
-using System.Linq;
+using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 #endif
 
@@ -229,26 +229,19 @@ namespace MPF.Processors
             if (archive == null)
                 return false;
 
-            foreach (string filename in Filenames)
+            // Get list of all files in archive
+            foreach (var entry in archive.Entries)
             {
-                // Check for invalid filenames
-                if (string.IsNullOrEmpty(filename))
+                if (entry.Key == null)
                     continue;
 
-                try
-                {
-                    // Check all entries on filename alone
-                    if (archive.Entries.Any(e => e.Key == filename))
-                        return true;
-                }
-                catch { }
+                if (Array.Exists(Filenames, filename => entry.Key == filename))
+                    return true;
             }
 
             return false;
         }
-#endif
 
-#if NET462_OR_GREATER || NETCOREAPP
         /// <summary>
         /// Extracts an output file from a zip archive
         /// </summary>
@@ -261,29 +254,25 @@ namespace MPF.Processors
             if (archive == null)
                 return false;
 
-            foreach (string filename in Filenames)
+            // Get list of all files in archive
+            foreach (var entry in archive.Entries)
             {
-                // Check for invalid filenames
-                if (string.IsNullOrEmpty(filename))
+                if (entry.Key == null)
                     continue;
 
-                try
+                var matches = Array.FindAll(Filenames, filename => entry.Key == filename);
+                foreach (string match in matches)
                 {
-                    // Check all entries on filename alone
-                    var outputFile = archive.Entries.FirstOrDefault(e => e.Key == filename);
-                    if (outputFile == null || outputFile.IsDirectory)
-                        continue;
-
-                    string outputPath = Path.Combine(outputDirectory, filename);
-
-                    using var entryStream = outputFile.OpenEntryStream();
-                    using var fileStream = File.Create(outputPath);
-                    entryStream.CopyTo(fileStream);
+                    try
+                    {
+                        string outputPath = Path.Combine(outputDirectory, match);
+                        entry.WriteToFile(outputPath);
+                    }
+                    catch { }
                 }
-                catch { }
             }
 
-            return false;
+            return true;
         }
 #endif
 
