@@ -726,11 +726,11 @@ namespace MPF.Frontend.Tools
         /// <returns>Filenames if possible, null on error</returns>
         public static string? GetXboxFilenames(Drive? drive)
         {
-            // If there's no drive path, we can't get BEE flag
+            // If there's no drive path, can't do anything
             if (string.IsNullOrEmpty(drive?.Name))
                 return null;
 
-            // If the folder no longer exists, we can't get exe name
+            // If the folder no longer exists, can't do anything
             if (!Directory.Exists(drive!.Name))
                 return null;
 
@@ -744,6 +744,57 @@ namespace MPF.Frontend.Tools
                 var files = Directory.GetFiles(msxc, "*", SearchOption.TopDirectoryOnly);
                 var filenames = Array.ConvertAll(files, Path.GetFileName);
                 return string.Join("\n", filenames);
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get Title ID(s) for Xbox One and Xbox Series X
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Title ID(s) if possible, null on error</returns>
+        public static string? GetXboxTitleID(Drive? drive)
+        {
+            // If there's no drive path, can't do anything
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, can't do anything
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // Get the catalog.js path
+#if NET20 || NET35
+            string catalogjs = Path.Combine(drive.Name, Path.Combine("MSXC", Path.Combine("Metadata", "catalog.js")));
+#else
+            string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
+#endif
+            // Check catalog.js exists
+            if (!File.Exists(msxc))
+                return null;
+
+            // Deserialize catalog.js and extract Title ID(s)
+            try
+            {
+                SabreTools.Data.Models.Xbox.Catalog? catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
+                if (catalog == null)
+                    return null;
+                if (!string.IsNullOrEmpty(catalog.TitleID))
+                    return titleIDString;
+                if (catalog.Packages == null)
+                    return null;
+
+                List<string> titleIDs = new List<string>();
+                foreach (var package in catalog.Packages)
+                {
+                    if (package != null && package.TitleID != null)
+                        titleIDs.Add(package.TitleID);
+                }
+                return string.Join(", ", titleIDs);
             }
             catch
             {
