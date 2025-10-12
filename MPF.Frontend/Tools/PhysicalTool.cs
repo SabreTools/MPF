@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -789,11 +788,13 @@ namespace MPF.Frontend.Tools
                 if (catalog.Packages == null)
                     return null;
 
-                List<string> titleIDs = new List<string>();
+                string[] titleIDs = new string[catalog.Packages.Length];
+                int i = 0;
                 foreach (var package in catalog.Packages)
                 {
                     if (package != null && package.TitleID != null)
-                        titleIDs.Add(package.TitleID);
+                        titleIDs[i] = package.TitleID;
+                    i++;
                 }
                 return string.Join(", ", titleIDs);
             }
