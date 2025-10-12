@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -774,7 +775,7 @@ namespace MPF.Frontend.Tools
             string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
 #endif
             // Check catalog.js exists
-            if (!File.Exists(msxc))
+            if (!File.Exists(catalogjs))
                 return null;
 
             // Deserialize catalog.js and extract Title ID(s)
@@ -784,7 +785,7 @@ namespace MPF.Frontend.Tools
                 if (catalog == null)
                     return null;
                 if (!string.IsNullOrEmpty(catalog.TitleID))
-                    return titleIDString;
+                    return catalog.TitleID;
                 if (catalog.Packages == null)
                     return null;
 
