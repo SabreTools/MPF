@@ -9,14 +9,6 @@
     
     <Application.Resources>
 
-        <!-- Strings -->
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!-- Default English-language strings -->
-                <ResourceDictionary Source="Resources/Strings.ko.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-
         <!-- Button -->
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
