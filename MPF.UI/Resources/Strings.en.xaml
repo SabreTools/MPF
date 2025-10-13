@@ -2,15 +2,16 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-   <system:String x:Key="AppTitle">Media Preservation Frontend</system:String>
-   <system:String x:Key="SystemLabel">System</system:String>
-   <system:String x:Key="OutputPathLabel">Output Path</system:String>
-   <system:String x:Key="BrowseLabel">Browse</system:String>
-   <system:String x:Key="DriveLetterLabel">Drive Letter</system:String>
-   <system:String x:Key="DriveSpeedLabel">Drive Speed</system:String>
-   <system:String x:Key="DumpingProgramLabel">Dumping Program</system:String>
-   <system:String x:Key="ParametersLabel">Parameters</system:String>
-   <system:String x:Key="ScanButton">Scan for Discs</system:String>
-   <system:String x:Key="UpdateLabelButton">Update Label</system:String>
-   <system:String x:Key="ProtectionScanButton">Scan for Protection</system:String>
+    <!-- Main Window -->
+    <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
+    <system:String x:Key="SystemLabelString">System</system:String>
+    <system:String x:Key="OutputPathLabelString">Output Path</system:String>
+    <system:String x:Key="BrowseLabelString">Browse</system:String>
+    <system:String x:Key="DriveLetterLabelString">Drive Letter</system:String>
+    <system:String x:Key="DriveSpeedLabelString">Drive Speed</system:String>
+    <system:String x:Key="DumpingProgramLabelString">Dumping Program</system:String>
+    <system:String x:Key="ParametersLabelString">Parameters</system:String>
+    <system:String x:Key="ScanButtonString">Scan for Discs</system:String>
+    <system:String x:Key="UpdateLabelButtonString">Update Label</system:String>
+    <system:String x:Key="ProtectionScanButtonString">Scan for Protection</system:String>
 </ResourceDictionary>

@@ -8,7 +8,7 @@
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
-                        Title="{DynamicResource AppTitle}" Width="600" WindowStyle="None"
+                        Title="{DynamicResource AppTitleString}" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -87,7 +87,7 @@
                 </StackPanel>
                 <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{DynamicResource AppTitle}" /></TextBlock>
+                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" /></TextBlock>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -134,7 +134,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource SystemLabel}" />
+                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource SystemLabelString}" />
                     <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                               ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
@@ -153,14 +153,14 @@
                               IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}"
                               Visibility="Hidden" />
 
-                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource OutputPathLabel}"/>
+                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource OutputPathLabelString}"/>
                     <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding OutputPathTextBoxEnabled}" />
-                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="{DynamicResource BrowseLabel}"
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="{DynamicResource BrowseLabelString}"
                             IsEnabled="{Binding OutputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveLetterLabel}"/>
+                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveLetterLabelString}"/>
                     <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
                               ItemsSource="{Binding Drives}" SelectedItem="{Binding Path=CurrentDrive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DriveLetterComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
@@ -171,17 +171,17 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveSpeedLabel}"/>
+                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveSpeedLabelString}"/>
                     <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
                               ItemsSource="{Binding DriveSpeeds}" SelectedItem="{Binding Path=DriveSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DriveSpeedComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DumpingProgramLabel}"/>
+                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DumpingProgramLabelString}"/>
                     <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                               ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource ParametersLabel}"/>
+                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource ParametersLabelString}"/>
                     <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding ParametersTextBoxEnabled}"/>
@@ -196,11 +196,11 @@
                     <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
                             Content="{Binding StartStopButtonText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             IsEnabled="{Binding StartStopButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ScanButton}"
+                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ScanButtonString}"
                             IsEnabled="{Binding MediaScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource UpdateLabelButton}"
+                    <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource UpdateLabelButtonString}"
                             IsEnabled="{Binding UpdateVolumeLabelEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ProtectionScanButton}"
+                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ProtectionScanButtonString}"
                             IsEnabled="{Binding CopyProtectScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>
