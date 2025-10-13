@@ -9,6 +9,7 @@
 - Move output file implementations to separate namespace
 - Conditionally require state
 - Replace "We" comments
+- Parse XboxOne/SX Title IDs
 
 ### 3.5.0 (2025-10-10)
 

@@ -846,10 +846,12 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.MicrosoftXboxOne:
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
                     info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
