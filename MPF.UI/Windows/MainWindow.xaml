@@ -22,7 +22,7 @@
         <ResourceDictionary x:Key="StringsResources">
             <ResourceDictionary.MergedDictionaries>
                 <!-- Default English-language strings -->
-                <ResourceDictionary Source="Resources/Strings.xaml" />
+                <ResourceDictionary Source="../Resources/Strings.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -116,12 +116,18 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+
+                    <ComboBox x:Name="UILanguageComboBox" Grid.Column="0" BorderThickness="0" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50"
+                              ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Path=CurrentUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding UILanguageComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
+                    </ComboBox>
+                    <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                    <Button x:Name="CloseButton" Grid.Column="2" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                         <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
                 </Grid>
@@ -224,11 +230,6 @@
                       IsExpanded="{Binding LogPanelExpanded}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>
-
-            <ComboBox Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="30">
-                <ComboBoxItem Content="EN" />
-                <ComboBoxItem Content="한글" />
-            </ComboBox>
         </StackPanel>
     </Border>
 </coreWindows:WindowBase>
