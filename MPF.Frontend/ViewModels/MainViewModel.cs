@@ -628,7 +628,7 @@ namespace MPF.Frontend.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
-            UILanguages = { "EN", "한글" };
+            UILanguages =  new List<string> { "EN", "한글" };
             CurrentUILanguage = "EN";
 
             MediaTypes = [];
