@@ -147,7 +147,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported UI Languages
         /// </summary>
-        public List<Element<string>> UILanguages
+        public List<Element<string?>> UILanguages
         {
             get => _uiLanguages;
             set
@@ -156,7 +156,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(UILanguages));
             }
         }
-        private List<Element<string>> _uiLanguages;
+        private List<Element<string?>> _uiLanguages;
 
         /// <summary>
         /// Currently selected UI Language
