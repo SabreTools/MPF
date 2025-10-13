@@ -1,0 +1,15 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+   <system:String x:Key="AppTitle">Media Preservation Frontend</system:String>
+   <system:String x:Key="SystemLabel">System</system:String>
+   <system:String x:Key="OutputPathLabel">Output Path</system:String>
+   <system:String x:Key="BrowseLabel">Browse</system:String>
+   <system:String x:Key="DriveLetterLabel">Drive Letter</system:String>
+   <system:String x:Key="DriveSpeedLabel">Drive Speed</system:String>
+   <system:String x:Key="DumpingProgramLabel">Dumping Program</system:String>
+   <system:String x:Key="ParametersLabel">Parameters</system:String>
+   <system:String x:Key="ScanButton">Scan for Discs</system:String>
+   <system:String x:Key="UpdateLabelButton">Update Label</system:String>
+   <system:String x:Key="ProtectionScanButton">Scan for Protection</system:String>
+</ResourceDictionary>
