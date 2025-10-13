@@ -10,6 +10,7 @@
 - Conditionally require state
 - Replace "We" comments
 - Parse XboxOne/SX Title IDs
+- Reduce chance of empty strings
 
 ### 3.5.0 (2025-10-10)
 

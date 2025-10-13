@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -780,7 +781,7 @@ namespace MPF.Frontend.Tools
             // Deserialize catalog.js and extract Title ID(s)
             try
             {
-                SabreTools.Data.Models.Xbox.Catalog? catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
+                var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
                 if (catalog == null)
                     return null;
                 if (!string.IsNullOrEmpty(catalog.TitleID))
@@ -788,15 +789,14 @@ namespace MPF.Frontend.Tools
                 if (catalog.Packages == null)
                     return null;
 
-                string[] titleIDs = new string[catalog.Packages.Length];
-                int i = 0;
+                List<string> titleIDs = [];
                 foreach (var package in catalog.Packages)
                 {
-                    if (package != null && package.TitleID != null)
-                        titleIDs[i] = package.TitleID;
-                    i++;
+                    if (package?.TitleID != null)
+                        titleIDs.Add(package.TitleID);
                 }
-                return string.Join(", ", titleIDs);
+
+                return string.Join(", ", [.. titleIDs]);
             }
             catch
             {

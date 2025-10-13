@@ -1636,7 +1636,7 @@ namespace MPF.Frontend.ViewModels
                         if (!File.Exists(catalogjs))
                             return RedumpSystem.MicrosoftXboxOne;
 
-                        SabreTools.Data.Models.Xbox.Catalog? catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
+                        var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
                         if (catalog != null && catalog.Version != null && catalog.Packages != null)
                         {
                             if (!double.TryParse(catalog.Version, out double version))
