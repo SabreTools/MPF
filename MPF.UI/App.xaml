@@ -13,7 +13,7 @@
         <ResourceDictionary x:Key="StringsResources">
             <ResourceDictionary.MergedDictionaries>
                 <!-- Default English-language strings -->
-                <ResourceDictionary Source="Resources/Strings.xaml" />
+                <ResourceDictionary x:Key="StringsResources.Default" Source="Resources/Strings.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

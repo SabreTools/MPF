@@ -212,10 +212,15 @@
                 </UniformGrid>
             </GroupBox>
 
-            <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
+            <Expander Margin="5,5,5,5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
                       IsExpanded="{Binding LogPanelExpanded}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>
+
+            <ComboBox Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="30">
+                <ComboBoxItem Content="EN" />
+                <ComboBoxItem Content="한글" />
+            </ComboBox>
         </StackPanel>
     </Border>
 </coreWindows:WindowBase>
