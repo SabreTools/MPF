@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Main Window -->
+    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String>
+    <system:String x:Key="SystemLabelString">시스템</system:String>
+    <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
+    <system:String x:Key="BrowseButtonString">찾아보기</system:String>
+    <system:String x:Key="DriveLetterLabelString">드라이브 문자</system:String>
+    <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
+    <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
+    <system:String x:Key="ParametersLabelString">매개변수</system:String>
+    <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
+    <system:String x:Key="UpdateLabelButtonString">레이블 업데이트</system:String>
+    <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
+</ResourceDictionary>
