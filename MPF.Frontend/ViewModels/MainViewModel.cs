@@ -131,48 +131,6 @@ namespace MPF.Frontend.ViewModels
         private bool _optionsMenuItemEnabled;
 
         /// <summary>
-        /// Indicates the status of the UI Language combo box
-        /// </summary>
-        public bool UILanguagesComboBoxEnabled
-        {
-            get => _uiLanguageComboBoxEnabled;
-            set
-            {
-                _uiLanguageComboBoxEnabled = value;
-                TriggerPropertyChanged(nameof(UILanguagesComboBoxEnabled));
-            }
-        }
-        private bool _uiLanguageComboBoxEnabled;
-
-        /// <summary>
-        /// Current list of supported UI Languages
-        /// </summary>
-        public List<Element<string>> UILanguages
-        {
-            get => _uiLanguages;
-            set
-            {
-                _uiLanguages = value;
-                TriggerPropertyChanged(nameof(UILanguages));
-            }
-        }
-        private List<Element<string>> _uiLanguages;
-
-        /// <summary>
-        /// Currently selected UI Language
-        /// </summary>
-        public string CurrentUILanguage
-        {
-            get => _currentUILanguage;
-            set
-            {
-                _currentUILanguage = value;
-                TriggerPropertyChanged(nameof(CurrentUILanguage));
-            }
-        }
-        private string _currentUILanguage;
-
-        /// <summary>
         /// Currently selected system value
         /// </summary>
         public RedumpSystem? CurrentSystem
@@ -614,7 +572,6 @@ namespace MPF.Frontend.ViewModels
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
             CreateIRDMenuItemEnabled = true;
-            UILanguagesComboBoxEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
@@ -627,9 +584,6 @@ namespace MPF.Frontend.ViewModels
             ParametersCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
-
-            UILanguages =  new List<string> { "EN", "한글" };
-            CurrentUILanguage = "EN";
 
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
@@ -1364,7 +1318,6 @@ namespace MPF.Frontend.ViewModels
             OptionsMenuItemEnabled = false;
             CheckDumpMenuItemEnabled = false;
             CreateIRDMenuItemEnabled = false;
-            UILanguagesComboBoxEnabled = false;
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
             OutputPathTextBoxEnabled = false;
@@ -1387,7 +1340,6 @@ namespace MPF.Frontend.ViewModels
             OptionsMenuItemEnabled = true;
             CheckDumpMenuItemEnabled = true;
             CreateIRDMenuItemEnabled = true;
-            UILanguagesComboBoxEnabled = false;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
@@ -1996,7 +1948,6 @@ namespace MPF.Frontend.ViewModels
             // Disable UI elements
             OptionsMenuItemEnabled = false;
 
-            UILanguagesComboBoxEnabled = false;
             SystemTypeComboBoxEnabled = false;
             MediaTypeComboBoxEnabled = false;
 
@@ -2035,7 +1986,6 @@ namespace MPF.Frontend.ViewModels
 
                 // Enable UI elements
                 OptionsMenuItemEnabled = true;
-                UILanguagesComboBoxEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
                 MediaTypeComboBoxEnabled = true;
@@ -2331,7 +2281,6 @@ namespace MPF.Frontend.ViewModels
             if (ParametersCheckBoxEnabled == false)
             {
                 OptionsMenuItemEnabled = false;
-                UILanguagesComboBoxEnabled = false;
 
                 SystemTypeComboBoxEnabled = false;
                 MediaTypeComboBoxEnabled = false;
@@ -2353,7 +2302,6 @@ namespace MPF.Frontend.ViewModels
                 ProcessCustomParameters();
 
                 OptionsMenuItemEnabled = true;
-                UILanguagesComboBoxEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
                 MediaTypeComboBoxEnabled = true;

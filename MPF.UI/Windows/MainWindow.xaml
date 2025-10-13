@@ -120,9 +120,10 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <ComboBox x:Name="UILanguageComboBox" Grid.Column="0" BorderThickness="0" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50"
-                              ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Path=CurrentUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding UILanguageComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
+                    <ComboBox x:Name="UILanguageComboBox" Grid.Column="0" BorderThickness="0" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"
+                              Style="{DynamicResource CustomComboBoxStyle}">
+                        <ComboBoxItem Content="EN" />
+                        <ComboBoxItem Content="한글" />
                     </ComboBox>
                     <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
