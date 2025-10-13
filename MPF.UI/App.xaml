@@ -11,9 +11,9 @@
 
         <!-- Strings -->
         <ResourceDictionary x:Key="StringsResources">
-            <ResourceDictionary.MergedDictionaries x:Key="StringsResources.MergedDictionaries">
+            <ResourceDictionary.MergedDictionaries>
                 <!-- Default English-language strings -->
-                <ResourceDictionary x:Key="StringsResources.DefaultStrings" Source="Resources/Strings.xaml" />
+                <ResourceDictionary Source="Resources/Strings.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 
