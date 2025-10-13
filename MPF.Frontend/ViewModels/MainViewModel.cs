@@ -147,7 +147,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported UI Languages
         /// </summary>
-        public List<Element<string?>> UILanguages
+        public List<Element<string>> UILanguages
         {
             get => _uiLanguages;
             set
@@ -156,12 +156,12 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(UILanguages));
             }
         }
-        private List<Element<string?>> _uiLanguages;
+        private List<Element<string>> _uiLanguages;
 
         /// <summary>
         /// Currently selected UI Language
         /// </summary>
-        public string? CurrentUILanguage
+        public string CurrentUILanguage
         {
             get => _currentUILanguage;
             set
@@ -170,7 +170,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(CurrentUILanguage));
             }
         }
-        private string? _currentUILanguage;
+        private string _currentUILanguage;
 
         /// <summary>
         /// Currently selected system value
@@ -628,7 +628,7 @@ namespace MPF.Frontend.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.OpenLogWindowAtStartup;
 
-            UILanguages = ["EN", "한글"];
+            UILanguages = { "EN", "한글" };
             CurrentUILanguage = "EN";
 
             MediaTypes = [];
