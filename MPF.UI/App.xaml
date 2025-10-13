@@ -12,6 +12,7 @@
         <!-- Strings -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- Default English-language strings -->
                 <ResourceDictionary Source="Resources/Strings.ko.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

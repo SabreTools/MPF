@@ -157,7 +157,7 @@
                     <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding OutputPathTextBoxEnabled}" />
-                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="{DynamicResource BrowseLabelString}"
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding OutputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
                     <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveLetterLabelString}"/>
