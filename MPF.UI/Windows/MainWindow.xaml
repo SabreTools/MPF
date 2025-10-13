@@ -17,14 +17,6 @@
     </Window.DataContext>
     <Window.Resources>
         <core:ElementConverter x:Key="ElementConverter" />
-
-        <!-- Strings -->
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!-- Default English-language strings -->
-                <ResourceDictionary Source="Resources/Strings.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
     </Window.Resources>
 
     <Border CornerRadius="8" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderBrush="Gray" BorderThickness="2">
