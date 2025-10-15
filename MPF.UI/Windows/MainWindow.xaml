@@ -25,9 +25,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
@@ -37,7 +34,7 @@
                     <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}" Width="30"
+                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}" Width="50"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
@@ -46,7 +43,7 @@
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
-                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}" Width="30"
+                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}" Width="50"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
@@ -70,7 +67,7 @@
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
-                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}" Width="30"
+                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}" Width="50"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
@@ -85,7 +82,7 @@
                         </MenuItem>
                     </Menu>
                 </StackPanel>
-                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                <Label Panel.ZIndex="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
                         <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" /></TextBlock>
                     </Label.Content>
@@ -104,7 +101,7 @@
                         </ContextMenu>
                     </Label.ContextMenu>
                 </Label>
-                <Grid Grid.Column="5">
+                <Grid Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="25"/>
