@@ -35,6 +35,6 @@
     <system:String x:Key="StatusGroupBoxString">Status</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">Log Output</system:String>
-    <system:String x:Key="ClearButtonString">Clear</system:String>
-    <system:String x:Key="SaveButtonString">Save</system:String>
+    <system:String x:Key="ClearButtonString">Clear Log</system:String>
+    <system:String x:Key="SaveButtonString">Save Log</system:String>
 </ResourceDictionary>

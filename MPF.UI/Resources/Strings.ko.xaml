@@ -9,11 +9,11 @@
     <system:String x:Key="ExitMenuItemString">종료</system:String>
     <system:String x:Key="ToolsMenuString">도구</system:String>
     <system:String x:Key="CheckDumpMenuItemString">체크 덤프</system:String>
-    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 만들기</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 생성</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">옵션</system:String>
     <system:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</system:String>
     <system:String x:Key="HelpMenuString">도움말</system:String>
-    <system:String x:Key="AboutMenuItemString">정보</system:String>
+    <system:String x:Key="AboutMenuItemString">앱 정보</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
     <system:String x:Key="LanguageMenuString">한국어</system:String>
     <!-- Settings Group Box-->
@@ -27,14 +27,14 @@
     <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
     <system:String x:Key="ParametersLabelString">매개변수</system:String>
     <!-- Controls Group Box-->
-    <system:String x:Key="ControlsGroupBoxString">제어</system:String>
+    <system:String x:Key="ControlsGroupBoxString">컨트롤</system:String>
     <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
-    <system:String x:Key="UpdateLabelButtonString">레이블 업데이트</system:String>
+    <system:String x:Key="UpdateLabelButtonString">레이블 갱신</system:String>
     <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
     <!-- Status Group Box -->
     <system:String x:Key="StatusGroupBoxString">상태</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">로그 출력</system:String>
-    <system:String x:Key="ClearButtonString">지우기</system:String>
-    <system:String x:Key="SaveButtonString">저장</system:String>
+    <system:String x:Key="ClearButtonString">로그 지우기</system:String>
+    <system:String x:Key="SaveButtonString">로그 저장</system:String>
 </ResourceDictionary>
