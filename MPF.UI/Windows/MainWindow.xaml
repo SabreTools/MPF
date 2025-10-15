@@ -28,7 +28,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
@@ -85,7 +85,7 @@
                         </MenuItem>
                     </Menu>
                 </StackPanel>
-                <Label Panel.ZIndex="0" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
                         <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" /></TextBlock>
                     </Label.Content>
@@ -106,7 +106,7 @@
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
