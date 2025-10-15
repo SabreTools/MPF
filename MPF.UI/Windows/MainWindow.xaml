@@ -34,7 +34,7 @@
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <StackPanel Panel.ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                    <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
+                    <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
                         <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}"
@@ -111,19 +111,23 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <MenuItem x:Name="LanguagesMenuItem" Grid.Column="0" Header="{DynamicResource LanguageMenuString}"
-                            Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                            Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                            Template="{DynamicResource CustomMenuItemTemplate}">
-                        <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                    <Menu x:Name="TopRightMenuBar" Width="Auto" Height="20"
+                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+                        <MenuItem x:Name="LanguagesMenuItem" Grid.Column="0" Header="{DynamicResource LanguageMenuString}"
                                 Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                 Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                Template="{DynamicResource CustomMenuItemTemplate}" />
-                        <MenuItem x:Name="KoreanMenuItem" Header="한국어" HorizontalAlignment="Left" Width="120" IsCheckable="True"
-                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                Template="{DynamicResource CustomMenuItemTemplate}" />
-                    </MenuItem>
+                                Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                        </MenuItem>
+                    </Menu>
 
                     <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
