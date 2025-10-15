@@ -561,7 +561,7 @@ namespace MPF.UI.Windows
                     // Change UI language to English
                     dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
                     break;
-                case "Korean": // 한국어
+                case "한국어":
                     // Change UI language to Korean
                     dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
                     break;

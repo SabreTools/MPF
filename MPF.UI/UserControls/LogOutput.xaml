@@ -23,8 +23,8 @@
                 </GroupBox.Template>
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/> <!-- Empty label for padding -->
-                    <Button Name="ClearButton" Height="25" Width="80" Content="Clear" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="SaveButton" Height="25" Width="80" Content="Save" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="ClearButton" Height="25" Width="80" Content="{DynamicResource ClearButtonString}" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="SaveButton" Height="25" Width="80" Content="{DynamicResource SaveButtonString}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>

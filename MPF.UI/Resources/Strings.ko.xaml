@@ -4,6 +4,8 @@
 
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String>
+    <!-- Settings Group Box-->
+    <system:String x:Key="SettingsGroupBoxString">설정</system:String>
     <system:String x:Key="SystemLabelString">시스템</system:String>
     <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
     <system:String x:Key="BrowseButtonString">찾아보기</system:String>
@@ -11,7 +13,11 @@
     <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
     <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
     <system:String x:Key="ParametersLabelString">매개변수</system:String>
+    <!-- Controls Group Box-->
+    <system:String x:Key="ControlsGroupBoxString">제어</system:String>
     <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
     <system:String x:Key="UpdateLabelButtonString">레이블 업데이트</system:String>
     <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
+    <system:String x:Key="ClearButtonString">지우기</system:String>
+    <system:String x:Key="SaveButtonString">저장</system:String>
 </ResourceDictionary>

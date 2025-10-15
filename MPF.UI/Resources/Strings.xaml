@@ -4,6 +4,7 @@
 
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
+    <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
     <system:String x:Key="SystemLabelString">System</system:String>
     <system:String x:Key="OutputPathLabelString">Output Path</system:String>
     <system:String x:Key="BrowseButtonString">Browse</system:String>
@@ -14,4 +15,6 @@
     <system:String x:Key="ScanButtonString">Scan for Discs</system:String>
     <system:String x:Key="UpdateLabelButtonString">Update Label</system:String>
     <system:String x:Key="ProtectionScanButtonString">Scan for Protection</system:String>
+    <system:String x:Key="ClearButtonString">Clear</system:String>
+    <system:String x:Key="SaveButtonString">Save</system:String>
 </ResourceDictionary>
