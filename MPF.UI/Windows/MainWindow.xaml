@@ -36,7 +36,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
@@ -78,6 +78,21 @@
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
+                        <MenuItem x:Name="LanguagesMenuItem" Header="_Languages"
+                              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                              Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="EnglishItem" Header="_English" HorizontalAlignment="Left" Width="185"
+                                  IsCheckable="True" Checked="ChangeUILanguage"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="_한국어" HorizontalAlignment="Left" Width="185"
+                                  IsCheckable="True" Checked="ChangeUILanguage"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
+                        </MenuItem>
                         <MenuItem x:Name="HelpMenuItem" Header="_Help"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
@@ -114,21 +129,14 @@
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="25"/>
-                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-
-                    <ComboBox x:Name="UILanguageComboBox" Grid.Column="0" BorderThickness="0" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"
-                              Style="{DynamicResource CustomComboBoxStyle}">
-                        <ComboBoxItem Content="EN" />
-                        <ComboBoxItem Content="한글" />
-                    </ComboBox>
-                    <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="2" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                         <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
                 </Grid>

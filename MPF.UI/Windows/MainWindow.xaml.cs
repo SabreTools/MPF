@@ -348,6 +348,48 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
+        /// Change UI language
+        /// </summary>
+        private void ChangeUILanguage(object sender, RoutedEventArgs e)
+        {
+            var clickedItem = (MenuItem)sender;
+            // Don't do anything if language is already selected
+            if (clickedItem.IsChecked)
+                return;
+
+            // Check selected item
+            clickedItem.IsChecked = true;
+
+            // Uncheck every item not checked
+            var menu = clickedItem.Parent;
+            foreach (var item in menu.Items)
+            {
+                // Items of Menu are the raw data; get the generated container (MenuItem).
+                if (menu.ItemContainerGenerator.ContainerFromItem(item) is MenuItem item && !ReferenceEquals(item, clickedItem))
+                    item.IsChecked = false;
+            }
+
+            // Change UI language to selected item
+            string lang = clickedItem.Header.ToString();
+            var dictionary = new ResourceDictionary();
+            switch (lang)
+            {
+                case "_English":
+                    // Change UI language to English
+                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                    break;
+                case "_한국어":
+                    // Change UI language to Korean
+                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                default:
+                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                    break;
+            }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+        }
+
+        /// <summary>
         /// Set media type combo box visibility based on current program
         /// </summary>
         public void SetMediaTypeVisibility()
