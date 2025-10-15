@@ -28,7 +28,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
@@ -106,7 +106,7 @@
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="25"/>
                         <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>

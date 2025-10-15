@@ -2,6 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!-- Language Name: EN / ENG -->
+    <system:String x:Key="LanguageMenuString">ENG</system:String>
+
     <!-- Common Elements -->
     <system:String x:Key="BrowseButtonString">Browse</system:String>
     <system:String x:Key="CancelButtonString">Cancel</system:String>
@@ -21,7 +24,6 @@
     <system:String x:Key="HelpMenuString">_Help</system:String>
     <system:String x:Key="AboutMenuItemString">_About</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
-    <system:String x:Key="LanguageMenuString">ENG</system:String>
     <!-- Settings Group Box-->
     <system:String x:Key="SystemLabelString">System Type</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">System/Media Type</system:String>
@@ -40,6 +42,8 @@
     <system:String x:Key="ClearButtonString">Clear Log</system:String>
     <system:String x:Key="SaveButtonString">Save Log</system:String>
 
+    <!-- Options Window -->
+
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>
     <system:String x:Key="InputPathLabelString">Input Path</system:String>
@@ -50,4 +54,13 @@
     <system:String x:Key="InputGroupBoxString">Input</system:String>
     <system:String x:Key="PS3ISOPathLabelString">PS3 ISO Path</system:String>
     <system:String x:Key="GetKeyPathLabelString">*.getkey.log File Path</system:String>
+
+    <!-- Media Information Guide Window -->
+
+    <!-- Ring Code Guide Window -->
+
+    <!-- About Window -->
+
+    <!-- Check for Updates Window -->
+
 </ResourceDictionary>

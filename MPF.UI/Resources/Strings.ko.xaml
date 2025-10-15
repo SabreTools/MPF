@@ -2,6 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!-- Language Name: KO / KOR / 한글 / 한국어 -->
+    <system:String x:Key="LanguageMenuString">한국어</system:String>
+
     <!-- Common Elements -->
     <system:String x:Key="BrowseButtonString">찾아보기</system:String>
     <system:String x:Key="CancelButtonString">취소</system:String>
@@ -11,17 +14,16 @@
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String>
     <!-- Top Menu Bar -->
-    <system:String x:Key="FileMenuString">파일</system:String>
-    <system:String x:Key="ExitMenuItemString">종료</system:String>
-    <system:String x:Key="ToolsMenuString">도구</system:String>
-    <system:String x:Key="CheckDumpMenuItemString">체크 덤프</system:String>
-    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 생성</system:String>
-    <system:String x:Key="OptionsDumpMenuItemString">옵션</system:String>
-    <system:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</system:String>
-    <system:String x:Key="HelpMenuString">도움말</system:String>
-    <system:String x:Key="AboutMenuItemString">앱 정보</system:String>
-    <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
-    <system:String x:Key="LanguageMenuString">한국어</system:String>
+    <system:String x:Key="FileMenuString">_파일</system:String>
+    <system:String x:Key="ExitMenuItemString">_종료</system:String>
+    <system:String x:Key="ToolsMenuString">_도구</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">_체크 덤프</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">_PS3 IRD 생성</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">_옵션</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">_디버그 정보 창</system:String>
+    <system:String x:Key="HelpMenuString">_도움말</system:String>
+    <system:String x:Key="AboutMenuItemString">_앱 정보</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">_업데이트 확인</system:String>
     <!-- Settings Group Box-->
     <system:String x:Key="SystemLabelString">시스템 유형</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
@@ -40,6 +42,8 @@
     <system:String x:Key="ClearButtonString">로그 지우기</system:String>
     <system:String x:Key="SaveButtonString">로그 저장</system:String>
 
+    <!-- Options Window -->
+
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
     <system:String x:Key="InputPathLabelString">입력 경로</system:String>
@@ -50,4 +54,13 @@
     <system:String x:Key="InputGroupBoxString">입력</system:String>
     <system:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</system:String>
     <system:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</system:String>
+
+    <!-- Media Information Guide Window -->
+
+    <!-- Ring Code Guide Window -->
+
+    <!-- About Window -->
+
+    <!-- Check for Updates Window -->
+
 </ResourceDictionary>
