@@ -378,7 +378,7 @@ namespace MPF.UI.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? Application.Current.Resources["SystemMediaTypeLabelString"];
+                ? Application.Current.Resources["SystemMediaTypeLabelString"]
                 : Application.Current.Resources["SystemLabelString"];
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
