@@ -82,13 +82,11 @@
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="EnglishItem" Header="_English" HorizontalAlignment="Left" Width="185"
-                                  IsCheckable="True" Checked="ChangeUILanguage"
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="185" IsCheckable="True"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="KoreanMenuItem" Header="_Korean" HorizontalAlignment="Left" Width="185"
-                                  IsCheckable="True" Checked="ChangeUILanguage"
+                            <MenuItem x:Name="KoreanMenuItem" Header="Korean" HorizontalAlignment="Left" Width="185" IsCheckable="True"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />

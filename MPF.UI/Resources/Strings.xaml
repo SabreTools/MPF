@@ -4,7 +4,7 @@
 
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
-    <system:String x:Key="SystemLabelString">System</system:String>
+    <system:String x:Key="SystemLabelString">TEST</system:String>
     <system:String x:Key="OutputPathLabelString">Output Path</system:String>
     <system:String x:Key="BrowseButtonString">Browse</system:String>
     <system:String x:Key="DriveLetterLabelString">Drive Letter</system:String>

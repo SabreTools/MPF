@@ -28,6 +28,7 @@ namespace MPF.UI.Windows
 
         #region Top Menu Bar
 
+        // Buttons
         private MenuItem? AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
         private MenuItem? AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
         private MenuItem? CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
@@ -35,6 +36,10 @@ namespace MPF.UI.Windows
         private MenuItem? CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
         private MenuItem? CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
         private MenuItem? OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
+
+        // Languages
+        private MenuItem? EnglishMenuItem => ItemHelper.FindChild<MenuItem>(this, "EnglishMenuItem");
+        private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
 
         #endregion
 
@@ -144,6 +149,8 @@ namespace MPF.UI.Windows
             CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
             CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
             OptionsMenuItem!.Click += OptionsMenuItemClick;
+            EnglishMenuItem!.Click += LanguageMenuItemClick;
+            KoreanMenuItem!.Click += LanguageMenuItemClick;
 
             // User Area Click
             CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
@@ -348,47 +355,6 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Change UI language
-        /// </summary>
-        private void ChangeUILanguage(object sender, RoutedEventArgs e)
-        {
-            var clickedItem = (MenuItem)sender;
-            // Don't do anything if language is already selected
-            if (clickedItem.IsChecked)
-                return;
-
-            // Check selected item
-            clickedItem.IsChecked = true;
-
-            // Uncheck every item not checked
-            var languageMenu = (MenuItem)clickedItem.Parent;
-            foreach (var item in languageMenu.Items)
-            {
-                if (item is MenuItem menuItem && menuItem != clickedItem)
-                    menuItem.IsChecked = false;
-            }
-
-            // Change UI language to selected item
-            string lang = clickedItem.Header.ToString() ?? "";
-            var dictionary = new ResourceDictionary();
-            switch (lang)
-            {
-                case "_English":
-                    // Change UI language to English
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-                case "_Korean": // 한국어
-                    // Change UI language to Korean
-                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
-                    break;
-                default:
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-            }
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
-        }
-
-        /// <summary>
         /// Set media type combo box visibility based on current program
         /// </summary>
         public void SetMediaTypeVisibility()
@@ -564,6 +530,47 @@ namespace MPF.UI.Windows
         /// </summary>
         public void OptionsMenuItemClick(object sender, RoutedEventArgs e) =>
             ShowOptionsWindow();
+
+        /// <summary>
+        /// Change UI language
+        /// </summary>
+        private void LanguageMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            var clickedItem = (MenuItem)sender;
+            // Don't do anything if language is already selected
+            if (clickedItem.IsChecked)
+                return;
+
+            // Check selected item
+            clickedItem.IsChecked = true;
+
+            // Uncheck every item not checked
+            var languageMenu = (MenuItem)clickedItem.Parent;
+            foreach (var item in languageMenu.Items)
+            {
+                if (item is MenuItem menuItem && menuItem != clickedItem)
+                    menuItem.IsChecked = false;
+            }
+
+            // Change UI language to selected item
+            string lang = clickedItem.Header.ToString() ?? "";
+            var dictionary = new ResourceDictionary();
+            switch (lang)
+            {
+                case "English":
+                    // Change UI language to English
+                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                    break;
+                case "Korean": // 한국어
+                    // Change UI language to Korean
+                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                default:
+                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                    break;
+            }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+        }
 
         #endregion
 
