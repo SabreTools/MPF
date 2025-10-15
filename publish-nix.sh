@@ -58,9 +58,9 @@ echo " "
 
 # Create the build matrix arrays
 UI_FRAMEWORKS=("net9.0-windows")
-UI_RUNTIMES=("win-x64")
+UI_RUNTIMES=("win-x86" "win-x64")
 CHECK_FRAMEWORKS=("net9.0")
-CHECK_RUNTIMES=("win-x64")
+CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
 # Use expanded framework lists, if requested
 if [ $USE_ALL = true ]; then
