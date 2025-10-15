@@ -369,12 +369,11 @@ namespace MPF.UI
         {
             // Create the default (English) strings resource dictionary
             var dictionary = new ResourceDictionary();
-            dictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+            dictionary.Source = new Uri(resourceName, UriKind.Relative);
 
-            // Add the strings resource
+            // Add the strings resource to app resources
             Resources.MergedDictionaries.Add(dictionary);
         }
-#endif
 
         /// <summary>
         /// Create a named style and add it to the current set of resources
