@@ -361,12 +361,11 @@ namespace MPF.UI.Windows
             clickedItem.IsChecked = true;
 
             // Uncheck every item not checked
-            var menu = clickedItem.Parent;
-            foreach (var item in menu.Items)
+            var languageMenu = (MenuItem)clickedItem.Parent;
+            foreach (var item in languageMenu.Items)
             {
-                // Items of Menu are the raw data; get the generated container (MenuItem).
-                if (menu.ItemContainerGenerator.ContainerFromItem(item) is MenuItem item && !ReferenceEquals(item, clickedItem))
-                    item.IsChecked = false;
+                if (item is MenuItem item && menuItem != clickedItem)
+                    menuItem.IsChecked = false;
             }
 
             // Change UI language to selected item
