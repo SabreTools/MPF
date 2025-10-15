@@ -4,6 +4,15 @@
 
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
+    <!-- Top Menu Bar -->
+    <system:String x:Key="FileMenuString">_File</system:String>
+    <system:String x:Key="ExitMenuItemString">E_xit</system:String>
+    <system:String x:Key="ToolsMenuString">_Tools</system:String>
+    <system:String x:Key="HelpMenuString">_Help</system:String>
+    <system:String x:Key="AboutMenuItemString">_About</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
+    <system:String x:Key="LanguageMenuString">English</system:String>
+    <!-- Settings Group Box-->
     <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
     <system:String x:Key="SystemLabelString">System</system:String>
     <system:String x:Key="OutputPathLabelString">Output Path</system:String>
@@ -12,9 +21,15 @@
     <system:String x:Key="DriveSpeedLabelString">Drive Speed</system:String>
     <system:String x:Key="DumpingProgramLabelString">Dumping Program</system:String>
     <system:String x:Key="ParametersLabelString">Parameters</system:String>
+    <!-- Controls Group Box-->
+    <system:String x:Key="ControlsGroupBoxString">Controls</system:String>
     <system:String x:Key="ScanButtonString">Scan for Discs</system:String>
     <system:String x:Key="UpdateLabelButtonString">Update Label</system:String>
     <system:String x:Key="ProtectionScanButtonString">Scan for Protection</system:String>
+    <!-- Status Group Box -->
+    <system:String x:Key="StatusGroupBoxString">Status</system:String>
+    <!-- Log Output -->
+    <system:String x:Key="LogOutputExpanderString">Log Output</system:String>
     <system:String x:Key="ClearButtonString">Clear</system:String>
     <system:String x:Key="SaveButtonString">Save</system:String>
 </ResourceDictionary>
