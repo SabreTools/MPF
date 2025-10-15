@@ -12,7 +12,7 @@
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Create _PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Options</system:String>
     <system:String x:Key="DebugInfoWindowMenuItemString">_Debug Info Window</system:String>
-    <system:String x:Key="HelpMenuString">_Help </system:String> <!-- Intentional whitespace -->
+    <system:String x:Key="HelpMenuString">_Help</system:String>
     <system:String x:Key="AboutMenuItemString">_About</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
     <system:String x:Key="LanguageMenuString">English</system:String>
