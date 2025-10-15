@@ -28,7 +28,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
@@ -106,12 +106,12 @@
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}"
+                    <MenuItem x:Name="LanguagesMenuItem" Grid.Column="0" Header="{DynamicResource LanguageMenuString}"
                             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                             Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                             Template="{DynamicResource CustomMenuItemTemplate}">
@@ -125,10 +125,10 @@
                                 Template="{DynamicResource CustomMenuItemTemplate}" />
                     </MenuItem>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                    <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                    <Button x:Name="CloseButton" Grid.Column="2" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                         <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
                 </Grid>
