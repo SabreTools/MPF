@@ -21,7 +21,7 @@
     <system:String x:Key="HelpMenuString">_Help</system:String>
     <system:String x:Key="AboutMenuItemString">_About</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
-    <system:String x:Key="LanguageMenuString">English</system:String>
+    <system:String x:Key="LanguageMenuString">ENG</system:String>
     <!-- Settings Group Box-->
     <system:String x:Key="SystemLabelString">System Type</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">System/Media Type</system:String>
