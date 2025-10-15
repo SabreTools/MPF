@@ -570,6 +570,9 @@ namespace MPF.UI.Windows
                     break;
             }
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
+
+            // Update the labels that don't get updated automatically
+            SetMediaTypeVisibility();
         }
 
         #endregion
