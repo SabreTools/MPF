@@ -8,6 +8,10 @@
     <system:String x:Key="FileMenuString">파일</system:String>
     <system:String x:Key="ExitMenuItemString">종료</system:String>
     <system:String x:Key="ToolsMenuString">도구</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">체크 덤프</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 만들기</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">옵션</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</system:String>
     <system:String x:Key="HelpMenuString">도움말</system:String>
     <system:String x:Key="AboutMenuItemString">정보</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
@@ -15,6 +19,7 @@
     <!-- Settings Group Box-->
     <system:String x:Key="SettingsGroupBoxString">설정</system:String>
     <system:String x:Key="SystemLabelString">시스템</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
     <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
     <system:String x:Key="BrowseButtonString">찾아보기</system:String>
     <system:String x:Key="DriveLetterLabelString">드라이브 문자</system:String>

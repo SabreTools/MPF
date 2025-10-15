@@ -362,7 +362,7 @@ namespace MPF.UI.Windows
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
-                SystemMediaTypeLabel!.Content = "System";
+                SystemMediaTypeLabel!.Content = Application.Current.Resources["SystemLabelString"];
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -370,7 +370,7 @@ namespace MPF.UI.Windows
             // If there are no media types defined
             if (MainViewModel.MediaTypes == null)
             {
-                SystemMediaTypeLabel!.Content = "System";
+                SystemMediaTypeLabel!.Content = Application.Current.Resources["SystemLabelString"];
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -378,8 +378,8 @@ namespace MPF.UI.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? "System/Media Type"
-                : "System";
+                ? Application.Current.Resources["SystemMediaTypeLabelString"];
+                : Application.Current.Resources["SystemLabelString"];
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
                 : Visibility.Hidden;
