@@ -369,7 +369,7 @@ namespace MPF.UI.Windows
             }
 
             // Change UI language to selected item
-            string lang = clickedItem.Header.ToString();
+            string lang = clickedItem.Header.ToString() ?? "";
             var dictionary = new ResourceDictionary();
             switch (lang)
             {
