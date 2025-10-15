@@ -87,7 +87,7 @@
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="KoreanMenuItem" Header="_한국어" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="KoreanMenuItem" Header="_Korean" HorizontalAlignment="Left" Width="185"
                                   IsCheckable="True" Checked="ChangeUILanguage"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
