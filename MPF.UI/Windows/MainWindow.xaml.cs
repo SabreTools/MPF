@@ -537,12 +537,12 @@ namespace MPF.UI.Windows
         private void LanguageMenuItemClick(object sender, RoutedEventArgs e)
         {
             var clickedItem = (MenuItem)sender;
-            // Don't do anything if language is already selected
-            if (clickedItem.IsChecked)
+            // Don't do anything if language is already checked and being unchecked
+            if (!clickedItem.IsChecked)
+            {
+                clickedItem.IsChecked = true;
                 return;
-
-            // Check selected item
-            clickedItem.IsChecked = true;
+            }
 
             // Uncheck every item not checked
             var languageMenu = (MenuItem)clickedItem.Parent;

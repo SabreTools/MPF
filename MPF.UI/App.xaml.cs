@@ -309,6 +309,9 @@ namespace MPF.UI
             InitializeComponent();
 #endif
 
+            // Assign resource dictionaries
+            SetUILanguage("Resources/Strings.xaml");
+
             // Create control templates
             CreateControlTemplate("ComboBoxTemplate");
             CreateControlTemplate("ComboBoxEditableTemplate");
@@ -358,6 +361,20 @@ namespace MPF.UI
             // Add the control template
             Resources[resourceName] = controlTemplate;
         }
+
+        /// <summary>
+        /// Create a strings resource dictionary for use as the UI language
+        /// </summary>
+        private void SetUILanguage(string resourceName)
+        {
+            // Create the default (English) strings resource dictionary
+            var dictionary = new ResourceDictionary();
+            dictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+
+            // Add the strings resource
+            Resources.MergedDictionaries.Add(dictionary);
+        }
+#endif
 
         /// <summary>
         /// Create a named style and add it to the current set of resources
