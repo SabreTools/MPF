@@ -2,6 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!-- Common Elements -->
+    <system:String x:Key="BrowseButtonString">Browse</system:String>
+    <system:String x:Key="CancelButtonString">Cancel</system:String>
+    <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
+    <system:String x:Key="StatusGroupBoxString">Status</system:String>
+
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
     <!-- Top Menu Bar -->
@@ -17,11 +23,9 @@
     <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
     <system:String x:Key="LanguageMenuString">English</system:String>
     <!-- Settings Group Box-->
-    <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
-    <system:String x:Key="SystemLabelString">System</system:String>
+    <system:String x:Key="SystemLabelString">System Type</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">System/Media Type</system:String>
     <system:String x:Key="OutputPathLabelString">Output Path</system:String>
-    <system:String x:Key="BrowseButtonString">Browse</system:String>
     <system:String x:Key="DriveLetterLabelString">Drive Letter</system:String>
     <system:String x:Key="DriveSpeedLabelString">Drive Speed</system:String>
     <system:String x:Key="DumpingProgramLabelString">Dumping Program</system:String>
@@ -31,10 +35,19 @@
     <system:String x:Key="ScanButtonString">Scan for Discs</system:String>
     <system:String x:Key="UpdateLabelButtonString">Update Label</system:String>
     <system:String x:Key="ProtectionScanButtonString">Scan for Protection</system:String>
-    <!-- Status Group Box -->
-    <system:String x:Key="StatusGroupBoxString">Status</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">Log Output</system:String>
     <system:String x:Key="ClearButtonString">Clear Log</system:String>
     <system:String x:Key="SaveButtonString">Save Log</system:String>
+
+    <!-- Check Dump Window-->
+    <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>
+    <system:String x:Key="InputPathLabelString">Input Path</system:String>
+    <system:String x:Key="CheckDumpButtonString">Check Dump</system:String>
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">Create PS3 IRD</system:String>
+    <system:String x:Key="InputGroupBoxString">Input</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">PS3 ISO Path</system:String>
+    <system:String x:Key="GetKeyPathLabelString">*.getkey.log File Path</system:String>
 </ResourceDictionary>

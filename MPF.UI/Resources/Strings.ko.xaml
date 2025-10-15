@@ -2,6 +2,12 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!-- Common Elements -->
+    <system:String x:Key="BrowseButtonString">찾아보기</system:String>
+    <system:String x:Key="CancelButtonString">취소</system:String>
+    <system:String x:Key="SettingsGroupBoxString">설정</system:String>
+    <system:String x:Key="StatusGroupBoxString">상태</system:String>
+
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String>
     <!-- Top Menu Bar -->
@@ -17,11 +23,9 @@
     <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
     <system:String x:Key="LanguageMenuString">한국어</system:String>
     <!-- Settings Group Box-->
-    <system:String x:Key="SettingsGroupBoxString">설정</system:String>
-    <system:String x:Key="SystemLabelString">시스템</system:String>
+    <system:String x:Key="SystemLabelString">시스템 유형</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
     <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
-    <system:String x:Key="BrowseButtonString">찾아보기</system:String>
     <system:String x:Key="DriveLetterLabelString">드라이브 문자</system:String>
     <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
     <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
@@ -31,10 +35,19 @@
     <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
     <system:String x:Key="UpdateLabelButtonString">레이블 갱신</system:String>
     <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
-    <!-- Status Group Box -->
-    <system:String x:Key="StatusGroupBoxString">상태</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">로그 출력</system:String>
     <system:String x:Key="ClearButtonString">로그 지우기</system:String>
     <system:String x:Key="SaveButtonString">로그 저장</system:String>
+
+    <!-- Check Dump Window-->
+    <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
+    <system:String x:Key="InputPathLabelString">입력 경로</system:String>
+    <system:String x:Key="CheckDumpButtonString">체크 덤프</system:String>
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">PS3 IRD 생성</system:String>
+    <system:String x:Key="InputGroupBoxString">입력</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</system:String>
+    <system:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</system:String>
 </ResourceDictionary>
