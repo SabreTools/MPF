@@ -96,6 +96,7 @@ namespace MPF.UI.Windows
 #endif
 
             // Set default language
+            var dictionary = new ResourceDictionary();
             switch (MainViewModel.Options.DefaultUILanguage)
             {
                 case "ENG":
@@ -110,6 +111,7 @@ namespace MPF.UI.Windows
                     dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
                     break;
             }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
         /// <summary>
