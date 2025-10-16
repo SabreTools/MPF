@@ -592,9 +592,9 @@ namespace MPF.Frontend.ViewModels
             // Set strings from application resource, if found
             try 
             {
-                DiscNotDetectedValue = Application.Current.FindResource("DiscNotDetectedButtonString");
-                StartDumpingValue = Application.Current.FindResource("StartDumpingButtonString");
-                StopDumpingValue = Application.Current.FindResource("StopDumpingButtonString");
+                DiscNotDetectedValue = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
+                StartDumpingValue = (string)Application.Current.FindResource("StartDumpingButtonString");
+                StopDumpingValue = (string)Application.Current.FindResource("StopDumpingButtonString");
             }
             catch { }
         }
