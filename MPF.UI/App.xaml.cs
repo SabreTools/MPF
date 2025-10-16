@@ -387,7 +387,7 @@ namespace MPF.UI
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
                 case "en":
-                    // Don't add any translated text
+                    // English already loaded, don't add any translated text
                     break;
                 
                 case "ko":
@@ -396,22 +396,20 @@ namespace MPF.UI
                     break;
                 
                 case "zh":
-                    // Check if region uses Traditional Chinese
+                    // Check if region uses Traditional or Simplified Chinese
                     string[] traditionalRegions = { "TW", "HK", "MO" };
                     if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
                     {
                         // TODO: Translate UI elements to Traditional Chinese
-                        translatedDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
                     }
                     else
                     {
                         // TODO: Translate UI elements to Simplified Chinese
-                        translatedDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
                     }
                     break;
                 
                 default:
-                    // Unsupported language
+                    // Unsupported language, don't add any translated text
                     break;
             }
 

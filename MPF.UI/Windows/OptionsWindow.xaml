@@ -71,7 +71,7 @@
                 <TabItem Header="General" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="User Interface">
-                            <UniformGrid Columns="2" Rows="2">
+                            <UniformGrid Columns="2" Rows="3">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
                                           IsChecked="{Binding Options.EnableDarkMode}"
                                           ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
@@ -91,6 +91,21 @@
                                           IsChecked="{Binding Options.FastUpdateLabel}"
                                           ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
                                 />
+
+                                <Label VerticalAlignment="Center" Content="Default UI Language:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultUILanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Options.DefaultUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
                             </UniformGrid>
                         </GroupBox>
 
