@@ -54,7 +54,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available UI languages
         /// </summary>
-        public static List<Element<UILanguages>> UILanguages => PopulateUILanguages();
+        public static List<Element<UILanguageComboBoxItem>> UILanguages => UILanguageComboBoxItem.GenerateElements();
 
         /// <summary>
         /// List of available log compression methods
