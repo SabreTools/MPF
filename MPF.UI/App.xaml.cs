@@ -394,7 +394,7 @@ namespace MPF.UI
                     translatedDictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
                     break;
                 
-                case "zh"
+                case "zh":
                     // Check if region uses Traditional Chinese
                     string[] traditionalRegions = { "TW", "HK", "MO" };
                     if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
