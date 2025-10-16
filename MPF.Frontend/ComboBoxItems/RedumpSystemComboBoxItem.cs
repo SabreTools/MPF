@@ -17,6 +17,7 @@ namespace MPF.Frontend.ComboBoxItems
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
 
+        private string _noSystemSelectedString = "No system selected";
         public string NoSystemSelectedString
         {
             get => _noSystemSelectedString;
@@ -26,7 +27,6 @@ namespace MPF.Frontend.ComboBoxItems
                     _noSystemSelectedString = value;
             }
         }
-        private string _noSystemSelectedString;
 
         public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
 
@@ -38,7 +38,7 @@ namespace MPF.Frontend.ComboBoxItems
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as RedumpSystem?).LongName() ?? NoSystemSelectedString ?? "No system selected";
+                    return (Data as RedumpSystem?).LongName() ?? NoSystemSelectedString;
             }
         }
 
@@ -63,7 +63,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static List<RedumpSystemComboBoxItem> GenerateElements(string noSystemSelectedString = string.Empty)
+        public static List<RedumpSystemComboBoxItem> GenerateElements(string noSystemSelectedString = null)
         {
             var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
             var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);
@@ -94,7 +94,7 @@ namespace MPF.Frontend.ComboBoxItems
 #endif
 
             RedumpSystemComboBoxItem nullSystem = new((RedumpSystem?)null);
-            nullSystem.NoSystemSelectedString = noSystemSelectedString;
+            nullSystem.NoSystemSelectedString = noSystemSelectedString ?? string.Empty;
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {
                 nullSystem,
