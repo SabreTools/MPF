@@ -34,7 +34,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <returns></returns>
         public static List<UILanguageComboBoxItem> GenerateElements()
         {
-            var langValues = new List<UILanguageComboBoxItem>;
+            var langValues = new List<UILanguageComboBoxItem>();
 
             foreach (var lang in languages)
             {
