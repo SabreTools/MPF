@@ -2460,7 +2460,10 @@ namespace MPF.Frontend.ViewModels
                 if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
                 if (translationStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
-                    Systems = RedumpSystemComboBoxItem.GenerateElements();//noSystemSelectedString);
+                {
+                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
+                    CurrentSystem ??= Systems[0];
+                }
 
                 if (StartStopButtonText as string == oldStartDumpingValue)
                 {
