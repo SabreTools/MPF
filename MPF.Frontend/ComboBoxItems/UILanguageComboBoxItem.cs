@@ -8,11 +8,11 @@ namespace MPF.Frontend.ComboBoxItems
     /// </summary>
     public class UILanguageComboBoxItem : IEquatable<UILanguageComboBoxItem>, IElement
     {
-        private readonly string? UILanguage;
+        private readonly string UILanguage;
 
         private readonly string[] languages = { "ENG", "한국어" };
 
-        public UILanguageComboBoxItem(string? language) => UILanguage = language;
+        public UILanguageComboBoxItem(string language) => UILanguage = language;
 
         /// <inheritdoc/>
         public string Name
