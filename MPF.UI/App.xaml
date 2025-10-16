@@ -253,7 +253,7 @@
                                 <!--<Grid RenderOptions.ClearTypeHint="Enabled">--> <!-- Not supported in .NET Framework 3.5 -->
                                 <Grid> <!-- Not supported in .NET Framework 3.5 -->
                                     <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                        <Rectangle x:Name="OpaqueRect" Fill="{TemplateBinding Background, ElementName=SubMenuBorder}" Height="{Binding ActualHeight, ElementName=SubMenuBorder}" Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
+                                        <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" Height="{Binding ActualHeight, ElementName=SubMenuBorder}" Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
                                     </Canvas>
                                     <Rectangle Fill="{DynamicResource MenuItem.SubMenu.HoverRectangle}" HorizontalAlignment="Left" Margin="29,2,0,2" Width="1"/>
                                     <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.TabNavigation="Cycle"/>
