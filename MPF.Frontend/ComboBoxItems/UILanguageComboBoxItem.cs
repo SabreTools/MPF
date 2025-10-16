@@ -47,11 +47,11 @@ namespace MPF.Frontend.ComboBoxItems
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as RedumpSystemComboBoxItem);
+            return Equals(obj as UILanguageComboBoxItem);
         }
 
         /// <inheritdoc/>
-        public bool Equals(RedumpSystemComboBoxItem? other)
+        public bool Equals(UILanguageComboBoxItem? other)
         {
             if (other == null)
                 return false;
