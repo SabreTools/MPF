@@ -543,11 +543,11 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
-        #region Constants
+        #region Strings
 
-        private const string DiscNotDetectedValue = "Disc Not Detected";
-        private const string StartDumpingValue = "Start Dumping";
-        private const string StopDumpingValue = "Stop Dumping";
+        private string DiscNotDetectedValue = "Disc Not Detected";
+        private string StartDumpingValue = "Start Dumping";
+        private string StopDumpingValue = "Stop Dumping";
 
         #endregion
 
@@ -588,6 +588,15 @@ namespace MPF.Frontend.ViewModels
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
+
+            // Set strings from application resource, if found
+            try 
+            {
+                DiscNotDetectedValue = Application.Current.FindResource("DiscNotDetectedButtonString");
+                StartDumpingValue = Application.Current.FindResource("StartDumpingButtonString");
+                StopDumpingValue = Application.Current.FindResource("StopDumpingButtonString");
+            }
+            catch { }
         }
 
         /// <summary>

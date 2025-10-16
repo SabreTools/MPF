@@ -177,7 +177,7 @@
                     <TextBox x:Name="PICPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding PICPathTextBoxEnabled}" />
-                    <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                                     IsEnabled="{Binding PICPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
                     <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="PIC Status"/>
@@ -204,9 +204,9 @@
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/>
                     <!-- Empty label for padding -->
-                    <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="Create IRD"
+                    <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource CreateIRDButtonString}"
                             IsEnabled="{Binding CreateIRDButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
                     <!-- Empty label for padding -->

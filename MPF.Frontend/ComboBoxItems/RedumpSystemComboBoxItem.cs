@@ -24,10 +24,17 @@ namespace MPF.Frontend.ComboBoxItems
         {
             get
             {
+                string noSystemSelectedString = "No system selected";
+                try
+                {
+                    noSystemSelectedString = Application.Current.FindResource("NoSystemSelectedString");
+                }
+                catch { }
+
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as RedumpSystem?).LongName() ?? "No system selected";
+                    return (Data as RedumpSystem?).LongName() ?? noSystemSelectedString;
             }
         }
 

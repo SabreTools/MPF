@@ -31,6 +31,7 @@
     <!-- Settings Group Box-->
     <system:String x:Key="SystemLabelString">시스템 유형</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
+    <system:String x:Key="NoSystemSelectedString">No system selected</system:String>
     <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
     <system:String x:Key="DriveLetterLabelString">드라이브 문자</system:String>
     <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
@@ -38,6 +39,9 @@
     <system:String x:Key="ParametersLabelString">매개변수</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">컨트롤</system:String>
+    <system:String x:Key="DiscNotDetectedButtonString">디스크 없음</system:String>
+    <system:String x:Key="StartDumpingButtonString">덤프 시작</system:String>
+    <system:String x:Key="StopDumpingButtonString">덤프 중지</system:String>
     <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
     <system:String x:Key="UpdateLabelButtonString">레이블 갱신</system:String>
     <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
@@ -47,9 +51,9 @@
     <system:String x:Key="SaveButtonString">로그 저장</system:String>
 
     <!-- Options Window -->
-    <system:String x:Key="OptionsTitleString">Options</system:String>
-    <system:String x:Key="OptionsFirstRunTitleString">Welcome to MPF, Explore the Options</system:String>
-    <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String>
+    <system:String x:Key="OptionsTitleString">옵션</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">MPF에 오신 것을 환영합니다. 옵션을 살펴보세요.</system:String>
+    <!-- <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String> -->
 
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
@@ -65,6 +69,7 @@
     <system:String x:Key="HexadecimalKeyLabelString">헥스 키</system:String>
     <system:String x:Key="KeyFilePathLabelString">키 파일 경로</system:String>
     <system:String x:Key="KeyStatusLabelString">키 상태</system:String>
+    <system:String x:Key="CreateIRDButtonString">IRD 생성</system:String>
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">미디어 정보</system:String>
