@@ -143,6 +143,16 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Default UI language to launch MPF into
+        /// null/empty = Detect locale
+        /// </summary>
+        public string? DefaultUILanguage
+        {
+            get { return GetStringSetting(Settings, "DefaultUILanguage", "Auto Detect"); }
+            set { Settings["DefaultUILanguage"] = value; }
+        }
+
+        /// <summary>
         /// Default output path for dumps
         /// </summary>
         public string? DefaultOutputPath

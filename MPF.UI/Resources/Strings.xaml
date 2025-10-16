@@ -1,0 +1,106 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Language Name: EN / ENG -->
+    <system:String x:Key="LanguageMenuString">ENG</system:String>
+
+    <!-- Common Elements -->
+    <system:String x:Key="AcceptButtonString">Accept</system:String>
+    <system:String x:Key="BrowseButtonString">Browse</system:String>
+    <system:String x:Key="CancelButtonString">Cancel</system:String>
+    <system:String x:Key="MinimizeMenuItemString">Minimize</system:String>
+    <system:String x:Key="CloseMenuItemString">Close</system:String>
+    <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
+    <system:String x:Key="StatusGroupBoxString">Status</system:String>
+    <system:String x:Key="WarningLabelString">WARNING:</system:String>
+
+    <!-- Main Window -->
+    <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>
+    <!-- Top Menu Bar -->
+    <system:String x:Key="FileMenuString">_File</system:String>
+    <system:String x:Key="ExitMenuItemString">E_xit</system:String>
+    <system:String x:Key="ToolsMenuString">_Tools</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">_Check Dump</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">Create _PS3 IRD</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">_Options</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">_Debug Info Window</system:String>
+    <system:String x:Key="HelpMenuString">_Help</system:String>
+    <system:String x:Key="AboutMenuItemString">_About</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">_Check for Updates</system:String>
+    <!-- Settings Group Box-->
+    <system:String x:Key="SystemLabelString">System Type</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">System/Media Type</system:String>
+    <system:String x:Key="NoSystemSelectedString">No system selected</system:String>
+    <system:String x:Key="OutputPathLabelString">Output Path</system:String>
+    <system:String x:Key="DriveLetterLabelString">Drive Letter</system:String>
+    <system:String x:Key="DriveSpeedLabelString">Drive Speed</system:String>
+    <system:String x:Key="DumpingProgramLabelString">Dumping Program</system:String>
+    <system:String x:Key="ParametersLabelString">Parameters</system:String>
+    <!-- Controls Group Box-->
+    <system:String x:Key="ControlsGroupBoxString">Controls</system:String>
+    <system:String x:Key="StartDumpingButtonString">Start Dumping</system:String>
+    <system:String x:Key="StopDumpingButtonString">Stop Dumping</system:String>
+    <system:String x:Key="ScanButtonString">Scan for Discs</system:String>
+    <system:String x:Key="UpdateLabelButtonString">Update Label</system:String>
+    <system:String x:Key="ProtectionScanButtonString">Scan for Protection</system:String>
+    <!-- Log Output -->
+    <system:String x:Key="LogOutputExpanderString">Log Output</system:String>
+    <system:String x:Key="ClearButtonString">Clear Log</system:String>
+    <system:String x:Key="SaveButtonString">Save Log</system:String>
+
+    <!-- Options Window -->
+    <system:String x:Key="OptionsTitleString">Options</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">Welcome to MPF, Explore the Options</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String>
+
+    <!-- Check Dump Window-->
+    <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>
+    <system:String x:Key="InputPathLabelString">Input Path</system:String>
+    <system:String x:Key="CheckDumpButtonString">Check Dump</system:String>
+    <system:String x:Key="CheckDumpWarningString">Check will overwrite any existing submission information files. Please make backups of those if you need to before running Check.</system:String>
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">Create PS3 IRD</system:String>
+    <system:String x:Key="InputGroupBoxString">Input</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">PS3 ISO Path</system:String>
+    <system:String x:Key="GetKeyPathLabelString">*.getkey.log File Path</system:String>
+    <system:String x:Key="KeyExpanderString">Manually define PS3 Disc Encryption Key</system:String>
+    <system:String x:Key="HexadecimalKeyLabelString">Hexadecimal Key</system:String>
+    <system:String x:Key="KeyFilePathLabelString">Key File Path</system:String>
+    <system:String x:Key="KeyStatusLabelString">Key Status</system:String>
+    <system:String x:Key="DiscIDExpanderString">Manually define PS3 Disc ID</system:String>
+    <system:String x:Key="DiscIDLabelString">Disc ID</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">Disc ID Status</system:String>
+    <system:String x:Key="PICExpanderString">Manually define Permanent Information &#x26; Control (PIC)</system:String>
+    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
+    <system:String x:Key="PICLabelString">PIC</system:String>
+    <system:String x:Key="PICFilePathLabelString">PIC File Path</system:String>
+    <system:String x:Key="PICStatusLabelString">PIC Status</system:String>
+    <system:String x:Key="CreateIRDButtonString">Create IRD</system:String>
+
+    <!-- Media Information Guide Window -->
+    <system:String x:Key="MediaInformationTitleString">Media Information</system:String>
+    <system:String x:Key="CategoryLabelString">Category</system:String>
+    <system:String x:Key="RegionLabelString">Region</system:String>
+    <system:String x:Key="LanguagesLabelString">Languages</system:String>
+    <system:String x:Key="LanguageSelectionViaLabelString">Language Selection Via</system:String>
+    <system:String x:Key="PCMacHybridLabelString">PC/Mac Hybrid</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Ring Code Guide</system:String>
+
+    <!-- Ring Code Guide Window -->
+    <system:String x:Key="RingCodeGuideTitleString">Ring Code Guide</system:String>
+
+    <!-- About Window -->
+    <system:String x:Key="AboutTitleString">About</system:String>
+    <system:String x:Key="AppTitleFullString">Media Preservation Frontend (MPF)</system:String>
+    <system:String x:Key="AboutLine1String">A community preservation frontend developed in C#.</system:String>
+    <system:String x:Key="AboutLine2String">Supports Redumper, Aaru, and DiscImageCreator.</system:String>
+    <system:String x:Key="AboutLine3String">Originally created to help the Redump project.</system:String>
+    <system:String x:Key="AboutThanksString">Thanks to everyone who has supported this project!</system:String>
+    <system:String x:Key="VersionLabelString">Version</system:String>
+
+    <!-- Check for Updates Window -->
+    <system:String x:Key="CheckForUpdatesTitleString">Version Update Check</system:String>
+
+</ResourceDictionary>

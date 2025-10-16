@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -309,6 +310,9 @@ namespace MPF.UI
             InitializeComponent();
 #endif
 
+            // Assign resource dictionaries
+            SetUILanguage();
+
             // Create control templates
             CreateControlTemplate("ComboBoxTemplate");
             CreateControlTemplate("ComboBoxEditableTemplate");
@@ -357,6 +361,60 @@ namespace MPF.UI
 
             // Add the control template
             Resources[resourceName] = controlTemplate;
+        }
+
+        /// <summary>
+        /// Create a strings resource dictionary for use as the UI language
+        /// </summary>
+        private void SetUILanguage()
+        {
+            // Add English strings to merged dictionary as default, add translations later
+            var baselineDictionary = new ResourceDictionary();
+            baselineDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+            Resources.MergedDictionaries.Add(baselineDictionary);
+
+            // Get current region code 
+            string region = "";
+            try
+            {
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            // Select startup language based on current system locale
+            var translatedDictionary = new ResourceDictionary();
+            switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+            {
+                case "en":
+                    // English already loaded, don't add any translated text
+                    break;
+                
+                case "ko":
+                    // Translate UI elements to Korean
+                    translatedDictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                
+                case "zh":
+                    // Check if region uses Traditional or Simplified Chinese
+                    string[] traditionalRegions = { "TW", "HK", "MO" };
+                    if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        // TODO: Translate UI elements to Traditional Chinese
+                    }
+                    else
+                    {
+                        // TODO: Translate UI elements to Simplified Chinese
+                    }
+                    break;
+                
+                default:
+                    // Unsupported language, don't add any translated text
+                    break;
+            }
+
+            // Add the strings resource to app resources
+            Resources.MergedDictionaries.Add(translatedDictionary);
         }
 
         /// <summary>

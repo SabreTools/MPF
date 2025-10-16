@@ -38,11 +38,11 @@
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
@@ -71,7 +71,7 @@
                 <TabItem Header="General" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="User Interface">
-                            <UniformGrid Columns="2" Rows="2">
+                            <UniformGrid Columns="2" Rows="3">
                                 <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
                                           IsChecked="{Binding Options.EnableDarkMode}"
                                           ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
@@ -91,6 +91,21 @@
                                           IsChecked="{Binding Options.FastUpdateLabel}"
                                           ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
                                 />
+
+                                <Label VerticalAlignment="Center" Content="Default UI Language:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultUILanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Options.DefaultUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
                             </UniformGrid>
                         </GroupBox>
 
@@ -493,8 +508,8 @@
                         <Label>
                             <Label.Content>
                                 <TextBlock TextWrapping="Wrap">
-                                    <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
-                                    <Run Text="If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny." />
+                                    <Run FontWeight="Bold" Foreground="Red" Text="{DynamicResource WarningLabelString}" />
+                                    <Run Text="{DynamicResource OptionsRetrievalWarningString}" />
                                 </TextBlock>
                             </Label.Content>
                         </Label>
@@ -513,9 +528,9 @@
                 </GroupBox.Template>
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/> <!-- Empty label for padding -->
-                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
+                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>

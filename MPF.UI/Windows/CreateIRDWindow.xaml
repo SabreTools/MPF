@@ -7,7 +7,7 @@
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
-                        Title="Create PS3 IRD" Width="600" WindowStyle="None"
+                        Title="{DynamicResource CreatePS3IRDDumpMenuItemString}" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -34,17 +34,17 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="Create PS3 IRD" />
+                        <Run FontWeight="Bold" Text="{DynamicResource CreatePS3IRDDumpMenuItemString}" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
@@ -66,7 +66,7 @@
                 </Grid>
             </Grid>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Input">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource InputGroupBoxString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -77,24 +77,24 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="PS3 ISO Path"/>
+                    <Label x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource PS3ISOPathLabelString}"/>
                     <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding InputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding InputPathTextBoxEnabled}" />
-                    <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding InputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="LogPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="*.getkey.log File Path"/>
+                    <Label x:Name="LogPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource GetKeyPathLabelString}"/>
                     <TextBox x:Name="LogPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                 Text="{Binding LogPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding LogPathTextBoxEnabled}" />
-                    <Button x:Name="LogPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="LogPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding LogPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
                 </Grid>
             </GroupBox>
 
             <Expander Name="KeyExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define PS3 Disc Encryption Key">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource KeyExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -106,26 +106,26 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="KeyLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Hexadecimal Key"/>
+                    <Label x:Name="KeyLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource HexadecimalKeyLabelString}"/>
                     <TextBox x:Name="KeyTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                 Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding HexKeyTextBoxEnabled}" />
 
                     <Label x:Name="KeyPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
-                           ToolTip="Typically a *.key file" Content="Key File Path"/>
+                           ToolTip="Typically a *.key file" Content="{DynamicResource KeyFilePathLabelString}"/>
                     <TextBox x:Name="KeyPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                 Text="{Binding KeyPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding KeyPathTextBoxEnabled}" />
-                    <Button x:Name="KeyPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="KeyPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding KeyPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="KeyStatusLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Key Status"/>
+                    <Label x:Name="KeyStatusLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource KeyStatusLabelString}"/>
                     <Label x:Name="KeyStatusText" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="{Binding KeyStatus}"/>
                 </Grid>
             </Expander>
 
             <Expander Name="DiscIDExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define PS3 Disc ID">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource DiscIDExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -136,18 +136,18 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="DiscIDLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Disc ID"/>
+                    <Label x:Name="DiscIDLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DiscIDLabelString}"/>
                     <TextBox x:Name="DiscIDTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding DiscIDString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding DiscIDTextBoxEnabled}" />
 
-                    <Label x:Name="DiscIDStatusLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="DiscID Status"/>
+                    <Label x:Name="DiscIDStatusLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DiscIDStatusLabelString}"/>
                     <Label x:Name="DiscIDStatusText" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="{Binding DiscIDStatus}"/>
                 </Grid>
             </Expander>
 
             <Expander Name="PICExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define Permanent Information &#x26; Control (PIC)">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource PICExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -160,12 +160,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="LayerbreakLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Layerbreak (sectors)"/>
+                    <Label x:Name="LayerbreakLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource LayerbreakLabelString}"/>
                     <TextBox x:Name="LayerbreakTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding LayerbreakString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding LayerbreakTextBoxEnabled}" />
 
-                    <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="PIC"/>
+                    <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource PICLabelString}"/>
                     <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Top"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                          MinHeight="55" MaxHeight="146" AcceptsReturn="True" 
@@ -173,19 +173,19 @@
                                          IsEnabled="{Binding PICTextBoxEnabled}" />
 
                     <Label x:Name="PICPathLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"
-                           ToolTip="Typically a *.physical or *_PIC.bin file" Content="PIC File Path"/>
+                           ToolTip="Typically a *.physical or *_PIC.bin file" Content="{DynamicResource PICFilePathLabelString}"/>
                     <TextBox x:Name="PICPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding PICPathTextBoxEnabled}" />
-                    <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                                     IsEnabled="{Binding PICPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="PIC Status"/>
+                    <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource PICStatusLabelString}"/>
                     <Label x:Name="PICStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding PICStatus}"/>
                 </Grid>
             </Expander>
             
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
                 <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
                     <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Text="{Binding CreateIRDStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -204,9 +204,9 @@
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/>
                     <!-- Empty label for padding -->
-                    <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="Create IRD"
+                    <Button Name="CreateIRDButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource CreateIRDButtonString}"
                             IsEnabled="{Binding CreateIRDButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
                     <!-- Empty label for padding -->

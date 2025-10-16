@@ -543,11 +543,11 @@ namespace MPF.Frontend.ViewModels
 
         #endregion
 
-        #region Constants
+        #region Strings
 
         private const string DiscNotDetectedValue = "Disc Not Detected";
-        private const string StartDumpingValue = "Start Dumping";
-        private const string StopDumpingValue = "Stop Dumping";
+        private string StartDumpingValue = "Start Dumping";
+        private string StopDumpingValue = "Stop Dumping";
 
         #endregion
 
@@ -811,25 +811,6 @@ namespace MPF.Frontend.ViewModels
             SecretLogLn(message);
             if (url == null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
-        }
-
-        /// <summary>
-        /// Build the about text 
-        /// </summary>
-        /// <returns></returns>
-        public string CreateAboutText()
-        {
-            string aboutText = $"Media Preservation Frontend (MPF)"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}A community preservation frontend developed in C#."
-                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
-                + $"{Environment.NewLine}Originally created to help the Redump project."
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Version {FrontendTool.GetCurrentVersion()}";
-            SecretLogLn(aboutText);
-            return aboutText;
         }
 
         /// <summary>
@@ -1881,6 +1862,14 @@ namespace MPF.Frontend.ViewModels
         }
 
         /// <summary>
+        /// Logs the About text
+        /// </summary>
+        public void LogAboutText(string message)
+        {
+            SecretLogLn(message);
+        }
+
+        /// <summary>
         /// Process the current custom parameters back into UI values
         /// </summary>
         public void ProcessCustomParameters()
@@ -2454,6 +2443,31 @@ namespace MPF.Frontend.ViewModels
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Translates strings in MainModelView
+        /// </summary>
+        /// <param name="translationStrings">Dictionary of keys and their translated string</param>
+        public void TranslateStrings(Dictionary<string, string>? translationStrings)
+        {
+            if (translationStrings != null)
+            {
+                // Cache current start dumping string
+                var oldStartDumpingValue = StartDumpingValue;
+
+                // Get translated strings
+                if (translationStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
+                    StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
+                if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
+                    StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
+
+                // Set button text
+                if (StartStopButtonText as string == oldStartDumpingValue)
+                    StartStopButtonText = StartDumpingValue;
+                else
+                    StartStopButtonText = StopDumpingValue;
             }
         }
 

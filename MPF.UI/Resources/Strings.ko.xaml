@@ -1,0 +1,106 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Language Name: KO / KOR / 한글 / 한국어 -->
+    <system:String x:Key="LanguageMenuString">한국어</system:String>
+
+    <!-- Common Elements -->
+    <system:String x:Key="AcceptButtonString">확인</system:String>
+    <system:String x:Key="BrowseButtonString">찾아보기</system:String>
+    <system:String x:Key="CancelButtonString">취소</system:String>
+    <system:String x:Key="MinimizeMenuItemString">최소화</system:String>
+    <system:String x:Key="CloseMenuItemString">끝내기</system:String>
+    <system:String x:Key="SettingsGroupBoxString">설정</system:String>
+    <system:String x:Key="StatusGroupBoxString">상태</system:String>
+    <system:String x:Key="WarningLabelString">경고:</system:String>
+
+    <!-- Main Window 
+    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
+    <!-- Top Menu Bar -->
+    <system:String x:Key="FileMenuString">파일</system:String>
+    <system:String x:Key="ExitMenuItemString">종료</system:String>
+    <system:String x:Key="ToolsMenuString">도구</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">체크 덤프</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 생성</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">옵션</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</system:String>
+    <system:String x:Key="HelpMenuString">도움말</system:String>
+    <system:String x:Key="AboutMenuItemString">앱 정보</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
+    <!-- Settings Group Box-->
+    <system:String x:Key="SystemLabelString">시스템 유형</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
+    <system:String x:Key="NoSystemSelectedString">No system selected</system:String>
+    <system:String x:Key="OutputPathLabelString">출력 경로</system:String>
+    <system:String x:Key="DriveLetterLabelString">드라이브 문자</system:String>
+    <system:String x:Key="DriveSpeedLabelString">드라이브 속도</system:String>
+    <system:String x:Key="DumpingProgramLabelString">덤프 프로그램</system:String>
+    <system:String x:Key="ParametersLabelString">매개변수</system:String>
+    <!-- Controls Group Box-->
+    <system:String x:Key="ControlsGroupBoxString">컨트롤</system:String>
+    <system:String x:Key="StartDumpingButtonString">덤프 시작</system:String>
+    <system:String x:Key="StopDumpingButtonString">덤프 중지</system:String>
+    <system:String x:Key="ScanButtonString">디스크 스캔</system:String>
+    <system:String x:Key="UpdateLabelButtonString">레이블 갱신</system:String>
+    <system:String x:Key="ProtectionScanButtonString">보호 스캔</system:String>
+    <!-- Log Output -->
+    <system:String x:Key="LogOutputExpanderString">로그 출력</system:String>
+    <system:String x:Key="ClearButtonString">로그 지우기</system:String>
+    <system:String x:Key="SaveButtonString">로그 저장</system:String>
+
+    <!-- Options Window -->
+    <system:String x:Key="OptionsTitleString">옵션</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">MPF에 오신 것을 환영합니다. 옵션을 살펴보세요.</system:String>
+    <!-- <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String> -->
+
+    <!-- Check Dump Window-->
+    <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
+    <system:String x:Key="InputPathLabelString">입력 경로</system:String>
+    <system:String x:Key="CheckDumpButtonString">체크 덤프</system:String>
+    <!-- <system:String x:Key="CheckDumpWarningString">Check will overwrite any existing submission information files. Please make backups of those if you need to before running Check.</system:String> -->
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">PS3 IRD 생성</system:String>
+    <system:String x:Key="InputGroupBoxString">입력</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</system:String>
+    <system:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</system:String>
+    <system:String x:Key="KeyExpanderString">PS3 디스크 암호화 키 수동 설정</system:String>
+    <system:String x:Key="HexadecimalKeyLabelString">헥스 키</system:String>
+    <system:String x:Key="KeyFilePathLabelString">키 파일 경로</system:String>
+    <system:String x:Key="KeyStatusLabelString">키 상태</system:String>
+    <system:String x:Key="DiscIDExpanderString">PS3 디스크 ID 수동 설정</system:String>
+    <system:String x:Key="DiscIDLabelString">디스크 ID</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">디스크 ID 상태</system:String>
+    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
+    <system:String x:Key="PICExpanderString">Permanent Information &#x26; Control (PIC) 수동 설정</system:String>
+    <system:String x:Key="PICLabelString">PIC</system:String>
+    <system:String x:Key="PICFilePathLabelString">PIC 파일 경로</system:String>
+    <system:String x:Key="PICStatusLabelString">PIC 상태</system:String>
+    <system:String x:Key="CreateIRDButtonString">IRD 생성</system:String>
+
+    <!-- Media Information Guide Window -->
+    <system:String x:Key="MediaInformationTitleString">미디어 정보</system:String>
+    <system:String x:Key="CategoryLabelString">카테고리</system:String>
+    <system:String x:Key="RegionLabelString">지역</system:String>
+    <system:String x:Key="LanguagesLabelString">언어 (언어)</system:String>
+    <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
+    <system:String x:Key="PCMacHybridLabelString">PC/Mac 하이브리드</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">링 코드 가이드</system:String>
+
+    <!-- Ring Code Guide Window -->
+    <system:String x:Key="RingCodeGuideTitleString">링 코드 가이드</system:String>
+
+    <!-- About Window -->
+    <system:String x:Key="AboutTitleString">앱 정보</system:String>
+    <!-- <system:String x:Key="AppTitleFullString">미디어 프리저베이션 프런트엔드 (MPF)</system:String>
+    <system:String x:Key="AboutLine1String">A community preservation frontend developed in C#.</system:String>
+    <system:String x:Key="AboutLine2String">Supports Redumper, Aaru, and DiscImageCreator.</system:String>
+    <system:String x:Key="AboutLine3String">Originally created to help the Redump project.</system:String>
+    <system:String x:Key="AboutThanksString">Thanks to everyone who has supported this project!</system:String> -->
+    <system:String x:Key="VersionLabelString">버전</system:String>
+
+    <!-- Check for Updates Window -->
+    <system:String x:Key="CheckForUpdatesTitleString">버전 업데이트 확인</system:String>
+
+</ResourceDictionary>
