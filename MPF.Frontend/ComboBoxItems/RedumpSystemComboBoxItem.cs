@@ -3,6 +3,7 @@ using System.Collections.Generic;
 #if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
 #endif
+using System.Windows;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ComboBoxItems
