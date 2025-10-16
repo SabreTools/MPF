@@ -596,8 +596,7 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            ProcessUserInfoDelegate processUserInfo,
-            Dictionary<string, string>? translatedStrings = null)
+            ProcessUserInfoDelegate processUserInfo)
         {
             // Set the callbacks
             _logger = loggerAction;
@@ -605,17 +604,7 @@ namespace MPF.Frontend.ViewModels
             _processUserInfo = processUserInfo;
 
             // Translate strings if provided
-            if (translatedStrings != null)
-            {
-                if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string? discNotDetectedValue))
-                    DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
-                if (translatedStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
-                    StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
-                if (translatedStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
-                    StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
-                if (translatedStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
-                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString!);
-            }
+            TranslateStrings(translationStrings);
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
@@ -2457,6 +2446,25 @@ namespace MPF.Frontend.ViewModels
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Translates strings in MainModelView
+        /// </summary>
+        /// <param name="translationStrings">Dictionary of keys and their translated string</param>
+        public void TranslateStrings(Dictionary<string, string>? translationStrings)
+        {
+            if (translationStrings != null)
+            {
+                if (translationStrings.TryGetValue("DiscNotDetectedButtonString", out string? discNotDetectedValue))
+                    DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
+                if (translatedtranslationStringsStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
+                    StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
+                if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
+                    StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
+                if (translationStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
+                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
             }
         }
 

@@ -115,15 +115,17 @@ namespace MPF.UI.Windows
             // Display the debug option in the menu, if necessary
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
+
+            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
             
             // Pass translation strings to MainViewModel
-            var translatedStrings = new Dictionary<string, string>();
-            translatedStrings["DiscNotDetectedButtonString"] = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
-            translatedStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
-            translatedStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
-            translatedStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
+            var translationStrings = new Dictionary<string, string>();
+            translationStrings["DiscNotDetectedButtonString"] = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
+            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
 
-            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow, translatedStrings);
+            MainViewModel.TranslateStrings(translationStrings);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
