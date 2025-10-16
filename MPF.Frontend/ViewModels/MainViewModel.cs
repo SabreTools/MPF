@@ -608,11 +608,11 @@ namespace MPF.Frontend.ViewModels
             if (translatedStrings != null)
             {
                 if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string discNotDetectedValue))
-                    DiscNotDetectedValue = discNotDetectedValue!;
+                    DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
                 if (translatedStrings.TryGetValue("StartDumpingButtonString", out string startDumpingButtonString))
-                    StartDumpingValue = startDumpingButtonString!;
+                    StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
                 if (translatedStrings.TryGetValue("StopDumpingButtonString", out string stopDumpingValue))
-                    StopDumpingValue = stopDumpingValue!;
+                    StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
                 if (translatedStrings.TryGetValue("NoSystemSelectedString", out string noSystemSelectedString))
                     Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString!);
             }

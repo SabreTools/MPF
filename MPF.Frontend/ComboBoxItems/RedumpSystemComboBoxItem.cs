@@ -86,7 +86,7 @@ namespace MPF.Frontend.ComboBoxItems
 
             RedumpSystemComboBoxItem emptySystem = new((RedumpSystem?)null);
             if (!string.IsNullOrEmpty(noSystemSelectedString))
-                emptySystem.NoSystemSelectedString = noSystemSelectedString;
+                emptySystem.NoSystemSelectedString = noSystemSelectedString!;
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {
                 emptySystem,
