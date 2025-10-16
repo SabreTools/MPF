@@ -17,7 +17,6 @@ namespace MPF.Frontend.ComboBoxItems
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
 
-        private string _noSystemSelectedString = "No system selected";
         public string NoSystemSelectedString
         {
             get => _noSystemSelectedString;
@@ -27,6 +26,7 @@ namespace MPF.Frontend.ComboBoxItems
                     _noSystemSelectedString = value;
             }
         }
+        private string _noSystemSelectedString;
 
         public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
 
@@ -38,7 +38,7 @@ namespace MPF.Frontend.ComboBoxItems
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as RedumpSystem?).LongName() ?? NoSystemSelectedString;
+                    return (Data as RedumpSystem?).LongName() ?? NoSystemSelectedString ?? "No system selected";
             }
         }
 
