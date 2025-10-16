@@ -545,7 +545,7 @@ namespace MPF.Frontend.ViewModels
 
         #region Strings
 
-        private string DiscNotDetectedValue = "Disc Not Detected";
+        private const string DiscNotDetectedValue = "Disc Not Detected";
         private string StartDumpingValue = "Start Dumping";
         private string StopDumpingValue = "Stop Dumping";
 
@@ -1998,7 +1998,7 @@ namespace MPF.Frontend.ViewModels
         /// If no volume label present, use PSX or PS2 serial if valid
         /// Otherwise, use "track" as volume label
         /// </summary>
-        private string? GetFormattedVolumeLabel(Drive? drive)
+        private static string? GetFormattedVolumeLabel(Drive? drive)
         {
             // If the drive is invalid
             if (drive == null)
@@ -2454,15 +2454,22 @@ namespace MPF.Frontend.ViewModels
         {
             if (translationStrings != null)
             {
-                if (translationStrings.TryGetValue("DiscNotDetectedButtonString", out string? discNotDetectedValue))
-                    DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
+                var oldStartDumpingValue = StartDumpingValue;
                 if (translationStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
                     StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
                 if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
                 if (translationStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
                     Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
-            }
+
+                if (StartStopButtonText as string == oldStartDumpingValue)
+                {
+                    StartStopButtonText = StartDumpingValue;
+                }
+                else
+                {
+                    StartStopButtonText = StopDumpingValue;
+                }
         }
 
         #endregion

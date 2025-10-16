@@ -39,7 +39,6 @@
     <system:String x:Key="ParametersLabelString">매개변수</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">컨트롤</system:String>
-    <system:String x:Key="DiscNotDetectedButtonString">디스크 없음</system:String>
     <system:String x:Key="StartDumpingButtonString">덤프 시작</system:String>
     <system:String x:Key="StopDumpingButtonString">덤프 중지</system:String>
     <system:String x:Key="ScanButtonString">디스크 스캔</system:String>

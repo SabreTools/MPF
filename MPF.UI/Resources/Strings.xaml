@@ -39,7 +39,6 @@
     <system:String x:Key="ParametersLabelString">Parameters</system:String>
     <!-- Controls Group Box-->
     <system:String x:Key="ControlsGroupBoxString">Controls</system:String>
-    <system:String x:Key="DiscNotDetectedButtonString">Disc Not Detected</system:String>
     <system:String x:Key="StartDumpingButtonString">Start Dumping</system:String>
     <system:String x:Key="StopDumpingButtonString">Stop Dumping</system:String>
     <system:String x:Key="ScanButtonString">Scan for Discs</system:String>

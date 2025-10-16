@@ -603,6 +603,14 @@ namespace MPF.UI.Windows
 
             // Update the labels that don't get updated automatically
             SetMediaTypeVisibility();
+
+            // Update the labels in MainViewModel
+            var translationStrings = new Dictionary<string, string>();
+            translationStrings["DiscNotDetectedButtonString"] = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
+            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
+            MainViewModel.TranslateStrings(translationStrings);
         }
 
         #endregion
