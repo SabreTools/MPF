@@ -10,7 +10,7 @@ namespace MPF.Frontend.ComboBoxItems
     {
         private readonly string UILanguage;
 
-        private readonly string[] languages = { "ENG", "한국어" };
+        private static readonly string[] languages = { "ENG", "한국어" };
 
         public UILanguageComboBoxItem(string language) => UILanguage = language;
 
@@ -19,7 +19,7 @@ namespace MPF.Frontend.ComboBoxItems
         {
             get
             {
-                if (Array.Exists(languages, r => r == region))
+                if (Array.Exists(languages, lang => lang == UILanguage))
                     return UILanguage;
                 else
                     return "Auto Detect";
@@ -38,7 +38,7 @@ namespace MPF.Frontend.ComboBoxItems
 
             foreach (var lang in languages)
             {
-                langValues.Add(lang);
+                langValues.Add(lang as UILanguageComboBoxItem);
             }
 
             return langValues;
@@ -56,7 +56,7 @@ namespace MPF.Frontend.ComboBoxItems
             if (other == null)
                 return false;
 
-            return Value == other.Value;
+            return UILanguage == other.UILanguage;
         }
 
         /// <inheritdoc/>
