@@ -377,8 +377,8 @@ namespace MPF.UI
             string region = "";
             try
             {
-                // Can throw exception
-                region = new RegionInfo(culture.Name).TwoLetterISORegionName;
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
             }
             catch { }
 
