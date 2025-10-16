@@ -468,7 +468,7 @@ namespace MPF.UI.Windows
                 + $"{Environment.NewLine}{(string)Application.Current.FindResource("ThanksString")}"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{(string)Application.Current.FindResource("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
-            MainViewModel.SecretLogLn(aboutText);
+            MainViewModel.LogAboutText(aboutText);
             return aboutText;
         }
 

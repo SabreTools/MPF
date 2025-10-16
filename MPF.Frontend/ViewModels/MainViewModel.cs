@@ -1862,6 +1862,14 @@ namespace MPF.Frontend.ViewModels
         }
 
         /// <summary>
+        /// Logs the About text
+        /// </summary>
+        public void LogAboutText(string message)
+        {
+            SecretLogLn(message)
+        }
+
+        /// <summary>
         /// Process the current custom parameters back into UI values
         /// </summary>
         public void ProcessCustomParameters()
