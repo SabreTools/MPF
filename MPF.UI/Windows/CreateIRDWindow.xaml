@@ -106,7 +106,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="KeyLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResourceHexadecimalKeyLabelString}"/>
+                    <Label x:Name="KeyLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource HexadecimalKeyLabelString}"/>
                     <TextBox x:Name="KeyTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                 Text="{Binding HexKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IsEnabled="{Binding HexKeyTextBoxEnabled}" />
