@@ -37,7 +37,7 @@ namespace MPF.Frontend.ComboBoxItems
             var langValues = new List<UILanguageComboBoxItem>()
             {
                 new UILanguageComboBoxItem(""),
-            }
+            };
 
             foreach (var lang in languages)
             {
