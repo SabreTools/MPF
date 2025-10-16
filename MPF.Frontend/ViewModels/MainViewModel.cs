@@ -2470,6 +2470,7 @@ namespace MPF.Frontend.ViewModels
                 {
                     StartStopButtonText = StopDumpingValue;
                 }
+            }
         }
 
         #endregion
