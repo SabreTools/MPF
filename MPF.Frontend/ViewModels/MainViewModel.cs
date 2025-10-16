@@ -1866,7 +1866,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void LogAboutText(string message)
         {
-            SecretLogLn(message)
+            SecretLogLn(message);
         }
 
         /// <summary>
