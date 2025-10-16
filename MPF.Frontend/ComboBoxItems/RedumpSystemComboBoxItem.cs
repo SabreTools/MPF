@@ -21,7 +21,11 @@ namespace MPF.Frontend.ComboBoxItems
         public string NoSystemSelectedString
         {
             get => _noSystemSelectedString;
-            set => _noSystemSelectedString = value ?? _noSystemSelectedString;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    _noSystemSelectedString = value;
+            }
         }
 
         public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
@@ -59,7 +63,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static List<RedumpSystemComboBoxItem> GenerateElements(string? noSystemSelectedString = null)
+        public static List<RedumpSystemComboBoxItem> GenerateElements(string noSystemSelectedString = string.Empty)
         {
             var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
             var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);
