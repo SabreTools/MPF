@@ -6,7 +6,7 @@ namespace MPF.Frontend.ComboBoxItems
     /// <summary>
     /// Represents a single item in the Default UI Language combo box
     /// </summary>
-    public class UILanguageComboBoxItem : IEquatable<UILanguage>, IElement
+    public class UILanguageComboBoxItem : IEquatable<UILanguageComboBoxItem>, IElement
     {
         private readonly string? UILanguage;
 
