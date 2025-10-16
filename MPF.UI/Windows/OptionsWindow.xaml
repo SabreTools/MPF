@@ -513,9 +513,9 @@
                 </GroupBox.Template>
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/> <!-- Empty label for padding -->
-                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
+                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>

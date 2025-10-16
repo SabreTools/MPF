@@ -310,7 +310,7 @@ namespace MPF.UI
 #endif
 
             // Assign resource dictionaries
-            SetUILanguage("Resources/Strings.xaml");
+            SetUILanguage();
 
             // Create control templates
             CreateControlTemplate("ComboBoxTemplate");
@@ -365,14 +365,56 @@ namespace MPF.UI
         /// <summary>
         /// Create a strings resource dictionary for use as the UI language
         /// </summary>
-        private void SetUILanguage(string resourceName)
+        private void SetUILanguage()
         {
-            // Create the default (English) strings resource dictionary
-            var dictionary = new ResourceDictionary();
-            dictionary.Source = new Uri(resourceName, UriKind.Relative);
+            // Add English strings to merged dictionary as default, add translations later
+            var baselineDictionary = new ResourceDictionary();
+            baselineDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+            Resources.MergedDictionaries.Add(baselineDictionary);
+
+            // Get current region code 
+            string region = "";
+            try
+            {
+                // Can throw exception
+                region = new RegionInfo(culture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            // Select startup language based on current system locale
+            var translatedDictionary = new ResourceDictionary();
+            switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+            {
+                case "en":
+                    // Don't add any translated text
+                    break;
+                
+                case "ko":
+                    // Translate UI elements to Korean
+                    translatedDictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                
+                case "zh"
+                    // Check if region uses Traditional Chinese
+                    string[] traditionalRegions = { "TW", "HK", "MO" };
+                    if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        // TODO: Translate UI elements to Traditional Chinese
+                        translatedDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+                    }
+                    else
+                    {
+                        // TODO: Translate UI elements to Simplified Chinese
+                        translatedDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+                    }
+                
+                default:
+                    // Unsupported language
+                    break;
+            }
 
             // Add the strings resource to app resources
-            Resources.MergedDictionaries.Add(dictionary);
+            Resources.MergedDictionaries.Add(translatedDictionary);
         }
 
         /// <summary>
