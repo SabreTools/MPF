@@ -65,9 +65,18 @@
     <system:String x:Key="InputGroupBoxString">입력</system:String>
     <system:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</system:String>
     <system:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</system:String>
+    <system:String x:Key="KeyExpanderString">Manually define PS3 Disc Encryption Key</system:String>
     <system:String x:Key="HexadecimalKeyLabelString">헥스 키</system:String>
     <system:String x:Key="KeyFilePathLabelString">키 파일 경로</system:String>
     <system:String x:Key="KeyStatusLabelString">키 상태</system:String>
+    <system:String x:Key="DiscIDExpanderString">Manually define PS3 Disc ID</system:String>
+    <system:String x:Key="DiscIDLabelString">디스크 ID</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">디스크 ID 상태</system:String>
+    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
+    <system:String x:Key="PICExpanderString">Manually define Permanent Information &#x26; Control (PIC)</system:String>
+    <system:String x:Key="PICLabelString">PIC</system:String>
+    <system:String x:Key="PICFilePathLabelString">PIC 파일 경로</system:String>
+    <system:String x:Key="PICStatusLabelString">PIC 상태</system:String>
     <system:String x:Key="CreateIRDButtonString">IRD 생성</system:String>
 
     <!-- Media Information Guide Window -->

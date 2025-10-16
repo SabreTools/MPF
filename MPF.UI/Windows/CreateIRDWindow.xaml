@@ -94,7 +94,7 @@
             </GroupBox>
 
             <Expander Name="KeyExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define PS3 Disc Encryption Key">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource KeyExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -125,7 +125,7 @@
             </Expander>
 
             <Expander Name="DiscIDExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define PS3 Disc ID">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource DiscIDExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -136,18 +136,18 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="DiscIDLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Disc ID"/>
+                    <Label x:Name="DiscIDLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DiscIDLabelString}"/>
                     <TextBox x:Name="DiscIDTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding DiscIDString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding DiscIDTextBoxEnabled}" />
 
-                    <Label x:Name="DiscIDStatusLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="DiscID Status"/>
+                    <Label x:Name="DiscIDStatusLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DiscIDStatusLabelString}"/>
                     <Label x:Name="DiscIDStatusText" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="{Binding DiscIDStatus}"/>
                 </Grid>
             </Expander>
 
             <Expander Name="PICExpander" BorderThickness="1" BorderBrush="#D5DFE5" Margin="5,5,5,5" HorizontalAlignment="Stretch" 
-                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="Manually define Permanent Information &#x26; Control (PIC)">
+                      IsEnabled="{Binding LogPathNotProvided}" IsExpanded="False" Header="{DynamicResource PICExpanderString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -160,12 +160,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="LayerbreakLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Layerbreak (sectors)"/>
+                    <Label x:Name="LayerbreakLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource LayerbreakLabelString}"/>
                     <TextBox x:Name="LayerbreakTextBox" Grid.Row="0" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding LayerbreakString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding LayerbreakTextBoxEnabled}" />
 
-                    <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="PIC"/>
+                    <Label x:Name="PICLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource PICLabelString}"/>
                     <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Top"
                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                          MinHeight="55" MaxHeight="146" AcceptsReturn="True" 
@@ -173,14 +173,14 @@
                                          IsEnabled="{Binding PICTextBoxEnabled}" />
 
                     <Label x:Name="PICPathLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"
-                           ToolTip="Typically a *.physical or *_PIC.bin file" Content="PIC File Path"/>
+                           ToolTip="Typically a *.physical or *_PIC.bin file" Content="{DynamicResource PICFilePathLabelString}"/>
                     <TextBox x:Name="PICPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                                      Text="{Binding PICPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      IsEnabled="{Binding PICPathTextBoxEnabled}" />
                     <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                                     IsEnabled="{Binding PICPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="PIC Status"/>
+                    <Label x:Name="PICStatusLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource PICStatusLabelString}"/>
                     <Label x:Name="PICStatusText" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="{Binding PICStatus}"/>
                 </Grid>
             </Expander>
