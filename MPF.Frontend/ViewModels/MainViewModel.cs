@@ -603,9 +603,6 @@ namespace MPF.Frontend.ViewModels
             _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
 
-            // Translate strings if provided
-            TranslateStrings(translationStrings);
-
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
         }
@@ -2459,7 +2456,7 @@ namespace MPF.Frontend.ViewModels
             {
                 if (translationStrings.TryGetValue("DiscNotDetectedButtonString", out string? discNotDetectedValue))
                     DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
-                if (translatedtranslationStringsStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
+                if (translationStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
                     StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
                 if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
