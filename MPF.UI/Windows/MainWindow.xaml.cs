@@ -116,7 +116,7 @@ namespace MPF.UI.Windows
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
             
             // Pass translation strings to MainViewModel
-            var translatedStrings = new Dictionary<string, string>();;
+            var translatedStrings = new Dictionary<string, string>();
             translatedStrings["DiscNotDetectedButtonString"] = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
             translatedStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
             translatedStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");

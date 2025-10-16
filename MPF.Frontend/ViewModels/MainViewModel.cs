@@ -607,13 +607,13 @@ namespace MPF.Frontend.ViewModels
             // Translate strings if provided
             if (translatedStrings != null)
             {
-                if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string discNotDetectedValue))
+                if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string? discNotDetectedValue))
                     DiscNotDetectedValue = discNotDetectedValue ?? DiscNotDetectedValue;
-                if (translatedStrings.TryGetValue("StartDumpingButtonString", out string startDumpingButtonString))
+                if (translatedStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
                     StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
-                if (translatedStrings.TryGetValue("StopDumpingButtonString", out string stopDumpingValue))
+                if (translatedStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
-                if (translatedStrings.TryGetValue("NoSystemSelectedString", out string noSystemSelectedString))
+                if (translatedStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
                     Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString!);
             }
 
