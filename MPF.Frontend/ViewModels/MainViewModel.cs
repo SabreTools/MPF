@@ -21,14 +21,13 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public Options Options
         {
-            get => _options;
+            get;
             set
             {
-                _options = value;
-                OptionsLoader.SaveToConfig(_options);
+                field = value;
+                OptionsLoader.SaveToConfig(field);
             }
         }
-        private Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed

@@ -17,7 +17,12 @@ namespace MPF.Frontend.ComboBoxItems
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
 
-        public string NoSystemSelectedString = "No system selected";
+        private string _noSystemSelectedString = "No system selected";
+        public string NoSystemSelectedString
+        {
+            get => _noSystemSelectedString;
+            set => _noSystemSelectedString = value ?? _noSystemSelectedString;
+        }
 
         public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
 
@@ -84,12 +89,11 @@ namespace MPF.Frontend.ComboBoxItems
                 );
 #endif
 
-            RedumpSystemComboBoxItem emptySystem = new((RedumpSystem?)null);
-            if (!string.IsNullOrEmpty(noSystemSelectedString))
-                emptySystem.NoSystemSelectedString = noSystemSelectedString!;
+            RedumpSystemComboBoxItem nullSystem = new((RedumpSystem?)null);
+            nullSystem.NoSystemSelectedString = noSystemSelectedString;
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {
-                emptySystem,
+                nullSystem,
             };
 
             foreach (var group in mapping)
