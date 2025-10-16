@@ -608,13 +608,13 @@ namespace MPF.Frontend.ViewModels
             if (translatedStrings != null)
             {
                 if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string discNotDetectedValue))
-                    DiscNotDetectedValue = discNotDetectedValue;
+                    DiscNotDetectedValue = discNotDetectedValue!;
                 if (translatedStrings.TryGetValue("StartDumpingButtonString", out string startDumpingButtonString))
-                    StartDumpingValue = startDumpingButtonString;
+                    StartDumpingValue = startDumpingButtonString!;
                 if (translatedStrings.TryGetValue("StopDumpingButtonString", out string stopDumpingValue))
-                    StopDumpingValue = stopDumpingValue;
+                    StopDumpingValue = stopDumpingValue!;
                 if (translatedStrings.TryGetValue("NoSystemSelectedString", out string noSystemSelectedString))
-                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
+                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString!);
             }
 
             // Finish initializing the rest of the values
@@ -2012,7 +2012,7 @@ namespace MPF.Frontend.ViewModels
         /// If no volume label present, use PSX or PS2 serial if valid
         /// Otherwise, use "track" as volume label
         /// </summary>
-        private static string? GetFormattedVolumeLabel(Drive? drive)
+        private string? GetFormattedVolumeLabel(Drive? drive)
         {
             // If the drive is invalid
             if (drive == null)
