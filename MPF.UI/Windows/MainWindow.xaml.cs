@@ -114,8 +114,15 @@ namespace MPF.UI.Windows
             // Display the debug option in the menu, if necessary
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
+            
+            // Pass translation strings to MainViewModel
+            var translatedStrings = new Dictionary<string, string>();;
+            translatedStrings["DiscNotDetectedButtonString"] = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
+            translatedStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translatedStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            translatedStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
 
-            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
+            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow, translatedStrings);
 
             // Set the UI color scheme according to the options
             ApplyTheme();

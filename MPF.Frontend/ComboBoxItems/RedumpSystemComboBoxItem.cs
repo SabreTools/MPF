@@ -3,7 +3,6 @@ using System.Collections.Generic;
 #if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
 #endif
-using System.Windows;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.ComboBoxItems
@@ -18,6 +17,8 @@ namespace MPF.Frontend.ComboBoxItems
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
 
+        public string NoSystemSelectedString = "No system selected";
+
         public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
 
         /// <inheritdoc/>
@@ -25,17 +26,10 @@ namespace MPF.Frontend.ComboBoxItems
         {
             get
             {
-                string noSystemSelectedString = "No system selected";
-                try
-                {
-                    noSystemSelectedString = Application.Current.FindResource("NoSystemSelectedString");
-                }
-                catch { }
-
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as RedumpSystem?).LongName() ?? noSystemSelectedString;
+                    return (Data as RedumpSystem?).LongName() ?? NoSystemSelectedString;
             }
         }
 
@@ -60,7 +54,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static List<RedumpSystemComboBoxItem> GenerateElements()
+        public static List<RedumpSystemComboBoxItem> GenerateElements(string? noSystemSelectedString = null)
         {
             var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
             var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);
@@ -90,9 +84,12 @@ namespace MPF.Frontend.ComboBoxItems
                 );
 #endif
 
+            RedumpSystemComboBoxItem emptySystem = new((RedumpSystem?)null);
+            if (!string.IsNullOrEmpty(noSystemSelectedString))
+                emptySystem.NoSystemSelectedString = noSystemSelectedString;
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {
-                new RedumpSystemComboBoxItem((RedumpSystem?)null),
+                emptySystem,
             };
 
             foreach (var group in mapping)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
@@ -589,15 +588,6 @@ namespace MPF.Frontend.ViewModels
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
-
-            // Set strings from application resource, if found
-            try 
-            {
-                DiscNotDetectedValue = (string)Application.Current.FindResource("DiscNotDetectedButtonString");
-                StartDumpingValue = (string)Application.Current.FindResource("StartDumpingButtonString");
-                StopDumpingValue = (string)Application.Current.FindResource("StopDumpingButtonString");
-            }
-            catch { }
         }
 
         /// <summary>
@@ -606,12 +596,26 @@ namespace MPF.Frontend.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
-            ProcessUserInfoDelegate processUserInfo)
+            ProcessUserInfoDelegate processUserInfo,
+            Dictionary<string, string>? translatedStrings = null)
         {
             // Set the callbacks
             _logger = loggerAction;
             _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
+
+            // Translate strings if provided
+            if (translatedStrings != null)
+            {
+                if (translatedStrings.TryGetValue("DiscNotDetectedButtonString", out string discNotDetectedValue))
+                    DiscNotDetectedValue = discNotDetectedValue;
+                if (translatedStrings.TryGetValue("StartDumpingButtonString", out string startDumpingButtonString))
+                    StartDumpingValue = startDumpingButtonString;
+                if (translatedStrings.TryGetValue("StopDumpingButtonString", out string stopDumpingValue))
+                    StopDumpingValue = stopDumpingValue;
+                if (translatedStrings.TryGetValue("NoSystemSelectedString", out string noSystemSelectedString))
+                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
+            }
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rebuildPrograms: true, rescanDrives: true);
