@@ -70,7 +70,7 @@
     <system:String x:Key="KeyFilePathLabelString">Key File Path</system:String>
     <system:String x:Key="KeyStatusLabelString">Key Status</system:String>
     <system:String x:Key="DiscIDExpanderString">Manually define PS3 Disc ID</system:String>
-    <system:String x:Key="DiscIDLabelString">Disc ID</system:String>Layerbreak (sectors)
+    <system:String x:Key="DiscIDLabelString">Disc ID</system:String>
     <system:String x:Key="DiscIDStatusLabelString">Disc ID Status</system:String>
     <system:String x:Key="PICExpanderString">Manually define Permanent Information &#x26; Control (PIC)</system:String>
     <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
