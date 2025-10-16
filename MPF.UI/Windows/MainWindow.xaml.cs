@@ -131,7 +131,7 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.FirstRun)
             {
                 // Show the options window
-                ShowOptionsWindow(Application.Current.FindResource("OptionsFirstRunTitleString"));
+                ShowOptionsWindow((string)Application.Current.FindResource("OptionsFirstRunTitleString"));
             }
         }
 
@@ -227,7 +227,7 @@ namespace MPF.UI.Windows
             }
 
             if (showIfSame || different)
-                CustomMessageBox.Show(this, message, Application.Current.FindResource("CheckForUpdatesTitleString"), MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+                CustomMessageBox.Show(this, message, (string)Application.Current.FindResource("CheckForUpdatesTitleString"), MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace MPF.UI.Windows
                 Owner = this,
                 ShowActivated = true,
                 ShowInTaskbar = true,
-                Title = title ?? Application.Current.FindResource("OptionsTitleString"),
+                Title = title ?? (string)Application.Current.FindResource("OptionsTitleString"),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
@@ -363,7 +363,7 @@ namespace MPF.UI.Windows
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
-                SystemMediaTypeLabel!.Content = Application.Current.FindResource("SystemLabelString");
+                SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -371,7 +371,7 @@ namespace MPF.UI.Windows
             // If there are no media types defined
             if (MainViewModel.MediaTypes == null)
             {
-                SystemMediaTypeLabel!.Content = Application.Current.FindResource("SystemLabelString");
+                SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -379,8 +379,8 @@ namespace MPF.UI.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? Application.Current.FindResource("SystemMediaTypeLabelString")
-                : Application.Current.FindResource("SystemLabelString");
+                ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
+                : (string)Application.Current.FindResource("SystemLabelString");
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
                 : Visibility.Hidden;
@@ -459,15 +459,15 @@ namespace MPF.UI.Windows
         /// <returns></returns>
         public string CreateAboutText()
         {
-            string aboutText = $"{Application.Current.FindResource("AppTitleFullString")}"
+            string aboutText = $"{(string)Application.Current.FindResource("AppTitleFullString")}"
                 + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}{Application.Current.FindResource("AboutLine1String")}"
-                + $"{Environment.NewLine}{Application.Current.FindResource("AboutLine2String")}"
-                + $"{Environment.NewLine}{Application.Current.FindResource("AboutLine3String")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine1String")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine2String")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine3String")}"
                 + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}{Application.Current.FindResource("ThanksString")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("ThanksString")}"
                 + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}{Application.Current.FindResource("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
             MainViewModel.SecretLogLn(aboutText);
             return aboutText;
         }
@@ -512,7 +512,7 @@ namespace MPF.UI.Windows
         public void AboutClick(object sender, RoutedEventArgs e)
         {
             string aboutText = CreateAboutText();
-            CustomMessageBox.Show(this, aboutText, Application.Current.FindResource("AboutTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBox.Show(this, aboutText, (string)Application.Current.FindResource("AboutTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
