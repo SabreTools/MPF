@@ -408,6 +408,7 @@ namespace MPF.UI
                         // TODO: Translate UI elements to Simplified Chinese
                         translatedDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
                     }
+                    break;
                 
                 default:
                     // Unsupported language
