@@ -122,8 +122,6 @@ namespace MPF.UI.Windows
             var translationStrings = new Dictionary<string, string>();
             translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
             translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
-            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
-
             MainViewModel.TranslateStrings(translationStrings);
 
             // Set the UI color scheme according to the options

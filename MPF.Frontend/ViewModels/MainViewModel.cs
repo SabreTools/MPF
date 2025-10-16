@@ -2454,25 +2454,20 @@ namespace MPF.Frontend.ViewModels
         {
             if (translationStrings != null)
             {
+                // Cache current start dumping string
                 var oldStartDumpingValue = StartDumpingValue;
+
+                // Get translated strings
                 if (translationStrings.TryGetValue("StartDumpingButtonString", out string? startDumpingButtonString))
                     StartDumpingValue = startDumpingButtonString ?? StartDumpingValue;
                 if (translationStrings.TryGetValue("StopDumpingButtonString", out string? stopDumpingValue))
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
-                if (translationStrings.TryGetValue("NoSystemSelectedString", out string? noSystemSelectedString))
-                {
-                    Systems = RedumpSystemComboBoxItem.GenerateElements(noSystemSelectedString);
-                    CurrentSystem ??= Systems[0];
-                }
 
+                // Set button text
                 if (StartStopButtonText as string == oldStartDumpingValue)
-                {
                     StartStopButtonText = StartDumpingValue;
-                }
                 else
-                {
                     StartStopButtonText = StopDumpingValue;
-                }
             }
         }
 
