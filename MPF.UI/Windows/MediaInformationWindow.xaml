@@ -8,7 +8,7 @@
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         mc:Ignorable="d"
-                        Title="Media Information" Width="600" WindowStyle="None"
+                        Title="{DynamicResource MediaInformationTitleString}" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -32,18 +32,18 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="Media Information" />
+                        <Run FontWeight="Bold" Text="{DynamicResource MediaInformationTitleString}" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -96,7 +96,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource CategoryLabelString}" />
                                         <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   Style="{DynamicResource CustomComboBoxStyle}" />
@@ -108,7 +108,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource RegionLabelString}" />
                                         <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Regions}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   Style="{DynamicResource CustomComboBoxStyle}" />
@@ -120,7 +120,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource LanguagesLabelString}" />
                                         <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Languages}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
@@ -138,7 +138,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
+                                        <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource LanguageSelectionViaLabelString}" />
                                         <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding LanguageSelections}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
@@ -181,7 +181,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" Margin="0,4"
+                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="{DynamicResource PCMacHybridLabelString}" Margin="0,4"
                                                   IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PCMacHybrid], Mode=TwoWay}"/>
                                     </Grid>
                                     <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
@@ -518,11 +518,11 @@
                     </ControlTemplate>
                 </GroupBox.Template>
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Height="25" Width="80" Content="Accept"
+                    <Button Name="AcceptButton" Height="25" Width="80" Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide"
+                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="{DynamicResource RingCodeGuideButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>

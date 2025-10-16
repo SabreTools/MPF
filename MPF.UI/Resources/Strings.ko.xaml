@@ -6,24 +6,28 @@
     <system:String x:Key="LanguageMenuString">한국어</system:String>
 
     <!-- Common Elements -->
+    <system:String x:Key="AcceptButtonString">확인</system:String>
     <system:String x:Key="BrowseButtonString">찾아보기</system:String>
     <system:String x:Key="CancelButtonString">취소</system:String>
+    <system:String x:Key="MinimizeMenuItemString">최소화</system:String>
+    <system:String x:Key="CloseMenuItemString">끝내기</system:String>
     <system:String x:Key="SettingsGroupBoxString">설정</system:String>
     <system:String x:Key="StatusGroupBoxString">상태</system:String>
+    <system:String x:Key="WarningLabelString">경고:</system:String>
 
-    <!-- Main Window -->
-    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String>
+    <!-- Main Window 
+    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
     <!-- Top Menu Bar -->
-    <system:String x:Key="FileMenuString">_파일</system:String>
-    <system:String x:Key="ExitMenuItemString">_종료</system:String>
-    <system:String x:Key="ToolsMenuString">_도구</system:String>
-    <system:String x:Key="CheckDumpMenuItemString">_체크 덤프</system:String>
-    <system:String x:Key="CreatePS3IRDDumpMenuItemString">_PS3 IRD 생성</system:String>
-    <system:String x:Key="OptionsDumpMenuItemString">_옵션</system:String>
-    <system:String x:Key="DebugInfoWindowMenuItemString">_디버그 정보 창</system:String>
-    <system:String x:Key="HelpMenuString">_도움말</system:String>
-    <system:String x:Key="AboutMenuItemString">_앱 정보</system:String>
-    <system:String x:Key="CheckForUpdateMenuItemString">_업데이트 확인</system:String>
+    <system:String x:Key="FileMenuString">파일</system:String>
+    <system:String x:Key="ExitMenuItemString">종료</system:String>
+    <system:String x:Key="ToolsMenuString">도구</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">체크 덤프</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 생성</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">옵션</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</system:String>
+    <system:String x:Key="HelpMenuString">도움말</system:String>
+    <system:String x:Key="AboutMenuItemString">앱 정보</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</system:String>
     <!-- Settings Group Box-->
     <system:String x:Key="SystemLabelString">시스템 유형</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</system:String>
@@ -43,24 +47,47 @@
     <system:String x:Key="SaveButtonString">로그 저장</system:String>
 
     <!-- Options Window -->
+    <system:String x:Key="OptionsTitleString">Options</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">Welcome to MPF, Explore the Options</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String>
 
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
     <system:String x:Key="InputPathLabelString">입력 경로</system:String>
     <system:String x:Key="CheckDumpButtonString">체크 덤프</system:String>
+    <!-- <system:String x:Key="CheckDumpWarningString">Check will overwrite any existing submission information files. Please make backups of those if you need to before running Check.</system:String> -->
 
     <!-- Create PS3 IRD Window -->
     <system:String x:Key="CreatePS3IRDTitleString">PS3 IRD 생성</system:String>
     <system:String x:Key="InputGroupBoxString">입력</system:String>
     <system:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</system:String>
     <system:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</system:String>
+    <system:String x:Key="HexadecimalKeyLabelString">헥스 키</system:String>
+    <system:String x:Key="KeyFilePathLabelString">키 파일 경로</system:String>
+    <system:String x:Key="KeyStatusLabelString">키 상태</system:String>
 
     <!-- Media Information Guide Window -->
+    <system:String x:Key="MediaInformationTitleString">미디어 정보</system:String>
+    <!-- <system:String x:Key="CategoryLabelString">Category</system:String>
+    <system:String x:Key="RegionLabelString">Region</system:String>
+    <system:String x:Key="LanguagesLabelString">Languages</system:String>
+    <system:String x:Key="LanguageSelectionViaLabelString">Language Selection Via</system:String>
+    <system:String x:Key="PCMacHybridLabelString">PC/Mac Hybrid</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Ring Code Guide</system:String> -->
 
     <!-- Ring Code Guide Window -->
+    <system:String x:Key="RingCodeGuideTitleString">링 코드 가이드</system:String>
 
     <!-- About Window -->
+    <system:String x:Key="AboutTitleString">앱 정보</system:String>
+    <!-- <system:String x:Key="AppTitleFullString">미디어 프리저베이션 프런트엔드 (MPF)</system:String>
+    <system:String x:Key="AboutLine1String">A community preservation frontend developed in C#.</system:String>
+    <system:String x:Key="AboutLine2String">Supports Redumper, Aaru, and DiscImageCreator.</system:String>
+    <system:String x:Key="AboutLine3String">Originally created to help the Redump project.</system:String>
+    <system:String x:Key="AboutThanksString">Thanks to everyone who has supported this project!</system:String> -->
+    <system:String x:Key="VersionLabelString">버전</system:String>
 
     <!-- Check for Updates Window -->
+    <system:String x:Key="CheckForUpdatesTitleString">버전 업데이트 확인</system:String>
 
 </ResourceDictionary>

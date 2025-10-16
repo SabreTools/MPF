@@ -814,25 +814,6 @@ namespace MPF.Frontend.ViewModels
         }
 
         /// <summary>
-        /// Build the about text 
-        /// </summary>
-        /// <returns></returns>
-        public string CreateAboutText()
-        {
-            string aboutText = $"Media Preservation Frontend (MPF)"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}A community preservation frontend developed in C#."
-                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
-                + $"{Environment.NewLine}Originally created to help the Redump project."
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Version {FrontendTool.GetCurrentVersion()}";
-            SecretLogLn(aboutText);
-            return aboutText;
-        }
-
-        /// <summary>
         /// Build a dummy SubmissionInfo
         /// </summary>
         public static SubmissionInfo CreateDebugSubmissionInfo()
