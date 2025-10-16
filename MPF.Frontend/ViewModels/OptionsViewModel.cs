@@ -54,7 +54,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of available UI languages
         /// </summary>
-        public static List<Element<UILanguageComboBoxItem>> UILanguages => UILanguageComboBoxItem.GenerateElements();
+        public static List<UILanguageComboBoxItem> UILanguages => UILanguageComboBoxItem.GenerateElements();
 
         /// <summary>
         /// List of available log compression methods
@@ -108,15 +108,6 @@ namespace MPF.Frontend.ViewModels
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
             return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
-        }
-
-        /// <summary>
-        /// Get a complete list of supported UI languages
-        /// </summary>
-        /// <returns></returns>
-        private static List<Element<string>> PopulateUILanguages()
-        {
-            return new List<string> { "Auto Detect", "ENG", "한국어" };
         }
 
         /// <summary>
