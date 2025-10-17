@@ -156,14 +156,6 @@ namespace MPF.UI.Windows
         /// </summary>
         private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
-            // Uncheck all language menu items
-            foreach (var item in LanguagesMenuItem.Items)
-            {
-                var menuItem = item as MenuItem;
-                if (menuItem != null && menuItem.IsCheckable)
-                    menuItem.IsChecked = false;
-            }
-
             // Auto detect language
             if (lang != InterfaceLanguage.AutoDetect)
             {
@@ -607,6 +599,13 @@ namespace MPF.UI.Windows
 
             // Set the language according to the settings
             SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+            // Uncheck all language menu items
+            foreach (var item in LanguagesMenuItem.Items)
+            {
+                var menuItem = item as MenuItem;
+                if (menuItem != null && menuItem.IsCheckable)
+                    menuItem.IsChecked = false;
+            }
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -673,6 +672,14 @@ namespace MPF.UI.Windows
             {
                 clickedItem.IsChecked = true;
                 return;
+            }
+
+            // Uncheck every item not checked
+            var languageMenu = (MenuItem)clickedItem.Parent;
+            foreach (var item in languageMenu.Items)
+            {
+                if (item is MenuItem menuItem && menuItem != clickedItem)
+                    menuItem.IsChecked = false;
             }
 
             // Change UI language to selected item
