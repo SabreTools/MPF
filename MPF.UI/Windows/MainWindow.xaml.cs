@@ -161,7 +161,7 @@ namespace MPF.UI.Windows
             {
                 MenuItem menuItem = item as MenuItem;
                 if (menuItem != null && menuItem.IsCheckable)
-                    item.IsChecked = false;
+                    menuItem.IsChecked = false;
             }
 
             // Auto detect language
