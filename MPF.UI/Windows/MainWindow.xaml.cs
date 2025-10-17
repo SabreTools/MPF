@@ -96,7 +96,7 @@ namespace MPF.UI.Windows
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
 
-            // Set all resources before window loads
+            // Set all resources before window loads (Must set English here)
             SetInterfaceLanguage(InterfaceLanguage.English);
         }
 
@@ -129,10 +129,7 @@ namespace MPF.UI.Windows
             MainViewModel.TranslateStrings(translationStrings);
 
             // Set interface language according to the options
-            if (MainViewModel.Options.DefaultInterfaceLanguage == InterfaceLanguage.AutoDetect)
-                AutoSetInterfaceLanguage();
-            else
-                SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+            SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -159,8 +156,21 @@ namespace MPF.UI.Windows
         /// </summary>
         private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
+            // Uncheck all language menu items
+            foreach (var item in LanguagesMenuItem.Items)
+            {
+                item.IsChecked = false;
+            }
+
+            // Auto detect language
+            if (lang != InterfaceLanguage.AutoDetect)
+            {
+                AutoSetInterfaceLanguage();
+                return;
+            }
+
             // Set baseline language (English), required as some translations may not translate all strings
-            if (lang != InterfaceLanguage.English || lang != InterfaceLanguage.AutoDetect)
+            if (lang != InterfaceLanguage.English)
             {
                 var baselineDictionary = new ResourceDictionary();
                 baselineDictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
@@ -594,18 +604,7 @@ namespace MPF.UI.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the language according to the settings
-            if (MainViewModel.Options.DefaultInterfaceLanguage != InterfaceLanguage.AutoDetect)
-            {
-                SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
-
-                // Update checked boxes in language selection menu
-                EnglishMenuItem.IsChecked = True;
-                foreach (var item in LanguagesMenuItem.Items)
-                {
-                    if (item is MenuItem menuItem && menuItem != EnglishMenuItem)
-                        menuItem.IsChecked = false;
-                }
-            }
+            SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
