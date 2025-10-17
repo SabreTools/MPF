@@ -157,7 +157,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Set the current interface language to a provided InterfaceLanguage
         /// </summary>
-        private static void SetInterfaceLanguage(InterfaceLanguage lang)
+        private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Set baseline language (English), required as some translations may not translate all strings
             if (lang != InterfaceLanguage.English || lang != InterfaceLanguage.AutoDetect)
@@ -187,7 +187,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Sets the interface language based on system locale
         /// </summary>
-        public static void AutoSetInterfaceLanguage()
+        public void AutoSetInterfaceLanguage()
         {
             // Get current region code to distinguish regional variants of languages
             string region = "";
@@ -592,6 +592,12 @@ namespace MPF.UI.Windows
             // Update and save options, if necessary
             MainViewModel.UpdateOptions(savedSettings, options);
 
+            // Set the language according to the settings
+            if (MainViewModel.Options.DefaultInterfaceLanguage == InterfaceLanguage.AutoDetect)
+                AutoSetInterfaceLanguage();
+            else
+                SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+
             // Set the UI color scheme according to the options
             ApplyTheme();
 
@@ -673,7 +679,7 @@ namespace MPF.UI.Windows
                 lang : lang switch
                 {
                     "ENG" => InterfaceLanguage.English,
-                    "한국어" => InterfaceLanguage.English,
+                    "한국어" => InterfaceLanguage.Korean,
                     _ => InterfaceLanguage.English,
                 }
             );
