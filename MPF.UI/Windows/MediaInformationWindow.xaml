@@ -75,19 +75,19 @@
                             <GroupBox Header="{DynamicResource CommonMediaInfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput Label="Title"
+                                    <controls:UserInput Label="{DynamicResource TitleInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"
+                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AlternativeTitle], Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Foreign Title (Non-Latin)" 
+                                    <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" 
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"
+                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AlternativeForeignTitle], Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Disc Number / Letter"
+                                    <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="Disc Title"
+                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="{DynamicResource DiscTitleInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="Disc Title (non-Latin)"
+                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DiscTitleNonLatin], Mode=TwoWay}"/>
 
                                     <Grid>
@@ -150,17 +150,17 @@
                                         </ComboBox>
                                     </Grid>
 
-                                    <controls:UserInput Label="Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
                             <GroupBox Header="{DynamicResource VersionsAndEditionGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionTextBox" Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="Edition (non-Latin)"
+                                    <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionTextBox" Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -181,19 +181,19 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="{DynamicResource PCMacHybridLabelString}" Margin="0,4"
+                                        <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" Margin="0,4"
                                                   IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PCMacHybrid], Mode=TwoWay}"/>
                                     </Grid>
-                                    <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
+                                    <controls:UserInput x:Name="CommentsTextBox" Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="Compatible OS"
+                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)CompatibleOS], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscKey, Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ProtectionTextBox" Label="Protection" ToolTip="CAUTION: Only edit if you know what you are doing!"
+                                    <controls:UserInput x:Name="ProtectionTextBox" Label="{DynamicResource ProtectionInputString}" ToolTip="CAUTION: Only edit if you know what you are doing!"
                                                         Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
                                                         VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                                 </StackPanel>

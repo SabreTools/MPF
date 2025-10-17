@@ -166,15 +166,29 @@
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Common Info</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">Common Media Information</system:String>
+    <system:String x:Key="TitleInputString">Title</system:String>
+    <system:String x:Key="AlternativeTitleInputString">Alternative Title</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Foreign Title (Non-Latin)</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">Alternative Foreign Title</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">Disc Number / Letter</system:String>
+    <system:String x:Key="DiscTitleInputString">Disc Title</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">Disc Title (non-Latin)</system:String>
     <system:String x:Key="CategoryLabelString">Category</system:String>
     <system:String x:Key="RegionLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Languages</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">Language Selection Via</system:String>
+    <system:String x:Key="SerialInputString">Serial</system:String>
+    <system:String x:Key="BarcodeInputString">Barcode</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">Version and Editions</system:String>
+    <system:String x:Key="VersionInputString">Version</system:String>
+    <system:String x:Key="EditionInputString">Edition</system:String>
+    <system:String x:Key="EditionNonLatinInputString">Edition (non-Latin)</system:String>
     <!-- Additional Info Tab -->
     <system:String x:Key="AdditionalInfoTabString">Additional Info</system:String>
+    <system:String x:Key="CommentsInputString">Comments</system:String>
+    <system:String x:Key="CompatibleOSInputString">Compatible OS</system:String>
+    <system:String x:Key="ProtectionInputString">Protection</system:String>
     <system:String x:Key="ExtrasGroupBoxString">Extras</system:String>
-    <system:String x:Key="PCMacHybridLabelString">PC/Mac Hybrid</system:String>
     <system:String x:Key="PhysicalIdentifiersGroupBoxString">Physical Identifiers</system:String>
     <system:String x:Key="PublisherIdentifiersGroupBoxString">Publisher Identifiers</system:String>
     <!-- Contents Tab -->

@@ -86,7 +86,7 @@
     <system:String x:Key="AddPlaceholdersCheckBoxString">자리표시자 추가</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</system:String>
-    <system:String x:Key="IncludeArtifactsCheckBoxString">[디버그] 아티팩트 포함</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] 아티팩트 포함</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</system:String>
     <system:String x:Key="LogCompressionLabelString">로그 압축:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</system:String>
@@ -166,15 +166,29 @@
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">일반 정보</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">일반 미디어 정보</system:String>
+    <system:String x:Key="TitleInputString">제목</system:String>
+    <system:String x:Key="AlternativeTitleInputString">대체 제목</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">외국어 제목 (비라틴 문자)</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">대체 외국어 제목</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">디스크 번호 / 문자</system:String>
+    <system:String x:Key="DiscTitleInputString">디스크 제목</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">디스크 제목 (비라틴 문자)</system:String>
     <system:String x:Key="CategoryLabelString">카테고리</system:String>
     <system:String x:Key="RegionLabelString">지역</system:String>
     <system:String x:Key="LanguagesLabelString">언어 (문자)</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
+    <system:String x:Key="SerialInputString">시리얼</system:String>
+    <system:String x:Key="BarcodeInputString">바코드</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">버전 및 에디션</system:String>
+    <system:String x:Key="VersionInputString">버전</system:String>
+    <system:String x:Key="EditionInputString">에디션</system:String>
+    <system:String x:Key="EditionNonLatinInputString">에디션 (비라틴 문자)</system:String>
     <!-- Additional Info Tab -->
     <system:String x:Key="AdditionalInfoTabString">추가 정보</system:String>
+    <system:String x:Key="CommentsInputString">코멘트</system:String>
+    <system:String x:Key="CompatibleOSInputString">호환 운영체제</system:String>
+    <system:String x:Key="ProtectionInputString">보호</system:String>
     <system:String x:Key="ExtrasGroupBoxString">추가</system:String>
-    <system:String x:Key="PCMacHybridLabelString">PC/Mac 하이브리드</system:String>
     <system:String x:Key="PhysicalIdentifiersGroupBoxString">물리적 식별자</system:String>
     <system:String x:Key="PublisherIdentifiersGroupBoxString">게시자 식별자</system:String>
     <!-- Contents Tab -->
