@@ -72,8 +72,8 @@
     <system:String x:Key="DiscIDExpanderString">PS3 디스크 ID 수동 설정</system:String>
     <system:String x:Key="DiscIDLabelString">디스크 ID</system:String>
     <system:String x:Key="DiscIDStatusLabelString">디스크 ID 상태</system:String>
-    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
     <system:String x:Key="PICExpanderString">Permanent Information &#x26; Control (PIC) 수동 설정</system:String>
+    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
     <system:String x:Key="PICLabelString">PIC</system:String>
     <system:String x:Key="PICFilePathLabelString">PIC 파일 경로</system:String>
     <system:String x:Key="PICStatusLabelString">PIC 상태</system:String>
