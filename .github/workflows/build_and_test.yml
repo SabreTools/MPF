@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "ui-lang-dev" ]
+    branches: [ "ui-langs-dev" ]
 
 jobs:
   build:
