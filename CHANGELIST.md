@@ -11,6 +11,16 @@
 - Replace "We" comments
 - Parse XboxOne/SX Title IDs
 - Reduce chance of empty strings
+- Initial UI lang code
+- Move to enum-based model for UI language options
+- Slight cleanup to main window language handling
+- Clean up nullability
+- Clean up a bit of element work
+- Fill in some gaps
+- Add UI by default to launch
+- Continue UI translation work
+- Minor formatting cleanup
+- Ensure readers and writers dispose
 
 ### 3.5.0 (2025-10-10)
 
