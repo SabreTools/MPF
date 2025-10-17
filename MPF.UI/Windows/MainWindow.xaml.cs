@@ -601,14 +601,21 @@ namespace MPF.UI.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the language according to the settings
-            SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
-
-            // Uncheck all language menu items
-            foreach (var item in LanguagesMenuItem.Items)
+            if (savedSettings)
             {
-                var menuItem = item as MenuItem;
-                if (menuItem != null && menuItem.IsCheckable)
-                    menuItem.IsChecked = false;
+                var newDefaultLang = MainViewModel.Options.DefaultInterfaceLanguage;
+                if (newDefaultLang != InterfaceLanguage.AutoDetect)
+                {
+                    SetInterfaceLanguage(newDefaultLang);
+
+                    // Uncheck all language menu items
+                    foreach (var item in LanguagesMenuItem.Items)
+                    {
+                        var menuItem = item as MenuItem;
+                        if (menuItem != null && menuItem.IsCheckable)
+                            menuItem.IsChecked = false;
+                    }
+                }
             }
 
             // Set the UI color scheme according to the options
