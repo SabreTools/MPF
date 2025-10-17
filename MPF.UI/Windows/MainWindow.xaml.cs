@@ -161,7 +161,7 @@ namespace MPF.UI.Windows
             }
             catch { }
 
-            var translatedDictionary = new ResourceDictionary();
+            var dictionary = new ResourceDictionary();
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
                 case "en":
@@ -170,7 +170,7 @@ namespace MPF.UI.Windows
                 
                 case "ko":
                     // Translate UI elements to Korean
-                    translatedDictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
+                    dictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
                     break;
                 
                 case "zh":
@@ -192,7 +192,7 @@ namespace MPF.UI.Windows
             }
 
             // Add the strings resource to app resources
-            Resources.MergedDictionaries.Add(translatedDictionary);
+            Resources.MergedDictionaries.Add(dictionary);
         }
 
         /// <summary>
@@ -206,7 +206,8 @@ namespace MPF.UI.Windows
             Resources.MergedDictionaries.Add(baselineDictionary);
 
             // Select startup language based on current system locale
-            switch (MainViewModel.Options.DefaultUILanguage)
+            var dictionary = new ResourceDictionary();
+            switch (MainViewModel.Options.DefaultInterfaceLanguage)
             {
                 case InterfaceLanguage.English:
                     // English locale set as baseline, do nothing
