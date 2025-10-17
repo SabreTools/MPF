@@ -95,8 +95,6 @@ namespace MPF.UI.Windows
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
-
-            SetInterfaceLanguage();
         }
 
         /// <summary>
@@ -127,6 +125,12 @@ namespace MPF.UI.Windows
             translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
             MainViewModel.TranslateStrings(translationStrings);
 
+            // Set interface language according to the options
+            if (MainViewModel.Options.DefaultInterfaceLanguage == InterfaceLanguage.AutoDetect)
+                AutoSetInterfaceLanguage();
+            else
+                SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+
             // Set the UI color scheme according to the options
             ApplyTheme();
 
@@ -146,13 +150,37 @@ namespace MPF.UI.Windows
         }
 
         #region Interface Language
+        
+        /// <summary>
+        /// Set the current interface language to a provided InterfaceLanguage
+        /// </summary>
+        private void SetInterfaceLanguage(InterfaceLanguage lang)
+        {
+            // Set baseline language (English), required as some translations may not translate all strings
+            SetInterfaceLanguage(InterfaceLanguage.English);
+
+            // Quit early on English or AutoDetect (no need to translate)
+            if (lang == InterfaceLanguage.English || lang == InterfaceLanguage.AutoDetect)
+                return;
+
+            var dictionary = new ResourceDictionary();
+            dictionary.Source = lang switch
+            {
+                InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+            };
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+        }
 
         /// <summary>
         /// Sets the interface language based on system locale
         /// </summary>
         public void AutoSetInterfaceLanguage()
         {
-            // Get current region code 
+            // Set baseline language (English), required as some translations may not translate all strings
+            SetInterfaceLanguage(InterfaceLanguage.English);
+
+            // Get current region code to distinguish regional variants of languages
             string region = "";
             try
             {
@@ -161,7 +189,6 @@ namespace MPF.UI.Windows
             }
             catch { }
 
-            var dictionary = new ResourceDictionary();
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
                 case "en":
@@ -170,7 +197,7 @@ namespace MPF.UI.Windows
                 
                 case "ko":
                     // Translate UI elements to Korean
-                    dictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
+                    SetInterfaceLanguage(InterfaceLanguage.Korean);
                     break;
                 
                 case "zh":
@@ -190,41 +217,6 @@ namespace MPF.UI.Windows
                     // Unsupported language, don't add any translated text
                     break;
             }
-
-            // Add the strings resource to app resources
-            Resources.MergedDictionaries.Add(dictionary);
-        }
-
-        /// <summary>
-        /// Sets the interface language based on locale or config
-        /// </summary>
-        public void SetInterfaceLanguage()
-        {
-            // Set baseline strings resource
-            var baselineDictionary = new ResourceDictionary();
-            baselineDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
-            Resources.MergedDictionaries.Add(baselineDictionary);
-
-            // Select startup language based on current system locale
-            var dictionary = new ResourceDictionary();
-            switch (MainViewModel.Options.DefaultInterfaceLanguage)
-            {
-                case InterfaceLanguage.English:
-                    // English locale set as baseline, do nothing
-                    return;
-
-                case InterfaceLanguage.Korean:
-                    // Set UI Language to Korean regardless of locale
-                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
-                    break;
-                
-                case InterfaceLanguage.AutoDetect:
-                default:
-                    // Set interface language based on system locale
-                    AutoSetInterfaceLanguage();
-                    return;
-            }
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
         #endregion
@@ -668,14 +660,12 @@ namespace MPF.UI.Windows
 
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? "";
-            var dictionary = new ResourceDictionary();
-            dictionary.Source = lang switch
+            lang switch
             {
-                "ENG" => new Uri("../Resources/Strings.xaml", UriKind.Relative),
-                "한국어" => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
-                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                "ENG" => SetInterfaceLanguage(InterfaceLanguage.English),
+                "한국어" => SetInterfaceLanguage(InterfaceLanguage.English),
+                _ => SetInterfaceLanguage(InterfaceLanguage.English),
             };
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
             // Update the labels that don't get updated automatically
             SetMediaTypeVisibility();
