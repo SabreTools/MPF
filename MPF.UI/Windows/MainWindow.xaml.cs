@@ -96,7 +96,7 @@ namespace MPF.UI.Windows
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
 
-            SetInterfaceLanguage()
+            SetInterfaceLanguage();
         }
 
         /// <summary>
