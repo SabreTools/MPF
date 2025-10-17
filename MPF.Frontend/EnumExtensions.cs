@@ -282,8 +282,7 @@ namespace MPF.Frontend
         {
             return (internalLanguage?.ToLowerInvariant()) switch
             {
-                "auto"
-                    or "auto detect" => InterfaceLanguage.AutoDetect,
+                "auto" or "autodetect" or "auto detect" => InterfaceLanguage.AutoDetect,
                 "eng" or "english" => InterfaceLanguage.English,
                 "kor" or "korean" or "한국어" => InterfaceLanguage.Korean,
 

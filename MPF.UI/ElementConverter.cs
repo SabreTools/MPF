@@ -18,6 +18,7 @@ namespace MPF.UI
             return value switch
             {
                 DiscCategory discCategory => new Element<DiscCategory>(discCategory),
+                InterfaceLanguage interfaceLanguage => new Element<InterfaceLanguage>(interfaceLanguage),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
                 LogCompression logCompression => new Element<LogCompression>(logCompression),
                 MediaType mediaType => new Element<MediaType>(mediaType),
@@ -41,6 +42,7 @@ namespace MPF.UI
             return element switch
             {
                 Element<DiscCategory> dcElement => dcElement.Value,
+                Element<InterfaceLanguage> ilElement => ilElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,
                 Element<LogCompression> lcElement => lcElement.Value,
                 Element<MediaType> mtElement => mtElement.Value,

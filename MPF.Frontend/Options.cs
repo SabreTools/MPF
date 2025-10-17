@@ -149,12 +149,12 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, "DefaultUILanguage", InterfaceLanguage.AutoDetect.ToString());
+                var valueString = GetStringSetting(Settings, "DefaultUILanguage", InterfaceLanguage.AutoDetect.ShortName());
                 return valueString.ToInterfaceLanguage();
             }
             set
             {
-                Settings["DefaultUILanguage"] = value.ToString();
+                Settings["DefaultUILanguage"] = value.ShortName();
             }
         }
 
