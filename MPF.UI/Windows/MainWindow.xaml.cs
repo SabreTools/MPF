@@ -150,7 +150,7 @@ namespace MPF.UI.Windows
         }
 
         #region Interface Language
-        
+
         /// <summary>
         /// Set the current interface language to a provided InterfaceLanguage
         /// </summary>
@@ -195,7 +195,7 @@ namespace MPF.UI.Windows
         public void AutoSetInterfaceLanguage()
         {
             // Get current region code to distinguish regional variants of languages
-            string region = "";
+            string region = string.Empty;
             try
             {
                 // Can throw exception depending on current locale
@@ -205,19 +205,19 @@ namespace MPF.UI.Windows
 
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
+                // English
                 case "en":
-                    // Translate UI elements to English
                     SetInterfaceLanguage(InterfaceLanguage.English);
                     break;
-                
+
+                // Korean
                 case "ko":
-                    // Translate UI elements to Korean
                     SetInterfaceLanguage(InterfaceLanguage.Korean);
                     break;
-                
+
+                // Traditional or Simplified Chinese
                 case "zh":
-                    // Check if region uses Traditional or Simplified Chinese
-                    string[] traditionalRegions = { "TW", "HK", "MO" };
+                    string[] traditionalRegions = ["TW", "HK", "MO"];
                     if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
                     {
                         // TODO: Translate UI elements to Traditional Chinese
@@ -227,7 +227,7 @@ namespace MPF.UI.Windows
                         // TODO: Translate UI elements to Simplified Chinese
                     }
                     break;
-                
+
                 default:
                     // Unsupported language, don't add any translated text
                     break;
@@ -695,9 +695,9 @@ namespace MPF.UI.Windows
             }
 
             // Change UI language to selected item
-            string lang = clickedItem.Header.ToString() ?? "";
+            string lang = clickedItem.Header.ToString() ?? string.Empty;
             SetInterfaceLanguage(
-                lang : lang switch
+                lang switch
                 {
                     "ENG" => InterfaceLanguage.English,
                     "한국어" => InterfaceLanguage.Korean,
