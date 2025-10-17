@@ -53,6 +53,87 @@
     <system:String x:Key="OptionsTitleString">옵션</system:String>
     <system:String x:Key="OptionsFirstRunTitleString">MPF에 오신 것을 환영합니다. 옵션을 살펴보세요.</system:String>
     <!-- <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String> -->
+    <!-- General Tab -->
+    <system:String x:Key="GeneralTabString">일반</system:String>
+    <system:String x:Key="UserInterfaceGroupBoxString">사용자 인터페이스</system:String>
+    <system:String x:Key="EnableDarkModeCheckBoxString">다크 모드 활성화</system:String>
+    <system:String x:Key="CheckForUpdatesCheckBoxString">시작 시 업데이트 확인</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">업데이트 URL을 클립보드에 복사</system:String>
+    <system:String x:Key="FastUpdateLabelCheckBoxString">빠른 업데이트 레이블</system:String>
+    <system:String x:Key="DefaultUILanguageLabelString">기본 UI 언어:</system:String>
+    <system:String x:Key="DetectionGroupBoxString">감지</system:String>
+    <system:String x:Key="SkipSystemDetectCheckBoxString">시스템 감지 건너뛰기</system:String>
+    <system:String x:Key="NoFixedDrivesCheckBoxString">고정 드라이브 없음</system:String>
+    <system:String x:Key="DefaultSystemLabelString">기본 시스템:</system:String>
+    <system:String x:Key="LoggingGroupBoxString">로그</system:String>
+    <system:String x:Key="VerboseLoggingCheckBoxString">상세 로그</system:String>
+    <system:String x:Key="AutoOpenLogCheckBoxString">로그 자동 열기</system:String>
+    <!-- Paths Tab -->
+    <system:String x:Key="PathsTabString">경로</system:String>
+    <system:String x:Key="AaruPathLabelString">Aaru 경로</system:String>
+    <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator 경로</system:String>
+    <system:String x:Key="RedumperPathLabelString">Redumper 경로</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">기본 덤핑 프로그램</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">기본 출력 경로</system:String>
+    <!-- Dumping Tab -->
+    <system:String x:Key="DumpingTabString">덤핑</system:String>
+    <system:String x:Key="DumpingGroupBoxString">덤핑</system:String>
+    <system:String x:Key="ShowDiscInfoCheckBoxString">디스크 정보 표시</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">모든 정보 가져오기</system:String>
+    <system:String x:Key="EnableTabInputCheckBoxString">탭 입력 활성화</system:String>
+    <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 호환성 활성화</system:String>
+    <system:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</system:String>
+    <system:String x:Key="AddPlaceholdersCheckBoxString">자리표시자 추가</system:String>
+    <system:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</system:String>
+    <system:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] 아티팩트 포함</system:String>
+    <system:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</system:String>
+    <system:String x:Key="LogCompressionLabelString">로그 압축:</system:String>
+    <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</system:String>
+    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">덤핑 후 PS3 IRD 생성</system:String>
+    <system:String x:Key="ProtectionGroupBoxString">보호</system:String>
+    <system:String x:Key="EnableProtectionScanCheckBoxString">보호 스캔 활성화</system:String>
+    <system:String x:Key="ScanArchiveContentsCheckBoxString">아카이브 내용 스캔</system:String>
+    <system:String x:Key="IncludeDebugInformationCheckBoxString">디버그 정보 포함</system:String>
+    <system:String x:Key="HideDriveLettersCheckBoxString">드라이브 문자 숨기기</system:String>
+    <system:String x:Key="DefaultSpeedsGroupBoxString">기본 속도</system:String>
+    <system:String x:Key="CDLabelString">CD</system:String>
+    <system:String x:Key="DVDLabelString">DVD</system:String>
+    <system:String x:Key="HDDVDLabelString">HD-DVD</system:String>
+    <system:String x:Key="BDLabelString">BD</system:String>
+    <!-- Programs Tab -->
+    <system:String x:Key="ProgramsTabString">프로그램</system:String>
+    <system:String x:Key="AaruGroupBoxString">Aaru</system:String>
+    <system:String x:Key="EnableDebugOutputCheckBoxString">디버그 출력 활성화</system:String>
+    <system:String x:Key="AaruEnableVerboseOutputCheckBoxString">상세 출력 활성화</system:String>
+    <system:String x:Key="ForceDumpingCheckBoxString">강제 덤핑</system:String>
+    <system:String x:Key="StripPersonalDataCheckBoxString">개인 데이터 제거</system:String>
+    <system:String x:Key="AaruRereadTriesLabelString">재읽기 시도 횟수:</system:String>
+    <system:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</system:String>
+    <system:String x:Key="QuietModeCheckBoxString">조용한 모드</system:String>
+    <system:String x:Key="ParanoidModeCheckBoxString">안전 모드</system:String>
+    <system:String x:Key="UseCMIFlagCheckBoxString">CMI 플래그 사용</system:String>
+    <system:String x:Key="MultiSectorReadCheckBoxString">멀티 섹터 읽기</system:String>
+    <system:String x:Key="MultiSectorReadValueLabelString">멀티 섹터 읽기 값:</system:String>
+    <system:String x:Key="DICCDRereadTriesLabelString">CD 재읽기 시도 횟수:</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD 재읽기 시도 횟수:</system:String>
+    <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
+    <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">상세 출력 활성화</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine Sector 모드 플래그 활성화</system:String>
+    <system:String x:Key="RedumperRereadTriesLabelString">재읽기 시도 횟수:</system:String>
+    <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor 리드인 재시도:</system:String>
+    <system:String x:Key="NonRedumpOptionsCheckBoxString">비-Redump 옵션</system:String>
+    <system:String x:Key="DefaultReadMethodLabelString">기본 읽기 방식:</system:String>
+    <system:String x:Key="DefaultSectorOrderLabelString">기본 섹터 순서:</system:String>
+    <system:String x:Key="DefaultDriveTypeLabelString">기본 드라이브 유형:</system:String>
+    <!-- Login Info Tab -->
+    <system:String x:Key="LoginInfoTabString">로그인 정보</system:String>
+    <system:String x:Key="RetrievalGroupBoxString">검색</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">일치 정보 가져오기</system:String>
+    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="UsernameLabelString">사용자 이름</system:String>
+    <system:String x:Key="PasswordLabelString">비밀번호</system:String>
+    <system:String x:Key="TestLoginButtonString">로그인 테스트</system:String>
 
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
@@ -85,15 +166,29 @@
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">일반 정보</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">일반 미디어 정보</system:String>
+    <system:String x:Key="TitleInputString">제목</system:String>
+    <system:String x:Key="AlternativeTitleInputString">대체 제목</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">외국어 제목 (비라틴 문자)</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">대체 외국어 제목</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">디스크 번호 / 문자</system:String>
+    <system:String x:Key="DiscTitleInputString">디스크 제목</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">디스크 제목 (비라틴 문자)</system:String>
     <system:String x:Key="CategoryLabelString">카테고리</system:String>
     <system:String x:Key="RegionLabelString">지역</system:String>
     <system:String x:Key="LanguagesLabelString">언어 (문자)</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
+    <system:String x:Key="SerialInputString">시리얼</system:String>
+    <system:String x:Key="BarcodeInputString">바코드</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">버전 및 에디션</system:String>
+    <system:String x:Key="VersionInputString">버전</system:String>
+    <system:String x:Key="EditionInputString">에디션</system:String>
+    <system:String x:Key="EditionNonLatinInputString">에디션 (비라틴 문자)</system:String>
     <!-- Additional Info Tab -->
     <system:String x:Key="AdditionalInfoTabString">추가 정보</system:String>
+    <system:String x:Key="CommentsInputString">코멘트</system:String>
+    <system:String x:Key="CompatibleOSInputString">호환 운영체제</system:String>
+    <system:String x:Key="ProtectionInputString">보호</system:String>
     <system:String x:Key="ExtrasGroupBoxString">추가</system:String>
-    <system:String x:Key="PCMacHybridLabelString">PC/Mac 하이브리드</system:String>
     <system:String x:Key="PhysicalIdentifiersGroupBoxString">물리적 식별자</system:String>
     <system:String x:Key="PublisherIdentifiersGroupBoxString">게시자 식별자</system:String>
     <!-- Contents Tab -->
