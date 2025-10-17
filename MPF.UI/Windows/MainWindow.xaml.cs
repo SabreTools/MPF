@@ -597,14 +597,12 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.DefaultOutputPath != options.DefaultOutputPath)
                 MainViewModel.OutputPath = string.Empty;
 
-            // Update and save options, if necessary
-            MainViewModel.UpdateOptions(savedSettings, options);
-
             // Set the language according to the settings
             if (savedSettings)
             {
-                var newDefaultLang = MainViewModel.Options.DefaultInterfaceLanguage;
-                if (newDefaultLang != InterfaceLanguage.AutoDetect)
+                var oldDefaultLang = MainViewModel.Options.DefaultInterfaceLanguage;
+                var newDefaultLang = options.DefaultInterfaceLanguage;
+                if (oldDefaultLang != newDefaultLang)
                 {
                     SetInterfaceLanguage(newDefaultLang);
 
@@ -617,6 +615,9 @@ namespace MPF.UI.Windows
                     }
                 }
             }
+
+            // Update and save options, if necessary
+            MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
