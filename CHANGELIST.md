@@ -3,7 +3,7 @@
 - Add BCA to list of files to select in Check UI
 - Move Zstd compression helper to base processor
 - Add file merge method in CleanRip
-- Implement file merging in CleanRip
+- Implement file merging in CleanRipw
 - Support reparsing of MPF-processed outputs
 - Use WriteToFile extension for zip entries
 - Move output file implementations to separate namespace
@@ -21,6 +21,7 @@
 - Continue UI translation work
 - Minor formatting cleanup
 - Ensure readers and writers dispose
+- Complete translation support
 
 ### 3.5.0 (2025-10-10)
 
