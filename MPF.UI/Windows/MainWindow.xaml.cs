@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 #if NET40
 using System.Threading.Tasks;
@@ -95,17 +96,7 @@ namespace MPF.UI.Windows
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
 
-            // Set default language
-            var dictionary = new ResourceDictionary();
-            dictionary.Source = MainViewModel.Options.DefaultUILanguage switch
-            {
-                InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
-                InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
-
-                // Default to English
-                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
-            };
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+            SetInterfaceLanguage()
         }
 
         /// <summary>
@@ -153,6 +144,89 @@ namespace MPF.UI.Windows
                 ShowOptionsWindow((string)Application.Current.FindResource("OptionsFirstRunTitleString"));
             }
         }
+
+        #region Interface Language
+
+        /// <summary>
+        /// Sets the interface language based on system locale
+        /// </summary>
+        public void AutoSetInterfaceLanguage()
+        {
+            // Get current region code 
+            string region = "";
+            try
+            {
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            var translatedDictionary = new ResourceDictionary();
+            switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+            {
+                case "en":
+                    // English already loaded, don't add any translated text
+                    break;
+                
+                case "ko":
+                    // Translate UI elements to Korean
+                    translatedDictionary.Source = new Uri("Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                
+                case "zh":
+                    // Check if region uses Traditional or Simplified Chinese
+                    string[] traditionalRegions = { "TW", "HK", "MO" };
+                    if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        // TODO: Translate UI elements to Traditional Chinese
+                    }
+                    else
+                    {
+                        // TODO: Translate UI elements to Simplified Chinese
+                    }
+                    break;
+                
+                default:
+                    // Unsupported language, don't add any translated text
+                    break;
+            }
+
+            // Add the strings resource to app resources
+            Resources.MergedDictionaries.Add(translatedDictionary);
+        }
+
+        /// <summary>
+        /// Sets the interface language based on locale or config
+        /// </summary>
+        public void SetInterfaceLanguage()
+        {
+            // Set baseline strings resource
+            var baselineDictionary = new ResourceDictionary();
+            baselineDictionary.Source = new Uri("Resources/Strings.xaml", UriKind.Relative);
+            Resources.MergedDictionaries.Add(baselineDictionary);
+
+            // Select startup language based on current system locale
+            switch (MainViewModel.Options.DefaultUILanguage)
+            {
+                case InterfaceLanguage.English:
+                    // English locale set as baseline, do nothing
+                    return;
+
+                case InterfaceLanguage.Korean:
+                    // Set UI Language to Korean regardless of locale
+                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
+                    break;
+                
+                case InterfaceLanguage.AutoDetect:
+                default:
+                    // Set interface language based on system locale
+                    AutoSetInterfaceLanguage();
+                    return;
+            }
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+        }
+
+        #endregion
 
         #region UI Functionality
 

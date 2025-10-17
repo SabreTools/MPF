@@ -143,18 +143,18 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Default UI language to launch MPF into
+        /// Default interface language to launch MPF into
         /// </summary>
-        public InterfaceLanguage DefaultUILanguage
+        public InterfaceLanguage DefaultInterfaceLanguage
         {
             get
             {
-                var valueString = GetStringSetting(Settings, "DefaultUILanguage", InterfaceLanguage.AutoDetect.ShortName());
+                var valueString = GetStringSetting(Settings, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
                 return valueString.ToInterfaceLanguage();
             }
             set
             {
-                Settings["DefaultUILanguage"] = value.ShortName();
+                Settings["DefaultInterfaceLanguage"] = value.ShortName();
             }
         }
 
