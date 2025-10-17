@@ -88,7 +88,7 @@
                 </StackPanel>
                 <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" Padding="0,0,20,0" /></TextBlock>
+                        <TextBlock TextAlignment="Center" Padding="0,0,20,0"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" /></TextBlock>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
