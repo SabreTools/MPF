@@ -186,6 +186,7 @@ namespace MPF.UI.Windows
 
         /// <summary>
         /// Sets the interface language based on system locale
+        /// Should only run at app startup, use SetInterfaceLanguage(lang) elsewhere
         /// </summary>
         public void AutoSetInterfaceLanguage()
         {
@@ -593,10 +594,18 @@ namespace MPF.UI.Windows
             MainViewModel.UpdateOptions(savedSettings, options);
 
             // Set the language according to the settings
-            if (MainViewModel.Options.DefaultInterfaceLanguage == InterfaceLanguage.AutoDetect)
-                AutoSetInterfaceLanguage();
-            else
+            if (MainViewModel.Options.DefaultInterfaceLanguage != InterfaceLanguage.AutoDetect)
+            {
                 SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+
+                // Update checked boxes in language selection menu
+                EnglishMenuItem.IsChecked = True;
+                foreach (var item in LanguagesMenuItem.Items)
+                {
+                    if (item is MenuItem menuItem && menuItem != EnglishMenuItem)
+                        menuItem.IsChecked = false;
+                }
+            }
 
             // Set the UI color scheme according to the options
             ApplyTheme();
