@@ -672,9 +672,9 @@ namespace MPF.UI.Windows
             SetInterfaceLanguage(
                 lang : lang switch
                 {
-                    "ENG" => SetInterfaceLanguage(InterfaceLanguage.English),
-                    "한국어" => SetInterfaceLanguage(InterfaceLanguage.English),
-                    _ => SetInterfaceLanguage(InterfaceLanguage.English),
+                    "ENG" => InterfaceLanguage.English,
+                    "한국어" => InterfaceLanguage.English,
+                    _ => InterfaceLanguage.English,
                 }
             );
 
