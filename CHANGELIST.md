@@ -23,6 +23,7 @@
 - Ensure readers and writers dispose
 - Complete translation support
 - Add skeleton for 8 more languages
+- Add 8 more language menu items
 
 ### 3.5.0 (2025-10-10)
 

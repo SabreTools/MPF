@@ -42,7 +42,15 @@ namespace MPF.UI.Windows
 
         // Languages
         private MenuItem? EnglishMenuItem => ItemHelper.FindChild<MenuItem>(this, "EnglishMenuItem");
+        private MenuItem? FrenchMenuItem => ItemHelper.FindChild<MenuItem>(this, "FrenchMenuItem");
+        private MenuItem? GermanMenuItem => ItemHelper.FindChild<MenuItem>(this, "GermanMenuItem");
+        private MenuItem? ItalianMenuItem => ItemHelper.FindChild<MenuItem>(this, "ItalianMenuItem");
+        private MenuItem? JapaneseMenuItem => ItemHelper.FindChild<MenuItem>(this, "JapaneseMenuItem");
         private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
+        private MenuItem? PolishMenuItem => ItemHelper.FindChild<MenuItem>(this, "PolishMenuItem");
+        private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
+        private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
+        private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
 
         #endregion
 
@@ -260,8 +268,17 @@ namespace MPF.UI.Windows
             CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
             CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
             OptionsMenuItem!.Click += OptionsMenuItemClick;
+
             EnglishMenuItem!.Click += LanguageMenuItemClick;
+            FrenchMenuItem!.Click += LanguageMenuItemClick;
+            GermanMenuItem!.Click += LanguageMenuItemClick;
+            ItalianMenuItem!.Click += LanguageMenuItemClick;
+            JapaneseMenuItem!.Click += LanguageMenuItemClick;
             KoreanMenuItem!.Click += LanguageMenuItemClick;
+            PolishMenuItem!.Click += LanguageMenuItemClick;
+            RussianMenuItem!.Click += LanguageMenuItemClick;
+            SpanishMenuItem!.Click += LanguageMenuItemClick;
+            SwedishMenuItem!.Click += LanguageMenuItemClick;
 
             // User Area Click
             CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
