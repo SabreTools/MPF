@@ -53,6 +53,87 @@
     <system:String x:Key="OptionsTitleString">Options</system:String>
     <system:String x:Key="OptionsFirstRunTitleString">Welcome to MPF, Explore the Options</system:String>
     <system:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</system:String>
+    <!-- General Tab -->
+    <system:String x:Key="GeneralTabString">General</system:String>
+    <system:String x:Key="UserInterfaceGroupBoxString">User Interface</system:String>
+    <system:String x:Key="EnableDarkModeCheckBoxString">Enable Dark Mode</system:String>
+    <system:String x:Key="CheckForUpdatesCheckBoxString">Check for Updates on Startup</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copy Update URL to Clipboard</system:String>
+    <system:String x:Key="FastUpdateLabelCheckBoxString">Fast Update Label</system:String>
+    <system:String x:Key="DefaultUILanguageLabelString">Default UI Language:</system:String>
+    <system:String x:Key="DetectionGroupBoxString">Detection</system:String>
+    <system:String x:Key="SkipSystemDetectCheckBoxString">Skip System Detect</system:String>
+    <system:String x:Key="SkipSystemDetectCheckBoxString">No Fixed Drives</system:String>
+    <system:String x:Key="DefaultSystemLabelString">Default System:</system:String>
+    <system:String x:Key="LoggingGroupBoxString">Logging</system:String>
+    <system:String x:Key="VerboseLoggingCheckBoxString">Verbose Logging</system:String>
+    <system:String x:Key="AutoOpenLogCheckBoxString">Auto-Open Logs</system:String>
+    <!-- Paths Tab -->
+    <system:String x:Key="PathsTabString">Paths</system:String>
+    <system:String x:Key="AaruPathLabelString">Aaru Path</system:String>
+    <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator Path</system:String>
+    <system:String x:Key="RedumperPathLabelString">Redumper Path</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Default Dumping Program</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">Default Output Path</system:String>
+    <!-- Dumping Tab -->
+    <system:String x:Key="DumpingTabString">Dumping</system:String>
+    <system:String x:Key="DumpingGroupBoxString">Dumping</system:String>
+    <system:String x:Key="ShowDiscInfoCheckBoxString">Show Disc Info</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Pull All Information</system:String>
+    <system:String x:Key="EnableTabInputCheckBoxString">Enable Tab Input</system:String>
+    <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Enable Redump Compatibility</system:String>
+    <system:String x:Key="ShowEjectReminderCheckBoxString">Show Eject Reminder</system:String>
+    <system:String x:Key="AddPlaceholdersCheckBoxString">Add Placeholders</system:String>
+    <system:String x:Key="AddFilenameSuffixCheckBoxString">Add Filename Suffix</system:String>
+    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Output Submission JSON</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Include Artifacts</system:String>
+    <system:String x:Key="CompressLogFilesCheckBoxString">Compress Log Files</system:String>
+    <system:String x:Key="LogCompressionLabelString">Log Compression:</system:String>
+    <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Delete Unnecessary Files</system:String>
+    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Create PS3 IRD After Dumping</system:String>
+    <system:String x:Key="ProtectionGroupBoxString">Protection</system:String>
+    <system:String x:Key="EnableProtectionScanCheckBoxString">Enable Protection Scan</system:String>
+    <system:String x:Key="ScanArchiveContentsCheckBoxString">Scan Archive Contents</system:String>
+    <system:String x:Key="IncludeDebugInformationCheckBoxString">Include Debug Information</system:String>
+    <system:String x:Key="HideDriveLettersCheckBoxString">Hide Drive Letters</system:String>
+    <system:String x:Key="DefaultSpeedsGroupBoxString">Default Speeds</system:String>
+    <system:String x:Key="CDLabelString">CD</system:String>
+    <system:String x:Key="DVDLabelString">DVD</system:String>
+    <system:String x:Key="HDDVDLabelString">HD-DVD</system:String>
+    <system:String x:Key="BDLabelString">BD</system:String>
+    <!-- Programs Tab -->
+    <system:String x:Key="ProgramsTabString">Programs</system:String>
+    <system:String x:Key="AaruGroupBoxString">Aaru</system:String>
+    <system:String x:Key="EnableDebugOutputCheckBoxString">Enable Debug Output</system:String>
+    <system:String x:Key="AaruEnableVerboseOutputCheckBoxString">Enable Verbose Output</system:String>
+    <system:String x:Key="ForceDumpingCheckBoxString">Force Dumping</system:String>
+    <system:String x:Key="StripPersonalDataCheckBoxString">Strip Personal Data</system:String>
+    <system:String x:Key="AaruRereadTriesLabelString">Reread Tries:</system:String>
+    <system:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</system:String>
+    <system:String x:Key="QuietModeCheckBoxString">Quiet Mode</system:String>
+    <system:String x:Key="ParanoidModeCheckBoxString">Paranoid Mode</system:String>
+    <system:String x:Key="UseCMIFlagCheckBoxString">Use CMI Flag</system:String>
+    <system:String x:Key="MultiSectorReadCheckBoxString">Multi-Sector Read</system:String>
+    <system:String x:Key="MultiSectorReadValueLabelString">Multi-Sector Read Value:</system:String>
+    <system:String x:Key="DICCDRereadTriesLabelString">CD Reread Tries:</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD Reread Tries:</system:String>
+    <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
+    <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Enable Verbose Output</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Enable Refine Sector Mode Flag</system:String>
+    <system:String x:Key="RedumperRereadTriesLabelString">Reread Tries:</system:String>
+    <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor Lead-in Retries:</system:String>
+    <system:String x:Key="NonRedumpOptionsCheckBoxString">Non-Redump Options</system:String>
+    <system:String x:Key="DefaultReadMethodLabelString">Default Read Method:</system:String>
+    <system:String x:Key="DefaultSectorOrderLabelString">Default Sector Order:</system:String>
+    <system:String x:Key="DefaultDriveTypeLabelString">Default Drive Type:</system:String>
+    <!-- Login Info Tab -->
+    <system:String x:Key="LoginInfoTabString">Login Info</system:String>
+    <system:String x:Key="RetrievalGroupBoxString">Retrieval</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Retrieve Match Information</system:String>
+    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="UsernameLabelString">Username</system:String>
+    <system:String x:Key="PasswordLabelString">Password</system:String>
+    <system:String x:Key="TestLoginButtonString">Test Login</system:String>
 
     <!-- Check Dump Window-->
     <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>
