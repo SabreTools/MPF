@@ -157,9 +157,11 @@ namespace MPF.UI.Windows
         private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Uncheck all language menu items
-            foreach (MenuItem item in LanguagesMenuItem.Items)
+            foreach (var item in LanguagesMenuItem.Items)
             {
-                item.IsChecked = false;
+                menuItem = item as MenuItem;
+                if (menuItem != null && menuItem.IsCheckable)
+                    item.IsChecked = false;
             }
 
             // Auto detect language
