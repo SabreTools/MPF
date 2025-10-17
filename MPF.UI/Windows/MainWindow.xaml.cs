@@ -673,14 +673,6 @@ namespace MPF.UI.Windows
                 return;
             }
 
-            // Uncheck every item not checked
-            var languageMenu = (MenuItem)clickedItem.Parent;
-            foreach (var item in languageMenu.Items)
-            {
-                if (item is MenuItem menuItem && menuItem != clickedItem)
-                    menuItem.IsChecked = false;
-            }
-
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? "";
             SetInterfaceLanguage(
