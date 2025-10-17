@@ -97,20 +97,14 @@ namespace MPF.UI.Windows
 
             // Set default language
             var dictionary = new ResourceDictionary();
-            switch (MainViewModel.Options.DefaultUILanguage)
+            dictionary.Source = MainViewModel.Options.DefaultUILanguage switch
             {
-                case "ENG":
-                    // Change UI language to English
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-                case "한국어":
-                    // Change UI language to Korean
-                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
-                    break;
-                default:
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-            }
+                InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+
+                // Default to English
+                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+            };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
         }
 
@@ -135,7 +129,7 @@ namespace MPF.UI.Windows
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
 
             MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
-            
+
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>();
             translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");

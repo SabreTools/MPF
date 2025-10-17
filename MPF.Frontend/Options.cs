@@ -144,12 +144,19 @@ namespace MPF.Frontend
 
         /// <summary>
         /// Default UI language to launch MPF into
-        /// null/empty = Detect locale
         /// </summary>
-        public string? DefaultUILanguage
+        public InterfaceLanguage? DefaultUILanguage
         {
-            get { return GetStringSetting(Settings, "DefaultUILanguage", "Auto Detect"); }
-            set { Settings["DefaultUILanguage"] = value; }
+            get
+            {
+                var valueString = GetStringSetting(Settings, "DefaultUILanguage", RedumpSystem.IBMPCcompatible.LongName());
+                var valueEnum = (valueString ?? string.Empty).ToInterfaceLanguage();
+                return valueEnum;
+            }
+            set
+            {
+                Settings["DefaultUILanguage"] = value.ShortName();
+            }
         }
 
         /// <summary>

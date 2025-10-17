@@ -16,6 +16,23 @@ namespace MPF.Frontend.Test
 
         [Theory]
         [InlineData(null, "Unknown")]
+        [InlineData(InterfaceLanguage.AutoDetect, "Auto Detect")]
+        [InlineData(InterfaceLanguage.English, "English")]
+        [InlineData(InterfaceLanguage.Korean, "한국어")]
+        public void LongName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
+        {
+            string? actual = lang.LongName();
+            Assert.Equal(expected, actual);
+
+            if (lang != null)
+            {
+                actual = EnumExtensions.GetLongName(lang);
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        [Theory]
+        [InlineData(null, "Unknown")]
         [InlineData(InternalProgram.NONE, "Unknown")]
         [InlineData(InternalProgram.Aaru, "Aaru")]
         [InlineData(InternalProgram.DiscImageCreator, "DiscImageCreator")]
@@ -117,6 +134,17 @@ namespace MPF.Frontend.Test
 
         [Theory]
         [InlineData(null, "Unknown")]
+        [InlineData(InterfaceLanguage.AutoDetect, "_AUTO")]
+        [InlineData(InterfaceLanguage.English, "eng")]
+        [InlineData(InterfaceLanguage.Korean, "kor")]
+        public void ShortName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
+        {
+            string? actual = lang.ShortName();
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, "Unknown")]
         [InlineData(InternalProgram.NONE, "Unknown")]
         [InlineData(InternalProgram.Aaru, "aaru")]
         [InlineData(InternalProgram.DiscImageCreator, "dic")]
@@ -134,6 +162,19 @@ namespace MPF.Frontend.Test
         #endregion
 
         #region From String
+
+        [Theory]
+        [InlineData(null, InterfaceLanguage.AutoDetect)]
+        [InlineData("", InterfaceLanguage.AutoDetect)]
+        [InlineData("_AUTO", InterfaceLanguage.AutoDetect)]
+        [InlineData("_auto", InterfaceLanguage.AutoDetect)]
+        [InlineData("eng", InterfaceLanguage.English)]
+        [InlineData("kor", InterfaceLanguage.Korean)]
+        public void ToInterfaceLanguageTest(string? interfaceLanguage, InterfaceLanguage expected)
+        {
+            InterfaceLanguage actual = interfaceLanguage.ToInterfaceLanguage();
+            Assert.Equal(expected, actual);
+        }
 
         [Theory]
         [InlineData(null, InternalProgram.NONE)]

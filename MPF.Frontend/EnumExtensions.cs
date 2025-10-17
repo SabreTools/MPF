@@ -63,6 +63,31 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Get the string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InterfaceLanguage lang)
+            => ((InterfaceLanguage?)lang).LongName();
+
+        /// <summary>
+        /// Get the string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InterfaceLanguage? lang)
+        {
+            return lang switch
+            {
+                InterfaceLanguage.AutoDetect => "Auto Detect",
+                InterfaceLanguage.English => "English",
+                InterfaceLanguage.Korean => "한국어",
+
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
         /// Get the string representation of the InternalProgram enum values
         /// </summary>
         /// <param name="prog">InternalProgram value to convert</param>
@@ -189,6 +214,23 @@ namespace MPF.Frontend
         #region Convert to Short Name
 
         /// <summary>
+        /// Get the short string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this InterfaceLanguage? lang)
+        {
+            return lang switch
+            {
+                InterfaceLanguage.AutoDetect => "_AUTO",
+                InterfaceLanguage.English => "eng",
+                InterfaceLanguage.Korean => "kor",
+
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
         /// Get the short string representation of the InternalProgram enum values
         /// </summary>
         /// <param name="prog">InternalProgram value to convert</param>
@@ -222,6 +264,24 @@ namespace MPF.Frontend
         #endregion
 
         #region Convert from String
+
+        /// <summary>
+        /// Get the InterfaceLanguage enum value for a given string
+        /// </summary>
+        /// <param name="internalLanguage">String value to convert</param>
+        /// <returns>InterfaceLanguage represented by the string, if possible</returns>
+        public static InterfaceLanguage ToInterfaceLanguage(this string? internalLanguage)
+        {
+            return (internalLanguage?.ToLowerInvariant()) switch
+            {
+                "_auto"
+                    or "auto detect" => InterfaceLanguage.AutoDetect,
+                "eng" or "english" => InterfaceLanguage.English,
+                "kor" or "한국어" => InterfaceLanguage.Korean,
+
+                _ => InterfaceLanguage.AutoDetect,
+            };
+        }
 
         /// <summary>
         /// Get the InternalProgram enum value for a given string

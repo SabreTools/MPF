@@ -1,6 +1,20 @@
 namespace MPF.Frontend
 {
     /// <summary>
+    /// Interface language
+    /// </summary>
+    public enum InterfaceLanguage
+    {
+        /// <summary>
+        /// Default to auto-detecting language
+        /// </summary>
+        AutoDetect = 0,
+
+        English,
+        Korean,
+    }
+
+    /// <summary>
     /// Drive type for dumping
     /// </summary>
     public enum InternalDriveType

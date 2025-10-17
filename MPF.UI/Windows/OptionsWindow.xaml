@@ -95,17 +95,7 @@
                                 <Label VerticalAlignment="Center" Content="Default UI Language:" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultUILanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Options.DefaultUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
-                                    <ComboBox.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ComboBoxItem}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsHeader}" Value="True">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ComboBox.ItemContainerStyle>
-                                </ComboBox>
+                                          Style="{DynamicResource CustomComboBoxStyle}" />
                             </UniformGrid>
                         </GroupBox>
 
