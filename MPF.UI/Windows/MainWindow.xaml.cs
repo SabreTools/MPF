@@ -157,19 +157,28 @@ namespace MPF.UI.Windows
         private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Set baseline language (English), required as some translations may not translate all strings
-            SetInterfaceLanguage(InterfaceLanguage.English);
-
-            // Quit early on English or AutoDetect (no need to translate)
-            if (lang == InterfaceLanguage.English || lang == InterfaceLanguage.AutoDetect)
-                return;
+            if (lang != InterfaceLanguage.English || lang != InterfaceLanguage.AutoDetect)
+            {
+                var baselineDictionary = new ResourceDictionary();
+                baselineDictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                Application.Current.Resources.MergedDictionaries.Add(baselineDictionary);
+            }
 
             var dictionary = new ResourceDictionary();
             dictionary.Source = lang switch
             {
+                InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
                 InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
                 _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
+
+            // Update the labels in MainViewModel
+            var translationStrings = new Dictionary<string, string>();
+            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
+            MainViewModel.TranslateStrings(translationStrings);
         }
 
         /// <summary>
@@ -660,22 +669,17 @@ namespace MPF.UI.Windows
 
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? "";
-            lang switch
-            {
-                "ENG" => SetInterfaceLanguage(InterfaceLanguage.English),
-                "한국어" => SetInterfaceLanguage(InterfaceLanguage.English),
-                _ => SetInterfaceLanguage(InterfaceLanguage.English),
-            };
+            SetInterfaceLanguage(
+                lang : lang switch
+                {
+                    "ENG" => SetInterfaceLanguage(InterfaceLanguage.English),
+                    "한국어" => SetInterfaceLanguage(InterfaceLanguage.English),
+                    _ => SetInterfaceLanguage(InterfaceLanguage.English),
+                }
+            );
 
             // Update the labels that don't get updated automatically
             SetMediaTypeVisibility();
-
-            // Update the labels in MainViewModel
-            var translationStrings = new Dictionary<string, string>();
-            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
-            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
-            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
-            MainViewModel.TranslateStrings(translationStrings);
         }
 
         #endregion
