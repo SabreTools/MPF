@@ -218,6 +218,14 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="lang">InterfaceLanguage value to convert</param>
         /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this InterfaceLanguage lang)
+            => ((InterfaceLanguage?)lang).ShortName();
+
+        /// <summary>
+        /// Get the short string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
         public static string ShortName(this InterfaceLanguage? lang)
         {
             return lang switch
