@@ -230,7 +230,7 @@ namespace MPF.Frontend
         {
             return lang switch
             {
-                InterfaceLanguage.AutoDetect => "_AUTO",
+                InterfaceLanguage.AutoDetect => "auto",
                 InterfaceLanguage.English => "eng",
                 InterfaceLanguage.Korean => "kor",
 
@@ -282,10 +282,10 @@ namespace MPF.Frontend
         {
             return (internalLanguage?.ToLowerInvariant()) switch
             {
-                "_auto"
+                "auto"
                     or "auto detect" => InterfaceLanguage.AutoDetect,
                 "eng" or "english" => InterfaceLanguage.English,
-                "kor" or "한국어" => InterfaceLanguage.Korean,
+                "kor" or "korean" or "한국어" => InterfaceLanguage.Korean,
 
                 _ => InterfaceLanguage.AutoDetect,
             };
@@ -338,7 +338,7 @@ namespace MPF.Frontend
         /// Get the LogCompression enum value for a given string
         /// </summary>
         /// <param name="logCompression">String value to convert</param>
-        /// <returns>LogCompression represented by teh string, if possible</returns>
+        /// <returns>LogCompression represented by the string, if possible</returns>
         public static LogCompression ToLogCompression(this string? logCompression)
         {
             return (logCompression?.ToLowerInvariant()) switch

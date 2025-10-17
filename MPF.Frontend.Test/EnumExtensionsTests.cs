@@ -134,7 +134,7 @@ namespace MPF.Frontend.Test
 
         [Theory]
         [InlineData(null, "Unknown")]
-        [InlineData(InterfaceLanguage.AutoDetect, "_AUTO")]
+        [InlineData(InterfaceLanguage.AutoDetect, "auto")]
         [InlineData(InterfaceLanguage.English, "eng")]
         [InlineData(InterfaceLanguage.Korean, "kor")]
         public void ShortName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
@@ -166,8 +166,7 @@ namespace MPF.Frontend.Test
         [Theory]
         [InlineData(null, InterfaceLanguage.AutoDetect)]
         [InlineData("", InterfaceLanguage.AutoDetect)]
-        [InlineData("_AUTO", InterfaceLanguage.AutoDetect)]
-        [InlineData("_auto", InterfaceLanguage.AutoDetect)]
+        [InlineData("auto", InterfaceLanguage.AutoDetect)]
         [InlineData("eng", InterfaceLanguage.English)]
         [InlineData("kor", InterfaceLanguage.Korean)]
         public void ToInterfaceLanguageTest(string? interfaceLanguage, InterfaceLanguage expected)
