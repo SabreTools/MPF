@@ -132,7 +132,7 @@
 
     <!-- Protection Error Window -->
     <system:String x:Key="ProtectionErrorTitleString">오류!</system:String>
-    <system:String x:Key="ProtectionErrorMessageString">예외가 발생했습니다. 자세한 내용은 로그를 참조하세요.</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">예외가 발생했습니다. 자세한 내용은 로그를 참조하세요</system:String>
 
     <!-- Protection Detected Window -->
     <system:String x:Key="ProtectionDetectedTitleString">감지된 보호</system:String>
