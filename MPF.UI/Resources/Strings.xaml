@@ -122,4 +122,19 @@
     <!-- Check for Updates Window -->
     <system:String x:Key="CheckForUpdatesTitleString">Version Update Check</system:String>
 
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">Eject</system:String>
+    <system:String x:Key="EjectMessageString">It is now safe to eject the disc</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">Quit</system:String>
+    <system:String x:Key="QuitMessageString">A dump is still being processed, are you sure you want to quit?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">Error!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">An exception occurred, see the log for details</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">Detected Protection(s)</system:String>
+
 </ResourceDictionary>

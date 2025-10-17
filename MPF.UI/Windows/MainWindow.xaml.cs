@@ -338,7 +338,8 @@ namespace MPF.UI.Windows
         {
             if (MainViewModel.AskBeforeQuit)
             {
-                MessageBoxResult result = CustomMessageBox.Show(this, "A dump is still being processed, are you sure you want to quit?", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                MessageBoxResult result = CustomMessageBox.Show(this, (string)Application.Current.FindResource("QuitMessageString"),
+                    (string)Application.Current.FindResource("QuitTitleString"), MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No)
                     e.Cancel = true;
             }
@@ -363,7 +364,8 @@ namespace MPF.UI.Windows
         public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             if (options?.ShowDiscEjectReminder == true)
-                CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.Show(this, (string)Application.Current.FindResource("EjectMessageString"),
+                    (string)Application.Current.FindResource("EjectTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
 
             var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
@@ -713,9 +715,11 @@ namespace MPF.UI.Windows
             if (!MainViewModel.LogPanelExpanded)
             {
                 if (!string.IsNullOrEmpty(output))
-                    CustomMessageBox.Show(this, output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(this, output, (string)Application.Current.FindResource("ProtectionDetectedTitleString"),
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 else
-                    CustomMessageBox.Show(this, "An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(this, (string)Application.Current.FindResource("ProtectionErrorMessageString"),
+                        (string)Application.Current.FindResource("ProtectionErrorTitleString"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

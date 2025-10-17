@@ -15,8 +15,8 @@
     <system:String x:Key="StatusGroupBoxString">상태</system:String>
     <system:String x:Key="WarningLabelString">경고:</system:String>
 
-    <!-- Main Window 
-    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
+    <!-- Main Window -->
+    <!-- <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">파일</system:String>
     <system:String x:Key="ExitMenuItemString">종료</system:String>
@@ -121,5 +121,20 @@
 
     <!-- Check for Updates Window -->
     <system:String x:Key="CheckForUpdatesTitleString">버전 업데이트 확인</system:String>
+
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">꺼내다</system:String>
+    <system:String x:Key="EjectMessageString">이제 디스크를 꺼내셔도 됩니다</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">종료</system:String>
+    <system:String x:Key="QuitMessageString">덤프가 아직 처리 중입니다. 종료하시겠습니까?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">오류!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">예외가 발생했습니다. 자세한 내용은 로그를 참조하세요.</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">감지된 보호</system:String>
 
 </ResourceDictionary>
