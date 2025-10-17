@@ -118,7 +118,7 @@
                                 Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                 Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                 Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="EnglishMenuItem" Header="ENG" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />

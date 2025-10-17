@@ -575,8 +575,8 @@ namespace MPF.UI.Windows
         /// </summary>
         private void LanguageMenuItemClick(object sender, RoutedEventArgs e)
         {
-            var clickedItem = (MenuItem)sender;
             // Don't do anything if language is already checked and being unchecked
+            var clickedItem = (MenuItem)sender;
             if (!clickedItem.IsChecked)
             {
                 clickedItem.IsChecked = true;
@@ -594,20 +594,12 @@ namespace MPF.UI.Windows
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? "";
             var dictionary = new ResourceDictionary();
-            switch (lang)
+            dictionary.Source = lang switch
             {
-                case "ENG":
-                    // Change UI language to English
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-                case "한국어":
-                    // Change UI language to Korean
-                    dictionary.Source = new Uri("../Resources/Strings.ko.xaml", UriKind.Relative);
-                    break;
-                default:
-                    dictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
-                    break;
-            }
+                "ENG" => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                "한국어" => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+            };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
             // Update the labels that don't get updated automatically
