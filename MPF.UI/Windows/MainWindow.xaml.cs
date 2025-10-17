@@ -206,7 +206,8 @@ namespace MPF.UI.Windows
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
                 case "en":
-                    // English already loaded, don't add any translated text
+                    // Translate UI elements to English
+                    SetInterfaceLanguage(InterfaceLanguage.English);
                     break;
                 
                 case "ko":
@@ -599,6 +600,7 @@ namespace MPF.UI.Windows
 
             // Set the language according to the settings
             SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+
             // Uncheck all language menu items
             foreach (var item in LanguagesMenuItem.Items)
             {

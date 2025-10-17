@@ -34,7 +34,7 @@
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <StackPanel Panel.ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                    <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
+                    <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20" Margin="0,0,0,2"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
                         <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}" Width="35"
