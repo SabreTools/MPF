@@ -63,7 +63,7 @@
     <system:String x:Key="DefaultUILanguageLabelString">Default UI Language:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Detection</system:String>
     <system:String x:Key="SkipSystemDetectCheckBoxString">Skip System Detect</system:String>
-    <system:String x:Key="SkipSystemDetectCheckBoxString">No Fixed Drives</system:String>
+    <system:String x:Key="NoFixedDrivesCheckBoxString">No Fixed Drives</system:String>
     <system:String x:Key="DefaultSystemLabelString">Default System:</system:String>
     <system:String x:Key="LoggingGroupBoxString">Logging</system:String>
     <system:String x:Key="VerboseLoggingCheckBoxString">Verbose Logging</system:String>

@@ -63,7 +63,7 @@
     <system:String x:Key="DefaultUILanguageLabelString">기본 UI 언어:</system:String>
     <system:String x:Key="DetectionGroupBoxString">감지</system:String>
     <system:String x:Key="SkipSystemDetectCheckBoxString">시스템 감지 건너뛰기</system:String>
-    <system:String x:Key="SkipSystemDetectCheckBoxString">고정 드라이브 없음</system:String>
+    <system:String x:Key="NoFixedDrivesCheckBoxString">고정 드라이브 없음</system:String>
     <system:String x:Key="DefaultSystemLabelString">기본 시스템:</system:String>
     <system:String x:Key="LoggingGroupBoxString">로그</system:String>
     <system:String x:Key="VerboseLoggingCheckBoxString">상세 로그</system:String>
