@@ -81,7 +81,15 @@ namespace MPF.Frontend
             {
                 InterfaceLanguage.AutoDetect => "Auto Detect",
                 InterfaceLanguage.English => "English",
+                InterfaceLanguage.French => "Français",
+                InterfaceLanguage.German => "Deutsch",
+                InterfaceLanguage.Italian => "Italiano",
+                InterfaceLanguage.Japanese => "日本語",
                 InterfaceLanguage.Korean => "한국어",
+                InterfaceLanguage.Polish => "Polski",
+                InterfaceLanguage.Russian => "Русский",
+                InterfaceLanguage.Spanish => "Español",
+                InterfaceLanguage.Swedish => "Svenska",
 
                 _ => "Unknown",
             };
@@ -232,7 +240,15 @@ namespace MPF.Frontend
             {
                 InterfaceLanguage.AutoDetect => "auto",
                 InterfaceLanguage.English => "eng",
+                InterfaceLanguage.French => "fra",
+                InterfaceLanguage.German => "deu",
+                InterfaceLanguage.Italian => "ita",
+                InterfaceLanguage.Japanese => "jpn",
                 InterfaceLanguage.Korean => "kor",
+                InterfaceLanguage.Polish => "pol",
+                InterfaceLanguage.Russian => "rus",
+                InterfaceLanguage.Spanish => "spa",
+                InterfaceLanguage.Swedish => "swe",
 
                 _ => "Unknown",
             };
@@ -284,7 +300,15 @@ namespace MPF.Frontend
             {
                 "auto" or "autodetect" or "auto detect" => InterfaceLanguage.AutoDetect,
                 "eng" or "english" => InterfaceLanguage.English,
+                "fra" or "french" or "français" => InterfaceLanguage.French,
+                "deu" or "german" or "deutsch" => InterfaceLanguage.German,
+                "ita" or "italian" or "italiano" => InterfaceLanguage.Italian,
+                "jpn" or "japanese" or "日本語" => InterfaceLanguage.Japanese,
                 "kor" or "korean" or "한국어" => InterfaceLanguage.Korean,
+                "pol" or "polish" or "polski" => InterfaceLanguage.Polish,
+                "rus" or "russian" or "русский" => InterfaceLanguage.Russian,
+                "spa" or "spanish" or "español" => InterfaceLanguage.Spanish,
+                "swe" or "swedish" or "svenska" => InterfaceLanguage.Swedish,
 
                 _ => InterfaceLanguage.AutoDetect,
             };

@@ -11,7 +11,15 @@ namespace MPF.Frontend
         AutoDetect = 0,
 
         English,
+        French,
+        German,
+        Italian,
+        Japanese,
         Korean,
+        Polish,
+        Russian,
+        Spanish,
+        Swedish,
     }
 
     /// <summary>

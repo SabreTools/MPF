@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Language Name: JA / JPN / Japanese / 日本語 -->
+    <system:String x:Key="LanguageMenuString">日本語</system:String>
+
+</ResourceDictionary>

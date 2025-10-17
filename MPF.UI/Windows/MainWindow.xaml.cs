@@ -175,7 +175,15 @@ namespace MPF.UI.Windows
             dictionary.Source = lang switch
             {
                 InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                InterfaceLanguage.French => new Uri("../Resources/Strings.fr.xaml", UriKind.Relative),
+                InterfaceLanguage.German => new Uri("../Resources/Strings.de.xaml", UriKind.Relative),
+                InterfaceLanguage.Italian => new Uri("../Resources/Strings.it.xaml", UriKind.Relative),
+                InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
                 InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
+                InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
+                InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
                 _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
@@ -205,15 +213,16 @@ namespace MPF.UI.Windows
 
             switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
             {
-                // English
-                case "en":
-                    SetInterfaceLanguage(InterfaceLanguage.English);
-                    break;
-
-                // Korean
-                case "ko":
-                    SetInterfaceLanguage(InterfaceLanguage.Korean);
-                    break;
+                case "en": SetInterfaceLanguage(InterfaceLanguage.English); break;
+                case "fr": SetInterfaceLanguage(InterfaceLanguage.French); break;
+                case "de": SetInterfaceLanguage(InterfaceLanguage.German); break;
+                case "it": SetInterfaceLanguage(InterfaceLanguage.Italian); break;
+                case "ja": SetInterfaceLanguage(InterfaceLanguage.Japanese); break;
+                case "ko": SetInterfaceLanguage(InterfaceLanguage.Korean); break;
+                case "pl": SetInterfaceLanguage(InterfaceLanguage.Polish); break;
+                case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
+                case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
+                case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
 
                 // Traditional or Simplified Chinese
                 case "zh":
@@ -700,7 +709,15 @@ namespace MPF.UI.Windows
                 lang switch
                 {
                     "ENG" => InterfaceLanguage.English,
+                    "FRA" => InterfaceLanguage.French,
+                    "DEU" => InterfaceLanguage.German,
+                    "ITA" => InterfaceLanguage.Italian,
+                    "日本語" => InterfaceLanguage.Japanese,
                     "한국어" => InterfaceLanguage.Korean,
+                    "POL" => InterfaceLanguage.Polish,
+                    "RUS" => InterfaceLanguage.Russian,
+                    "SPA" => InterfaceLanguage.Spanish,
+                    "SWE" => InterfaceLanguage.Swedish,
                     _ => InterfaceLanguage.English,
                 }
             );

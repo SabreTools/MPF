@@ -18,7 +18,15 @@ namespace MPF.Frontend.Test
         [InlineData(null, "Unknown")]
         [InlineData(InterfaceLanguage.AutoDetect, "Auto Detect")]
         [InlineData(InterfaceLanguage.English, "English")]
+        [InlineData(InterfaceLanguage.French, "Français")]
+        [InlineData(InterfaceLanguage.German, "Deutsch")]
+        [InlineData(InterfaceLanguage.Italian, "Italiano")]
+        [InlineData(InterfaceLanguage.Japanese, "日本語")]
         [InlineData(InterfaceLanguage.Korean, "한국어")]
+        [InlineData(InterfaceLanguage.Polish, "Polski")]
+        [InlineData(InterfaceLanguage.Russian, "Русский")]
+        [InlineData(InterfaceLanguage.Spanish, "Español")]
+        [InlineData(InterfaceLanguage.Swedish, "Svenska")]
         public void LongName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
         {
             string? actual = lang.LongName();
@@ -136,7 +144,15 @@ namespace MPF.Frontend.Test
         [InlineData(null, "Unknown")]
         [InlineData(InterfaceLanguage.AutoDetect, "auto")]
         [InlineData(InterfaceLanguage.English, "eng")]
+        [InlineData(InterfaceLanguage.French, "fra")]
+        [InlineData(InterfaceLanguage.German, "deu")]
+        [InlineData(InterfaceLanguage.Italian, "ita")]
+        [InlineData(InterfaceLanguage.Japanese, "jpn")]
         [InlineData(InterfaceLanguage.Korean, "kor")]
+        [InlineData(InterfaceLanguage.Polish, "pol")]
+        [InlineData(InterfaceLanguage.Russian, "rus")]
+        [InlineData(InterfaceLanguage.Spanish, "spa")]
+        [InlineData(InterfaceLanguage.Swedish, "swe")]
         public void ShortName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
         {
             string? actual = lang.ShortName();
@@ -168,7 +184,15 @@ namespace MPF.Frontend.Test
         [InlineData("", InterfaceLanguage.AutoDetect)]
         [InlineData("auto", InterfaceLanguage.AutoDetect)]
         [InlineData("eng", InterfaceLanguage.English)]
+        [InlineData("fra", InterfaceLanguage.French)]
+        [InlineData("deu", InterfaceLanguage.German)]
+        [InlineData("ita", InterfaceLanguage.Italian)]
+        [InlineData("jpn", InterfaceLanguage.Japanese)]
         [InlineData("kor", InterfaceLanguage.Korean)]
+        [InlineData("pol", InterfaceLanguage.Polish)]
+        [InlineData("rus", InterfaceLanguage.Russian)]
+        [InlineData("spa", InterfaceLanguage.Spanish)]
+        [InlineData("swe", InterfaceLanguage.Swedish)]
         public void ToInterfaceLanguageTest(string? interfaceLanguage, InterfaceLanguage expected)
         {
             InterfaceLanguage actual = interfaceLanguage.ToInterfaceLanguage();
