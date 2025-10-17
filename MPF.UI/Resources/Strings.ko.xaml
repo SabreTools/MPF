@@ -83,7 +83,7 @@
     <system:String x:Key="MediaInformationTitleString">미디어 정보</system:String>
     <system:String x:Key="CategoryLabelString">카테고리</system:String>
     <system:String x:Key="RegionLabelString">지역</system:String>
-    <system:String x:Key="LanguagesLabelString">언어 (언어)</system:String>
+    <system:String x:Key="LanguagesLabelString">언어 (문자)</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
     <system:String x:Key="PCMacHybridLabelString">PC/Mac 하이브리드</system:String>
     <system:String x:Key="RingCodeGuideButtonString">링 코드 가이드</system:String>
