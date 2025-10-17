@@ -15,8 +15,8 @@
     <system:String x:Key="StatusGroupBoxString">상태</system:String>
     <system:String x:Key="WarningLabelString">경고:</system:String>
 
-    <!-- Main Window 
-    <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
+    <!-- Main Window -->
+    <!-- <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">파일</system:String>
     <system:String x:Key="ExitMenuItemString">종료</system:String>
@@ -72,8 +72,8 @@
     <system:String x:Key="DiscIDExpanderString">PS3 디스크 ID 수동 설정</system:String>
     <system:String x:Key="DiscIDLabelString">디스크 ID</system:String>
     <system:String x:Key="DiscIDStatusLabelString">디스크 ID 상태</system:String>
-    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
     <system:String x:Key="PICExpanderString">Permanent Information &#x26; Control (PIC) 수동 설정</system:String>
+    <system:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</system:String>
     <system:String x:Key="PICLabelString">PIC</system:String>
     <system:String x:Key="PICFilePathLabelString">PIC 파일 경로</system:String>
     <system:String x:Key="PICStatusLabelString">PIC 상태</system:String>
@@ -81,12 +81,31 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">미디어 정보</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">링 코드 가이드</system:String>
+    <!-- Common Info Tab -->
+    <system:String x:Key="CommonInfoTabString">일반 정보</system:String>
+    <system:String x:Key="CommonMediaInfoGroupBoxString">일반 미디어 정보</system:String>
     <system:String x:Key="CategoryLabelString">카테고리</system:String>
     <system:String x:Key="RegionLabelString">지역</system:String>
-    <system:String x:Key="LanguagesLabelString">언어 (언어)</system:String>
+    <system:String x:Key="LanguagesLabelString">언어 (문자)</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
+    <system:String x:Key="VersionsAndEditionGroupBoxString">버전 및 에디션</system:String>
+    <!-- Additional Info Tab -->
+    <system:String x:Key="AdditionalInfoTabString">추가 정보</system:String>
+    <system:String x:Key="ExtrasGroupBoxString">추가</system:String>
     <system:String x:Key="PCMacHybridLabelString">PC/Mac 하이브리드</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">링 코드 가이드</system:String>
+    <system:String x:Key="PhysicalIdentifiersGroupBoxString">물리적 식별자</system:String>
+    <system:String x:Key="PublisherIdentifiersGroupBoxString">게시자 식별자</system:String>
+    <!-- Contents Tab -->
+    <system:String x:Key="ContentsTabString">내용물</system:String>
+    <!-- Ringcodes Tab -->
+    <system:String x:Key="RingcodesTabString">링 코드</system:String>
+    <system:String x:Key="L0InfoGroupBoxString">데이터/L0 정보</system:String>
+    <system:String x:Key="L1InfoGroupBoxString">라벨/L1 정보</system:String>
+    <system:String x:Key="L2InfoGroupBoxString">L2 정보</system:String>
+    <system:String x:Key="L3InfoGroupBoxString">L3 정보</system:String>
+    <!-- Read-Only Info Tab -->
+    <system:String x:Key="ReadOnlyInfoTabString">읽기 전용 정보</system:String>
 
     <!-- Ring Code Guide Window -->
     <system:String x:Key="RingCodeGuideTitleString">링 코드 가이드</system:String>
@@ -102,5 +121,20 @@
 
     <!-- Check for Updates Window -->
     <system:String x:Key="CheckForUpdatesTitleString">버전 업데이트 확인</system:String>
+
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">꺼내다</system:String>
+    <system:String x:Key="EjectMessageString">이제 디스크를 꺼내셔도 됩니다</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">종료</system:String>
+    <system:String x:Key="QuitMessageString">덤프가 아직 처리 중입니다. 종료하시겠습니까?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">오류!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">예외가 발생했습니다. 자세한 내용은 로그를 참조하세요</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">감지된 보호</system:String>
 
 </ResourceDictionary>

@@ -93,8 +93,8 @@
                                 />
 
                                 <Label VerticalAlignment="Center" Content="Default UI Language:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultUILanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                          ItemsSource="{Binding UILanguages}" SelectedItem="{Binding Options.DefaultUILanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                <ComboBox x:Name="DefaultInterfaceLanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding InterfaceLanguages}" SelectedItem="{Binding Options.DefaultInterfaceLanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" />
                             </UniformGrid>
                         </GroupBox>

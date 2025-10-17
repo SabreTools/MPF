@@ -81,12 +81,31 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Media Information</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Ring Code Guide</system:String>
+    <!-- Common Info Tab -->
+    <system:String x:Key="CommonInfoTabString">Common Info</system:String>
+    <system:String x:Key="CommonMediaInfoGroupBoxString">Common Media Information</system:String>
     <system:String x:Key="CategoryLabelString">Category</system:String>
     <system:String x:Key="RegionLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Languages</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">Language Selection Via</system:String>
+    <system:String x:Key="VersionsAndEditionGroupBoxString">Version and Editions</system:String>
+    <!-- Additional Info Tab -->
+    <system:String x:Key="AdditionalInfoTabString">Additional Info</system:String>
+    <system:String x:Key="ExtrasGroupBoxString">Extras</system:String>
     <system:String x:Key="PCMacHybridLabelString">PC/Mac Hybrid</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Ring Code Guide</system:String>
+    <system:String x:Key="PhysicalIdentifiersGroupBoxString">Physical Identifiers</system:String>
+    <system:String x:Key="PublisherIdentifiersGroupBoxString">Publisher Identifiers</system:String>
+    <!-- Contents Tab -->
+    <system:String x:Key="ContentsTabString">Contents</system:String>
+    <!-- Ringcodes Tab -->
+    <system:String x:Key="RingcodesTabString">Ringcodes</system:String>
+    <system:String x:Key="L0InfoGroupBoxString">Data/L0 Info</system:String>
+    <system:String x:Key="L1InfoGroupBoxString">Label/L1 Info</system:String>
+    <system:String x:Key="L2InfoGroupBoxString">L2 Info</system:String>
+    <system:String x:Key="L3InfoGroupBoxString">L3 Info</system:String>
+    <!-- Read-Only Info Tab -->
+    <system:String x:Key="ReadOnlyInfoTabString">Read-Only Info</system:String>
 
     <!-- Ring Code Guide Window -->
     <system:String x:Key="RingCodeGuideTitleString">Ring Code Guide</system:String>
@@ -102,5 +121,20 @@
 
     <!-- Check for Updates Window -->
     <system:String x:Key="CheckForUpdatesTitleString">Version Update Check</system:String>
+
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">Eject</system:String>
+    <system:String x:Key="EjectMessageString">It is now safe to eject the disc</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">Quit</system:String>
+    <system:String x:Key="QuitMessageString">A dump is still being processed, are you sure you want to quit?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">Error!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">An exception occurred, see the log for details</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">Detected Protection(s)</system:String>
 
 </ResourceDictionary>

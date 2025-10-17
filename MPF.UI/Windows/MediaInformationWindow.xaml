@@ -69,10 +69,10 @@
             <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem x:Name="CommonInfo" Header="{DynamicResource CommonInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Common Media Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource CommonMediaInfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="Title"
@@ -155,7 +155,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource VersionsAndEditionGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
@@ -168,10 +168,10 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Additional Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource AdditionalInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource ExtrasGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <Grid x:Name="PCMacHybridGrid" Visibility="Collapsed">
@@ -199,7 +199,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Physical Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource PhysicalIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."
@@ -219,7 +219,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource PublisherIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"
@@ -282,7 +282,7 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource ContentsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -346,10 +346,10 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Ringcodes" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource RingcodesTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L0Info" Header="{DynamicResource L0InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring"
@@ -365,7 +365,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L1Info" Header="{DynamicResource L1InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring"
@@ -381,7 +381,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L2Info" Header="{DynamicResource L2InfoGroupBoxString}" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring"
@@ -393,7 +393,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L3Info" Header="{DynamicResource L3InfoGroupBoxString}" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring"
@@ -408,7 +408,7 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource ReadOnlyInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

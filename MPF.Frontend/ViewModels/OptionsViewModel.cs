@@ -52,9 +52,9 @@ namespace MPF.Frontend.ViewModels
         public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
-        /// List of available UI languages
+        /// List of available interface languages
         /// </summary>
-        public static List<Element<InterfaceLanguage>> UILanguages => Element<InterfaceLanguage>.GenerateElements();
+        public static List<Element<InterfaceLanguage>> InterfaceLanguages => Element<InterfaceLanguage>.GenerateElements();
 
         /// <summary>
         /// List of available log compression methods
