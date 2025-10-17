@@ -2,7 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "ui-langs-dev" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
       run: dotnet test
       
     - name: Run publish script
-      run: ./publish-nix.sh
+      run: ./publish-nix.sh -dp
 
     - name: Upload to rolling
       uses: ncipollo/release-action@v1.14.0
