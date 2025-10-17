@@ -95,6 +95,9 @@ namespace MPF.UI.Windows
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
+
+            // Set all resources before window loads
+            SetInterfaceLanguage(InterfaceLanguage.English);
         }
 
         /// <summary>
@@ -186,9 +189,6 @@ namespace MPF.UI.Windows
         /// </summary>
         public void AutoSetInterfaceLanguage()
         {
-            // Set baseline language (English), required as some translations may not translate all strings
-            SetInterfaceLanguage(InterfaceLanguage.English);
-
             // Get current region code to distinguish regional variants of languages
             string region = "";
             try
