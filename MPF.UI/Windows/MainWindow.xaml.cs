@@ -159,7 +159,7 @@ namespace MPF.UI.Windows
             // Uncheck all language menu items
             foreach (var item in LanguagesMenuItem.Items)
             {
-                menuItem = item as MenuItem;
+                MenuItem menuItem = item as MenuItem;
                 if (menuItem != null && menuItem.IsCheckable)
                     item.IsChecked = false;
             }
