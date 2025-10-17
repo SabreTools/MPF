@@ -157,7 +157,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Set the current interface language to a provided InterfaceLanguage
         /// </summary>
-        private void SetInterfaceLanguage(InterfaceLanguage lang)
+        private static void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Set baseline language (English), required as some translations may not translate all strings
             if (lang != InterfaceLanguage.English || lang != InterfaceLanguage.AutoDetect)
@@ -187,7 +187,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Sets the interface language based on system locale
         /// </summary>
-        public void AutoSetInterfaceLanguage()
+        public static void AutoSetInterfaceLanguage()
         {
             // Get current region code to distinguish regional variants of languages
             string region = "";
