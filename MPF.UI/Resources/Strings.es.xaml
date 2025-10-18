@@ -128,14 +128,14 @@
     <system:String x:Key="RetrievalGroupBoxString">Recuperación</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Recuperar información de coincidencias</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
-    <system:String x:Key="UsernameLabelString">Nombre de usuario</system:String>
+    <system:String x:Key="UsernameLabelString">Usuario</system:String>
     <system:String x:Key="PasswordLabelString">Contraseña</system:String>
     <system:String x:Key="TestLoginButtonString">Probar acceso</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Comprobar volcado existente</system:String>
     <system:String x:Key="InputPathLabelString">Ruta de entrada</system:String>
-    <system:String x:Key="CheckDumpButtonString">Comprobar volcado</system:String>
+    <system:String x:Key="CheckDumpButtonString">Comprobar</system:String>
     <system:String x:Key="CheckDumpWarningString">La comprobación sobrescribirá cualquier archivo de información de envío existente. Por favor, realiza copias de seguridad de esos archivos si las necesitas antes de ejecutar la comprobación.</system:String>
 
     <!-- Create PS3 IRD Window -->

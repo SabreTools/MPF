@@ -74,8 +74,8 @@
     <system:String x:Key="AaruPathLabelString">Aaru-sökväg</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-sökväg</system:String>
     <system:String x:Key="RedumperPathLabelString">Redumper-sökväg</system:String>
-    <system:String x:Key="DefaultDumpingProgramLabelString">Standard Dumpningsprogram</system:String>
-    <system:String x:Key="DefaultOutputPathLabelString">Standard Utdatamapp</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Standard dumpningsprogram</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">Standard utdatamapp</system:String>
     <!-- Dumping Tab -->
     <system:String x:Key="DumpingTabString">Dumpning</system:String>
     <system:String x:Key="DumpingGroupBoxString">Dumpning</system:String>
@@ -87,11 +87,11 @@
     <system:String x:Key="AddPlaceholdersCheckBoxString">Lägg till platshållare</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Generera JSON för Submission</system:String>
-    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inkludera Artefakter</system:String>
-    <system:String x:Key="CompressLogFilesCheckBoxString">Komprimera Loggfiler</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inkludera artefakter</system:String>
+    <system:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</system:String>
     <system:String x:Key="LogCompressionLabelString">Loggkomprimering:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</system:String>
-    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter Dumpning</system:String>
+    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter dumpning</system:String>
     <system:String x:Key="ProtectionGroupBoxString">Kopieringsskydd</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Aktivera skyddsskanning</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Skanna arkivinnehåll</system:String>
@@ -110,10 +110,10 @@
     <system:String x:Key="QuietModeCheckBoxString">Tyst läge</system:String>
     <system:String x:Key="ParanoidModeCheckBoxString">Paranoidt Läge</system:String>
     <system:String x:Key="UseCMIFlagCheckBoxString">Aktivera CMI-Flagga</system:String>
-    <system:String x:Key="MultiSectorReadCheckBoxString">Multi-sektor Läsning</system:String>
-    <system:String x:Key="MultiSectorReadValueLabelString">Multi-sektor Läsvärde:</system:String>
+    <system:String x:Key="MultiSectorReadCheckBoxString">Multi-sektor läsning</system:String>
+    <system:String x:Key="MultiSectorReadValueLabelString">Multi-sektor läsvärde:</system:String>
     <system:String x:Key="DICCDRereadTriesLabelString">Omläsningsförsök för:</system:String>
-    <system:String x:Key="DICDVDRereadTriesLabelString">Omläsningsförsök för DVD/HD-DVD/BD::</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">Omläsningsförsök för DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Aktivera detaljerad utdata</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode flagga</system:String>
@@ -126,7 +126,7 @@
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Inloggningsinfo</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Hämtning</system:String>
-    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchinformation från Redump.org</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Användarnamn</system:String>
     <system:String x:Key="PasswordLabelString">Lösenord</system:String>

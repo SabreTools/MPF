@@ -190,7 +190,7 @@ namespace MPF.Frontend
         /// <remarks>This is a hidden setting</remarks>
         public bool ShowDebugViewMenuItem
         {
-            get { return GetBooleanSetting(Settings, "ShowDebugViewMenuItem", false); }
+            get { return GetBooleanSetting(Settings, "ShowDebugViewMenuItem", true); }
             set { Settings["ShowDebugViewMenuItem"] = value.ToString(); }
         }
 
