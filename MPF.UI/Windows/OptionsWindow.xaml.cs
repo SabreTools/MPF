@@ -5,7 +5,7 @@ using System.Threading;
 #endif
 using System.Threading.Tasks;
 using System.Windows;
-using WinForms = System.Windows.Forms;
+using System.Windows.Forms;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Web;
@@ -113,21 +113,21 @@ namespace MPF.UI.Windows
 
             CommonDialog dialog = shouldBrowseForPath
                 ? (CommonDialog)CreateFolderBrowserDialog()
-                : WinForms.CreateOpenFileDialog(initialDirectory);
+                : CreateOpenFileDialog(initialDirectory);
             using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
-                if (result == WinForms.DialogResult.OK)
+                if (result == System.Windows.Forms.DialogResult.OK)
                 {
                     string path = string.Empty;
                     bool exists = false;
 
-                    if (shouldBrowseForPath && dialog is WinForms.FolderBrowserDialog folderBrowserDialog)
+                    if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
                     {
                         path = folderBrowserDialog.SelectedPath;
                         exists = Directory.Exists(path);
                     }
-                    else if (dialog is WinForms.OpenFileDialog openFileDialog)
+                    else if (dialog is OpenFileDialog openFileDialog)
                     {
                         path = openFileDialog.FileName;
                         exists = File.Exists(path);
@@ -144,7 +144,7 @@ namespace MPF.UI.Windows
                     {
                         CustomMessageBox.Show(
                             "Specified path doesn't exist!",
-                            (string)Application.Current.FindResource("ErrorMessageString"),
+                            (string)System.Windows.Application.Current.FindResource("ErrorMessageString"),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
@@ -164,14 +164,14 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Create an open folder dialog box
         /// </summary>
-        private static WinForms.FolderBrowserDialog CreateFolderBrowserDialog() => new();
+        private static FolderBrowserDialog CreateFolderBrowserDialog() => new();
 
         /// <summary>
         /// Create an open file dialog box
         /// </summary>
-        private static WinForms.OpenFileDialog CreateOpenFileDialog(string? initialDirectory)
+        private static OpenFileDialog CreateOpenFileDialog(string? initialDirectory)
         {
-            return new WinForms.OpenFileDialog()
+            return new OpenFileDialog()
             {
                 InitialDirectory = initialDirectory,
                 Filter = "Executables (*.exe)|*.exe",
@@ -191,7 +191,7 @@ namespace MPF.UI.Windows
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (success == false)
-                CustomMessageBox.Show(this, message, (string)Application.Current.FindResource("ErrorMessageString"), MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.Show(this, message, (string)System.Windows.Application.Current.FindResource("ErrorMessageString"), MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         
@@ -215,7 +215,7 @@ namespace MPF.UI.Windows
         {
             if (OptionsViewModel.Options.RedumperNonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
-                    (string)Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
                 OptionsViewModel.NonRedumpModeUnChecked();
         }
