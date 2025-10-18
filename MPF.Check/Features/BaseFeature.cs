@@ -166,8 +166,13 @@ namespace MPF.Check.Features
             Console.WriteLine("-j, --json                     Enable submission JSON output");
             Console.WriteLine("    --include-artifacts        Include artifacts in JSON (requires --json)");
             Console.WriteLine("-z, --zip                      Enable log file compression");
-            Console.WriteLine("    --log-compression          Set the log compression type (requires --zip)");
+            Console.WriteLine("    --log-compression          Set the log compression type (requires compression enabled)");
             Console.WriteLine("-d, --delete                   Enable unnecessary file deletion");
+            Console.WriteLine();
+            Console.WriteLine("WARNING: If using a configuration file alongside any of the above options");
+            Console.WriteLine("then flag options will act as toggles instead of always enabling.");
+            Console.WriteLine("For example, if log compression is enabled in your configuration file, then");
+            Console.WriteLine("providing the --zip option would disable compression.");
             Console.WriteLine();
             Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
             Console.WriteLine("as any log archives. Please make backups of those if you need to before running Check.");

@@ -25,6 +25,7 @@
 - Add skeleton for 8 more languages
 - Add 8 more language menu items
 - Add basic translation for 8 more languages
+- Make Check flags toggle if config used
 
 ### 3.5.0 (2025-10-10)
 

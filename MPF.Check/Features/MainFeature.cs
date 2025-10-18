@@ -48,7 +48,7 @@ namespace MPF.Check.Features
         internal readonly StringInput LoadSeedInput = new(_loadSeedName, "--load-seed", "Load a seed submission JSON for user information");
 
         private const string _logCompressionName = "log-compression";
-        internal readonly StringInput LogCompressionInput = new(_logCompressionName, "--log-compression", "Set the log compression type (requires --zip)");
+        internal readonly StringInput LogCompressionInput = new(_logCompressionName, "--log-compression", "Set the log compression type (requires compression enabled)");
 
         private const string _noPlaceholdersName = "no-placeholders";
         internal readonly FlagInput NoPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
@@ -167,19 +167,19 @@ namespace MPF.Check.Features
 
                 // Disable placeholder values in submission info
                 else if (NoPlaceholdersInput.ProcessInput(args, ref index))
-                    Options.AddPlaceholders = false;
+                    Options.AddPlaceholders = !Options.AddPlaceholders;
 
                 // Create IRD from output files (PS3 only)
                 else if (CreateIrdInput.ProcessInput(args, ref index))
-                    Options.CreateIRDAfterDumping = true;
+                    Options.CreateIRDAfterDumping = !Options.CreateIRDAfterDumping;
 
-                // Set the log compression type (requires --zip)
+                // Set the log compression type (requires compression enabled)
                 else if (LogCompressionInput.ProcessInput(args, ref index))
                     Options.LogCompression = LogCompressionInput.Value.ToLogCompression();
 
                 // Retrieve Redump match information
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
-                    Options.RetrieveMatchInformation = false;
+                    Options.RetrieveMatchInformation = !Options.RetrieveMatchInformation;
 
                 // Redump login
                 else if (args[index].StartsWith("-c=") || args[index].StartsWith("--credentials="))
@@ -205,7 +205,7 @@ namespace MPF.Check.Features
 
                 // Pull all information (requires Redump login)
                 else if (PullAllInput.ProcessInput(args, ref index))
-                    Options.PullAllInformation = true;
+                    Options.PullAllInformation = !Options.PullAllInformation;
 
                 // Use a device path for physical checks
                 else if (PathInput.ProcessInput(args, ref index))
@@ -229,23 +229,23 @@ namespace MPF.Check.Features
 
                 // Add filename suffix
                 else if (SuffixInput.ProcessInput(args, ref index))
-                    Options.AddFilenameSuffix = true;
+                    Options.AddFilenameSuffix = !Options.AddFilenameSuffix;
 
                 // Output submission JSON
                 else if (JsonInput.ProcessInput(args, ref index))
-                    Options.OutputSubmissionJSON = true;
+                    Options.OutputSubmissionJSON = !Options.OutputSubmissionJSON;
 
                 // Include JSON artifacts
                 else if (IncludeArtifactsInput.ProcessInput(args, ref index))
-                    Options.IncludeArtifacts = true;
+                    Options.IncludeArtifacts = !Options.IncludeArtifacts;
 
                 // Compress log and extraneous files
                 else if (ZipInput.ProcessInput(args, ref index))
-                    Options.CompressLogFiles = true;
+                    Options.CompressLogFiles = !Options.CompressLogFiles;
 
                 // Delete unnecessary files
                 else if (DeleteInput.ProcessInput(args, ref index))
-                    Options.DeleteUnnecessaryFiles = true;
+                    Options.DeleteUnnecessaryFiles = !Options.DeleteUnnecessaryFiles;
 
                 // Default, add to inputs
                 else
