@@ -165,6 +165,14 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="method">RedumperReadMethod value to convert</param>
         /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperReadMethod method)
+            => ((RedumperReadMethod?)method).LongName();
+
+        /// <summary>
+        /// Get the string representation of the RedumperReadMethod enum values
+        /// </summary>
+        /// <param name="method">RedumperReadMethod value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
         public static string LongName(this RedumperReadMethod? method)
         {
             return method switch
@@ -176,6 +184,14 @@ namespace MPF.Frontend
                 _ => "Unknown",
             };
         }
+
+        /// <summary>
+        /// Get the string representation of the RedumperSectorOrder enum values
+        /// </summary>
+        /// <param name="order">RedumperSectorOrder value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperSectorOrder order)
+            => ((RedumperSectorOrder?)order).LongName();
 
         /// <summary>
         /// Get the string representation of the RedumperSectorOrder enum values
@@ -195,6 +211,14 @@ namespace MPF.Frontend
                 _ => "Unknown",
             };
         }
+
+        /// <summary>
+        /// Get the string representation of the RedumperDriveType enum values
+        /// </summary>
+        /// <param name="type">RedumperDriveType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperDriveType type)
+            => ((RedumperDriveType?)type).LongName();
 
         /// <summary>
         /// Get the string representation of the RedumperDriveType enum values

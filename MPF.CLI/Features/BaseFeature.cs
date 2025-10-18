@@ -235,6 +235,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("?, h, help              Show this help text");
             Console.WriteLine("version                 Print the program version");
             Console.WriteLine("lc, listcodes           List supported comment/content site codes");
+            Console.WriteLine("lo, listconfig          List current configuration values");
             Console.WriteLine("lm, listmedia           List supported media types");
             Console.WriteLine("ls, listsystems         List supported system types");
             Console.WriteLine("lp, listprograms        List supported dumping program outputs");
