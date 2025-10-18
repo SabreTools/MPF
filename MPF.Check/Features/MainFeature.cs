@@ -1,3 +1,4 @@
+using System;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine.Inputs;
@@ -149,6 +150,10 @@ namespace MPF.Check.Features
                     RedumpUsername = null,
                     RedumpPassword = null,
                 };
+            }
+            else
+            {
+                Console.WriteLine("Options will be loaded from found configuration file!");
             }
 
             // The first argument is the system type
