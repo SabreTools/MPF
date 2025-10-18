@@ -468,13 +468,12 @@
                 <TabItem Header="{DynamicResource LoginInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RetrievalGroupBoxString}">
-                            <UniformGrid Columns="2" Rows="1">
+                            <UniformGrid Columns="1" Rows="1">
                                 <CheckBox VerticalAlignment="Center" Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
                                           IsChecked="{Binding Options.RetrieveMatchInformation}"
                                           ToolTip="Attempts to retrieve match information from Redump"
                                           Margin="0,4"
                                 />
-                                <Label/> <!-- Empty label for padding -->
                             </UniformGrid>
                         </GroupBox>
 

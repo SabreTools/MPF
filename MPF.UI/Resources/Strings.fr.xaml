@@ -41,12 +41,12 @@
     <system:String x:Key="StartDumpingButtonString">Démarrer le dump</system:String>
     <system:String x:Key="StopDumpingButtonString">Arrêter le dump</system:String>
     <system:String x:Key="ScanButtonString">Scanner les disques</system:String>
-    <system:String x:Key="UpdateLabelButtonString">Mettre à jour l'étiquette</system:String>
+    <system:String x:Key="UpdateLabelButtonString">Actualiser l’étiquette</system:String>
     <system:String x:Key="ProtectionScanButtonString">Scanner la protection</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">Journal des opérations</system:String>
-    <system:String x:Key="ClearButtonString">Effacer le journal</system:String>
-    <system:String x:Key="SaveButtonString">Enregistrer le journal</system:String>
+    <system:String x:Key="ClearButtonString">Effacer</system:String>
+    <system:String x:Key="SaveButtonString">Enregistrer</system:String>
 
     <!-- Options Window -->
     <system:String x:Key="OptionsTitleString">Options</system:String>
@@ -57,7 +57,7 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Interface utilisateur</system:String>
     <system:String x:Key="EnableDarkModeCheckBoxString">Activer le mode sombre</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Vérifier les mises à jour au démarrage</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copier l’URL de mise à jour dans le presse-papiers</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copier l’URL de mise à jour</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Étiquette de mise à jour rapide</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Langue par défaut de l’interface :</system:String>
     <system:String x:Key="DetectionGroupBoxString">Détection</system:String>
@@ -72,7 +72,7 @@
     <system:String x:Key="AaruPathLabelString">Chemin Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Chemin DiscImageCreator</system:String>
     <system:String x:Key="RedumperPathLabelString">Chemin Redumper</system:String>
-    <system:String x:Key="DefaultDumpingProgramLabelString">Programme de dump par défaut</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Programme par défaut</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Chemin de sortie par défaut</system:String>
     <!-- Dumping Tab -->
     <system:String x:Key="DumpingTabString">Dumping</system:String>
@@ -114,7 +114,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">Nombre de relectures DVD/HD-DVD/BD :</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Activer la sortie détaillée</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Activer le flag mode raffinement secteur</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Activer flag raffinement secteur</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Nombre de relectures :</system:String>
     <system:String x:Key="PlextorLeadinRetries:LabelString">Relectures Plextor Lead-in :</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Options non-Redump</system:String>
@@ -133,14 +133,14 @@
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Vérifier le dump existant</system:String>
     <system:String x:Key="InputPathLabelString">Chemin d’entrée</system:String>
-    <system:String x:Key="CheckDumpButtonString">Vérifier le dump</system:String>
+    <system:String x:Key="CheckDumpButtonString">Vérifier Dump</system:String>
     <system:String x:Key="CheckDumpWarningString">La vérification écrasera tous les fichiers d’informations de soumission existants. Veuillez en faire une sauvegarde si nécessaire avant d’exécuter la vérification.</system:String>
 
     <!-- Create PS3 IRD Window -->
     <system:String x:Key="CreatePS3IRDTitleString">Créer PS3 IRD</system:String>
     <system:String x:Key="InputGroupBoxString">Entrée</system:String>
     <system:String x:Key="PS3ISOPathLabelString">Chemin ISO PS3</system:String>
-    <system:String x:Key="GetKeyPathLabelString">Chemin du fichier *.getkey.log</system:String>
+    <system:String x:Key="GetKeyPathLabelString">Chemin *.getkey.log</system:String>
     <system:String x:Key="KeyExpanderString">Définir manuellement la clé de chiffrement du disque PS3</system:String>
     <system:String x:Key="HexadecimalKeyLabelString">Clé hexadécimale</system:String>
     <system:String x:Key="KeyFilePathLabelString">Chemin du fichier de clé</system:String>
