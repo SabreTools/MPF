@@ -33,53 +33,53 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <StackPanel Panel.ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,-5,0"
+                <StackPanel Panel.ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,-40,0"
                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                     <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}" Width="35"
+                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
-                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}" Width="40"
+                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
-                            <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
-                            <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding OptionsMenuItemEnabled}"/>
-                            <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" HorizontalAlignment="Left" Width="140"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
-                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}" Width="45"
+                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" HorizontalAlignment="Left" Width="120"
+                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
@@ -119,19 +119,23 @@
                                 Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                 Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                 Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="EnglishMenuItem" Header="ENG" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="FrenchMenuItem" Header="FRA" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="GermanMenuItem" Header="DEU" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="SpanishMenuItem" Header="Español" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="ItalianMenuItem" Header="ITA" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="FrenchMenuItem" Header="Français" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
@@ -143,19 +147,15 @@
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="PolishMenuItem" Header="POL" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="PolishMenuItem" Header="Polski" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="RussianMenuItem" Header="RUS" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="RussianMenuItem" Header="Русский" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="SpanishMenuItem" Header="SPA" HorizontalAlignment="Left" Width="120" IsCheckable="True"
-                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
-                                    Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="SwedishMenuItem" Header="SWE" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" HorizontalAlignment="Left" Width="120" IsCheckable="True"
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />

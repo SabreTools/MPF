@@ -106,7 +106,7 @@
                                           ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NoFixedDrivesCheckBoxStrings}"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NoFixedDrivesCheckBoxString}"
                                           IsChecked="{Binding Options.IgnoreFixedDrives}"
                                           ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                 />
@@ -147,9 +147,9 @@
                 <TabItem Header="{DynamicResource PathsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <Grid Margin="5,5,5,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="2.0*" />
-                            <ColumnDefinition Width="0.2*" />
+                            <ColumnDefinition Width="3.0*" />
+                            <ColumnDefinition Width="0.3*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -437,7 +437,7 @@
                                          ToolTipService.ShowOnDisabled="True"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource PlextorLeadinRetries}" Click="NonRedumpModeClicked"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NonRedumpOptionsCheckBoxString}" Click="NonRedumpModeClicked"
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
@@ -468,13 +468,12 @@
                 <TabItem Header="{DynamicResource LoginInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RetrievalGroupBoxString}">
-                            <UniformGrid Columns="2" Rows="1">
+                            <UniformGrid Columns="1" Rows="1">
                                 <CheckBox VerticalAlignment="Center" Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
                                           IsChecked="{Binding Options.RetrieveMatchInformation}"
                                           ToolTip="Attempts to retrieve match information from Redump"
                                           Margin="0,4"
                                 />
-                                <Label/> <!-- Empty label for padding -->
                             </UniformGrid>
                         </GroupBox>
 
