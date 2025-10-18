@@ -19,7 +19,7 @@
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">_Archivo</system:String>
     <system:String x:Key="ExitMenuItemString">_Salir</system:String>
-    <system:String x:Key="ToolsMenuString">_Herramientas</system:String>
+    <system:String x:Key="ToolsMenuString">_Utilidades</system:String>
     <system:String x:Key="CheckDumpMenuItemString">_Comprobar volcado</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Crear _PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Opciones</system:String>
@@ -45,8 +45,8 @@
     <system:String x:Key="ProtectionScanButtonString">Buscar protección</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">Registro de salida</system:String>
-    <system:String x:Key="ClearButtonString">Borrar registro</system:String>
-    <system:String x:Key="SaveButtonString">Guardar registro</system:String>
+    <system:String x:Key="ClearButtonString">Borrar</system:String>
+    <system:String x:Key="SaveButtonString">Guardar</system:String>
 
     <!-- Options Window -->
     <system:String x:Key="OptionsTitleString">Opciones</system:String>
@@ -72,7 +72,7 @@
     <system:String x:Key="AaruPathLabelString">Ruta de Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Ruta de DiscImageCreator</system:String>
     <system:String x:Key="RedumperPathLabelString">Ruta de Redumper</system:String>
-    <system:String x:Key="DefaultDumpingProgramLabelString">Programa de volcado predeterminado</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Programa predeterminado</system:String>
     <system:String x:Key="DefaultOutputPathLabelString">Ruta de salida predeterminada</system:String>
     <!-- Dumping Tab -->
     <system:String x:Key="DumpingTabString">Volcado</system:String>
@@ -114,7 +114,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">Intentos de relectura de DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Habilitar salida detallada</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Habilitar bandera de modo de refinamiento de sectores</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Habilitar bandera de refinamiento de sectores</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Intentos de relectura:</system:String>
     <system:String x:Key="PlextorLeadinRetries:LabelString">Reintentos de lead-in de Plextor:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Opciones fuera de Redump</system:String>

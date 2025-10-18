@@ -19,7 +19,7 @@
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">_File</system:String>
     <system:String x:Key="ExitMenuItemString">_Esci</system:String>
-    <system:String x:Key="ToolsMenuString">_Strumenti</system:String>
+    <system:String x:Key="ToolsMenuString">_Utility</system:String>
     <system:String x:Key="CheckDumpMenuItemString">_Verifica Dump</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">_Crea PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Opzioni</system:String>

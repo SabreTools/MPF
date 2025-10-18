@@ -19,7 +19,7 @@
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">Файл</system:String>
     <system:String x:Key="ExitMenuItemString">Выход</system:String>
-    <system:String x:Key="ToolsMenuString">Инструменты</system:String>
+    <system:String x:Key="ToolsMenuString">Утилиты</system:String>
     <system:String x:Key="CheckDumpMenuItemString">Проверить дамп</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Создать PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">Параметры</system:String>
