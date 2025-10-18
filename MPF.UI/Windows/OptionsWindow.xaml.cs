@@ -112,7 +112,7 @@ namespace MPF.UI.Windows
 
             CommonDialog dialog = shouldBrowseForPath
                 ? (CommonDialog)CreateFolderBrowserDialog()
-                : CreateOpenFileDialog(initialDirectory);
+                : System.Windows.Forms.CreateOpenFileDialog(initialDirectory);
             using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
@@ -121,7 +121,7 @@ namespace MPF.UI.Windows
                     string path = string.Empty;
                     bool exists = false;
 
-                    if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
+                    if (shouldBrowseForPath && dialog is System.Windows.Forms.FolderBrowserDialog folderBrowserDialog)
                     {
                         path = folderBrowserDialog.SelectedPath;
                         exists = Directory.Exists(path);
