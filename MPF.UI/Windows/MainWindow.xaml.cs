@@ -51,6 +51,7 @@ namespace MPF.UI.Windows
         private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
         private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
         private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
+        private MenuItem? UkrainianMenuItem => ItemHelper.FindChild<MenuItem>(this, "UkrainianMenuItem");
 
         #endregion
 
@@ -192,6 +193,7 @@ namespace MPF.UI.Windows
                 InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
                 InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
                 InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
+                InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
                 _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
@@ -231,6 +233,7 @@ namespace MPF.UI.Windows
                 case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
                 case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
                 case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
+                case "uk": SetInterfaceLanguage(InterfaceLanguage.Ukrainian); break;
 
                 // Traditional or Simplified Chinese
                 case "zh":
@@ -279,6 +282,7 @@ namespace MPF.UI.Windows
             RussianMenuItem!.Click += LanguageMenuItemClick;
             SpanishMenuItem!.Click += LanguageMenuItemClick;
             SwedishMenuItem!.Click += LanguageMenuItemClick;
+            UkrainianMenuItem!.Click += LanguageMenuItemClick;
 
             // User Area Click
             CopyProtectScanButton!.Click += CopyProtectScanButtonClick;

@@ -90,6 +90,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Russian => "Русский",
                 InterfaceLanguage.Spanish => "Español",
                 InterfaceLanguage.Swedish => "Svenska",
+                InterfaceLanguage.Ukrainian => "Українська",
 
                 _ => "Unknown",
             };
@@ -249,6 +250,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Russian => "rus",
                 InterfaceLanguage.Spanish => "spa",
                 InterfaceLanguage.Swedish => "swe",
+                InterfaceLanguage.Ukrainian => "ukr",
 
                 _ => "Unknown",
             };
@@ -309,6 +311,7 @@ namespace MPF.Frontend
                 "rus" or "russian" or "русский" => InterfaceLanguage.Russian,
                 "spa" or "spanish" or "español" => InterfaceLanguage.Spanish,
                 "swe" or "swedish" or "svenska" => InterfaceLanguage.Swedish,
+                "ukr" or "ukranian" or "українська" => InterfaceLanguage.Ukrainian,
 
                 _ => InterfaceLanguage.AutoDetect,
             };

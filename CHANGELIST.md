@@ -27,6 +27,7 @@
 - Add basic translation for 8 more languages
 - Make Check flags toggle if config used
 - Add console print when Check loads from config
+- Add Ukrainian translation (superg)
 
 ### 3.5.0 (2025-10-10)
 
