@@ -722,22 +722,7 @@ namespace MPF.UI.Windows
 
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? string.Empty;
-            SetInterfaceLanguage(
-                lang switch
-                {
-                    "ENG" => InterfaceLanguage.English,
-                    "FRA" => InterfaceLanguage.French,
-                    "DEU" => InterfaceLanguage.German,
-                    "ITA" => InterfaceLanguage.Italian,
-                    "日本語" => InterfaceLanguage.Japanese,
-                    "한국어" => InterfaceLanguage.Korean,
-                    "POL" => InterfaceLanguage.Polish,
-                    "RUS" => InterfaceLanguage.Russian,
-                    "SPA" => InterfaceLanguage.Spanish,
-                    "SWE" => InterfaceLanguage.Swedish,
-                    _ => InterfaceLanguage.English,
-                }
-            );
+            SetInterfaceLanguage(ToInterfaceLanguage(lang));
 
             // Update the labels that don't get updated automatically
             SetMediaTypeVisibility();

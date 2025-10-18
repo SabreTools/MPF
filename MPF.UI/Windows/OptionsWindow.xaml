@@ -437,7 +437,7 @@
                                          ToolTipService.ShowOnDisabled="True"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource PlextorLeadinRetries}" Click="NonRedumpModeClicked"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NonRedumpOptionsCheckBoxString}" Click="NonRedumpModeClicked"
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
