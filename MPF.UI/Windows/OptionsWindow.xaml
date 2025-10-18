@@ -147,8 +147,8 @@
                 <TabItem Header="{DynamicResource PathsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <Grid Margin="5,5,5,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="2.0*" />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="7.0*" />
                             <ColumnDefinition Width="0.2*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>

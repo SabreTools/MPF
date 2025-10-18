@@ -126,9 +126,9 @@
     <system:String x:Key="RetrievalGroupBoxString">Récupération</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Récupérer les informations de correspondance</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
-    <system:String x:Key="UsernameLabelString">Nom d’utilisateur</system:String>
+    <system:String x:Key="UsernameLabelString">Utilisateur</system:String>
     <system:String x:Key="PasswordLabelString">Mot de passe</system:String>
-    <system:String x:Key="TestLoginButtonString">Tester la connexion</system:String>
+    <system:String x:Key="TestLoginButtonString">Tester</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Vérifier le dump existant</system:String>

@@ -45,8 +45,8 @@
     <system:String x:Key="ProtectionScanButtonString">Проверить защиту</system:String>
     <!-- Log Output -->
     <system:String x:Key="LogOutputExpanderString">Вывод лога</system:String>
-    <system:String x:Key="ClearButtonString">Очистить лог</system:String>
-    <system:String x:Key="SaveButtonString">Сохранить лог</system:String>
+    <system:String x:Key="ClearButtonString">Очистить</system:String>
+    <system:String x:Key="SaveButtonString">Сохранить</system:String>
 
     <!-- Options Window -->
     <system:String x:Key="OptionsTitleString">Параметры</system:String>

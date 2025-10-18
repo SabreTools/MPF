@@ -57,7 +57,7 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Interfaccia Utente</system:String>
     <system:String x:Key="EnableDarkModeCheckBoxString">Abilita Modalità Scura</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Controlla Aggiornamenti all'Avvio</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copia URL Aggiornamento negli Appunti</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copia URL Aggiornamento</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Aggiornamento Rapido Etichetta</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Lingua Predefinita UI:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Rilevamento</system:String>

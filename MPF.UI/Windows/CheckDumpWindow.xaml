@@ -145,9 +145,9 @@
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/>
                     <!-- Empty label for padding -->
-                    <Button Name="CheckDumpButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource CheckDumpButtonString}"
+                    <Button Name="CheckDumpButton" Height="25" Width="100" IsDefault="True" Content="{DynamicResource CheckDumpButtonString}"
                             IsEnabled="{Binding CheckDumpButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
+                    <Button Name="CancelButton" Height="25" Width="100" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             IsEnabled="{Binding CancelButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/>
                     <!-- Empty label for padding -->

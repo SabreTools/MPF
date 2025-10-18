@@ -38,7 +38,7 @@
                     <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}" Width="45"
+                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
@@ -47,7 +47,7 @@
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
-                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}" Width="45"
+                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
@@ -71,7 +71,7 @@
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
-                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}" Width="45"
+                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
