@@ -5,7 +5,6 @@ using System.Threading;
 #endif
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Web;
