@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <!-- Language Name: KO / KOR / 한글 / 한국어 -->
+    <!-- Language Name: KO / KOR / Korean / 한글 / 한국어 -->
     <system:String x:Key="LanguageMenuString">한국어</system:String>
 
     <!-- Common Elements -->
@@ -16,7 +16,6 @@
     <system:String x:Key="WarningLabelString">경고:</system:String>
 
     <!-- Main Window -->
-    <!-- <system:String x:Key="AppTitleString">미디어 프리저베이션 프런트엔드</system:String> -->
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">파일</system:String>
     <system:String x:Key="ExitMenuItemString">종료</system:String>
@@ -97,10 +96,6 @@
     <system:String x:Key="IncludeDebugInformationCheckBoxString">디버그 정보 포함</system:String>
     <system:String x:Key="HideDriveLettersCheckBoxString">드라이브 문자 숨기기</system:String>
     <system:String x:Key="DefaultSpeedsGroupBoxString">기본 속도</system:String>
-    <system:String x:Key="CDLabelString">CD</system:String>
-    <system:String x:Key="DVDLabelString">DVD</system:String>
-    <system:String x:Key="HDDVDLabelString">HD-DVD</system:String>
-    <system:String x:Key="BDLabelString">BD</system:String>
     <!-- Programs Tab -->
     <system:String x:Key="ProgramsTabString">프로그램</system:String>
     <system:String x:Key="AaruGroupBoxString">Aaru</system:String>
@@ -135,7 +130,7 @@
     <system:String x:Key="PasswordLabelString">비밀번호</system:String>
     <system:String x:Key="TestLoginButtonString">로그인 테스트</system:String>
 
-    <!-- Check Dump Window-->
+    <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">체크 기존 덤프</system:String>
     <system:String x:Key="InputPathLabelString">입력 경로</system:String>
     <system:String x:Key="CheckDumpButtonString">체크 덤프</system:String>

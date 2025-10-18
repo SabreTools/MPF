@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <!-- Language Name: EN / ENG -->
+    <!-- Language Name: EN / ENG / English -->
     <system:String x:Key="LanguageMenuString">ENG</system:String>
 
     <!-- Common Elements -->
@@ -135,7 +135,7 @@
     <system:String x:Key="PasswordLabelString">Password</system:String>
     <system:String x:Key="TestLoginButtonString">Test Login</system:String>
 
-    <!-- Check Dump Window-->
+    <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Check Existing Dump</system:String>
     <system:String x:Key="InputPathLabelString">Input Path</system:String>
     <system:String x:Key="CheckDumpButtonString">Check Dump</system:String>
