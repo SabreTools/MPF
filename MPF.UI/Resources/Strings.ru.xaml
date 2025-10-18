@@ -114,7 +114,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">Повторы чтения DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Подробный вывод</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Флаг уточнённого режима секторов</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Уточнённого режима секторов</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Повторные чтения:</system:String>
     <system:String x:Key="PlextorLeadinRetries:LabelString">Повторы Lead-in (Plextor):</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Параметры вне Redump</system:String>

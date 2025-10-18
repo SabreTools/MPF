@@ -57,7 +57,7 @@
     <system:String x:Key="UserInterfaceGroupBoxString">Interfaz de Usuario</system:String>
     <system:String x:Key="EnableDarkModeCheckBoxString">Habilitar modo oscuro</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Buscar actualizaciones al iniciar</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copiar URL de actualización al portapapeles</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Copiar URL de actualización</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Etiqueta de actualización rápida</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Idioma predeterminado de la interfaz:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Detección</system:String>
@@ -107,14 +107,14 @@
     <system:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</system:String>
     <system:String x:Key="QuietModeCheckBoxString">Modo silencioso</system:String>
     <system:String x:Key="ParanoidModeCheckBoxString">Modo paranoico</system:String>
-    <system:String x:Key="UseCMIFlagCheckBoxString">Usar bandera CMI</system:String>
+    <system:String x:Key="UseCMIFlagCheckBoxString">Usar opción CMI</system:String>
     <system:String x:Key="MultiSectorReadCheckBoxString">Lectura multi-sector</system:String>
     <system:String x:Key="MultiSectorReadValueLabelString">Valor de lectura multi-sector:</system:String>
     <system:String x:Key="DICCDRereadTriesLabelString">Intentos de relectura de CD:</system:String>
     <system:String x:Key="DICDVDRereadTriesLabelString">Intentos de relectura de DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Habilitar salida detallada</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Habilitar bandera de refinamiento de sectores</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Habilitar refinamiento de sectores</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Intentos de relectura:</system:String>
     <system:String x:Key="PlextorLeadinRetries:LabelString">Reintentos de lead-in de Plextor:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Opciones fuera de Redump</system:String>

@@ -114,7 +114,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD omläsningsförsök:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Aktivera Detaljerad Utdata</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode-Flagga</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Försök att läsa om:</system:String>
     <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor Lead-in Försök:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Alternativ utan Redump</system:String>
