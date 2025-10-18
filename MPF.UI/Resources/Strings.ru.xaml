@@ -118,7 +118,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Подробный вывод</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Уточнённого режима секторов</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Повторные чтения:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Повторы Lead-in (Plextor):</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Повторы Lead-in (Plextor):</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Параметры вне Redump</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">Метод чтения по умолчанию:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Порядок секторов:</system:String>

@@ -118,7 +118,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">詳細出力を有効にする</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine Sector モードフラグを有効にする</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">再読み込み回数:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor リードイン再試行回数:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Plextor リードイン再試行回数:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">非 Redump オプション</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">既定のリード方法:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">既定のセクター順序:</system:String>

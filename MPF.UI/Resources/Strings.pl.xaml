@@ -118,7 +118,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Włącz szczegółowe wyjście</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Włącz flagę trybu poprawy sektorów</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Liczba prób ponownego odczytu:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Liczba prób lead-in Plextor:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Liczba prób lead-in Plextor:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Opcje nie-Redump</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">Domyślna metoda odczytu:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Domyślna kolejność sektorów:</system:String>

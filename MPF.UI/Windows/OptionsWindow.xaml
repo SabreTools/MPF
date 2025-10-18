@@ -106,7 +106,7 @@
                                           ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NoFixedDrivesCheckBoxStrings}"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NoFixedDrivesCheckBoxString}"
                                           IsChecked="{Binding Options.IgnoreFixedDrives}"
                                           ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                 />

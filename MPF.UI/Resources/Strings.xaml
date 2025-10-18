@@ -123,7 +123,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Enable Verbose Output</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Enable Refine Sector Mode Flag</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Reread Tries:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor Lead-in Retries:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Plextor Lead-in Retries:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Non-Redump Options</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">Default Read Method:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Default Sector Order:</system:String>

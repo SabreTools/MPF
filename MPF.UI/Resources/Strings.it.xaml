@@ -118,7 +118,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Abilita Output Dettagliato</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Abilita Flag Modalità Raffina Settore</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Tentativi di Rilettura:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Tentativi Plextor Lead-in:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Tentativi Plextor Lead-in:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Opzioni Non-Redump</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">Metodo di Lettura Predefinito:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Ordine Settori Predefinito:</system:String>

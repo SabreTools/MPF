@@ -118,7 +118,7 @@
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Aktivera Detaljerad Utdata</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Försök att läsa om:</system:String>
-    <system:String x:Key="PlextorLeadinRetries:LabelString">Plextor Lead-in Försök:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Plextor Lead-in Försök:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Alternativ utan Redump</system:String>
     <system:String x:Key="DefaultReadMethodLabelString">Standard Läsmethod:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Standard Sektorrordning:</system:String>
@@ -130,7 +130,7 @@
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Användarnamn</system:String>
     <system:String x:Key="PasswordLabelString">Lösenord</system:String>
-    <system:String x:Key="TestLoginButtonString">Testa Inloggning</system:String>
+    <system:String x:Key="TestLoginButtonString">Testa</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Kontrollera Befintlig Dump</system:String>
