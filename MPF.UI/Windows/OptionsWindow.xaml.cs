@@ -144,7 +144,7 @@ namespace MPF.UI.Windows
                     {
                         CustomMessageBox.Show(
                             "Specified path doesn't exist!",
-                            "Error",
+                            (string)Application.Current.FindResource("ErrorMessageString"),
                             MessageBoxButton.OK,
                             MessageBoxImage.Error
                         );
@@ -191,7 +191,7 @@ namespace MPF.UI.Windows
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (success == false)
-                CustomMessageBox.Show(this, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.Show(this, message, (string)Application.Current.FindResource("ErrorMessageString"), MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         
@@ -214,7 +214,8 @@ namespace MPF.UI.Windows
         private void NonRedumpModeClicked(object sender, EventArgs e)
         {
             if (OptionsViewModel.Options.RedumperNonRedumpMode)
-                CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
+                    (string)Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
                 OptionsViewModel.NonRedumpModeUnChecked();
         }

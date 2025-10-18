@@ -14,6 +14,8 @@
     <system:String x:Key="SettingsGroupBoxString">Impostazioni</system:String>
     <system:String x:Key="StatusGroupBoxString">Stato</system:String>
     <system:String x:Key="WarningLabelString">ATTENZIONE:</system:String>
+    <system:String x:Key="WarningMessageString">Attenzione</system:String>
+    <system:String x:Key="ErrorMessageString">Errore</system:String>
 
     <!-- Main Window -->
     <!-- Top Menu Bar -->

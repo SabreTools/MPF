@@ -14,6 +14,8 @@
     <system:String x:Key="SettingsGroupBoxString">Settings</system:String>
     <system:String x:Key="StatusGroupBoxString">Status</system:String>
     <system:String x:Key="WarningLabelString">WARNING:</system:String>
+    <system:String x:Key="WarningMessageString">Warning</system:String>
+    <system:String x:Key="ErrorMessageString">Error</system:String>
 
     <!-- Main Window -->
     <system:String x:Key="AppTitleString">Media Preservation Frontend</system:String>

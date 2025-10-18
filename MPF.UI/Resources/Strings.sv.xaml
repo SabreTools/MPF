@@ -14,6 +14,8 @@
     <system:String x:Key="SettingsGroupBoxString">Inställningar</system:String>
     <system:String x:Key="StatusGroupBoxString">Status</system:String>
     <system:String x:Key="WarningLabelString">VARNING:</system:String>
+    <system:String x:Key="WarningMessageString">Varning</system:String>
+    <system:String x:Key="ErrorMessageString">Fel</system:String>
 
     <!-- Main Window -->
     <!-- Top Menu Bar -->

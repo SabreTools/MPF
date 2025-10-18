@@ -14,6 +14,8 @@
     <system:String x:Key="SettingsGroupBoxString">設定</system:String>
     <system:String x:Key="StatusGroupBoxString">ステータス</system:String>
     <system:String x:Key="WarningLabelString">警告:</system:String>
+    <system:String x:Key="WarningMessageString">警告</system:String>
+    <system:String x:Key="ErrorMessageString">エラー</system:String>
 
     <!-- Main Window -->
     <!-- Top Menu Bar -->
