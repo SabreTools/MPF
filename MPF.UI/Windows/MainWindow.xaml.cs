@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend;
-using MPF.Frontend.EnumExtensions;
 using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
@@ -723,7 +722,7 @@ namespace MPF.UI.Windows
 
             // Change UI language to selected item
             string lang = clickedItem.Header.ToString() ?? string.Empty;
-            SetInterfaceLanguage(ToInterfaceLanguage(lang));
+            SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang));
 
             // Update the labels that don't get updated automatically
             SetMediaTypeVisibility();
