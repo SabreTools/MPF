@@ -32,8 +32,10 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown"
-                       Content="{Binding Path=Title, Mode=OneWay}" FontWeight="Bold">
+                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                    <Label.Content>
+                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{Binding Path=Title, Mode=OneWay}" /></TextBlock>
+                    </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
