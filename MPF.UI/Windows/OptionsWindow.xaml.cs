@@ -5,6 +5,7 @@ using System.Threading;
 #endif
 using System.Threading.Tasks;
 using System.Windows;
+using WinForms = System.Windows.Forms;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Web;
@@ -112,21 +113,21 @@ namespace MPF.UI.Windows
 
             CommonDialog dialog = shouldBrowseForPath
                 ? (CommonDialog)CreateFolderBrowserDialog()
-                : System.Windows.Forms.CreateOpenFileDialog(initialDirectory);
+                : WinForms.CreateOpenFileDialog(initialDirectory);
             using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == WinForms.DialogResult.OK)
                 {
                     string path = string.Empty;
                     bool exists = false;
 
-                    if (shouldBrowseForPath && dialog is System.Windows.Forms.FolderBrowserDialog folderBrowserDialog)
+                    if (shouldBrowseForPath && dialog is WinForms.FolderBrowserDialog folderBrowserDialog)
                     {
                         path = folderBrowserDialog.SelectedPath;
                         exists = Directory.Exists(path);
                     }
-                    else if (dialog is OpenFileDialog openFileDialog)
+                    else if (dialog is WinForms.OpenFileDialog openFileDialog)
                     {
                         path = openFileDialog.FileName;
                         exists = File.Exists(path);
@@ -163,14 +164,14 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Create an open folder dialog box
         /// </summary>
-        private static FolderBrowserDialog CreateFolderBrowserDialog() => new();
+        private static WinForms.FolderBrowserDialog CreateFolderBrowserDialog() => new();
 
         /// <summary>
         /// Create an open file dialog box
         /// </summary>
-        private static OpenFileDialog CreateOpenFileDialog(string? initialDirectory)
+        private static WinForms.OpenFileDialog CreateOpenFileDialog(string? initialDirectory)
         {
-            return new OpenFileDialog()
+            return new WinForms.OpenFileDialog()
             {
                 InitialDirectory = initialDirectory,
                 Filter = "Executables (*.exe)|*.exe",
