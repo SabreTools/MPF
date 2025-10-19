@@ -37,6 +37,7 @@
 - Handle log zip path in information extraction
 - Redumper state file is not accessed
 - Fix tests broken by last commit
+- Regex outputs should not name based on pattern
 
 ### 3.5.0 (2025-10-10)
 

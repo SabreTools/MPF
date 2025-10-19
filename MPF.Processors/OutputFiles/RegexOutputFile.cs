@@ -99,11 +99,11 @@ namespace MPF.Processors.OutputFiles
                     continue;
 
                 var matches = Array.FindAll(Filenames, pattern => Regex.IsMatch(entry.Key, pattern));
-                foreach (string match in matches)
+                if (matches.Length > 0)
                 {
                     try
                     {
-                        string outputPath = Path.Combine(outputDirectory, match);
+                        string outputPath = Path.Combine(outputDirectory, entry.Key);
                         entry.WriteToFile(outputPath);
                     }
                     catch { }
