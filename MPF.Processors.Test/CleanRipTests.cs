@@ -290,6 +290,30 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetPreservedFilePaths
+
+        [Fact]
+        public void GetPreservedFilePaths_Invalid_Empty()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetPreservedFilePaths_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
+            string outputFilename = "test.iso";
+            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        #endregion
+
         #region GenerateCleanripDatafile
 
         [Fact]

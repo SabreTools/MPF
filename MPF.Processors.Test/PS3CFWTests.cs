@@ -207,5 +207,29 @@ namespace MPF.Processors.Test
         }
 
         #endregion
+
+        #region GetPreservedFilePaths
+
+        [Fact]
+        public void GetPreservedFilePaths_Invalid_Empty()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
+            var actual = processor.GetPreservedFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetPreservedFilePaths_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
+            string outputFilename = "test.iso";
+            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
+            var actual = processor.GetPreservedFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        #endregion
     }
 }

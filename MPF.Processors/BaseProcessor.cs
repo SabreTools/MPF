@@ -108,6 +108,7 @@ namespace MPF.Processors
 
             // Get the lists of zippable files
             var zippableFiles = GetZippableFilePaths(mediaType, outputDirectory, outputFilename);
+            var preservedFiles = GetPreservedFilePaths(mediaType, outputDirectory, outputFilename);
             var generatedFiles = GetGeneratedFilePaths(outputDirectory, filenameSuffix);
 
             // Don't create an archive if there are no paths
@@ -155,6 +156,10 @@ namespace MPF.Processors
                 // Delete all successful files
                 foreach (string file in successful)
                 {
+                    // Ignore files that are preserved
+                    if (preservedFiles.Contains(file))
+                        continue;
+                    
                     try { File.Delete(file); } catch { }
                 }
 
@@ -606,6 +611,36 @@ namespace MPF.Processors
             }
 
             return zippablePaths;
+        }
+
+        /// <summary>
+        /// Generate a list of all preserved file paths
+        /// </summary>
+        /// <param name="mediaType">Media type for controlling expected file sets</param>
+        /// <param name="outputDirectory">Output folder to use as the base path</param>
+        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <returns>List of all preserved file paths, empty otherwise</returns>
+        /// <remarks>Assumes filename has an extension</remarks>
+        internal List<string> GetPreservedFilePaths(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        {
+            // Get the list of output files
+            var outputFiles = GetOutputFiles(mediaType, outputDirectory, outputFilename);
+            if (outputFiles.Count == 0)
+                return [];
+
+            // Filter down to zippable files
+            var preserved = outputFiles.FindAll(of => of.IsPreserved);
+
+            // Get all paths that exist
+            var preservedPaths = new List<string>();
+            foreach (var file in preserved)
+            {
+                var paths = file.GetPaths(outputDirectory ?? string.Empty);
+                paths = paths.FindAll(File.Exists);
+                preservedPaths.AddRange(paths);
+            }
+
+            return preservedPaths;
         }
 
         #endregion

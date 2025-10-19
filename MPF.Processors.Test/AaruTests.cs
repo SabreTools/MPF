@@ -246,6 +246,30 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetPreservedFilePaths
+
+        [Fact]
+        public void GetPreservedFilePaths_Invalid_Empty()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetPreservedFilePaths_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
+            string outputFilename = "test.aaruf";
+            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        #endregion
+
         #region GenerateCuesheet
 
         [Fact]

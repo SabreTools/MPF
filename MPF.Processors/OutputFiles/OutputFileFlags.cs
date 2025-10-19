@@ -37,5 +37,10 @@ namespace MPF.Processors.OutputFiles
         /// File can be zipped after processing
         /// </summary>
         Zippable = 0x0010,
+
+        /// <summary>
+        /// File should be preserved after zipping
+        /// </summary>
+        Preserve = 0x0020,
     }
 }
