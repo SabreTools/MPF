@@ -35,6 +35,7 @@
 - Allow placeholder files to be used in Check
 - Make .img not required for DIC outputs
 - Handle log zip path in information extraction
+- Redumper state file is not accessed
 
 ### 3.5.0 (2025-10-10)
 

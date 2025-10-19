@@ -501,9 +501,8 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "pma"),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
-                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
-                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -622,9 +621,8 @@ namespace MPF.Processors
                         new($"{outputFilename}.ssv2", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ssv2"),
-                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
-                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -666,9 +664,8 @@ namespace MPF.Processors
                         new($"{outputFilename}.skeleton.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton_zst"),
-                        new($"{outputFilename}.state", !File.Exists($"{basePath}.state.zst")
-                            ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
-                            : OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                        new($"{outputFilename}.state", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
                             "state"),
                         new($"{outputFilename}.state.zst", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
