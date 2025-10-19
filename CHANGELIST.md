@@ -31,6 +31,7 @@
 - Add list configuration commandline feature
 - Handle a provided log zip in Check operation
 - Allow files to be zipped but not deleted
+- Fix long translated strings
 
 ### 3.5.0 (2025-10-10)
 
