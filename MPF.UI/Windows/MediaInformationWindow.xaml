@@ -8,7 +8,7 @@
                         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         mc:Ignorable="d"
-                        Title="Media Information" Width="600" WindowStyle="None"
+                        Title="{DynamicResource MediaInformationTitleString}" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -32,18 +32,18 @@
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
                 <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <Run FontWeight="Bold" Text="Media Information" />
+                        <Run FontWeight="Bold" Text="{DynamicResource MediaInformationTitleString}" />
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       BorderBrush="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
@@ -69,25 +69,25 @@
             <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem x:Name="CommonInfo" Header="{DynamicResource CommonInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Common Media Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource CommonMediaInfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput Label="Title"
+                                    <controls:UserInput Label="{DynamicResource TitleInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"
+                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AlternativeTitle], Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Foreign Title (Non-Latin)" 
+                                    <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" 
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"
+                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AlternativeForeignTitle], Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Disc Number / Letter"
+                                    <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="Disc Title"
+                                    <controls:UserInput x:Name="DiscTitleTextBox" Label="{DynamicResource DiscTitleInputString}"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="Disc Title (non-Latin)"
+                                    <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DiscTitleNonLatin], Mode=TwoWay}"/>
 
                                     <Grid>
@@ -96,7 +96,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource CategoryLabelString}" />
                                         <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   Style="{DynamicResource CustomComboBoxStyle}" />
@@ -108,7 +108,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource RegionLabelString}" />
                                         <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Regions}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   Style="{DynamicResource CustomComboBoxStyle}" />
@@ -120,7 +120,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource LanguagesLabelString}" />
                                         <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding Languages}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
@@ -138,7 +138,7 @@
                                             <ColumnDefinition Width="1.75*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
+                                        <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource LanguageSelectionViaLabelString}" />
                                         <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
                                                   ItemsSource="{Binding LanguageSelections}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
@@ -150,17 +150,17 @@
                                         </ComboBox>
                                     </Grid>
 
-                                    <controls:UserInput Label="Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
-                                    <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource VersionsAndEditionGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
-                                    <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionTextBox" Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="Edition (non-Latin)"
+                                    <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionTextBox" Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
                                 </StackPanel>
                             </GroupBox>
@@ -168,10 +168,10 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Additional Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource AdditionalInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource ExtrasGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <Grid x:Name="PCMacHybridGrid" Visibility="Collapsed">
@@ -184,22 +184,22 @@
                                         <CheckBox Grid.Column="1" x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" Margin="0,4"
                                                   IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PCMacHybrid], Mode=TwoWay}"/>
                                     </Grid>
-                                    <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
+                                    <controls:UserInput x:Name="CommentsTextBox" Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="Compatible OS"
+                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)CompatibleOS], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscKey, Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscID, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="ProtectionTextBox" Label="Protection" ToolTip="CAUTION: Only edit if you know what you are doing!"
+                                    <controls:UserInput x:Name="ProtectionTextBox" Label="{DynamicResource ProtectionInputString}" ToolTip="CAUTION: Only edit if you know what you are doing!"
                                                         Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
                                                         VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Physical Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource PhysicalIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."
@@ -219,7 +219,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="{DynamicResource PublisherIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"
@@ -282,7 +282,7 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource ContentsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -346,10 +346,10 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Ringcodes" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource RingcodesTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <GroupBox x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L0Info" Header="{DynamicResource L0InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring"
@@ -365,7 +365,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L1Info" Header="{DynamicResource L1InfoGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring"
@@ -381,7 +381,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L2Info" Header="{DynamicResource L2InfoGroupBoxString}" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring"
@@ -393,7 +393,7 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox x:Name="L3Info" Header="{DynamicResource L3InfoGroupBoxString}" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring"
@@ -408,7 +408,7 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource ReadOnlyInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <GroupBox Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -518,11 +518,11 @@
                     </ControlTemplate>
                 </GroupBox.Template>
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Height="25" Width="80" Content="Accept"
+                    <Button Name="AcceptButton" Height="25" Width="80" Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide"
+                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="{DynamicResource RingCodeGuideButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>

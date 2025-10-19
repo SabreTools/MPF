@@ -1,0 +1,227 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Language Name: RU / RUS / Russian / Русский -->
+    <system:String x:Key="LanguageMenuString">RUS</system:String>
+
+    <!-- Common Elements -->
+    <system:String x:Key="AcceptButtonString">Принять</system:String>
+    <system:String x:Key="BrowseButtonString">Обзор</system:String>
+    <system:String x:Key="CancelButtonString">Отмена</system:String>
+    <system:String x:Key="MinimizeMenuItemString">Свернуть</system:String>
+    <system:String x:Key="CloseMenuItemString">Закрыть</system:String>
+    <system:String x:Key="SettingsGroupBoxString">Настройки</system:String>
+    <system:String x:Key="StatusGroupBoxString">Статус</system:String>
+    <system:String x:Key="WarningLabelString">ПРЕДУПРЕЖДЕНИЕ:</system:String>
+    <system:String x:Key="WarningMessagetring">Предупреждение</system:String>
+    <system:String x:Key="ErrorMessageString">Ошибка</system:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <system:String x:Key="FileMenuString">Файл</system:String>
+    <system:String x:Key="ExitMenuItemString">Выход</system:String>
+    <system:String x:Key="ToolsMenuString">Утилиты</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">Проверить дамп</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">Создать PS3 IRD</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">Параметры</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">Окно отладки</system:String>
+    <system:String x:Key="HelpMenuString">Справка</system:String>
+    <system:String x:Key="AboutMenuItemString">О программе</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">Проверить обновления</system:String>
+    <!-- Settings Group Box -->
+    <system:String x:Key="SystemLabelString">Тип системы</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">Система / тип носителя</system:String>
+    <system:String x:Key="NoSystemSelectedString">Система не выбрана</system:String>
+    <system:String x:Key="OutputPathLabelString">Путь вывода</system:String>
+    <system:String x:Key="DriveLetterLabelString">Буква диска</system:String>
+    <system:String x:Key="DriveSpeedLabelString">Скорость привода</system:String>
+    <system:String x:Key="DumpingProgramLabelString">Программа дампа</system:String>
+    <system:String x:Key="ParametersLabelString">Параметры</system:String>
+    <!-- Controls Group Box -->
+    <system:String x:Key="ControlsGroupBoxString">Управление</system:String>
+    <system:String x:Key="StartDumpingButtonString">Начать дамп</system:String>
+    <system:String x:Key="StopDumpingButtonString">Остановить дамп</system:String>
+    <system:String x:Key="ScanButtonString">Сканировать диски</system:String>
+    <system:String x:Key="UpdateLabelButtonString">Обновить метку</system:String>
+    <system:String x:Key="ProtectionScanButtonString">Проверить защиту</system:String>
+    <!-- Log Output -->
+    <system:String x:Key="LogOutputExpanderString">Вывод лога</system:String>
+    <system:String x:Key="ClearButtonString">Очистить</system:String>
+    <system:String x:Key="SaveButtonString">Сохранить</system:String>
+
+    <!-- Options Window -->
+    <system:String x:Key="OptionsTitleString">Параметры</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">Добро пожаловать в MPF — изучите параметры</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">Если вы включаете проверку и получение данных, вы несёте ответственность за соответствие введённой информации фактическим данным вашего носителя. Некоторые данные могут быть помечены как требующие проверки, однако вся информация должна быть тщательно проверена.</system:String>
+    <!-- General Tab -->
+    <system:String x:Key="GeneralTabString">Общие</system:String>
+    <system:String x:Key="UserInterfaceGroupBoxString">Интерфейс</system:String>
+    <system:String x:Key="EnableDarkModeCheckBoxString">Включить тёмную тему</system:String>
+    <system:String x:Key="CheckForUpdatesCheckBoxString">Проверять обновления при запуске</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Копировать ссылку обновления в буфер</system:String>
+    <system:String x:Key="FastUpdateLabelCheckBoxString">Быстрое обновление метки</system:String>
+    <system:String x:Key="DefaultUILanguageLabelString">Язык интерфейса по умолчанию:</system:String>
+    <system:String x:Key="DetectionGroupBoxString">Обнаружение</system:String>
+    <system:String x:Key="SkipSystemDetectCheckBoxString">Пропустить определение системы</system:String>
+    <system:String x:Key="NoFixedDrivesCheckBoxString">Без жёстких дисков</system:String>
+    <system:String x:Key="DefaultSystemLabelString">Система по умолчанию:</system:String>
+    <system:String x:Key="LoggingGroupBoxString">Журналирование</system:String>
+    <system:String x:Key="VerboseLoggingCheckBoxString">Подробный лог</system:String>
+    <system:String x:Key="AutoOpenLogCheckBoxString">Автоматически открывать логи</system:String>
+    <!-- Paths Tab -->
+    <system:String x:Key="PathsTabString">Пути</system:String>
+    <system:String x:Key="AaruPathLabelString">Путь к Aaru</system:String>
+    <system:String x:Key="DiscImageCreatorPathLabelString">Путь к DiscImageCreator</system:String>
+    <system:String x:Key="RedumperPathLabelString">Путь к Redumper</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Программа дампа по умолчанию</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">Путь вывода по умолчанию</system:String>
+    <!-- Dumping Tab -->
+    <system:String x:Key="DumpingTabString">Дамп</system:String>
+    <system:String x:Key="DumpingGroupBoxString">Дамп</system:String>
+    <system:String x:Key="ShowDiscInfoCheckBoxString">Показать информацию о диске</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Извлечь всю информацию</system:String>
+    <system:String x:Key="EnableTabInputCheckBoxString">Разрешить ввод через вкладки</system:String>
+    <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Совместимость с Redump</system:String>
+    <system:String x:Key="ShowEjectReminderCheckBoxString">Показывать напоминание о извлечении</system:String>
+    <system:String x:Key="AddPlaceholdersCheckBoxString">Добавлять шаблоны</system:String>
+    <system:String x:Key="AddFilenameSuffixCheckBoxString">Добавлять суффикс к имени файла</system:String>
+    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Создавать JSON для отправки</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[ОТЛАДКА] Включать артефакты</system:String>
+    <system:String x:Key="CompressLogFilesCheckBoxString">Сжимать файлы логов</system:String>
+    <system:String x:Key="LogCompressionLabelString">Сжатие логов:</system:String>
+    <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Удалять лишние файлы</system:String>
+    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Создать PS3 IRD после дампа</system:String>
+    <system:String x:Key="ProtectionGroupBoxString">Защита</system:String>
+    <system:String x:Key="EnableProtectionScanCheckBoxString">Включить проверку защиты</system:String>
+    <system:String x:Key="ScanArchiveContentsCheckBoxString">Проверять содержимое архива</system:String>
+    <system:String x:Key="IncludeDebugInformationCheckBoxString">Включать отладочную информацию</system:String>
+    <system:String x:Key="HideDriveLettersCheckBoxString">Скрывать буквы дисков</system:String>
+    <system:String x:Key="DefaultSpeedsGroupBoxString">Скорости по умолчанию</system:String>
+    <!-- Programs Tab -->
+    <system:String x:Key="ProgramsTabString">Программы</system:String>
+    <system:String x:Key="AaruGroupBoxString">Aaru</system:String>
+    <system:String x:Key="EnableDebugOutputCheckBoxString">Включить отладочный вывод</system:String>
+    <system:String x:Key="AaruEnableVerboseOutputCheckBoxString">Подробный вывод</system:String>
+    <system:String x:Key="ForceDumpingCheckBoxString">Принудительный дамп</system:String>
+    <system:String x:Key="StripPersonalDataCheckBoxString">Удалять личные данные</system:String>
+    <system:String x:Key="AaruRereadTriesLabelString">Повторные чтения:</system:String>
+    <system:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</system:String>
+    <system:String x:Key="QuietModeCheckBoxString">Тихий режим</system:String>
+    <system:String x:Key="ParanoidModeCheckBoxString">Параноидальный режим</system:String>
+    <system:String x:Key="UseCMIFlagCheckBoxString">Использовать флаг CMI</system:String>
+    <system:String x:Key="MultiSectorReadCheckBoxString">Чтение нескольких секторов</system:String>
+    <system:String x:Key="MultiSectorReadValueLabelString">Количество секторов:</system:String>
+    <system:String x:Key="DICCDRereadTriesLabelString">Повторы чтения CD:</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">Повторы чтения DVD/HD-DVD/BD:</system:String>
+    <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
+    <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Подробный вывод</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Уточнённого режима секторов</system:String>
+    <system:String x:Key="RedumperRereadTriesLabelString">Повторные чтения:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">Повторы Lead-in (Plextor):</system:String>
+    <system:String x:Key="NonRedumpOptionsCheckBoxString">Параметры вне Redump</system:String>
+    <system:String x:Key="DefaultReadMethodLabelString">Метод чтения по умолчанию:</system:String>
+    <system:String x:Key="DefaultSectorOrderLabelString">Порядок секторов:</system:String>
+    <system:String x:Key="DefaultDriveTypeLabelString">Тип привода по умолчанию:</system:String>
+    <!-- Login Info Tab -->
+    <system:String x:Key="LoginInfoTabString">Данные входа</system:String>
+    <system:String x:Key="RetrievalGroupBoxString">Получение</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Получать совпадающую информацию</system:String>
+    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="UsernameLabelString">Имя пользователя</system:String>
+    <system:String x:Key="PasswordLabelString">Пароль</system:String>
+    <system:String x:Key="TestLoginButtonString">Проверить</system:String>
+
+    <!-- Check Dump Window -->
+    <system:String x:Key="CheckDumpTitleString">Проверка дампа</system:String>
+    <system:String x:Key="InputPathLabelString">Путь к входным данным</system:String>
+    <system:String x:Key="CheckDumpButtonString">Проверить дамп</system:String>
+    <system:String x:Key="CheckDumpWarningString">Проверка перезапишет существующие файлы информации. Создайте резервные копии перед запуском проверки.</system:String>
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">Создание PS3 IRD</system:String>
+    <system:String x:Key="InputGroupBoxString">Вход</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">Путь к PS3 ISO</system:String>
+    <system:String x:Key="GetKeyPathLabelString">Путь к файлу *.getkey.log</system:String>
+    <system:String x:Key="KeyExpanderString">Задать ключ шифрования PS3 вручную</system:String>
+    <system:String x:Key="HexadecimalKeyLabelString">Шестнадцатеричный ключ</system:String>
+    <system:String x:Key="KeyFilePathLabelString">Путь к файлу ключа</system:String>
+    <system:String x:Key="KeyStatusLabelString">Статус ключа</system:String>
+    <system:String x:Key="DiscIDExpanderString">Задать PS3 Disc ID вручную</system:String>
+    <system:String x:Key="DiscIDLabelString">Disc ID</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">Статус Disc ID</system:String>
+    <system:String x:Key="PICExpanderString">Задать Permanent Information &amp; Control (PIC) вручную</system:String>
+    <system:String x:Key="LayerbreakLabelString">Раздел слоя (в секторах)</system:String>
+    <system:String x:Key="PICLabelString">PIC</system:String>
+    <system:String x:Key="PICFilePathLabelString">Путь к файлу PIC</system:String>
+    <system:String x:Key="PICStatusLabelString">Статус PIC</system:String>
+    <system:String x:Key="CreateIRDButtonString">Создать IRD</system:String>
+
+    <!-- Media Information Guide Window -->
+    <system:String x:Key="MediaInformationTitleString">Информация о носителе</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Справка по кольцевым кодам</system:String>
+    <!-- Common Info Tab -->
+    <system:String x:Key="CommonInfoTabString">Общая информация</system:String>
+    <system:String x:Key="CommonMediaInfoGroupBoxString">Общие данные о носителе</system:String>
+    <system:String x:Key="TitleInputString">Название</system:String>
+    <system:String x:Key="AlternativeTitleInputString">Альтернативное название</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Иностранное название (нелатиницей)</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">Альтернативное иностранное название</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">Номер / буква диска</system:String>
+    <system:String x:Key="DiscTitleInputString">Название диска</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">Название диска (нелатиницей)</system:String>
+    <system:String x:Key="CategoryLabelString">Категория</system:String>
+    <system:String x:Key="RegionLabelString">Регион</system:String>
+    <system:String x:Key="LanguagesLabelString">Языки</system:String>
+    <system:String x:Key="LanguageSelectionViaLabelString">Выбор языка через</system:String>
+    <system:String x:Key="SerialInputString">Серийный номер</system:String>
+    <system:String x:Key="BarcodeInputString">Штрихкод</system:String>
+    <system:String x:Key="VersionsAndEditionGroupBoxString">Версии и издания</system:String>
+    <system:String x:Key="VersionInputString">Версия</system:String>
+    <system:String x:Key="EditionInputString">Издание</system:String>
+    <system:String x:Key="EditionNonLatinInputString">Издание (нелатиницей)</system:String>
+    <!-- Additional Info Tab -->
+    <system:String x:Key="AdditionalInfoTabString">Доп. информация</system:String>
+    <system:String x:Key="CommentsInputString">Комментарии</system:String>
+    <system:String x:Key="CompatibleOSInputString">Совместимые ОС</system:String>
+    <system:String x:Key="ProtectionInputString">Защита</system:String>
+    <system:String x:Key="ExtrasGroupBoxString">Дополнительно</system:String>
+    <system:String x:Key="PhysicalIdentifiersGroupBoxString">Физические идентификаторы</system:String>
+    <system:String x:Key="PublisherIdentifiersGroupBoxString">Идентификаторы издателя</system:String>
+    <!-- Contents Tab -->
+    <system:String x:Key="ContentsTabString">Содержимое</system:String>
+    <!-- Ringcodes Tab -->
+    <system:String x:Key="RingcodesTabString">Кольцевые коды</system:String>
+    <system:String x:Key="L0InfoGroupBoxString">Данные / L0</system:String>
+    <system:String x:Key="L1InfoGroupBoxString">Метка / L1</system:String>
+    <system:String x:Key="L2InfoGroupBoxString">L2</system:String>
+    <system:String x:Key="L3InfoGroupBoxString">L3</system:String>
+    <!-- Read-Only Info Tab -->
+    <system:String x:Key="ReadOnlyInfoTabString">Только для чтения</system:String>
+
+    <!-- Ring Code Guide Window -->
+    <system:String x:Key="RingCodeGuideTitleString">Справка по кольцевым кодам</system:String>
+
+    <!-- About Window -->
+    <system:String x:Key="AboutTitleString">О программе</system:String>
+    <system:String x:Key="VersionLabelString">Версия</system:String>
+
+    <!-- Check for Updates Window -->
+    <system:String x:Key="CheckForUpdatesTitleString">Проверка обновлений</system:String>
+
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">Извлечение</system:String>
+    <system:String x:Key="EjectMessageString">Теперь можно безопасно извлечь диск</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">Выход</system:String>
+    <system:String x:Key="QuitMessageString">Дамп всё ещё выполняется. Вы уверены, что хотите выйти?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">Ошибка!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">Произошло исключение. Подробности см. в логе.</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">Обнаружена защита</system:String>
+
+</ResourceDictionary>

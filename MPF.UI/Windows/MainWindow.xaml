@@ -8,7 +8,7 @@
                         xmlns:coreWindows="clr-namespace:MPF.UI.Windows"
                         xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                         mc:Ignorable="d"
-                        Title="Media Preservation Frontend" Width="600" WindowStyle="None"
+                        Title="{DynamicResource AppTitleString}" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
                         AllowsTransparency="True" Background="Transparent">
 
@@ -28,76 +28,77 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="5"/>
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <StackPanel Panel.ZIndex="1" Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                    <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
+                <StackPanel Panel.ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,-50,0"
+                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                    <Menu x:Name="TopLeftMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                        <MenuItem x:Name="FileMenuItem" Header="_File"
+                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
-                        <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
+                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="CheckDumpMenuItem" Header="_Check Dump" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
-                            <MenuItem x:Name="CreateIRDMenuItem" Header="_Create PS3 IRD" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
-                            <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}"
                                   IsEnabled="{Binding OptionsMenuItemEnabled}"/>
-                            <MenuItem x:Name="DebugViewMenuItem" Header="_Debug Info Window" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" HorizontalAlignment="Left" Width="140"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
-                        <MenuItem x:Name="HelpMenuItem" Header="_Help"
+                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                            <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185"
+                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" HorizontalAlignment="Left" Width="140"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
                     </Menu>
                 </StackPanel>
-                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
-                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="Media Preservation Frontend" /></TextBlock>
+                        <TextBlock TextAlignment="Center" Padding="0,0,20,0"><Run FontWeight="Bold" Text="{DynamicResource AppTitleString}" /></TextBlock>
                     </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
@@ -106,20 +107,75 @@
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                    <Menu x:Name="TopRightMenuBar" Width="Auto" Height="20"
+                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+                        <MenuItem x:Name="LanguagesMenuItem" Grid.Column="0" Header="{DynamicResource LanguageMenuString}"
+                                Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                Template="{DynamicResource CustomMenuItemTemplate}">
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="SpanishMenuItem" Header="Español" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="FrenchMenuItem" Header="Français" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="PolishMenuItem" Header="Polski" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="RussianMenuItem" Header="Русский" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
+                        </MenuItem>
+                    </Menu>
+
+                    <Button x:Name="MinimizeButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                    <Button x:Name="CloseButton" Grid.Column="2" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                         <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
                 </Grid>
             </Grid>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
                 <Grid Margin="5,5,5,5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -134,7 +190,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System" />
+                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource SystemLabelString}"/>
                     <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                               ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding SystemTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
@@ -153,14 +209,14 @@
                               IsEnabled="{Binding MediaTypeComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}"
                               Visibility="Hidden" />
 
-                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Path"/>
-                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource OutputPathLabelString}"/>
+                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="342" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding OutputPathTextBoxEnabled}" />
-                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="53" HorizontalAlignment="Right" Content="{DynamicResource BrowseButtonString}"
                             IsEnabled="{Binding OutputPathBrowseButtonEnabled}" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
+                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveLetterLabelString}"/>
                     <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
                               ItemsSource="{Binding Drives}" SelectedItem="{Binding Path=CurrentDrive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DriveLetterComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}">
@@ -171,17 +227,17 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
+                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DriveSpeedLabelString}"/>
                     <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
                               ItemsSource="{Binding DriveSpeeds}" SelectedItem="{Binding Path=DriveSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DriveSpeedComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
+                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource DumpingProgramLabelString}"/>
                     <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                               ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding DumpingProgramComboBoxEnabled}" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
+                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="{DynamicResource ParametersLabelString}"/>
                     <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
                              Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding ParametersTextBoxEnabled}"/>
@@ -191,28 +247,28 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Controls">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource ControlsGroupBoxString}">
                 <UniformGrid Columns="4" Margin="5,5,5,5">
                     <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
                             Content="{Binding StartStopButtonText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             IsEnabled="{Binding StartStopButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Discs"
+                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ScanButtonString}"
                             IsEnabled="{Binding MediaScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Update Label"
+                    <Button x:Name="UpdateVolumeLabel" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource UpdateLabelButtonString}"
                             IsEnabled="{Binding UpdateVolumeLabelEnabled}" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for Protection"
+                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{DynamicResource ProtectionScanButtonString}"
                             IsEnabled="{Binding CopyProtectScanButtonEnabled}" Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>
 
-            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
                 <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
                     <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
                                Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </UniformGrid>
             </GroupBox>
 
-            <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
+            <Expander Margin="5,5,5,5" MaxHeight="300" HorizontalAlignment="Stretch" Header="{DynamicResource LogOutputExpanderString}" x:Name="LogPanel"
                       IsExpanded="{Binding LogPanelExpanded}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>

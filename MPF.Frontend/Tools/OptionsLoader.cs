@@ -193,10 +193,10 @@ namespace MPF.Frontend.Tools
                 return new Options();
 
             var serializer = JsonSerializer.Create();
-            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var reader = new StreamReader(stream);
+            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+            using var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
-            reader.Dispose();
+
             return new Options(settings);
         }
 
@@ -225,13 +225,11 @@ namespace MPF.Frontend.Tools
                 property.SetValue(options, val, null);
             }
 
-            // Handle a very strange edge case
-            if (!File.Exists(ConfigurationPath))
-                File.Create(ConfigurationPath).Dispose();
-
             var serializer = JsonSerializer.Create();
-            var sw = new StreamWriter(ConfigurationPath) { AutoFlush = true };
+            var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+
             serializer.Serialize(writer, options.Settings, typeof(Dictionary<string, string>));
         }
 

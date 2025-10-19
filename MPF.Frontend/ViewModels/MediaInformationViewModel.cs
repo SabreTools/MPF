@@ -39,8 +39,8 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of Redump-supported Regions
         /// </summary>
-        private static readonly List<Region> RedumpRegions = new()
-        {
+        private static readonly List<Region> RedumpRegions =
+        [
             Region.Argentina,
             Region.Asia,
             Region.AsiaEurope,
@@ -120,7 +120,7 @@ namespace MPF.Frontend.ViewModels
             Region.USAJapan,
             Region.USAKorea,
             Region.World,
-        };
+        ];
 
         /// <summary>
         /// List of available languages
@@ -131,8 +131,8 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// List of Redump-supported Languages
         /// </summary>
-        private static readonly List<Language> RedumpLanguages = new()
-        {
+        private static readonly List<Language> RedumpLanguages =
+        [
             Language.Afrikaans,
             Language.Albanian,
             Language.Arabic,
@@ -181,7 +181,7 @@ namespace MPF.Frontend.ViewModels
             Language.Turkish,
             Language.Ukrainian,
             Language.Vietnamese,
-        };
+        ];
 
         /// <summary>
         /// List of available languages

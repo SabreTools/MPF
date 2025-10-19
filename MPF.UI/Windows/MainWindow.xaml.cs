@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 #if NET40
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Frontend;
+using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
 using MPF.UI.UserControls;
@@ -28,6 +31,7 @@ namespace MPF.UI.Windows
 
         #region Top Menu Bar
 
+        // Buttons
         private MenuItem? AboutMenuItem => ItemHelper.FindChild<MenuItem>(this, "AboutMenuItem");
         private MenuItem? AppExitMenuItem => ItemHelper.FindChild<MenuItem>(this, "AppExitMenuItem");
         private MenuItem? CheckForUpdatesMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckForUpdatesMenuItem");
@@ -35,6 +39,19 @@ namespace MPF.UI.Windows
         private MenuItem? CheckDumpMenuItem => ItemHelper.FindChild<MenuItem>(this, "CheckDumpMenuItem");
         private MenuItem? CreateIRDMenuItem => ItemHelper.FindChild<MenuItem>(this, "CreateIRDMenuItem");
         private MenuItem? OptionsMenuItem => ItemHelper.FindChild<MenuItem>(this, "OptionsMenuItem");
+
+        // Languages
+        private MenuItem? EnglishMenuItem => ItemHelper.FindChild<MenuItem>(this, "EnglishMenuItem");
+        private MenuItem? FrenchMenuItem => ItemHelper.FindChild<MenuItem>(this, "FrenchMenuItem");
+        private MenuItem? GermanMenuItem => ItemHelper.FindChild<MenuItem>(this, "GermanMenuItem");
+        private MenuItem? ItalianMenuItem => ItemHelper.FindChild<MenuItem>(this, "ItalianMenuItem");
+        private MenuItem? JapaneseMenuItem => ItemHelper.FindChild<MenuItem>(this, "JapaneseMenuItem");
+        private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
+        private MenuItem? PolishMenuItem => ItemHelper.FindChild<MenuItem>(this, "PolishMenuItem");
+        private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
+        private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
+        private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
+        private MenuItem? UkrainianMenuItem => ItemHelper.FindChild<MenuItem>(this, "UkrainianMenuItem");
 
         #endregion
 
@@ -87,6 +104,9 @@ namespace MPF.UI.Windows
             };
             System.Windows.Shell.WindowChrome.SetWindowChrome(this, chrome);
 #endif
+
+            // Set all resources before window loads (Must set English here)
+            SetInterfaceLanguage(InterfaceLanguage.English);
         }
 
         /// <summary>
@@ -111,6 +131,15 @@ namespace MPF.UI.Windows
 
             MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
 
+            // Pass translation strings to MainViewModel
+            var translationStrings = new Dictionary<string, string>();
+            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            MainViewModel.TranslateStrings(translationStrings);
+
+            // Set interface language according to the options
+            SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+
             // Set the UI color scheme according to the options
             ApplyTheme();
 
@@ -125,9 +154,107 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.FirstRun)
             {
                 // Show the options window
-                ShowOptionsWindow("Welcome to MPF, Explore the Options");
+                ShowOptionsWindow((string)Application.Current.FindResource("OptionsFirstRunTitleString"));
             }
         }
+
+        #region Interface Language
+
+        /// <summary>
+        /// Set the current interface language to a provided InterfaceLanguage
+        /// </summary>
+        private void SetInterfaceLanguage(InterfaceLanguage lang)
+        {
+            // Auto detect language
+            if (lang == InterfaceLanguage.AutoDetect)
+            {
+                AutoSetInterfaceLanguage();
+                return;
+            }
+
+            // Set baseline language (English), required as some translations may not translate all strings
+            if (lang != InterfaceLanguage.English)
+            {
+                var baselineDictionary = new ResourceDictionary();
+                baselineDictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                Application.Current.Resources.MergedDictionaries.Add(baselineDictionary);
+            }
+
+            var dictionary = new ResourceDictionary();
+            dictionary.Source = lang switch
+            {
+                InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                InterfaceLanguage.French => new Uri("../Resources/Strings.fr.xaml", UriKind.Relative),
+                InterfaceLanguage.German => new Uri("../Resources/Strings.de.xaml", UriKind.Relative),
+                InterfaceLanguage.Italian => new Uri("../Resources/Strings.it.xaml", UriKind.Relative),
+                InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
+                InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
+                InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
+                InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
+                InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
+                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+            };
+            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+
+            // Update the labels in MainViewModel
+            var translationStrings = new Dictionary<string, string>();
+            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
+            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
+            MainViewModel.TranslateStrings(translationStrings);
+        }
+
+        /// <summary>
+        /// Sets the interface language based on system locale
+        /// Should only run at app startup, use SetInterfaceLanguage(lang) elsewhere
+        /// </summary>
+        public void AutoSetInterfaceLanguage()
+        {
+            // Get current region code to distinguish regional variants of languages
+            string region = string.Empty;
+            try
+            {
+                // Can throw exception depending on current locale
+                region = new RegionInfo(CultureInfo.CurrentUICulture.Name).TwoLetterISORegionName;
+            }
+            catch { }
+
+            switch (CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+            {
+                case "en": SetInterfaceLanguage(InterfaceLanguage.English); break;
+                case "fr": SetInterfaceLanguage(InterfaceLanguage.French); break;
+                case "de": SetInterfaceLanguage(InterfaceLanguage.German); break;
+                case "it": SetInterfaceLanguage(InterfaceLanguage.Italian); break;
+                case "ja": SetInterfaceLanguage(InterfaceLanguage.Japanese); break;
+                case "ko": SetInterfaceLanguage(InterfaceLanguage.Korean); break;
+                case "pl": SetInterfaceLanguage(InterfaceLanguage.Polish); break;
+                case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
+                case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
+                case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
+                case "uk": SetInterfaceLanguage(InterfaceLanguage.Ukrainian); break;
+
+                // Traditional or Simplified Chinese
+                case "zh":
+                    string[] traditionalRegions = ["TW", "HK", "MO"];
+                    if (Array.Exists(traditionalRegions, r => r.Equals(region, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        // TODO: Translate UI elements to Traditional Chinese
+                    }
+                    else
+                    {
+                        // TODO: Translate UI elements to Simplified Chinese
+                    }
+                    break;
+
+                default:
+                    // Unsupported language, don't add any translated text
+                    break;
+            }
+        }
+
+        #endregion
 
         #region UI Functionality
 
@@ -144,6 +271,18 @@ namespace MPF.UI.Windows
             CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
             CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
             OptionsMenuItem!.Click += OptionsMenuItemClick;
+
+            EnglishMenuItem!.Click += LanguageMenuItemClick;
+            FrenchMenuItem!.Click += LanguageMenuItemClick;
+            GermanMenuItem!.Click += LanguageMenuItemClick;
+            ItalianMenuItem!.Click += LanguageMenuItemClick;
+            JapaneseMenuItem!.Click += LanguageMenuItemClick;
+            KoreanMenuItem!.Click += LanguageMenuItemClick;
+            PolishMenuItem!.Click += LanguageMenuItemClick;
+            RussianMenuItem!.Click += LanguageMenuItemClick;
+            SpanishMenuItem!.Click += LanguageMenuItemClick;
+            SwedishMenuItem!.Click += LanguageMenuItemClick;
+            UkrainianMenuItem!.Click += LanguageMenuItemClick;
 
             // User Area Click
             CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
@@ -219,7 +358,7 @@ namespace MPF.UI.Windows
             }
 
             if (showIfSame || different)
-                CustomMessageBox.Show(this, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+                CustomMessageBox.Show(this, message, (string)Application.Current.FindResource("CheckForUpdatesTitleString"), MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -229,7 +368,8 @@ namespace MPF.UI.Windows
         {
             if (MainViewModel.AskBeforeQuit)
             {
-                MessageBoxResult result = CustomMessageBox.Show(this, "A dump is still being processed, are you sure you want to quit?", "Quit", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                MessageBoxResult result = CustomMessageBox.Show(this, (string)Application.Current.FindResource("QuitMessageString"),
+                    (string)Application.Current.FindResource("QuitTitleString"), MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No)
                     e.Cancel = true;
             }
@@ -254,7 +394,8 @@ namespace MPF.UI.Windows
         public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             if (options?.ShowDiscEjectReminder == true)
-                CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.Show(this, (string)Application.Current.FindResource("EjectMessageString"),
+                    (string)Application.Current.FindResource("EjectTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
 
             var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
@@ -338,7 +479,7 @@ namespace MPF.UI.Windows
                 Owner = this,
                 ShowActivated = true,
                 ShowInTaskbar = true,
-                Title = title ?? "Options",
+                Title = title ?? (string)Application.Current.FindResource("OptionsTitleString"),
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
@@ -355,7 +496,7 @@ namespace MPF.UI.Windows
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
             {
-                SystemMediaTypeLabel!.Content = "System";
+                SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -363,7 +504,7 @@ namespace MPF.UI.Windows
             // If there are no media types defined
             if (MainViewModel.MediaTypes == null)
             {
-                SystemMediaTypeLabel!.Content = "System";
+                SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
                 return;
             }
@@ -371,8 +512,8 @@ namespace MPF.UI.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.MediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? "System/Media Type"
-                : "System";
+                ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
+                : (string)Application.Current.FindResource("SystemLabelString");
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
                 : Visibility.Hidden;
@@ -445,6 +586,25 @@ namespace MPF.UI.Windows
             return true;
         }
 
+        /// <summary>
+        /// Build the about text 
+        /// </summary>
+        /// <returns></returns>
+        public string CreateAboutText()
+        {
+            string aboutText = $"{(string)Application.Current.FindResource("AppTitleFullString")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine1String")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine2String")}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutLine3String")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("AboutThanksString")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{(string)Application.Current.FindResource("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
+            MainViewModel.LogAboutText(aboutText);
+            return aboutText;
+        }
+
         #endregion
 
         #region Event Handlers
@@ -467,6 +627,25 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.DefaultOutputPath != options.DefaultOutputPath)
                 MainViewModel.OutputPath = string.Empty;
 
+            // Set the language according to the settings
+            if (savedSettings)
+            {
+                var oldDefaultLang = MainViewModel.Options.DefaultInterfaceLanguage;
+                var newDefaultLang = options.DefaultInterfaceLanguage;
+                if (oldDefaultLang != newDefaultLang)
+                {
+                    SetInterfaceLanguage(newDefaultLang);
+
+                    // Uncheck all language menu items
+                    foreach (var item in LanguagesMenuItem.Items)
+                    {
+                        var menuItem = item as MenuItem;
+                        if (menuItem != null && menuItem.IsCheckable)
+                            menuItem.IsChecked = false;
+                    }
+                }
+            }
+
             // Update and save options, if necessary
             MainViewModel.UpdateOptions(savedSettings, options);
 
@@ -484,8 +663,8 @@ namespace MPF.UI.Windows
         /// </summary>
         public void AboutClick(object sender, RoutedEventArgs e)
         {
-            string aboutText = MainViewModel.CreateAboutText();
-            CustomMessageBox.Show(this, aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            string aboutText = CreateAboutText();
+            CustomMessageBox.Show(this, aboutText, (string)Application.Current.FindResource("AboutTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -524,6 +703,35 @@ namespace MPF.UI.Windows
         public void OptionsMenuItemClick(object sender, RoutedEventArgs e) =>
             ShowOptionsWindow();
 
+        /// <summary>
+        /// Change UI language
+        /// </summary>
+        private void LanguageMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            // Don't do anything if language is already checked and being unchecked
+            var clickedItem = (MenuItem)sender;
+            if (!clickedItem.IsChecked)
+            {
+                clickedItem.IsChecked = true;
+                return;
+            }
+
+            // Uncheck every item not checked
+            var languageMenu = (MenuItem)clickedItem.Parent;
+            foreach (var item in languageMenu.Items)
+            {
+                if (item is MenuItem menuItem && menuItem != clickedItem)
+                    menuItem.IsChecked = false;
+            }
+
+            // Change UI language to selected item
+            string lang = clickedItem.Header.ToString() ?? string.Empty;
+            SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang));
+
+            // Update the labels that don't get updated automatically
+            SetMediaTypeVisibility();
+        }
+
         #endregion
 
         #region User Area
@@ -538,9 +746,11 @@ namespace MPF.UI.Windows
             if (!MainViewModel.LogPanelExpanded)
             {
                 if (!string.IsNullOrEmpty(output))
-                    CustomMessageBox.Show(this, output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(this, output, (string)Application.Current.FindResource("ProtectionDetectedTitleString"),
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 else
-                    CustomMessageBox.Show(this, "An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(this, (string)Application.Current.FindResource("ProtectionErrorMessageString"),
+                        (string)Application.Current.FindResource("ProtectionErrorTitleString"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

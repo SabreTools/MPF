@@ -52,24 +52,29 @@ namespace MPF.Frontend.ViewModels
         public static List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
+        /// List of available interface languages
+        /// </summary>
+        public static List<Element<InterfaceLanguage>> InterfaceLanguages => Element<InterfaceLanguage>.GenerateElements();
+
+        /// <summary>
         /// List of available log compression methods
         /// </summary>
-        public static List<Element<LogCompression>> LogCompressions => PopulateLogCompressions();
+        public static List<Element<LogCompression>> LogCompressions => Element<LogCompression>.GenerateElements();
 
         /// <summary>
         /// Current list of supported Redumper read methods
         /// </summary>
-        public static List<Element<RedumperReadMethod>> RedumperReadMethods => PopulateRedumperReadMethods();
+        public static List<Element<RedumperReadMethod>> RedumperReadMethods => Element<RedumperReadMethod>.GenerateElements();
 
         /// <summary>
         /// Current list of supported Redumper sector orders
         /// </summary>
-        public static List<Element<RedumperSectorOrder>> RedumperSectorOrders => PopulateRedumperSectorOrders();
+        public static List<Element<RedumperSectorOrder>> RedumperSectorOrders => Element<RedumperSectorOrder>.GenerateElements();
 
         /// <summary>
         /// Current list of supported Redumper drive types
         /// </summary>
-        public static List<Element<RedumperDriveType>> RedumperDriveTypes => PopulateRedumperDriveTypes();
+        public static List<Element<RedumperDriveType>> RedumperDriveTypes => Element<RedumperDriveType>.GenerateElements();
 
         /// <summary>
         /// Current list of supported system profiles
@@ -103,43 +108,6 @@ namespace MPF.Frontend.ViewModels
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
             return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
-        }
-
-        /// <summary>
-        /// Get a complete list of supported log compression methods
-        /// </summary>
-        /// <returns></returns>
-        private static List<Element<LogCompression>> PopulateLogCompressions()
-        {
-            var logCompressions = new List<LogCompression> { LogCompression.DeflateDefault, LogCompression.DeflateMaximum, LogCompression.Zstd19 };
-            return logCompressions.ConvertAll(lc => new Element<LogCompression>(lc));
-        }
-
-        /// <summary>
-        /// Get a complete list of supported redumper drive read methods
-        /// </summary>
-        private static List<Element<RedumperReadMethod>> PopulateRedumperReadMethods()
-        {
-            var readMethods = new List<RedumperReadMethod> { RedumperReadMethod.NONE, RedumperReadMethod.D8, RedumperReadMethod.BE };
-            return readMethods.ConvertAll(rm => new Element<RedumperReadMethod>(rm));
-        }
-
-        /// <summary>
-        /// Get a complete list of supported redumper drive sector orders
-        /// </summary>
-        private static List<Element<RedumperSectorOrder>> PopulateRedumperSectorOrders()
-        {
-            var sectorOrders = new List<RedumperSectorOrder> { RedumperSectorOrder.NONE, RedumperSectorOrder.DATA_C2_SUB, RedumperSectorOrder.DATA_SUB_C2, RedumperSectorOrder.DATA_SUB, RedumperSectorOrder.DATA_C2 };
-            return sectorOrders.ConvertAll(so => new Element<RedumperSectorOrder>(so));
-        }
-
-        /// <summary>
-        /// Get a complete list of supported redumper drive types
-        /// </summary>
-        private static List<Element<RedumperDriveType>> PopulateRedumperDriveTypes()
-        {
-            var driveTypes = new List<RedumperDriveType> { RedumperDriveType.NONE, RedumperDriveType.GENERIC, RedumperDriveType.PLEXTOR, RedumperDriveType.LG_ASU8A, RedumperDriveType.LG_ASU8B, RedumperDriveType.LG_ASU8C, RedumperDriveType.LG_ASU3, RedumperDriveType.LG_ASU2 };
-            return driveTypes.ConvertAll(dt => new Element<RedumperDriveType>(dt));
         }
 
         #endregion

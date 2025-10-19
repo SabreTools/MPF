@@ -11,6 +11,27 @@
 - Replace "We" comments
 - Parse XboxOne/SX Title IDs
 - Reduce chance of empty strings
+- Initial UI lang code
+- Move to enum-based model for UI language options
+- Slight cleanup to main window language handling
+- Clean up nullability
+- Clean up a bit of element work
+- Fill in some gaps
+- Add UI by default to launch
+- Continue UI translation work
+- Minor formatting cleanup
+- Ensure readers and writers dispose
+- Complete translation support
+- Add skeleton for 8 more languages
+- Add 8 more language menu items
+- Add basic translation for 8 more languages
+- Make Check flags toggle if config used
+- Add console print when Check loads from config
+- Add Ukrainian translation (superg)
+- Add list configuration commandline feature
+- Handle a provided log zip in Check operation
+- Allow files to be zipped but not deleted
+- Fix long translated strings
 
 ### 3.5.0 (2025-10-10)
 

@@ -63,6 +63,40 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Get the string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InterfaceLanguage lang)
+            => ((InterfaceLanguage?)lang).LongName();
+
+        /// <summary>
+        /// Get the string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InterfaceLanguage? lang)
+        {
+            return lang switch
+            {
+                InterfaceLanguage.AutoDetect => "Auto Detect",
+                InterfaceLanguage.English => "English",
+                InterfaceLanguage.French => "Français",
+                InterfaceLanguage.German => "Deutsch",
+                InterfaceLanguage.Italian => "Italiano",
+                InterfaceLanguage.Japanese => "日本語",
+                InterfaceLanguage.Korean => "한국어",
+                InterfaceLanguage.Polish => "Polski",
+                InterfaceLanguage.Russian => "Русский",
+                InterfaceLanguage.Spanish => "Español",
+                InterfaceLanguage.Swedish => "Svenska",
+                InterfaceLanguage.Ukrainian => "Українська",
+
+                _ => "Unknown",
+            };
+        }
+
+        /// <summary>
         /// Get the string representation of the InternalProgram enum values
         /// </summary>
         /// <param name="prog">InternalProgram value to convert</param>
@@ -131,6 +165,14 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="method">RedumperReadMethod value to convert</param>
         /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperReadMethod method)
+            => ((RedumperReadMethod?)method).LongName();
+
+        /// <summary>
+        /// Get the string representation of the RedumperReadMethod enum values
+        /// </summary>
+        /// <param name="method">RedumperReadMethod value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
         public static string LongName(this RedumperReadMethod? method)
         {
             return method switch
@@ -142,6 +184,14 @@ namespace MPF.Frontend
                 _ => "Unknown",
             };
         }
+
+        /// <summary>
+        /// Get the string representation of the RedumperSectorOrder enum values
+        /// </summary>
+        /// <param name="order">RedumperSectorOrder value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperSectorOrder order)
+            => ((RedumperSectorOrder?)order).LongName();
 
         /// <summary>
         /// Get the string representation of the RedumperSectorOrder enum values
@@ -161,6 +211,14 @@ namespace MPF.Frontend
                 _ => "Unknown",
             };
         }
+
+        /// <summary>
+        /// Get the string representation of the RedumperDriveType enum values
+        /// </summary>
+        /// <param name="type">RedumperDriveType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumperDriveType type)
+            => ((RedumperDriveType?)type).LongName();
 
         /// <summary>
         /// Get the string representation of the RedumperDriveType enum values
@@ -187,6 +245,40 @@ namespace MPF.Frontend
         #endregion
 
         #region Convert to Short Name
+
+        /// <summary>
+        /// Get the short string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this InterfaceLanguage lang)
+            => ((InterfaceLanguage?)lang).ShortName();
+
+        /// <summary>
+        /// Get the short string representation of the InterfaceLanguage enum values
+        /// </summary>
+        /// <param name="lang">InterfaceLanguage value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string ShortName(this InterfaceLanguage? lang)
+        {
+            return lang switch
+            {
+                InterfaceLanguage.AutoDetect => "auto",
+                InterfaceLanguage.English => "eng",
+                InterfaceLanguage.French => "fra",
+                InterfaceLanguage.German => "deu",
+                InterfaceLanguage.Italian => "ita",
+                InterfaceLanguage.Japanese => "jpn",
+                InterfaceLanguage.Korean => "kor",
+                InterfaceLanguage.Polish => "pol",
+                InterfaceLanguage.Russian => "rus",
+                InterfaceLanguage.Spanish => "spa",
+                InterfaceLanguage.Swedish => "swe",
+                InterfaceLanguage.Ukrainian => "ukr",
+
+                _ => "Unknown",
+            };
+        }
 
         /// <summary>
         /// Get the short string representation of the InternalProgram enum values
@@ -222,6 +314,32 @@ namespace MPF.Frontend
         #endregion
 
         #region Convert from String
+
+        /// <summary>
+        /// Get the InterfaceLanguage enum value for a given string
+        /// </summary>
+        /// <param name="internalLanguage">String value to convert</param>
+        /// <returns>InterfaceLanguage represented by the string, if possible</returns>
+        public static InterfaceLanguage ToInterfaceLanguage(this string? internalLanguage)
+        {
+            return (internalLanguage?.ToLowerInvariant()) switch
+            {
+                "auto" or "autodetect" or "auto detect" => InterfaceLanguage.AutoDetect,
+                "eng" or "english" => InterfaceLanguage.English,
+                "fra" or "french" or "français" => InterfaceLanguage.French,
+                "deu" or "german" or "deutsch" => InterfaceLanguage.German,
+                "ita" or "italian" or "italiano" => InterfaceLanguage.Italian,
+                "jpn" or "japanese" or "日本語" => InterfaceLanguage.Japanese,
+                "kor" or "korean" or "한국어" => InterfaceLanguage.Korean,
+                "pol" or "polish" or "polski" => InterfaceLanguage.Polish,
+                "rus" or "russian" or "русский" => InterfaceLanguage.Russian,
+                "spa" or "spanish" or "español" => InterfaceLanguage.Spanish,
+                "swe" or "swedish" or "svenska" => InterfaceLanguage.Swedish,
+                "ukr" or "ukranian" or "українська" => InterfaceLanguage.Ukrainian,
+
+                _ => InterfaceLanguage.AutoDetect,
+            };
+        }
 
         /// <summary>
         /// Get the InternalProgram enum value for a given string
@@ -270,7 +388,7 @@ namespace MPF.Frontend
         /// Get the LogCompression enum value for a given string
         /// </summary>
         /// <param name="logCompression">String value to convert</param>
-        /// <returns>LogCompression represented by teh string, if possible</returns>
+        /// <returns>LogCompression represented by the string, if possible</returns>
         public static LogCompression ToLogCompression(this string? logCompression)
         {
             return (logCompression?.ToLowerInvariant()) switch

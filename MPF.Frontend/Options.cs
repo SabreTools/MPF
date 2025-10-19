@@ -143,6 +143,22 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Default interface language to launch MPF into
+        /// </summary>
+        public InterfaceLanguage DefaultInterfaceLanguage
+        {
+            get
+            {
+                var valueString = GetStringSetting(Settings, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
+                return valueString.ToInterfaceLanguage();
+            }
+            set
+            {
+                Settings["DefaultInterfaceLanguage"] = value.ShortName();
+            }
+        }
+
+        /// <summary>
         /// Default output path for dumps
         /// </summary>
         public string? DefaultOutputPath

@@ -32,17 +32,19 @@
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" MouseDown="TitleMouseDown" />
-                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown"
-                       Content="{Binding Path=Title, Mode=OneWay}" FontWeight="Bold">
+                <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
+                    <Label.Content>
+                        <TextBlock TextAlignment="Center"><Run FontWeight="Bold" Text="{Binding Path=Title, Mode=OneWay}" /></TextBlock>
+                    </Label.Content>
                     <Label.ContextMenu>
                         <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                      Style="{DynamicResource CustomContextMenuStyle}">
-                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
-                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick" Width="185"
                                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                       Template="{DynamicResource CustomMenuItemTemplate}"/>
@@ -68,45 +70,50 @@
                         Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
-                <TabItem Header="General" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource GeneralTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="User Interface">
-                            <UniformGrid Columns="2" Rows="2">
-                                <CheckBox VerticalAlignment="Center" Content="Enable Dark Mode"
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource UserInterfaceGroupBoxString}">
+                            <UniformGrid Columns="2" Rows="3">
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableDarkModeCheckBoxString}"
                                           IsChecked="{Binding Options.EnableDarkMode}"
                                           ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Check for Updates on Startup"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource CheckForUpdatesCheckBoxString}"
                                           IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
                                           ToolTip="Check for updates when the application starts" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Copy Update URL to Clipboard"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource CopyURLToClipboardCheckBoxString}"
                                           IsChecked="{Binding Options.CopyUpdateUrlToClipboard}"
                                           ToolTip="If an update is found, try to copy the update URL to the clipboard" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Fast Update Label"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource FastUpdateLabelCheckBoxString}"
                                           IsChecked="{Binding Options.FastUpdateLabel}"
                                           ToolTip="Bypasses disc checks to quickly update the output path. Use with caution!" Margin="0,4"
                                 />
+
+                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultUILanguageLabelString}" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultInterfaceLanguageComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding InterfaceLanguages}" SelectedItem="{Binding Options.DefaultInterfaceLanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          Style="{DynamicResource CustomComboBoxStyle}" />
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Detection">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource DetectionGroupBoxString}">
                             <UniformGrid Columns="2" Rows="2">
-                                <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource SkipSystemDetectCheckBoxString}"
                                           IsChecked="{Binding Options.SkipSystemDetection}"
                                           ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NoFixedDrivesCheckBoxString}"
                                           IsChecked="{Binding Options.IgnoreFixedDrives}"
                                           ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                 />
 
-                                <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
+                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultSystemLabelString}" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
@@ -123,14 +130,14 @@
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Logging">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource LoggingGroupBoxString}">
                             <UniformGrid Columns="2" Rows="1">
-                                <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource VerboseLoggingCheckBoxString}"
                                           IsChecked="{Binding Options.VerboseLogging}"
                                           ToolTip="Display all logging statements" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource AutoOpenLogCheckBoxString}"
                                           IsChecked="{Binding Options.OpenLogWindowAtStartup}"
                                           ToolTip="Open the log panel when the program launches" Margin="0,4"
                                 />
@@ -139,12 +146,12 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Paths" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource PathsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <Grid Margin="5,5,5,5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="2.0*" />
-                            <ColumnDefinition Width="0.2*" />
+                            <ColumnDefinition Width="3.0*" />
+                            <ColumnDefinition Width="0.3*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -155,30 +162,30 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
+                        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource AaruPathLabelString}" />
                         <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                  Text="{Binding Options.AaruPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
-                        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
+                        <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource DiscImageCreatorPathLabelString}" />
                         <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                  Text="{Binding Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
-                        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Redumper Path" />
+                        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource RedumperPathLabelString}" />
                         <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                  Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
-                        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Dumping Program" />
+                        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource DefaultDumpingProgramLabelString}" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                   ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                   Style="{DynamicResource CustomComboBoxStyle}" />
 
-                        <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path"
+                        <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource DefaultOutputPathLabelString}"
                                ToolTip="Variables allowed:&#x0a;  &#37;SYSTEM&#37;&#9;(System name, long)&#x0a;  &#37;SYS&#37;&#9;&#9;(System name, short)&#x0a;  &#37;MEDIA&#37;&#9;(Media type)&#x0a;  &#37;PROGRAM&#37;&#9;(Program name, long)&#x0a;  &#37;PROG&#37;&#9;(Program name, short)&#x0a;  &#37;LABEL&#37;&#9;(Volume label)&#x0a;  &#37;DATE&#37;&#9;(Current date)&#x0a;  &#37;DATETIME&#37;&#9;(Current date and time)" />
                         <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                  Text="{Binding Options.DefaultOutputPath}" VerticalContentAlignment="Center" 
@@ -188,104 +195,104 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource DumpingTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource DumpingGroupBoxString}">
                             <UniformGrid Columns="2" Rows="7">
-                                <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource ShowDiscInfoCheckBoxString}"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the media information output after dumping" Margin="0,4"
                                       />
 
-                                <CheckBox VerticalAlignment="Center" Content="Pull All Information"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource PullAllInformationCheckBoxString}"
                                      IsChecked="{Binding Options.PullAllInformation}"
                                      ToolTip="Instead of pulling a safe subset of data after dumping, enable pulling all comment and content data" Margin="0,4"
                                       />
 
-                                <CheckBox VerticalAlignment="Center" Content="Enable Tab Input"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableTabInputCheckBoxString}"
                                      IsChecked="{Binding Options.EnableTabsInInputFields}"
                                      ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Enable Redump Compatibility"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableRedumpCompatibilityCheckBoxString}"
                                      IsChecked="{Binding Options.EnableRedumpCompatibility}"
                                      ToolTip="Enable limiting outputs to only those supported by Redump" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Show Eject Reminder"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource ShowEjectReminderCheckBoxString}"
                                      IsChecked="{Binding Options.ShowDiscEjectReminder}"
                                      ToolTip="Enable showing the disc eject reminder after information is gathered" Margin="0,4"
                                       />
 
-                                <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource AddPlaceholdersCheckBoxString}"
                                      IsChecked="{Binding Options.AddPlaceholders}"
                                      ToolTip="Enable adding placeholder text in the output for required and optional fields" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Add Filename Suffix"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource AddFilenameSuffixCheckBoxString}"
                                      IsChecked="{Binding Options.AddFilenameSuffix}"
                                      ToolTip="Enable appending the output filename to the generated files" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Output Submission JSON"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource OutputSubmissionJSONCheckBoxString}"
                                      IsChecked="{Binding Options.OutputSubmissionJSON}"
                                      ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="[DEBUG] Include Artifacts"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource IncludeArtifactsCheckBoxString}"
                                      IsChecked="{Binding Options.IncludeArtifacts}" IsEnabled="{Binding Options.OutputSubmissionJSON}"
                                      ToolTip="Include log files in serialized JSON data [NOT RECOMMENDED TO USE]"
                                      ToolTipService.ShowOnDisabled="True" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource CompressLogFilesCheckBoxString}"
                                      IsChecked="{Binding Options.CompressLogFiles}"
                                      ToolTip="Compress output log files to reduce space" Margin="0,4"
                                      />
 
-                                <Label VerticalAlignment="Center" Content="Log Compression:" HorizontalAlignment="Right" />
+                                <Label VerticalAlignment="Center" Content="{DynamicResource LogCompressionLabelString}" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="LogCompressionComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding LogCompressions}" SelectedItem="{Binding Options.LogCompression, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.CompressLogFiles}"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Delete Unnecessary Files"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource DeleteUnnecessaryFilesCheckBoxString}"
                                      IsChecked="{Binding Options.DeleteUnnecessaryFiles}"
                                      ToolTip="Delete unnecesary output files to reduce space" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Create PS3 IRD After Dumping"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource CreatePS3IRDAfterDumpingCheckBoxString}"
                                      IsChecked="{Binding Options.CreateIRDAfterDumping}"
                                      ToolTip="Automatically creates an IRD file after dumping a PS3 disc" Margin="0,4"
                                      />
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Protection">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource ProtectionGroupBoxString}">
                             <UniformGrid Columns="2" Rows="2">
-                                <CheckBox VerticalAlignment="Center" Content="Enable Protection Scan"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableProtectionScanCheckBoxString}"
                                           IsChecked="{Binding Options.ScanForProtection}"
                                           ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Scan Archive Contents"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource ScanArchiveContentsCheckBoxString}"
                                           IsChecked="{Binding Options.ScanArchivesForProtection}"
                                           ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource IncludeDebugInformationCheckBoxString}"
                                           IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
                                           ToolTip="Include debug information during protection scans" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Hide Drive Letters"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource HideDriveLettersCheckBoxString}"
                                           IsChecked="{Binding Options.HideDriveLetters}"
                                           ToolTip="Remove drive letters from protection scan output" Margin="0,4"
                                 />
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Default Speeds" Grid.ColumnSpan="2">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource DefaultSpeedsGroupBoxString}" Grid.ColumnSpan="2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80"/>
@@ -300,28 +307,28 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
 
-                                <Label Grid.Row="0" Grid.Column="0" Content="CD" />
+                                <Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource CDLabelString}" />
                                 <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForCDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedCD}" />
                                 <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                     Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
-                                <Label Grid.Row="1" Grid.Column="0" Content="DVD" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource DVDLabelString}" />
                                 <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForDVDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedDVD}"  />
                                 <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
-                                <Label Grid.Row="2" Grid.Column="0" Content="HD-DVD" />
+                                <Label Grid.Row="2" Grid.Column="0" Content="{DynamicResource HDDVDLabelString}" />
                                 <Slider x:Name="DumpSpeedHDDVDSlider" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForHDDVDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedHDDVD}"  />
                                 <TextBox x:Name="DumpSpeedHDDVDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
-                                <Label Grid.Row="3" Grid.Column="0" Content="BD" />
+                                <Label Grid.Row="3" Grid.Column="0" Content="{DynamicResource BDLabelString}" />
                                 <Slider x:Name="DumpSpeedBDSlider" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForBDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedBD}"  />
@@ -332,31 +339,31 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Programs" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource ProgramsTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Aaru">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource AaruGroupBoxString}">
                             <UniformGrid Columns="2" Rows="3">
-                                <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableDebugOutputCheckBoxString}"
                                           IsChecked="{Binding Options.AaruEnableDebug}"
                                           ToolTip="Enable debug output in logs" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource AaruEnableVerboseOutputCheckBoxString}"
                                           IsChecked="{Binding Options.AaruEnableVerbose}"
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Force Dumping"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource ForceDumpingCheckBoxString}"
                                           IsChecked="{Binding Options.AaruForceDumping}"
                                           ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource StripPersonalDataCheckBoxString}"
                                           IsChecked="{Binding Options.AaruStripPersonalData}"
                                           ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
                                 />
 
-                                <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource AaruRereadTriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.AaruRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
@@ -364,42 +371,42 @@
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="DiscImageCreator">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource DiscImageCreatorGroupBoxString}">
                             <UniformGrid Columns="2" Rows="5">
-                                <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource QuietModeCheckBoxString}"
                                           IsChecked="{Binding Options.DICQuietMode}"
                                           ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource ParanoidModeCheckBoxString}"
                                           IsChecked="{Binding Options.DICParanoidMode}"
                                           ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Use CMI Flag"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource UseCMIFlagCheckBoxString}"
                                           IsChecked="{Binding Options.DICUseCMIFlag}"
                                           ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource MultiSectorReadCheckBoxString}"
                                           IsChecked="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
                                 />
 
-                                <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource MultiSectorReadValueLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
                                           ToolTip="Set the default value for the /mr flag"
                                           ToolTipService.ShowOnDisabled="True"
                                 />
 
-                                <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource DICCDRereadTriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICRereadCount}"
                                           ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
                                 />
 
-                                <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource DICDVDRereadTriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                           Text="{Binding Options.DICDVDRereadCount}"
                                           ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
@@ -407,50 +414,50 @@
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redumper">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RedumperGroupBoxString}">
                             <UniformGrid Columns="2" Rows="8">
-                                <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource RedumperEnableVerboseOutputCheckBoxString}"
                                           IsChecked="{Binding Options.RedumperEnableVerbose}"
                                           ToolTip="Enable verbose output in logs" Margin="0,4"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Enable Refine Sector Mode Flag"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource EnableRefineSectorModeFlagCheckBoxString}"
                                           IsChecked="{Binding Options.RedumperRefineSectorMode}"
                                           ToolTip="Enable the refine sector mode flag by default" Margin="0,4"
                                 />
 
-                                <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource RedumperRereadTriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperRereadCount}"
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
-                                <Label Content="Plextor Lead-in Retries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource PlextorLeadinRetries}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperLeadinRetryCount}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"
                                          ToolTipService.ShowOnDisabled="True"
                                 />
 
-                                <CheckBox VerticalAlignment="Center" Content="Non-Redump Options" Click="NonRedumpModeClicked"
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource NonRedumpOptionsCheckBoxString}" Click="NonRedumpModeClicked"
                                           IsChecked="{Binding Options.RedumperNonRedumpMode}"
                                           ToolTip="Enable non-redump options" Margin="0,4"
                                 />
                                 <Label/> <!-- Empty label for padding -->
 
-                                <Label VerticalAlignment="Center" Content="Default Read Method:" HorizontalAlignment="Right" />
+                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultReadMethodLabelString}" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
-                                <Label VerticalAlignment="Center" Content="Default Sector Order:" HorizontalAlignment="Right" />
+                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultSectorOrderLabelString}" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
-                                <Label VerticalAlignment="Center" Content="Default Drive Type:" HorizontalAlignment="Right" />
+                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultDriveTypeLabelString}" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperDriveTypeComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperDriveTypes}" SelectedItem="{Binding Options.RedumperDriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
@@ -460,31 +467,30 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Login Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="{DynamicResource LoginInfoTabString}" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Retrieval">
-                            <UniformGrid Columns="2" Rows="1">
-                                <CheckBox VerticalAlignment="Center" Content="Retrieve Match Information"
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RetrievalGroupBoxString}">
+                            <UniformGrid Columns="1" Rows="1">
+                                <CheckBox VerticalAlignment="Center" Content="{DynamicResource RetrieveMatchInformationCheckBoxString}"
                                           IsChecked="{Binding Options.RetrieveMatchInformation}"
                                           ToolTip="Attempts to retrieve match information from Redump"
                                           Margin="0,4"
                                 />
-                                <Label/> <!-- Empty label for padding -->
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump">
+                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RedumpGroupBoxString}">
                             <UniformGrid Columns="5">
-                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
+                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource UsernameLabelString}" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
                                     Text="{Binding Options.RedumpUsername}"
                                     IsEnabled="{Binding Options.RetrieveMatchInformation}" />
 
-                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
+                                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource PasswordLabelString}" />
                                 <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*"
                                              IsEnabled="{Binding Options.RetrieveMatchInformation}"/>
 
-                                <Button x:Name="RedumpLoginTestButton" Height="22" Width="80" Content="Test Login"
+                                <Button x:Name="RedumpLoginTestButton" Height="22" Width="80" Content="{DynamicResource TestLoginButtonString}"
                                         Style="{DynamicResource CustomButtonStyle}"
                                          IsEnabled="{Binding Options.RetrieveMatchInformation}" />
                             </UniformGrid>
@@ -493,8 +499,8 @@
                         <Label>
                             <Label.Content>
                                 <TextBlock TextWrapping="Wrap">
-                                    <Run FontWeight="Bold" Foreground="Red" Text="WARNING:" />
-                                    <Run Text="If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny." />
+                                    <Run FontWeight="Bold" Foreground="Red" Text="{DynamicResource WarningLabelString}" />
+                                    <Run Text="{DynamicResource OptionsRetrievalWarningString}" />
                                 </TextBlock>
                             </Label.Content>
                         </Label>
@@ -513,9 +519,9 @@
                 </GroupBox.Template>
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
                     <Label/> <!-- Empty label for padding -->
-                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
+                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="{DynamicResource AcceptButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="{DynamicResource CancelButtonString}"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>

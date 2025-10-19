@@ -93,9 +93,26 @@ namespace MPF.Processors.OutputFiles
             get
             {
 #if NET20 || NET35
-                return (_flags & OutputFileFlags.Zippable) != 0;
+                return (_flags & OutputFileFlags.Zippable) != 0
+                    || (_flags & OutputFileFlags.Preserve) != 0;
 #else
-                return _flags.HasFlag(OutputFileFlags.Zippable);
+                return _flags.HasFlag(OutputFileFlags.Zippable)
+                    || _flags.HasFlag(OutputFileFlags.Preserve);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Indicates if the file is preserved after zipping
+        /// </summary>
+        public bool IsPreserved
+        {
+            get
+            {
+#if NET20 || NET35
+                return (_flags & OutputFileFlags.Preserve) != 0;
+#else
+                return _flags.HasFlag(OutputFileFlags.Preserve);
 #endif
             }
         }
