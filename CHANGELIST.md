@@ -36,6 +36,7 @@
 - Make .img not required for DIC outputs
 - Handle log zip path in information extraction
 - Redumper state file is not accessed
+- Fix tests broken by last commit
 
 ### 3.5.0 (2025-10-10)
 
