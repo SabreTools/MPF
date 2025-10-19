@@ -20,6 +20,7 @@ namespace MPF.Frontend
         Russian,
         Spanish,
         Swedish,
+        Ukrainian,
     }
 
     /// <summary>

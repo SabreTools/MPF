@@ -159,6 +159,10 @@
                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                     Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" HorizontalAlignment="Left" Width="120" IsCheckable="True"
+                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                    Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                    Template="{DynamicResource CustomMenuItemTemplate}" />
                         </MenuItem>
                     </Menu>
 
