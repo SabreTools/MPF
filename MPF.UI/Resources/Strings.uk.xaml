@@ -22,7 +22,7 @@
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">_Файл</system:String>
     <system:String x:Key="ExitMenuItemString">_Вийти</system:String>
-    <system:String x:Key="ToolsMenuString">_Інструменти</system:String>
+    <system:String x:Key="ToolsMenuString">_Утиліти</system:String>
     <system:String x:Key="CheckDumpMenuItemString">_Перевірити дамп</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Створити _PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">П_араметри</system:String>
@@ -59,8 +59,8 @@
     <system:String x:Key="GeneralTabString">Загальні</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Графічний інтерфейс</system:String>
     <system:String x:Key="EnableDarkModeCheckBoxString">Увімкнути темний режим</system:String>
-    <system:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску програми</system:String>
-    <system:String x:Key="CopyURLToClipboardCheckBoxString">Зкопіювати URL оновлення до буфера обміну</system:String>
+    <system:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">Скопіювати URL оновлення</system:String>
     <system:String x:Key="FastUpdateLabelCheckBoxString">Швидке оновлення міток</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Мова інтерфейсу за замовчуванням:</system:String>
     <system:String x:Key="DetectionGroupBoxString">Пошук</system:String>
@@ -75,8 +75,8 @@
     <system:String x:Key="AaruPathLabelString">Шлях до Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Шлях до DiscImageCreator</system:String>
     <system:String x:Key="RedumperPathLabelString">Шлях до Redumper</system:String>
-    <system:String x:Key="DefaultDumpingProgramLabelString">Програма для дампу за замовчуванням</system:String>
-    <system:String x:Key="DefaultOutputPathLabelString">Вихідний каталог за замовчуванням</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">Програма за замовчуванням</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">Вихідна тека за замовчуванням</system:String>
     <!-- Dumping Tab -->
     <system:String x:Key="DumpingTabString">Дамп</system:String>
     <system:String x:Key="DumpingGroupBoxString">Дамп</system:String>
@@ -84,10 +84,10 @@
     <system:String x:Key="PullAllInformationCheckBoxString">Завантажити всю інформацію</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">Увімкнути закладки</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Увімкнути сумісність з Redump</system:String>
-    <system:String x:Key="ShowEjectReminderCheckBoxString">Показувати нагадування витягнути диск</system:String>
+    <system:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</system:String>
     <system:String x:Key="AddPlaceholdersCheckBoxString">Заповняти поля за замовчуванням</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</system:String>
-    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для додавання в систему</system:String>
+    <system:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для подання в систему</system:String>
     <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Увімкнути артефакти</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Стискати звіти</system:String>
     <system:String x:Key="LogCompressionLabelString">Компресія звітів:</system:String>
@@ -106,7 +106,7 @@
     <!-- Programs Tab -->
     <system:String x:Key="ProgramsTabString">Програми</system:String>
     <system:String x:Key="AaruGroupBoxString">Aaru</system:String>
-    <system:String x:Key="EnableDebugOutputCheckBoxString">Увімкнути вивід інформації для відладки</system:String>
+    <system:String x:Key="EnableDebugOutputCheckBoxString">Увімкнути вивід інформації для дебагу</system:String>
     <system:String x:Key="AaruEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</system:String>
     <system:String x:Key="ForceDumpingCheckBoxString">Форсувати дамп</system:String>
     <system:String x:Key="StripPersonalDataCheckBoxString">Видалити персональні дані</system:String>
@@ -121,7 +121,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">Кількість спроб читання для DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторний режим покращення</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторний удосконалення</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Кількість спроб читання:</system:String>
     <system:String x:Key="PlextorLeadinRetriesLabelString">Кількість спроб читання Plextor Lead-in:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Розширені параметри</system:String>
@@ -170,7 +170,7 @@
     <system:String x:Key="CommonMediaInfoGroupBoxString">Загальна інформація по диску</system:String>
     <system:String x:Key="TitleInputString">Назва</system:String>
     <system:String x:Key="AlternativeTitleInputString">Альтернативна назва</system:String>
-    <system:String x:Key="ForeignTitleNonLatinInputString">Назва іншою мовою (не латиниця)</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Назва іншою мовою (не латин.)</system:String>
     <system:String x:Key="AlternativeForeignTitleInputString">Альтернативна назва іншою мовою</system:String>
     <system:String x:Key="DiscNumberLetterInputString">Номер / Буква диску</system:String>
     <system:String x:Key="DiscTitleInputString">Назва диску</system:String>
