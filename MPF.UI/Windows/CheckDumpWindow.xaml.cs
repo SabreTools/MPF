@@ -112,7 +112,7 @@ namespace MPF.UI.Windows
             WinForms.FileDialog fileDialog = new WinForms.OpenFileDialog
             {
                 InitialDirectory = directory,
-                Filter = "Disc Images|*.iso;*.cue;*.aaruf;*.bca|All Files|*.*",
+                Filter = "Disc Images|*.iso;*.cue;*.aaruf;*.bca|Log Archives|*_logs.zip|All Files|*.*",
             };
             WinForms.DialogResult result = fileDialog.ShowDialog();
 

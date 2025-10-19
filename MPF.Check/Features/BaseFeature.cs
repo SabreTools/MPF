@@ -128,7 +128,7 @@ namespace MPF.Check.Features
         public static void DisplayHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.Check <system> [options] </path/to/output.cue/iso> ...");
+            Console.WriteLine("MPF.Check <system> [options] </path/to/output.cue|iso|_logs.zip> ...");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("?, h, help              Show this help text");
