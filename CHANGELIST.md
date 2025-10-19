@@ -34,6 +34,7 @@
 - Fix long translated strings
 - Allow placeholder files to be used in Check
 - Make .img not required for DIC outputs
+- Handle log zip path in information extraction
 
 ### 3.5.0 (2025-10-10)
 

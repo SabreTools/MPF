@@ -55,6 +55,13 @@ namespace MPF.Frontend.Tools
             var outputDirectory = Path.GetDirectoryName(outputPath);
             string outputFilename = Path.GetFileName(outputPath);
 
+            // If a standard log zip was provided, replace the suffix with ".tmp" for easier processing
+            if (outputFilename.EndsWith("_logs.zip", StringComparison.OrdinalIgnoreCase))
+            {
+                int zipSuffixIndex = outputFilename.LastIndexOf("_logs.zip", StringComparison.OrdinalIgnoreCase);
+                outputFilename = outputFilename.Substring(0, zipSuffixIndex) + ".tmp";
+            }
+
             // Check that all of the relevant files are there
             List<string> missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
             if (missingFiles.Count > 0)
