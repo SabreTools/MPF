@@ -32,6 +32,7 @@
 - Handle a provided log zip in Check operation
 - Allow files to be zipped but not deleted
 - Fix long translated strings
+- Allow placeholder files to be used in Check
 
 ### 3.5.0 (2025-10-10)
 

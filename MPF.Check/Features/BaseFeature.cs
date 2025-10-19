@@ -97,13 +97,6 @@ namespace MPF.Check.Features
             // Loop through all the rest of the args
             for (int i = 0; i < Inputs.Count; i++)
             {
-                // Check for a file
-                if (!File.Exists(Inputs[i].Trim('"')))
-                {
-                    Console.Error.WriteLine($"{Inputs[i].Trim('"')} does not exist");
-                    return false;
-                }
-
                 // Get the full file path
                 string filepath = Path.GetFullPath(Inputs[i].Trim('"'));
 
