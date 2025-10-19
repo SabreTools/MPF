@@ -609,7 +609,8 @@ namespace MPF.Processors
                             | OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ccd"),
-                        new($"{outputFilename}.cue", OutputFileFlags.Required),
+                        new($"{outputFilename}.cue", OutputFileFlags.Required
+                            | OutputFileFlags.Preserve),
                         new($"{outputFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
                         new($"{outputFilename}.img", OutputFileFlags.Required

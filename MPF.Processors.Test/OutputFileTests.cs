@@ -16,6 +16,7 @@ namespace MPF.Processors.Test
         [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, false)]
+        [InlineData(OutputFileFlags.Preserve, false)]
         public void IsRequiredTest(OutputFileFlags flags, bool expected)
         {
             var of = new OutputFile("file", flags, "key");
@@ -34,6 +35,7 @@ namespace MPF.Processors.Test
         [InlineData(OutputFileFlags.Binary, true)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, false)]
+        [InlineData(OutputFileFlags.Preserve, false)]
         public void IsArtifactTest(OutputFileFlags flags, bool expected)
         {
             var of = new OutputFile("file", flags, "key");
@@ -52,6 +54,7 @@ namespace MPF.Processors.Test
         [InlineData(OutputFileFlags.Binary, true)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, false)]
+        [InlineData(OutputFileFlags.Preserve, false)]
         public void IsBinaryArtifactTest(OutputFileFlags flags, bool expected)
         {
             var of = new OutputFile("file", flags, "key");
@@ -70,6 +73,7 @@ namespace MPF.Processors.Test
         [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, true)]
         [InlineData(OutputFileFlags.Zippable, false)]
+        [InlineData(OutputFileFlags.Preserve, false)]
         public void IsDeleteableTest(OutputFileFlags flags, bool expected)
         {
             var of = new OutputFile("file", flags, "key");
@@ -88,6 +92,7 @@ namespace MPF.Processors.Test
         [InlineData(OutputFileFlags.Binary, false)]
         [InlineData(OutputFileFlags.Deleteable, false)]
         [InlineData(OutputFileFlags.Zippable, true)]
+        [InlineData(OutputFileFlags.Preserve, true)]
         public void IsZippableTest(OutputFileFlags flags, bool expected)
         {
             var of = new OutputFile("file", flags, "key");
@@ -97,6 +102,25 @@ namespace MPF.Processors.Test
             Assert.Equal(expected, of.IsZippable);
             Assert.Equal(expected, cof.IsZippable);
             Assert.Equal(expected, rof.IsZippable);
+        }
+
+        [Theory]
+        [InlineData(OutputFileFlags.None, false)]
+        [InlineData(OutputFileFlags.Required, false)]
+        [InlineData(OutputFileFlags.Artifact, false)]
+        [InlineData(OutputFileFlags.Binary, false)]
+        [InlineData(OutputFileFlags.Deleteable, false)]
+        [InlineData(OutputFileFlags.Zippable, false)]
+        [InlineData(OutputFileFlags.Preserve, true)]
+        public void IsPreservedTest(OutputFileFlags flags, bool expected)
+        {
+            var of = new OutputFile("file", flags, "key");
+            var cof = new CustomOutputFile("file", flags, "key", File.Exists);
+            var rof = new RegexOutputFile("file", flags, "key");
+
+            Assert.Equal(expected, of.IsPreserved);
+            Assert.Equal(expected, cof.IsPreserved);
+            Assert.Equal(expected, rof.IsPreserved);
         }
 
         #endregion

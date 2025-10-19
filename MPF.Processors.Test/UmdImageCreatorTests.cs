@@ -209,6 +209,30 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetPreservedFilePaths
+
+        [Fact]
+        public void GetPreservedFilePaths_Invalid_Empty()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetPreservedFilePaths(MediaType.UMD, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetPreservedFilePaths_Valid_Empty()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "UmdImageCreator", "UMD");
+            string outputFilename = "test.iso";
+            var processor = new UmdImageCreator(RedumpSystem.SonyPlayStationPortable);
+            var actual = processor.GetPreservedFilePaths(MediaType.UMD, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        #endregion
+
         #region GetPVD
 
         [Fact]

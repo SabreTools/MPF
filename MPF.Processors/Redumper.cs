@@ -131,6 +131,7 @@ namespace MPF.Processors
             switch (mediaType)
             {
                 case MediaType.CDROM:
+                    // TODO: Read the cuesheet from the log if the external file doesn't exist
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
 
                     // Attempt to get the error count
@@ -484,7 +485,8 @@ namespace MPF.Processors
                         new($"{outputFilename}.cdtext", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "cdtext"),
-                        new($"{outputFilename}.cue", OutputFileFlags.Required),
+                        new($"{outputFilename}.cue", OutputFileFlags.Required
+                            | OutputFileFlags.Preserve),
                         new($"{outputFilename}.flip", OutputFileFlags.None),
                         new($"{outputFilename}.fulltoc", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

@@ -277,7 +277,31 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
             var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(10, actual.Count);
+            Assert.Equal(11, actual.Count);
+        }
+
+        #endregion
+
+        #region GetPreservedFilePaths
+
+        [Fact]
+        public void GetPreservedFilePaths_Invalid_Empty()
+        {
+            string? outputDirectory = null;
+            string outputFilename = string.Empty;
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            Assert.Empty(actual);
+        }
+
+        [Fact]
+        public void GetPreservedFilePaths_Valid_Filled()
+        {
+            string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
+            string outputFilename = "test.cue";
+            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            Assert.Single(actual);
         }
 
         #endregion
