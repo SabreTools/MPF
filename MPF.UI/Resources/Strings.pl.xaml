@@ -130,7 +130,7 @@
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Nazwa użytkownika</system:String>
     <system:String x:Key="PasswordLabelString">Hasło</system:String>
-    <system:String x:Key="TestLoginButtonString">Test logowania</system:String>
+    <system:String x:Key="TestLoginButtonString">Sprawdź</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Sprawdź istniejący dump</system:String>
@@ -159,7 +159,7 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Informacje o nośniku</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ring Code</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ringcode</system:String>
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Informacje ogólne</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">Ogólne informacje o nośniku</system:String>

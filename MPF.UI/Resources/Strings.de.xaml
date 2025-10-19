@@ -126,7 +126,7 @@
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Login-Informationen</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Abruf</system:String>
-    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmungsinformationen abrufen</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Übereinstimmung informationen abrufen</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Benutzername</system:String>
     <system:String x:Key="PasswordLabelString">Passwort</system:String>

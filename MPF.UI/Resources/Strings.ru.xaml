@@ -130,7 +130,7 @@
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Имя пользователя</system:String>
     <system:String x:Key="PasswordLabelString">Пароль</system:String>
-    <system:String x:Key="TestLoginButtonString">Проверить вход</system:String>
+    <system:String x:Key="TestLoginButtonString">Проверить</system:String>
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Проверка дампа</system:String>
