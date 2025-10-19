@@ -26,7 +26,7 @@
     <system:String x:Key="CheckDumpMenuItemString">_Перевірити дамп</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Створити _PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">П_араметри</system:String>
-    <system:String x:Key="DebugInfoWindowMenuItemString">В_ікно відладки</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">В_ікно дебагу</system:String>
     <system:String x:Key="HelpMenuString">_Допомога</system:String>
     <system:String x:Key="AboutMenuItemString">П_ро програму</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">П_еревірити оновлення</system:String>
@@ -34,7 +34,7 @@
     <system:String x:Key="SystemLabelString">Тип системи</system:String>
     <system:String x:Key="SystemMediaTypeLabelString">Система/Тип диску</system:String>
     <system:String x:Key="NoSystemSelectedString">Система не вибрана</system:String>
-    <system:String x:Key="OutputPathLabelString">Вихідний каталог</system:String>
+    <system:String x:Key="OutputPathLabelString">Вихідна тека</system:String>
     <system:String x:Key="DriveLetterLabelString">Буква диску</system:String>
     <system:String x:Key="DriveSpeedLabelString">Швидкість приводу</system:String>
     <system:String x:Key="DumpingProgramLabelString">Програма для дампу</system:String>
@@ -71,7 +71,7 @@
     <system:String x:Key="VerboseLoggingCheckBoxString">Детальний звіт</system:String>
     <system:String x:Key="AutoOpenLogCheckBoxString">Відкривати звіт автоматично</system:String>
     <!-- Paths Tab -->
-    <system:String x:Key="PathsTabString">Каталоги</system:String>
+    <system:String x:Key="PathsTabString">Теки</system:String>
     <system:String x:Key="AaruPathLabelString">Шлях до Aaru</system:String>
     <system:String x:Key="DiscImageCreatorPathLabelString">Шлях до DiscImageCreator</system:String>
     <system:String x:Key="RedumperPathLabelString">Шлях до Redumper</system:String>
@@ -88,7 +88,7 @@
     <system:String x:Key="AddPlaceholdersCheckBoxString">Заповняти поля за замовчуванням</system:String>
     <system:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</system:String>
     <system:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для подання в систему</system:String>
-    <system:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Увімкнути артефакти</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[ДЕБАГ] Увімкнути артефакти</system:String>
     <system:String x:Key="CompressLogFilesCheckBoxString">Стискати звіти</system:String>
     <system:String x:Key="LogCompressionLabelString">Компресія звітів:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Видалити непотрібні файли</system:String>
@@ -96,7 +96,7 @@
     <system:String x:Key="ProtectionGroupBoxString">Protection</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Увімкнути сканування захисту</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Сканувати архіви</system:String>
-    <system:String x:Key="IncludeDebugInformationCheckBoxString">Додавати інформацію для відладки</system:String>
+    <system:String x:Key="IncludeDebugInformationCheckBoxString">Додавати інформацію для дебагу</system:String>
     <system:String x:Key="HideDriveLettersCheckBoxString">Приховати букви дисків</system:String>
     <system:String x:Key="DefaultSpeedsGroupBoxString">Швидкість за замовчуванням</system:String>
     <system:String x:Key="CDLabelString">CD</system:String>
@@ -121,7 +121,7 @@
     <system:String x:Key="DICDVDRereadTriesLabelString">Спроб читання для DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</system:String>
-    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторний удосконалення</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторне покращення</system:String>
     <system:String x:Key="RedumperRereadTriesLabelString">Кількість спроб читання:</system:String>
     <system:String x:Key="PlextorLeadinRetriesLabelString">Кількість спроб читання Plextor Lead-in:</system:String>
     <system:String x:Key="NonRedumpOptionsCheckBoxString">Розширені параметри</system:String>
@@ -139,7 +139,7 @@
 
     <!-- Check Dump Window -->
     <system:String x:Key="CheckDumpTitleString">Перевірити існуючий дамп</system:String>
-    <system:String x:Key="InputPathLabelString">Вхідний каталог</system:String>
+    <system:String x:Key="InputPathLabelString">Вхіда тека</system:String>
     <system:String x:Key="CheckDumpButtonString">Перевірити дамп</system:String>
     <system:String x:Key="CheckDumpWarningString">Перевірка перепише існуючі інформаційні файли для додавання в систему. Будь-ласка зробіть резервні копії перед запукском перевірки якщо це необхідно.</system:String>
 
@@ -170,8 +170,8 @@
     <system:String x:Key="CommonMediaInfoGroupBoxString">Загальна інформація по диску</system:String>
     <system:String x:Key="TitleInputString">Назва</system:String>
     <system:String x:Key="AlternativeTitleInputString">Альтернативна назва</system:String>
-    <system:String x:Key="ForeignTitleNonLatinInputString">Назва іншою мово</system:String>
-    <system:String x:Key="AlternativeForeignTitleInputString">Альт. назва іншою мовою</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Оригінальна назва</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">Альт. оригінальна назва</system:String>
     <system:String x:Key="DiscNumberLetterInputString">Номер / Буква диску</system:String>
     <system:String x:Key="DiscTitleInputString">Назва диску</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Назва диску (не латиниця)</system:String>
