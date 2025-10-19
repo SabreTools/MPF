@@ -208,7 +208,7 @@ namespace MPF.Processors.Test
             string outputFilename = string.Empty;
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
             var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(15, actual.Count);
+            Assert.Equal(14, actual.Count);
         }
 
         [Fact]

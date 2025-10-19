@@ -33,6 +33,7 @@
 - Allow files to be zipped but not deleted
 - Fix long translated strings
 - Allow placeholder files to be used in Check
+- Make .img not required for DIC outputs
 
 ### 3.5.0 (2025-10-10)
 

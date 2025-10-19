@@ -613,8 +613,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Preserve),
                         new($"{outputFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
-                        new($"{outputFilename}.img", OutputFileFlags.Required
-                            | OutputFileFlags.Deleteable),
+                        new($"{outputFilename}.img", OutputFileFlags.Deleteable),
                         new([$"{outputFilename}.img_EdcEcc.txt", $"{outputFilename}.img_EccEdc.txt"], OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "img_edcecc"),
