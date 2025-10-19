@@ -159,7 +159,7 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Informacje o nośniku</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ring Code</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ringcode</system:String>
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Informacje ogólne</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">Ogólne informacje o nośniku</system:String>

@@ -118,7 +118,7 @@
     <system:String x:Key="MultiSectorReadCheckBoxString">Пакетне читання секторів</system:String>
     <system:String x:Key="MultiSectorReadValueLabelString">Кількість секторів в одному пакеті:</system:String>
     <system:String x:Key="DICCDRereadTriesLabelString">Кількість спроб читання для CD:</system:String>
-    <system:String x:Key="DICDVDRereadTriesLabelString">Кількість спроб читання для DVD/HD-DVD/BD:</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">Спроб читання для DVD/HD-DVD/BD:</system:String>
     <system:String x:Key="RedumperGroupBoxString">Redumper</system:String>
     <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</system:String>
     <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторний удосконалення</system:String>
@@ -170,8 +170,8 @@
     <system:String x:Key="CommonMediaInfoGroupBoxString">Загальна інформація по диску</system:String>
     <system:String x:Key="TitleInputString">Назва</system:String>
     <system:String x:Key="AlternativeTitleInputString">Альтернативна назва</system:String>
-    <system:String x:Key="ForeignTitleNonLatinInputString">Назва іншою мовою (не латин.)</system:String>
-    <system:String x:Key="AlternativeForeignTitleInputString">Альтернативна назва іншою мовою</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Назва іншою мово</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">Альт. назва іншою мовою</system:String>
     <system:String x:Key="DiscNumberLetterInputString">Номер / Буква диску</system:String>
     <system:String x:Key="DiscTitleInputString">Назва диску</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Назва диску (не латиниця)</system:String>
