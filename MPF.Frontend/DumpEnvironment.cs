@@ -486,6 +486,13 @@ namespace MPF.Frontend
             var outputDirectory = Path.GetDirectoryName(OutputPath);
             var outputFilename = Path.GetFileName(OutputPath);
 
+            // If a standard log zip was provided, replace the suffix with ".tmp" for easier processing
+            if (outputFilename.EndsWith("_logs.zip", StringComparison.OrdinalIgnoreCase))
+            {
+                int zipSuffixIndex = outputFilename.LastIndexOf("_logs.zip", StringComparison.OrdinalIgnoreCase);
+                outputFilename = outputFilename.Substring(0, zipSuffixIndex) + ".tmp";
+            }
+
             // Determine the media type from the processor
             MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
             if (mediaType == null)

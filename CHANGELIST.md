@@ -29,6 +29,7 @@
 - Add console print when Check loads from config
 - Add Ukrainian translation (superg)
 - Add list configuration commandline feature
+- Handle a provided log zip in Check operation
 
 ### 3.5.0 (2025-10-10)
 
