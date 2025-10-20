@@ -313,7 +313,7 @@ namespace MPF.ExecutionContexts.Redumper
             }
             if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
             {
-                switch (System)
+                switch (RedumpSystem)
                 {
                     // Systems known to have significant data outside the ISO9660 filesystem
                     case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox:
