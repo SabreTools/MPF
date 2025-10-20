@@ -313,22 +313,42 @@ namespace MPF.ExecutionContexts.Redumper
             }
             if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
             {
-                // Enable skeleton for CD and DVD only, by default
-                switch (MediaType)
+                switch (RedumpSystem)
                 {
-                    case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    case SabreTools.RedumpLib.Data.MediaType.DVD:
-                        this[FlagStrings.Skeleton] = true;
-                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                        break;
-
-                    // If the type is unknown, also enable
-                    case null:
-                        this[FlagStrings.Skeleton] = true;
-                        (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                    // Systems known to have significant data outside the ISO9660 filesystem
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox360:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.PlaymajiPolymega:
+                    // Skeletons from newer BD-based consoles unnecessary
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxOne:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxSeriesXS:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation3:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation4:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation5:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.NintendoWiiU:
                         break;
 
                     default:
+                        // Enable skeleton for CD and DVD only, by default
+                        switch (MediaType)
+                        {
+                            case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                            case SabreTools.RedumpLib.Data.MediaType.DVD:
+                                {
+                                    this[FlagStrings.Skeleton] = true;
+                                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                                }
+                                break;
+
+                            // If the type is unknown, also enable
+                            case null:
+                                this[FlagStrings.Skeleton] = true;
+                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                                break;
+
+                            default:
+                                break;
+                        }
                         break;
                 }
             }
