@@ -316,16 +316,16 @@ namespace MPF.ExecutionContexts.Redumper
                 switch (System)
                 {
                     // Systems known to have significant data outside the ISO9660 filesystem
-                    SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox:
-                    SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox360:
-                    SabreTools.RedumpLib.Data.RedumpSystem.PlaymajiPolymega:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox360:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.PlaymajiPolymega:
                     // Skeletons from newer BD-based consoles unnecessary
-                    SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxOne:
-                    SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxSeriesXS:
-                    SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation3:
-                    SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation4:
-                    SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation5:
-                    SabreTools.RedumpLib.Data.RedumpSystem.NintendoWiiU:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxOne:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxSeriesXS:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation3:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation4:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation5:
+                    case SabreTools.RedumpLib.Data.RedumpSystem.NintendoWiiU:
                         break;
 
                     default:
