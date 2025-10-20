@@ -350,6 +350,7 @@ namespace MPF.ExecutionContexts.Redumper
                                 break;
                         }
                         break;
+                }
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
