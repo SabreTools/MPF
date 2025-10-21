@@ -40,6 +40,7 @@
 - Regex outputs should not name based on pattern
 - Make log archive handling more user-apparent
 - Be selective on which systems to enable skeleton
+- Readme updates for accuracy
 
 ### 3.5.0 (2025-10-10)
 

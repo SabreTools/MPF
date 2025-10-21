@@ -26,11 +26,7 @@ The main UI has some known limitations that are documented in code and in some p
   - MAUI is not a viable alternative due to lack of out-of-box support for Linux
   - Avalonia is being heavily considered as an alternative
 - For those who need .NET Framework 4.8, there is an official fork: [MPF Legacy](https://github.com/Deterous/MPF-Legacy)
-- For those who require broader archive/installer compatibility for protection scanning (Windows-only), please use the x86 builds as there are some specific scanning libraries that only work with that build
-  - This is actively being worked on as part of [Binary Object Scanner](https://github.com/SabreTools/BinaryObjectScanner)
-  - Please consider contributing if you have experience in dealing with multiple archive and installer types
-  - Consider using a third-party scanning tool, such as Protection ID, if this is not sufficient for your needs
-  - See [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
+- Some archive types may not be supported for protection scanning, see [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
 
 ## Media Preservation Frontend CLI (MPF.CLI)
 
@@ -42,21 +38,11 @@ Configuration files are stored by default next to the application as `config.jso
 
 The main CLI has some known limitations that are documented in code and in some prior support tickets:
 
-- No programs are bundled by default
-  - This is the result of the extremely varied builds that are allowed
-- For those who require broader archive/installer compatibility for protection scanning (Windows-only), please use the x86 builds as there are some specific scanning libraries that only work with that build
-  - This is actively being worked on as part of [Binary Object Scanner](https://github.com/SabreTools/BinaryObjectScanner)
-  - Please consider contributing if you have experience in dealing with multiple archive and installer types
-  - Consider using a third-party scanning tool, such as Protection ID, if this is not sufficient for your needs
-  - See [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
+- Some archive types may not be supported for protection scanning, see [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
 MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
-
-**WARNING:** Both the standalone Check executable and the Check functionality in the UI will overwrite both any existing submission information files as well as any log archives. Please make backups of those if you need to before running Check.
-
-**WARNING:** Both the standalone Check executable and the Check functionality in the UI assume that the output files are what were output by the original dumping program. If you need to reparse any outputs that have already been processed by MPF, you will need to unzip all files as if it were the original folder layout.
 
 ## System Requirements
 
