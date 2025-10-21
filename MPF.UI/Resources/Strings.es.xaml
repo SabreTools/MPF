@@ -30,8 +30,8 @@
     <system:String x:Key="AboutMenuItemString">_Acerca de</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">_Buscar actualizaciones</system:String>
     <!-- Settings Group Box-->
-    <system:String x:Key="SystemLabelString">Tipo de sistema</system:String>
-    <system:String x:Key="SystemMediaTypeLabelString">Tipo de sistema/medio</system:String>
+    <system:String x:Key="SystemLabelString">Sistema</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">Sistema/Tipo de medio</system:String>
     <system:String x:Key="NoSystemSelectedString">Ningún sistema seleccionado</system:String>
     <system:String x:Key="OutputPathLabelString">Ruta de salida</system:String>
     <system:String x:Key="DriveLetterLabelString">Letra de unidad</system:String>
