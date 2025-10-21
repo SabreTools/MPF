@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
 using MPF.CLI.Features;
-using MPF.Frontend;
 using MPF.Frontend.Features;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine;
@@ -20,19 +19,12 @@ namespace MPF.CLI
             var options = OptionsLoader.LoadFromConfig();
             if (options.FirstRun)
             {
-                // Application paths
-                options.AaruPath = "FILL ME IN";
-                options.DiscImageCreatorPath = "FILL ME IN";
-                options.RedumperPath = "FILL ME IN";
-                options.InternalProgram = InternalProgram.NONE;
-
                 // Reset first run
                 options.FirstRun = false;
                 OptionsLoader.SaveToConfig(options);
 
                 // Display non-error message
                 Console.WriteLine("First-run detected! Please fill out config.json and run again.");
-                BaseFeature.DisplayHelp();
                 return;
             }
 
