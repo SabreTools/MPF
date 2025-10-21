@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using SabreTools.RedumpLib.Data;
 using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
@@ -22,10 +23,17 @@ namespace MPF.Frontend
         {
             get
             {
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "aaru",
+                    PlatformID.MacOSX => "aaru",
+                    _ => "aaru.exe"
+                };
+
 #if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Aaru", "Aaru.exe"));
+                return Path.Combine("Programs", Path.Combine("Aaru", executableName));
 #else
-                return Path.Combine("Programs", "Aaru", "Aaru.exe");
+                return Path.Combine("Programs", "Aaru", executableName);
 #endif
             }
         }
@@ -37,10 +45,17 @@ namespace MPF.Frontend
         {
             get
             {
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "DiscImageCreator.out",
+                    PlatformID.MacOSX => "DiscImageCreator",
+                    _ => "DiscImageCreator.exe"
+                };
+
 #if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Creator", "DiscImageCreator.exe"));
+                return Path.Combine("Programs", Path.Combine("Creator", executableName));
 #else
-                return Path.Combine("Programs", "Creator", "DiscImageCreator.exe");
+                return Path.Combine("Programs", "Creator", executableName);
 #endif
             }
         }
@@ -52,10 +67,17 @@ namespace MPF.Frontend
         {
             get
             {
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "redumper",
+                    PlatformID.MacOSX => "redumper",
+                    _ => "redumper.exe"
+                };
+
 #if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Redumper", "redumper.exe"));
+                return Path.Combine("Programs", Path.Combine("Redumper", executableName));
 #else
-                return Path.Combine("Programs", "Redumper", "redumper.exe");
+                return Path.Combine("Programs", "Redumper", executableName);
 #endif
             }
         }

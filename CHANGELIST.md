@@ -42,6 +42,7 @@
 - Be selective on which systems to enable skeleton
 - Readme updates for accuracy
 - Separate out default program paths
+- Add per-OS executable names
 
 ### 3.5.0 (2025-10-10)
 
