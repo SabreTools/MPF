@@ -24,7 +24,7 @@ namespace MPF.CLI
                 OptionsLoader.SaveToConfig(options);
 
                 // Display non-error message
-                Console.WriteLine("First-run detected! Please fill out config.json and run again.");
+                Console.WriteLine("First-run detected! Please verify the generated config.json and run again.");
                 return;
             }
 
