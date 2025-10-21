@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using SabreTools.RedumpLib.Data;
 using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
@@ -12,6 +13,55 @@ namespace MPF.Frontend
 {
     public class Options
     {
+        #region Default Paths
+
+        /// <summary>
+        /// Default Aaru path
+        /// </summary>
+        private string DefaultAaruPath
+        {
+            get
+            {
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Aaru", "Aaru.exe"));
+#else
+                return Path.Combine("Programs", "Aaru", "Aaru.exe");
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Default DiscImageCreator path
+        /// </summary>
+        private string DefaultDiscImageCreatorPath
+        {
+            get
+            {
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Creator", "DiscImageCreator.exe"));
+#else
+                return Path.Combine("Programs", "Creator", "DiscImageCreator.exe");
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Default Redumper path
+        /// </summary>
+        private string DefaultRedumperPath
+        {
+            get
+            {
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Redumper", "redumper.exe"));
+#else
+                return Path.Combine("Programs", "Redumper", "redumper.exe");
+#endif
+            }
+        }
+
+        #endregion
+
         /// <summary>
         /// All settings in the form of a dictionary
         /// </summary>
@@ -33,7 +83,7 @@ namespace MPF.Frontend
         /// </summary>
         public string? AaruPath
         {
-            get { return GetStringSetting(Settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
+            get { return GetStringSetting(Settings, "AaruPath", DefaultAaruPath); }
             set { Settings["AaruPath"] = value; }
         }
 
@@ -42,7 +92,7 @@ namespace MPF.Frontend
         /// </summary>
         public string? DiscImageCreatorPath
         {
-            get { return GetStringSetting(Settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
+            get { return GetStringSetting(Settings, "DiscImageCreatorPath", DefaultDiscImageCreatorPath); }
             set { Settings["DiscImageCreatorPath"] = value; }
         }
 
@@ -51,7 +101,7 @@ namespace MPF.Frontend
         /// </summary>
         public string? RedumperPath
         {
-            get { return GetStringSetting(Settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
+            get { return GetStringSetting(Settings, "RedumperPath", DefaultRedumperPath); }
             set { Settings["RedumperPath"] = value; }
         }
 

@@ -41,6 +41,7 @@
 - Make log archive handling more user-apparent
 - Be selective on which systems to enable skeleton
 - Readme updates for accuracy
+- Separate out default program paths
 
 ### 3.5.0 (2025-10-10)
 
