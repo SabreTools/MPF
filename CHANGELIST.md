@@ -45,6 +45,7 @@
 - Add per-OS executable names
 - Simplify first-run CLI experience
 - Change CLI first-run wording
+- Free disk space for runners
 
 ### 3.5.0 (2025-10-10)
 
