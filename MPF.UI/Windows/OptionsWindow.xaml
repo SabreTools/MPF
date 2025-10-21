@@ -432,7 +432,7 @@
                                          ToolTip="Specifies how many rereads are attempted on read error"
                                 />
 
-                                <Label Content="{DynamicResource PlextorLeadinRetries}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource PlextorLeadinRetriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperLeadinRetryCount}"
                                          ToolTip="Specifies how many retries are attempted for lead-in on Plextor drives"

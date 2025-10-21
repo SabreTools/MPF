@@ -46,6 +46,7 @@
 - Simplify first-run CLI experience
 - Change CLI first-run wording
 - Free disk space for runners
+- Possibly fix missing options string
 
 ### 3.5.0 (2025-10-10)
 
