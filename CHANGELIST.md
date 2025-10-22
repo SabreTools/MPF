@@ -49,6 +49,7 @@
 - Possibly fix missing options string
 - Minor Spanish cleanup
 - Update RedumpLib to 1.8.0
+- Limit visibility of Compatible OS text box
 
 ### 3.5.0 (2025-10-10)
 

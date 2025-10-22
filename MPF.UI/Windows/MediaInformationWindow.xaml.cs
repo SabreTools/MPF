@@ -19,7 +19,8 @@ namespace MPF.UI.Windows
         #endregion
 
         #region Additional Info
-        
+
+        private UserInput? CompatibleOSTextBox => ItemHelper.FindChild<UserInput>(this, "CompatibleOSTextBox");
         private Grid? PCMacHybridGrid => ItemHelper.FindChild<Grid>(this, "PCMacHybridGrid");
         private UserInput? DiscIDTextBox => ItemHelper.FindChild<UserInput>(this, "DiscIDTextBox");
         private UserInput? DiscKeyTextBox => ItemHelper.FindChild<UserInput>(this, "DiscKeyTextBox");
@@ -464,10 +465,12 @@ namespace MPF.UI.Windows
             {
                 case RedumpSystem.AppleMacintosh:
                     PCMacHybridGrid!.Visibility = Visibility.Visible;
+                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
                     break;
 
                 case RedumpSystem.IBMPCcompatible:
                     PCMacHybridGrid!.Visibility = Visibility.Visible;
+                    CompatibleOSTextBox!.Visibility = Visibility.Visible;
                     break;
 
                 case RedumpSystem.NintendoWiiU:

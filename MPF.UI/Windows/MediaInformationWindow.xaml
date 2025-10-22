@@ -187,7 +187,7 @@
                                     <controls:UserInput x:Name="CommentsTextBox" Label="{DynamicResource CommentsInputString}"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}"
+                                    <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)CompatibleOS], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Visibility="Collapsed"
                                                     Text="{Binding Path=SubmissionInfo.Extras.DiscKey, Mode=TwoWay}"/>
