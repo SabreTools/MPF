@@ -9,6 +9,7 @@ using MPF.Frontend.Tools;
 using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Data.Sections;
 
 namespace MPF.Frontend.ViewModels
 {

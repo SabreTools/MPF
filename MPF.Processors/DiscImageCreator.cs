@@ -173,12 +173,9 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // Get the dumping program and version
             var dicVersion = GetCommandFilePathAndVersion(basePath, out var dicCmd);
-            info.DumpingInfo!.DumpingProgram ??= string.Empty;
+            info.DumpingInfo.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {dicVersion ?? "Unknown Version"}";
             info.DumpingInfo.DumpingParameters = GetParameters(dicCmd) ?? "Unknown Parameters";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
@@ -204,7 +201,7 @@ namespace MPF.Processors
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset($"{basePath}_disc.txt");
-            info.CommonDiscInfo!.RingWriteOffset = writeOffset;
+            info.CommonDiscInfo.RingWriteOffset = writeOffset;
             info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
 
             // Attempt to get multisession data
@@ -226,7 +223,7 @@ namespace MPF.Processors
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
                     if (IsAudio(info.TracksAndWriteOffsets.Cuesheet))
                     {
-                        info.CommonDiscInfo!.ErrorsCount = "0";
+                        info.CommonDiscInfo.ErrorsCount = "0";
                     }
                     else
                     {
@@ -236,7 +233,7 @@ namespace MPF.Processors
                         else if (File.Exists($"{basePath}.img_EccEdc.txt"))
                             errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
 
-                        info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                        info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
                     break;
@@ -313,7 +310,7 @@ namespace MPF.Processors
                 case RedumpSystem.SonyElectronicBook:
                     info.CopyProtection!.SecuROMData = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
-                        info.CommonDiscInfo!.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
+                        info.CommonDiscInfo.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
 
                     // Needed for some odd copy protections
                     info.CopyProtection!.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
@@ -329,7 +326,7 @@ namespace MPF.Processors
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
@@ -344,7 +341,7 @@ namespace MPF.Processors
                         var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         }
@@ -352,7 +349,7 @@ namespace MPF.Processors
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS, out _))
                         {
                             // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                            //info.CommonDiscInfo.CommentsSpecialFields![SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
@@ -360,7 +357,7 @@ namespace MPF.Processors
                     {
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var xgd1SS, out _))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                             // SS Version from DIC is ignored now
@@ -376,7 +373,7 @@ namespace MPF.Processors
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
                         if (!redumpCompat)
                             info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
@@ -390,7 +387,7 @@ namespace MPF.Processors
                         var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
                         if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         }
@@ -398,7 +395,7 @@ namespace MPF.Processors
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS, out _))
                         {
                             // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                            //info.CommonDiscInfo.CommentsSpecialFields![SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras!.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
@@ -406,7 +403,7 @@ namespace MPF.Processors
                     {
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var xgd23SS, out _))
                         {
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                             // SS Version from DIC is ignored now
@@ -432,7 +429,7 @@ namespace MPF.Processors
                             out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                             info.VersionAndEditions!.Version = version ?? string.Empty;
                             info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
@@ -450,7 +447,7 @@ namespace MPF.Processors
                     if (GetSegaCDBuildInfo(info.Extras.Header, out var scdSerial, out var fixedDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? string.Empty;
                     }
 
@@ -471,7 +468,7 @@ namespace MPF.Processors
                             out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                             info.VersionAndEditions!.Version = version ?? string.Empty;
                             info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
@@ -494,7 +491,7 @@ namespace MPF.Processors
                             out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                             info.VersionAndEditions!.Version = version ?? string.Empty;
                             info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
@@ -517,7 +514,7 @@ namespace MPF.Processors
                             out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                             info.VersionAndEditions!.Version = version ?? string.Empty;
                             info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
@@ -540,7 +537,7 @@ namespace MPF.Processors
                             out var date))
                         {
                             // Ensure internal serial is pulled from local data
-                            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                             info.VersionAndEditions!.Version = version ?? string.Empty;
                             info.CommonDiscInfo.EXEDateBuildDate = date ?? string.Empty;
                         }
@@ -558,7 +555,7 @@ namespace MPF.Processors
                     if (GetSaturnBuildInfo(info.Extras.Header, out var saturnSerial, out var saturnVersion, out var buildDate))
                     {
                         // Ensure internal serial is pulled from local data
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
                         info.VersionAndEditions!.Version = saturnVersion ?? string.Empty;
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                     }
@@ -582,10 +579,10 @@ namespace MPF.Processors
                 case RedumpSystem.SonyPlayStation3:
                     if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                         info.VersionAndEditions!.Version = ps3Version ?? string.Empty;
                         if (ps3FirmwareVersion != null)
-                            info.CommonDiscInfo!.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
+                            info.CommonDiscInfo.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
                     }
 
                     break;

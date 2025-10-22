@@ -26,11 +26,8 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // TODO: Determine if there's a UMDImageCreator version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the PVD, if it exists
             info.Extras!.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
@@ -62,7 +59,7 @@ namespace MPF.Processors
                 out var layer,
                 out long size))
             {
-                info.CommonDiscInfo!.Title = title ?? string.Empty;
+                info.CommonDiscInfo.Title = title ?? string.Empty;
                 info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
                 info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                 info.VersionAndEditions!.Version = version ?? string.Empty;

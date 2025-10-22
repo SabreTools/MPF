@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Data.Sections;
 
 namespace MPF.Frontend.ViewModels
 {

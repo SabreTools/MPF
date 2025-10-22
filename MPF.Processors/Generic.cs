@@ -28,11 +28,8 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // Get the dumping program and version
-            info.DumpingInfo!.DumpingProgram = "UNKNOWN PROGRAM";
+            info.DumpingInfo.DumpingProgram = "UNKNOWN PROGRAM";
             info.DumpingInfo.DumpingDate = GetDumpingDate(basePath);
 
             // Get the Datafile information

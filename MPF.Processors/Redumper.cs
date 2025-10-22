@@ -73,12 +73,10 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-            info.CommonDiscInfo!.Comments = string.Empty;
+            info.CommonDiscInfo.Comments = string.Empty;
 
             // Get the dumping program and version
-            info.DumpingInfo!.DumpingProgram ??= string.Empty;
+            info.DumpingInfo.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
             info.DumpingInfo.DumpingParameters = GetParameters($"{basePath}.log") ?? "Unknown Parameters";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd HH:mm:ss");
@@ -779,7 +777,7 @@ namespace MPF.Processors
 
         /// <summary>
         /// Checks whether a .manufacturer file is empty or not
-        /// True if standard DVD (empty DMI), False if error or XGD with security sectors 
+        /// True if standard DVD (empty DMI), False if error or XGD with security sectors
         /// </summary>
         /// <param name="inputFilename">Filename of .manufacturer file to check</param>
         private static bool IsManufacturerEmpty(string inputFilename)
@@ -893,7 +891,7 @@ namespace MPF.Processors
             {
                 string? datString = null;
 
-                // Find all occurrences of the hash information 
+                // Find all occurrences of the hash information
                 while (!sr.EndOfStream)
                 {
                     // Fast forward to the dat line

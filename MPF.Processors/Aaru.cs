@@ -82,11 +82,8 @@ namespace MPF.Processors
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
 
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // TODO: Determine if there's an Aaru version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}.cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar($"{basePath}.cicm.xml");
@@ -123,7 +120,7 @@ namespace MPF.Processors
 
             // Get the error count
             long errorCount = GetErrorCount($"{basePath}.resume.xml");
-            info.CommonDiscInfo!.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+            info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset(sidecar);
@@ -193,7 +190,7 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
@@ -202,7 +199,7 @@ namespace MPF.Processors
 
                     if (GetXboxDMIInfo(sidecar, out var serial, out var version, out Region? region))
                     {
-                        info.CommonDiscInfo!.Serial = serial ?? string.Empty;
+                        info.CommonDiscInfo.Serial = serial ?? string.Empty;
                         info.VersionAndEditions!.Version = version ?? string.Empty;
                         info.CommonDiscInfo.Region = region;
                     }
@@ -212,7 +209,7 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
@@ -221,7 +218,7 @@ namespace MPF.Processors
 
                     if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out Region? region360))
                     {
-                        info.CommonDiscInfo!.Serial = serial360 ?? string.Empty;
+                        info.CommonDiscInfo.Serial = serial360 ?? string.Empty;
                         info.VersionAndEditions!.Version = version360 ?? string.Empty;
                         info.CommonDiscInfo.Region = region360;
                     }

@@ -24,9 +24,6 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // Try to determine the ISO file
             string isoPath = string.Empty;
             if (File.Exists($"{basePath}.iso"))
@@ -35,7 +32,7 @@ namespace MPF.Processors
                 isoPath = $"{basePath}.ISO";
 
             // TODO: Determine if there's a CFW version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate(isoPath)?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(isoPath)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the Datafile information
             Datafile? datafile = GenerateDatafile(isoPath);

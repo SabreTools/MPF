@@ -33,11 +33,8 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // TODO: Determine if there's a CleanRip version anywhere
-            info.DumpingInfo!.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
+            info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Try to merge parts together, if needed
             _ = MergeFileParts(basePath);
@@ -65,7 +62,7 @@ namespace MPF.Processors
             // Get internal information
             if (GetGameCubeWiiInformation(basePath + $"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
             {
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.InternalName] = internalName ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = internalName ?? string.Empty;
                 info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
                 if (!redumpCompat)
                 {

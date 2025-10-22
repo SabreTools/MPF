@@ -10,6 +10,7 @@ using BinaryObjectScanner;
 using MPF.Processors;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Data.Sections;
 using SabreTools.RedumpLib.Web;
 
 namespace MPF.Frontend.Tools
@@ -67,7 +68,7 @@ namespace MPF.Frontend.Tools
             if (missingFiles.Count > 0)
             {
                 resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}\nThis may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
-                return null;    
+                return null;
             }
 
             // Extract files from existing log archive, if it exists
@@ -89,7 +90,7 @@ namespace MPF.Frontend.Tools
                 info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Add a placeholder for the logs link
-            info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
+            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData))
@@ -102,7 +103,7 @@ namespace MPF.Frontend.Tools
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels != null)
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
@@ -142,7 +143,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Set fields that may have automatic filling otherwise
-            info.CommonDiscInfo!.Category ??= DiscCategory.Games;
+            info.CommonDiscInfo.Category ??= DiscCategory.Games;
             info.VersionAndEditions!.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
@@ -395,8 +396,6 @@ namespace MPF.Frontend.Tools
                 },
             };
 
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
             return info;
         }
 
@@ -586,7 +585,7 @@ namespace MPF.Frontend.Tools
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -601,7 +600,7 @@ namespace MPF.Frontend.Tools
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums!.Layerbreak == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -611,7 +610,7 @@ namespace MPF.Frontend.Tools
                     // If we have a dual-layer disc
                     else if (info.SizeAndChecksums!.Layerbreak2 == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -625,7 +624,7 @@ namespace MPF.Frontend.Tools
                     // If we have a triple-layer disc
                     else if (info.SizeAndChecksums!.Layerbreak3 == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -643,7 +642,7 @@ namespace MPF.Frontend.Tools
                     // If we have a quad-layer disc
                     else
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -666,7 +665,7 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -681,7 +680,7 @@ namespace MPF.Frontend.Tools
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums!.Layerbreak == default)
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -691,7 +690,7 @@ namespace MPF.Frontend.Tools
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -710,7 +709,7 @@ namespace MPF.Frontend.Tools
 
                 case MediaType.UMD:
                     // Both single- and dual-layer discs have two "layers" for the ring
-                    info.CommonDiscInfo!.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -738,23 +737,23 @@ namespace MPF.Frontend.Tools
             switch (system)
             {
                 case RedumpSystem.AcornArchimedes:
-                    info.CommonDiscInfo!.Region ??= Region.UnitedKingdom;
+                    info.CommonDiscInfo.Region ??= Region.UnitedKingdom;
                     break;
 
                 case RedumpSystem.AudioCD:
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.EnhancedCD:
                 case RedumpSystem.SuperAudioCD:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Audio;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Audio;
                     break;
 
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case RedumpSystem.BDVideo:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
                     bool bee = PhysicalTool.GetBusEncryptionEnabled(drive);
                     if (bee && string.IsNullOrEmpty(info.CopyProtection!.Protection))
                         info.CopyProtection.Protection = "Bus encryption enabled flag set";
@@ -767,56 +766,56 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.DVDVideo:
                 case RedumpSystem.HDDVDVideo:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
                     info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCDTV:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Europe;
                     break;
 
                 case RedumpSystem.FujitsuFMTownsseries:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.FujitsuFMTownsMarty:
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.HasbroVideoNow:
                 case RedumpSystem.HasbroVideoNowColor:
                 case RedumpSystem.HasbroVideoNowJr:
                 case RedumpSystem.VideoCD:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
                     break;
 
                 case RedumpSystem.HasbroVideoNowXP:
                 case RedumpSystem.PhotoCD:
                 case RedumpSystem.SonyElectronicBook:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Multimedia;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Multimedia;
                     break;
 
                 case RedumpSystem.IncredibleTechnologiesEagle:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamieAmusement:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiFireBeat:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -824,91 +823,91 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
+                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
+                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
-                        info.CommonDiscInfo!.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
+                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
 
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystem573:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiTwinkle:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MattelHyperScan:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.NavisoftNaviken21:
-                    info.CommonDiscInfo!.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.NECPC88series:
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.NECPC98series:
-                    info.CommonDiscInfo!.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.NECPCFXPCFXGA:
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaTitanVideo:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SharpX68000:
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.SNKNeoGeoCD:
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -916,26 +915,26 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
+                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
+                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
-                        info.CommonDiscInfo!.Region = ProcessingTool.GetPlayStationRegion(ps1Exe);
+                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps1Exe);
 
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    info.CommonDiscInfo!.LanguageSelection ??= [];
+                    info.CommonDiscInfo.LanguageSelection ??= [];
                     string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo!.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
+                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo!.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
@@ -965,8 +964,8 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.TomyKissSite:
-                    info.CommonDiscInfo!.Category ??= DiscCategory.Video;
-                    info.CommonDiscInfo!.Region ??= Region.Japan;
+                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
+                    info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
@@ -995,7 +994,7 @@ namespace MPF.Frontend.Tools
         private static bool CommentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the comments fields exist
-            if (info.CommonDiscInfo!.CommentsSpecialFields == null)
+            if (info.CommonDiscInfo.CommentsSpecialFields == null)
                 info.CommonDiscInfo.CommentsSpecialFields = [];
 
             // Check if the field exists
@@ -1020,7 +1019,7 @@ namespace MPF.Frontend.Tools
             // Set the value
             string? value = valueFunc(drive);
             if (value != null)
-                info.CommonDiscInfo!.CommentsSpecialFields![key] = value;
+                info.CommonDiscInfo.CommentsSpecialFields![key] = value;
         }
 
         /// <summary>
@@ -1029,7 +1028,7 @@ namespace MPF.Frontend.Tools
         private static bool ContentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the contents fields exist
-            if (info.CommonDiscInfo!.ContentsSpecialFields == null)
+            if (info.CommonDiscInfo.ContentsSpecialFields == null)
                 info.CommonDiscInfo.ContentsSpecialFields = [];
 
             // Check if the field exists
@@ -1054,7 +1053,7 @@ namespace MPF.Frontend.Tools
             // Set the value
             string? value = valueFunc(drive);
             if (value != null)
-                info.CommonDiscInfo!.ContentsSpecialFields![key] = value;
+                info.CommonDiscInfo.ContentsSpecialFields![key] = value;
         }
 
         /// <summary>

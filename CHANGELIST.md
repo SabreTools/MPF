@@ -48,6 +48,7 @@
 - Free disk space for runners
 - Possibly fix missing options string
 - Minor Spanish cleanup
+- Update RedumpLib to 1.8.0
 
 ### 3.5.0 (2025-10-10)
 

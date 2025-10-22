@@ -26,9 +26,6 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
         {
-            // Ensure that required sections exist
-            info = Builder.EnsureAllSections(info);
-
             // Get output directory
             string outputDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
 
@@ -38,7 +35,7 @@ namespace MPF.Processors
                 return;
 
             // XBC dump info
-            info.DumpingInfo!.DumpingProgram ??= string.Empty;
+            info.DumpingInfo.DumpingProgram ??= string.Empty;
             info.DumpingInfo.DumpingProgram += $" {GetVersion(logPath) ?? "Unknown Version"}";
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate(logPath)?.ToString("yyyy-MM-dd HH:mm:ss");
             info.DumpingInfo.Model = GetDrive(logPath) ?? "Unknown Drive";
@@ -62,7 +59,7 @@ namespace MPF.Processors
 
             // Look for read errors
             if (GetReadErrors(logPath, out long readErrors))
-                info.CommonDiscInfo!.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
+                info.CommonDiscInfo.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
             switch (System)
             {
@@ -71,7 +68,7 @@ namespace MPF.Processors
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
                     if (xmid != null)
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
@@ -96,7 +93,7 @@ namespace MPF.Processors
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
                     if (xemid != null)
                     {
-                        info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields![SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
                         if (!redumpCompat)
                             info.VersionAndEditions!.Version = xemid.Version ?? string.Empty;
@@ -129,11 +126,11 @@ namespace MPF.Processors
 
             // DMI/PFI/SS CRC32 hashes
             if (File.Exists(dmiPath))
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
             if (File.Exists(pfiPath))
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
             if (File.Exists(ssPath))
-                info.CommonDiscInfo!.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
         }
 
         /// <inheritdoc/>
@@ -267,7 +264,7 @@ namespace MPF.Processors
             // Sample:
             // ====================================================================
             // Xbox Backup Creator v2.9 Build:0425 By Redline99
-            // 
+            //
 
             try
             {
@@ -552,15 +549,15 @@ namespace MPF.Processors
             ----------------------------------------
             RT CID MOD DATA          Drive Response
             -- --  --  ------------- -------------------
-            01 14  00  033100 0340FF B7D8C32A B703590100    
-            03 BE  00  244530 24552F F4B9B528 BE46360500    
-            01 97  00  DBBAD0 DBCACF DD7787F4 484977ED00    
-            03 45  00  FCAF00 FCBEFF FB7A7773 AAB662FC00    
-            05 6B  00  033100 033E7F 0A31252A 0200000200    
-            07 46  00  244530 2452AF F8E77EBC 5B00005B00    
-            05 36  00  DBBAD0 DBC84F F5DFA735 B50000B500    
-            07 A1  00  FCAF00 FCBC7F 6B749DBF 0E01000E01    
-            E0 50  00  42F4E1 00B6F7 00000000 0000000000    
+            01 14  00  033100 0340FF B7D8C32A B703590100
+            03 BE  00  244530 24552F F4B9B528 BE46360500
+            01 97  00  DBBAD0 DBCACF DD7787F4 484977ED00
+            03 45  00  FCAF00 FCBEFF FB7A7773 AAB662FC00
+            05 6B  00  033100 033E7F 0A31252A 0200000200
+            07 46  00  244530 2452AF F8E77EBC 5B00005B00
+            05 36  00  DBBAD0 DBC84F F5DFA735 B50000B500
+            07 A1  00  FCAF00 FCBC7F 6B749DBF 0E01000E01
+            E0 50  00  42F4E1 00B6F7 00000000 0000000000
             --------------------------------------------
             */
 

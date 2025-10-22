@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using MPF.Frontend.Tools;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Data.Sections;
 using Xunit;
 
 namespace MPF.Frontend.Test.Tools
@@ -10,7 +9,7 @@ namespace MPF.Frontend.Test.Tools
     public class InfoToolTests
     {
         [Fact]
-        public void ProcessSpecialFieldsCompleteTest()
+        public void ProcessSpecialFields_Complete()
         {
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
@@ -36,9 +35,9 @@ namespace MPF.Frontend.Test.Tools
 
             // Validate the basics
             Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Null(info.CommonDiscInfo.CommentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
             Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Null(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
 
             // Split the values
             string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
@@ -50,23 +49,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void ProcessSpecialFieldsNullObjectTest()
-        {
-            // Create a new SubmissionInfo object
-            var info = new SubmissionInfo()
-            {
-                CommonDiscInfo = null,
-            };
-
-            // Process the special fields
-            Formatter.ProcessSpecialFields(info);
-
-            // Validate
-            Assert.Null(info.CommonDiscInfo);
-        }
-
-        [Fact]
-        public void ProcessSpecialFieldsNullCommentsContentsTest()
+        public void ProcessSpecialFields_NullStrings()
         {
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
@@ -92,9 +75,9 @@ namespace MPF.Frontend.Test.Tools
 
             // Validate the basics
             Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Null(info.CommonDiscInfo.CommentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
             Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Null(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
 
             // Split the values
             string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
@@ -106,7 +89,7 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
-        public void ProcessSpecialFieldsNullDictionariesTest()
+        public void ProcessSpecialFields_EmptyDictionaries()
         {
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
@@ -114,10 +97,10 @@ namespace MPF.Frontend.Test.Tools
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
-                    CommentsSpecialFields = null,
+                    CommentsSpecialFields = [],
 
                     Contents = "This is a contents line\n[T:GF] Game Footage",
-                    ContentsSpecialFields = null,
+                    ContentsSpecialFields = [],
                 }
             };
 
@@ -126,9 +109,9 @@ namespace MPF.Frontend.Test.Tools
 
             // Validate the basics
             Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Null(info.CommonDiscInfo.CommentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
             Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Null(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
 
             // Split the values
             string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
