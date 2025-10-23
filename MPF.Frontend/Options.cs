@@ -246,13 +246,13 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, "DefaultSystem", RedumpSystem.IBMPCcompatible.LongName());
+                var valueString = GetStringSetting(Settings, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
                 var valueEnum = (valueString ?? string.Empty).ToRedumpSystem();
                 return valueEnum;
             }
             set
             {
-                Settings["DefaultSystem"] = value.LongName();
+                Settings["DefaultSystem"] = value.ToString();
             }
         }
 
