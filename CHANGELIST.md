@@ -51,6 +51,7 @@
 - Update RedumpLib to 1.8.0
 - Limit visibility of Compatible OS text box
 - Stop using long name for default system setting
+- Updated Polish translation
 
 ### 3.5.0 (2025-10-10)
 
