@@ -20,9 +20,9 @@
     <!-- Main Window -->
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">_Plik</system:String>
-    <system:String x:Key="ExitMenuItemString">_Załaduj</system:String>
-    <system:String x:Key="ToolsMenuString">_Dodatki</system:String>
-    <system:String x:Key="CheckDumpMenuItemString">_Sprawdź Dump</system:String>
+    <system:String x:Key="ExitMenuItemString">_Zakończ</system:String>
+    <system:String x:Key="ToolsMenuString">_Narzędzia</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">_Sprawdź dump</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">_Utwórz PS3 IRD</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Opcje</system:String>
     <system:String x:Key="DebugInfoWindowMenuItemString">Okno informacji _debugowania</system:String>
@@ -34,15 +34,15 @@
     <system:String x:Key="SystemMediaTypeLabelString">System / Typ nośnika</system:String>
     <system:String x:Key="NoSystemSelectedString">Nie wybrano systemu</system:String>
     <system:String x:Key="OutputPathLabelString">Ścieżka wyjściowa</system:String>
-    <system:String x:Key="DriveLetterLabelString">Litera dysku</system:String>
+    <system:String x:Key="DriveLetterLabelString">Litera napędu</system:String>
     <system:String x:Key="DriveSpeedLabelString">Prędkość napędu</system:String>
     <system:String x:Key="DumpingProgramLabelString">Program do dumpingu</system:String>
     <system:String x:Key="ParametersLabelString">Parametry</system:String>
     <!-- Controls Group Box -->
-    <system:String x:Key="ControlsGroupBoxString">Kontrolki</system:String>
+    <system:String x:Key="ControlsGroupBoxString">Sterowanie</system:String>
     <system:String x:Key="StartDumpingButtonString">Rozpocznij dumping</system:String>
     <system:String x:Key="StopDumpingButtonString">Zatrzymaj dumping</system:String>
-    <system:String x:Key="ScanButtonString">Skanuj dyski</system:String>
+    <system:String x:Key="ScanButtonString">Skanuj płyty</system:String>
     <system:String x:Key="UpdateLabelButtonString">Aktualizuj etykietę</system:String>
     <system:String x:Key="ProtectionScanButtonString">Skanuj zabezpieczenia</system:String>
     <!-- Log Output -->
@@ -53,7 +53,7 @@
     <!-- Options Window -->
     <system:String x:Key="OptionsTitleString">Opcje</system:String>
     <system:String x:Key="OptionsFirstRunTitleString">Witamy w MPF, odkryj opcje</system:String>
-    <system:String x:Key="OptionsRetrievalWarningString">Włączenie walidacji i pobierania informacji wymaga odpowiedzialności za poprawność danych w stosunku do faktycznego nośnika. Niektóre informacje mogą być oznaczone do weryfikacji jako przypomnienie, ale wszystkie dane powinny być poddane tej samej kontroli.</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">Jeśli zdecydujesz się włączyć opcję walidacji i pobierania informacji, jesteś odpowiedzialny za sprawdzenie, że wszystkie wprowadzone dane są zgodne z faktycznym nośnikiem. Niektóre informacje mogą być oznaczone do weryfikacji jako przypomnienie, ale wszystkie dane powinny być poddane tej samej kontroli.</system:String>
     <!-- General Tab -->
     <system:String x:Key="GeneralTabString">Ogólne</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Interfejs użytkownika</system:String>
@@ -79,7 +79,7 @@
     <!-- Dumping Tab -->
     <system:String x:Key="DumpingTabString">Dumping</system:String>
     <system:String x:Key="DumpingGroupBoxString">Dumping</system:String>
-    <system:String x:Key="ShowDiscInfoCheckBoxString">Pokaż informacje o dysku</system:String>
+    <system:String x:Key="ShowDiscInfoCheckBoxString">Pokaż informacje o płycie</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Pobierz wszystkie informacje</system:String>
     <system:String x:Key="EnableTabInputCheckBoxString">Włącz obsługę klawisza Tab</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Włącz kompatybilność z Redump</system:String>
@@ -92,11 +92,11 @@
     <system:String x:Key="LogCompressionLabelString">Kompresja logów:</system:String>
     <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Usuń niepotrzebne pliki</system:String>
     <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Utwórz PS3 IRD po dumpingu</system:String>
-    <system:String x:Key="ProtectionGroupBoxString">Ochrona</system:String>
+    <system:String x:Key="ProtectionGroupBoxString">Zabezpieczenia</system:String>
     <system:String x:Key="EnableProtectionScanCheckBoxString">Włącz skanowanie zabezpieczeń</system:String>
     <system:String x:Key="ScanArchiveContentsCheckBoxString">Skanuj zawartość archiwów</system:String>
     <system:String x:Key="IncludeDebugInformationCheckBoxString">Dołącz informacje debugowania</system:String>
-    <system:String x:Key="HideDriveLettersCheckBoxString">Ukryj litery dysków</system:String>
+    <system:String x:Key="HideDriveLettersCheckBoxString">Ukryj litery napędów</system:String>
     <system:String x:Key="DefaultSpeedsGroupBoxString">Domyślne prędkości</system:String>
     <!-- Programs Tab -->
     <system:String x:Key="ProgramsTabString">Programy</system:String>
@@ -136,7 +136,7 @@
     <system:String x:Key="CheckDumpTitleString">Sprawdź istniejący dump</system:String>
     <system:String x:Key="InputPathLabelString">Ścieżka wejściowa</system:String>
     <system:String x:Key="CheckDumpButtonString">Sprawdź dump</system:String>
-    <system:String x:Key="CheckDumpWarningString">Sprawdzenie nadpisze wszystkie istniejące pliki informacji o zgłoszeniu. Zrób kopie zapasowe, jeśli są potrzebne, przed wykonaniem sprawdzenia.</system:String>
+    <system:String x:Key="CheckDumpWarningString">Sprawdzenie nadpisze wszystkie istniejące pliki informacji zgłoszenia. Zrób kopie zapasowe, jeśli są potrzebne, przed wykonaniem sprawdzenia.</system:String>
 
     <!-- Create PS3 IRD Window -->
     <system:String x:Key="CreatePS3IRDTitleString">Utwórz PS3 IRD</system:String>
@@ -147,9 +147,9 @@
     <system:String x:Key="HexadecimalKeyLabelString">Klucz szesnastkowy</system:String>
     <system:String x:Key="KeyFilePathLabelString">Ścieżka pliku klucza</system:String>
     <system:String x:Key="KeyStatusLabelString">Status klucza</system:String>
-    <system:String x:Key="DiscIDExpanderString">Ręczne określenie ID dysku PS3</system:String>
-    <system:String x:Key="DiscIDLabelString">ID dysku</system:String>
-    <system:String x:Key="DiscIDStatusLabelString">Status ID dysku</system:String>
+    <system:String x:Key="DiscIDExpanderString">Ręczne określenie ID płyty PS3</system:String>
+    <system:String x:Key="DiscIDLabelString">ID płyty</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">Status ID płyty</system:String>
     <system:String x:Key="PICExpanderString">Ręczne określenie Permanent Information &#x26; Control (PIC)</system:String>
     <system:String x:Key="LayerbreakLabelString">Layerbreak (sektory)</system:String>
     <system:String x:Key="PICLabelString">PIC</system:String>
@@ -159,7 +159,7 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Informacje o nośniku</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ringcode</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ring Code</system:String>
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Informacje ogólne</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">Ogólne informacje o nośniku</system:String>
@@ -167,9 +167,9 @@
     <system:String x:Key="AlternativeTitleInputString">Alternatywny tytuł</system:String>
     <system:String x:Key="ForeignTitleNonLatinInputString">Tytuł obcy (niełaciński)</system:String>
     <system:String x:Key="AlternativeForeignTitleInputString">Alternatywny tytuł obcy</system:String>
-    <system:String x:Key="DiscNumberLetterInputString">Numer / litera dysku</system:String>
-    <system:String x:Key="DiscTitleInputString">Tytuł dysku</system:String>
-    <system:String x:Key="DiscTitleNonLatinInputString">Tytuł dysku (niełaciński)</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">Numer / litera płyty</system:String>
+    <system:String x:Key="DiscTitleInputString">Tytuł płyty</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">Tytuł płyty (niełaciński)</system:String>
     <system:String x:Key="CategoryLabelString">Kategoria</system:String>
     <system:String x:Key="RegionLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Języki</system:String>
@@ -211,7 +211,7 @@
 
     <!-- Eject Window -->
     <system:String x:Key="EjectTitleString">Wysuń</system:String>
-    <system:String x:Key="EjectMessageString">Można bezpiecznie wysunąć dysk</system:String>
+    <system:String x:Key="EjectMessageString">Można bezpiecznie wysunąć płytę</system:String>
 
     <!-- Ask Before Quit Window -->
     <system:String x:Key="QuitTitleString">Zakończ</system:String>
