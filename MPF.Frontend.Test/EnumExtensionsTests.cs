@@ -28,6 +28,7 @@ namespace MPF.Frontend.Test
         [InlineData(InterfaceLanguage.Spanish, "Español")]
         [InlineData(InterfaceLanguage.Swedish, "Svenska")]
         [InlineData(InterfaceLanguage.Ukrainian, "Українська")]
+        [InlineData(InterfaceLanguage.L337, "L337")]
         public void LongName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
         {
             string? actual = lang.LongName();
@@ -155,6 +156,7 @@ namespace MPF.Frontend.Test
         [InlineData(InterfaceLanguage.Spanish, "spa")]
         [InlineData(InterfaceLanguage.Swedish, "swe")]
         [InlineData(InterfaceLanguage.Ukrainian, "ukr")]
+        [InlineData(InterfaceLanguage.L337, "l37")]
         public void ShortName_InterfaceLanguage(InterfaceLanguage? lang, string? expected)
         {
             string? actual = lang.ShortName();
@@ -196,6 +198,7 @@ namespace MPF.Frontend.Test
         [InlineData("spa", InterfaceLanguage.Spanish)]
         [InlineData("swe", InterfaceLanguage.Swedish)]
         [InlineData("ukr", InterfaceLanguage.Ukrainian)]
+        [InlineData("l37", InterfaceLanguage.L337)]
         public void ToInterfaceLanguageTest(string? interfaceLanguage, InterfaceLanguage expected)
         {
             InterfaceLanguage actual = interfaceLanguage.ToInterfaceLanguage();
