@@ -7,7 +7,7 @@
 
     <!-- Common Elements -->
     <system:String x:Key="AcceptButtonString">Akceptuj</system:String>
-    <system:String x:Key="BrowseButtonString">Przeglądaj</system:String>
+    <system:String x:Key="BrowseButtonString">Wybierz</system:String>
     <system:String x:Key="CancelButtonString">Anuluj</system:String>
     <system:String x:Key="MinimizeMenuItemString">Minimalizuj</system:String>
     <system:String x:Key="CloseMenuItemString">Zamknij</system:String>
@@ -128,7 +128,7 @@
     <system:String x:Key="RetrievalGroupBoxString">Pobieranie</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Pobierz informacje o dopasowaniu</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
-    <system:String x:Key="UsernameLabelString">Nazwa użytkownika</system:String>
+    <system:String x:Key="UsernameLabelString">Użytkownika</system:String>
     <system:String x:Key="PasswordLabelString">Hasło</system:String>
     <system:String x:Key="TestLoginButtonString">Sprawdź</system:String>
 
@@ -159,7 +159,7 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Informacje o nośniku</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ring Code</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Przewodnik Ringcode</system:String>
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Informacje ogólne</system:String>
     <system:String x:Key="CommonMediaInfoGroupBoxString">Ogólne informacje o nośniku</system:String>

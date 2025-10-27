@@ -56,6 +56,7 @@
 - Try to add UI links to rolling release
 - Slight tweak to automatic UI links
 - Add hidden language (NovaAurora)
+- Fix langs
 
 ### 3.5.0 (2025-10-10)
 
