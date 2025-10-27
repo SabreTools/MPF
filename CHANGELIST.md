@@ -53,6 +53,7 @@
 - Stop using long name for default system setting
 - Updated Polish translation
 - Fix rolling tag
+- Try to add UI links to rolling release
 
 ### 3.5.0 (2025-10-10)
 
