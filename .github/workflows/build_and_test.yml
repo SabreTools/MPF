@@ -47,7 +47,10 @@ jobs:
         artifacts: "*.nupkg,*.snupkg,*.zip"
         body: 'Last built commit: ${{ github.sha }}
 
+            ## UI Builds
+
             [Windows x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net9.0-windows_win-x64_release.zip)
+
             [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net9.0-windows_win-x64_debug.zip)'
         name: 'Rolling Release'
         prerelease: True

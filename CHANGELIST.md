@@ -54,6 +54,7 @@
 - Updated Polish translation
 - Fix rolling tag
 - Try to add UI links to rolling release
+- Slight tweak to automatic UI links
 
 ### 3.5.0 (2025-10-10)
 
