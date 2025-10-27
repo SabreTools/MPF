@@ -55,6 +55,7 @@
 - Fix rolling tag
 - Try to add UI links to rolling release
 - Slight tweak to automatic UI links
+- Add hidden language (NovaAurora)
 
 ### 3.5.0 (2025-10-10)
 

@@ -91,6 +91,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Spanish => "Español",
                 InterfaceLanguage.Swedish => "Svenska",
                 InterfaceLanguage.Ukrainian => "Українська",
+                InterfaceLanguage.L337 => "L337",
 
                 _ => "Unknown",
             };
@@ -275,6 +276,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Spanish => "spa",
                 InterfaceLanguage.Swedish => "swe",
                 InterfaceLanguage.Ukrainian => "ukr",
+                InterfaceLanguage.L337 => "l37",
 
                 _ => "Unknown",
             };
@@ -336,6 +338,7 @@ namespace MPF.Frontend
                 "spa" or "spanish" or "español" => InterfaceLanguage.Spanish,
                 "swe" or "swedish" or "svenska" => InterfaceLanguage.Swedish,
                 "ukr" or "ukranian" or "українська" => InterfaceLanguage.Ukrainian,
+                "l37" or "l337" => InterfaceLanguage.L337,
 
                 _ => InterfaceLanguage.AutoDetect,
             };

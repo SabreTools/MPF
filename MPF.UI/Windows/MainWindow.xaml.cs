@@ -194,6 +194,7 @@ namespace MPF.UI.Windows
                 InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
                 InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
                 InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
+                InterfaceLanguage.L337 => new Uri("../Resources/Strings.37.xaml", UriKind.Relative),
                 _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
