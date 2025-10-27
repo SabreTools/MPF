@@ -60,7 +60,7 @@ To build for .NET 9.0, ensure that the [.NET 9.0 SDK](https://dotnet.microsoft.c
 **MPF.UI (Windows only):**
 
 ```bash
-dotnet build MPF/MPF.csproj --framework net9.0-windows --runtime [win-x86|win-x64]
+dotnet build MPF.UI/MPF.UI.csproj --framework net9.0-windows --runtime [win-x86|win-x64]
 ```
 
 **MPF.CLI (Windows, OSX, Linux):**

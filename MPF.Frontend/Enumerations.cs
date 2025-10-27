@@ -10,6 +10,7 @@ namespace MPF.Frontend
         /// </summary>
         AutoDetect = 0,
 
+        // Selectable languages (in Manual Window dropdown)
         English,
         French,
         German,
@@ -21,6 +22,9 @@ namespace MPF.Frontend
         Spanish,
         Swedish,
         Ukrainian,
+
+        // Hidden languages (not in Main Window dropdown)
+        L337,
     }
 
     /// <summary>
