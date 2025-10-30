@@ -1410,7 +1410,7 @@ namespace MPF.Processors
         /// <returns>Status of the LibCrypt data, if possible</returns>
         private static void GetLibCryptDetected(string basePath, out YesNo detected, out string? data)
         {
-            string subPath = basePath + ".sub";
+            string subPath = $"{basePath}.sub";
             if (!File.Exists(subPath))
             {
                 detected = YesNo.NULL;
@@ -1426,9 +1426,9 @@ namespace MPF.Processors
             }
 
             // Guard against false positives
-            if (File.Exists(basePath + "_subIntention.txt"))
+            if (File.Exists($"{basePath}_subIntention.txt"))
             {
-                string libCryptData = ProcessingTool.GetFullFile(basePath + "_subIntention.txt") ?? "";
+                string libCryptData = ProcessingTool.GetFullFile($"{basePath}_subIntention.txt") ?? "";
                 if (string.IsNullOrEmpty(libCryptData))
                 {
                     detected = YesNo.No;

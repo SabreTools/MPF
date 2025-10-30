@@ -57,10 +57,10 @@ namespace MPF.Processors
             }
 
             // Get BCA information, if available
-            info.Extras!.BCA = GetBCA(basePath + $"{basePath}.bca");
+            info.Extras!.BCA = GetBCA($"{basePath}.bca");
 
             // Get internal information
-            if (GetGameCubeWiiInformation(basePath + $"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
+            if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
             {
                 info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = internalName ?? string.Empty;
                 info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;

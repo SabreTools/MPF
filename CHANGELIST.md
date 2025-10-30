@@ -57,6 +57,7 @@
 - Slight tweak to automatic UI links
 - Add hidden language (NovaAurora)
 - Fix langs
+- Fix issues with path assembly
 
 ### 3.5.0 (2025-10-10)
 
