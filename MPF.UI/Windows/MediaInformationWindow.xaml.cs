@@ -220,25 +220,25 @@ namespace MPF.UI.Windows
                 PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
-            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets?.ClrMameProData))
+            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData))
                 HashData!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Size == null || submissionInfo.SizeAndChecksums.Size == 0)
+            if (submissionInfo.SizeAndChecksums.Size == 0)
                 HashDataSize!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.CRC32))
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.CRC32))
                 HashDataCRC!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.MD5))
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.MD5))
                 HashDataMD5!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums?.SHA1))
+            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.SHA1))
                 HashDataSHA1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak == null || submissionInfo.SizeAndChecksums.Layerbreak == 0)
+            if (submissionInfo.SizeAndChecksums.Layerbreak == 0)
                 HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak2 == null || submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
+            if (submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
                 HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums?.Layerbreak3 == null || submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
+            if (submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
                 HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.AntiModchip == null)
                 AntiModchip!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.TracksAndWriteOffsets?.OtherWriteOffsets == null)
+            if (submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets == null)
                 DiscOffset!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.DMIHash))
                 DMIHash!.Visibility = Visibility.Collapsed;
@@ -334,7 +334,7 @@ namespace MPF.UI.Windows
                 case DiscType.NintendoWiiOpticalDiscDL:
                 case DiscType.NintendoWiiUOpticalDiscSL:
                     // Quad-layer discs
-                    if (submissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
+                    if (submissionInfo?.SizeAndChecksums.Layerbreak3 != default(long))
                     {
                         L2Info!.Visibility = Visibility.Visible;
                         L3Info!.Visibility = Visibility.Visible;
@@ -365,7 +365,7 @@ namespace MPF.UI.Windows
                     }
 
                     // Triple-layer discs
-                    else if (submissionInfo?.SizeAndChecksums?.Layerbreak2 != default(long))
+                    else if (submissionInfo?.SizeAndChecksums.Layerbreak2 != default(long))
                     {
                         L2Info!.Visibility = Visibility.Visible;
 
@@ -390,7 +390,7 @@ namespace MPF.UI.Windows
                     }
 
                     // Double-layer discs
-                    else if (submissionInfo?.SizeAndChecksums?.Layerbreak != default(long))
+                    else if (submissionInfo?.SizeAndChecksums.Layerbreak != default(long))
                     {
                         L0Info!.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
                         L0MasteringRing!.Label = "Mastering Ring";

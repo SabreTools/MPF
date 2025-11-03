@@ -89,21 +89,24 @@ namespace MPF.Frontend.Tools
             if (options.IncludeArtifacts)
                 info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
-            // Add a placeholder for the logs link
-            info.CommonDiscInfo.CommentsSpecialFields![SiteCode.LogsLink] = "[Please provide a link to your logs here]";
-
             // Get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets!.ClrMameProData))
-                _ = await FillFromRedump(options, info, resultProgress);
+            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData))
+            {
+                bool filledInfo = await FillFromRedump(options, info, resultProgress);
+
+                // Add a placeholder for the logs link if not a verification
+                if (!filledInfo)
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
+            }
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrEmpty(info.SizeAndChecksums?.CRC32))
+            if (!string.IsNullOrEmpty(info.SizeAndChecksums.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels != null)
-                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.VolumeLabel] = volLabels;
+                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
             ProcessMediaType(info, mediaType, options.AddPlaceholders);
@@ -112,7 +115,7 @@ namespace MPF.Frontend.Tools
             ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
-            if (drive != null && system.SupportsAntiModchipScans() && info.CopyProtection!.AntiModchip == YesNo.NULL)
+            if (drive != null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
                 info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
@@ -132,7 +135,7 @@ namespace MPF.Frontend.Tools
 
                     var protectionString = ProtectionTool.FormatProtections(protections);
 
-                    info.CopyProtection!.Protection += protectionString;
+                    info.CopyProtection.Protection += protectionString;
                     info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);
                     resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
                 }
@@ -144,7 +147,7 @@ namespace MPF.Frontend.Tools
 
             // Set fields that may have automatic filling otherwise
             info.CommonDiscInfo.Category ??= DiscCategory.Games;
-            info.VersionAndEditions!.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+            info.VersionAndEditions.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
@@ -173,7 +176,6 @@ namespace MPF.Frontend.Tools
                 return false;
 
             // Set the current dumper based on username
-            info.DumpersAndStatus ??= new DumpersAndStatusSection();
             info.DumpersAndStatus.Dumpers = [options.RedumpUsername ?? "Anonymous User"];
             info.PartiallyMatchedIDs = [];
 
@@ -199,7 +201,7 @@ namespace MPF.Frontend.Tools
 
             // Loop through all of the hashdata to find matching IDs
             resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
-            var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
+            var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
             {
@@ -598,7 +600,7 @@ namespace MPF.Frontend.Tools
                 case MediaType.BluRay:
 
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums!.Layerbreak == default)
+                    if (info.SizeAndChecksums.Layerbreak == default)
                     {
                         info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -608,7 +610,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
-                    else if (info.SizeAndChecksums!.Layerbreak2 == default)
+                    else if (info.SizeAndChecksums.Layerbreak2 == default)
                     {
                         info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -622,7 +624,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a triple-layer disc
-                    else if (info.SizeAndChecksums!.Layerbreak3 == default)
+                    else if (info.SizeAndChecksums.Layerbreak3 == default)
                     {
                         info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -671,14 +673,14 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.Extras!.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
                 case MediaType.NintendoWiiUOpticalDisc:
 
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums!.Layerbreak == default)
+                    if (info.SizeAndChecksums.Layerbreak == default)
                     {
                         info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -702,7 +704,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.Extras!.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     break;
@@ -718,10 +720,10 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                    info.SizeAndChecksums!.CRC32 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.CRC32 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.MD5 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.SHA1 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.TracksAndWriteOffsets!.ClrMameProData = null;
+                    info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
 
@@ -755,19 +757,19 @@ namespace MPF.Frontend.Tools
                 case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category ??= DiscCategory.Video;
                     bool bee = PhysicalTool.GetBusEncryptionEnabled(drive);
-                    if (bee && string.IsNullOrEmpty(info.CopyProtection!.Protection))
+                    if (bee && string.IsNullOrEmpty(info.CopyProtection.Protection))
                         info.CopyProtection.Protection = "Bus encryption enabled flag set";
                     else if (bee)
-                        info.CopyProtection!.Protection += "\nBus encryption enabled flag set";
+                        info.CopyProtection.Protection += "\nBus encryption enabled flag set";
                     else
-                        info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     break;
 
                 case RedumpSystem.DVDVideo:
                 case RedumpSystem.HDDVDVideo:
                     info.CommonDiscInfo.Category ??= DiscCategory.Video;
-                    info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
@@ -851,13 +853,13 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields![SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
@@ -943,7 +945,7 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.Extras!.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
@@ -969,7 +971,7 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.CopyProtection!.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
 
@@ -1019,7 +1021,7 @@ namespace MPF.Frontend.Tools
             // Set the value
             string? value = valueFunc(drive);
             if (value != null)
-                info.CommonDiscInfo.CommentsSpecialFields![key] = value;
+                info.CommonDiscInfo.CommentsSpecialFields[key] = value;
         }
 
         /// <summary>
@@ -1062,7 +1064,7 @@ namespace MPF.Frontend.Tools
         private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
         {
             // If the version already exists, skip
-            if (!string.IsNullOrEmpty(info.VersionAndEditions!.Version))
+            if (!string.IsNullOrEmpty(info.VersionAndEditions.Version))
                 return;
 
             // Set the version

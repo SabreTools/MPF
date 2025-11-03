@@ -617,7 +617,7 @@ namespace MPF.Frontend
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
                 resultProgress.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
-                bool deleteSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums?.Layerbreak, submissionInfo?.SizeAndChecksums?.CRC32);
+                bool deleteSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums.Layerbreak, submissionInfo?.SizeAndChecksums.CRC32);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success("IRD created!"));
                 else

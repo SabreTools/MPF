@@ -35,14 +35,14 @@ namespace MPF.Processors
             // Get the Datafile information
             var datafile = GetDatafile(basePath);
             if (datafile != null)
-                info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+                info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Extract info based generically on MediaType
             switch (mediaType)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    info.TracksAndWriteOffsets!.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     break;
 
                 case MediaType.DVD:
@@ -55,7 +55,7 @@ namespace MPF.Processors
                     var firstRom = datafile?.Game?[0]?.Rom?[0];
                     if (firstRom != null)
                     {
-                        info.SizeAndChecksums!.Size = long.Parse(firstRom.Size ?? "0");
+                        info.SizeAndChecksums.Size = long.Parse(firstRom.Size ?? "0");
                         info.SizeAndChecksums.CRC32 = firstRom.CRC;
                         info.SizeAndChecksums.MD5 = firstRom.MD5;
                         info.SizeAndChecksums.SHA1 = firstRom.SHA1;

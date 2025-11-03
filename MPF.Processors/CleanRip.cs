@@ -41,12 +41,12 @@ namespace MPF.Processors
 
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile($"{basePath}.iso", $"{basePath}-dumpinfo.txt");
-            info.TracksAndWriteOffsets!.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+            info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the individual hash data, as per internal
             if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
-                info.SizeAndChecksums!.Size = size;
+                info.SizeAndChecksums.Size = size;
                 info.SizeAndChecksums.CRC32 = crc32;
                 info.SizeAndChecksums.MD5 = md5;
                 info.SizeAndChecksums.SHA1 = sha1;
@@ -57,16 +57,16 @@ namespace MPF.Processors
             }
 
             // Get BCA information, if available
-            info.Extras!.BCA = GetBCA($"{basePath}.bca");
+            info.Extras.BCA = GetBCA($"{basePath}.bca");
 
             // Get internal information
             if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
             {
-                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalName] = internalName ?? string.Empty;
-                info.CommonDiscInfo.CommentsSpecialFields![SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = internalName ?? string.Empty;
+                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
                 if (!redumpCompat)
                 {
-                    info.VersionAndEditions!.Version = version ?? info.VersionAndEditions.Version;
+                    info.VersionAndEditions.Version = version ?? info.VersionAndEditions.Version;
                     info.CommonDiscInfo.Region = region ?? info.CommonDiscInfo.Region;
                 }
             }

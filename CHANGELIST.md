@@ -58,6 +58,7 @@
 - Add hidden language (NovaAurora)
 - Fix langs
 - Fix issues with path assembly
+- Clean up submission info use and log link text
 
 ### 3.5.0 (2025-10-10)
 
