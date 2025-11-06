@@ -59,6 +59,7 @@
 - Fix langs
 - Fix issues with path assembly
 - Clean up submission info use and log link text
+- Update Redumper to build 658
 
 ### 3.5.0 (2025-10-10)
 

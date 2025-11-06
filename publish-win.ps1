@@ -71,6 +71,7 @@ function Download-Programs {
     $DL_MAP = @{
         # Aaru
         "Aaru_linux-arm64"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_arm64.tar.gz"
+        #"Aaru_linux-armhf"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_armhf.tar.gz"
         "Aaru_linux-x64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_amd64.tar.gz"
         "Aaru_osx-arm64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos-aarch64.zip"
         "Aaru_osx-x64"         = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos.zip"
@@ -88,13 +89,14 @@ function Download-Programs {
         "Creator_win-x64"      = "https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
 
         # Redumper
-        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-linux-arm64.zip"
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-linux-x64.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-macos-arm64.zip"
-        "Redumper_osx-x64"     = ""
-        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-arm64.zip"
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-x86.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-x64.zip"
+        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-arm64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-x64.zip"
+        #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-x86.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-macos-arm64.zip"
+        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-macos-x64.zip"
+        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-arm64.zip"
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-x86.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-x64.zip"
     }
 
     # Download and extract files
