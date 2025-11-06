@@ -82,12 +82,13 @@ function download_programs() {
 
     # Aaru
     DL_MAP["Aaru_linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_arm64.tar.gz"
+    #DL_MAP["Aaru_linux-armhf"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_armhf.tar.gz"
     DL_MAP["Aaru_linux-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_amd64.tar.gz"
     DL_MAP["Aaru_osx-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos-aarch64.zip"
     DL_MAP["Aaru_osx-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos.zip"
     DL_MAP["Aaru_win-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_aarch64.zip"
-    DL_MAP["Aaru_win-x86"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_x64.zip"
     DL_MAP["Aaru_win-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_x64.zip"
+    DL_MAP["Aaru_win-x86"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_x64.zip"
 
     # DiscImageCreator
     DL_MAP["Creator_linux-arm64"]=""
@@ -95,17 +96,18 @@ function download_programs() {
     DL_MAP["Creator_osx-arm64"]="https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
     DL_MAP["Creator_osx-x64"]="https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
     DL_MAP["Creator_win-arm64"]=""
-    DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
     DL_MAP["Creator_win-x64"]="https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
+    DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
 
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-linux-x64.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]=""
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-arm64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-x86.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b655/redumper-b655-windows-x64.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-x64.zip"
+    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b658/redumper-b658-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
