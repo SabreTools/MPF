@@ -60,6 +60,7 @@
 - Fix issues with path assembly
 - Clean up submission info use and log link text
 - Update Redumper to build 658
+- Pre-compress all skeletons for multi-track CDs
 
 ### 3.5.0 (2025-10-10)
 
