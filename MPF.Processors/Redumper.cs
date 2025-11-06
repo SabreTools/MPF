@@ -143,7 +143,8 @@ namespace MPF.Processors
                     // Get the track name from the matches
                     string trackName = match.Groups[1].Value;
                     trackName = Path.GetFileNameWithoutExtension(trackName);
-                    string trackPath = Path.Combine(Path.GetDirectoryName(basePath), trackName);
+                    string baseDir = Path.GetDirectoryName(basePath);
+                    string trackPath = Path.Combine(baseDir, trackName);
 
                     // Compress the skeleton if it exists
                     if (File.Exists($"{trackPath}.skeleton"))
