@@ -125,6 +125,33 @@ namespace MPF.Processors
             if (File.Exists($"{basePath}.state"))
                 _ = CompressZstandard($"{basePath}.state");
 
+            // Pre-compress all skeletons for multi-track CDs
+            if (File.Exists($"{basePath}.cue"))
+            {
+                string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+                foreach (string cueLine in cueLines)
+                {
+                    // Skip all non-FILE lines
+                    if (!cueLine.StartsWith("FILE"))
+                        continue;
+
+                    // Extract the information
+                    var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
+                    if (!match.Success || match.Groups.Count == 0)
+                        continue;
+
+                    // Get the track name from the matches
+                    string trackName = match.Groups[1].Value;
+                    trackName = Path.GetFileNameWithoutExtension(trackName);
+                    string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
+                    string trackPath = Path.Combine(baseDir, trackName);
+
+                    // Compress the skeleton if it exists
+                    if (File.Exists($"{trackPath}.skeleton"))
+                        _ = CompressZstandard($"{trackPath}.skeleton");
+                }
+            }
+
             // Extract info based generically on MediaType
             switch (mediaType)
             {
