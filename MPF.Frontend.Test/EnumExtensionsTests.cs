@@ -235,6 +235,7 @@ namespace MPF.Frontend.Test
         private static readonly RedumpSystem?[] _copyProtectionSystems =
         [
             RedumpSystem.AppleMacintosh,
+            RedumpSystem.DVDVideo,
             RedumpSystem.EnhancedCD ,
             RedumpSystem.IBMPCcompatible,
             RedumpSystem.PalmOS,
