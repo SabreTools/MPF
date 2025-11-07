@@ -520,6 +520,7 @@ namespace MPF.Frontend
             return system switch
             {
                 RedumpSystem.AppleMacintosh => true,
+                RedumpSystem.DVDVideo => true,
                 RedumpSystem.EnhancedCD => true,
                 RedumpSystem.IBMPCcompatible => true,
                 RedumpSystem.PalmOS => true,

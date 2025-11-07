@@ -61,6 +61,7 @@
 - Clean up submission info use and log link text
 - Update Redumper to build 658
 - Pre-compress all skeletons for multi-track CDs
+- Add DVD-Video to list of copy protection scanning systems
 
 ### 3.5.0 (2025-10-10)
 
