@@ -66,6 +66,7 @@
 - Use dated default output filenames
 - Update packages
 - Scan disc image if not multi-track
+- Scan multi-track images for protection
 
 ### 3.5.0 (2025-10-10)
 

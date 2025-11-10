@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 #endif
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
@@ -127,40 +128,11 @@ namespace MPF.Frontend.Tools
             {
                 resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
 
-                Dictionary<string, List<string>>? protections = null;
                 try
                 {
+                    Dictionary<string, List<string>>? protections = null;
                     if (options.ScanForProtection)
-                    {
-                        // Scan the mounted drive path
-                        if (drive?.Name != null)
-                            protections = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, protectionProgress);
-
-                        // Scan the disc image, if possible
-                        Dictionary<string, List<string>> imageProtections = [];
-                        if (File.Exists($"{basePath}.iso"))
-                        {
-                            imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
-                        }
-                        else if (File.Exists($"{basePath}.bin"))
-                        {
-                            imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
-                        }
-                        // TODO: Add scanning for multi-track images based on cue parsing
-
-                        // Add image protections, if any exist
-                        if (imageProtections.Count > 0)
-                        {
-                            protections = [];
-                            foreach (var kvp in imageProtections)
-                            {
-                                if (!protections.ContainsKey(kvp.Key))
-                                    protections[kvp.Key] = [];
-
-                                protections[kvp.Key].AddRange(kvp.Value);
-                            }
-                        }
-                    }
+                        protections = await GetProtections(basePath, drive, options, protectionProgress);
 
                     var protectionString = ProtectionTool.FormatProtections(protections);
 
@@ -1098,6 +1070,86 @@ namespace MPF.Frontend.Tools
 
             // Set the version
             info.VersionAndEditions.Version = valueFunc(drive) ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Get the protections for a disc based on the mounted path and disc image
+        /// </summary>
+        private async static Task<Dictionary<string, List<string>>> GetProtections(string basePath,
+            Drive? drive,
+            Options options,
+            IProgress<ProtectionProgress>? protectionProgress = null)
+        {
+            // Setup the output protections dictionary
+            Dictionary<string, List<string>> protections = [];
+
+            // Scan the mounted drive path
+            if (drive?.Name != null)
+                protections = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+
+            // Scan the disc image, if possible
+            Dictionary<string, List<string>> imageProtections = [];
+            if (File.Exists($"{basePath}.iso"))
+            {
+                imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
+            }
+            else if (File.Exists($"{basePath}.bin"))
+            {
+                imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
+            }
+            else if (File.Exists($"{basePath}.cue"))
+            {
+                string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+                foreach (string cueLine in cueLines)
+                {
+                    // Skip all non-FILE lines
+                    if (!cueLine.StartsWith("FILE"))
+                        continue;
+
+                    // Extract the information
+                    var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
+                    if (!match.Success || match.Groups.Count == 0)
+                        continue;
+
+                    // Get the track name from the matches
+                    string trackName = match.Groups[1].Value;
+                    trackName = Path.GetFileNameWithoutExtension(trackName);
+                    string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
+                    string trackPath = Path.Combine(baseDir, trackName);
+
+                    // Scan the track for protections, if it exists
+                    if (File.Exists($"{trackPath}.bin"))
+                    {
+                        var trackProtections = await ProtectionTool.RunProtectionScanOnImage($"{trackPath}.bin", options, protectionProgress);
+
+                        // Add track protections, if any exist
+                        if (trackProtections.Count > 0)
+                        {
+                            foreach (var kvp in trackProtections)
+                            {
+                                if (!imageProtections.ContainsKey(kvp.Key))
+                                    imageProtections[kvp.Key] = [];
+
+                                imageProtections[kvp.Key].AddRange(kvp.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Add image protections, if any exist
+            if (imageProtections.Count > 0)
+            {
+                foreach (var kvp in imageProtections)
+                {
+                    if (!protections.ContainsKey(kvp.Key))
+                        protections[kvp.Key] = [];
+
+                    protections[kvp.Key].AddRange(kvp.Value);
+                }
+            }
+
+            return protections;
         }
 
         /// <summary>
