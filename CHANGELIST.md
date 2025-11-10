@@ -64,6 +64,7 @@
 - Add DVD-Video to list of copy protection scanning systems
 - Update Redumper to build 660
 - Use dated default output filenames
+- Update packages
 
 ### 3.5.0 (2025-10-10)
 
