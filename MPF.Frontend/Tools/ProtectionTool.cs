@@ -66,6 +66,69 @@ namespace MPF.Frontend.Tools
         ];
 
         /// <summary>
+        /// Run comprehensive protection scans based on both the
+        /// physical media as well as the image
+        /// </summary>
+        /// <param name="basePath">Base output image path</param>
+        /// <param name="drive">Drive object representing the current drive</param>
+        /// <param name="options">Options object that determines what to scan</param>
+        /// <param name="progress">Optional progress callback</param>
+        public async static Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
+            Drive? drive,
+            Options options,
+            IProgress<ProtectionProgress>? protectionProgress = null)
+        {
+            // Setup the output protections dictionary
+            Dictionary<string, List<string>> protections = [];
+
+            // Scan the mounted drive path
+            if (drive?.Name != null)
+                protections = await RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+
+            // Scan the disc image, if possible
+            if (File.Exists($"{basePath}.iso"))
+            {
+                var imageProtections = await RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
+                MergeDictionaries(protections, imageProtections);
+            }
+            else if (File.Exists($"{basePath}.bin"))
+            {
+                var imageProtections = await RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
+                MergeDictionaries(protections, imageProtections);
+            }
+            else if (File.Exists($"{basePath}.cue"))
+            {
+                string[] cueLines = File.ReadAllLines($"{basePath}.cue");
+                foreach (string cueLine in cueLines)
+                {
+                    // Skip all non-FILE lines
+                    if (!cueLine.StartsWith("FILE"))
+                        continue;
+
+                    // Extract the information
+                    var match = Regex.Match(cueLine, @"FILE ""(.*?)"" BINARY");
+                    if (!match.Success || match.Groups.Count == 0)
+                        continue;
+
+                    // Get the track name from the matches
+                    string trackName = match.Groups[1].Value;
+                    trackName = Path.GetFileNameWithoutExtension(trackName);
+                    string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
+                    string trackPath = Path.Combine(baseDir, trackName);
+
+                    // Scan the track for protections, if it exists
+                    if (File.Exists($"{trackPath}.bin"))
+                    {
+                        var trackProtections = await RunProtectionScanOnImage($"{trackPath}.bin", options, protectionProgress);
+                        MergeDictionaries(protections, trackProtections);
+                    }
+                }
+            }
+
+            return protections;
+        }
+
+        /// <summary>
         /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
@@ -119,7 +182,7 @@ namespace MPF.Frontend.Tools
 #endif
             {
                 var scanner = new Scanner(
-                    false, // Disable extracting disc images for now
+                    scanArchives: false, // Disable extracting disc images for now
                     scanContents: false, // Disabled for image scanning
                     scanPaths: false, // Disabled for image scanning
                     scanSubdirectories: false, // Disabled for image scanning
@@ -592,6 +655,31 @@ namespace MPF.Frontend.Tools
             // Sort and return the protections
             foundProtections.Sort();
             return string.Join(", ", [.. foundProtections]);
+        }
+
+        /// <summary>
+        /// Merge two dictionaries together based on keys
+        /// </summary>
+        /// <param name="original">Source dictionary to add to</param>
+        /// <param name="add">Second dictionary to add from</param>
+        private static void MergeDictionaries(Dictionary<string, List<string>> original, Dictionary<string, List<string>> add)
+        {
+            // Ignore if there are no values to append
+            if (add.Count == 0)
+                return;
+
+            // Loop through and add from the new dictionary
+            foreach (var kvp in add)
+            {
+                // Ignore empty values
+                if (kvp.Value.Count == 0)
+                    continue;
+
+                if (!original.ContainsKey(kvp.Key))
+                    original[kvp.Key] = [];
+
+                original[kvp.Key].AddRange(kvp.Value);
+            }
         }
     }
 }

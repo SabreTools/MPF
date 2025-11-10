@@ -67,6 +67,7 @@
 - Update packages
 - Scan disc image if not multi-track
 - Scan multi-track images for protection
+- Move and rename new protection scan method
 
 ### 3.5.0 (2025-10-10)
 
