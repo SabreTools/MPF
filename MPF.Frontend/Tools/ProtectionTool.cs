@@ -102,6 +102,42 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
+        /// Run protection scan on a disc image
+        /// </summary>
+        /// <param name="image">Image path to scan for protection</param>
+        /// <param name="options">Options object that determines what to scan</param>
+        /// <param name="progress">Optional progress callback</param>
+        /// <returns>Set of all detected copy protections with an optional error string</returns>
+        public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnImage(string image,
+            Options options,
+            IProgress<ProtectionProgress>? progress = null)
+        {
+#if NET40
+            var found = await Task.Factory.StartNew(() =>
+#else
+            var found = await Task.Run(() =>
+#endif
+            {
+                var scanner = new Scanner(
+                    false, // Disable extracting disc images for now
+                    scanContents: false, // Disabled for image scanning
+                    scanPaths: false, // Disabled for image scanning
+                    scanSubdirectories: false, // Disabled for image scanning
+                    options.IncludeDebugProtectionInformation,
+                    progress);
+
+                return scanner.GetProtections(image);
+            });
+
+            // If nothing was returned, return
+            if (found == null || found.Count == 0)
+                return [];
+
+            // Return the filtered set of protections
+            return found;
+        }
+
+        /// <summary>
         /// Format found protections to a deduplicated, ordered string
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
@@ -124,7 +160,7 @@ namespace MPF.Frontend.Tools
             {
                 if (value.Count == 0)
                     continue;
-                
+
                 foreach (var prot in value)
                 {
                     if (!protectionValues.Contains(prot))
@@ -137,7 +173,7 @@ namespace MPF.Frontend.Tools
                 .Distinct()
                 .ToList();
 #endif
-            
+
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(protectionValues);
             if (string.IsNullOrEmpty(protectionString))
@@ -427,7 +463,7 @@ namespace MPF.Frontend.Tools
                     .FindAll(p => p != "SafeDisc 2+");
                 }
 
-                // Best case for SafeDisc 1.X: A full SafeDisc version is found that isn't part of a version range. 
+                // Best case for SafeDisc 1.X: A full SafeDisc version is found that isn't part of a version range.
                 else if (foundProtections.Exists(p => Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$", RegexOptions.Compiled)
                         && !Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)))
                 {

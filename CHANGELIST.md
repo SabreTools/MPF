@@ -65,6 +65,7 @@
 - Update Redumper to build 660
 - Use dated default output filenames
 - Update packages
+- Scan disc image if not multi-track
 
 ### 3.5.0 (2025-10-10)
 

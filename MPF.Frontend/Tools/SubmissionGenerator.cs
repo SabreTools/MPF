@@ -130,8 +130,37 @@ namespace MPF.Frontend.Tools
                 Dictionary<string, List<string>>? protections = null;
                 try
                 {
-                    if (options.ScanForProtection && drive?.Name != null)
-                        protections = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+                    if (options.ScanForProtection)
+                    {
+                        // Scan the mounted drive path
+                        if (drive?.Name != null)
+                            protections = await ProtectionTool.RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+
+                        // Scan the disc image, if possible
+                        Dictionary<string, List<string>> imageProtections = [];
+                        if (File.Exists($"{basePath}.iso"))
+                        {
+                            imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
+                        }
+                        else if (File.Exists($"{basePath}.bin"))
+                        {
+                            imageProtections = await ProtectionTool.RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
+                        }
+                        // TODO: Add scanning for multi-track images based on cue parsing
+
+                        // Add image protections, if any exist
+                        if (imageProtections.Count > 0)
+                        {
+                            protections = [];
+                            foreach (var kvp in imageProtections)
+                            {
+                                if (!protections.ContainsKey(kvp.Key))
+                                    protections[kvp.Key] = [];
+
+                                protections[kvp.Key].AddRange(kvp.Value);
+                            }
+                        }
+                    }
 
                     var protectionString = ProtectionTool.FormatProtections(protections);
 
