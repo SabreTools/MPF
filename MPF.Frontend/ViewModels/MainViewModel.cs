@@ -1392,9 +1392,9 @@ namespace MPF.Frontend.ViewModels
             string programShort = program == "DiscImageCreator" ? "DIC" : program;
             if (string.IsNullOrEmpty(programShort))
                 programShort = "Unknown Program";
-            string label = GetFormattedVolumeLabel(_currentDrive) ?? "track";
+            string label = GetFormattedVolumeLabel(_currentDrive) ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             if (string.IsNullOrEmpty(label))
-                label = "track";
+                label = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string date = DateTime.Today.ToString("yyyyMMdd");
             if (string.IsNullOrEmpty(date))
                 date = "UNKNOWN";
@@ -1429,7 +1429,7 @@ namespace MPF.Frontend.ViewModels
             // Get path pieces that are used in all branches
             string defaultOutputPath = Options.DefaultOutputPath ?? "ISO";
             string extension = _environment?.GetDefaultExtension(CurrentMediaType) ?? ".bin";
-            string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? "track";
+            string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
 
             // If no path exists, set one using default values
@@ -1997,7 +1997,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs
         /// If no volume label present, use PSX or PS2 serial if valid
-        /// Otherwise, use "track" as volume label
+        /// Otherwise, use "track" with current datetime as volume label
         /// </summary>
         private static string? GetFormattedVolumeLabel(Drive? drive)
         {
@@ -2016,7 +2016,7 @@ namespace MPF.Frontend.ViewModels
                 case RedumpSystem.SonyPlayStation:
                 case RedumpSystem.SonyPlayStation2:
                     string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
-                    volumeLabel ??= ps12Serial ?? "track";
+                    volumeLabel ??= ps12Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
@@ -2024,7 +2024,7 @@ namespace MPF.Frontend.ViewModels
                     if (volumeLabel == "PS3VOLUME")
                         volumeLabel = ps3Serial ?? volumeLabel;
                     else
-                        volumeLabel ??= ps3Serial ?? "track";
+                        volumeLabel ??= ps3Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
@@ -2032,7 +2032,7 @@ namespace MPF.Frontend.ViewModels
                     if (volumeLabel == "PS4VOLUME")
                         volumeLabel = ps4Serial ?? volumeLabel;
                     else
-                        volumeLabel ??= ps4Serial ?? "track";
+                        volumeLabel ??= ps4Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
@@ -2040,11 +2040,11 @@ namespace MPF.Frontend.ViewModels
                     if (volumeLabel == "PS5VOLUME")
                         volumeLabel = ps5Serial ?? volumeLabel;
                     else
-                        volumeLabel ??= ps5Serial ?? "track";
+                        volumeLabel ??= ps5Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
                 default:
-                    volumeLabel ??= "track";
+                    volumeLabel ??= $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
             }
 

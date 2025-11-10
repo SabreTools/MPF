@@ -63,6 +63,7 @@
 - Pre-compress all skeletons for multi-track CDs
 - Add DVD-Video to list of copy protection scanning systems
 - Update Redumper to build 660
+- Use dated default output filenames
 
 ### 3.5.0 (2025-10-10)
 

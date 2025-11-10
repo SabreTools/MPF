@@ -312,11 +312,11 @@ namespace MPF.UI.Windows
             // Get the current path, if possible
             string currentPath = MainViewModel.OutputPath;
             if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.DefaultOutputPath))
-                currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, "track.bin");
+                currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
             else if (string.IsNullOrEmpty(currentPath))
-                currentPath = "track.bin";
+                currentPath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
             if (string.IsNullOrEmpty(currentPath))
-                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, "track.bin");
+                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory!, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
 
             // Get the full path
             currentPath = Path.GetFullPath(currentPath);
@@ -588,7 +588,7 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Build the about text 
+        /// Build the about text
         /// </summary>
         /// <returns></returns>
         public string CreateAboutText()

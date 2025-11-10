@@ -146,9 +146,9 @@ namespace MPF.CLI.Features
             }
 
             // Ensure we have the values we need
-            if (CustomParams == null && (DevicePath == null || FilePath == null))
+            if (CustomParams == null && DevicePath == null)
             {
-                Console.Error.WriteLine("Both a device path and file path need to be supplied, exiting...");
+                Console.Error.WriteLine("Either custom parameters or a device path need to be provided, exiting...");
                 return false;
             }
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
@@ -160,6 +160,12 @@ namespace MPF.CLI.Features
             }
 
             // Normalize the file path
+            if (DevicePath != null && FilePath == null)
+            {
+                FilePath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+                if (Options.DefaultOutputPath != null)
+                    FilePath = Path.Combine(Options.DefaultOutputPath, FilePath);
+            }
             if (FilePath != null)
                 FilePath = FrontendTool.NormalizeOutputPaths(FilePath, getFullPath: true);
 
@@ -247,7 +253,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("-t, --mediatype <mediatype>    Set media type for dumping (Required for DIC)");
             Console.WriteLine("-d, --device <devicepath>      Physical drive path (Required if no custom parameters set)");
             Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
-            Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Required if no custom parameters set)");
+            Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Recommended, uses defaults otherwise)");
             Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
             Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
             Console.WriteLine();
@@ -259,7 +265,7 @@ namespace MPF.CLI.Features
 
             Console.WriteLine("Custom dumping parameters, if used, will fully replace the default parameters.");
             Console.WriteLine("All dumping parameters need to be supplied if doing this.");
-            Console.WriteLine("Otherwise, both a drive path and output file path are required.");
+            Console.WriteLine("Otherwise, a drive path is required.");
             Console.WriteLine();
 
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");

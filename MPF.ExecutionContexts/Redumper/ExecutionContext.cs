@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -502,7 +503,7 @@ namespace MPF.ExecutionContexts.Redumper
 
             // If the image name was not set, set it with a default value
             if (string.IsNullOrEmpty((_inputs[FlagStrings.ImageName] as StringInput)?.Value))
-                (_inputs[FlagStrings.ImageName] as StringInput)?.SetValue("track");
+                (_inputs[FlagStrings.ImageName] as StringInput)?.SetValue($"track_{DateTime.Now:yyyyMMdd-HHmm}");
 
             return true;
         }
