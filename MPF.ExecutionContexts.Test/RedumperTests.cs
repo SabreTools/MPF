@@ -27,10 +27,10 @@ namespace MPF.ExecutionContexts.Test
         }
 
         #endregion
-    
+
         #region Default Values
 
-        private static Dictionary<string, string?> AllOptions = new()
+        private static readonly Dictionary<string, string?> AllOptions = new()
         {
             [SettingConstants.EnableVerbose] = "true",
             [SettingConstants.LeadinRetryCount] = "1000",

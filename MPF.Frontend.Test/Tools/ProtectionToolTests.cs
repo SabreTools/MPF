@@ -661,7 +661,7 @@ namespace MPF.Frontend.Test.Tools
                 throw new ArgumentException("Invalid skip value", nameof(skip));
 
             // The list is in order of preference
-            protections = protections.Skip(skip).ToList();
+            protections = [.. protections.Skip(skip)];
 
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);
@@ -711,7 +711,7 @@ namespace MPF.Frontend.Test.Tools
                 throw new ArgumentException("Invalid skip value", nameof(skip));
 
             // The list is in order of preference
-            protections = protections.Skip(skip).ToList();
+            protections = [.. protections.Skip(skip)];
 
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(expected, sanitized);
@@ -770,7 +770,7 @@ namespace MPF.Frontend.Test.Tools
                 throw new ArgumentException("Invalid skip value", nameof(skip));
 
             // The list is in order of preference
-            protections = protections.Skip(skip).ToList();
+            protections = [.. protections.Skip(skip)];
 
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);

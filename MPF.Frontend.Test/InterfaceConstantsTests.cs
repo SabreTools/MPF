@@ -18,7 +18,7 @@ namespace MPF.Frontend.Test
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
             var actual = InterfaceConstants.GetSpeedsForMediaType(mediaType);
-            Assert.Equal(maxExpected, actual[actual.Count - 1]);
+            Assert.Equal(maxExpected, actual[^1]);
         }
     }
 }

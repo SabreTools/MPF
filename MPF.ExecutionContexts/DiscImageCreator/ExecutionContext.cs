@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using SabreTools.RedumpLib.Data;
 
@@ -441,7 +440,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 if (DrivePath != null)
                 {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    if (DrivePath.Contains(' '))
+#else
                     if (DrivePath.Contains(" "))
+#endif
                         parameters.Append($"\"{DrivePath}\" ");
                     else
                         parameters.Append($"{DrivePath} ");

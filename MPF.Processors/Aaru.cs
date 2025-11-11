@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.CueSheets;
 using SabreTools.Data.Models.Logiqx;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Schemas;
 #if NET462_OR_GREATER || NETCOREAPP
@@ -408,8 +407,8 @@ namespace MPF.Processors
                     else
                     {
                         // Default if index data missing from sidecar
-                        cueTrack.Indices = new CueIndex[]
-                        {
+                        cueTrack.Indices =
+                        [
                             new()
                             {
                                 Index = 1,
@@ -417,7 +416,7 @@ namespace MPF.Processors
                                 Seconds = 0,
                                 Frames = 0,
                             },
-                        };
+                        ];
                     }
 
                     // Add the track to the file
@@ -1352,7 +1351,7 @@ namespace MPF.Processors
                         {
                             foreach (ChecksumType checksum in security.Checksums)
                             {
-                            // Only CRC is collected
+                                // Only CRC is collected
                                 if (checksum.type == ChecksumTypeType.crc32)
                                 {
                                     // TODO: Validate correctness for all 3 fields

@@ -59,7 +59,7 @@ namespace MPF.Processors.OutputFiles
             // Ensure the directory exists
             if (!Directory.Exists(outputDirectory))
                 return false;
-            
+
             foreach (string filename in Filenames)
             {
                 // Check for invalid filenames

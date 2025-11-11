@@ -42,7 +42,7 @@ namespace MPF.ExecutionContexts.Test
 
         #region Default Values
 
-        private static Dictionary<string, string?> AllOptions = new()
+        private static readonly Dictionary<string, string?> AllOptions = new()
         {
             [SettingConstants.DVDRereadCount] = "1000",
             [SettingConstants.MultiSectorRead] = "true",

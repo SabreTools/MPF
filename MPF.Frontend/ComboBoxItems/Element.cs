@@ -17,7 +17,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// Allow elements to be used as their internal enum type
         /// </summary>
         /// <param name="item"></param>
-        public static implicit operator TEnum? (Element<TEnum> item) => item?.Data;
+        public static implicit operator TEnum?(Element<TEnum> item) => item?.Data;
 
         /// <inheritdoc/>
         public string Name => EnumExtensions.GetLongName(Data);

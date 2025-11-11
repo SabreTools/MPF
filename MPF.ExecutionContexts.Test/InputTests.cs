@@ -20,7 +20,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", new string[] { "flag" }, 0, true, true)]
         public void FlagInputTest(string name, string[] parts, int index, bool success, bool expected)
         {
-            FlagInput input = new FlagInput(name);
+            var input = new FlagInput(name);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -55,7 +55,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=false" }, 0, true, false)]
         public void BooleanInputTest(string name, bool required, string[] parts, int index, bool success, bool? expected)
         {
-            BooleanInput input = new BooleanInput(name, required);
+            var input = new BooleanInput(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -90,7 +90,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (sbyte)-1)]
         public void Int8InputTest(string name, bool required, string[] parts, int index, bool success, sbyte? expected)
         {
-            Int8Input input = new Int8Input(name, required);
+            var input = new Int8Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -123,7 +123,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (byte)1)]
         public void UInt8InputTest(string name, bool required, string[] parts, int index, bool success, byte? expected)
         {
-            UInt8Input input = new UInt8Input(name, required);
+            var input = new UInt8Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -158,7 +158,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (short)-1)]
         public void Int16InputTest(string name, bool required, string[] parts, int index, bool success, short? expected)
         {
-            Int16Input input = new Int16Input(name, required);
+            var input = new Int16Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -191,7 +191,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (ushort)1)]
         public void UInt16InputTest(string name, bool required, string[] parts, int index, bool success, ushort? expected)
         {
-            UInt16Input input = new UInt16Input(name, required);
+            var input = new UInt16Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -226,7 +226,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (int)-1)]
         public void Int32InputTest(string name, bool required, string[] parts, int index, bool success, int? expected)
         {
-            Int32Input input = new Int32Input(name, required);
+            var input = new Int32Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -259,7 +259,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (uint)1)]
         public void UInt32InputTest(string name, bool required, string[] parts, int index, bool success, uint? expected)
         {
-            UInt32Input input = new UInt32Input(name, required);
+            var input = new UInt32Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -294,7 +294,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (long)-1)]
         public void Int64InputTest(string name, bool required, string[] parts, int index, bool success, long? expected)
         {
-            Int64Input input = new Int64Input(name, required);
+            var input = new Int64Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -327,7 +327,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (ulong)1)]
         public void UInt64InputTest(string name, bool required, string[] parts, int index, bool success, ulong? expected)
         {
-            UInt64Input input = new UInt64Input(name, required);
+            var input = new UInt64Input(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);
@@ -355,7 +355,7 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=value" }, 0, true, "value")]
         public void StringInputTest(string name, bool required, string[] parts, int index, bool success, string? expected)
         {
-            StringInput input = new StringInput(name, required);
+            var input = new StringInput(name, required);
             bool actual = input.Process(parts, ref index);
 
             Assert.Equal(success, actual);

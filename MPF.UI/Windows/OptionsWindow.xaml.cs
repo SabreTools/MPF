@@ -101,7 +101,11 @@ namespace MPF.UI.Windows
                 return;
 
             // Strips button prefix to obtain the setting name
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            string pathSettingName = button.Name[..button.Name.IndexOf("Button")];
+#else
             string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
+#endif
 
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
@@ -137,8 +141,7 @@ namespace MPF.UI.Windows
                     {
                         OptionsViewModel.Options[pathSettingName] = path;
                         var textBox = TextBoxForPathSetting(parent, pathSettingName);
-                        if (textBox != null)
-                            textBox.Text = path;
+                        textBox?.Text = path;
                     }
                     else
                     {
@@ -194,7 +197,7 @@ namespace MPF.UI.Windows
                 CustomMessageBox.Show(this, message, (string)System.Windows.Application.Current.FindResource("ErrorMessageString"), MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        
+
             return success;
         }
 

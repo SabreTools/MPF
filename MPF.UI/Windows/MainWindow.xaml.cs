@@ -12,7 +12,6 @@ using MPF.Frontend;
 using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
-using MPF.UI.UserControls;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
@@ -132,9 +131,11 @@ namespace MPF.UI.Windows
             MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
 
             // Pass translation strings to MainViewModel
-            var translationStrings = new Dictionary<string, string>();
-            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
-            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
+            var translationStrings = new Dictionary<string, string>
+            {
+                ["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString"),
+                ["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString")
+            };
             MainViewModel.TranslateStrings(translationStrings);
 
             // Set interface language according to the options
@@ -175,35 +176,41 @@ namespace MPF.UI.Windows
             // Set baseline language (English), required as some translations may not translate all strings
             if (lang != InterfaceLanguage.English)
             {
-                var baselineDictionary = new ResourceDictionary();
-                baselineDictionary.Source = new Uri("../Resources/Strings.xaml", UriKind.Relative);
+                var baselineDictionary = new ResourceDictionary
+                {
+                    Source = new Uri("../Resources/Strings.xaml", UriKind.Relative)
+                };
                 Application.Current.Resources.MergedDictionaries.Add(baselineDictionary);
             }
 
-            var dictionary = new ResourceDictionary();
-            dictionary.Source = lang switch
+            var dictionary = new ResourceDictionary
             {
-                InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
-                InterfaceLanguage.French => new Uri("../Resources/Strings.fr.xaml", UriKind.Relative),
-                InterfaceLanguage.German => new Uri("../Resources/Strings.de.xaml", UriKind.Relative),
-                InterfaceLanguage.Italian => new Uri("../Resources/Strings.it.xaml", UriKind.Relative),
-                InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
-                InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
-                InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
-                InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
-                InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
-                InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
-                InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
-                InterfaceLanguage.L337 => new Uri("../Resources/Strings.37.xaml", UriKind.Relative),
-                _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                Source = lang switch
+                {
+                    InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                    InterfaceLanguage.French => new Uri("../Resources/Strings.fr.xaml", UriKind.Relative),
+                    InterfaceLanguage.German => new Uri("../Resources/Strings.de.xaml", UriKind.Relative),
+                    InterfaceLanguage.Italian => new Uri("../Resources/Strings.it.xaml", UriKind.Relative),
+                    InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
+                    InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
+                    InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                    InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
+                    InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
+                    InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
+                    InterfaceLanguage.Ukrainian => new Uri("../Resources/Strings.uk.xaml", UriKind.Relative),
+                    InterfaceLanguage.L337 => new Uri("../Resources/Strings.37.xaml", UriKind.Relative),
+                    _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
+                }
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
             // Update the labels in MainViewModel
-            var translationStrings = new Dictionary<string, string>();
-            translationStrings["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString");
-            translationStrings["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString");
-            translationStrings["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString");
+            var translationStrings = new Dictionary<string, string>
+            {
+                ["StartDumpingButtonString"] = (string)Application.Current.FindResource("StartDumpingButtonString"),
+                ["StopDumpingButtonString"] = (string)Application.Current.FindResource("StopDumpingButtonString"),
+                ["NoSystemSelectedString"] = (string)Application.Current.FindResource("NoSystemSelectedString")
+            };
             MainViewModel.TranslateStrings(translationStrings);
         }
 
@@ -547,10 +554,14 @@ namespace MPF.UI.Windows
                 return false;
 
             if (color!.Length == 7 && color[0] == '#')
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                color = color[1..];
+#else
                 color = color.Substring(1);
+#endif
 
-            if (color.Length != 6)
-                return false;
+                if (color.Length != 6)
+                    return false;
 
             for (int i = 0; i < color.Length; i++)
             {
@@ -640,8 +651,7 @@ namespace MPF.UI.Windows
                     // Uncheck all language menu items
                     foreach (var item in LanguagesMenuItem.Items)
                     {
-                        var menuItem = item as MenuItem;
-                        if (menuItem != null && menuItem.IsCheckable)
+                        if (item is MenuItem menuItem && menuItem.IsCheckable)
                             menuItem.IsChecked = false;
                     }
                 }

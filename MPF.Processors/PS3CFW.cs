@@ -2,7 +2,6 @@
 using System.IO;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -125,7 +124,11 @@ namespace MPF.Processors
                 if (key != null)
                     info.Extras.DiscKey = key.ToUpperInvariant();
                 if (id != null)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    info.Extras.DiscID = $"{id.ToUpperInvariant()[..24]}XXXXXXXX";
+#else
                     info.Extras.DiscID = id.ToUpperInvariant().Substring(0, 24) + "XXXXXXXX";
+#endif
                 if (string.IsNullOrEmpty(info.Extras.PIC) && !string.IsNullOrEmpty(pic))
                     info.Extras.PIC = SplitString(pic, 32);
             }

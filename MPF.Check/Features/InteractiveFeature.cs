@@ -77,7 +77,7 @@ namespace MPF.Check.Features
                 hideDriveLetters = false;
 
             // Create state values
-            string? result = string.Empty;
+            string? result;
 
         root:
             Console.Clear();
@@ -212,7 +212,7 @@ namespace MPF.Check.Features
                 if (program == InternalProgram.NONE)
                     continue;
 
-                Console.WriteLine($"{program.ToString().ToLowerInvariant().PadRight(15)} => {program.LongName()}");
+                Console.WriteLine($"{program.ToString().ToLowerInvariant(),-15} => {program.LongName()}");
             }
 
             Console.WriteLine();
@@ -262,7 +262,7 @@ namespace MPF.Check.Features
             Console.WriteLine("Options:");
             foreach (var compressionType in (LogCompression[])Enum.GetValues(typeof(LogCompression)))
             {
-                Console.WriteLine($"{compressionType.ToString().ToLowerInvariant().PadRight(15)} => {compressionType.LongName()}");
+                Console.WriteLine($"{compressionType.ToString().ToLowerInvariant(),-15} => {compressionType.LongName()}");
             }
 
             Console.WriteLine();

@@ -1,5 +1,3 @@
-using System;
-
 namespace MPF.ExecutionContexts.Data
 {
     /// <summary>
@@ -124,49 +122,77 @@ namespace MPF.ExecutionContexts.Data
             factor = 1;
 
             // Characters
-            if (value.EndsWith("c", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            if (value.EndsWith('c'))
+#else
+            if (value.EndsWith("c", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 1;
                 value = value.TrimEnd('c');
             }
 
             // Words
-            else if (value.EndsWith("w", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('w'))
+#else
+            else if (value.EndsWith("w", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 2;
                 value = value.TrimEnd('w');
             }
 
             // Double Words
-            else if (value.EndsWith("d", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('d'))
+#else
+            else if (value.EndsWith("d", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 4;
                 value = value.TrimEnd('d');
             }
 
             // Quad Words
-            else if (value.EndsWith("q", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('q'))
+#else
+            else if (value.EndsWith("q", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 8;
                 value = value.TrimEnd('q');
             }
 
             // Kilobytes
-            else if (value.EndsWith("k", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('k'))
+#else
+            else if (value.EndsWith("k", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 1024;
                 value = value.TrimEnd('k');
             }
 
             // Megabytes
-            else if (value.EndsWith("M", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('M'))
+#else
+            else if (value.EndsWith("M", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 1024 * 1024;
                 value = value.TrimEnd('M');
             }
 
             // Gigabytes
-            else if (value.EndsWith("G", StringComparison.Ordinal))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            else if (value.EndsWith('G'))
+#else
+            else if (value.EndsWith("G", System.StringComparison.Ordinal))
+#endif
             {
                 factor = 1024 * 1024 * 1024;
                 value = value.TrimEnd('G');
@@ -189,7 +215,11 @@ namespace MPF.ExecutionContexts.Data
             if (value[1] != 'x' && value[1] != 'X')
                 return value;
 
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            return value[2..];
+#else
             return value.Substring(2);
+#endif
         }
 
         #endregion

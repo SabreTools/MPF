@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Processors.OutputFiles;
 using SabreTools.Hashing;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
@@ -977,7 +976,11 @@ namespace MPF.Processors
                     if (line.StartsWith("current profile:"))
                     {
                         // current profile: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        discProfile = line["current profile: ".Length..];
+#else
                         discProfile = line.Substring("current profile: ".Length);
+#endif
                     }
 
                     line = sr.ReadLine();
@@ -1023,7 +1026,11 @@ namespace MPF.Processors
                     }
 
                     // disc type: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    string discTypeStr = line["disc type: ".Length..];
+#else
                     string discTypeStr = line.Substring("disc type: ".Length);
+#endif
 
                     // Set the media type based on the string
                     discType = discTypeStr switch
@@ -1132,17 +1139,29 @@ namespace MPF.Processors
                     {
                         if (line.StartsWith("protection system type"))
                         {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            copyrightProtectionSystemType = line["protection system type: ".Length..];
+#else
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
+#endif
                             if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
                                 copyrightProtectionSystemType = "No";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            region = line["region management information: ".Length..];
+#else
                             region = line.Substring("region management information: ".Length);
+#endif
                         }
                         else if (line.StartsWith("disc key"))
                         {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            decryptedDiscKey = line["disc key: ".Length..].Replace(':', ' ');
+#else
                             decryptedDiscKey = line.Substring("disc key: ".Length).Replace(':', ' ');
+#endif
                         }
                         else if (line.StartsWith("title keys"))
                         {
@@ -1343,23 +1362,43 @@ namespace MPF.Processors
 
                     if (line.StartsWith("build date:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        buildDate = line["build date: ".Length..].Trim();
+#else
                         buildDate = line.Substring("build date: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("version:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
                         version = line.Substring("version: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("serial:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
                         serial = line.Substring("serial: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("region:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["region: ".Length..].Trim();
+#else
                         region = line.Substring("region: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("regions:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["regions: ".Length..].Trim();
+#else
                         region = line.Substring("regions: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("header:"))
                     {
@@ -1481,24 +1520,40 @@ namespace MPF.Processors
                     else if (line.StartsWith("layer break:"))
                     {
                         // layer break: <layerbreak>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        layerbreak1 = line["layer break: ".Length..].Trim();
+#else
                         layerbreak1 = line.Substring("layer break: ".Length).Trim();
+#endif
                     }
 
                     // Multi-layer discs have the layer in the name
                     else if (line.StartsWith("layer break (layer: 0):"))
                     {
                         // layer break (layer: 0): <layerbreak>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        layerbreak1 = line["layer break (layer: 0): ".Length..].Trim();
+#else
                         layerbreak1 = line.Substring("layer break (layer: 0): ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("layer break (layer: 1):"))
                     {
                         // layer break (layer: 1): <layerbreak>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        layerbreak2 = line["layer break (layer: 1): ".Length..].Trim();
+#else
                         layerbreak2 = line.Substring("layer break (layer: 1): ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("layer break (layer: 2):"))
                     {
                         // layer break (layer: 2): <layerbreak>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        layerbreak3 = line["layer break (layer: 2): ".Length..].Trim();
+#else
                         layerbreak3 = line.Substring("layer break (layer: 2): ".Length).Trim();
+#endif
                     }
                 }
 
@@ -1545,11 +1600,19 @@ namespace MPF.Processors
 
                     // Store the first session range
                     if (line.Contains("session 1:"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        firstSession = line["session 1: ".Length..].Trim();
+#else
                         firstSession = line.Substring("session 1: ".Length).Trim();
+#endif
 
                     // Store the secomd session range
                     else if (line.Contains("session 2:"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        secondSession = line["session 2: ".Length..].Trim();
+#else
                         secondSession = line.Substring("session 2: ".Length).Trim();
+#endif
                 }
 
                 // If either is blank, we don't have multisession
@@ -1696,7 +1759,11 @@ namespace MPF.Processors
                     }
                     else if (line.StartsWith("EXE date:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        exeDate = line["EXE date: ".Length..].Trim();
+#else
                         exeDate = line.Substring("EXE date: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("libcrypt:") || line.StartsWith("MSF:"))
                     {
@@ -1708,11 +1775,19 @@ namespace MPF.Processors
                     }
                     else if (line.StartsWith("serial:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
                         serial = line.Substring("serial: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("version:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
                         version = line.Substring("version: ".Length).Trim();
+#endif
                     }
                     else
                     {
@@ -1831,7 +1906,11 @@ namespace MPF.Processors
                         return null;
 
                     if (line.StartsWith("protection: PS2"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["protection: ".Length..].Trim();
+#else
                         return line.Substring("protection: ".Length).Trim();
+#endif
 
                     line = sr.ReadLine()?.Trim();
                 }
@@ -1942,7 +2021,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("non-zero data sample range") == true)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["non-zero data sample range: [".Length..].Trim().Split(' ')[0];
+#else
                         return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+#endif
                 }
 
                 // Required lines were not found
@@ -2016,12 +2099,20 @@ namespace MPF.Processors
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = segaHeader!.Split('\n');
+                string[] header = segaHeader!.Split(separator: '\n');
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string serialVersionLine = header[2][58..];
+                string dateLine = header[3][58..];
+                serial = serialVersionLine[..10].Trim();
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
+                buildDate = dateLine[..8];
+#else
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 buildDate = dateLine.Substring(0, 8);
+#endif
                 buildDate = $"{buildDate[0]}{buildDate[1]}{buildDate[2]}{buildDate[3]}-{buildDate[4]}{buildDate[5]}-{buildDate[6]}{buildDate[7]}";
                 return true;
             }
@@ -2065,23 +2156,43 @@ namespace MPF.Processors
 
                     if (line.StartsWith("build date:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        buildDate = line["build date: ".Length..].Trim();
+#else
                         buildDate = line.Substring("build date: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("version:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
                         version = line.Substring("version: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("serial:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
                         serial = line.Substring("serial: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("region:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["region: ".Length..].Trim();
+#else
                         region = line.Substring("region: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("regions:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["regions: ".Length..].Trim();
+#else
                         region = line.Substring("regions: ".Length).Trim();
+#endif
                     }
                     else if (line?.StartsWith("header:") == true)
                     {
@@ -2286,19 +2397,35 @@ namespace MPF.Processors
 
                     if (line.StartsWith("build date:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        buildDate = line["build date: ".Length..].Trim();
+#else
                         buildDate = line.Substring("build date: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("serial:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
                         serial = line.Substring("serial: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("region:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["region: ".Length..].Trim();
+#else
                         region = line.Substring("region: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("regions:"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        region = line["regions: ".Length..].Trim();
+#else
                         region = line.Substring("regions: ".Length).Trim();
+#endif
                     }
                     else if (line.StartsWith("header:"))
                     {
@@ -2345,7 +2472,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("Universal Hash") == true)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["Universal Hash (SHA-1): ".Length..].Trim();
+#else
                         return line.Substring("Universal Hash (SHA-1): ".Length).Trim();
+#endif
                 }
 
                 // Required lines were not found
@@ -2428,7 +2559,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("arguments: ") == true)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["arguments: ".Length..].Trim();
+#else
                         return line.Substring("arguments: ".Length).Trim();
+#endif
                 }
 
                 // Required lines were not found
@@ -2468,7 +2603,11 @@ namespace MPF.Processors
                     // ISO9660 Volume Identifier
                     if (line.StartsWith("volume identifier: "))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string label = line["volume identifier: ".Length..];
+#else
                         string label = line.Substring("volume identifier: ".Length);
+#endif
 
                         // Skip if label is blank
                         if (label == null || label.Length <= 0)
@@ -2518,7 +2657,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.TrimStart();
                     if (line?.StartsWith("disc write offset") == true)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["disc write offset: ".Length..].Trim();
+#else
                         return line.Substring("disc write offset: ".Length).Trim();
+#endif
                 }
 
                 // Required lines were not found

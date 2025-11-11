@@ -284,7 +284,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateCuesheet_Empty_Null()
         {
-            CICMMetadataType? cicmSidecar = new CICMMetadataType();
+            CICMMetadataType? cicmSidecar = new();
             string basePath = "test";
             string? actual = Aaru.GenerateCuesheet(cicmSidecar, basePath);
             Assert.Null(actual);
@@ -293,7 +293,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateCuesheet_Valid_Filled()
         {
-            TrackType trackType = new TrackType
+            TrackType trackType = new()
             {
                 BytesPerSector = 2352,
                 Flags = new TrackFlagsType { Quadraphonic = true },
@@ -303,7 +303,7 @@ namespace MPF.Processors.Test
                 TrackType1 = TrackTypeTrackType.mode1,
             };
 
-            OpticalDiscType opticalDiscType = new OpticalDiscType
+            OpticalDiscType opticalDiscType = new()
             {
                 DiscType = "CD-ROM",
                 MediaCatalogueNumber = "mcn",
@@ -311,7 +311,7 @@ namespace MPF.Processors.Test
                 Tracks = [1],
             };
 
-            CICMMetadataType? cicmSidecar = new CICMMetadataType
+            CICMMetadataType? cicmSidecar = new()
             {
                 OpticalDisc = [opticalDiscType],
                 Performer = ["performer"],
@@ -341,7 +341,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateDatafile_Empty_Null()
         {
-            CICMMetadataType? cicmSidecar = new CICMMetadataType();
+            CICMMetadataType? cicmSidecar = new();
             string basePath = "test";
             var actual = Aaru.GenerateDatafile(cicmSidecar, basePath);
             Assert.Null(actual);
@@ -350,7 +350,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateDatafile_Valid_Filled()
         {
-            TrackType trackType = new TrackType
+            TrackType trackType = new()
             {
                 Checksums =
                 [
@@ -362,7 +362,7 @@ namespace MPF.Processors.Test
                 Size = 12345,
             };
 
-            OpticalDiscType opticalDiscType = new OpticalDiscType
+            OpticalDiscType opticalDiscType = new()
             {
                 DiscType = "CD-ROM",
                 MediaCatalogueNumber = "mcn",
@@ -370,7 +370,7 @@ namespace MPF.Processors.Test
                 Tracks = [1],
             };
 
-            CICMMetadataType? cicmSidecar = new CICMMetadataType
+            CICMMetadataType? cicmSidecar = new()
             {
                 OpticalDisc = [opticalDiscType],
             };
@@ -397,7 +397,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GeneratePVD_Empty_Null()
         {
-            CICMMetadataType? cicmSidecar = new CICMMetadataType();
+            CICMMetadataType? cicmSidecar = new();
             var actual = Aaru.GeneratePVD(cicmSidecar);
             Assert.Null(actual);
         }
@@ -405,7 +405,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GeneratePVD_Valid_Filled()
         {
-            FileSystemType fileSystemType = new FileSystemType
+            FileSystemType fileSystemType = new()
             {
                 CreationDate = DateTime.UtcNow,
                 CreationDateSpecified = true,
@@ -417,22 +417,22 @@ namespace MPF.Processors.Test
                 EffectiveDateSpecified = true,
             };
 
-            PartitionType partitionType = new PartitionType
+            PartitionType partitionType = new()
             {
                 FileSystems = [fileSystemType],
             };
 
-            TrackType trackType = new TrackType
+            TrackType trackType = new()
             {
                 FileSystemInformation = [partitionType],
             };
 
-            OpticalDiscType opticalDiscType = new OpticalDiscType
+            OpticalDiscType opticalDiscType = new()
             {
                 Track = [trackType],
             };
 
-            CICMMetadataType? cicmSidecar = new CICMMetadataType
+            CICMMetadataType? cicmSidecar = new()
             {
                 OpticalDisc = [opticalDiscType],
             };

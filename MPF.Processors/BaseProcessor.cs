@@ -159,7 +159,7 @@ namespace MPF.Processors
                     // Ignore files that are preserved
                     if (preservedFiles.Contains(file))
                         continue;
-                    
+
                     try { File.Delete(file); } catch { }
                 }
 
@@ -480,7 +480,11 @@ namespace MPF.Processors
             // Get the entry name from the file
             string entryName = file;
             if (!string.IsNullOrEmpty(outputDirectory))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                entryName = entryName[outputDirectory.Length..];
+#else
                 entryName = entryName.Substring(outputDirectory!.Length);
+#endif
 
             // Ensure the entry is formatted correctly
             entryName = entryName.TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
@@ -758,7 +762,11 @@ namespace MPF.Processors
                     return null;
 
                 if (trimLength > -1 && trimLength < hex.Length)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    hex = hex[..trimLength];
+#else
                     hex = hex.Substring(0, trimLength);
+#endif
 
                 // TODO: Check for non-zero values in discarded PIC
                 return SplitString(hex, 32);
@@ -807,7 +815,8 @@ namespace MPF.Processors
                     else
                         pvdCharArray[i] = '.';
                 }
-                string pvdASCII = new string(pvdCharArray, 0, 96);
+
+                string pvdASCII = new(pvdCharArray, 0, 96);
                 pvd = string.Empty;
                 for (int i = 0; i < 96; i += 16)
                 {
@@ -825,7 +834,7 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Returns true if a Cuesheet consists of only Audio tracks, false otherwise 
+        /// Returns true if a Cuesheet consists of only Audio tracks, false otherwise
         /// </summary>
         internal static bool IsAudio(string? cue)
         {

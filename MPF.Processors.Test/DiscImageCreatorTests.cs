@@ -426,7 +426,7 @@ namespace MPF.Processors.Test
         public void GetDiscType_Empty_Null()
         {
             string disc = string.Empty;
-            bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
+            bool actual = DiscImageCreator.GetDiscType(disc, out _);
             Assert.False(actual);
         }
 
@@ -434,7 +434,7 @@ namespace MPF.Processors.Test
         public void GetDiscType_Invalid_Null()
         {
             string disc = "INVALID";
-            bool actual = DiscImageCreator.GetDiscType(disc, out string? discTypeOrBookType);
+            bool actual = DiscImageCreator.GetDiscType(disc, out _);
             Assert.False(actual);
         }
 
@@ -1189,7 +1189,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetXGDAuxHashInfo_Invalid_Null()
         {
-            Datafile? suppl = new Datafile();
+            Datafile? suppl = new();
             bool actual = DiscImageCreator.GetXGDAuxHashInfo(suppl,
                 out string? dmihash,
                 out string? pfihash,
@@ -1204,7 +1204,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetXGDAuxHashInfo_Valid_Filled()
         {
-            Datafile? suppl = new Datafile
+            Datafile? suppl = new()
             {
                 Game =
                 [

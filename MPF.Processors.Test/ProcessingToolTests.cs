@@ -24,7 +24,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GenerateDatfile_Invalid_Null()
         {
-            Datafile? datafile = new Datafile();
+            Datafile? datafile = new();
             string? actual = ProcessingTool.GenerateDatfile(datafile);
             Assert.Null(actual);
         }
@@ -33,7 +33,7 @@ namespace MPF.Processors.Test
         public void GenerateDatfile_Valid_Filled()
         {
             string? expected = "<rom name=\"test\" size=\"12345\" crc=\"00000000\" md5=\"d41d8cd98f00b204e9800998ecf8427e\" sha1=\"da39a3ee5e6b4b0d3255bfef95601890afd80709\" />";
-            Rom rom = new Rom
+            Rom rom = new()
             {
                 Name = "test",
                 Size = "12345",
@@ -41,8 +41,8 @@ namespace MPF.Processors.Test
                 MD5 = "d41d8cd98f00b204e9800998ecf8427e",
                 SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             };
-            Game game = new Game { Rom = [rom] };
-            Datafile? datafile = new Datafile { Game = [game] };
+            Game game = new() { Rom = [rom] };
+            Datafile? datafile = new() { Game = [game] };
 
             string? actual = ProcessingTool.GenerateDatfile(datafile);
             Assert.Equal(expected, actual);
@@ -181,7 +181,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetISOHashValues_Datafile_Empty_Null()
         {
-            Datafile? datafile = new Datafile();
+            Datafile? datafile = new();
             bool actual = ProcessingTool.GetISOHashValues(datafile,
                 out long size,
                 out string? crc32,
@@ -203,7 +203,7 @@ namespace MPF.Processors.Test
             string? expectedMd5 = "d41d8cd98f00b204e9800998ecf8427e";
             string? expectedSha1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
-            Rom rom = new Rom
+            Rom rom = new()
             {
                 Name = "test",
                 Size = "12345",
@@ -211,8 +211,8 @@ namespace MPF.Processors.Test
                 MD5 = "d41d8cd98f00b204e9800998ecf8427e",
                 SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709",
             };
-            Game game = new Game { Rom = [rom] };
-            Datafile? datafile = new Datafile { Game = [game] };
+            Game game = new() { Rom = [rom] };
+            Datafile? datafile = new() { Game = [game] };
 
             bool actual = ProcessingTool.GetISOHashValues(datafile,
                 out long size,
@@ -322,7 +322,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetLayerbreaks_Empty_Null()
         {
-            DiscInformation? di = new DiscInformation();
+            DiscInformation? di = new();
             bool actual = ProcessingTool.GetLayerbreaks(di,
                 out long? layerbreak1,
                 out long? layerbreak2,
@@ -341,35 +341,35 @@ namespace MPF.Processors.Test
             long? expectedLayerbreak2 = 134744076;
             long? expectedLayerbreak3 = 202116114;
 
-            DiscInformationUnit layer0 = new DiscInformationUnit
+            DiscInformationUnit layer0 = new()
             {
                 Body = new DiscInformationUnitBody
                 {
                     FormatDependentContents = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08],
                 }
             };
-            DiscInformationUnit layer1 = new DiscInformationUnit
+            DiscInformationUnit layer1 = new()
             {
                 Body = new DiscInformationUnitBody
                 {
                     FormatDependentContents = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08],
                 }
             };
-            DiscInformationUnit layer2 = new DiscInformationUnit
+            DiscInformationUnit layer2 = new()
             {
                 Body = new DiscInformationUnitBody
                 {
                     FormatDependentContents = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08],
                 }
             };
-            DiscInformationUnit layer3 = new DiscInformationUnit
+            DiscInformationUnit layer3 = new()
             {
                 Body = new DiscInformationUnitBody
                 {
                     FormatDependentContents = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08],
                 }
             };
-            DiscInformation? di = new DiscInformation
+            DiscInformation? di = new()
             {
                 Units = [layer0, layer1, layer2, layer3],
             };
@@ -400,7 +400,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetPICIdentifier_Empty_Null()
         {
-            DiscInformation? di = new DiscInformation();
+            DiscInformation? di = new();
             string? actual = ProcessingTool.GetPICIdentifier(di);
             Assert.Null(actual);
         }
@@ -409,14 +409,14 @@ namespace MPF.Processors.Test
         public void GetPICIdentifier_Valid_Filled()
         {
             string? expected = "UHD";
-            DiscInformationUnit layer0 = new DiscInformationUnit
+            DiscInformationUnit layer0 = new()
             {
                 Body = new DiscInformationUnitBody
                 {
                     DiscTypeIdentifier = "UHD",
                 }
             };
-            DiscInformation? di = new DiscInformation
+            DiscInformation? di = new()
             {
                 Units = [layer0],
             };

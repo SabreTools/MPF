@@ -328,7 +328,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="line">Byte array to check for Shift-JIS encoding</param>
         /// <returns>True if the byte array contains Shift-JIS characters, false otherwise</returns>
-        /// <see href="https://www.lemoda.net/c/detect-shift-jis/"/> 
+        /// <see href="https://www.lemoda.net/c/detect-shift-jis/"/>
         internal static bool BytesContainsShiftJIS(byte[] bytes)
         {
             // Invalid arrays do not count
@@ -637,7 +637,11 @@ namespace MPF.Processors
                     return false;
 
                 // Get Disc Key from log
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string discKeyStr = line["disc_key = ".Length..];
+#else
                 string discKeyStr = line.Substring("disc_key = ".Length);
+#endif
 
                 // Validate Disc Key from log
                 if (discKeyStr.Length != 32)
@@ -656,14 +660,22 @@ namespace MPF.Processors
                     return false;
 
                 // Get Disc ID from log
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string discIDStr = line["disc_id = ".Length..];
+#else
                 string discIDStr = line.Substring("disc_id = ".Length);
+#endif
 
                 // Validate Disc ID from log
                 if (discIDStr.Length != 32)
                     return false;
 
                 // Replace X's in Disc ID with 00000001
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                discIDStr = $"{discIDStr[..24]}00000001";
+#else
                 discIDStr = discIDStr.Substring(0, 24) + "00000001";
+#endif
 
                 // Convert Disc ID to byte array
                 id = discIDStr;
@@ -730,7 +742,11 @@ namespace MPF.Processors
 
                 key = keyString.FromHexString();
                 id = idString.FromHexString();
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                pic = picString[..230].FromHexString();
+#else
                 pic = picString.Substring(0, 230).FromHexString();
+#endif
                 return true;
             }
             else
@@ -755,7 +771,11 @@ namespace MPF.Processors
                 return null;
 
             // Censor last 4 bytes by replacing with 0x00000001
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            cleandiscID = $"{cleandiscID[..24]}00000001";
+#else
             cleandiscID = cleandiscID.Substring(0, 24) + "00000001";
+#endif
 
             // Convert to byte array, null if invalid hex string
             return cleandiscID.FromHexString();
@@ -881,7 +901,11 @@ namespace MPF.Processors
                 return null;
 
             // Convert to byte array, null if invalid hex string
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            return cleanPIC[..230].FromHexString();
+#else
             return cleanPIC.Substring(0, 230).FromHexString();
+#endif
         }
 
         /// <summary>
@@ -1125,8 +1149,8 @@ namespace MPF.Processors
             else if (xgdType == 3)
                 ccrt_offset = 0x20;
 
-            int[] entry_offsets = { 0, 9, 18, 27, 36, 45, 54, 63 };
-            int[] entry_lengths = { 8, 8, 8, 8, 4, 4, 4, 4 };
+            int[] entry_offsets = [0, 9, 18, 27, 36, 45, 54, 63];
+            int[] entry_lengths = [8, 8, 8, 8, 4, 4, 4, 4];
             for (int i = 0; i < entry_offsets.Length; i++)
             {
                 bool emptyResponse = true;

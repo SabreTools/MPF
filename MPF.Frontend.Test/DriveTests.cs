@@ -43,7 +43,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateDriveTypeMappingTestData()
         {
             var testData = new List<object?[]>() { new object?[] { null, true } };
-            foreach (DriveType driveType in Enum.GetValues(typeof(DriveType)))
+            foreach (DriveType driveType in Enum.GetValues<DriveType>())
             {
                 if (Array.IndexOf(_mappableDriveTypes, driveType) > -1)
                     testData.Add([driveType, false]);

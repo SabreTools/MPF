@@ -69,9 +69,9 @@ namespace MPF.ExecutionContexts.Data
             {
                 // Separator
                 if (useEquals)
-                    builder.Append("=");
+                    builder.Append('=');
                 else
-                    builder.Append(" ");
+                    builder.Append(' ');
 
                 // Value
                 builder.Append(Value.ToString());

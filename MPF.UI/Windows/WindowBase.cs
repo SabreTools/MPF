@@ -18,7 +18,7 @@ namespace MPF.UI.Windows
                 DialogResult = false;
             }
             catch { }
-            
+
             Close();
         }
 

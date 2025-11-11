@@ -86,7 +86,11 @@ namespace MPF.Frontend
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                devicePath = devicePath["\\\\.\\".Length..];
+#else
                 devicePath = devicePath.Substring("\\\\.\\".Length);
+#endif
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);

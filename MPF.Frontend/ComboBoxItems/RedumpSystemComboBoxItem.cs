@@ -84,7 +84,7 @@ namespace MPF.Frontend.ComboBoxItems
 
             var systemsValues = new List<RedumpSystemComboBoxItem>
             {
-                new RedumpSystemComboBoxItem((RedumpSystem?)null),
+                new((RedumpSystem?)null),
             };
 
             foreach (var group in mapping)

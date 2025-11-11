@@ -470,7 +470,11 @@ namespace MPF.ExecutionContexts.Redumper
 
                     // Default is either a flag or an invalid mode
                     default:
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        if (part.StartsWith('-'))
+#else
                         if (part.StartsWith("-"))
+#endif
                         {
                             isFlag = true;
                             break;

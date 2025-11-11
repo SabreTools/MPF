@@ -263,7 +263,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsAntiModchipScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
+            foreach (RedumpSystem redumpSystem in Enum.GetValues<RedumpSystem>())
             {
                 if (_antiModchipSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);
@@ -277,7 +277,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsCopyProtectionScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (RedumpSystem redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
+            foreach (RedumpSystem redumpSystem in Enum.GetValues<RedumpSystem>())
             {
                 if (_copyProtectionSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);

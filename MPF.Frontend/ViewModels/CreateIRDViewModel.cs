@@ -544,7 +544,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private bool ShouldEnableCreateIRDButton()
         {
-            if(string.IsNullOrEmpty(InputPath) || !File.Exists(InputPath))
+            if (string.IsNullOrEmpty(InputPath) || !File.Exists(InputPath))
             {
                 CreateIRDStatus = "Please provide an ISO";
                 return false;

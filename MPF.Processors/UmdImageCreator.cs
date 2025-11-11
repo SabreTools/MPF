@@ -4,7 +4,6 @@ using System.IO;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -182,7 +181,11 @@ namespace MPF.Processors
                         break;
 
                     if (line.StartsWith("TITLE") && title == null)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        title = line["TITLE: ".Length..];
+#else
                         title = line.Substring("TITLE: ".Length);
+#endif
                     else if (line.StartsWith("DISC_ID") && version == null)
                         serial = line.Split(' ')[1];
                     else if (line.StartsWith("DISC_VERSION") && version == null)
@@ -197,7 +200,11 @@ namespace MPF.Processors
 
                 // If we have a serial, format it
                 if (!string.IsNullOrEmpty(serial) && serial!.Length > 4)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    serial = $"{serial[..4]}-{serial[4..]}";
+#else
                     serial = serial.Substring(0, 4) + "-" + serial.Substring(4);
+#endif
 
                 // If the L0 length is the size of the full disc, there's no layerbreak
                 if (long.TryParse(layer, out long umdlayerValue) && umdlayerValue * 2048 == size)
@@ -240,7 +247,11 @@ namespace MPF.Processors
                     // ISO9660 and extensions section
                     if (line.StartsWith("Volume Descriptor Type: "))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        _ = int.TryParse(line["Volume Descriptor Type: ".Length..], out int volTypeInt);
+#else
                         int.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+#endif
                         volType = volTypeInt switch
                         {
                             // 0 => "Boot Record" // Should not not contain a Volume Identifier
@@ -259,11 +270,19 @@ namespace MPF.Processors
                     // Identifier
                     else if (line.StartsWith("Volume Identifier: "))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        label = line["Volume Identifier: ".Length..];
+#else
                         label = line.Substring("Volume Identifier: ".Length);
+#endif
 
                         // Remove leading non-printable character (unsure why DIC outputs this)
                         if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            label = label[1..];
+#else
                             label = label.Substring(1);
+#endif
 
                         // Skip if label is blank
                         if (label == null || label.Length <= 0)

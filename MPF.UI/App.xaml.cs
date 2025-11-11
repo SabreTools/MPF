@@ -321,7 +321,7 @@ namespace MPF.UI
         /// <summary>
         /// Create an XAML parser context with the required namespaces
         /// </summary>
-        private ParserContext CreateParserContext()
+        private static ParserContext CreateParserContext()
         {
             var context = new ParserContext();
 

@@ -81,11 +81,7 @@ namespace MPF.Frontend
         public int? Speed
         {
             get => _executionContext?.Speed;
-            set
-            {
-                if (_executionContext != null)
-                    _executionContext.Speed = value;
-            }
+            set => _executionContext?.Speed = value;
         }
 
         /// <inheritdoc cref="Extensions.LongName(RedumpSystem?)/>

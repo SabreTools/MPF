@@ -39,7 +39,7 @@ namespace MPF.UI.Windows
         private System.Windows.Controls.Button? CancelButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "CancelButton");
 
         #endregion
-        
+
 #endif
 
         /// <summary>

@@ -538,7 +538,11 @@ namespace MPF.ExecutionContexts.Aaru
                     if (string.IsNullOrEmpty(InputValue))
                         return null;
 
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    if (InputValue!.Contains(' '))
+#else
                     if (InputValue!.Contains(" "))
+#endif
                         parameters.Append($"\"{InputValue!.TrimEnd('\\')}\" ");
                     else
                         parameters.Append($"{InputValue!.TrimEnd('\\')} ");

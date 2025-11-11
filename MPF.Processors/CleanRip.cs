@@ -4,7 +4,6 @@ using System.Text;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -192,11 +191,23 @@ namespace MPF.Processors
                         if (string.IsNullOrEmpty(line))
                             continue;
                         else if (line!.StartsWith("CRC32"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            crc = line[7..].ToLowerInvariant();
+#else
                             crc = line.Substring(7).ToLowerInvariant();
+#endif
                         else if (line.StartsWith("MD5"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            md5 = line[5..];
+#else
                             md5 = line.Substring(5);
+#endif
                         else if (line.StartsWith("SHA-1"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            sha1 = line[7..];
+#else
                             sha1 = line.Substring(7);
+#endif
                     }
                 }
 
@@ -303,15 +314,27 @@ namespace MPF.Processors
                     }
                     else if (line!.StartsWith("Version"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["Version: ".Length..];
+#else
                         version = line.Substring("Version: ".Length);
+#endif
                     }
                     else if (line.StartsWith("Internal Name"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        name = line["Internal Name: ".Length..];
+#else
                         name = line.Substring("Internal Name: ".Length);
+#endif
                     }
                     else if (line.StartsWith("Filename"))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["Filename: ".Length..];
+#else
                         serial = line.Substring("Filename: ".Length);
+#endif
                         if (serial.EndsWith("-disc2"))
                             serial = serial.Replace("-disc2", string.Empty);
 

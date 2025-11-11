@@ -42,7 +42,7 @@ namespace MPF.CLI.Features
             System = Options.DefaultSystem;
 
             // Create state values
-            string? result = string.Empty;
+            string? result;
 
         root:
             Console.Clear();
@@ -115,9 +115,9 @@ namespace MPF.CLI.Features
         dumpingProgram:
             Console.WriteLine();
             Console.WriteLine("Options:");
-            Console.WriteLine($"{InternalProgram.Redumper.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.Redumper.LongName()}");
-            Console.WriteLine($"{InternalProgram.DiscImageCreator.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.DiscImageCreator.LongName()}");
-            Console.WriteLine($"{InternalProgram.Aaru.ToString().ToLowerInvariant().PadRight(15)} => {InternalProgram.Aaru.LongName()}");
+            Console.WriteLine($"{InternalProgram.Redumper.ToString().ToLowerInvariant(),-15} => {InternalProgram.Redumper.LongName()}");
+            Console.WriteLine($"{InternalProgram.DiscImageCreator.ToString().ToLowerInvariant(),-15} => {InternalProgram.DiscImageCreator.LongName()}");
+            Console.WriteLine($"{InternalProgram.Aaru.ToString().ToLowerInvariant(),-15} => {InternalProgram.Aaru.LongName()}");
             Console.WriteLine();
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");

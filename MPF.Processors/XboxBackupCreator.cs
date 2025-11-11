@@ -4,7 +4,6 @@ using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -274,7 +273,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.Trim();
                     if (line?.StartsWith("Xbox Backup Creator ") == true)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["Xbox Backup Creator ".Length..].Trim();
+#else
                         return line.Substring("Xbox Backup Creator ".Length).Trim();
+#endif
                 }
 
                 // Required lines were not found
@@ -314,9 +317,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.Trim();
                     if (line?.StartsWith("Source Drive: ") == true)
-                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line["Source Drive: ".Length..].Trim();
+#else
                         return line.Substring("Source Drive: ".Length).Trim();
-                    }
+#endif
                 }
 
                 // Required lines were not found
@@ -358,9 +363,11 @@ namespace MPF.Processors
                 {
                     string? line = sr.ReadLine()?.Trim();
                     if (line?.StartsWith("LayerBreak=") == true)
-                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return long.TryParse(line["LayerBreak=".Length..].Trim(), out layerbreak);
+#else
                         return long.TryParse(line.Substring("LayerBreak=".Length).Trim(), out layerbreak);
-                    }
+#endif
                 }
 
                 // Required lines were not found
@@ -479,7 +486,11 @@ namespace MPF.Processors
                     if (line?.StartsWith("Media ID") == true)
                     {
                         line = sr.ReadLine()?.Trim();
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        return line?[26..].Trim();
+#else
                         return line?.Substring(26).Trim();
+#endif
                     }
                 }
 

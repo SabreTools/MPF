@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
@@ -968,17 +967,31 @@ namespace MPF.Processors
                     // The exe date is listed in a single line, File Identifier: ABCD_123.45;1
                     if (line.Length >= "File Identifier: ".Length + 11 &&
                         line.StartsWith("File Identifier:") &&
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        line["File Identifier: ".Length..] == exeName)
+#else
                         line.Substring("File Identifier: ".Length) == exeName)
+#endif
                     {
                         // Account for Y2K date problem
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        if (exeDate != null && exeDate[..2] == "19")
+#else
                         if (exeDate != null && exeDate.Substring(0, 2) == "19")
+#endif
                         {
                             string decade = exeDate!.Substring(2, 1);
 
                             // Does only PSX need to account for 1920s-60s?
                             if (decade == "0" || decade == "1" ||
                                 psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
+                            {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                exeDate = $"20{exeDate[2..]}";
+#else
                                 exeDate = $"20{exeDate.Substring(2)}";
+#endif
+                            }
                         }
 
                         // Currently stored date is the EXE date, return it
@@ -1042,25 +1055,41 @@ namespace MPF.Processors
                     if (line.StartsWith("DiscType:"))
                     {
                         // DiscType: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string identifier = line["DiscType: ".Length..];
+#else
                         string identifier = line.Substring("DiscType: ".Length);
+#endif
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("DiscTypeIdentifier:"))
                     {
                         // DiscTypeIdentifier: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string identifier = line["DiscTypeIdentifier: ".Length..];
+#else
                         string identifier = line.Substring("DiscTypeIdentifier: ".Length);
+#endif
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("DiscTypeSpecific:"))
                     {
                         // DiscTypeSpecific: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string identifier = line["DiscTypeSpecific: ".Length..];
+#else
                         string identifier = line.Substring("DiscTypeSpecific: ".Length);
+#endif
                         discTypeOrBookTypeSet.Add(identifier);
                     }
                     else if (line.StartsWith("BookType:"))
                     {
                         // BookType: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string identifier = line["BookType: ".Length..];
+#else
                         string identifier = line.Substring("BookType: ".Length);
+#endif
                         discTypeOrBookTypeSet.Add(identifier);
                     }
 
@@ -1119,9 +1148,17 @@ namespace MPF.Processors
                             break;
 
                         if (line.StartsWith("CopyrightProtectionType"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            copyrightProtectionSystemType = line["CopyrightProtectionType: ".Length..];
+#else
                             copyrightProtectionSystemType = line.Substring("CopyrightProtectionType: ".Length);
+#endif
                         else if (line.StartsWith("RegionManagementInformation"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            region = line["RegionManagementInformation: ".Length..];
+#else
                             region = line.Substring("RegionManagementInformation: ".Length);
+#endif
 
                         line = sr.ReadLine()?.Trim();
                     }
@@ -1144,7 +1181,11 @@ namespace MPF.Processors
 
                         if (line.StartsWith("DecryptedDiscKey"))
                         {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            decryptedDiscKey = line["DecryptedDiscKey[020]: ".Length..];
+#else
                             decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+#endif
                         }
                         else if (line.StartsWith("LBA:"))
                         {
@@ -1157,7 +1198,11 @@ namespace MPF.Processors
                                 var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$", RegexOptions.Compiled);
                                 string matchedFilename = match.Groups[1].Value;
                                 if (matchedFilename.EndsWith(";1"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                    matchedFilename = matchedFilename[..^2];
+#else
                                     matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+#endif
 
                                 vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
                             }
@@ -1166,7 +1211,11 @@ namespace MPF.Processors
                                 var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$", RegexOptions.Compiled);
                                 string matchedFilename = match.Groups[1].Value;
                                 if (matchedFilename.EndsWith(";1"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                    matchedFilename = matchedFilename[..^2];
+#else
                                     matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+#endif
 
                                 vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
                             }
@@ -1238,13 +1287,21 @@ namespace MPF.Processors
                     else if (line.StartsWith("Total errors"))
                     {
                         totalErrors ??= 0;
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        if (long.TryParse(line["Total errors: ".Length..].Trim(), out long te))
+#else
                         if (long.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
+#endif
                             totalErrors += te;
                     }
                     else if (line.StartsWith("Total warnings"))
                     {
                         totalErrors ??= 0;
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        if (long.TryParse(line["Total warnings: ".Length..].Trim(), out long tw))
+#else
                         if (long.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
+#endif
                             totalErrors += tw;
                     }
                 }
@@ -1276,11 +1333,19 @@ namespace MPF.Processors
             try
             {
                 string[] header = segaHeader!.Split('\n');
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string versionLine = header[4][58..];
+                string dateLine = header[5][58..];
+                serial = versionLine[..10].TrimEnd();
+                version = versionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine[..8];
+#else
                 string versionLine = header[4].Substring(58);
                 string dateLine = header[5].Substring(58);
                 serial = versionLine.Substring(0, 10).TrimEnd();
                 version = versionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
+#endif
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
@@ -1320,17 +1385,29 @@ namespace MPF.Processors
                     if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
                     {
                         // VendorId: <manufacturer>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        manufacturer = line["VendorId: ".Length..];
+#else
                         manufacturer = line.Substring("VendorId: ".Length);
+#endif
                     }
                     else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
                     {
                         // ProductId: <model>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        model = line["ProductId: ".Length..];
+#else
                         model = line.Substring("ProductId: ".Length);
+#endif
                     }
                     else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
                     {
                         // ProductRevisionLevel: <firmware>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        firmware = line["ProductRevisionLevel: ".Length..];
+#else
                         firmware = line.Substring("ProductRevisionLevel: ".Length);
+#endif
                     }
 
                     line = sr.ReadLine();
@@ -1528,7 +1605,11 @@ namespace MPF.Processors
                 // TODO: Are there any examples of 3+ session discs?
 
                 // Read the first session lead-out
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                var firstSessionLeadOutLengthString = line?["Lead-out length of 1st session: ".Length..];
+#else
                 var firstSessionLeadOutLengthString = line?.Substring("Lead-out length of 1st session: ".Length);
+#endif
                 line = sr.ReadLine()?.Trim();
                 if (line == null)
                     return null;
@@ -1537,12 +1618,20 @@ namespace MPF.Processors
                 string? secondSessionLeadInLengthString = null;
                 if (line?.StartsWith("Lead-in length") == true)
                 {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    secondSessionLeadInLengthString = line?["Lead-in length of 2nd session: ".Length..];
+#else
                     secondSessionLeadInLengthString = line?.Substring("Lead-in length of 2nd session: ".Length);
+#endif
                     line = sr.ReadLine()?.Trim();
                 }
 
                 // Read the second session pregap
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                var secondSessionPregapLengthString = line?["Pregap length of 1st track of 2nd session: ".Length..];
+#else
                 var secondSessionPregapLengthString = line?.Substring("Pregap length of 1st track of 2nd session: ".Length);
+#endif
 
                 // Calculate the session gap total
                 if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
@@ -1668,7 +1757,11 @@ namespace MPF.Processors
                         // Firmware Version
                         if (line.StartsWith("version") && section == "UPDATE")
                         {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            firmwareVersion = line["version: ".Length..];
+#else
                             firmwareVersion = line.Substring("version: ".Length);
+#endif
                         }
 
                         // Internal Serial
@@ -1676,9 +1769,17 @@ namespace MPF.Processors
                         {
                             // Always use the SFB if it exists
                             if (section == "SFB")
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                serial = line["TITLE_ID: ".Length..];
+#else
                                 serial = line.Substring("TITLE_ID: ".Length);
+#endif
                             else if (section == "SFO" && string.IsNullOrEmpty(version))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                serial = line["TITLE_ID: ".Length..].Insert(4, "-");
+#else
                                 serial = line.Substring("TITLE_ID: ".Length).Insert(4, "-");
+#endif
                         }
 
                         // Version
@@ -1686,9 +1787,17 @@ namespace MPF.Processors
                         {
                             // Always use the SFB if it exists
                             if (section == "SFB")
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                version = line["VERSION: ".Length..];
+#else
                                 version = line.Substring("VERSION: ".Length);
+#endif
                             else if (section == "SFO" && string.IsNullOrEmpty(version))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                                version = line["VERSION: ".Length..];
+#else
                                 version = line.Substring("VERSION: ".Length);
+#endif
                         }
 
                         // Set the section, if needed
@@ -1861,11 +1970,19 @@ namespace MPF.Processors
             try
             {
                 string[] header = segaHeader!.Split('\n');
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string serialVersionLine = header[2][58..];
+                string dateLine = header[3][58..];
+                serial = serialVersionLine[..10].Trim();
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine[..8];
+#else
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
+#endif
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
@@ -1946,16 +2063,27 @@ namespace MPF.Processors
             try
             {
                 string[] header = segaHeader!.Split('\n');
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                string serialVersionLine = header[8][58..];
+                string dateLine = header[1][58..];
+                serial = serialVersionLine.Substring(3, 8).TrimEnd('-', ' ');
+                date = dateLine[8..].Trim();
+#else
                 string serialVersionLine = header[8].Substring(58);
                 string dateLine = header[1].Substring(58);
                 serial = serialVersionLine.Substring(3, 8).TrimEnd('-', ' ');
                 date = dateLine.Substring(8).Trim();
+#endif
 
                 // Properly format the date string, if possible
                 string[] dateSplit = date.Split('.');
 
                 if (dateSplit.Length == 1)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    dateSplit = [date[..4], date[4..]];
+#else
                     dateSplit = [date.Substring(0, 4), date.Substring(4)];
+#endif
 
                 string month = dateSplit[1];
                 dateSplit[1] = month switch
@@ -2083,7 +2211,11 @@ namespace MPF.Processors
                     // ISO9660 and extensions section
                     if (line.StartsWith("Volume Descriptor Type: "))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        _ = int.TryParse(line["Volume Descriptor Type: ".Length..], out int volTypeInt);
+#else
                         int.TryParse(line.Substring("Volume Descriptor Type: ".Length), out int volTypeInt);
+#endif
                         volType = volTypeInt switch
                         {
                             // 0 => "Boot Record" // Should not not contain a Volume Identifier
@@ -2102,11 +2234,19 @@ namespace MPF.Processors
                     // Identifier
                     else if (line.StartsWith("Volume Identifier: "))
                     {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        label = line["Volume Identifier: ".Length..];
+#else
                         label = line.Substring("Volume Identifier: ".Length);
+#endif
 
                         // Remove leading non-printable character (unsure why DIC outputs this)
                         if (Convert.ToUInt32(label[0]) == 0x7F || Convert.ToUInt32(label[0]) < 0x20)
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                            label = label[1..];
+#else
                             label = label.Substring(1);
+#endif
 
                         // Skip if label is blank, and skip Joliet (DIC Joliet parsing is broken?)
                         if (label == null || label.Length <= 0 || volType == "Joliet")
@@ -2173,7 +2313,11 @@ namespace MPF.Processors
 
                     // Now that we're at the offsets, attempt to get the sample offset
                     var offsetLine = sr.ReadLine()?.Split(' ');
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    string offset = offsetLine != null ? offsetLine[^1] : string.Empty;
+#else
                     string offset = offsetLine != null ? offsetLine[offsetLine.Length - 1] : string.Empty;
+#endif
                     offsets.Add(offset);
                 }
 

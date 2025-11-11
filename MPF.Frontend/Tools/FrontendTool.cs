@@ -151,8 +151,7 @@ namespace MPF.Frontend.Tools
                 return title;
 
             // If we have an invalid language, assume Language.English
-            if (language == null)
-                language = Language.English;
+            language ??= Language.English;
 
             // Get the title split into parts
             string[] splitTitle = Array.FindAll(title!.Split(' '), s => !string.IsNullOrEmpty(s));
@@ -496,12 +495,20 @@ namespace MPF.Frontend.Tools
                 else if (!itemInserted && segment.EndsWith(":"))
                 {
                     itemInserted = true;
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    newTitleBuilder.Append($" {segment[..^1]}, {firstItem}:");
+#else
                     newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}:");
+#endif
                 }
                 else if (!itemInserted && segment.EndsWith("-"))
                 {
                     itemInserted = true;
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    newTitleBuilder.Append($" {segment[..^1]}, {firstItem}-");
+#else
                     newTitleBuilder.Append($" {segment.Substring(0, segment.Length - 1)}, {firstItem}-");
+#endif
                 }
                 else
                 {

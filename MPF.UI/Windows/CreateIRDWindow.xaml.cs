@@ -270,9 +270,9 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnCreateIRDClick(object sender, EventArgs e)
         {
-            if (KeyExpander != null) KeyExpander.IsExpanded = false;
-            if (DiscIDExpander != null) DiscIDExpander.IsExpanded = false;
-            if (PICExpander != null) PICExpander.IsExpanded = false;
+            KeyExpander?.IsExpanded = false;
+            DiscIDExpander?.IsExpanded = false;
+            PICExpander?.IsExpanded = false;
 
             string tempStatus = CreateIRDViewModel.CreateIRDStatus;
             bool[] enabledFields = CreateIRDViewModel.DisableUIFields();
