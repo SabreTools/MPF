@@ -81,10 +81,6 @@ namespace MPF.Frontend.Tools
             // Setup the output protections dictionary
             Dictionary<string, List<string>> protections = [];
 
-            // Scan the mounted drive path
-            if (drive?.Name != null)
-                protections = await RunProtectionScanOnPath(drive.Name, options, protectionProgress);
-
             // Scan the disc image, if possible
             if (File.Exists($"{basePath}.iso"))
             {
@@ -123,6 +119,13 @@ namespace MPF.Frontend.Tools
                         MergeDictionaries(protections, trackProtections);
                     }
                 }
+            }
+
+            // Scan the mounted drive path
+            if (drive?.Name != null)
+            {
+                var driveProtections = await RunProtectionScanOnPath(drive.Name, options, protectionProgress);
+                MergeDictionaries(protections, driveProtections);
             }
 
             return protections;
