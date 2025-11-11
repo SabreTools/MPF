@@ -6,18 +6,18 @@ namespace MPF.Frontend.ComboBoxItems
     /// <summary>
     /// A generic combo box element
     /// </summary>
-    /// <typeparam name="T">Enum type representing the possible values</typeparam>
-    public class Element<T> : IEquatable<Element<T>>, IElement where T : struct, Enum
+    /// <typeparam name="TEnum">Enum type representing the possible values</typeparam>
+    public class Element<TEnum> : IEquatable<Element<TEnum>>, IElement where TEnum : struct, Enum
     {
-        private readonly T Data;
+        private readonly TEnum Data;
 
-        public Element(T data) => Data = data;
+        public Element(TEnum data) => Data = data;
 
         /// <summary>
         /// Allow elements to be used as their internal enum type
         /// </summary>
         /// <param name="item"></param>
-        public static implicit operator T? (Element<T> item) => item?.Data;
+        public static implicit operator TEnum? (Element<TEnum> item) => item?.Data;
 
         /// <inheritdoc/>
         public string Name => EnumExtensions.GetLongName(Data);
@@ -27,7 +27,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <summary>
         /// Internal enum value
         /// </summary>
-        public T Value => Data;
+        public TEnum Value => Data;
 
         /// <summary>
         /// Determine if the item is selected or not
@@ -39,20 +39,20 @@ namespace MPF.Frontend.ComboBoxItems
         /// Generate all elements associated with the data enum type
         /// </summary>
         /// <returns></returns>
-        public static List<Element<T>> GenerateElements()
+        public static List<Element<TEnum>> GenerateElements()
         {
-            var enumArr = (T[])Enum.GetValues(typeof(T));
-            return [.. Array.ConvertAll(enumArr, e => new Element<T>(e))];
+            var enumArr = (TEnum[])Enum.GetValues(typeof(TEnum));
+            return [.. Array.ConvertAll(enumArr, e => new Element<TEnum>(e))];
         }
 
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as Element<T>);
+            return Equals(obj as Element<TEnum>);
         }
 
         /// <inheritdoc/>
-        public bool Equals(Element<T>? other)
+        public bool Equals(Element<TEnum>? other)
         {
             if (other == null)
                 return false;

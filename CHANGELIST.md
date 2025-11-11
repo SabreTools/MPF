@@ -70,6 +70,7 @@
 - Move and rename new protection scan method
 - Path scan after image scan
 - Update Redumper to build 663
+- Name some type parameters
 
 ### 3.5.0 (2025-10-10)
 

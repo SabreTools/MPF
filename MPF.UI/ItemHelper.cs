@@ -7,20 +7,20 @@ namespace MPF.UI
     internal static class ItemHelper
     {
         /// <summary>
-        /// Finds a Child of a given item in the visual tree. 
+        /// Finds a Child of a given item in the visual tree.
         /// </summary>
         /// <param name="parent">A direct parent of the queried item.</param>
-        /// <typeparam name="T">The type of the queried item.</typeparam>
+        /// <typeparam name="TDependencyObject">The type of the queried item.</typeparam>
         /// <param name="childName">x:Name or Name of child. </param>
-        /// <returns>The first parent item that matches the submitted type parameter. 
-        /// If not matching item can be found, 
+        /// <returns>The first parent item that matches the submitted type parameter.
+        /// If not matching item can be found,
         /// a null parent is being returned.</returns>
-        public static T? FindChild<T>(DependencyObject? parent, string childName) where T : DependencyObject
+        public static TDependencyObject? FindChild<TDependencyObject>(DependencyObject? parent, string childName) where TDependencyObject : DependencyObject
         {
-            // Confirm parent and childName are valid. 
+            // Confirm parent and childName are valid.
             if (parent == null) return null;
 
-            T? foundChild = null;
+            TDependencyObject? foundChild = null;
 
             if (parent is ItemsControl itemsControl && itemsControl.Items != null)
             {
@@ -30,12 +30,12 @@ namespace MPF.UI
                     var child = itemsControl.Items[i] as DependencyObject;
 
                     // If the child is not of the request child type child
-                    if (child is not T)
+                    if (child is not TDependencyObject)
                     {
                         // recursively drill down the tree
-                        foundChild = FindChild<T>(child, childName);
+                        foundChild = FindChild<TDependencyObject>(child, childName);
 
-                        // If the child is found, break so we do not overwrite the found child. 
+                        // If the child is found, break so we do not overwrite the found child.
                         if (foundChild != null)
                             break;
                     }
@@ -45,14 +45,14 @@ namespace MPF.UI
                         if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)
                         {
                             // if the child's name is of the request name
-                            foundChild = (T)child;
+                            foundChild = (TDependencyObject)child;
                             break;
                         }
                     }
                     else
                     {
                         // child element found.
-                        foundChild = (T)child;
+                        foundChild = (TDependencyObject)child;
                         break;
                     }
                 }
@@ -62,10 +62,10 @@ namespace MPF.UI
                 var child = contentControl.Content as DependencyObject;
 
                 // If the child is not of the request child type child
-                if (child is not T)
+                if (child is not TDependencyObject)
                 {
                     // recursively drill down the tree
-                    foundChild = FindChild<T>(child, childName);
+                    foundChild = FindChild<TDependencyObject>(child, childName);
                 }
                 else if (!string.IsNullOrEmpty(childName))
                 {
@@ -73,13 +73,13 @@ namespace MPF.UI
                     if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)
                     {
                         // if the child's name is of the request name
-                        foundChild = (T)child;
+                        foundChild = (TDependencyObject)child;
                     }
                 }
                 else
                 {
                     // child element found.
-                    foundChild = (T)child;
+                    foundChild = (TDependencyObject)child;
                 }
             }
             else if (parent is Visual)
@@ -90,12 +90,12 @@ namespace MPF.UI
                     var child = VisualTreeHelper.GetChild(parent, i);
 
                     // If the child is not of the request child type child
-                    if (child is not T)
+                    if (child is not TDependencyObject)
                     {
                         // recursively drill down the tree
-                        foundChild = FindChild<T>(child, childName);
+                        foundChild = FindChild<TDependencyObject>(child, childName);
 
-                        // If the child is found, break so we do not overwrite the found child. 
+                        // If the child is found, break so we do not overwrite the found child.
                         if (foundChild != null)
                             break;
                     }
@@ -105,14 +105,14 @@ namespace MPF.UI
                         if (child is FrameworkElement frameworkElement && frameworkElement.Name == childName)
                         {
                             // if the child's name is of the request name
-                            foundChild = (T)child;
+                            foundChild = (TDependencyObject)child;
                             break;
                         }
                     }
                     else
                     {
                         // child element found.
-                        foundChild = (T)child;
+                        foundChild = (TDependencyObject)child;
                         break;
                     }
                 }
