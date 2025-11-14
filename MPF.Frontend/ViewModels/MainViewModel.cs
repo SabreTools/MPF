@@ -2010,7 +2010,7 @@ namespace MPF.Frontend.ViewModels
                 return DiscNotDetectedValue;
 
             // Use internal serials where appropriate
-            string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel;
+            string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel!.Trim();
             switch (GetRedumpSystem(drive))
             {
                 case RedumpSystem.SonyPlayStation:

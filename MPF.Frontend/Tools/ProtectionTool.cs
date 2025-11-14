@@ -665,6 +665,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="original">Source dictionary to add to</param>
         /// <param name="add">Second dictionary to add from</param>
+        /// TODO: Remove from here when IO is updated
         private static void MergeDictionaries(Dictionary<string, List<string>> original, Dictionary<string, List<string>> add)
         {
             // Ignore if there are no values to append

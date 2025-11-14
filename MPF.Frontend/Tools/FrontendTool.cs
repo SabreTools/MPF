@@ -49,6 +49,9 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(volumeLabel))
                 return null;
 
+            // Trim the volume label
+            volumeLabel = volumeLabel!.Trim();
+
             // Audio CD
             if (volumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.AudioCD;

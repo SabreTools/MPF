@@ -71,6 +71,7 @@
 - Path scan after image scan
 - Update Redumper to build 663
 - Name some type parameters
+- Ensure volume label is trimmed if used in filenames
 
 ### 3.5.0 (2025-10-10)
 
