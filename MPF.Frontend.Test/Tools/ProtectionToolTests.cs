@@ -775,6 +775,21 @@ namespace MPF.Frontend.Test.Tools
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);
         }
+        
+        [Fact]
+        public void SanitizeFoundProtections_StarForce_Keyless()
+        {
+            List<string> protections =
+            [
+                "StarForce Keyless",
+                "StarForce Keyless - ",
+                "StarForce Keyless - ESPY97LS8FHNYR52JDWL8D6FJ",
+                "StarForce Keyless - UAYA-RPMVHJ-ZRY45G-ETUJ36-WL922B",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal("StarForce Keyless", sanitized);
+        }
 
         [Fact]
         public void SanitizeFoundProtections_Sysiphus()
