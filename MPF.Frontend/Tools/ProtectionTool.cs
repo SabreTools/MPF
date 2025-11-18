@@ -637,6 +637,12 @@ namespace MPF.Frontend.Tools
                     foundProtections = foundProtections.FindAll(p => p != "StarForce");
                 }
             }
+            
+            if (foundProtections.Exists(p => p.StartsWith("StarForce Keyless")))
+            {
+                foundProtections = foundProtections.FindAll(p => !p.StartsWith("StarForce Keyless"));
+                foundProtections.Add("StarForce Keyless");
+            }
 
             // Sysiphus
             if (foundProtections.Exists(p => p == "Sysiphus")
