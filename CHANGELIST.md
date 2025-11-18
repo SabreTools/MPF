@@ -72,6 +72,7 @@
 - Update Redumper to build 663
 - Name some type parameters
 - Ensure volume label is trimmed if used in filenames
+- Remove DPM identifier for StarForce Keyless
 
 ### 3.5.0 (2025-10-10)
 
