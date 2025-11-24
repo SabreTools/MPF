@@ -445,29 +445,29 @@
                                 />
                                 <Label/> <!-- Empty label for padding -->
 
-                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultReadMethodLabelString}" HorizontalAlignment="Right" />
+                                <Label Content="{DynamicResource DefaultReadMethodLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperReadMethodComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperReadMethods}" SelectedItem="{Binding Options.RedumperReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
-                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultSectorOrderLabelString}" HorizontalAlignment="Right" />
+                                <Label Content="{DynamicResource DefaultSectorOrderLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperSectorOrderComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperSectorOrders}" SelectedItem="{Binding Options.RedumperSectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
-                                <Label VerticalAlignment="Center" Content="{DynamicResource DefaultDriveTypeLabelString}" HorizontalAlignment="Right" />
+                                <Label Content="{DynamicResource DefaultDriveTypeLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                 <ComboBox x:Name="DefaultRedumperDriveTypeComboBox" Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding RedumperDriveTypes}" SelectedItem="{Binding Options.RedumperDriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
 
-                                <Label Content="{DynamicResource PlextorLeadinRetriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <Label Content="{DynamicResource DefaultDrivePregapStartLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
                                          Text="{Binding Options.RedumperDrivePregapStart}"
                                          ToolTip="Specifies negative LBA for drive to start reading disc pregap from"
-                                         ToolTipService.ShowOnDisabled="True"
+                                         ToolTipService.ShowOnDisabled="True" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
                             </UniformGrid>
                         </GroupBox>
