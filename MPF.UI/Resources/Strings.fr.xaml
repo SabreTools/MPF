@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Méthode de lecture par défaut :</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Ordre des secteurs par défaut :</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Type de lecteur par défaut :</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Pregap Start de lecteur par défaut:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Infos de connexion</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Récupération</system:String>

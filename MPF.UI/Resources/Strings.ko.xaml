@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">기본 읽기 방식:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">기본 섹터 순서:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">기본 드라이브 유형:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">기본 드라이브 프리갭 스타트:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">로그인 정보</system:String>
     <system:String x:Key="RetrievalGroupBoxString">검색</system:String>

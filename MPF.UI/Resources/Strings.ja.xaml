@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">既定のリード方法:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">既定のセクター順序:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">既定のドライブ種別:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">既定のドライブ プリギャップ スタート:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">ログイン情報</system:String>
     <system:String x:Key="RetrievalGroupBoxString">情報取得</system:String>

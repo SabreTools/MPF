@@ -128,6 +128,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Режим читання за замовчуванням:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Структура сектору за замовчуванням:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Тип приводу за замовчуванням:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Pregap start приводу за замовчуванням:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Інформація для входу</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Завантаження</system:String>

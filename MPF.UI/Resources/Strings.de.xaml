@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Standard-Lesemethode:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Standard-Sektorordnung:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Standard-Laufwerkstyp:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Standard-Laufwerk Pregap Start:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Login-Informationen</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Abruf</system:String>

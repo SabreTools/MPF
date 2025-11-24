@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Метод чтения по умолчанию:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Порядок секторов:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Тип привода по умолчанию:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Pregap Start привода по умолчанию:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Данные входа</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Получение</system:String>

@@ -73,6 +73,7 @@
 - Name some type parameters
 - Ensure volume label is trimmed if used in filenames
 - Remove DPM identifier for StarForce Keyless
+- New Redumper Drive Pregap Start option
 
 ### 3.5.0 (2025-10-10)
 
