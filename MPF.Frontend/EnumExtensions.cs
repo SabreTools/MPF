@@ -466,31 +466,31 @@ namespace MPF.Frontend
             {
                 "generic" => RedumperDriveType.GENERIC,
                 "plextor" => RedumperDriveType.PLEXTOR,
-                "lg_asus8a"
-                    or "lg-asus8a"
-                    or "lgasus8a"
-                    or "lg_asus_8a"
-                    or "lg-asus-8a" => RedumperDriveType.LG_ASU8A,
-                "lg_asus8b"
-                    or "lg-asus8b"
-                    or "lgasus8b"
-                    or "lg_asus_8b"
-                    or "lg-asus-8b" => RedumperDriveType.LG_ASU8B,
-                "lg_asus8c"
-                    or "lg-asus8c"
-                    or "lgasus8c"
-                    or "lg_asus_8c"
-                    or "lg-asus-8c" => RedumperDriveType.LG_ASU8C,
+                "lg_asu8a"
+                    or "lg-asu8a"
+                    or "lgasu8a"
+                    or "lg_asu_8a"
+                    or "lg-asu-8a" => RedumperDriveType.LG_ASU8A,
+                "lg_asu8b"
+                    or "lg-asu8b"
+                    or "lgasu8b"
+                    or "lg_asu_8b"
+                    or "lg-asu-8b" => RedumperDriveType.LG_ASU8B,
+                "lg_asu8c"
+                    or "lg-asu8c"
+                    or "lgasu8c"
+                    or "lg_asu_8c"
+                    or "lg-asu-8c" => RedumperDriveType.LG_ASU8C,
                 "lg_asus3"
-                    or "lg-asus3"
-                    or "lgasus3"
-                    or "lg_asus_3"
-                    or "lg-asus-3" => RedumperDriveType.LG_ASU3,
-                "lg_asus2"
-                    or "lg-asus2"
-                    or "lgasus2"
-                    or "lg_asus_2"
-                    or "lg-asus-2" => RedumperDriveType.LG_ASU2,
+                    or "lg-asu3"
+                    or "lgasu3"
+                    or "lg_asu_3"
+                    or "lg-asu-3" => RedumperDriveType.LG_ASU3,
+                "lg_asu2"
+                    or "lg-asu2"
+                    or "lgasu2"
+                    or "lg_asu_2"
+                    or "lg-asu-2" => RedumperDriveType.LG_ASU2,
 
                 _ => RedumperDriveType.NONE,
             };
