@@ -485,6 +485,15 @@ namespace MPF.Frontend
         }
 
         /// <summary>
+        /// Currently selected default redumper drive pregap start sector
+        /// </summary>
+        public int RedumperDrivePregapStart
+        {
+            get { return GetInt32Setting(Settings, RedumperSettings.DrivePregapStart, RedumperSettings.DrivePregapStartDefault); }
+            set { Settings[RedumperSettings.DrivePregapStart] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Currently selected default redumper read method
         /// </summary>
         public RedumperReadMethod RedumperReadMethod

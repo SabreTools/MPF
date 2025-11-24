@@ -128,6 +128,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Default Read Method:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Default Sector Order:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Default Drive Type:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Default Drive Pregap Start:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Login Info</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Retrieval</system:String>

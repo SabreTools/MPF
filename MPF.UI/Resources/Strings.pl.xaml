@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Domyślna metoda odczytu:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Domyślna kolejność sektorów:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Domyślny typ napędu:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Domyślny pregap start napęd:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Informacje logowania</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Pobieranie</system:String>

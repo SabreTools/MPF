@@ -123,6 +123,7 @@
     <system:String x:Key="DefaultReadMethodLabelString">Standard läsmetod:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Standard sektorordning:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Standard enhetstyp:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Standard pregap start:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Inloggningsinfo</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Hämtning</system:String>

@@ -14,6 +14,9 @@ namespace MPF.ExecutionContexts.Redumper
         public const string LeadinRetryCount = "RedumperLeadinRetryCount";
         public const int LeadinRetryCountDefault = 4;
 
+        public const string DrivePregapStart = "RedumperDrivePregapStart";
+        public const int DrivePregapStartDefault = 0;
+
         public const string ReadMethod = "RedumperReadMethod";
         public static readonly string ReadMethodDefault = Redumper.ReadMethod.NONE.ToString();
 

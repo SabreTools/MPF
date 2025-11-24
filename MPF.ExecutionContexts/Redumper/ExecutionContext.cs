@@ -363,6 +363,13 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.DriveReadMethod] as StringInput)?.SetValue(readMethod!);
             }
 
+            int drivePregapStart = GetInt32Setting(options, SettingConstants.DrivePregapStart, SettingConstants.DrivePregapStartDefault);
+            if (drivePregapStart != SettingConstants.DrivePregapStartDefault)
+            {
+                this[FlagStrings.DrivePregapStart] = true;
+                (_inputs[FlagStrings.DrivePregapStart] as Int32Input)?.SetValue(drivePregapStart);
+            }
+
             string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault);
             if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
             {

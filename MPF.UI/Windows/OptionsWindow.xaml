@@ -462,6 +462,13 @@
                                           ItemsSource="{Binding RedumperDriveTypes}" SelectedItem="{Binding Options.RedumperDriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                           Style="{DynamicResource CustomComboBoxStyle}" IsEnabled="{Binding Options.RedumperNonRedumpMode}"
                                 />
+
+                                <Label Content="{DynamicResource PlextorLeadinRetriesLabelString}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="200" HorizontalAlignment="Left"
+                                         Text="{Binding Options.RedumperDrivePregapStart}"
+                                         ToolTip="Specifies negative LBA for drive to start reading disc pregap from"
+                                         ToolTipService.ShowOnDisabled="True"
+                                />
                             </UniformGrid>
                         </GroupBox>
                     </StackPanel>
