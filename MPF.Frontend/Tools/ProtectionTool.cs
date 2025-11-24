@@ -207,13 +207,16 @@ namespace MPF.Frontend.Tools
         /// Format found protections to a deduplicated, ordered string
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
+        /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Detected protections, if any</returns>
-        public static string? FormatProtections(Dictionary<string, List<string>>? protections)
+        public static string? FormatProtections(Dictionary<string, List<string>>? protections, Drive? drive)
         {
             // If the filtered list is empty in some way, return
             if (protections == null)
-                return "(CHECK WITH PROTECTIONID)";
-            else if (protections.Count == 0)
+                return "[EXTERNAL SCAN NEEDED]";
+            else if (protections.Count == 0 && drive?.Name == null)
+                return "Mounted disc path missing [EXTERNAL SCAN NEEDED]";
+            else if (protections.Count == 0 && drive?.Name != null)
                 return "None found [OMIT FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
@@ -637,7 +640,7 @@ namespace MPF.Frontend.Tools
                     foundProtections = foundProtections.FindAll(p => p != "StarForce");
                 }
             }
-            
+
             if (foundProtections.Exists(p => p.StartsWith("StarForce Keyless")))
             {
                 foundProtections = foundProtections.FindAll(p => !p.StartsWith("StarForce Keyless"));

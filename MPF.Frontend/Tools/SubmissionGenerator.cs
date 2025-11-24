@@ -131,9 +131,15 @@ namespace MPF.Frontend.Tools
                 {
                     Dictionary<string, List<string>>? protections = null;
                     if (options.ScanForProtection)
-                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
+                    {
+                        // Explicitly note missing/invalid device paths
+                        if (drive?.Name == null)
+                            resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
 
-                    var protectionString = ProtectionTool.FormatProtections(protections);
+                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
+                    }
+
+                    var protectionString = ProtectionTool.FormatProtections(protections, drive);
 
                     info.CopyProtection.Protection += protectionString;
                     info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);

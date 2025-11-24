@@ -1959,7 +1959,7 @@ namespace MPF.Frontend.ViewModels
             try
             {
                 var protections = await ProtectionTool.RunProtectionScanOnPath(CurrentDrive.Name, Options, progress);
-                var output = ProtectionTool.FormatProtections(protections);
+                var output = ProtectionTool.FormatProtections(protections, CurrentDrive);
 
                 LogLn($"Detected the following protections in {CurrentDrive.Name}:\r\n\r\n{output}");
                 return output;
