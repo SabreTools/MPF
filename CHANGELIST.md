@@ -76,6 +76,7 @@
 - New Redumper Drive Pregap Start option
 - Clarify the unmounted device case
 - Add support for .NET 10
+- Update Redumper to build 665
 
 ### 3.5.0 (2025-10-10)
 
