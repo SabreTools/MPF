@@ -1359,7 +1359,7 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            DriveSpeedComboBoxEnabled = _environment.DoesSupportDriveSpeed(CurrentMediaType);
+            DriveSpeedComboBoxEnabled = DumpEnvironment.DoesSupportDriveSpeed(CurrentMediaType);
 
             // If input params are enabled, generate the full parameters from the environment
             if (ParametersCheckBoxEnabled)

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using MPF.UI;
-
-#pragma warning disable IDE1006 // Naming Styles
 
 namespace WPFCustomMessageBox
 {
@@ -201,26 +197,20 @@ namespace WPFCustomMessageBox
 
         private void DisplayImage(MessageBoxImage image)
         {
-            Icon icon;
-
-            switch (image)
+            Icon icon = image switch
             {
-                case MessageBoxImage.Exclamation:       // Enumeration value 48 - also covers "Warning"
-                    icon = SystemIcons.Exclamation;
-                    break;
-                case MessageBoxImage.Error:             // Enumeration value 16, also covers "Hand" and "Stop"
-                    icon = SystemIcons.Hand;
-                    break;
-                case MessageBoxImage.Information:       // Enumeration value 64 - also covers "Asterisk"
-                    icon = SystemIcons.Information;
-                    break;
-                case MessageBoxImage.Question:
-                    icon = SystemIcons.Question;
-                    break;
-                default:
-                    icon = SystemIcons.Information;
-                    break;
-            }
+                // Enumeration value 48 - also covers "Warning"
+                MessageBoxImage.Exclamation => SystemIcons.Exclamation,
+
+                // Enumeration value 16, also covers "Hand" and "Stop"
+                MessageBoxImage.Error => SystemIcons.Hand,
+
+                // Enumeration value 64 - also covers "Asterisk"
+                MessageBoxImage.Information => SystemIcons.Information,
+
+                MessageBoxImage.Question => SystemIcons.Question,
+                _ => SystemIcons.Information,
+            };
 
             Image_MessageBox!.Source = icon.ToImageSource();
             Image_MessageBox.Visibility = Visibility.Visible;

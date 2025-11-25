@@ -2334,10 +2334,9 @@ namespace MPF.Processors
 
                 offsets = temp;
 #else
-                offsets = offsets
+                offsets = [.. offsets
                     .FindAll(s => !string.IsNullOrEmpty(s))
-                    .Distinct()
-                    .ToList();
+                    .Distinct()];
 #endif
 
                 // Now that we're at the offsets, attempt to get the sample offset

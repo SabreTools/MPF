@@ -48,31 +48,31 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 MPF.UI, MPF.CLI, and MPF.Check have the same system requirements for running, with the exception that MPF.UI is Windows-only.
 
-- [Supported OS versions for .NET 9](https://github.com/dotnet/core/blob/main/release-notes/9.0/supported-os.md)
-  - Requires [.NET 9.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) if built without bundled runtime
+- [Supported OS versions for .NET 10](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md)
+  - Requires [.NET 10.0 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if built without bundled runtime
 
 Ensure that your operating system and runtimes are as up-to-date as possible, since some features may rely on those updates.
 
 ## Build Instructions
 
-To build for .NET 9.0, ensure that the [.NET 9.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+To build for .NET 10.0, ensure that the [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) (or later) is installed and included in your `PATH`. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 **MPF.UI (Windows only):**
 
 ```bash
-dotnet build MPF.UI/MPF.UI.csproj --framework net9.0-windows --runtime [win-x86|win-x64]
+dotnet build MPF.UI/MPF.UI.csproj --framework net10.0-windows --runtime [win-x86|win-x64]
 ```
 
 **MPF.CLI (Windows, OSX, Linux):**
 
 ```bash
-dotnet build MPF.CLI/MPF.CLI.csproj --framework net9.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
+dotnet build MPF.CLI/MPF.CLI.csproj --framework net10.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
 ```
 
 **MPF.Check (Windows, OSX, Linux):**
 
 ```bash
-dotnet build MPF.Check/MPF.Check.csproj --framework net9.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
+dotnet build MPF.Check/MPF.Check.csproj --framework net10.0 --runtime [win-x86|win-x64|win-arm64|linux-x64|linux-arm64|osx-x64|osx-arm64]
 ```
 
 Choose one of `win-x86`, `win-x64`, `win-arm64`, `linux-x64`, `linux-arm64`, `osx-x64`, or `osx-arm64` depending on the machine you are targeting.

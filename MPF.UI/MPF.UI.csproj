@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <!-- Assembly Properties -->
-        <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows</TargetFrameworks>
+        <TargetFrameworks>net40;net452;net462;net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
         <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
         <OutputType>WinExe</OutputType>
         <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
@@ -39,7 +39,7 @@
         <ReferenceWpfLunaTheme>false</ReferenceWpfLunaTheme>
         <ReferenceWpfRoyaleTheme>false</ReferenceWpfRoyaleTheme>
     </PropertyGroup>
-    <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`)) OR $(TargetFramework.StartsWith(`net9`))">
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`)) OR $(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`)) OR $(TargetFramework.StartsWith(`net9`)) OR $(TargetFramework.StartsWith(`net10`))">
         <ReferenceWpfAeroTheme>false</ReferenceWpfAeroTheme>
         <ReferenceWpfAero2Theme>true</ReferenceWpfAero2Theme>
         <ReferenceWpfAeroLiteTheme>false</ReferenceWpfAeroLiteTheme>
@@ -70,7 +70,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.RedumpLib" Version="[1.8.0]" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="[1.9.0]" />
     </ItemGroup>
 
     <ItemGroup>

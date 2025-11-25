@@ -16,7 +16,7 @@ namespace WPFCustomMessageBox
     {
         /// <summary>
         /// Global parameter to enable (true) or disable (false) the removal of the title bar icon.
-        /// If you are using a custom window style, the icon removal may cause issues like displaying two title bar (the default windows one and the custom one). 
+        /// If you are using a custom window style, the icon removal may cause issues like displaying two title bar (the default windows one and the custom one).
         /// </summary>
         private static readonly bool RemoveTitleBarIcon = true;
 
@@ -99,14 +99,13 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
-            switch (button)
+            return button switch
             {
-                case MessageBoxButton.YesNo:
-                case MessageBoxButton.YesNoCancel:
-                    return ShowYesNoMessage(null, messageBoxText, caption, null, null, null, null, timeout, timeoutResult);
-                default:
-                    return ShowOKMessage(null, messageBoxText, caption, null, null, null, timeout, timeoutResult);
-            }
+                MessageBoxButton.YesNo
+                    or MessageBoxButton.YesNoCancel => ShowYesNoMessage(null, messageBoxText, caption, null, null, null, null, timeout, timeoutResult),
+
+                _ => ShowOKMessage(null, messageBoxText, caption, null, null, null, timeout, timeoutResult),
+            };
         }
 
         /// <summary>
@@ -124,14 +123,13 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(Window owner, string messageBoxText, string caption, MessageBoxButton button, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
-            switch (button)
+            return button switch
             {
-                case MessageBoxButton.YesNo:
-                case MessageBoxButton.YesNoCancel:
-                    return ShowYesNoMessage(owner, messageBoxText, caption, null, null, null, null, timeout, timeoutResult);
-                default:
-                    return ShowOKMessage(owner, messageBoxText, caption, null, null, null, timeout, timeoutResult);
-            }
+                MessageBoxButton.YesNo
+                    or MessageBoxButton.YesNoCancel => ShowYesNoMessage(owner, messageBoxText, caption, null, null, null, null, timeout, timeoutResult),
+
+                _ => ShowOKMessage(owner, messageBoxText, caption, null, null, null, timeout, timeoutResult),
+            };
         }
 
         /// <summary>
@@ -149,14 +147,13 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
-            switch (button)
+            return button switch
             {
-                case MessageBoxButton.YesNo:
-                case MessageBoxButton.YesNoCancel:
-                    return ShowYesNoMessage(null, messageBoxText, caption, null, null, null, icon, timeout, timeoutResult);
-                default:
-                    return ShowOKMessage(null, messageBoxText, caption, null, null, icon, timeout, timeoutResult);
-            }
+                MessageBoxButton.YesNo
+                    or MessageBoxButton.YesNoCancel => ShowYesNoMessage(null, messageBoxText, caption, null, null, null, icon, timeout, timeoutResult),
+
+                _ => ShowOKMessage(null, messageBoxText, caption, null, null, icon, timeout, timeoutResult),
+            };
         }
 
         /// <summary>
@@ -175,14 +172,13 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(Window owner, string? messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
-            switch (button)
+            return button switch
             {
-                case MessageBoxButton.YesNo:
-                case MessageBoxButton.YesNoCancel:
-                    return ShowYesNoMessage(owner, messageBoxText, caption, null, null, null, icon, timeout, timeoutResult);
-                default:
-                    return ShowOKMessage(owner, messageBoxText, caption, null, null, icon, timeout, timeoutResult);
-            }
+                MessageBoxButton.YesNo
+                    or MessageBoxButton.YesNoCancel => ShowYesNoMessage(owner, messageBoxText, caption, null, null, null, icon, timeout, timeoutResult),
+
+                _ => ShowOKMessage(owner, messageBoxText, caption, null, null, icon, timeout, timeoutResult),
+            };
         }
 
         /// <summary>
@@ -574,7 +570,8 @@ namespace WPFCustomMessageBox
                 //System.Threading.Timer timer = null;
                 //timer = new System.Threading.Timer(s => { msg.Close(); timer.Dispose(); }, null, timeout.Value, System.Threading.Timeout.Infinite);
                 var timer = new System.Timers.Timer(timeout.Value) { AutoReset = false };
-                timer.Elapsed += delegate {
+                timer.Elapsed += delegate
+                {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
                         dialog.Result = timeoutResult;

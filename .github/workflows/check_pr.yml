@@ -3,30 +3,29 @@ name: Build PR
 on: [pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Free Disk Space (Ubuntu)
-      uses: jlumbroso/free-disk-space@v1.3.1
-      with:
-        dotnet: false
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Free Disk Space (Ubuntu)
+              uses: jlumbroso/free-disk-space@v1.3.1
+              with:
+                  dotnet: false
 
-    - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-            6.0.x
-            8.0.x
-            9.0.x
-            10.0.x
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v5
+              with:
+                  dotnet-version: |
+                      8.0.x
+                      9.0.x
+                      10.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore
+            - name: Restore dependencies
+              run: dotnet restore
 
-    - name: Build
-      run: dotnet build
+            - name: Build
+              run: dotnet build
 
-    - name: Test
-      run: dotnet test
+            - name: Test
+              run: dotnet test

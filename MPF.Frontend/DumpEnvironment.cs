@@ -288,7 +288,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
-        public bool DoesSupportDriveSpeed(MediaType? mediaType)
+        public static bool DoesSupportDriveSpeed(MediaType? mediaType)
         {
             return mediaType switch
             {
@@ -486,7 +486,11 @@ namespace MPF.Frontend
             if (outputFilename.EndsWith("_logs.zip", StringComparison.OrdinalIgnoreCase))
             {
                 int zipSuffixIndex = outputFilename.LastIndexOf("_logs.zip", StringComparison.OrdinalIgnoreCase);
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                outputFilename = outputFilename[..zipSuffixIndex] + ".tmp";
+#else
                 outputFilename = outputFilename.Substring(0, zipSuffixIndex) + ".tmp";
+#endif
             }
 
             // Determine the media type from the processor
@@ -818,7 +822,11 @@ namespace MPF.Frontend
                 {
                     string scanPath = key;
                     if (hideDriveLetters)
-                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? String.Empty).Length);
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        scanPath = Path.DirectorySeparatorChar + key[(Path.GetPathRoot(key) ?? string.Empty).Length..];
+#else
+                        scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? string.Empty).Length);
+#endif
 
                     List<string>? scanResult = info.CopyProtection.FullProtections[key];
 

@@ -51,8 +51,8 @@ namespace WPFCustomMessageBox
         }
 
         /// <summary>
-        /// Keyboard Accellerators are used in Windows to allow easy shortcuts to controls like Buttons and 
-        /// MenuItems. These allow users to press the Alt key, and a shortcut key will be highlighted on the 
+        /// Keyboard Accellerators are used in Windows to allow easy shortcuts to controls like Buttons and
+        /// MenuItems. These allow users to press the Alt key, and a shortcut key will be highlighted on the
         /// control. If the user presses that key, that control will be activated.
         /// This method checks a string if it contains a keyboard accellerator. If it doesn't, it adds one to the
         /// beginning of the string. If there are two strings with the same accellerator, Windows handles it.

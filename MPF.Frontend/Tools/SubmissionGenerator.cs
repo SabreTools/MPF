@@ -60,7 +60,11 @@ namespace MPF.Frontend.Tools
             if (outputFilename.EndsWith("_logs.zip", StringComparison.OrdinalIgnoreCase))
             {
                 int zipSuffixIndex = outputFilename.LastIndexOf("_logs.zip", StringComparison.OrdinalIgnoreCase);
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                outputFilename = outputFilename[..zipSuffixIndex] + ".tmp";
+#else
                 outputFilename = outputFilename.Substring(0, zipSuffixIndex) + ".tmp";
+#endif
             }
 
             // Check that all of the relevant files are there

@@ -560,8 +560,8 @@ namespace MPF.UI.Windows
                 color = color.Substring(1);
 #endif
 
-                if (color.Length != 6)
-                    return false;
+            if (color.Length != 6)
+                return false;
 
             for (int i = 0; i < color.Length; i++)
             {

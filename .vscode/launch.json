@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MPF.Check/bin/Debug/net9.0/MPF.Check.dll",
+            "program": "${workspaceFolder}/MPF.Check/bin/Debug/net10.0/MPF.Check.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MPF.Check",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -24,7 +24,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MPF.CLI/bin/Debug/net9.0/MPF.CLI.dll",
+            "program": "${workspaceFolder}/MPF.CLI/bin/Debug/net10.0/MPF.CLI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MPF.CLI",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -38,7 +38,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MPF.UI/bin/Debug/net9.0-windows/MPF.dll",
+            "program": "${workspaceFolder}/MPF.UI/bin/Debug/net10.0-windows/MPF.dll",
             "args": [],
             "cwd": "${workspaceFolder}/MPF.UI",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

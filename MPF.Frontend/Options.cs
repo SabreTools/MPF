@@ -19,7 +19,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Aaru path
         /// </summary>
-        private string DefaultAaruPath
+        private static string DefaultAaruPath
         {
             get
             {
@@ -41,7 +41,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default DiscImageCreator path
         /// </summary>
-        private string DefaultDiscImageCreatorPath
+        private static string DefaultDiscImageCreatorPath
         {
             get
             {
@@ -63,7 +63,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Redumper path
         /// </summary>
-        private string DefaultRedumperPath
+        private static string DefaultRedumperPath
         {
             get
             {

@@ -301,7 +301,7 @@ namespace MPF.UI
             </Style.Triggers>
         </Style>";
 
-       #endregion
+        #endregion
 
         public App()
         {

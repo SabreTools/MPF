@@ -775,7 +775,7 @@ namespace MPF.Frontend.Test.Tools
             string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
             Assert.Equal(protections[0], sanitized);
         }
-        
+
         [Fact]
         public void SanitizeFoundProtections_StarForce_Keyless()
         {
