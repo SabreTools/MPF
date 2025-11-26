@@ -77,6 +77,7 @@
 - Clarify the unmounted device case
 - Add support for .NET 10
 - Update Redumper to build 665
+- Disable Zstd PKZIP outputs
 
 ### 3.5.0 (2025-10-10)
 

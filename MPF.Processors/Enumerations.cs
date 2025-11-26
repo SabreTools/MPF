@@ -18,7 +18,8 @@ namespace MPF.Processors
         /// <summary>
         /// PKZIP using Zstd level 19
         /// </summary>
-        Zstd19,
+        /// TODO: Re-enable when fixed at the library level
+        // Zstd19,
     }
 
     /// <summary>
