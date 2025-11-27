@@ -141,7 +141,7 @@ namespace MPF.Processors
                         zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.BestCompression) { UseZip64 = true });
                         break;
                     // case LogCompression.Zstd19:
-                    //     zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.ZStandard, (CompressionLevel)19) { UseZip64 = true });
+                    //     zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.ZStandard, (CompressionLevel)19) { UseZip64 = true, CompressionBufferSize = 0x20000 });
                     //     break;
                     case LogCompression.DeflateDefault:
                     default:

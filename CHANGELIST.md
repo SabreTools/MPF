@@ -78,6 +78,7 @@
 - Add support for .NET 10
 - Update Redumper to build 665
 - Disable Zstd PKZIP outputs
+- Add commented fix for Zstd PKZIP
 
 ### 3.5.0 (2025-10-10)
 
