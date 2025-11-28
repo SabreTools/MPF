@@ -12,7 +12,7 @@
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <VersionPrefix>3.5.0</VersionPrefix>
+        <VersionPrefix>3.6.0</VersionPrefix>
 
         <!-- Package Properties -->
         <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
