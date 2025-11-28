@@ -79,6 +79,7 @@
 - Update Redumper to build 665
 - Disable Zstd PKZIP outputs
 - Add commented fix for Zstd PKZIP
+- Reenable Zstd PKZIP outputs
 
 ### 3.5.0 (2025-10-10)
 
