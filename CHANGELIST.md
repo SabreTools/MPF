@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Check for null or empty layerbreak arrays
+
 ### 3.6.0 (2025-11-28)
 
 - Add BCA to list of files to select in Check UI

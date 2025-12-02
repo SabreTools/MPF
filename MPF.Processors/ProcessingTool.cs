@@ -253,10 +253,10 @@ namespace MPF.Processors
             // Wrap big-endian reading
             static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
             {
-                if (bytes == null)
+                if (bytes.IsNullOrEmpty())
                     return default;
 
-                return bytes.ReadInt32BigEndian(ref offset);
+                return bytes!.ReadInt32BigEndian(ref offset);
             }
 
             // Layerbreak 1 (2+ layers)
