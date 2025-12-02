@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Check for null or empty layerbreak arrays
+- Check range-specific values in layerbreak
 
 ### 3.6.0 (2025-11-28)
 
