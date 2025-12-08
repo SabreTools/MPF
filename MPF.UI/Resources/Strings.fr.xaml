@@ -212,7 +212,7 @@
 
     <!-- Eject Window -->
     <system:String x:Key="EjectTitleString">Éjecter</system:String>
-    <system:String x:Key="EjectMessageString">Il est maintenant sûr d’éjecter le disque</system:String>
+    <system:String x:Key="EjectMessageString">Vous pouvez maintenant éjecter le disque en toute sécurité</system:String>
 
     <!-- Ask Before Quit Window -->
     <system:String x:Key="QuitTitleString">Quitter</system:String>
