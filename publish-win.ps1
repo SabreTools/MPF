@@ -89,14 +89,14 @@ function Download-Programs {
         "Creator_win-x64"      = "https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
 
         # Redumper
-        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-linux-arm64.zip"
-        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-linux-x64.zip"
-        #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-linux-x86.zip"
-        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-macos-arm64.zip"
-        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-macos-x64.zip"
-        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-windows-arm64.zip"
-        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-windows-x86.zip"
-        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b669/redumper-b669-windows-x64.zip"
+        "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-linux-arm64.zip"
+        "Redumper_linux-x64"   = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-linux-x64.zip"
+        #"Redumper_linux-x86"   = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-linux-x86.zip"
+        "Redumper_osx-arm64"   = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-macos-arm64.zip"
+        "Redumper_osx-x64"     = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-macos-x64.zip"
+        "Redumper_win-arm64"   = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-windows-arm64.zip"
+        "Redumper_win-x86"     = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-windows-x86.zip"
+        "Redumper_win-x64"     = "https://github.com/superg/redumper/releases/download/b670/redumper-b670-windows-x64.zip"
     }
 
     # Download and extract files
