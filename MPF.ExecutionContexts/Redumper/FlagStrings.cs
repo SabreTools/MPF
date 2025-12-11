@@ -63,7 +63,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string LeaveUnchanged = "--leave-unchanged";
         public const string ForceQTOC = "--force-qtoc";
         public const string SkipFill = "--skip-fill";
-        public const string ISO9660Trim = "--iso9660-trim";
+        public const string FilesystemTrim = "--filesystem-trim";
 
         #endregion
 
@@ -88,6 +88,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string ForceUnscrambled = "--force-unscrambled";
         public const string ForceRefine = "--force-refine";
         public const string Firmware = "--firmware";
+        public const string ForceFlash = "--force-flash";
         public const string SkipSubcodeDesync = "--skip-subcode-desync";
         public const string Rings = "--rings";
         public const string CdrErrorThreshold = "--cdr-error-threshold";

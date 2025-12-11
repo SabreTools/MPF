@@ -345,22 +345,18 @@ namespace MPF.Processors
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         }
 
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS))
                         {
-                            // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
                     else
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var xgd1SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var xgd1SS))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                            // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
@@ -391,22 +387,18 @@ namespace MPF.Processors
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         }
 
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS))
                         {
-                            // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
                     else
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var xgd23SS, out _))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var xgd23SS))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                            // SS Version from DIC is ignored now
-                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
@@ -2387,11 +2379,10 @@ namespace MPF.Processors
         /// <param name="pfihash">Extracted PFI.bin CRC32 hash (upper-cased)</param>
         /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
         /// <param name="ss">Extracted security sector data</param>
-        /// <param name="ssver">Extracted security sector version</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        internal static bool GetXGDAuxInfo(string disc, out string? dmihash, out string? pfihash, out string? sshash, out string? ss, out string? ssver)
+        internal static bool GetXGDAuxInfo(string disc, out string? dmihash, out string? pfihash, out string? sshash, out string? ss)
         {
-            dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
+            dmihash = null; pfihash = null; sshash = null; ss = null;
 
             // If the file doesn't exist, we can't get info from it
             if (string.IsNullOrEmpty(disc))
@@ -2401,9 +2392,6 @@ namespace MPF.Processors
 
             // This flag is needed because recent versions of DIC include security data twice
             bool foundSecuritySectors = false;
-
-            // SS version for all Kreon DIC dumps is v1
-            ssver = "01";
 
             try
             {

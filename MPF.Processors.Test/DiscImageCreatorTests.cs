@@ -1242,15 +1242,13 @@ namespace MPF.Processors.Test
                 out string? dmihash,
                 out string? pfihash,
                 out string? sshash,
-                out string? ss,
-                out string? ssver);
+                out string? ss);
 
             Assert.False(actual);
             Assert.Null(dmihash);
             Assert.Null(pfihash);
             Assert.Null(sshash);
             Assert.Null(ss);
-            Assert.Null(ssver);
         }
 
         [Fact]
@@ -1261,36 +1259,31 @@ namespace MPF.Processors.Test
                 out string? dmihash,
                 out string? pfihash,
                 out string? sshash,
-                out string? ss,
-                out string? ssver);
+                out string? ss);
 
             Assert.False(actual);
             Assert.Null(dmihash);
             Assert.Null(pfihash);
             Assert.Null(sshash);
             Assert.Null(ss);
-            Assert.Null(ssver);
         }
 
         [Fact]
         public void GetXGDAuxInfo_Valid_Filled()
         {
             string? expectedSs = "0-12345";
-            string? expectedSsver = "01";
             string disc = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM", "test_disc.txt");
             bool actual = DiscImageCreator.GetXGDAuxInfo(disc,
                 out string? dmihash,
                 out string? pfihash,
                 out string? sshash,
-                out string? ss,
-                out string? ssver);
+                out string? ss);
 
             Assert.True(actual);
             Assert.Equal("00000000", dmihash);
             Assert.Equal("00000000", pfihash);
             Assert.Equal("00000000", sshash);
             Assert.Equal(expectedSs, ss);
-            Assert.Equal(expectedSsver, ssver);
         }
 
         #endregion

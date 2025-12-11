@@ -99,7 +99,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.LeaveUnchanged] = new FlagInput(FlagStrings.LeaveUnchanged),
             [FlagStrings.ForceQTOC] = new FlagInput(FlagStrings.ForceQTOC),
             [FlagStrings.SkipFill] = new UInt8Input(FlagStrings.SkipFill),
-            [FlagStrings.ISO9660Trim] = new FlagInput(FlagStrings.ISO9660Trim),
+            [FlagStrings.FilesystemTrim] = new FlagInput(FlagStrings.FilesystemTrim),
 
             // Drive Test
             [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
@@ -118,6 +118,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.ForceUnscrambled] = new FlagInput(FlagStrings.ForceUnscrambled),
             [FlagStrings.ForceRefine] = new FlagInput(FlagStrings.ForceRefine),
             //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
+            [FlagStrings.ForceFlash] = new FlagInput(FlagStrings.ForceFlash),
             [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
             [FlagStrings.Rings] = new FlagInput(FlagStrings.Rings),
             [FlagStrings.CdrErrorThreshold] = new Int32Input(FlagStrings.CdrErrorThreshold),
@@ -198,7 +199,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.LeaveUnchanged,
                     FlagStrings.ForceQTOC,
                     FlagStrings.SkipFill,
-                    FlagStrings.ISO9660Trim,
+                    FlagStrings.FilesystemTrim,
 
                     // Drive Test
                     FlagStrings.DriveTestSkipPlextorLeadin,
@@ -217,6 +218,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.ForceUnscrambled,
                     FlagStrings.ForceRefine,
                     //FlagStrings.Firmware,
+                    FlagStrings.ForceFlash,
                     FlagStrings.SkipSubcodeDesync,
                     FlagStrings.Rings,
                     FlagStrings.CdrErrorThreshold,
