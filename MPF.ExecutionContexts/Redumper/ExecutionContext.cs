@@ -99,7 +99,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.LeaveUnchanged] = new FlagInput(FlagStrings.LeaveUnchanged),
             [FlagStrings.ForceQTOC] = new FlagInput(FlagStrings.ForceQTOC),
             [FlagStrings.SkipFill] = new UInt8Input(FlagStrings.SkipFill),
-            [FlagStrings.ISO9660Trim] = new FlagInput(FlagStrings.ISO9660Trim),
+            [FlagStrings.FilesystemTrim] = new FlagInput(FlagStrings.FilesystemTrim),
 
             // Drive Test
             [FlagStrings.DriveTestSkipPlextorLeadin] = new FlagInput(FlagStrings.DriveTestSkipPlextorLeadin),
@@ -199,7 +199,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.LeaveUnchanged,
                     FlagStrings.ForceQTOC,
                     FlagStrings.SkipFill,
-                    FlagStrings.ISO9660Trim,
+                    FlagStrings.FilesystemTrim,
 
                     // Drive Test
                     FlagStrings.DriveTestSkipPlextorLeadin,

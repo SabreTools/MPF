@@ -63,7 +63,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string LeaveUnchanged = "--leave-unchanged";
         public const string ForceQTOC = "--force-qtoc";
         public const string SkipFill = "--skip-fill";
-        public const string ISO9660Trim = "--iso9660-trim";
+        public const string FilesystemTrim = "--filesystem-trim";
 
         #endregion
 
