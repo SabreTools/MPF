@@ -9,11 +9,11 @@ namespace MPF.ExecutionContexts.Redumper
 
         GENERIC,
         PLEXTOR,
-        LG_ASU8A,
-        LG_ASU8B,
-        LG_ASU8C,
-        LG_ASU3,
-        LG_ASU2,
+        MTK8A,
+        MTK8B,
+        MTK8C,
+        MTK3,
+        MTK2,
     }
 
     /// <summary>
