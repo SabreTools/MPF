@@ -3,6 +3,7 @@
 - Check for null or empty layerbreak arrays
 - Check range-specific values in layerbreak
 - Update Redumper to build 671
+- Update Redumper to build 676 (rename asus flags to mediatek)
 
 ### 3.6.0 (2025-11-28)
 

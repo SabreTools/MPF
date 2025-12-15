@@ -121,11 +121,11 @@ namespace MPF.Frontend.Test
         [InlineData(RedumperDriveType.NONE, "Default")]
         [InlineData(RedumperDriveType.GENERIC, "GENERIC")]
         [InlineData(RedumperDriveType.PLEXTOR, "PLEXTOR")]
-        [InlineData(RedumperDriveType.LG_ASU8A, "LG_ASU8A")]
-        [InlineData(RedumperDriveType.LG_ASU8B, "LG_ASU8B")]
-        [InlineData(RedumperDriveType.LG_ASU8C, "LG_ASU8C")]
-        [InlineData(RedumperDriveType.LG_ASU3, "LG_ASU3")]
-        [InlineData(RedumperDriveType.LG_ASU2, "LG_ASU2")]
+        [InlineData(RedumperDriveType.MTK8A, "MTK8A")]
+        [InlineData(RedumperDriveType.MTK8B, "MTK8B")]
+        [InlineData(RedumperDriveType.MTK8C, "MTK8C")]
+        [InlineData(RedumperDriveType.MTK3, "MTK3")]
+        [InlineData(RedumperDriveType.MTK2, "MTK2")]
         public void LongName_RedumperDriveType(RedumperDriveType? type, string? expected)
         {
             string? actual = type.LongName();
