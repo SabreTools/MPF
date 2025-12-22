@@ -79,6 +79,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Continue = "--continue";
         public const string LBAStart = "--lba-start";
         public const string LBAEnd = "--lba-end";
+        public const string LBAEndBySubcode = "--lba-end-by-subcode";
         public const string RefineSubchannel = "--refine-subchannel";
         public const string RefineSectorMode = "--refine-sector-mode";
         public const string Skip = "--skip";
@@ -90,7 +91,6 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Firmware = "--firmware";
         public const string ForceFlash = "--force-flash";
         public const string SkipSubcodeDesync = "--skip-subcode-desync";
-        public const string Rings = "--rings";
         public const string CdrErrorThreshold = "--cdr-error-threshold";
 
         #endregion

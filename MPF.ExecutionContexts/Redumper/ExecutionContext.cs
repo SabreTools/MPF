@@ -109,6 +109,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.Continue] = new StringInput(FlagStrings.Continue),
             [FlagStrings.LBAStart] = new Int32Input(FlagStrings.LBAStart),
             [FlagStrings.LBAEnd] = new Int32Input(FlagStrings.LBAEnd),
+            [FlagStrings.LBAEndBySubcode] = new Int32Input(FlagStrings.LBAEndBySubcode),
             [FlagStrings.RefineSubchannel] = new FlagInput(FlagStrings.RefineSubchannel),
             [FlagStrings.RefineSectorMode] = new FlagInput(FlagStrings.RefineSectorMode),
             [FlagStrings.Skip] = new StringInput(FlagStrings.Skip),
@@ -120,7 +121,6 @@ namespace MPF.ExecutionContexts.Redumper
             //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
             [FlagStrings.ForceFlash] = new FlagInput(FlagStrings.ForceFlash),
             [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
-            [FlagStrings.Rings] = new FlagInput(FlagStrings.Rings),
             [FlagStrings.CdrErrorThreshold] = new Int32Input(FlagStrings.CdrErrorThreshold),
 
             // Undocumented
@@ -209,6 +209,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.Continue,
                     FlagStrings.LBAStart,
                     FlagStrings.LBAEnd,
+                    FlagStrings.LBAEndBySubcode,
                     FlagStrings.RefineSubchannel,
                     FlagStrings.RefineSectorMode,
                     FlagStrings.Skip,
@@ -220,7 +221,6 @@ namespace MPF.ExecutionContexts.Redumper
                     //FlagStrings.Firmware,
                     FlagStrings.ForceFlash,
                     FlagStrings.SkipSubcodeDesync,
-                    FlagStrings.Rings,
                     FlagStrings.CdrErrorThreshold,
 
                     // Undocumented
