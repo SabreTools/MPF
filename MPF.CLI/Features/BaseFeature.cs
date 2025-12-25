@@ -159,6 +159,18 @@ namespace MPF.CLI.Features
                 return false;
             }
 
+            // If no media type is provided, use a default
+            if (CustomParams == null && (MediaType == null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
+            {
+                // Get reasonable default values based on the current system
+                var mediaTypes = System.MediaTypes();
+                MediaType = mediaTypes.Count > 0 ? mediaTypes[0] : SabreTools.RedumpLib.Data.MediaType.CDROM;
+                if (MediaType == SabreTools.RedumpLib.Data.MediaType.NONE)
+                    MediaType = SabreTools.RedumpLib.Data.MediaType.CDROM;
+
+                Console.WriteLine($"No media type was provided, using {MediaType.LongName()}");
+            }
+
             // Normalize the file path
             if (DevicePath != null && FilePath == null)
             {
