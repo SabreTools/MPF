@@ -60,7 +60,7 @@
     <system:String x:Key="EnableDarkModeCheckBoxString">Activer le mode sombre</system:String>
     <system:String x:Key="CheckForUpdatesCheckBoxString">Vérifier les mises à jour au démarrage</system:String>
     <system:String x:Key="CopyURLToClipboardCheckBoxString">Copier l’URL de mise à jour</system:String>
-    <system:String x:Key="FastUpdateLabelCheckBoxString">Étiquette de mise à jour rapide</system:String>
+    <system:String x:Key="FastUpdateLabelCheckBoxString">Mise à jour rapide du titre du disque</system:String>
     <system:String x:Key="DefaultUILanguageLabelString">Langue par défaut de l’interface :</system:String>
     <system:String x:Key="DetectionGroupBoxString">Détection</system:String>
     <system:String x:Key="SkipSystemDetectCheckBoxString">Ignorer la détection du système</system:String>
@@ -81,7 +81,7 @@
     <system:String x:Key="DumpingGroupBoxString">Dumping</system:String>
     <system:String x:Key="ShowDiscInfoCheckBoxString">Afficher les infos du disque</system:String>
     <system:String x:Key="PullAllInformationCheckBoxString">Récupérer toutes les informations</system:String>
-    <system:String x:Key="EnableTabInputCheckBoxString">Activer la saisie par tabulation</system:String>
+    <system:String x:Key="EnableTabInputCheckBoxString">Activer la saisie des tabulations</system:String>
     <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">Activer la compatibilité Redump</system:String>
     <system:String x:Key="ShowEjectReminderCheckBoxString">Afficher le rappel d’éjection</system:String>
     <system:String x:Key="AddPlaceholdersCheckBoxString">Ajouter des espaces réservés</system:String>
