@@ -6,6 +6,7 @@
 - Update Redumper to build 676 (rename asus flags to mediatek)
 - Use default media type if not provided
 - Update Redumper to build 682 (Dreamcast support)
+- Add default subfolder to CLI outputs
 
 ### 3.6.0 (2025-11-28)
 

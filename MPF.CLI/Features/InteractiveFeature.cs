@@ -38,7 +38,12 @@ namespace MPF.CLI.Features
 
             // Create return values
             MediaType = SabreTools.RedumpLib.Data.MediaType.NONE;
-            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+#if NET20 || NET35
+            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", Path.Combine(defaultFileName, $"{defaultFileName}.bin"));
+#else
+            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", defaultFileName, $"{defaultFileName}.bin");
+#endif
             System = Options.DefaultSystem;
 
             // Create state values

@@ -174,7 +174,8 @@ namespace MPF.CLI.Features
             // Normalize the file path
             if (DevicePath != null && FilePath == null)
             {
-                FilePath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+                string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
+                FilePath = Path.Combine(defaultFileName, $"{defaultFileName}.bin");
                 if (Options.DefaultOutputPath != null)
                     FilePath = Path.Combine(Options.DefaultOutputPath, FilePath);
             }
