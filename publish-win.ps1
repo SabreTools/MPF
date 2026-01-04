@@ -81,12 +81,12 @@ function Download-Programs {
 
         # DiscImageCreator
         "Creator_linux-arm64"  = ""
-        "Creator_linux-x64"    = "https://github.com/user-attachments/files/22080484/DiscImageCreator_20250901.tar.gz"
-        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
-        "Creator_osx-x64"      = "https://github.com/user-attachments/files/20000184/DiscImageCreator_20250501.zip"
+        "Creator_linux-x64"    = "https://github.com/user-attachments/files/24401509/DiscImageCreator_20260101.tar.gz"
+        "Creator_osx-arm64"    = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
+        "Creator_osx-x64"      = "https://github.com/user-attachments/files/24401512/DiscImageCreator_20260101.zip"
         "Creator_win-arm64"    = ""
-        "Creator_win-x86"      = "https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
-        "Creator_win-x64"      = "https://github.com/user-attachments/files/22080480/DiscImageCreator_20250901.zip"
+        "Creator_win-x86"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
+        "Creator_win-x64"      = "https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
         # Redumper
         "Redumper_linux-arm64" = "https://github.com/superg/redumper/releases/download/b682/redumper-b682-linux-arm64.zip"

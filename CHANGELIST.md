@@ -7,6 +7,7 @@
 - Use default media type if not provided
 - Update Redumper to build 682 (Dreamcast support)
 - Add default subfolder to CLI outputs
+- Update DIC to 20260101
 
 ### 3.6.0 (2025-11-28)
 

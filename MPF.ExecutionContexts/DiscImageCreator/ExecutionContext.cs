@@ -208,6 +208,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     FlagStrings.Tages,
                 ],
 
+                [CommandStrings.AuthPS3] = [],
+
                 [CommandStrings.BluRay] =
                 [
                     FlagStrings.DatExpand,
@@ -418,6 +420,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
             // Drive Letter
             if (BaseCommand == CommandStrings.Audio
+                || BaseCommand == CommandStrings.AuthPS3
                 || BaseCommand == CommandStrings.BluRay
                 || BaseCommand == CommandStrings.Close
                 || BaseCommand == CommandStrings.CompactDisc
@@ -1184,6 +1187,14 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         EndLBAValue = int.Parse(parts[5]);
 
                     index = 6;
+                    break;
+
+                case CommandStrings.AuthPS3:
+                    if (parts.Length != 2)
+                        return false;
+
+                    // Blindly assume the path exists
+                    DrivePath = parts[1];
                     break;
 
                 case CommandStrings.BluRay:

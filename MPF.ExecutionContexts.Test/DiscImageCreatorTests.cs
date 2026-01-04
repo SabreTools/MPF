@@ -102,6 +102,21 @@ namespace MPF.ExecutionContexts.Test
 
         #endregion
 
+        #region AuthPS3
+
+        [Theory]
+        [InlineData("authps3 f")]
+        public void AuthPS3Test(string parameters)
+        {
+            string? expected = "authps3 f";
+            var context = new ExecutionContext(parameters);
+            string? actual = context.GenerateParameters();
+            Assert.Equal(expected, actual);
+            Assert.False(context.IsDumpingCommand());
+        }
+
+        #endregion
+
         #region BluRay
 
         [Theory]

@@ -636,6 +636,9 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "img_cue"),
+                        new($"{outputFilename}_interleave.sub", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "interleave_sub"),
                         new($"{outputFilename}_mainError.txt", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
@@ -666,6 +669,9 @@ namespace MPF.Processors
                             | OutputFileFlags.Artifact
                             | OutputFileFlags.Zippable,
                             "vol_desc"),
+                        new($"{outputFilename}_with_cdg.bin", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "with_cdg_bin"),
 
                         new([$"{outputFilename} (Track 0).sub", $"{outputFilename} (Track 00).sub"], OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

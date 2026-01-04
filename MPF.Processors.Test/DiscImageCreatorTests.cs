@@ -95,7 +95,7 @@ namespace MPF.Processors.Test
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(26, actual.Count);
+            Assert.Equal(28, actual.Count);
         }
 
         [Fact]
@@ -276,7 +276,7 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
             var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(21, actual.Count);
+            Assert.Equal(23, actual.Count);
         }
 
         #endregion
@@ -324,7 +324,7 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
             var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Equal(24, actual.Count);
+            Assert.Equal(26, actual.Count);
         }
 
         #region GetPreservedFilePaths

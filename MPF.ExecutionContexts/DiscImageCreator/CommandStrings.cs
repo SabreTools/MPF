@@ -7,6 +7,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
     {
         public const string NONE = "";
         public const string Audio = "audio";
+        public const string AuthPS3 = "authps3";
         public const string BluRay = "bd";
         public const string Close = "close";
         public const string CompactDisc = "cd";
