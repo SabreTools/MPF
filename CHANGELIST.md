@@ -8,6 +8,7 @@
 - Update Redumper to build 682 (Dreamcast support)
 - Add default subfolder to CLI outputs
 - Update DIC to 20260101
+- Update Redumper to build 683
 
 ### 3.6.0 (2025-11-28)
 
