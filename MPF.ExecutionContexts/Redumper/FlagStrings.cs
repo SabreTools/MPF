@@ -92,6 +92,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string ForceFlash = "--force-flash";
         public const string SkipSubcodeDesync = "--skip-subcode-desync";
         public const string CdrErrorThreshold = "--cdr-error-threshold";
+        public const string ScsiTimeout = "--scsi-timeout";
 
         #endregion
 

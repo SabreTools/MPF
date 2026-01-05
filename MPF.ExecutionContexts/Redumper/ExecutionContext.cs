@@ -122,6 +122,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.ForceFlash] = new FlagInput(FlagStrings.ForceFlash),
             [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
             [FlagStrings.CdrErrorThreshold] = new Int32Input(FlagStrings.CdrErrorThreshold),
+            [FlagStrings.ScsiTimeout] = new Int32Input(FlagStrings.ScsiTimeout),
 
             // Undocumented
             [FlagStrings.Debug] = new FlagInput(FlagStrings.Debug),
@@ -222,6 +223,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.ForceFlash,
                     FlagStrings.SkipSubcodeDesync,
                     FlagStrings.CdrErrorThreshold,
+                    FlagStrings.ScsiTimeout,
 
                     // Undocumented
                     FlagStrings.Debug,
