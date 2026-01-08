@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -152,6 +153,283 @@ namespace MPF.Frontend.Tools
             {
                 // Absorb the exception
                 return false;
+            }
+        }
+
+        #endregion
+        
+        // TODO: This could technically be PC or Mac, unsure what to call it
+        #region Computer
+        
+        // TODO: All 3 steam methods contain a lot of duplicated code. Is it possible to merge them?
+        /// <summary>
+        /// Get info for discs containing Steam2 (sis/sim/sid) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam2 information on success, null otherwise</returns>
+        public static string? GetSteam2Info(Drive? drive)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamDepotIdList = new List<string>();
+
+                // TODO: is this case-sensitive?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+                    
+                    string filename = Path.GetFileName(sis);
+
+                    // Skips steam3 sku sis files
+                    // TODO: is this always the correct assumption?
+                    if (filename.ToLower() == "sku.sis")
+                        continue;
+                    
+                    long sisSize = new FileInfo(sis).Length;
+                    
+                    // Arbitrary filesize
+                    // TODO: check all sis sizes to make sure this is good
+                    if (sisSize < 1000000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+                    
+                        //TODO: use ST.Serialization constants?
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
+                            upper = steam2Value;
+                    
+                        if (upper == null)
+                            continue;
+
+                        if (upper["depots"] == null)
+                            continue;
+
+                        // TODO: why do I need to use conditional access still
+                        var depotArr = upper["depots"]?.ToObject<Dictionary<string, string>>();
+                    
+                        if (depotArr == null)
+                            continue;
+                    
+                        steamDepotIdList.AddRange(depotArr.Values.ToList());
+                    }
+                }
+                
+                var sortedArray = steamDepotIdList.Select(long.Parse).ToArray();
+                
+                // TODO: do I need to get the environment newline here
+                // TODO: compatibility with pre dotnet 4.0
+                steamInfo = string.Join("\n", sortedArray);
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+        
+                /// <summary>
+        /// Get info for discs containing Steam2 (sis/csm/csd) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam3 information on success, null otherwise</returns>
+        public static string? GetSteam3Info(Drive? drive)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamDepotIdDict = new SortedDictionary<long, long>();
+
+                // TODO: is this case-sensitive?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+                    
+                    string filename = Path.GetFileName(sis);
+
+                    // Skips steam2 sku sis files
+                    // TODO: is this always the correct assumption?
+                    if (filename.ToLower() != "sku.sis")
+                        continue;
+                    
+                    long sisSize = new FileInfo(sis).Length;
+                    
+                    // Arbitrary filesize
+                    // TODO: check all sis sizes to make sure this is good
+                    if (sisSize < 1000000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+                    
+                        //TODO: use ST.Serialization constants?
+                        if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
+                            upper = steam3Value;
+                    
+                        if (upper == null)
+                            continue;
+
+                        if (upper["manifests"] == null)
+                            continue;
+
+                        // TODO: why do I need to use conditional access still
+                        // TODO: i dont think parsing them directly to long, long works. Fix this later, or rectify the
+                        // TODO: others if it actually does
+                        var depotArr = upper["manifests"]?.ToObject<Dictionary<long, long>>();
+                    
+                        if (depotArr == null)
+                            continue;
+
+                        foreach (var depot in depotArr)
+                            steamDepotIdDict.Add(depot.Key, depot.Value);
+                    }
+                }
+
+                // TODO: do I need to get the environment newline here
+                foreach (var depot in steamDepotIdDict)
+                {
+                    steamInfo += $"{depot.Key} ({depot.Value})\n";
+                }
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+        
+        /// <summary>
+        /// Get info for discs containing Steam2 (sis/sim/sid) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam2 information on success, null otherwise</returns>
+        public static string? GetSteamAppInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamAppIdList = new List<string>();
+
+                // TODO: is this case-sensitive?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+
+                // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+                    
+                    string filename = Path.GetFileName(sis);
+
+                    // Skips steam3 sku sis files
+                    // TODO: is this always the correct assumption?
+                    if (filename.ToLower() == "sku.sis")
+                        continue;
+                    
+                    long sisSize = new FileInfo(sis).Length;
+                    
+                    // Arbitrary filesize
+                    // TODO: check all sis sizes to make sure this is good
+                    if (sisSize < 1000000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+                        
+                        //TODO: use ST.Serialization constants?
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
+                            upper = steam2Value;
+                        else if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
+                            upper = steam3Value;
+                        
+                        if (upper == null)
+                            continue;
+
+                        if (upper["apps"] == null)
+                            continue;
+
+                        // TODO: why do I need to use conditional access still
+                        var appArr = upper["apps"]?.ToObject<Dictionary<string, string>>();
+                        
+                        if (appArr == null)
+                            continue;
+                        
+                        steamAppIdList.AddRange(appArr.Values.ToList());
+                    }
+                }
+
+                var sortedArray = steamAppIdList.Select(long.Parse).ToArray();
+                // TODO: compatibility with pre dotnet 4.0
+                steamInfo = string.Join(", ", sortedArray);
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
             }
         }
 
