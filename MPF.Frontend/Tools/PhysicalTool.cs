@@ -238,6 +238,7 @@ namespace MPF.Frontend.Tools
                 }
                 
                 var sortedArray = steamDepotIdList.Select(long.Parse).ToArray();
+                Array.Sort(sortedArray);
                 
 #if NET20 || NET35
                 var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
@@ -327,7 +328,11 @@ namespace MPF.Frontend.Tools
                             continue;
 
                         foreach (var depot in depotArr)
-                            steamDepotIdDict.Add(depot.Key, depot.Value);
+#if NETFRAMEWORK
+                            steamDepotIdDict.Add(depot.Key, depot.Value); // Always fine in practice.
+#else
+                            steamDepotIdDict.TryAdd(depot.Key, depot.Value); // Mainly here to allow easier bulk testing.
+#endif
                     }
                 }
 
@@ -427,6 +432,7 @@ namespace MPF.Frontend.Tools
                 }
 
                 var sortedArray = steamAppIdList.Select(long.Parse).ToArray();
+                Array.Sort(sortedArray);
                 
 #if NET20 || NET35
                 var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
