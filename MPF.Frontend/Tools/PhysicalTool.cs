@@ -158,10 +158,8 @@ namespace MPF.Frontend.Tools
 
         #endregion
         
-        // TODO: This could technically be PC or Mac, unsure what to call it
         #region Computer
         
-        // TODO: All 3 steam methods contain a lot of duplicated code. Is it possible to merge them?
         /// <summary>
         /// Get info for discs containing Steam2 (sis/sim/sid) depots
         /// </summary>
@@ -184,7 +182,6 @@ namespace MPF.Frontend.Tools
 
                 // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
 #if NETFRAMEWORK
-                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #else
                 var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
@@ -199,7 +196,6 @@ namespace MPF.Frontend.Tools
                     string filename = Path.GetFileName(sis);
 
                     // Skips steam3 sku sis files
-                    // TODO: is this always the correct assumption?
                     if (filename.ToLower() == "sku.sis")
                         continue;
                     
@@ -232,7 +228,6 @@ namespace MPF.Frontend.Tools
                         if (upper["depots"] == null)
                             continue;
 
-                        // TODO: why do I need to use conditional access still
                         var depotArr = upper["depots"]?.ToObject<Dictionary<string, string>>();
                     
                         if (depotArr == null)
@@ -285,7 +280,6 @@ namespace MPF.Frontend.Tools
 
                 // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
 #if NETFRAMEWORK
-                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #else
                 var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
@@ -326,10 +320,7 @@ namespace MPF.Frontend.Tools
 
                         if (upper["manifests"] == null)
                             continue;
-
-                        // TODO: why do I need to use conditional access still
-                        // TODO: i dont think parsing them directly to long, long works. Fix this later, or rectify the
-                        // TODO: others if it actually does
+                        
                         var depotArr = upper["manifests"]?.ToObject<Dictionary<long, long>>();
                     
                         if (depotArr == null)
@@ -379,7 +370,6 @@ namespace MPF.Frontend.Tools
 
                 // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
 #if NETFRAMEWORK
-                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #else
                 var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
@@ -427,7 +417,6 @@ namespace MPF.Frontend.Tools
                         else
                             continue;
 
-                        // TODO: why do I need to use conditional access still
                         var appArr = upper[appsString]?.ToObject<Dictionary<string, string>>();
 
                         if (appArr == null)
