@@ -818,7 +818,6 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Category ??= DiscCategory.Multimedia;
                     break;
                 
-                // TODO: check if this actually works after you hook up redumplib too
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.AppleMacintosh:
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SteamAppID] = PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
