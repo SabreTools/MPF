@@ -169,7 +169,7 @@ namespace MPF.Frontend.Tools
         /// <returns>Steam2 information on success, null otherwise</returns>
         public static string? GetSteam2Info(Drive? drive)
         {
-            // If there's no drive path, we can't get exe name
+            // If there's no drive path, we can't get any sis files
             if (string.IsNullOrEmpty(drive?.Name))
                 return null;
 
@@ -182,8 +182,14 @@ namespace MPF.Frontend.Tools
                 string? steamInfo = "";
                 var steamDepotIdList = new List<string>();
 
-                // TODO: is this case-sensitive?
-                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
 
                 foreach (string sis in sisPaths)
                 {
@@ -199,9 +205,8 @@ namespace MPF.Frontend.Tools
                     
                     long sisSize = new FileInfo(sis).Length;
                     
-                    // Arbitrary filesize
-                    // TODO: check all sis sizes to make sure this is good
-                    if (sisSize < 1000000)
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this. 
+                    if (sisSize > 10000) 
                         continue;
 
                     // Read the sku sis file
@@ -212,8 +217,12 @@ namespace MPF.Frontend.Tools
                     if (skuSis != null && skuSis.VDFObject != null)
                     {
                         JToken? upper = null;
-                    
-                        //TODO: use ST.Serialization constants?
+
+                        // One single case is known where this isn't true, RID 70147. As of writing, the page claims
+                        // it's .sis/.csm/.csd, this isn't true, it's .sis/.sim/.sid. It's one of the latest
+                        // .sis/.sim/.sim discs, if not the latest, and the only one currently known to use "sku" instead
+                        // of "SKU". It's most likely safe to remove this, but to err on the side of caution, this should 
+                        // remain to avoid any risk of double-filling info until a much larger amount of testing is done.
                         if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
                             upper = steam2Value;
                     
@@ -235,10 +244,13 @@ namespace MPF.Frontend.Tools
                 
                 var sortedArray = steamDepotIdList.Select(long.Parse).ToArray();
                 
-                // TODO: do I need to get the environment newline here
-                // TODO: compatibility with pre dotnet 4.0
+#if NET20 || NET35
+                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
+                steamInfo = string.Join("\n", compatibilitySortedArray);
+#else
                 steamInfo = string.Join("\n", sortedArray);
-
+#endif
+                
                 if (steamInfo == "")
                     return null;
                 else
@@ -271,8 +283,14 @@ namespace MPF.Frontend.Tools
                 string? steamInfo = "";
                 var steamDepotIdDict = new SortedDictionary<long, long>();
 
-                // TODO: is this case-sensitive?
-                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
 
                 foreach (string sis in sisPaths)
                 {
@@ -282,15 +300,13 @@ namespace MPF.Frontend.Tools
                     string filename = Path.GetFileName(sis);
 
                     // Skips steam2 sku sis files
-                    // TODO: is this always the correct assumption?
                     if (filename.ToLower() != "sku.sis")
                         continue;
                     
                     long sisSize = new FileInfo(sis).Length;
                     
-                    // Arbitrary filesize
-                    // TODO: check all sis sizes to make sure this is good
-                    if (sisSize < 1000000)
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this. 
+                    if (sisSize > 10000) 
                         continue;
 
                     // Read the sku sis file
@@ -302,7 +318,6 @@ namespace MPF.Frontend.Tools
                     {
                         JToken? upper = null;
                     
-                        //TODO: use ST.Serialization constants?
                         if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
                             upper = steam3Value;
                     
@@ -325,7 +340,6 @@ namespace MPF.Frontend.Tools
                     }
                 }
 
-                // TODO: do I need to get the environment newline here
                 foreach (var depot in steamDepotIdDict)
                 {
                     steamInfo += $"{depot.Key} ({depot.Value})\n";
@@ -363,8 +377,14 @@ namespace MPF.Frontend.Tools
                 string? steamInfo = "";
                 var steamAppIdList = new List<string>();
 
-                // TODO: is this case-sensitive?
-                string[] sisPaths = Directory.GetFiles(drive.Name, "*.sis");
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                // TODO: it does not seem like there's a non-annoying way to recurse in netframework?
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
 
                 // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
                 foreach (string sis in sisPaths)
@@ -374,16 +394,10 @@ namespace MPF.Frontend.Tools
                     
                     string filename = Path.GetFileName(sis);
 
-                    // Skips steam3 sku sis files
-                    // TODO: is this always the correct assumption?
-                    if (filename.ToLower() == "sku.sis")
-                        continue;
-                    
                     long sisSize = new FileInfo(sis).Length;
                     
-                    // Arbitrary filesize
-                    // TODO: check all sis sizes to make sure this is good
-                    if (sisSize < 1000000)
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this. 
+                    if (sisSize > 10000) 
                         continue;
 
                     // Read the sku sis file
@@ -395,7 +409,6 @@ namespace MPF.Frontend.Tools
                     {
                         JToken? upper = null;
                         
-                        //TODO: use ST.Serialization constants?
                         if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
                             upper = steam2Value;
                         else if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
@@ -404,23 +417,35 @@ namespace MPF.Frontend.Tools
                         if (upper == null)
                             continue;
 
-                        if (upper["apps"] == null)
+                        string? appsString = null;
+
+                        // Some newer Steam3 discs (RID 114373 & 114374, 126740) use Apps instead of apps.
+                        if (upper["apps"] != null)
+                            appsString = "apps";
+                        else if (upper["Apps"] != null)
+                            appsString = "Apps";
+                        else
                             continue;
 
                         // TODO: why do I need to use conditional access still
-                        var appArr = upper["apps"]?.ToObject<Dictionary<string, string>>();
-                        
+                        var appArr = upper[appsString]?.ToObject<Dictionary<string, string>>();
+
                         if (appArr == null)
-                            continue;
+                                continue;
                         
                         steamAppIdList.AddRange(appArr.Values.ToList());
                     }
                 }
 
                 var sortedArray = steamAppIdList.Select(long.Parse).ToArray();
-                // TODO: compatibility with pre dotnet 4.0
+                
+#if NET20 || NET35
+                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
+                steamInfo = string.Join(", ", compatibilitySortedArray);
+#else
                 steamInfo = string.Join(", ", sortedArray);
-
+#endif
+                
                 if (steamInfo == "")
                     return null;
                 else
