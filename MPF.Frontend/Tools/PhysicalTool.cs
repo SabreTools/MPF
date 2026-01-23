@@ -165,7 +165,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
         /// <returns>Steam2 information on success, null otherwise</returns>
-        public static string? GetSteam2Info(Drive? drive)
+        public static string? GetSteamSimSidInfo(Drive? drive)
         {
             // If there's no drive path, we can't get any sis files
             if (string.IsNullOrEmpty(drive?.Name))
@@ -195,7 +195,7 @@ namespace MPF.Frontend.Tools
                     
                     string filename = Path.GetFileName(sis);
 
-                    // Skips steam3 sku sis files
+                    // Skips csm/csd sku sis files
                     if (filename.ToLower() == "sku.sis")
                         continue;
                     
@@ -219,8 +219,8 @@ namespace MPF.Frontend.Tools
                         // .sis/.sim/.sim discs, if not the latest, and the only one currently known to use "sku" instead
                         // of "SKU". It's most likely safe to remove this, but to err on the side of caution, this should 
                         // remain to avoid any risk of double-filling info until a much larger amount of testing is done.
-                        if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
-                            upper = steam2Value;
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steamSimSidValue))
+                            upper = steamSimSidValue;
                     
                         if (upper == null)
                             continue;
@@ -259,12 +259,12 @@ namespace MPF.Frontend.Tools
             }
         }
         
-                /// <summary>
-        /// Get info for discs containing Steam2 (sis/csm/csd) depots
+        /// <summary>
+        /// Get info for discs containing Steam3 (sis/csm/csd) depots
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
-        /// <returns>Steam3 information on success, null otherwise</returns>
-        public static string? GetSteam3Info(Drive? drive)
+        /// <returns>Steam Csm/Csd information on success, null otherwise</returns>
+        public static string? GetSteamCsmCsdInfo(Drive? drive)
         {
             // If there's no drive path, we can't get exe name
             if (string.IsNullOrEmpty(drive?.Name))
@@ -313,8 +313,8 @@ namespace MPF.Frontend.Tools
                     {
                         JToken? upper = null;
                     
-                        if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
-                            upper = steam3Value;
+                        if (skuSis.VDFObject.TryGetValue("sku", out var steamCsmCsdValue))
+                            upper = steamCsmCsdValue;
                     
                         if (upper == null)
                             continue;
@@ -404,10 +404,10 @@ namespace MPF.Frontend.Tools
                     {
                         JToken? upper = null;
                         
-                        if (skuSis.VDFObject.TryGetValue("SKU", out var steam2Value))
-                            upper = steam2Value;
-                        else if (skuSis.VDFObject.TryGetValue("sku", out var steam3Value))
-                            upper = steam3Value;
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steamSimSidValue))
+                            upper = steamSimSidValue;
+                        else if (skuSis.VDFObject.TryGetValue("sku", out var steamCsmCsdValue))
+                            upper = steamCsmCsdValue;
                         
                         if (upper == null)
                             continue;

@@ -821,8 +821,8 @@ namespace MPF.Frontend.Tools
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.AppleMacintosh:
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SteamAppID] = PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
-                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.Steam2DepotID] = PhysicalTool.GetSteam2Info(drive) ?? string.Empty;
-                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.Steam3DepotID] = PhysicalTool.GetSteam3Info(drive) ?? string.Empty;
+                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] = PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
+                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] = PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.IncredibleTechnologiesEagle:
