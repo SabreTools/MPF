@@ -61,7 +61,7 @@ namespace MPF.CLI.Features
         public override bool ProcessArgs(string[] args, int index)
         {
             // If we have no arguments, just return
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
                 return true;
 
             // Read the options from config, if possible

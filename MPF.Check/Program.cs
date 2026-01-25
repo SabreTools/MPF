@@ -19,7 +19,7 @@ namespace MPF.Check
             var commandSet = CreateCommands(mainFeature);
 
             // If we have no args, show the help and quit
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
             {
                 BaseFeature.DisplayHelp();
                 return;
@@ -48,12 +48,14 @@ namespace MPF.Check
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!interactive.VerifyInputs())
                     {
                         Console.Error.WriteLine("At least one input is required");
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!interactive.Execute())
                     {
                         BaseFeature.DisplayHelp();
@@ -69,12 +71,14 @@ namespace MPF.Check
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!mainFeature.VerifyInputs())
                     {
                         Console.Error.WriteLine("At least one input is required");
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!mainFeature.Execute())
                     {
                         BaseFeature.DisplayHelp();

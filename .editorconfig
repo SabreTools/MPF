@@ -1,4 +1,167 @@
-﻿[*.cs]
+# top-most EditorConfig file
+root = true
 
-# SYSLIB1045: Convert to 'GeneratedRegexAttribute'.
-dotnet_diagnostic.SYSLIB1045.severity = silent
+# C# files
+[*.cs]
+
+# Indentation and spacing
+charset = utf-8
+indent_size = 4
+indent_style = space
+tab_width = 4
+trim_trailing_whitespace = true
+
+# New line preferences
+end_of_line = lf
+insert_final_newline = true
+max_line_length = unset
+
+# using directive preferences
+csharp_using_directive_placement = outside_namespace
+dotnet_diagnostic.IDE0005.severity = error
+
+# Code-block preferences
+csharp_style_namespace_declarations = block_scoped
+csharp_style_prefer_method_group_conversion = true
+csharp_style_prefer_top_level_statements = false
+
+# Expression-level preferences
+csharp_prefer_simple_default_expression = true
+csharp_style_inlined_variable_declaration = true
+csharp_style_unused_value_assignment_preference = discard_variable
+csharp_style_unused_value_expression_statement_preference = discard_variable
+dotnet_diagnostic.IDE0001.severity = warning
+dotnet_diagnostic.IDE0002.severity = warning
+dotnet_diagnostic.IDE0004.severity = warning
+dotnet_diagnostic.IDE0010.severity = error
+dotnet_diagnostic.IDE0051.severity = warning
+dotnet_diagnostic.IDE0052.severity = warning
+dotnet_diagnostic.IDE0072.severity = warning
+dotnet_diagnostic.IDE0080.severity = warning
+dotnet_diagnostic.IDE0100.severity = error
+dotnet_diagnostic.IDE0110.severity = error
+dotnet_diagnostic.IDE0120.severity = warning
+dotnet_diagnostic.IDE0121.severity = warning
+dotnet_diagnostic.IDE0240.severity = error
+dotnet_diagnostic.IDE0241.severity = error
+dotnet_style_coalesce_expression = true
+dotnet_style_namespace_match_folder = false
+dotnet_style_null_propagation = true
+dotnet_style_prefer_auto_properties = true
+dotnet_style_prefer_collection_expression = when_types_loosely_match
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true
+dotnet_style_prefer_compound_assignment = true
+csharp_style_prefer_simple_property_accessors = true
+dotnet_style_prefer_simplified_interpolation = true
+dotnet_style_prefer_simplified_boolean_expressions = true
+csharp_style_prefer_unbound_generic_type_in_nameof = true
+
+# Field preferences
+dotnet_diagnostic.IDE0044.severity = warning
+dotnet_style_readonly_field = true
+
+# Language keyword vs. framework types preferences
+dotnet_diagnostic.IDE0049.severity = error
+dotnet_style_predefined_type_for_locals_parameters_members = true
+dotnet_style_predefined_type_for_member_access = true
+
+# Modifier preferences
+csharp_prefer_static_local_function = true
+csharp_style_prefer_readonly_struct = true
+dotnet_diagnostic.IDE0036.severity = warning
+dotnet_diagnostic.IDE0040.severity = error
+dotnet_diagnostic.IDE0380.severity = error
+dotnet_style_require_accessibility_modifiers = always
+
+# New-line preferences
+dotnet_diagnostic.IDE2000.severity = warning
+dotnet_diagnostic.IDE2002.severity = warning
+dotnet_diagnostic.IDE2003.severity = warning
+dotnet_diagnostic.IDE2004.severity = warning
+dotnet_diagnostic.IDE2005.severity = warning
+dotnet_diagnostic.IDE2006.severity = warning
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
+csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = false
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = false
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
+dotnet_style_allow_multiple_blank_lines_experimental = false
+dotnet_style_allow_statement_immediately_after_block_experimental = false
+
+# Null-checking preferences
+csharp_style_conditional_delegate_call = true
+
+# Parameter preferences
+dotnet_code_quality_unused_parameters = all
+dotnet_diagnostic.IDE0280.severity = error
+
+# Parentheses preferences
+dotnet_diagnostic.IDE0047.severity = warning
+dotnet_diagnostic.IDE0048.severity = warning
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_operators = always_for_clarity
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+
+# Pattern-matching preferences
+dotnet_diagnostic.IDE0019.severity = warning
+dotnet_diagnostic.IDE0020.severity = warning
+dotnet_diagnostic.IDE0038.severity = warning
+dotnet_diagnostic.IDE0066.severity = none
+dotnet_diagnostic.IDE0083.severity = warning
+dotnet_diagnostic.IDE0260.severity = warning
+csharp_style_pattern_matching_over_as_with_null_check = true
+csharp_style_pattern_matching_over_is_with_cast_check = true
+csharp_style_prefer_not_pattern = true
+csharp_style_prefer_pattern_matching = true
+
+# this. and Me. preferences
+dotnet_style_qualification_for_event = false
+dotnet_style_qualification_for_field = false
+dotnet_style_qualification_for_method = false
+dotnet_style_qualification_for_property = false
+
+# var preferences
+csharp_style_var_for_built_in_types = false
+csharp_style_var_when_type_is_apparent = true
+
+# .NET formatting options
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = true
+
+# C# formatting options
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_case_contents_when_block = false
+csharp_indent_labels = one_less_than_current
+csharp_indent_switch_labels = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_else = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_open_brace = all
+csharp_new_line_between_query_expression_clauses = true
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_around_declaration_statements = false
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false

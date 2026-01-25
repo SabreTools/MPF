@@ -114,6 +114,7 @@ namespace MPF.CLI.Features
             }
 
             // Validate the internal program
+#pragma warning disable IDE0010
             switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
@@ -122,6 +123,7 @@ namespace MPF.CLI.Features
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
                         return false;
                     }
+
                     break;
 
                 case InternalProgram.DiscImageCreator:
@@ -130,6 +132,7 @@ namespace MPF.CLI.Features
                         Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
                         return false;
                     }
+
                     break;
 
                 case InternalProgram.Redumper:
@@ -138,29 +141,32 @@ namespace MPF.CLI.Features
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
                         return false;
                     }
+
                     break;
 
                 default:
                     Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
                     break;
             }
+#pragma warning restore IDE0010
 
             // Ensure we have the values we need
-            if (CustomParams == null && DevicePath == null)
+            if (CustomParams is null && DevicePath is null)
             {
                 Console.Error.WriteLine("Either custom parameters or a device path need to be provided, exiting...");
                 return false;
             }
+
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
-                && CustomParams == null
-                && (MediaType == null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
+                && CustomParams is null
+                && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
                 Console.Error.WriteLine("Media type is required for DiscImageCreator, exiting...");
                 return false;
             }
 
             // If no media type is provided, use a default
-            if (CustomParams == null && (MediaType == null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
+            if (CustomParams is null && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
                 // Get reasonable default values based on the current system
                 var mediaTypes = System.MediaTypes();
@@ -172,14 +178,15 @@ namespace MPF.CLI.Features
             }
 
             // Normalize the file path
-            if (DevicePath != null && FilePath == null)
+            if (DevicePath is not null && FilePath is null)
             {
                 string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                 FilePath = Path.Combine(defaultFileName, $"{defaultFileName}.bin");
-                if (Options.DefaultOutputPath != null)
+                if (Options.DefaultOutputPath is not null)
                     FilePath = Path.Combine(Options.DefaultOutputPath, FilePath);
             }
-            if (FilePath != null)
+
+            if (FilePath is not null)
                 FilePath = FrontendTool.NormalizeOutputPaths(FilePath, getFullPath: true);
 
             // Get the speed from the options
@@ -221,7 +228,7 @@ namespace MPF.CLI.Features
             }
 
             // If we have a mounted path, replace the environment
-            if (MountedPath != null && Directory.Exists(MountedPath))
+            if (MountedPath is not null && Directory.Exists(MountedPath))
             {
                 drive = Drive.Create(null, MountedPath);
                 env = new DumpEnvironment(Options,

@@ -50,7 +50,7 @@ namespace MPF.ExecutionContexts.Data
         public override string Format(bool useEquals)
         {
             // Do not output if there is no value
-            if (Value == null)
+            if (Value is null)
                 return string.Empty;
 
             // Build the output format

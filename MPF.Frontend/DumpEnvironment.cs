@@ -133,23 +133,25 @@ namespace MPF.Frontend
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
-            if (programFound == null && _internalProgram != InternalProgram.Redumper)
+            if (programFound is null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Redumper(_system);
+                var processor = new Redumper(_system);
                 var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
                     programFound = InternalProgram.Redumper;
             }
-            if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
+
+            if (programFound is null && _internalProgram != InternalProgram.DiscImageCreator)
             {
-                var processor = new Processors.DiscImageCreator(_system);
+                var processor = new DiscImageCreator(_system);
                 var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
                     programFound = InternalProgram.DiscImageCreator;
             }
-            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+
+            if (programFound is null && _internalProgram != InternalProgram.Aaru)
             {
-                var processor = new Processors.Aaru(_system);
+                var processor = new Aaru(_system);
                 var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
                 if (missingFiles.Count == 0)
                     programFound = InternalProgram.Aaru;
@@ -165,21 +167,23 @@ namespace MPF.Frontend
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
-            if (programFound == null && _internalProgram != InternalProgram.Redumper)
+            if (programFound is null && _internalProgram != InternalProgram.Redumper)
             {
-                var processor = new Processors.Redumper(_system);
+                var processor = new Redumper(_system);
                 if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
                     programFound = InternalProgram.Redumper;
             }
-            if (programFound == null && _internalProgram != InternalProgram.DiscImageCreator)
+
+            if (programFound is null && _internalProgram != InternalProgram.DiscImageCreator)
             {
-                var processor = new Processors.DiscImageCreator(_system);
+                var processor = new DiscImageCreator(_system);
                 if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
                     programFound = InternalProgram.DiscImageCreator;
             }
-            if (programFound == null && _internalProgram != InternalProgram.Aaru)
+
+            if (programFound is null && _internalProgram != InternalProgram.Aaru)
             {
-                var processor = new Processors.Aaru(_system);
+                var processor = new Aaru(_system);
                 if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
                     programFound = InternalProgram.Aaru;
             }
@@ -194,6 +198,7 @@ namespace MPF.Frontend
         /// <param name="parameters">String representation of the parameters</param>
         public bool SetExecutionContext(MediaType? mediaType, string? parameters)
         {
+#pragma warning disable IDE0072
             _executionContext = _internalProgram switch
             {
                 InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.AaruPath },
@@ -204,9 +209,10 @@ namespace MPF.Frontend
                 InternalProgram.NONE => null,
                 _ => null,
             };
+#pragma warning restore IDE0072
 
             // Set system, type, and drive
-            if (_executionContext != null)
+            if (_executionContext is not null)
             {
                 _executionContext.RedumpSystem = _system;
                 _executionContext.MediaType = mediaType;
@@ -216,7 +222,7 @@ namespace MPF.Frontend
                 _drive ??= Drive.Create(InternalDriveType.Optical, _executionContext.InputPath!);
             }
 
-            return _executionContext != null;
+            return _executionContext is not null;
         }
 
         /// <summary>
@@ -226,7 +232,7 @@ namespace MPF.Frontend
         {
             _processor = _internalProgram switch
             {
-                InternalProgram.Aaru => new Processors.Aaru(_system),
+                InternalProgram.Aaru => new Aaru(_system),
                 InternalProgram.CleanRip => new CleanRip(_system),
                 InternalProgram.DiscImageCreator => new DiscImageCreator(_system),
                 InternalProgram.PS3CFW => new PS3CFW(_system),
@@ -239,7 +245,7 @@ namespace MPF.Frontend
                 _ => null,
             };
 
-            return _processor != null;
+            return _processor is not null;
         }
 
         /// <summary>
@@ -251,12 +257,13 @@ namespace MPF.Frontend
         public string? GetFullParameters(MediaType? mediaType, int? driveSpeed)
         {
             // Populate with the correct params for inputs (if we're not on the default option)
-            if (_system != null && mediaType != MediaType.NONE)
+            if (_system is not null && mediaType != MediaType.NONE)
             {
                 // If drive letter is invalid, skip this
-                if (_drive == null)
+                if (_drive is null)
                     return null;
 
+#pragma warning disable IDE0072
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
@@ -268,6 +275,7 @@ namespace MPF.Frontend
                     InternalProgram.NONE => null,
                     _ => null,
                 };
+#pragma warning restore IDE0072
 
                 // Generate and return the param string
                 return _executionContext?.GenerateParameters();
@@ -290,6 +298,7 @@ namespace MPF.Frontend
         /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
         public static bool DoesSupportDriveSpeed(MediaType? mediaType)
         {
+#pragma warning disable IDE0072
             return mediaType switch
             {
                 MediaType.CDROM
@@ -302,12 +311,13 @@ namespace MPF.Frontend
                     or MediaType.NintendoWiiUOpticalDisc => true,
                 _ => false,
             };
+#pragma warning restore IDE0072
         }
 
         /// <inheritdoc cref="BaseProcessor.FoundAllFiles(MediaType?, string?, string)"/>
         public bool FoundAllFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
-            if (_processor == null)
+            if (_processor is null)
                 return false;
 
             return _processor.FoundAllFiles(mediaType, outputDirectory, outputFilename).Count == 0;
@@ -316,7 +326,7 @@ namespace MPF.Frontend
         /// <inheritdoc cref="BaseProcessor.FoundAnyFiles(MediaType?, string?, string)"/>
         public bool FoundAnyFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
         {
-            if (_processor == null)
+            if (_processor is null)
                 return false;
 
             return _processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename);
@@ -325,7 +335,7 @@ namespace MPF.Frontend
         /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
         public string? GetDefaultExtension(MediaType? mediaType)
         {
-            if (_executionContext == null)
+            if (_executionContext is null)
                 return null;
 
             return _executionContext.GetDefaultExtension(mediaType);
@@ -334,7 +344,7 @@ namespace MPF.Frontend
         /// <inheritdoc cref="BaseExecutionContext.GetMediaType()"/>
         public MediaType? GetMediaType()
         {
-            if (_executionContext == null)
+            if (_executionContext is null)
                 return null;
 
             return _executionContext.GetMediaType();
@@ -346,9 +356,10 @@ namespace MPF.Frontend
         public ResultEventArgs GetSupportStatus(MediaType? mediaType)
         {
             // No system chosen, update status
-            if (_system == null)
+            if (_system is null)
                 return ResultEventArgs.Failure("Please select a valid system");
 
+#pragma warning disable IDE0072
             // If we're on an unsupported type, update the status accordingly
             return mediaType switch
             {
@@ -381,12 +392,13 @@ namespace MPF.Frontend
                 // Undumpable but recognized types
                 _ => ResultEventArgs.Failure($"{mediaType.LongName()} media are not supported for dumping"),
             };
+#pragma warning restore IDE0072
         }
 
         /// <inheritdoc cref="BaseExecutionContext.IsDumpingCommand()"/>
         public bool IsDumpingCommand()
         {
-            if (_executionContext == null)
+            if (_executionContext is null)
                 return false;
 
             return _executionContext.IsDumpingCommand();
@@ -412,11 +424,11 @@ namespace MPF.Frontend
         public async Task<ResultEventArgs> Run(MediaType? mediaType, IProgress<ResultEventArgs>? progress = null)
         {
             // If we don't have parameters
-            if (_executionContext == null)
+            if (_executionContext is null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Build default console progress indicators if none exist
-            if (progress == null)
+            if (progress is null)
             {
                 var temp = new Progress<ResultEventArgs>();
                 temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
@@ -459,17 +471,18 @@ namespace MPF.Frontend
             ProcessUserInfoDelegate? processUserInfo = null,
             SubmissionInfo? seedInfo = null)
         {
-            if (_processor == null)
+            if (_processor is null)
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Build default console progress indicators if none exist
-            if (resultProgress == null)
+            if (resultProgress is null)
             {
                 var temp = new Progress<ResultEventArgs>();
                 temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
                 resultProgress = temp;
             }
-            if (protectionProgress == null)
+
+            if (protectionProgress is null)
             {
                 var temp = new Progress<ProtectionProgress>();
                 temp.ProgressChanged += ConsoleLogger.ProgressUpdated;
@@ -495,7 +508,7 @@ namespace MPF.Frontend
 
             // Determine the media type from the processor
             MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
-            if (mediaType == null)
+            if (mediaType is null)
                 return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
             // Extract the information from the output files
@@ -509,13 +522,13 @@ namespace MPF.Frontend
                 _processor,
                 resultProgress,
                 protectionProgress);
-            if (submissionInfo == null)
+            if (submissionInfo is null)
                 return ResultEventArgs.Failure("There was an issue extracting information!");
             else
                 resultProgress.Report(ResultEventArgs.Success("Extracting information complete!"));
 
             // Inject seed submission info data, if necessary
-            if (seedInfo != null)
+            if (seedInfo is not null)
             {
                 resultProgress.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
                 submissionInfo = Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
@@ -523,7 +536,7 @@ namespace MPF.Frontend
             }
 
             // Get user-modifiable information if configured to
-            if (_options.PromptForDiscInformation && processUserInfo != null)
+            if (_options.PromptForDiscInformation && processUserInfo is not null)
             {
                 resultProgress.Report(ResultEventArgs.Success("Waiting for additional media information..."));
                 bool? filledInfo = processUserInfo.Invoke(_options, ref submissionInfo);
@@ -541,7 +554,7 @@ namespace MPF.Frontend
             // Format the information for the text output
             resultProgress.Report(ResultEventArgs.Success("Formatting information..."));
             var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility, out string? formatResult);
-            if (formattedValues == null)
+            if (formattedValues is null)
                 resultProgress.Report(ResultEventArgs.Failure(formatResult));
             else
                 resultProgress.Report(ResultEventArgs.Success(formatResult));
@@ -558,7 +571,7 @@ namespace MPF.Frontend
                 resultProgress.Report(ResultEventArgs.Failure(txtResult));
 
             // Write the copy protection output
-            if (submissionInfo?.CopyProtection?.FullProtections != null && submissionInfo.CopyProtection.FullProtections.Count > 0)
+            if (submissionInfo?.CopyProtection?.FullProtections is not null && submissionInfo.CopyProtection.FullProtections.Count > 0)
             {
                 if (_options.ScanForProtection)
                 {
@@ -635,7 +648,7 @@ namespace MPF.Frontend
         internal bool ParametersValid(MediaType? mediaType)
         {
             // Missing drive means it can never be valid
-            if (_drive == null)
+            if (_drive is null)
                 return false;
 
             bool parametersValid = _executionContext?.IsValid() ?? false;
@@ -655,14 +668,14 @@ namespace MPF.Frontend
         private ResultEventArgs IsValidForDump(MediaType? mediaType)
         {
             // Validate that everything is good
-            if (_executionContext == null || !ParametersValid(mediaType))
+            if (_executionContext is null || !ParametersValid(mediaType))
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
             OutputPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
 
             // Validate that the output path isn't on the dumping drive
-            if (_drive?.Name != null && OutputPath.StartsWith(_drive.Name))
+            if (_drive?.Name is not null && OutputPath.StartsWith(_drive.Name))
                 return ResultEventArgs.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -671,7 +684,7 @@ namespace MPF.Frontend
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(_executionContext.ExecutablePath!);
-            if (_drive?.Name != null && fullExecutablePath.StartsWith(_drive.Name))
+            if (_drive?.Name is not null && fullExecutablePath.StartsWith(_drive.Name))
                 return ResultEventArgs.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
@@ -692,7 +705,7 @@ namespace MPF.Frontend
         private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, string? lines, out string status)
         {
             // Check to see if the inputs are valid
-            if (lines == null)
+            if (lines is null)
             {
                 status = "No formatted data found to write!";
                 return false;
@@ -737,7 +750,7 @@ namespace MPF.Frontend
         private static bool WriteOutputData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool includedArtifacts)
         {
             // Check to see if the input is valid
-            if (info == null)
+            if (info is null)
                 return false;
 
             try
@@ -797,7 +810,7 @@ namespace MPF.Frontend
         private static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
             // Check to see if the inputs are valid
-            if (info?.CopyProtection?.FullProtections == null || info.CopyProtection.FullProtections.Count == 0)
+            if (info?.CopyProtection?.FullProtections is null || info.CopyProtection.FullProtections.Count == 0)
                 return true;
 
             // Now write out to a generic file
@@ -830,7 +843,7 @@ namespace MPF.Frontend
 
                     List<string>? scanResult = info.CopyProtection.FullProtections[key];
 
-                    if (scanResult == null)
+                    if (scanResult is null)
                         sw.WriteLine($"{scanPath}: None");
                     else
                         sw.WriteLine($"{scanPath}: {string.Join(", ", [.. scanResult])}");

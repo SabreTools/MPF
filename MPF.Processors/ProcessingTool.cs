@@ -40,11 +40,11 @@ namespace MPF.Processors
         public static string? GenerateDatfile(Datafile? datafile)
         {
             // If we don't have a valid datafile, we can't do anything
-            if (datafile?.Game == null || datafile.Game.Length == 0)
+            if (datafile?.Game is null || datafile.Game.Length == 0)
                 return null;
 
             var roms = datafile.Game[0].Rom;
-            if (roms == null || roms.Length == 0)
+            if (roms is null || roms.Length == 0)
                 return null;
 
             // Otherwise, reconstruct the hash data with only the required info
@@ -109,7 +109,7 @@ namespace MPF.Processors
                 });
 
                 // If the reader is null for some reason, we can't do anything
-                if (xtr == null)
+                if (xtr is null)
                     return null;
 
                 var serializer = new XmlSerializer(typeof(Datafile));
@@ -191,11 +191,11 @@ namespace MPF.Processors
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
-            if (datafile?.Game == null || datafile.Game.Length == 0)
+            if (datafile?.Game is null || datafile.Game.Length == 0)
                 return false;
 
             var roms = datafile.Game[0].Rom;
-            if (roms == null || roms.Length == 0)
+            if (roms is null || roms.Length == 0)
                 return false;
 
             var rom = roms[0];
@@ -247,13 +247,13 @@ namespace MPF.Processors
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
 
             // If we don't have valid disc information, we can't do anything
-            if (di?.Units == null || di.Units.Length <= 1)
+            if (di?.Units is null || di.Units.Length <= 1)
                 return false;
 
             // Wrap big-endian reading
             static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
             {
-                if (bytes == null || bytes.Length < offset + 4)
+                if (bytes is null || bytes.Length < offset + 4)
                     return default;
 
                 return bytes.ReadInt32BigEndian(ref offset);
@@ -294,7 +294,7 @@ namespace MPF.Processors
         public static string? GetPICIdentifier(DiscInformation? di)
         {
             // If we don't have valid disc information, we can't do anything
-            if (di?.Units == null || di.Units.Length < 1)
+            if (di?.Units is null || di.Units.Length < 1)
                 return null;
 
             // Assume the identifier is consistent across all units
@@ -309,7 +309,7 @@ namespace MPF.Processors
         public static string NormalizeShiftJIS(byte[]? contents)
         {
             // Invalid arrays are passed as-is
-            if (contents == null || contents.Length == 0)
+            if (contents is null || contents.Length == 0)
                 return string.Empty;
 
 #if NET462_OR_GREATER || NETCOREAPP
@@ -332,7 +332,7 @@ namespace MPF.Processors
         internal static bool BytesContainsShiftJIS(byte[] bytes)
         {
             // Invalid arrays do not count
-            if (bytes == null || bytes.Length == 0)
+            if (bytes is null || bytes.Length == 0)
                 return false;
 
             // Loop through and check each pair of bytes
@@ -401,6 +401,7 @@ namespace MPF.Processors
             {
                 // string publisher = serial[0] + serial[1];
                 // char secondRegion = serial[3];
+#pragma warning disable IDE0010
                 switch (serial[2])
                 {
                     case 'A': return Region.Asia;
@@ -433,6 +434,7 @@ namespace MPF.Processors
                             _ => (Region?)Region.Japan,
                         };
                 }
+#pragma warning restore IDE0010
             }
 
             // Japan-only special serial
@@ -505,8 +507,8 @@ namespace MPF.Processors
                 return false;
 
             // Create conversion delegates
-            byte _btoi(byte b) => (byte)(b / 16 * 10 + b % 16);
-            byte _itob(byte i) => (byte)(i / 10 * 16 + i % 10);
+            byte _btoi(byte b) => (byte)((b / 16 * 10) + (b % 16));
+            byte _itob(byte i) => (byte)((i / 10 * 16) + (i % 10));
 
             try
             {
@@ -558,7 +560,7 @@ namespace MPF.Processors
                             time++;
 
                         expected[3] = _itob((byte)(time / 60 / 75));
-                        expected[4] = _itob((byte)((time / 75) % 60));
+                        expected[4] = _itob((byte)(time / 75 % 60));
                         expected[5] = _itob((byte)(time % 75));
                     }
 
@@ -567,7 +569,7 @@ namespace MPF.Processors
 
                     // MSF2 [7-9]
                     expected[7] = _itob((byte)(sector / 60 / 75));
-                    expected[8] = _itob((byte)((sector / 75) % 60));
+                    expected[8] = _itob((byte)(sector / 75 % 60));
                     expected[9] = _itob((byte)(sector % 75));
 
                     // CRC-16 [10-11] -- TODO: Ensure byte order is correct
@@ -625,15 +627,15 @@ namespace MPF.Processors
 
                 // Determine whether GetKey was successful
                 string? line;
-                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("get_dec_key succeeded!") == false) ;
-                if (line == null)
+                while ((line = sr.ReadLine()) is not null && !line.Trim().StartsWith("get_dec_key succeeded!")) ;
+                if (line is null)
                     return false;
 
                 // Look for Disc Key in log
-                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_key = ") == false) ;
+                while ((line = sr.ReadLine()) is not null && !line.Trim().StartsWith("disc_key = ")) ;
 
                 // If end of file reached, no key found
-                if (line == null)
+                if (line is null)
                     return false;
 
                 // Get Disc Key from log
@@ -649,14 +651,14 @@ namespace MPF.Processors
 
                 // Convert Disc Key to byte array
                 key = discKeyStr;
-                if (key == null)
+                if (key is null)
                     return false;
 
                 // Read Disc ID
-                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("disc_id = ") == false) ;
+                while ((line = sr.ReadLine()) is not null && !line.Trim().StartsWith("disc_id = ")) ;
 
                 // If end of file reached, no ID found
-                if (line == null)
+                if (line is null)
                     return false;
 
                 // Get Disc ID from log
@@ -679,21 +681,21 @@ namespace MPF.Processors
 
                 // Convert Disc ID to byte array
                 id = discIDStr;
-                if (id == null)
+                if (id is null)
                     return false;
 
                 // Look for PIC in log
-                while ((line = sr.ReadLine()) != null && line.Trim().StartsWith("PIC:") == false) ;
+                while ((line = sr.ReadLine()) is not null && !line.Trim().StartsWith("PIC:")) ;
 
                 // If end of file reached, no PIC found
-                if (line == null)
+                if (line is null)
                     return false;
 
                 // Get PIC from log
                 string discPICStr = "";
                 for (int i = 0; i < 9; i++)
                     discPICStr += sr.ReadLine();
-                if (discPICStr == null)
+                if (discPICStr is null)
                     return false;
 
                 // Validate PIC from log
@@ -702,11 +704,11 @@ namespace MPF.Processors
 
                 // Convert PIC to byte array
                 pic = discPICStr;
-                if (pic == null)
+                if (pic is null)
                     return false;
 
                 // Double check for warnings in .getkey.log
-                while ((line = sr.ReadLine()) != null)
+                while ((line = sr.ReadLine()) is not null)
                 {
                     string t = line.Trim();
                     if (t.StartsWith("WARNING"))
@@ -952,10 +954,10 @@ namespace MPF.Processors
                 return null;
 
             byte[]? crc32 = inputCRC32.FromHexString();
-            if (crc32 == null || crc32.Length != 4)
+            if (crc32 is null || crc32.Length != 4)
                 return null;
 
-            return (uint)(0x01000000 * crc32[0] + 0x00010000 * crc32[1] + 0x00000100 * crc32[2] + 0x00000001 * crc32[3]);
+            return (uint)((0x01000000 * crc32[0]) + (0x00010000 * crc32[1]) + (0x00000100 * crc32[2]) + (0x00000001 * crc32[3]));
         }
 
         #endregion
@@ -1162,6 +1164,7 @@ namespace MPF.Processors
                         break;
                     }
                 }
+
                 if (emptyResponse)
                     return true;
             }
@@ -1439,33 +1442,32 @@ namespace MPF.Processors
             else
                 numRanges = 4;
 
-
             uint[] startLBA = new uint[numRanges];
             uint[] endLBA = new uint[numRanges];
             for (uint i = 0; i < numRanges; i++)
             {
                 // Determine range Physical Sector Number
-                uint startPSN = (uint)((((ss[i * 9 + 1636] << 8) | ss[i * 9 + 1637]) << 8) | ss[i * 9 + 1638]);
-                uint endPSN = (uint)((((ss[i * 9 + 1639] << 8) | ss[i * 9 + 1640]) << 8) | ss[i * 9 + 1641]);
+                uint startPSN = (uint)((((ss[(i * 9) + 1636] << 8) | ss[(i * 9) + 1637]) << 8) | ss[(i * 9) + 1638]);
+                uint endPSN = (uint)((((ss[(i * 9) + 1639] << 8) | ss[(i * 9) + 1640]) << 8) | ss[(i * 9) + 1641]);
 
                 // Determine range Logical Sector Number
                 if (xgdType == 1 && startPSN >= (1913776 + 0x030000))
                 {
                     // Layer 1 of XGD1
-                    startLBA[i] = (1913776 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
-                    endLBA[i] = (1913776 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    startLBA[i] = ((1913776 + 0x030000) * 2) - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    endLBA[i] = ((1913776 + 0x030000) * 2) - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
                 }
                 else if (xgdType == 2 && startPSN >= (1913760 + 0x030000))
                 {
                     // Layer 1 of XGD2
-                    startLBA[i] = (1913760 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
-                    endLBA[i] = (1913760 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    startLBA[i] = ((1913760 + 0x030000) * 2) - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    endLBA[i] = ((1913760 + 0x030000) * 2) - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
                 }
                 else if (xgdType == 3 && startPSN >= (2133520 + 0x030000))
                 {
                     // Layer 1 of XGD3
-                    startLBA[i] = (2133520 + 0x030000) * 2 - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
-                    endLBA[i] = (2133520 + 0x030000) * 2 - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    startLBA[i] = ((2133520 + 0x030000) * 2) - (startPSN ^ 0xFFFFFF) - 0x030000 - 1;
+                    endLBA[i] = ((2133520 + 0x030000) * 2) - (endPSN ^ 0xFFFFFF) - 0x030000 - 1;
                 }
                 else
                 {

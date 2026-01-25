@@ -209,9 +209,9 @@ namespace MPF.Frontend.ViewModels
         /// TODO: Convert selected list item to binding
         public void Load()
         {
-            if (SubmissionInfo.CommonDiscInfo?.Languages != null)
+            if (SubmissionInfo.CommonDiscInfo?.Languages is not null)
                 Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.Languages, l) > -1);
-            if (SubmissionInfo.CommonDiscInfo?.LanguageSelection != null)
+            if (SubmissionInfo.CommonDiscInfo?.LanguageSelection is not null)
                 LanguageSelections.ForEach(ls => ls.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.LanguageSelection, ls) > -1);
         }
 
@@ -221,7 +221,7 @@ namespace MPF.Frontend.ViewModels
         /// TODO: Convert selected list item to binding
         public void Save()
         {
-            if (SubmissionInfo.CommonDiscInfo == null)
+            if (SubmissionInfo.CommonDiscInfo is null)
                 SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
             SubmissionInfo.CommonDiscInfo.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
             if (SubmissionInfo.CommonDiscInfo.Languages.Length == 0)

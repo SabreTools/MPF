@@ -50,7 +50,7 @@ namespace MPF.Frontend
 #endif
                 }
 
-                if (method != null)
+                if (method is not null)
                     return method.Invoke(null, [value]) as string ?? string.Empty;
                 else
                     return string.Empty;
@@ -540,11 +540,13 @@ namespace MPF.Frontend
         /// </summary>
         public static bool SupportsAntiModchipScans(this RedumpSystem? system)
         {
+#pragma warning disable IDE0072
             return system switch
             {
                 RedumpSystem.SonyPlayStation => true,
                 _ => false,
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -552,6 +554,7 @@ namespace MPF.Frontend
         /// </summary>
         public static bool SupportsCopyProtectionScans(this RedumpSystem? system)
         {
+#pragma warning disable IDE0072
             return system switch
             {
                 RedumpSystem.AppleMacintosh => true,
@@ -564,6 +567,7 @@ namespace MPF.Frontend
                 RedumpSystem.SonyElectronicBook => true,
                 _ => false,
             };
+#pragma warning restore IDE0072
         }
 
         #endregion

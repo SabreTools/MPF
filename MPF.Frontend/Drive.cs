@@ -94,7 +94,7 @@ namespace MPF.Frontend
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);
-            if (driveInfo == null || driveInfo == default)
+            if (driveInfo is null || driveInfo == default)
                 return null;
 
             // Fill in the rest of the data
@@ -110,7 +110,7 @@ namespace MPF.Frontend
         private void PopulateFromDriveInfo(DriveInfo? driveInfo)
         {
             // If we have an invalid DriveInfo, just return
-            if (driveInfo == null || driveInfo == default)
+            if (driveInfo is null || driveInfo == default)
                 return;
 
             // Populate the data fields
@@ -142,8 +142,8 @@ namespace MPF.Frontend
             var drives = GetDriveList(ignoreFixedDrives);
             drives.Sort((d1, d2) =>
             {
-                string d1Name = d1?.Name == null ? "\0" : d1.Name;
-                string d2Name = d2?.Name == null ? "\0" : d2.Name;
+                string d1Name = d1?.Name is null ? "\0" : d1.Name;
+                string d2Name = d2?.Name is null ? "\0" : d2.Name;
                 return d1Name.CompareTo(d2Name);
             });
             return [.. drives];
@@ -156,6 +156,7 @@ namespace MPF.Frontend
         /// <returns>The detected media type, if possible</returns>
         public MediaType? GetMediaType(RedumpSystem? system)
         {
+#pragma warning disable IDE0010
             // Take care of the non-optical stuff first
             switch (InternalDriveType)
             {
@@ -215,6 +216,7 @@ namespace MPF.Frontend
                 case RedumpSystem.SonyPlayStationPortable:
                     return MediaType.UMD;
             }
+#pragma warning restore IDE0010
 
             // Handle optical media by size and filesystem
             if (TotalSize >= 0 && TotalSize <= 800_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))
@@ -286,12 +288,12 @@ namespace MPF.Frontend
                 {
                     CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
                     uint? mediaType = properties["MediaType"]?.Value as uint?;
-                    if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
+                    if (mediaType is not null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
                         Array.ForEach(drives, d =>
                         {
-                            if (d?.Name != null && d.Name[0] == devId)
+                            if (d?.Name is not null && d.Name[0] == devId)
                                 d.InternalDriveType = Frontend.InternalDriveType.Floppy;
                         });
                     }
@@ -313,6 +315,7 @@ namespace MPF.Frontend
         /// <returns>InternalDriveType, if possible, null on error</returns>
         internal static InternalDriveType? ToInternalDriveType(DriveType driveType)
         {
+#pragma warning disable IDE0072
             return driveType switch
             {
                 DriveType.CDRom => (InternalDriveType?)Frontend.InternalDriveType.Optical,
@@ -320,6 +323,7 @@ namespace MPF.Frontend
                 DriveType.Removable => (InternalDriveType?)Frontend.InternalDriveType.Removable,
                 _ => null,
             };
+#pragma warning restore IDE0072
         }
 
         #endregion

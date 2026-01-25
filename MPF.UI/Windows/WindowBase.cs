@@ -66,12 +66,15 @@ namespace MPF.UI.Windows
 
             // Display and get the result
             MessageBoxResult result = CustomMessageBox.Show(this, message, title, button, image);
+
+#pragma warning disable IDE0072
             return result switch
             {
                 MessageBoxResult.OK or MessageBoxResult.Yes => true,
                 MessageBoxResult.No => false,
                 _ => null,
             };
+#pragma warning restore IDE0072
         }
     }
 }

@@ -402,7 +402,7 @@ namespace MPF.Processors
                 foreach (var outputFile in outputFiles)
                 {
                     // Skip non-artifact files
-                    if (!outputFile.IsArtifact || outputFile.ArtifactKey == null)
+                    if (!outputFile.IsArtifact || outputFile.ArtifactKey is null)
                         continue;
 
                     // Skip non-existent files
@@ -744,7 +744,7 @@ namespace MPF.Processors
         internal static string? GetPIC(string? picPath, int trimLength = -1)
         {
             // If the file is invalid
-            if (picPath == null)
+            if (picPath is null)
                 return null;
 
             // If the file doesn't exist, we can't get the info
@@ -758,7 +758,7 @@ namespace MPF.Processors
             try
             {
                 var hex = ProcessingTool.GetFullFile(picPath, true);
-                if (hex == null)
+                if (hex is null)
                     return null;
 
                 if (trimLength > -1 && trimLength < hex.Length)
@@ -820,7 +820,7 @@ namespace MPF.Processors
                 pvd = string.Empty;
                 for (int i = 0; i < 96; i += 16)
                 {
-                    pvd += $"{(0x0320 + i):X4} : {buf[i]:X2} {buf[i + 1]:X2} {buf[i + 2]:X2} {buf[i + 3]:X2} {buf[i + 4]:X2} {buf[i + 5]:X2} {buf[i + 6]:X2} {buf[i + 7]:X2}  " +
+                    pvd += $"{0x0320 + i:X4} : {buf[i]:X2} {buf[i + 1]:X2} {buf[i + 2]:X2} {buf[i + 3]:X2} {buf[i + 4]:X2} {buf[i + 5]:X2} {buf[i + 6]:X2} {buf[i + 7]:X2}  " +
                         $"{buf[i + 8]:X2} {buf[i + 9]:X2} {buf[i + 10]:X2} {buf[i + 11]:X2} {buf[i + 12]:X2} {buf[i + 13]:X2} {buf[i + 14]:X2} {buf[i + 15]:X2}   {pvdASCII.Substring(i, 16)}\n";
                 }
 
@@ -869,7 +869,7 @@ namespace MPF.Processors
         internal static string SplitString(string? str, int count, bool trim = false)
         {
             // Ignore invalid inputs
-            if (str == null || str.Length == 0)
+            if (str is null || str.Length == 0)
                 return string.Empty;
 
             // Handle non-modifying counts

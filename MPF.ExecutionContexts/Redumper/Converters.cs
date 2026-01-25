@@ -13,6 +13,7 @@ namespace MPF.ExecutionContexts.Redumper
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string? Extension(MediaType? type)
         {
+#pragma warning disable IDE0072
             return type switch
             {
                 MediaType.CDROM
@@ -25,6 +26,7 @@ namespace MPF.ExecutionContexts.Redumper
                 MediaType.NintendoWiiUOpticalDisc => ".wud",
                 _ => null,
             };
+#pragma warning restore IDE0072
         }
 
         #endregion

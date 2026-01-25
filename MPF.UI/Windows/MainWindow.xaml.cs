@@ -185,6 +185,7 @@ namespace MPF.UI.Windows
 
             var dictionary = new ResourceDictionary
             {
+#pragma warning disable IDE0072
                 Source = lang switch
                 {
                     InterfaceLanguage.English => new Uri("../Resources/Strings.xaml", UriKind.Relative),
@@ -201,6 +202,7 @@ namespace MPF.UI.Windows
                     InterfaceLanguage.L337 => new Uri("../Resources/Strings.37.xaml", UriKind.Relative),
                     _ => new Uri("../Resources/Strings.xaml", UriKind.Relative),
                 }
+#pragma warning restore IDE0072
             };
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
 
@@ -254,6 +256,7 @@ namespace MPF.UI.Windows
                     {
                         // TODO: Translate UI elements to Simplified Chinese
                     }
+
                     break;
 
                 default:
@@ -510,7 +513,7 @@ namespace MPF.UI.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.MediaTypes == null)
+            if (MainViewModel.MediaTypes is null)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
@@ -627,8 +630,8 @@ namespace MPF.UI.Windows
         public void OnOptionsUpdated(object? sender, EventArgs e)
         {
             // Get the options window
-            var optionsWindow = (sender as OptionsWindow);
-            if (optionsWindow?.OptionsViewModel == null)
+            var optionsWindow = sender as OptionsWindow;
+            if (optionsWindow?.OptionsViewModel is null)
                 return;
 
             // Get if the settings were saved
@@ -681,20 +684,20 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for AppExitMenuItem Click event
         /// </summary>
-        public void AppExitClick(object sender, RoutedEventArgs e) =>
-            Application.Current.Shutdown();
+        public void AppExitClick(object sender, RoutedEventArgs e)
+            => Application.Current.Shutdown();
 
         /// <summary>
         /// Handler for CheckDumpMenuItem Click event
         /// </summary>
-        public void CheckDumpMenuItemClick(object sender, RoutedEventArgs e) =>
-            ShowCheckDumpWindow();
+        public void CheckDumpMenuItemClick(object sender, RoutedEventArgs e)
+            => ShowCheckDumpWindow();
 
         /// <summary>
         /// Handler for CreateIRDMenuItem Click event
         /// </summary>
-        public void CreateIRDMenuItemClick(object sender, RoutedEventArgs e) =>
-            ShowCreateIRDWindow();
+        public void CreateIRDMenuItemClick(object sender, RoutedEventArgs e)
+            => ShowCreateIRDWindow();
 
         /// <summary>
         /// Handler for CheckForUpdatesMenuItem Click event
@@ -705,14 +708,14 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for DebugViewMenuItem Click event
         /// </summary>
-        public void DebugViewClick(object sender, RoutedEventArgs e) =>
-            ShowDebugDiscInfoWindow();
+        public void DebugViewClick(object sender, RoutedEventArgs e)
+            => ShowDebugDiscInfoWindow();
 
         /// <summary>
         /// Handler for OptionsMenuItem Click event
         /// </summary>
-        public void OptionsMenuItemClick(object sender, RoutedEventArgs e) =>
-            ShowOptionsWindow();
+        public void OptionsMenuItemClick(object sender, RoutedEventArgs e)
+            => ShowOptionsWindow();
 
         /// <summary>
         /// Change UI language
@@ -807,8 +810,8 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for MediaScanButton Click event
         /// </summary>
-        public void MediaScanButtonClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
+        public void MediaScanButtonClick(object sender, RoutedEventArgs e)
+            => MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
 
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
@@ -840,8 +843,8 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for StartStopButton Click event
         /// </summary>
-        public void StartStopButtonClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ToggleStartStop();
+        public void StartStopButtonClick(object sender, RoutedEventArgs e)
+            => MainViewModel.ToggleStartStop();
 
         /// <summary>
         /// Handler for SystemTypeComboBox SelectionChanged event

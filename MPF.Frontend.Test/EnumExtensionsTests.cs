@@ -34,7 +34,7 @@ namespace MPF.Frontend.Test
             string? actual = lang.LongName();
             Assert.Equal(expected, actual);
 
-            if (lang != null)
+            if (lang is not null)
             {
                 actual = EnumExtensions.GetLongName(lang);
                 Assert.Equal(expected, actual);
@@ -56,7 +56,7 @@ namespace MPF.Frontend.Test
             string? actual = prog.LongName();
             Assert.Equal(expected, actual);
 
-            if (prog != null)
+            if (prog is not null)
             {
                 actual = EnumExtensions.GetLongName(prog);
                 Assert.Equal(expected, actual);
@@ -73,7 +73,7 @@ namespace MPF.Frontend.Test
             string? actual = comp.LongName();
             Assert.Equal(expected, actual);
 
-            if (comp != null)
+            if (comp is not null)
             {
                 actual = EnumExtensions.GetLongName(comp);
                 Assert.Equal(expected, actual);
@@ -90,7 +90,7 @@ namespace MPF.Frontend.Test
             string? actual = method.LongName();
             Assert.Equal(expected, actual);
 
-            if (method != null)
+            if (method is not null)
             {
                 actual = EnumExtensions.GetLongName(method);
                 Assert.Equal(expected, actual);
@@ -109,7 +109,7 @@ namespace MPF.Frontend.Test
             string? actual = order.LongName();
             Assert.Equal(expected, actual);
 
-            if (order != null)
+            if (order is not null)
             {
                 actual = EnumExtensions.GetLongName(order);
                 Assert.Equal(expected, actual);
@@ -131,7 +131,7 @@ namespace MPF.Frontend.Test
             string? actual = type.LongName();
             Assert.Equal(expected, actual);
 
-            if (type != null)
+            if (type is not null)
             {
                 actual = EnumExtensions.GetLongName(type);
                 Assert.Equal(expected, actual);

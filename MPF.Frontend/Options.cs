@@ -23,12 +23,14 @@ namespace MPF.Frontend
         {
             get
             {
+#pragma warning disable IDE0072
                 string executableName = Environment.OSVersion.Platform switch
                 {
                     PlatformID.Unix => "aaru",
                     PlatformID.MacOSX => "aaru",
                     _ => "aaru.exe"
                 };
+#pragma warning restore IDE0072
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Aaru", executableName));
@@ -45,12 +47,14 @@ namespace MPF.Frontend
         {
             get
             {
+#pragma warning disable IDE0072
                 string executableName = Environment.OSVersion.Platform switch
                 {
                     PlatformID.Unix => "DiscImageCreator.out",
                     PlatformID.MacOSX => "DiscImageCreator",
                     _ => "DiscImageCreator.exe"
                 };
+#pragma warning restore IDE0072
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Creator", executableName));
@@ -67,12 +71,14 @@ namespace MPF.Frontend
         {
             get
             {
+#pragma warning disable IDE0072
                 string executableName = Environment.OSVersion.Platform switch
                 {
                     PlatformID.Unix => "redumper",
                     PlatformID.MacOSX => "redumper",
                     _ => "redumper.exe"
                 };
+#pragma warning restore IDE0072
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Redumper", executableName));

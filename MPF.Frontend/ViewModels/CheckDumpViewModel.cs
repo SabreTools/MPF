@@ -354,7 +354,7 @@ namespace MPF.Frontend.ViewModels
 
             // Select the current default dumping program
             int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-            CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
+            CurrentProgram = currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value;
 
             // Reenable event handlers, if necessary
             if (cachedCanExecuteSelectionChanged) EnableEventHandlers();
@@ -366,7 +366,7 @@ namespace MPF.Frontend.ViewModels
 
         private bool ShouldEnableCheckDumpButton()
         {
-            return CurrentSystem != null && !string.IsNullOrEmpty(InputPath);
+            return CurrentSystem is not null && !string.IsNullOrEmpty(InputPath);
         }
 
         /// <summary>

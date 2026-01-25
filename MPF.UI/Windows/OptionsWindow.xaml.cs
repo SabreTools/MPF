@@ -1,8 +1,5 @@
 ﻿using System;
 using System.IO;
-#if NET40
-using System.Threading;
-#endif
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -97,7 +94,7 @@ namespace MPF.UI.Windows
         private void BrowseForPath(Window parent, System.Windows.Controls.Button? button)
         {
             // If the button is null, we can't do anything
-            if (button == null)
+            if (button is null)
                 return;
 
             // Strips button prefix to obtain the setting name
@@ -116,7 +113,7 @@ namespace MPF.UI.Windows
                 initialDirectory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
 
             CommonDialog dialog = shouldBrowseForPath
-                ? (CommonDialog)CreateFolderBrowserDialog()
+                ? CreateFolderBrowserDialog()
                 : CreateOpenFileDialog(initialDirectory);
             using (dialog)
             {
@@ -161,8 +158,8 @@ namespace MPF.UI.Windows
         /// </summary>
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
-        private static System.Windows.Controls.TextBox? TextBoxForPathSetting(Window parent, string name) =>
-            parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
+        private static System.Windows.Controls.TextBox? TextBoxForPathSetting(Window parent, string name)
+            => parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
         /// <summary>
         /// Create an open folder dialog box
@@ -208,8 +205,8 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for generic Click event
         /// </summary>
-        private void BrowseForPathClick(object sender, EventArgs e) =>
-            BrowseForPath(this, sender as System.Windows.Controls.Button);
+        private void BrowseForPathClick(object sender, EventArgs e)
+            => BrowseForPath(this, sender as System.Windows.Controls.Button);
 
         /// <summary>
         /// Alert user of non-redump mode implications

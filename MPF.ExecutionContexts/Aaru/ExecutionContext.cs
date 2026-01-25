@@ -511,6 +511,7 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // Handle filenames based on command, if necessary
+#pragma warning disable IDE0010
             switch (BaseCommand)
             {
                 // Input value only (file path)
@@ -586,6 +587,7 @@ namespace MPF.ExecutionContexts.Aaru
                     parameters.Append($"\"{RemoteHostValue}\" ");
                     break;
             }
+#pragma warning restore IDE0010
 
             return parameters.ToString().TrimEnd();
         }
@@ -636,7 +638,7 @@ namespace MPF.ExecutionContexts.Aaru
             InputValue = drivePath;
             OutputValue = filename;
 
-            if (driveSpeed != null)
+            if (driveSpeed is not null)
             {
                 this[FlagStrings.SpeedLong] = true;
                 (_inputs[FlagStrings.SpeedLong] as Int8Input)?.SetValue((sbyte)driveSpeed);
@@ -656,16 +658,19 @@ namespace MPF.ExecutionContexts.Aaru
                 this[FlagStrings.DebugLong] = true;
                 _preCommandInputs[FlagStrings.DebugLong].SetValue(true);
             }
+
             if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
             {
                 this[FlagStrings.VerboseLong] = true;
                 _preCommandInputs[FlagStrings.VerboseLong].SetValue(true);
             }
+
             if (GetBooleanSetting(options, SettingConstants.ForceDumping, SettingConstants.ForceDumpingDefault))
             {
                 this[FlagStrings.ForceLong] = true;
                 (_inputs[FlagStrings.ForceLong] as BooleanInput)?.SetValue(true);
             }
+
             if (GetBooleanSetting(options, SettingConstants.StripPersonalData, SettingConstants.StripPersonalDataDefault))
             {
                 this[FlagStrings.PrivateLong] = true;
@@ -757,6 +762,7 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // Handle filenames based on command, if necessary
+#pragma warning disable IDE0010
             switch (BaseCommand)
             {
                 // Input value only
@@ -823,6 +829,7 @@ namespace MPF.ExecutionContexts.Aaru
                     i++;
                     break;
             }
+#pragma warning restore IDE0010
 
             // If we didn't reach the end for some reason, it failed
             if (i != parts.Length)
@@ -854,7 +861,7 @@ namespace MPF.ExecutionContexts.Aaru
             var normalized = NormalizeCommand($"{partOne} {partTwo}".Trim());
 
             // Null normalization means invalid command
-            if (normalized == null)
+            if (normalized is null)
                 return null;
 
             // Determine if start should be incremented

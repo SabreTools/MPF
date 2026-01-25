@@ -96,13 +96,13 @@ namespace MPF.Processors
             info.SizeAndChecksums.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
             if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
             {
-                if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                if (layerbreak1 is not null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                     info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                if (layerbreak2 is not null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
                     info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                if (layerbreak3 is not null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
                     info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
             }
 
@@ -121,9 +121,9 @@ namespace MPF.Processors
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
             if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))
             {
-                if (key != null)
+                if (key is not null)
                     info.Extras.DiscKey = key.ToUpperInvariant();
-                if (id != null)
+                if (id is not null)
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                     info.Extras.DiscID = $"{id.ToUpperInvariant()[..24]}XXXXXXXX";
 #else

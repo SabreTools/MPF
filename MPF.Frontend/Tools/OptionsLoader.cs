@@ -21,7 +21,7 @@ namespace MPF.Frontend.Tools
         {
             get
             {
-                if (_configPath != null)
+                if (_configPath is not null)
                     return _configPath;
 
                 _configPath = GetConfigurationPath();

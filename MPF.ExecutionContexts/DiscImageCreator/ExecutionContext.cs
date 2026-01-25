@@ -441,7 +441,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD2Swap
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
-                if (DrivePath != null)
+                if (DrivePath is not null)
                 {
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                     if (DrivePath.Contains(' '))
@@ -478,7 +478,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD2Swap
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
-                if (Filename != null)
+                if (Filename is not null)
                     parameters.Append($"\"{Filename.Trim('"')}\" ");
                 else
                     return null;
@@ -487,7 +487,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             // Optiarc Filename
             if (BaseCommand == CommandStrings.Merge)
             {
-                if (OptiarcFilename != null)
+                if (OptiarcFilename is not null)
                     parameters.Append($"\"{OptiarcFilename.Trim('"')}\" ");
                 else
                     return null;
@@ -507,7 +507,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 || BaseCommand == CommandStrings.XGD2Swap
                 || BaseCommand == CommandStrings.XGD3Swap)
             {
-                if (DriveSpeed != null)
+                if (DriveSpeed is not null)
                     parameters.Append($"{DriveSpeed} ");
                 else
                     return null;
@@ -517,7 +517,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             if (BaseCommand == CommandStrings.Audio
                 || BaseCommand == CommandStrings.Data)
             {
-                if (StartLBAValue != null && EndLBAValue != null)
+                if (StartLBAValue is not null && EndLBAValue is not null)
                 {
                     parameters.Append($"{StartLBAValue} ");
                     parameters.Append($"{EndLBAValue} ");
@@ -532,7 +532,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.AddOffset] == true)
                 {
                     parameters.Append($"{FlagStrings.AddOffset} ");
-                    if (AddOffsetValue != null)
+                    if (AddOffsetValue is not null)
                         parameters.Append($"{AddOffsetValue} ");
                 }
             }
@@ -557,7 +557,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.BEOpcode] == true)
                 {
                     parameters.Append($"{FlagStrings.BEOpcode} ");
-                    if (BEOpcodeValue != null)
+                    if (BEOpcodeValue is not null)
                         parameters.Append($"{BEOpcodeValue} ");
                 }
             }
@@ -568,22 +568,25 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.C2Opcode] == true)
                 {
                     parameters.Append($"{FlagStrings.C2Opcode} ");
-                    if (C2OpcodeValue[0] != null)
+                    if (C2OpcodeValue[0] is not null)
                     {
                         if (C2OpcodeValue[0] > 0)
                             parameters.Append($"{C2OpcodeValue[0]} ");
                         else
                             return null;
                     }
-                    if (C2OpcodeValue[1] != null)
+
+                    if (C2OpcodeValue[1] is not null)
                     {
                         parameters.Append($"{C2OpcodeValue[1]} ");
                     }
-                    if (C2OpcodeValue[2] != null)
+
+                    if (C2OpcodeValue[2] is not null)
                     {
                         parameters.Append($"{C2OpcodeValue[2]} ");
                     }
-                    if (C2OpcodeValue[3] != null)
+
+                    if (C2OpcodeValue[3] is not null)
                     {
                         if (C2OpcodeValue[3] == 0)
                         {
@@ -592,7 +595,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         else if (C2OpcodeValue[3] == 1)
                         {
                             parameters.Append($"{C2OpcodeValue[3]} ");
-                            if (C2OpcodeValue[4] != null && C2OpcodeValue[5] != null)
+                            if (C2OpcodeValue[4] is not null && C2OpcodeValue[5] is not null)
                             {
                                 if (C2OpcodeValue[4] > 0 && C2OpcodeValue[5] > 0)
                                 {
@@ -619,7 +622,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.C2OpcodeNew] == true)
                 {
                     parameters.Append($"{FlagStrings.C2OpcodeNew} ");
-                    if (C2OpcodeValue[0] != null)
+                    if (C2OpcodeValue[0] is not null)
                     {
                         if (C2OpcodeValue[0] > 0)
                             parameters.Append($"{C2OpcodeValue[0]} ");
@@ -663,7 +666,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.DVDReread] == true)
                 {
                     parameters.Append($"{FlagStrings.DVDReread} ");
-                    if (DVDRereadValue != null)
+                    if (DVDRereadValue is not null)
                         parameters.Append($"{DVDRereadValue} ");
                 }
             }
@@ -681,7 +684,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.Fix] == true)
                 {
                     parameters.Append($"{FlagStrings.Fix} ");
-                    if (FixValue != null)
+                    if (FixValue is not null)
                         parameters.Append($"{FixValue} ");
                     else
                         return null;
@@ -694,7 +697,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.ForceDescrambleSector] == true)
                 {
                     parameters.Append($"{FlagStrings.ForceDescrambleSector} ");
-                    if (ForceDescrambleSectorValue != null)
+                    if (ForceDescrambleSectorValue is not null)
                         parameters.Append($"{ForceDescrambleSectorValue} ");
                     else
                         return null;
@@ -707,7 +710,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.ForceUnitAccess] == true)
                 {
                     parameters.Append($"{FlagStrings.ForceUnitAccess} ");
-                    if (ForceUnitAccessValue != null)
+                    if (ForceUnitAccessValue is not null)
                         parameters.Append($"{ForceUnitAccessValue} ");
                 }
             }
@@ -725,7 +728,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.MultiSectorRead] == true)
                 {
                     parameters.Append($"{FlagStrings.MultiSectorRead} ");
-                    if (MultiSectorReadValue != null)
+                    if (MultiSectorReadValue is not null)
                         parameters.Append($"{MultiSectorReadValue} ");
                 }
             }
@@ -771,7 +774,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.NoSkipSS] == true)
                 {
                     parameters.Append($"{FlagStrings.NoSkipSS} ");
-                    if (NoSkipSecuritySectorValue != null)
+                    if (NoSkipSecuritySectorValue is not null)
                         parameters.Append($"{NoSkipSecuritySectorValue} ");
                 }
             }
@@ -782,7 +785,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.PadSector] == true)
                 {
                     parameters.Append($"{FlagStrings.PadSector} ");
-                    if (PadSectorValue != null)
+                    if (PadSectorValue is not null)
                         parameters.Append($"{PadSectorValue} ");
                 }
             }
@@ -796,7 +799,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     if (BaseCommand == CommandStrings.DigitalVideoDisc)
                     {
-                        if (RangeStartLBAValue == null || RangeEndLBAValue == null)
+                        if (RangeStartLBAValue is null || RangeEndLBAValue is null)
                             return null;
 
                         parameters.Append($"{RangeStartLBAValue} ");
@@ -828,7 +831,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     if (BaseCommand == CommandStrings.DigitalVideoDisc)
                     {
-                        if (ReverseStartLBAValue == null || ReverseEndLBAValue == null)
+                        if (ReverseStartLBAValue is null || ReverseEndLBAValue is null)
                             return null;
 
                         parameters.Append($"{ReverseStartLBAValue} ");
@@ -850,7 +853,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.ScanFileProtect] == true)
                 {
                     parameters.Append($"{FlagStrings.ScanFileProtect} ");
-                    if (ScanFileProtectValue != null)
+                    if (ScanFileProtectValue is not null)
                     {
                         if (ScanFileProtectValue > 0)
                             parameters.Append($"{ScanFileProtectValue} ");
@@ -880,14 +883,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.SkipSector] == true)
                 {
                     parameters.Append($"{FlagStrings.SkipSector} ");
-                    if (SkipSectorValue[0] != null)
+                    if (SkipSectorValue[0] is not null)
                     {
                         if (SkipSectorValue[0] > 0)
                             parameters.Append($"{SkipSectorValue[0]} ");
                         else
                             return null;
                     }
-                    if (SkipSectorValue[1] != null)
+
+                    if (SkipSectorValue[1] is not null)
                     {
                         if (SkipSectorValue[1] == 0)
                             parameters.Append($"{SkipSectorValue[1]} ");
@@ -901,7 +905,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.SubchannelReadLevel] == true)
                 {
                     parameters.Append($"{FlagStrings.SubchannelReadLevel} ");
-                    if (SubchannelReadLevelValue != null)
+                    if (SubchannelReadLevelValue is not null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
                             parameters.Append($"{SubchannelReadLevelValue} ");
@@ -945,7 +949,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 if (this[FlagStrings.VideoNow] == true)
                 {
                     parameters.Append($"{FlagStrings.VideoNow} ");
-                    if (VideoNowValue != null)
+                    if (VideoNowValue is not null)
                     {
                         if (VideoNowValue >= 0)
                             parameters.Append($"{VideoNowValue} ");
@@ -1070,6 +1074,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             };
 
             // Now sort based on disc type
+#pragma warning disable IDE0010
             switch (MediaType)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
@@ -1105,6 +1110,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                             this[FlagStrings.NoFixSubQLibCrypt] = true;
                             break;
                     }
+
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
                     this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, SettingConstants.UseCMIFlagDefault);
@@ -1138,6 +1144,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     // Currently no defaults set
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <inheritdoc/>
@@ -1543,7 +1550,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Add Offset
                     intValue = ProcessInt32Parameter(parts, FlagStrings.AddOffset, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue)
+                    if (intValue is not null && intValue != int.MinValue)
                         AddOffsetValue = intValue;
 
                     // AMSF
@@ -1621,7 +1628,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // DVD/HD-DVD/BD Reread
                     intValue = ProcessInt32Parameter(parts, FlagStrings.DVDReread, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue)
+                    if (intValue is not null && intValue != int.MinValue)
                         DVDRereadValue = intValue;
 
                     // Extract MS-CAB
@@ -1629,7 +1636,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Fix
                     intValue = ProcessInt32Parameter(parts, FlagStrings.Fix, ref i);
-                    if (intValue != null && intValue != int.MinValue)
+                    if (intValue is not null && intValue != int.MinValue)
                         FixValue = intValue;
 
                     // Force Descramble Sector
@@ -1691,7 +1698,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Force Unit Access
                     intValue = ProcessInt32Parameter(parts, FlagStrings.ForceUnitAccess, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0)
                         ForceUnitAccessValue = intValue;
 
                     // Full TOC
@@ -1699,7 +1706,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // Multi-Sector Read
                     intValue = ProcessInt32Parameter(parts, FlagStrings.MultiSectorRead, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0)
                         MultiSectorReadValue = intValue;
 
                     // NoFixSubP
@@ -1719,12 +1726,12 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // NoSkipSS
                     intValue = ProcessInt32Parameter(parts, FlagStrings.NoSkipSS, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0)
                         NoSkipSecuritySectorValue = intValue;
 
                     // PadSector
                     byteValue = ProcessUInt8Parameter(parts, FlagStrings.PadSector, ref i, missingAllowed: true);
-                    if (byteValue != null)
+                    if (byteValue is not null)
                         PadSectorValue = byteValue;
 
                     // Range
@@ -1776,7 +1783,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // ScanFileProtect
                     intValue = ProcessInt32Parameter(parts, FlagStrings.ScanFileProtect, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0)
                         ScanFileProtectValue = intValue;
 
                     // ScanSectorProtect
@@ -1817,7 +1824,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // SubchannelReadLevel
                     intValue = ProcessInt32Parameter(parts, FlagStrings.SubchannelReadLevel, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0 && intValue <= 2)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0 && intValue <= 2)
                         SubchannelReadLevelValue = intValue;
 
                     // Tages
@@ -1834,7 +1841,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     // VideoNow
                     intValue = ProcessInt32Parameter(parts, FlagStrings.VideoNow, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != int.MinValue && intValue >= 0)
+                    if (intValue is not null && intValue != int.MinValue && intValue >= 0)
                         VideoNowValue = intValue;
 
                     // VideoNowColor
@@ -1866,6 +1873,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return;
             }
 
+#pragma warning disable IDE0010
             switch (type)
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
@@ -1881,6 +1889,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         BaseCommand = CommandStrings.XBOX;
                         return;
                     }
+
                     BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
                 case SabreTools.RedumpLib.Data.MediaType.GDROM:
@@ -1915,6 +1924,7 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                     BaseCommand = null;
                     return;
             }
+#pragma warning restore IDE0010
         }
 
         #endregion

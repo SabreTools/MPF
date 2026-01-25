@@ -16,6 +16,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         public static int GetDefaultSpeedForMediaType(MediaType? mediaType, Options options)
         {
+#pragma warning disable IDE0072
             return mediaType switch
             {
                 // CD dump speed
@@ -37,6 +38,7 @@ namespace MPF.Frontend.Tools
                 // Default
                 _ => options.PreferredDumpSpeedCD,
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -117,7 +119,7 @@ namespace MPF.Frontend.Tools
         public static string? NormalizeDiscTitle(string? title, Language?[]? languages)
         {
             // If we have no set languages, then assume English
-            if (languages == null || languages.Length == 0)
+            if (languages is null || languages.Length == 0)
                 languages = [Language.English];
 
             // Loop through all of the given languages
@@ -591,7 +593,7 @@ namespace MPF.Frontend.Tools
             {
                 // Get current assembly version
                 var assemblyVersion = Assembly.GetEntryAssembly()?.GetName()?.Version;
-                if (assemblyVersion == null)
+                if (assemblyVersion is null)
                 {
                     different = false;
                     message = "Assembly version could not be determined";
@@ -603,7 +605,7 @@ namespace MPF.Frontend.Tools
 
                 // Get the latest tag from GitHub
                 _ = GetRemoteVersionAndUrl(out string? tag, out url);
-                different = version != tag && tag != null;
+                different = version != tag && tag is not null;
 
                 message = $"Local version: {version}"
                     + $"{Environment.NewLine}Remote version: {tag}"
@@ -627,7 +629,7 @@ namespace MPF.Frontend.Tools
             try
             {
                 var assembly = Assembly.GetEntryAssembly();
-                if (assembly == null)
+                if (assembly is null)
                     return null;
 
                 var assemblyVersion = Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
@@ -660,11 +662,11 @@ namespace MPF.Frontend.Tools
             message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
             var latestReleaseJsonString = hc.SendAsync(message)?.ConfigureAwait(false).GetAwaiter().GetResult()
                 .Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            if (latestReleaseJsonString == null)
+            if (latestReleaseJsonString is null)
                 return false;
 
             var latestReleaseJson = Newtonsoft.Json.Linq.JObject.Parse(latestReleaseJsonString);
-            if (latestReleaseJson == null)
+            if (latestReleaseJson is null)
                 return false;
 
             tag = latestReleaseJson["tag_name"]?.ToString();

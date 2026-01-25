@@ -9,6 +9,7 @@
 - Add default subfolder to CLI outputs
 - Update DIC to 20260101
 - Update Redumper to build 683
+- Add editorconfig, fix issues
 
 ### 3.6.0 (2025-11-28)
 

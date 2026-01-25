@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
+#pragma warning disable IDE0051 // Remove unused private members
 namespace MPF.UI
 {
     /// <summary>
@@ -10,7 +11,6 @@ namespace MPF.UI
     /// </summary>
     public partial class App : Application
     {
-
 #if NET35_OR_GREATER || NETCOREAPP
 
         #region ControlTemplates

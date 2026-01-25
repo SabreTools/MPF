@@ -54,7 +54,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <inheritdoc/>
         public bool Equals(Element<TEnum>? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return Name == other.Name;

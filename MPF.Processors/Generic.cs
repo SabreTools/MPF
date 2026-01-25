@@ -33,10 +33,11 @@ namespace MPF.Processors
 
             // Get the Datafile information
             var datafile = GetDatafile(basePath);
-            if (datafile != null)
+            if (datafile is not null)
                 info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Extract info based generically on MediaType
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -52,7 +53,7 @@ namespace MPF.Processors
                 case MediaType.BluRay:
                 case MediaType.UMD:
                     var firstRom = datafile?.Game?[0]?.Rom?[0];
-                    if (firstRom != null)
+                    if (firstRom is not null)
                     {
                         info.SizeAndChecksums.Size = long.Parse(firstRom.Size ?? "0");
                         info.SizeAndChecksums.CRC32 = firstRom.CRC;
@@ -62,6 +63,7 @@ namespace MPF.Processors
 
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <inheritdoc/>
@@ -115,31 +117,31 @@ namespace MPF.Processors
             if (File.Exists($"{basePath}.bin"))
             {
                 var rom = GetRom($"{basePath}.bin");
-                if (rom != null)
+                if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
             else if (File.Exists($"{basePath}.ima"))
             {
                 var rom = GetRom($"{basePath}.ima");
-                if (rom != null)
+                if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
             else if (File.Exists($"{basePath}.img"))
             {
                 var rom = GetRom($"{basePath}.img");
-                if (rom != null)
+                if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
             else if (File.Exists($"{basePath}.iso"))
             {
                 var rom = GetRom($"{basePath}.iso");
-                if (rom != null)
+                if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
             else if (File.Exists($"{basePath}.mdf"))
             {
                 var rom = GetRom($"{basePath}.mdf");
-                if (rom != null)
+                if (rom is not null)
                     return GetDatafile(basePath, rom);
             }
 
@@ -150,7 +152,7 @@ namespace MPF.Processors
 
                 // Try Track 0
                 var track0rom = GetRom($"{basePath} (Track 0).bin");
-                if (track0rom != null)
+                if (track0rom is not null)
                     roms.Add(track0rom);
 
                 // Hash all found tracks
@@ -158,7 +160,7 @@ namespace MPF.Processors
                 {
                     // Get the rom for the track
                     var rom = GetRom($"{basePath} (Track {i}).bin");
-                    if (rom == null)
+                    if (rom is null)
                         break;
 
                     // Add the track to the output
@@ -167,7 +169,7 @@ namespace MPF.Processors
 
                 // Try Track A
                 var trackArom = GetRom($"{basePath} (Track A).bin");
-                if (trackArom != null)
+                if (trackArom is not null)
                     roms.Add(trackArom);
 
                 // Create and return if there are any tracks
@@ -180,7 +182,7 @@ namespace MPF.Processors
 
                 // Try Track 00
                 var track00rom = GetRom($"{basePath} (Track 00).bin");
-                if (track00rom != null)
+                if (track00rom is not null)
                     roms.Add(track00rom);
 
                 // Hash all found tracks
@@ -188,7 +190,7 @@ namespace MPF.Processors
                 {
                     // Get the rom for the track
                     var rom = GetRom($"{basePath} (Track {i:D2}).bin");
-                    if (rom == null)
+                    if (rom is null)
                         break;
 
                     // Add the track to the output
@@ -197,7 +199,7 @@ namespace MPF.Processors
 
                 // Try Track AA
                 var trackAArom = GetRom($"{basePath} (Track AA).bin");
-                if (trackAArom != null)
+                if (trackAArom is not null)
                     roms.Add(trackAArom);
 
                 // Create and return if there are any tracks

@@ -211,12 +211,12 @@ namespace MPF.UI.Windows
         private void HideReadOnlyFields(SubmissionInfo? submissionInfo)
         {
             // If there's no submission information
-            if (submissionInfo == null)
+            if (submissionInfo is null)
                 return;
 
-            if (submissionInfo.FullyMatchedID == null)
+            if (submissionInfo.FullyMatchedID is null)
                 FullyMatchedID!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.PartiallyMatchedIDs == null || submissionInfo.PartiallyMatchedIDs.Count == 0)
+            if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
@@ -236,13 +236,13 @@ namespace MPF.UI.Windows
                 HashDataLayerbreak2!.Visibility = Visibility.Collapsed;
             if (submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
                 HashDataLayerbreak3!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CopyProtection?.AntiModchip == null)
+            if (submissionInfo.CopyProtection?.AntiModchip is null)
                 AntiModchip!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets == null)
+            if (submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets is null)
                 DiscOffset!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.DMIHash))
                 DMIHash!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.EDC?.EDC == null)
+            if (submissionInfo.EDC?.EDC is null)
                 EDC!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.ErrorsCount))
                 ErrorsCount!.Visibility = Visibility.Collapsed;
@@ -258,7 +258,7 @@ namespace MPF.UI.Windows
                 InternalSerialName!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.Multisession))
                 Multisession!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CopyProtection?.LibCrypt == null)
+            if (submissionInfo.CopyProtection?.LibCrypt is null)
                 LibCrypt!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData))
                 LibCryptData!.Visibility = Visibility.Collapsed;
@@ -300,6 +300,7 @@ namespace MPF.UI.Windows
             var system = submissionInfo?.CommonDiscInfo?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
+#pragma warning disable IDE0010
             switch (submissionInfo?.CommonDiscInfo?.Media)
             {
                 case DiscType.CD:
@@ -452,6 +453,7 @@ namespace MPF.UI.Windows
                     L3Info!.Visibility = Visibility.Collapsed;
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <summary>
@@ -461,6 +463,7 @@ namespace MPF.UI.Windows
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
+#pragma warning disable IDE0010
             switch (system)
             {
                 case RedumpSystem.AppleMacintosh:
@@ -490,6 +493,7 @@ namespace MPF.UI.Windows
                     DiscIDTextBox!.Visibility = Visibility.Visible;
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <summary>
@@ -498,7 +502,7 @@ namespace MPF.UI.Windows
         private static bool ShouldCollapseComment(SubmissionInfo? submissionInfo, SiteCode siteCode)
         {
             // If the special fields don't exist
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields == null)
+            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields is null)
                 return true;
 
             // If the key doesn't exist

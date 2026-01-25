@@ -55,7 +55,7 @@ namespace MPF.ExecutionContexts.Data
         public override string Format(bool useEquals)
         {
             // Do not output if there is no value
-            if (Value == null)
+            if (Value is null)
                 return string.Empty;
 
             // Build the output format
@@ -95,25 +95,25 @@ namespace MPF.ExecutionContexts.Data
                 if (index + 1 >= parts.Length)
                 {
                     Value = _required ? null : byte.MinValue;
-                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                    Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                     return !_required;
                 }
 
                 // If the next value is valid
-                if (ParseValue(parts[index + 1], out byte? value) && value != null)
+                if (ParseValue(parts[index + 1], out byte? value) && value is not null)
                 {
                     index++;
                     Value = value;
-                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                    Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                     return true;
                 }
 
                 // Return value based on required flag
                 Value = _required ? null : byte.MinValue;
-                Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                 return !_required;
             }
 
@@ -129,24 +129,24 @@ namespace MPF.ExecutionContexts.Data
                 if (string.IsNullOrEmpty(val))
                 {
                     Value = _required ? null : byte.MinValue;
-                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                    Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                     return !_required;
                 }
 
                 // If the next value is valid
-                if (ParseValue(val, out byte? value) && value != null)
+                if (ParseValue(val, out byte? value) && value is not null)
                 {
                     Value = value;
-                    Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                    Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                    Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                    Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                     return true;
                 }
 
                 // Return value based on required flag
                 Value = _required ? null : byte.MinValue;
-                Value = (MinValue != null && Value < MinValue) ? MinValue : Value;
-                Value = (MaxValue != null && Value > MaxValue) ? MaxValue : Value;
+                Value = (MinValue is not null && Value < MinValue) ? MinValue : Value;
+                Value = (MaxValue is not null && Value > MaxValue) ? MaxValue : Value;
                 return !_required;
             }
 

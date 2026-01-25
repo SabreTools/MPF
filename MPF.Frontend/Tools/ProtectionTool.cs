@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using SabreTools.IO.Extensions;
 
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'
 namespace MPF.Frontend.Tools
 {
     public static class ProtectionTool
@@ -73,7 +74,7 @@ namespace MPF.Frontend.Tools
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
-        public async static Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
+        public static async Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
             Drive? drive,
             Options options,
             IProgress<ProtectionProgress>? protectionProgress = null)
@@ -122,7 +123,7 @@ namespace MPF.Frontend.Tools
             }
 
             // Scan the mounted drive path
-            if (drive?.Name != null)
+            if (drive?.Name is not null)
             {
                 var driveProtections = await RunProtectionScanOnPath(drive.Name, options, protectionProgress);
                 MergeDictionaries(protections, driveProtections);
@@ -160,7 +161,7 @@ namespace MPF.Frontend.Tools
             });
 
             // If nothing was returned, return
-            if (found == null || found.Count == 0)
+            if (found is null || found.Count == 0)
                 return [];
 
             // Return the filtered set of protections
@@ -196,7 +197,7 @@ namespace MPF.Frontend.Tools
             });
 
             // If nothing was returned, return
-            if (found == null || found.Count == 0)
+            if (found is null || found.Count == 0)
                 return [];
 
             // Return the filtered set of protections
@@ -212,11 +213,11 @@ namespace MPF.Frontend.Tools
         public static string? FormatProtections(Dictionary<string, List<string>>? protections, Drive? drive)
         {
             // If the filtered list is empty in some way, return
-            if (protections == null)
+            if (protections is null)
                 return "[EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.Name == null)
+            else if (protections.Count == 0 && drive?.Name is null)
                 return "Mounted disc path missing [EXTERNAL SCAN NEEDED]";
-            else if (protections.Count == 0 && drive?.Name != null)
+            else if (protections.Count == 0 && drive?.Name is not null)
                 return "None found [OMIT FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
@@ -306,7 +307,7 @@ namespace MPF.Frontend.Tools
             string[] paths = [.. protections.Keys];
             foreach (var path in paths)
             {
-                if (!protections.TryGetValue(path, out var values) || values == null || values.Count == 0)
+                if (!protections.TryGetValue(path, out var values) || values is null || values.Count == 0)
                     continue;
 
                 // Always copy the values if they're valid
@@ -331,7 +332,7 @@ namespace MPF.Frontend.Tools
                 // Loop through the matching paths
                 foreach (var path in matchingPaths)
                 {
-                    if (!filtered.TryGetValue(path, out var values) || values == null || values.Count == 0)
+                    if (!filtered.TryGetValue(path, out var values) || values is null || values.Count == 0)
                         continue;
 
                     if (values.Exists(s => !s.Contains("GitHub") &&
@@ -368,6 +369,7 @@ namespace MPF.Frontend.Tools
                 foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file") && !p.StartsWith("[Access issue when opening file"));
                 foundProtections.Add("Exception occurred while scanning [RESCAN NEEDED]");
             }
+
             if (foundProtections.Exists(p => p.StartsWith("[Access issue when opening file")))
             {
                 foundProtections = foundProtections.FindAll(p => !p.StartsWith("[Exception opening file") && !p.StartsWith("[Access issue when opening file"));
@@ -546,8 +548,8 @@ namespace MPF.Frontend.Tools
                 }
 
                 // Next best case for SafeDisc 1: A SafeDisc version range is found from "SECDRV.SYS".
-                else if (foundProtections.Exists(p => p.StartsWith("Macrovision Security Driver")
-                        && Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled)
+                else if (foundProtections.Exists(p => (p.StartsWith("Macrovision Security Driver")
+                        && Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}-[1-2]\.[0-9]{2}\.[0-9]{3}", RegexOptions.Compiled))
                         || Regex.IsMatch(p, @"SafeDisc 1\.[0-9]{2}\.[0-9]{3}$")))
                 {
                     foundProtections = foundProtections.FindAll(p => !p.StartsWith("Macrovision Protection File"))

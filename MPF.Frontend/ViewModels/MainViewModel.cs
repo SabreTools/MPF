@@ -658,7 +658,7 @@ namespace MPF.Frontend.ViewModels
 
                 // Check for the last selected drive, if possible
                 int index = -1;
-                if (lastSelectedDrive != null)
+                if (lastSelectedDrive is not null)
                     index = Drives.FindIndex(d => d.MarkedActive && (d.Name?[0] ?? '\0') == lastSelectedDrive);
 
                 // Check for active optical drives
@@ -674,7 +674,7 @@ namespace MPF.Frontend.ViewModels
                     index = Drives.FindIndex(d => d.MarkedActive);
 
                 // Set the selected index
-                CurrentDrive = (index != -1 ? Drives[index] : Drives[0]);
+                CurrentDrive = index != -1 ? Drives[index] : Drives[0];
                 Status = "Valid drive found!";
                 CopyProtectScanButtonEnabled = true;
 
@@ -706,16 +706,16 @@ namespace MPF.Frontend.ViewModels
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
             DisableEventHandlers();
 
-            if (CurrentSystem != null)
+            if (CurrentSystem is not null)
             {
                 var mediaTypeValues = CurrentSystem.MediaTypes();
                 int index = mediaTypeValues.FindIndex(m => m == CurrentMediaType);
-                if (CurrentMediaType != null && index == -1)
+                if (CurrentMediaType is not null && index == -1)
                     VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
                 MediaTypes = mediaTypeValues.ConvertAll(m => new Element<MediaType>(m ?? MediaType.NONE));
                 MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
-                CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
+                CurrentMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
             }
             else
             {
@@ -738,7 +738,11 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Create a static list of supported programs, not everything
+#if NET5_0_OR_GREATER
+            var ipArr = Enum.GetValues<InternalProgram>();
+#else
             var ipArr = (InternalProgram[])Enum.GetValues(typeof(InternalProgram));
+#endif
             ipArr = Array.FindAll(ipArr, ip => InternalProgramExists(ip));
             InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
 
@@ -754,7 +758,7 @@ namespace MPF.Frontend.ViewModels
             else
             {
                 int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-                CurrentProgram = (currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value);
+                CurrentProgram = currentIndex > -1 ? InternalPrograms[currentIndex].Value : InternalPrograms[0].Value;
             }
 
             // Reenable event handlers, if necessary
@@ -784,7 +788,7 @@ namespace MPF.Frontend.ViewModels
         public void ChangeMediaType(System.Collections.IList removedItems, System.Collections.IList addedItems)
         {
             // Only change the media type if the selection and not the list has changed
-            if ((removedItems == null || removedItems.Count == 1) && (addedItems == null || addedItems.Count == 1))
+            if ((removedItems is null || removedItems.Count == 1) && (addedItems is null || addedItems.Count == 1))
                 SetSupportedDriveSpeed();
 
             GetOutputNames(false);
@@ -810,7 +814,7 @@ namespace MPF.Frontend.ViewModels
             FrontendTool.CheckForNewVersion(out different, out message, out url);
 
             SecretLogLn(message);
-            if (url == null)
+            if (url is null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
         }
 
@@ -829,7 +833,7 @@ namespace MPF.Frontend.ViewModels
 
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
-                    System = SabreTools.RedumpLib.Data.RedumpSystem.IBMPCcompatible,
+                    System = RedumpSystem.IBMPCcompatible,
                     Media = DiscType.BD128,
                     Title = "Game Title",
                     ForeignTitleNonLatin = "Foreign Game Title",
@@ -962,11 +966,11 @@ namespace MPF.Frontend.ViewModels
         public void ToggleStartStop()
         {
             // Dump or stop the dump
-            if (StartStopButtonText as string == StartDumpingValue)
+            if ((StartStopButtonText as string) == StartDumpingValue)
             {
                 StartDumping();
             }
-            else if (StartStopButtonText as string == StopDumpingValue)
+            else if ((StartStopButtonText as string) == StopDumpingValue)
             {
                 VerboseLogLn("Canceling dumping process...");
                 _environment?.CancelDumping();
@@ -1009,7 +1013,7 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = false;
 
             // Safely check the parameters box, just in case
-            if (ParametersCheckBoxEnabled == false)
+            if (!ParametersCheckBoxEnabled)
             {
                 bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
                 DisableEventHandlers();
@@ -1064,7 +1068,7 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = false;
 
             // Safely check the parameters box, just in case
-            if (ParametersCheckBoxEnabled == false)
+            if (!ParametersCheckBoxEnabled)
             {
                 bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
                 DisableEventHandlers();
@@ -1162,7 +1166,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void VerboseLog(string text)
         {
-            if (_logger != null && Options.VerboseLogging)
+            if (_logger is not null && Options.VerboseLogging)
                 _logger(LogLevel.VERBOSE, text);
         }
 
@@ -1186,7 +1190,7 @@ namespace MPF.Frontend.ViewModels
         private void CacheCurrentDiscType()
         {
             // If the selected item is invalid, we just skip
-            if (CurrentDrive == null)
+            if (CurrentDrive is null)
                 return;
 
             // Get reasonable default values based on the current system
@@ -1202,7 +1206,7 @@ namespace MPF.Frontend.ViewModels
                 MediaType? detectedMediaType = CurrentDrive.GetMediaType(CurrentSystem);
 
                 // If we got either an error or no media, default to the current System default
-                if (detectedMediaType == null)
+                if (detectedMediaType is null)
                 {
                     VerboseLogLn($"Could not detect media type, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
@@ -1244,7 +1248,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void DetermineSystemType()
         {
-            if (Drives == null || Drives.Count == 0 || CurrentDrive == null)
+            if (Drives is null || Drives.Count == 0 || CurrentDrive is null)
             {
                 VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
@@ -1252,16 +1256,16 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
-                if (currentSystem != null)
+                if (currentSystem is not null)
                     VerboseLogLn($"detected {currentSystem.LongName()}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
-                if (currentSystem == null && CurrentDrive.MarkedActive == false && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
                 {
                     try
                     {
                         // If disc is readable on inactive drive, assume it is a Mac disc
-                        if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) != null)
+                        if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) is not null)
                         {
                             currentSystem = RedumpSystem.AppleMacintosh;
                             VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
@@ -1271,19 +1275,19 @@ namespace MPF.Frontend.ViewModels
                 }
 
                 // Fallback to default system only if drive is active
-                if (currentSystem == null && CurrentDrive.MarkedActive)
+                if (currentSystem is null && CurrentDrive.MarkedActive)
                 {
                     currentSystem = Options.DefaultSystem;
                     VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
                 }
 
-                if (currentSystem != null)
+                if (currentSystem is not null)
                 {
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
                     CurrentSystem = Systems[sysIndex];
                 }
             }
-            else if (Options.SkipSystemDetection && Options.DefaultSystem != null)
+            else if (Options.SkipSystemDetection && Options.DefaultSystem is not null)
             {
                 var currentSystem = Options.DefaultSystem;
                 VerboseLogLn($"System detection disabled, defaulting to {currentSystem.LongName()}.");
@@ -1365,7 +1369,7 @@ namespace MPF.Frontend.ViewModels
             if (ParametersCheckBoxEnabled)
             {
                 var generated = _environment.GetFullParameters(CurrentMediaType, DriveSpeed);
-                if (generated != null)
+                if (generated is not null)
                     Parameters = generated;
             }
         }
@@ -1420,7 +1424,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
         public void GetOutputNames(bool driveChanged)
         {
-            if (Drives == null || Drives.Count == 0 || CurrentDrive == null)
+            if (Drives is null || Drives.Count == 0 || CurrentDrive is null)
             {
                 VerboseLogLn("Skipping output name building because no valid drives found!");
                 return;
@@ -1480,24 +1484,24 @@ namespace MPF.Frontend.ViewModels
         private static RedumpSystem? GetRedumpSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
-            if (drive == null || string.IsNullOrEmpty(drive.Name))
+            if (drive is null || string.IsNullOrEmpty(drive.Name))
                 return null;
 
             // If we can't read the files in the drive, we can only perform physical checks
-            if (drive.MarkedActive == false || !Directory.Exists(drive.Name))
+            if (!drive.MarkedActive || !Directory.Exists(drive.Name))
             {
                 try
                 {
                     // Check for Panasonic 3DO - filesystem not readable on Windows
                     RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
-                    if (detected3DOSystem != null)
+                    if (detected3DOSystem is not null)
                     {
                         return detected3DOSystem;
                     }
 
                     // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
                     RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
-                    if (detectedSegaSystem != null)
+                    if (detectedSegaSystem is not null)
                     {
                         return detectedSegaSystem;
                     }
@@ -1514,7 +1518,7 @@ namespace MPF.Frontend.ViewModels
 
             // Check volume labels first
             RedumpSystem? systemFromLabel = FrontendTool.GetRedumpSystemFromVolumeLabel(drive.VolumeLabel);
-            if (systemFromLabel != null)
+            if (systemFromLabel is not null)
                 return systemFromLabel;
 
             // Get a list of files for quicker checking
@@ -1619,7 +1623,7 @@ namespace MPF.Frontend.ViewModels
                             return RedumpSystem.MicrosoftXboxOne;
 
                         var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
-                        if (catalog != null && catalog.Version != null && catalog.Packages != null)
+                        if (catalog is not null && catalog.Version is not null && catalog.Packages is not null)
                         {
                             if (!double.TryParse(catalog.Version, out double version))
                                 return RedumpSystem.MicrosoftXboxOne;
@@ -1654,7 +1658,7 @@ namespace MPF.Frontend.ViewModels
             {
                 // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
                 RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
-                if (segaSystem != null)
+                if (segaSystem is not null)
                 {
                     return segaSystem;
                 }
@@ -1886,7 +1890,7 @@ namespace MPF.Frontend.ViewModels
             {
                 int driveIndex = Drives.ConvertAll(d => d.Name?[0] ?? '\0')
                     .IndexOf(_environment.ContextInputPath?[0] ?? default);
-                CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
+                CurrentDrive = driveIndex != -1 ? Drives[driveIndex] : Drives[0];
             }
             catch { }
 
@@ -1901,13 +1905,13 @@ namespace MPF.Frontend.ViewModels
 
             OutputPath = FrontendTool.NormalizeOutputPaths(_environment.ContextOutputPath, false);
 
-            if (MediaTypes != null)
+            if (MediaTypes is not null)
             {
                 MediaType? mediaType = _environment.GetMediaType();
-                if (mediaType != null)
+                if (mediaType is not null)
                 {
                     int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
-                    CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
+                    CurrentMediaType = mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0];
                 }
             }
 
@@ -1924,7 +1928,7 @@ namespace MPF.Frontend.ViewModels
             _environment ??= DetermineEnvironment();
 
             // If we don't have a valid drive
-            if (CurrentDrive?.Name == null)
+            if (CurrentDrive?.Name is null)
             {
                 ErrorLogLn("No valid drive found!");
                 return null;
@@ -2002,7 +2006,7 @@ namespace MPF.Frontend.ViewModels
         private static string? GetFormattedVolumeLabel(Drive? drive)
         {
             // If the drive is invalid
-            if (drive == null)
+            if (drive is null)
                 return null;
 
             // If the drive is marked as inactive
@@ -2011,6 +2015,7 @@ namespace MPF.Frontend.ViewModels
 
             // Use internal serials where appropriate
             string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel!.Trim();
+#pragma warning disable IDE0010
             switch (GetRedumpSystem(drive))
             {
                 case RedumpSystem.SonyPlayStation:
@@ -2047,6 +2052,7 @@ namespace MPF.Frontend.ViewModels
                     volumeLabel ??= $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
             }
+#pragma warning restore IDE0010
 
             foreach (char c in Path.GetInvalidFileNameChars())
             {
@@ -2062,11 +2068,11 @@ namespace MPF.Frontend.ViewModels
         private void SetCurrentDiscType()
         {
             // If we don't have any selected media types, we don't care and return
-            if (MediaTypes == null)
+            if (MediaTypes is null)
                 return;
 
             // If we have a detected media type, use that first
-            if (_detectedMediaType != null)
+            if (_detectedMediaType is not null)
             {
                 int detectedIndex = MediaTypes.FindIndex(kvp => kvp.Value == _detectedMediaType);
                 if (detectedIndex > -1)
@@ -2077,15 +2083,15 @@ namespace MPF.Frontend.ViewModels
             }
 
             // If we have an invalid current type, we don't care and return
-            if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
+            if (CurrentMediaType is null || CurrentMediaType == MediaType.NONE)
                 return;
 
             // Now set the selected item, if possible
             int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentMediaType);
-            if (CurrentMediaType != null && index == -1)
+            if (CurrentMediaType is not null && index == -1)
                 VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
-            CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
+            CurrentMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
         }
 
         /// <summary>
@@ -2111,8 +2117,8 @@ namespace MPF.Frontend.ViewModels
         private bool ShouldEnableDumpingButton()
         {
             return Drives.Count > 0
-                && CurrentSystem != null
-                && CurrentMediaType != null
+                && CurrentSystem is not null
+                && CurrentMediaType is not null
                 && ProgramSupportsMedia();
         }
 
@@ -2122,9 +2128,10 @@ namespace MPF.Frontend.ViewModels
         private bool ProgramSupportsMedia()
         {
             // If the media type is not set, return false
-            if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
+            if (CurrentMediaType is null || CurrentMediaType == MediaType.NONE)
                 return false;
 
+#pragma warning disable IDE0072
             return CurrentProgram switch
             {
                 // Aaru
@@ -2170,6 +2177,7 @@ namespace MPF.Frontend.ViewModels
                 // Default
                 _ => false,
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -2268,7 +2276,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void ToggleParameters()
         {
-            if (ParametersCheckBoxEnabled == false)
+            if (!ParametersCheckBoxEnabled)
             {
                 OptionsMenuItemEnabled = false;
 
@@ -2316,20 +2324,20 @@ namespace MPF.Frontend.ViewModels
         /// <returns>True if dumping should start, false otherwise</returns>
         private bool ValidateBeforeDumping()
         {
-            if (Parameters == null || _environment == null)
+            if (Parameters is null || _environment is null)
                 return false;
 
             // Validate that we have an output path of any sort
             if (string.IsNullOrEmpty(_environment.OutputPath))
             {
-                if (_displayUserMessage != null)
+                if (_displayUserMessage is not null)
                     _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
                 LogLn("Dumping aborted!");
                 return false;
             }
 
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (!_environment.DriveMarkedActive && _displayUserMessage != null)
+            if (!_environment.DriveMarkedActive && _displayUserMessage is not null)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
                     + (!_environment!.DetectedByWindows() ? $"This is normal for {_environment.SystemName} as the discs may not be readable on Windows. " : string.Empty)
@@ -2349,7 +2357,7 @@ namespace MPF.Frontend.ViewModels
 
             // If a complete or partial dump already exists
             bool foundAllFiles = _environment.FoundAllFiles(CurrentMediaType, outputDirectory, outputFilename);
-            if (foundAllFiles && _displayUserMessage != null)
+            if (foundAllFiles && _displayUserMessage is not null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
                 if (mbresult != true)
@@ -2362,7 +2370,7 @@ namespace MPF.Frontend.ViewModels
             {
                 // If a partial dump exists
                 bool foundAnyFiles = _environment.FoundAnyFiles(CurrentMediaType, outputDirectory, outputFilename);
-                if (foundAnyFiles && _displayUserMessage != null)
+                if (foundAnyFiles && _displayUserMessage is not null)
                 {
                     bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                     if (mbresult != true)
@@ -2375,7 +2383,7 @@ namespace MPF.Frontend.ViewModels
                 {
                     // If a complete dump exists from a different program
                     InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(CurrentMediaType, outputDirectory, outputFilename);
-                    if (completeProgramFound != null && _displayUserMessage != null)
+                    if (completeProgramFound is not null && _displayUserMessage is not null)
                     {
                         bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                         if (mbresult != true)
@@ -2388,7 +2396,7 @@ namespace MPF.Frontend.ViewModels
                     {
                         // If a partial dump exists from a different program
                         InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(CurrentMediaType, outputDirectory, outputFilename);
-                        if (partialProgramFound != null && _displayUserMessage != null)
+                        if (partialProgramFound is not null && _displayUserMessage is not null)
                         {
                             bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
                             if (mbresult != true)
@@ -2410,7 +2418,7 @@ namespace MPF.Frontend.ViewModels
                 fullPath = Path.GetFullPath(outputDirectory);
 
             var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath) ?? string.Empty);
-            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30) && _displayUserMessage != null)
+            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30) && _displayUserMessage is not null)
             {
                 bool? mbresult = _displayUserMessage("Low Space", "There is less than 1gb of space left on the target drive. Are you sure you want to continue?", 2, true);
                 if (mbresult != true)
@@ -2433,6 +2441,7 @@ namespace MPF.Frontend.ViewModels
         {
             try
             {
+#pragma warning disable IDE0072
                 return program switch
                 {
                     InternalProgram.Redumper => File.Exists(Options.RedumperPath),
@@ -2440,6 +2449,7 @@ namespace MPF.Frontend.ViewModels
                     InternalProgram.DiscImageCreator => File.Exists(Options.DiscImageCreatorPath),
                     _ => false,
                 };
+#pragma warning restore IDE0072
             }
             catch
             {
@@ -2453,7 +2463,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="translationStrings">Dictionary of keys and their translated string</param>
         public void TranslateStrings(Dictionary<string, string>? translationStrings)
         {
-            if (translationStrings != null)
+            if (translationStrings is not null)
             {
                 // Cache current start dumping string
                 var oldStartDumpingValue = StartDumpingValue;
@@ -2465,7 +2475,7 @@ namespace MPF.Frontend.ViewModels
                     StopDumpingValue = stopDumpingValue ?? StopDumpingValue;
 
                 // Set button text
-                if (StartStopButtonText as string == oldStartDumpingValue)
+                if ((StartStopButtonText as string) == oldStartDumpingValue)
                     StartStopButtonText = StartDumpingValue;
                 else
                     StartStopButtonText = StopDumpingValue;
@@ -2496,15 +2506,19 @@ namespace MPF.Frontend.ViewModels
             var message = value?.Message;
 
             // Update the label with only the first line of output
-            if (message != null && message.Contains("\n"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+            if (message is not null && message.Contains('\n'))
+#else
+            if (message is not null && message.Contains("\n"))
+#endif
                 Status = message.Split('\n')[0] + " (See log output)";
             else
                 Status = message ?? string.Empty;
 
             // Log based on success or failure
-            if (value != null && value)
+            if (value is not null && value)
                 VerboseLogLn(message ?? string.Empty);
-            else if (value != null && !value)
+            else if (value is not null && !value)
                 ErrorLogLn(message ?? string.Empty);
         }
 

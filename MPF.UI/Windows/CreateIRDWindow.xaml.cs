@@ -279,10 +279,11 @@ namespace MPF.UI.Windows
             CreateIRDViewModel.CreateIRDStatus = "Creating IRD... Please Wait";
             string? outputPath = BrowseOutputFile();
             string? errorMessage = "Please provide an output path";
-            if (outputPath != null)
+            if (outputPath is not null)
             {
                 errorMessage = CreateIRDViewModel.CreateIRD(outputPath);
             }
+
             if (string.IsNullOrEmpty(errorMessage))
             {
                 bool? checkAgain = DisplayUserMessage("IRD Create", "An IRD has been created successfully! Would you like to create another IRD?", 2, false);

@@ -206,13 +206,13 @@ namespace MPF.Processors.OutputFiles
         public virtual bool Exists(ZipArchive? archive)
         {
             // If the archive is invalid
-            if (archive == null)
+            if (archive is null)
                 return false;
 
             // Get list of all files in archive
             foreach (var entry in archive.Entries)
             {
-                if (entry.Key == null)
+                if (entry.Key is null)
                     continue;
 
                 if (Array.Exists(Filenames, filename => entry.Key == filename))
@@ -231,13 +231,13 @@ namespace MPF.Processors.OutputFiles
         public virtual bool Extract(ZipArchive? archive, string outputDirectory)
         {
             // If the archive is invalid
-            if (archive == null)
+            if (archive is null)
                 return false;
 
             // Get list of all files in archive
             foreach (var entry in archive.Entries)
             {
-                if (entry.Key == null)
+                if (entry.Key is null)
                     continue;
 
                 var matches = Array.FindAll(Filenames, filename => entry.Key == filename);

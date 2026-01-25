@@ -53,6 +53,7 @@ namespace MPF.Processors
                     logEntry?.WriteToFile(logPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
+
                 logArchive?.Dispose();
             }
 #endif
@@ -152,6 +153,7 @@ namespace MPF.Processors
             }
 
             // Extract info based generically on MediaType
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -161,8 +163,8 @@ namespace MPF.Processors
                     // Attempt to get the error count
                     if (GetErrorCount($"{basePath}.log", out long redumpErrors, out long c2Errors))
                     {
-                        info.CommonDiscInfo.ErrorsCount = (redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString());
-                        info.DumpingInfo.C2ErrorsCount = (c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString());
+                        info.CommonDiscInfo.ErrorsCount = redumpErrors == -1 ? "Error retrieving error count" : redumpErrors.ToString();
+                        info.DumpingInfo.C2ErrorsCount = c2Errors == -1 ? "Error retrieving error count" : c2Errors.ToString();
                     }
 
                     // Attempt to get extra metadata if it's an audio disc
@@ -205,7 +207,7 @@ namespace MPF.Processors
 
                     // Attempt to get the error count
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
-                    info.CommonDiscInfo.ErrorsCount = (scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString());
+                    info.CommonDiscInfo.ErrorsCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
 
                     // Bluray-specific options
                     if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
@@ -309,15 +311,15 @@ namespace MPF.Processors
                     }
 
                     string? dmiCrc = HashTool.GetFileHash($"{basePath}.dmi", HashType.CRC32);
-                    if (dmiCrc != null)
+                    if (dmiCrc is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = dmiCrc.ToUpperInvariant();
                     string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
-                    if (pfiCrc != null)
+                    if (pfiCrc is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
                     if (ProcessingTool.IsValidSS($"{basePath}.ss") && !ProcessingTool.IsValidPartialSS($"{basePath}.ss"))
                     {
                         string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
-                        if (ssCrc != null)
+                        if (ssCrc is not null)
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }
 
@@ -340,6 +342,7 @@ namespace MPF.Processors
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
                     }
+
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
@@ -362,6 +365,7 @@ namespace MPF.Processors
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
                     }
+
                     break;
 
                 case RedumpSystem.SegaDreamcast:
@@ -377,6 +381,7 @@ namespace MPF.Processors
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
                     }
+
                     break;
 
                 case RedumpSystem.SegaNaomi:
@@ -392,6 +397,7 @@ namespace MPF.Processors
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
                     }
+
                     break;
 
                 case RedumpSystem.SegaNaomi2:
@@ -407,6 +413,7 @@ namespace MPF.Processors
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
                     }
+
                     break;
 
                 case RedumpSystem.SegaSaturn:
@@ -443,7 +450,7 @@ namespace MPF.Processors
                     }
 
                     string? ps2Protection = GetPlayStation2Protection($"{basePath}.log");
-                    if (ps2Protection != null)
+                    if (ps2Protection is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Protection] = ps2Protection;
 
                     break;
@@ -475,6 +482,7 @@ namespace MPF.Processors
 
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <inheritdoc/>
@@ -488,6 +496,7 @@ namespace MPF.Processors
             if (!string.IsNullOrEmpty(outputDirectory))
                 basePath = Path.Combine(outputDirectory, basePath);
 
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -696,6 +705,7 @@ namespace MPF.Processors
                             "state_zst"),
                     ];
             }
+#pragma warning restore IDE0010
 
             return [];
         }
@@ -711,7 +721,7 @@ namespace MPF.Processors
         private static bool DatfileExists(string log)
         {
             // Uncompressed outputs
-            if (GetDatfile(log) != null)
+            if (GetDatfile(log) is not null)
                 return true;
 
             // Check for the log file
@@ -745,11 +755,11 @@ namespace MPF.Processors
                     }
                 }
 
-                if (logEntry == null)
+                if (logEntry is null)
                     return false;
 
                 using var sr = new StreamReader(logEntry.OpenEntryStream());
-                return GetDatfile(sr) != null;
+                return GetDatfile(sr) is not null;
             }
             catch
             {
@@ -967,7 +977,7 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(log);
                 var line = sr.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -1016,7 +1026,7 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(log);
                 var line = sr.ReadLine()?.TrimEnd();
-                while (line != null)
+                while (line is not null)
                 {
                     // If the line isn't the non-embedded disc type, skip
                     if (!line.StartsWith("disc type:"))
@@ -1042,7 +1052,7 @@ namespace MPF.Processors
                         "HD-DVD" => MediaType.HDDVD,
                         _ => null,
                     };
-                    return discType != null;
+                    return discType is not null;
                 }
 
                 return false;
@@ -1135,7 +1145,7 @@ namespace MPF.Processors
 
                     // Now read until we hit the manufacturing information
                     var line = sr.ReadLine()?.Trim();
-                    while (line != null && !sr.EndOfStream)
+                    while (line is not null && !sr.EndOfStream)
                     {
                         if (line.StartsWith("protection system type"))
                         {
@@ -1249,7 +1259,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     // C2: <error count>
@@ -1357,7 +1367,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("build date:"))
@@ -1451,7 +1461,7 @@ namespace MPF.Processors
                 var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
 
                 string? line;
-                while ((line = sr.ReadLine()) != null)
+                while ((line = sr.ReadLine()) is not null)
                 {
                     var match = regex.Match(line.Trim());
                     if (match.Success)
@@ -1499,7 +1509,7 @@ namespace MPF.Processors
                     var line = sr.ReadLine()?.Trim();
 
                     // If we have a null line, just break
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     // Single-layer discs have no layerbreak
@@ -1595,7 +1605,7 @@ namespace MPF.Processors
                     var line = sr.ReadLine()?.Trim();
 
                     // If we have a null line, just break
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     // Store the first session range
@@ -1651,7 +1661,7 @@ namespace MPF.Processors
                     var line = sr.ReadLine()?.Trim();
 
                     // If we have a null line, just break
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("anti-modchip: no"))
@@ -1691,7 +1701,7 @@ namespace MPF.Processors
                     var line = sr.ReadLine()?.Trim();
 
                     // If we have a null line, just break
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.Contains("EDC: no"))
@@ -1740,13 +1750,14 @@ namespace MPF.Processors
                         line?.StartsWith("PS5 [") == true)
                         break;
                 }
+
                 if (sr.EndOfStream)
                     return false;
 
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("anti-modchip:"))
@@ -1862,7 +1873,7 @@ namespace MPF.Processors
                 var line = sr.ReadLine()?.Trim();
                 while (!sr.EndOfStream)
                 {
-                    if (line == null)
+                    if (line is null)
                         return false;
 
                     if (line.StartsWith("libcrypt: no"))
@@ -1902,7 +1913,7 @@ namespace MPF.Processors
                 var line = sr.ReadLine()?.Trim();
                 while (!sr.EndOfStream)
                 {
-                    if (line == null)
+                    if (line is null)
                         return null;
 
                     if (line.StartsWith("protection: PS2"))
@@ -2151,7 +2162,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("build date:"))
@@ -2252,7 +2263,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     // SCSI: <error count>
@@ -2392,7 +2403,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine()?.TrimStart();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("build date:"))
@@ -2595,7 +2606,7 @@ namespace MPF.Processors
                 using var sr = File.OpenText(log);
                 var line = sr.ReadLine();
 
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -2610,7 +2621,7 @@ namespace MPF.Processors
 #endif
 
                         // Skip if label is blank
-                        if (label == null || label.Length <= 0)
+                        if (label is null || label.Length <= 0)
                             break;
 
                         if (volLabels.ContainsKey(label))

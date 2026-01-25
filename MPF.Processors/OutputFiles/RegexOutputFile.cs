@@ -69,13 +69,13 @@ namespace MPF.Processors.OutputFiles
         public override bool Exists(ZipArchive? archive)
         {
             // If the archive is invalid
-            if (archive == null)
+            if (archive is null)
                 return false;
 
             // Get list of all files in archive
             foreach (var entry in archive.Entries)
             {
-                if (entry.Key == null)
+                if (entry.Key is null)
                     continue;
 
                 if (Array.Exists(Filenames, pattern => Regex.IsMatch(entry.Key, pattern)))
@@ -89,13 +89,13 @@ namespace MPF.Processors.OutputFiles
         public override bool Extract(ZipArchive? archive, string outputDirectory)
         {
             // If the archive is invalid
-            if (archive == null)
+            if (archive is null)
                 return false;
 
             // Get list of all files in archive
             foreach (var entry in archive.Entries)
             {
-                if (entry.Key == null)
+                if (entry.Key is null)
                     continue;
 
                 var matches = Array.FindAll(Filenames, pattern => Regex.IsMatch(entry.Key, pattern));
@@ -128,7 +128,7 @@ namespace MPF.Processors.OutputFiles
             foreach (string file in directoryFiles)
             {
                 var matches = Array.FindAll(Filenames, pattern => Regex.IsMatch(file, pattern));
-                if (matches != null && matches.Length > 0)
+                if (matches is not null && matches.Length > 0)
                     paths.Add(file);
             }
 

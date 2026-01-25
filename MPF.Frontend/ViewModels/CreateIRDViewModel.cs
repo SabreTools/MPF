@@ -570,7 +570,7 @@ namespace MPF.Frontend.ViewModels
                 && string.IsNullOrEmpty(DiscIDString)
                 && string.IsNullOrEmpty(PICString)
                 && string.IsNullOrEmpty(PICPath)
-                && Layerbreak == null;
+                && Layerbreak is null;
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace MPF.Frontend.ViewModels
             LogPathBrowseButtonEnabled = false;
 
             byte[]? id = ProcessingTool.ParseDiscID(DiscIDString);
-            if (id != null)
+            if (id is not null)
             {
                 DiscID = id;
                 DiscIDStatus = $"Using provided ID: {DiscIDString}";
@@ -716,7 +716,7 @@ namespace MPF.Frontend.ViewModels
             HexKeyTextBoxEnabled = false;
 
             byte[]? key = ProcessingTool.ParseKeyFile(KeyPath);
-            if (key != null)
+            if (key is not null)
             {
                 Key = key;
                 KeyStatus = $"Using key from file: {Path.GetFileName(KeyPath)}";
@@ -760,7 +760,7 @@ namespace MPF.Frontend.ViewModels
             KeyPathBrowseButtonEnabled = false;
 
             byte[]? key = ProcessingTool.ParseHexKey(HexKey);
-            if (key != null)
+            if (key is not null)
             {
                 Key = key;
                 KeyStatus = $"Using provided Key: {HexKey}";
@@ -800,7 +800,7 @@ namespace MPF.Frontend.ViewModels
             LayerbreakTextBoxEnabled = false;
 
             PIC = ProcessingTool.ParsePICFile(PICPath);
-            if (PIC != null)
+            if (PIC is not null)
             {
                 PICStatus = $"Using PIC from file: {Path.GetFileName(PICPath)}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
@@ -843,7 +843,7 @@ namespace MPF.Frontend.ViewModels
             LayerbreakTextBoxEnabled = false;
 
             PIC = ProcessingTool.ParsePIC(PICString);
-            if (PIC != null)
+            if (PIC is not null)
             {
                 PICStatus = "Using provided PIC";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
@@ -883,7 +883,7 @@ namespace MPF.Frontend.ViewModels
             PICTextBoxEnabled = false;
 
             Layerbreak = ProcessingTool.ParseLayerbreak(LayerbreakString);
-            if (Layerbreak != null)
+            if (Layerbreak is not null)
             {
                 PICStatus = $"Will generate a PIC using a Layerbreak of {Layerbreak}";
                 CreateIRDButtonEnabled = ShouldEnableCreateIRDButton();
@@ -1042,16 +1042,16 @@ namespace MPF.Frontend.ViewModels
                 return $"{InputPath!.Trim('"')} is not a valid ISO path.";
 
             // TODO: Implement pulling key from redump.org
-            if (Key == null)
+            if (Key is null)
                 return "Pulling key from redump.org is currently not implemented.";
 
             try
             {
                 // Create Redump-style reproducible IRD
                 LibIRD.ReIRD ird = new(InputPath, Key, Layerbreak);
-                if (PIC != null)
+                if (PIC is not null)
                     ird.PIC = PIC;
-                if (DiscID != null && ird.DiscID[15] != 0x00)
+                if (DiscID is not null && ird.DiscID[15] != 0x00)
                     ird.DiscID = DiscID;
                 ird.Write(outputPath);
                 CreateIRDStatus = "IRD Created Successfully";

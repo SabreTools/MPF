@@ -105,7 +105,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <inheritdoc/>
         public bool Equals(RedumpSystemComboBoxItem? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return Value == other.Value;

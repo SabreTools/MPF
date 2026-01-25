@@ -60,6 +60,7 @@ namespace MPF.Processors
                     sidecarEntry?.WriteToFile(sidecarPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
+
                 logArchive?.Dispose();
             }
 #endif
@@ -119,7 +120,7 @@ namespace MPF.Processors
 
             // Get the error count
             long errorCount = GetErrorCount($"{basePath}.resume.xml");
-            info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+            info.CommonDiscInfo.ErrorsCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset(sidecar);
@@ -127,6 +128,7 @@ namespace MPF.Processors
             info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
 
             // Extract info based generically on MediaType
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 // TODO: Can this do GD-ROM?
@@ -221,8 +223,10 @@ namespace MPF.Processors
                         info.VersionAndEditions.Version = version360 ?? string.Empty;
                         info.CommonDiscInfo.Region = region360;
                     }
+
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <inheritdoc/>
@@ -231,6 +235,7 @@ namespace MPF.Processors
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -295,6 +300,7 @@ namespace MPF.Processors
                             "resume"),
                     ];
             }
+#pragma warning restore IDE0010
 
             return [];
         }
@@ -312,7 +318,7 @@ namespace MPF.Processors
         internal static string? GenerateCuesheet(CICMMetadataType? cicmSidecar, string basePath)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Required variables
@@ -324,18 +330,18 @@ namespace MPF.Processors
             };
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return null;
 
             // Loop through each OpticalDisc in the metadata
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // Only capture the first total track count
-                if (opticalDisc.Tracks != null && opticalDisc.Tracks.Length > 0)
+                if (opticalDisc.Tracks is not null && opticalDisc.Tracks.Length > 0)
                     totalTracks = opticalDisc.Tracks[0];
 
                 // If there are no tracks, we can't get a cuesheet
-                if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
+                if (opticalDisc.Track is null || opticalDisc.Track.Length == 0)
                     continue;
 
                 // Get cuesheet-level information
@@ -362,7 +368,7 @@ namespace MPF.Processors
 
                     // Add index data
                     var cueTracks = new List<CueTrack>();
-                    if (track.Indexes != null && track.Indexes.Length > 0)
+                    if (track.Indexes is not null && track.Indexes.Length > 0)
                     {
                         var cueIndicies = new List<CueIndex>();
 
@@ -372,8 +378,8 @@ namespace MPF.Processors
                             // Get timestamp from frame count
                             int absoluteLength = Math.Abs(trackIndex.Value);
                             int frames = absoluteLength % 75;
-                            int seconds = (absoluteLength / 75) % 60;
-                            int minutes = (absoluteLength / 75 / 60);
+                            int seconds = absoluteLength / 75 % 60;
+                            int minutes = absoluteLength / 75 / 60;
                             string timeString = $"{minutes:D2}:{seconds:D2}:{frames:D2}";
 
                             // Pregap information
@@ -430,10 +436,10 @@ namespace MPF.Processors
 
             // If we have a cuesheet to write out, do so
             cueSheet.Files = [.. cueFiles];
-            if (cueSheet != null && cueSheet != default)
+            if (cueSheet is not null && cueSheet != default)
             {
                 var ms = new SabreTools.Serialization.Writers.CueSheet().SerializeStream(cueSheet);
-                if (ms == null)
+                if (ms is null)
                     return null;
 
                 using var sr = new StreamReader(ms);
@@ -451,6 +457,7 @@ namespace MPF.Processors
         /// <returns>CueTrackDataType representing the input data</returns>
         private static CueTrackDataType ConvertToDataType(TrackTypeTrackType trackType, uint bytesPerSector)
         {
+#pragma warning disable IDE0010
             switch (trackType)
             {
                 case TrackTypeTrackType.audio:
@@ -473,6 +480,7 @@ namespace MPF.Processors
                 default:
                     return CueTrackDataType.MODE1_2352;
             }
+#pragma warning restore IDE0010
         }
 
         /// <summary>
@@ -482,7 +490,7 @@ namespace MPF.Processors
         /// <returns>CueTrackFlag representing the flags</returns>
         private static CueTrackFlag ConvertToTrackFlag(TrackFlagsType trackFlagsType)
         {
-            if (trackFlagsType == null)
+            if (trackFlagsType is null)
                 return 0;
 
             CueTrackFlag flag = 0;
@@ -512,25 +520,25 @@ namespace MPF.Processors
         internal static Datafile? GenerateDatafile(CICMMetadataType? cicmSidecar, string basePath)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Required variables
             var roms = new List<Rom>();
 
             // Process OpticalDisc, if possible
-            if (cicmSidecar.OpticalDisc != null && cicmSidecar.OpticalDisc.Length > 0)
+            if (cicmSidecar.OpticalDisc is not null && cicmSidecar.OpticalDisc.Length > 0)
             {
                 // Loop through each OpticalDisc in the metadata
                 foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
                 {
                     // Only capture the first total track count
                     uint totalTracks = 0;
-                    if (opticalDisc.Tracks != null && opticalDisc.Tracks.Length > 0)
+                    if (opticalDisc.Tracks is not null && opticalDisc.Tracks.Length > 0)
                         totalTracks = opticalDisc.Tracks[0];
 
                     // If there are no tracks, we can't get a datfile
-                    if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
+                    if (opticalDisc.Track is null || opticalDisc.Track.Length == 0)
                         continue;
 
                     // Loop through each track
@@ -543,12 +551,13 @@ namespace MPF.Processors
                         string sha1 = string.Empty;
 
                         // If we don't have any checksums, we can't get a DAT for this track
-                        if (track.Checksums == null || track.Checksums.Length == 0)
+                        if (track.Checksums is null || track.Checksums.Length == 0)
                             continue;
 
                         // Extract only relevant checksums
                         foreach (ChecksumType checksum in track.Checksums)
                         {
+#pragma warning disable IDE0010
                             switch (checksum.type)
                             {
                                 case ChecksumTypeType.crc32:
@@ -561,6 +570,7 @@ namespace MPF.Processors
                                     sha1 = checksum.Value;
                                     break;
                             }
+#pragma warning restore IDE0010
                         }
 
                         // Build the track datfile data and append
@@ -571,7 +581,7 @@ namespace MPF.Processors
             }
 
             // Process BlockMedia, if possible
-            if (cicmSidecar.BlockMedia != null && cicmSidecar.BlockMedia.Length > 0)
+            if (cicmSidecar.BlockMedia is not null && cicmSidecar.BlockMedia.Length > 0)
             {
                 // Loop through each BlockMedia in the metadata
                 foreach (BlockMediaType blockMedia in cicmSidecar.BlockMedia)
@@ -582,12 +592,13 @@ namespace MPF.Processors
                     string sha1 = string.Empty;
 
                     // If we don't have any checksums, we can't get a DAT for this track
-                    if (blockMedia.Checksums == null || blockMedia.Checksums.Length == 0)
+                    if (blockMedia.Checksums is null || blockMedia.Checksums.Length == 0)
                         continue;
 
                     // Extract only relevant checksums
                     foreach (ChecksumType checksum in blockMedia.Checksums)
                     {
+#pragma warning disable IDE0010
                         switch (checksum.type)
                         {
                             case ChecksumTypeType.crc32:
@@ -600,6 +611,7 @@ namespace MPF.Processors
                                 sha1 = checksum.Value;
                                 break;
                         }
+#pragma warning restore IDE0010
                     }
 
                     // Build the track datfile data and append
@@ -658,11 +670,11 @@ namespace MPF.Processors
         internal static string? GeneratePVD(CICMMetadataType? cicmSidecar)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Process OpticalDisc, if possible
-            if (cicmSidecar.OpticalDisc != null && cicmSidecar.OpticalDisc.Length > 0)
+            if (cicmSidecar.OpticalDisc is not null && cicmSidecar.OpticalDisc.Length > 0)
             {
                 // Loop through each OpticalDisc in the metadata
                 foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
@@ -670,7 +682,7 @@ namespace MPF.Processors
                     var pvdData = GeneratePVDData(opticalDisc);
 
                     // If we got a null value, we skip this disc
-                    if (pvdData == null)
+                    if (pvdData is null)
                         continue;
 
                     // Build each row in consecutive order
@@ -704,21 +716,21 @@ namespace MPF.Processors
             DateTime effective = DateTime.MinValue;
 
             // If there are no tracks, we can't get a PVD
-            if (opticalDisc?.Track == null || opticalDisc.Track.Length == 0)
+            if (opticalDisc?.Track is null || opticalDisc.Track.Length == 0)
                 return null;
 
             // Take the first track only
             TrackType track = opticalDisc.Track[0];
 
             // If there are no partitions, we can't get a PVD
-            if (track.FileSystemInformation == null || track.FileSystemInformation.Length == 0)
+            if (track.FileSystemInformation is null || track.FileSystemInformation.Length == 0)
                 return null;
 
             // Loop through each Partition
             foreach (PartitionType partition in track.FileSystemInformation)
             {
                 // If the partition has no file systems, we can't get a PVD
-                if (partition.FileSystems == null || partition.FileSystems.Length == 0)
+                if (partition.FileSystems is null || partition.FileSystems.Length == 0)
                     continue;
 
                 // Loop through each FileSystem until we find a PVD
@@ -837,7 +849,7 @@ namespace MPF.Processors
         private static string? GenerateSectorOutputLine(string row, byte[] bytes, int offset)
         {
             // If the data isn't correct, return null
-            if (bytes == null || offset < 0 || offset >= bytes.Length || bytes.Length - offset < 16)
+            if (bytes is null || offset < 0 || offset >= bytes.Length || bytes.Length - offset < 16)
                 return null;
 
             var pvdLine = new StringBuilder();
@@ -886,7 +898,7 @@ namespace MPF.Processors
                 });
 
                 // If the reader is null for some reason, we can't do anything
-                if (xtr == null)
+                if (xtr is null)
                     return null;
 
                 var serializer = new XmlSerializer(typeof(CICMMetadataType));
@@ -910,11 +922,11 @@ namespace MPF.Processors
             discType = null; discSubType = null;
 
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return false;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return false;
 
             // Find and return the hardware info, if possible
@@ -1088,11 +1100,11 @@ namespace MPF.Processors
         private static string? GetDVDProtection(CICMMetadataType? cicmSidecar)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return null;
 
             // Get an output for the copyright protection
@@ -1161,7 +1173,7 @@ namespace MPF.Processors
                         totalErrors = 0;
                     else if (line.StartsWith("</BadBlocks>"))
                         return totalErrors ?? -1;
-                    else if (line.StartsWith("<Block>") && totalErrors != null)
+                    else if (line.StartsWith("<Block>") && totalErrors is not null)
                         totalErrors++;
                 }
 
@@ -1186,24 +1198,24 @@ namespace MPF.Processors
             manufacturer = null; model = null; firmware = null;
 
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return false;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return false;
 
             // Find and return the hardware info, if possible
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If there's no hardware information, skip
-                if (opticalDisc.DumpHardwareArray == null || opticalDisc.DumpHardwareArray.Length == 0)
+                if (opticalDisc.DumpHardwareArray is null || opticalDisc.DumpHardwareArray.Length == 0)
                     continue;
 
                 foreach (DumpHardwareType hardware in opticalDisc.DumpHardwareArray)
                 {
                     // If the hardware information is invalid, skip
-                    if (hardware == null)
+                    if (hardware is null)
                         continue;
 
                     // Store the first instance of each value
@@ -1227,11 +1239,11 @@ namespace MPF.Processors
         private static string? GetLayerbreak(CICMMetadataType? cicmSidecar)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return null;
 
             // Setup the layerbreak
@@ -1241,7 +1253,7 @@ namespace MPF.Processors
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If there's no layer information, skip
-                if (opticalDisc.Layers == null)
+                if (opticalDisc.Layers is null)
                     continue;
 
                 // TODO: Determine how to find the layerbreak from the CICM or other outputs
@@ -1258,11 +1270,11 @@ namespace MPF.Processors
         private static string? GetWriteOffset(CICMMetadataType? cicmSidecar)
         {
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return null;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return null;
 
             // Loop through each OpticalDisc in the metadata
@@ -1288,28 +1300,28 @@ namespace MPF.Processors
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return false;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return false;
 
             // Loop through each OpticalDisc in the metadata
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If the Xbox type isn't set, we can't extract information
-                if (opticalDisc.Xbox == null)
+                if (opticalDisc.Xbox is null)
                     continue;
 
                 // Get the Xbox information
                 XboxType xbox = opticalDisc.Xbox;
 
                 // DMI
-                if (xbox.DMI != null)
+                if (xbox.DMI is not null)
                 {
                     DumpType dmi = xbox.DMI;
-                    if (dmi.Checksums != null && dmi.Checksums.Length != 0)
+                    if (dmi.Checksums is not null && dmi.Checksums.Length != 0)
                     {
                         foreach (ChecksumType checksum in dmi.Checksums)
                         {
@@ -1324,10 +1336,10 @@ namespace MPF.Processors
                 }
 
                 // PFI
-                if (xbox.PFI != null)
+                if (xbox.PFI is not null)
                 {
                     DumpType pfi = xbox.PFI;
-                    if (pfi.Checksums != null && pfi.Checksums.Length != 0)
+                    if (pfi.Checksums is not null && pfi.Checksums.Length != 0)
                     {
                         foreach (ChecksumType checksum in pfi.Checksums)
                         {
@@ -1342,12 +1354,12 @@ namespace MPF.Processors
                 }
 
                 // SS
-                if (xbox.SecuritySectors != null && xbox.SecuritySectors.Length > 0)
+                if (xbox.SecuritySectors is not null && xbox.SecuritySectors.Length > 0)
                 {
                     foreach (XboxSecuritySectorsType securitySector in xbox.SecuritySectors)
                     {
                         DumpType security = securitySector.SecuritySectors;
-                        if (security.Checksums != null && security.Checksums.Length != 0)
+                        if (security.Checksums is not null && security.Checksums.Length != 0)
                         {
                             foreach (ChecksumType checksum in security.Checksums)
                             {
@@ -1364,7 +1376,7 @@ namespace MPF.Processors
                         }
 
                         // If we got a hash, we can break
-                        if (sshash != null)
+                        if (sshash is not null)
                             break;
                     }
                 }
@@ -1383,25 +1395,25 @@ namespace MPF.Processors
             serial = null; version = null; region = Region.World;
 
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return false;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return false;
 
             // Loop through each OpticalDisc in the metadata
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If the Xbox type isn't set, we can't extract information
-                if (opticalDisc.Xbox == null)
+                if (opticalDisc.Xbox is null)
                     continue;
 
                 // Get the Xbox information
                 XboxType xbox = opticalDisc.Xbox;
 
                 // DMI
-                if (xbox.DMI != null)
+                if (xbox.DMI is not null)
                 {
                     DumpType dmi = xbox.DMI;
                     string image = dmi.Image;
@@ -1431,25 +1443,25 @@ namespace MPF.Processors
             serial = null; version = null; region = Region.World;
 
             // If the object is null, we can't get information from it
-            if (cicmSidecar == null)
+            if (cicmSidecar is null)
                 return false;
 
             // Only care about OpticalDisc types
-            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+            if (cicmSidecar.OpticalDisc is null || cicmSidecar.OpticalDisc.Length == 0)
                 return false;
 
             // Loop through each OpticalDisc in the metadata
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
                 // If the Xbox type isn't set, we can't extract information
-                if (opticalDisc.Xbox == null)
+                if (opticalDisc.Xbox is null)
                     continue;
 
                 // Get the Xbox information
                 XboxType xbox = opticalDisc.Xbox;
 
                 // DMI
-                if (xbox.DMI != null)
+                if (xbox.DMI is not null)
                 {
                     DumpType dmi = xbox.DMI;
                     string image = dmi.Image;

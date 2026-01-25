@@ -21,12 +21,14 @@ namespace MPF.Processors
         /// <inheritdoc/>
         public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
         {
+#pragma warning disable IDE0072
             return System switch
             {
                 RedumpSystem.NintendoGameCube => MediaType.NintendoGameCubeGameDisc,
                 RedumpSystem.NintendoWii => MediaType.NintendoWiiOpticalDisc,
                 _ => null,
             };
+#pragma warning restore IDE0072
         }
 
         /// <inheritdoc/>
@@ -255,7 +257,7 @@ namespace MPF.Processors
             try
             {
                 var hex = ProcessingTool.GetFullFile(bcaPath, true);
-                if (hex == null)
+                if (hex is null)
                     return null;
 
                 // Separate into blocks of 4 hex digits and newlines
@@ -342,6 +344,7 @@ namespace MPF.Processors
                         // string gameid = serial[1] + serial[2];
                         // string version = serial[4] + serial[5]
 
+#pragma warning disable IDE0010
                         switch (serial[3])
                         {
                             case 'A':
@@ -393,6 +396,7 @@ namespace MPF.Processors
                                 region = null; // Not a real region code
                                 break;
                         }
+#pragma warning restore IDE0010
                     }
                 }
 

@@ -40,6 +40,7 @@ namespace MPF.Frontend
         /// <returns>Read-only list of drive speeds</returns>
         public static List<int> GetSpeedsForMediaType(MediaType? type)
         {
+#pragma warning disable IDE0072
             return type switch
             {
                 MediaType.CDROM
@@ -54,6 +55,7 @@ namespace MPF.Frontend
                 // Default to CD speed range
                 _ => CD,
             };
+#pragma warning restore IDE0072
         }
     }
 }

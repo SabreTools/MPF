@@ -33,7 +33,7 @@ namespace MPF.CLI
             var commandSet = CreateCommands(mainFeature);
 
             // If we have no args, show the help and quit
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
             {
                 BaseFeature.DisplayHelp();
                 return;
@@ -62,6 +62,7 @@ namespace MPF.CLI
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!interactive.Execute())
                     {
                         BaseFeature.DisplayHelp();
@@ -77,6 +78,7 @@ namespace MPF.CLI
                         BaseFeature.DisplayHelp();
                         return;
                     }
+
                     if (!mainFeature.Execute())
                     {
                         BaseFeature.DisplayHelp();

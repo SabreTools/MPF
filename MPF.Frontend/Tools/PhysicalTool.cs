@@ -50,7 +50,7 @@ namespace MPF.Frontend.Tools
 
                 // Fix the Y2K timestamp issue, if required
                 if (fixTwoDigitYear)
-                    year = year >= 1900 && year < 1920 ? 2000 + year % 100 : year;
+                    year = year >= 1900 && year < 1920 ? 2000 + (year % 100) : year;
 
                 // Format and return the string
                 var dt = new DateTime(year, month, day);
@@ -71,7 +71,7 @@ namespace MPF.Frontend.Tools
         /// <returns>Byte array of first sector of data, null on error</returns>
         public static byte[]? GetFirstBytes(Drive? drive, int numBytes)
         {
-            if (drive == null || drive.Letter == null || drive.Letter == '\0')
+            if (drive is null || drive.Letter is null || drive.Letter == '\0')
                 return null;
 
             // Must read between 1 and 2048 bytes
@@ -549,7 +549,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Readers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
-                    if (appPkgHeader != null)
+                    if (appPkgHeader is not null)
                         pkgInfo += $"{appPkgHeader.ContentID}{Environment.NewLine}";
                 }
 
@@ -574,7 +574,7 @@ namespace MPF.Frontend.Tools
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drive);
-            if (json == null)
+            if (json is null)
                 return null;
 
             try
@@ -597,7 +597,7 @@ namespace MPF.Frontend.Tools
         {
             // Attempt to get the param.json file
             var json = GetPlayStation5ParamsJsonFromDrive(drive);
-            if (json == null)
+            if (json is null)
                 return null;
 
             try
@@ -700,7 +700,7 @@ namespace MPF.Frontend.Tools
                     var appPkgHeaderDeserializer = new SabreTools.Serialization.Readers.AppPkgHeader();
                     var appPkgHeader = appPkgHeaderDeserializer.Deserialize(fileStream);
 
-                    if (appPkgHeader != null)
+                    if (appPkgHeader is not null)
                         pkgInfo += $"{appPkgHeader.ContentID}{Environment.NewLine}";
                 }
 
@@ -782,17 +782,17 @@ namespace MPF.Frontend.Tools
             try
             {
                 var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
-                if (catalog == null)
+                if (catalog is null)
                     return null;
                 if (!string.IsNullOrEmpty(catalog.TitleID))
                     return catalog.TitleID;
-                if (catalog.Packages == null)
+                if (catalog.Packages is null)
                     return null;
 
                 List<string> titleIDs = [];
                 foreach (var package in catalog.Packages)
                 {
-                    if (package?.TitleID != null)
+                    if (package?.TitleID is not null)
                         titleIDs.Add(package.TitleID);
                 }
 
@@ -816,11 +816,11 @@ namespace MPF.Frontend.Tools
         /// <returns>Detected RedumpSystem if detected, null otherwise</returns>
         public static RedumpSystem? DetectSegaSystem(Drive? drive)
         {
-            if (drive == null)
+            if (drive is null)
                 return null;
 
             byte[]? firstSector = GetFirstBytes(drive, 0x10);
-            if (firstSector == null || firstSector.Length < 0x10)
+            if (firstSector is null || firstSector.Length < 0x10)
                 return null;
 
             string systemType = Encoding.ASCII.GetString(firstSector, 0x00, 0x10);
@@ -850,11 +850,11 @@ namespace MPF.Frontend.Tools
         /// <returns>RedumpSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
         public static RedumpSystem? Detect3DOSystem(Drive? drive)
         {
-            if (drive == null)
+            if (drive is null)
                 return null;
 
             byte[]? firstSector = GetFirstBytes(drive, 0xC0);
-            if (firstSector == null || firstSector.Length < 0xC0)
+            if (firstSector is null || firstSector.Length < 0xC0)
                 return null;
 
             string systemType = Encoding.ASCII.GetString(firstSector, 0xB0, 0x10);

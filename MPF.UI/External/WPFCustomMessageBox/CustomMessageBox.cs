@@ -99,6 +99,7 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
+#pragma warning disable IDE0072
             return button switch
             {
                 MessageBoxButton.YesNo
@@ -106,6 +107,7 @@ namespace WPFCustomMessageBox
 
                 _ => ShowOKMessage(null, messageBoxText, caption, null, null, null, timeout, timeoutResult),
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -123,6 +125,7 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(Window owner, string messageBoxText, string caption, MessageBoxButton button, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
+#pragma warning disable IDE0072
             return button switch
             {
                 MessageBoxButton.YesNo
@@ -130,6 +133,7 @@ namespace WPFCustomMessageBox
 
                 _ => ShowOKMessage(owner, messageBoxText, caption, null, null, null, timeout, timeoutResult),
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -147,6 +151,7 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
+#pragma warning disable IDE0072
             return button switch
             {
                 MessageBoxButton.YesNo
@@ -154,6 +159,7 @@ namespace WPFCustomMessageBox
 
                 _ => ShowOKMessage(null, messageBoxText, caption, null, null, icon, timeout, timeoutResult),
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -172,6 +178,7 @@ namespace WPFCustomMessageBox
         /// <returns>A System.Windows.MessageBoxResult value that specifies which message box button is clicked by the user.</returns>
         public static MessageBoxResult Show(Window owner, string? messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon, int? timeout = null, MessageBoxResult timeoutResult = MessageBoxResult.None)
         {
+#pragma warning disable IDE0072
             return button switch
             {
                 MessageBoxButton.YesNo
@@ -179,6 +186,7 @@ namespace WPFCustomMessageBox
 
                 _ => ShowOKMessage(owner, messageBoxText, caption, null, null, icon, timeout, timeoutResult),
             };
+#pragma warning restore IDE0072
         }
 
         /// <summary>
@@ -497,7 +505,6 @@ namespace WPFCustomMessageBox
             return ShowYesNoMessage(owner, messageBoxText, caption, yesButtonText, noButtonText, cancelButtonText, icon, timeout, timeoutResult);
         }
 
-
         /// <summary>
         /// Displays a message box that has a message, caption, OK/Cancel buttons with custom System.String values for the buttons' text, and icon;
         /// and that returns a result.
@@ -525,7 +532,6 @@ namespace WPFCustomMessageBox
 
             return msg.Result;
         }
-
 
         /// <summary>
         /// Displays a message box that has a message, caption, Yes/No/Cancel buttons with custom System.String values for the buttons' text, and icon;

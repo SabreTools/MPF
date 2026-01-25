@@ -60,6 +60,7 @@ Here are some notes about the various output files and what they represent:
 - toc           - Binary representation of the table of contents
 - volDesc       - Volume descriptor information
 */
+
 namespace MPF.Processors
 {
     /// <summary>
@@ -98,12 +99,13 @@ namespace MPF.Processors
                     discEntry?.WriteToFile(discPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
+
                 logArchive?.Dispose();
             }
 #endif
 
             // Get the comma-separated list of values
-            if (GetDiscType($"{basePath}_disc.txt", out var discType) && discType != null)
+            if (GetDiscType($"{basePath}_disc.txt", out var discType) && discType is not null)
             {
                 // CD-ROM
                 if (discType.Contains("CD-DA or CD-ROM Disc"))
@@ -213,6 +215,7 @@ namespace MPF.Processors
                 VolumeLabels = volLabels;
 
             // Extract info based generically on MediaType
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -232,7 +235,7 @@ namespace MPF.Processors
                         else if (File.Exists($"{basePath}.img_EccEdc.txt"))
                             errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
 
-                        info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                        info.CommonDiscInfo.ErrorsCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
                     }
 
                     break;
@@ -262,13 +265,13 @@ namespace MPF.Processors
                         info.SizeAndChecksums.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
                         if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
-                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                            if (layerbreak1 is not null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                            if (layerbreak2 is not null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                            if (layerbreak3 is not null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
                         }
                     }
@@ -323,7 +326,7 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID($"{basePath}_DMI.bin");
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                    if (xmid != null)
+                    if (xmid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
@@ -366,7 +369,7 @@ namespace MPF.Processors
                 case RedumpSystem.MicrosoftXbox360:
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}_DMI.bin");
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                    if (xemid != null)
+                    if (xemid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
@@ -572,7 +575,7 @@ namespace MPF.Processors
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                         info.VersionAndEditions.Version = ps3Version ?? string.Empty;
-                        if (ps3FirmwareVersion != null)
+                        if (ps3FirmwareVersion is not null)
                             info.CommonDiscInfo.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
                     }
 
@@ -957,7 +960,7 @@ namespace MPF.Processors
                 string? exeDate = null;
                 using var sr = File.OpenText(volDesc);
                 var line = sr.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -973,16 +976,16 @@ namespace MPF.Processors
                     {
                         // Account for Y2K date problem
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                        if (exeDate != null && exeDate[..2] == "19")
+                        if (exeDate is not null && exeDate[..2] == "19")
 #else
-                        if (exeDate != null && exeDate.Substring(0, 2) == "19")
+                        if (exeDate is not null && exeDate.Substring(0, 2) == "19")
 #endif
                         {
                             string decade = exeDate!.Substring(2, 1);
 
                             // Does only PSX need to account for 1920s-60s?
                             if (decade == "0" || decade == "1" ||
-                                psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6"))
+                                (psx && (decade == "2" || decade == "3" || decade == "4" || decade == "5" || decade == "6")))
                             {
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                                 exeDate = $"20{exeDate[2..]}";
@@ -1044,7 +1047,7 @@ namespace MPF.Processors
 
                 using var sr = File.OpenText(disc);
                 var line = sr.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -1142,7 +1145,7 @@ namespace MPF.Processors
                     var line = sr.ReadLine()?.Trim();
                     while (line?.StartsWith("========== ManufacturingInformation ==========") == false)
                     {
-                        if (line == null)
+                        if (line is null)
                             break;
 
                         if (line.StartsWith("CopyrightProtectionType"))
@@ -1174,7 +1177,7 @@ namespace MPF.Processors
                     while (!sr.EndOfStream)
                     {
                         var line = sr.ReadLine()?.Trim();
-                        if (line == null)
+                        if (line is null)
                             break;
 
                         if (line.StartsWith("DecryptedDiscKey"))
@@ -1274,7 +1277,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.StartsWith("[NO ERROR]"))
@@ -1374,7 +1377,7 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(drive);
                 var line = sr.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -1438,7 +1441,7 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(disc);
                 var line = sr.ReadLine();
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -1538,12 +1541,12 @@ namespace MPF.Processors
                 // Seek to the TOC data
                 using var sr = File.OpenText(disc);
                 var line = sr.ReadLine();
-                if (line == null)
+                if (line is null)
                     return null;
 
                 if (!line.StartsWith("========== TOC"))
                     while ((line = sr.ReadLine())?.StartsWith("========== TOC") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Create the required regex
@@ -1558,12 +1561,12 @@ namespace MPF.Processors
                 }
 
                 // Seek to the FULL TOC data
-                if (line == null)
+                if (line is null)
                     return null;
 
                 if (!line.StartsWith("========== FULL TOC"))
                     while ((line = sr.ReadLine())?.StartsWith("========== FULL TOC") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Create the required regex
@@ -1574,7 +1577,7 @@ namespace MPF.Processors
                 var trackSessionMapping = new Dictionary<string, string>();
                 while ((line = sr.ReadLine())?.StartsWith("========== OpCode") == false)
                 {
-                    if (line == null)
+                    if (line is null)
                         return null;
 
                     var match = trackSessionRegex.Match(line);
@@ -1594,7 +1597,7 @@ namespace MPF.Processors
 
                 // Seek to the multisession data
                 line = sr.ReadLine()?.Trim();
-                if (line == null)
+                if (line is null)
                     return null;
 
                 if (!line.StartsWith("Lead-out length"))
@@ -1609,7 +1612,7 @@ namespace MPF.Processors
                 var firstSessionLeadOutLengthString = line?.Substring("Lead-out length of 1st session: ".Length);
 #endif
                 line = sr.ReadLine()?.Trim();
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Read the second session lead-in, if it exists
@@ -1691,7 +1694,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         return false;
 
                     if (line.StartsWith("Detected anti-mod string"))
@@ -1732,7 +1735,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         return false;
 
                     // Determine the section we are in
@@ -1847,7 +1850,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     if (line.Contains("mode 2 form 2"))
@@ -1898,7 +1901,7 @@ namespace MPF.Processors
                 // If we're in a new mainInfo, the location of the header changed
                 using var sr = File.OpenText(mainInfo);
                 var line = sr.ReadLine();
-                if (line == null)
+                if (line is null)
                     return null;
 
                 if (line.StartsWith("========== OpCode")
@@ -1912,25 +1915,25 @@ namespace MPF.Processors
                     line = sr.ReadLine();
                 }
 
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Make sure we're in the area
-                if (line.StartsWith("========== LBA") == false)
+                if (!line.StartsWith("========== LBA"))
                     while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // If we have a Sega disc, skip sector 0
                 if (line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
                     while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // If we have a PlayStation disc, skip sector 4
                 if (line.StartsWith("========== LBA[000004, 0x00004]: Main Channel =========="))
                     while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Assume the first non-LBA0/4 sector listed is the proper one
@@ -2130,7 +2133,7 @@ namespace MPF.Processors
                 // If we're in a new mainInfo, the location of the header changed
                 using var sr = File.OpenText(mainInfo);
                 var line = sr.ReadLine();
-                if (line == null)
+                if (line is null)
                     return null;
 
                 if (line.StartsWith("========== OpCode")
@@ -2139,31 +2142,31 @@ namespace MPF.Processors
                 {
                     // Seek to unscrambled data
                     while ((line = sr.ReadLine())?.Contains("Check MCN and/or ISRC") == false) ;
-                    if (line == null)
+                    if (line is null)
                         return null;
 
                     // Read the next line so the search goes properly
                     line = sr.ReadLine();
                 }
 
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Make sure we're in the area
                 if (!line.StartsWith("========== LBA"))
                     while ((line = sr.ReadLine())?.StartsWith("========== LBA") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Make sure we're in the right sector
                 if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
                     while ((line = sr.ReadLine())?.StartsWith("========== LBA[000000, 0000000]: Main Channel ==========") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Fast forward to the header
                 while ((line = sr.ReadLine())?.Trim()?.StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F") == false) ;
-                if (line == null)
+                if (line is null)
                     return null;
 
                 // Now that we're at the Header, read each line in and concatenate
@@ -2201,7 +2204,7 @@ namespace MPF.Processors
 
                 string volType = "UNKNOWN";
                 string label;
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -2247,7 +2250,7 @@ namespace MPF.Processors
 #endif
 
                         // Skip if label is blank, and skip Joliet (DIC Joliet parsing is broken?)
-                        if (label == null || label.Length <= 0 || volType == "Joliet")
+                        if (label is null || label.Length <= 0 || volType == "Joliet")
                         {
                             volType = "UNKNOWN";
                             line = sr.ReadLine();
@@ -2312,9 +2315,9 @@ namespace MPF.Processors
                     // Now that we're at the offsets, attempt to get the sample offset
                     var offsetLine = sr.ReadLine()?.Split(' ');
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                    string offset = offsetLine != null ? offsetLine[^1] : string.Empty;
+                    string offset = offsetLine is not null ? offsetLine[^1] : string.Empty;
 #else
-                    string offset = offsetLine != null ? offsetLine[offsetLine.Length - 1] : string.Empty;
+                    string offset = offsetLine is not null ? offsetLine[offsetLine.Length - 1] : string.Empty;
 #endif
                     offsets.Add(offset);
                 }
@@ -2324,7 +2327,7 @@ namespace MPF.Processors
                 var temp = new List<string>();
                 foreach (var offset in offsets)
                 {
-                    if (offset == null || offset.Length == 0)
+                    if (offset is null || offset.Length == 0)
                         continue;
                     if (!temp.Contains(offset))
                         temp.Add(offset);
@@ -2362,12 +2365,12 @@ namespace MPF.Processors
             dmihash = null; pfihash = null; sshash = null;
 
             // If we don't have a valid datafile, we can't do anything
-            if (suppl?.Game == null || suppl.Game.Length == 0)
+            if (suppl?.Game is null || suppl.Game.Length == 0)
                 return false;
 
             // Try to extract the hash information
             var roms = suppl.Game[0].Rom;
-            if (roms == null || roms.Length == 0)
+            if (roms is null || roms.Length == 0)
                 return false;
 
             dmihash = Array.Find(roms, r => r.Name?.EndsWith("DMI.bin") == true)?.CRC?.ToUpperInvariant();
@@ -2405,7 +2408,7 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         break;
 
                     // XGD version (1 = Xbox, 2 = Xbox360)
@@ -2427,7 +2430,7 @@ namespace MPF.Processors
                             && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                         {
                             line = sr.ReadLine()?.Trim();
-                            if (line == null)
+                            if (line is null)
                                 break;
 
                             // If we have a recognized line format, parse it
@@ -2438,7 +2441,7 @@ namespace MPF.Processors
                             }
                         }
 
-                        if (line == null)
+                        if (line is null)
                             break;
                     }
 

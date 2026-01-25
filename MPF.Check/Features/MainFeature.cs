@@ -116,7 +116,7 @@ namespace MPF.Check.Features
                 hideDriveLetters = false;
 
             // If we have no arguments, just return
-            if (args == null || args.Length == 0)
+            if (args is null || args.Length == 0)
                 return true;
 
             // Read the options from config, if possible

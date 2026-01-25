@@ -127,7 +127,7 @@ namespace WPFCustomMessageBox
             ShowActivated = true;
             ShowInTaskbar = true;
 
-            if (owner != null && owner.IsLoaded)
+            if (owner is not null && owner.IsLoaded)
             {
                 Owner = owner;
                 WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -154,6 +154,7 @@ namespace WPFCustomMessageBox
 
         private void DisplayButtons(MessageBoxButton button)
         {
+#pragma warning disable IDE0010
             switch (button)
             {
                 case MessageBoxButton.OKCancel:
@@ -193,10 +194,12 @@ namespace WPFCustomMessageBox
                     Button_Cancel!.Visibility = Visibility.Collapsed;
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         private void DisplayImage(MessageBoxImage image)
         {
+#pragma warning disable IDE0072
             Icon icon = image switch
             {
                 // Enumeration value 48 - also covers "Warning"
@@ -211,6 +214,7 @@ namespace WPFCustomMessageBox
                 MessageBoxImage.Question => SystemIcons.Question,
                 _ => SystemIcons.Information,
             };
+#pragma warning restore IDE0072
 
             Image_MessageBox!.Source = icon.ToImageSource();
             Image_MessageBox.Visibility = Visibility.Visible;

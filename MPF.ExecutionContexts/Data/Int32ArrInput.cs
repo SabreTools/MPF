@@ -60,7 +60,7 @@ namespace MPF.ExecutionContexts.Data
         public override string Format(bool useEquals)
         {
             // Do not output if there is no value
-            if (Value == null)
+            if (Value is null)
                 return string.Empty;
 
             // Build the output format
@@ -70,7 +70,7 @@ namespace MPF.ExecutionContexts.Data
             builder.Append(Name);
 
             // Only output separator and value if needed
-            if (_required || (!_required && Value != null))
+            if (_required || (!_required && Value is not null))
             {
                 // Separator
                 if (useEquals)
@@ -79,7 +79,7 @@ namespace MPF.ExecutionContexts.Data
                     builder.Append(' ');
 
                 // Value
-                int?[] nonNull = Array.FindAll(Value, i => i != null);
+                int?[] nonNull = Array.FindAll(Value, i => i is not null);
                 string[] stringValues = Array.ConvertAll(nonNull, i => i.ToString() ?? string.Empty);
                 builder.Append(string.Join(" ", stringValues));
             }
@@ -106,12 +106,12 @@ namespace MPF.ExecutionContexts.Data
                         return !_required;
 
                     // If the next value is valid
-                    if (ParseValue(parts[index + 1], out int? value) && value != null)
+                    if (ParseValue(parts[index + 1], out int? value) && value is not null)
                     {
                         index++;
                         Value[i] = value;
-                        Value[i] = (MinValue != null && Value[i] < MinValue) ? MinValue : Value[i];
-                        Value[i] = (MaxValue != null && Value[i] > MaxValue) ? MaxValue : Value[i];
+                        Value[i] = (MinValue is not null && Value[i] < MinValue) ? MinValue : Value[i];
+                        Value[i] = (MaxValue is not null && Value[i] > MaxValue) ? MaxValue : Value[i];
                         continue;
                     }
 

@@ -177,18 +177,18 @@ namespace MPF.Processors
                 while (!sr.EndOfStream)
                 {
                     string? line = sr.ReadLine()?.Trim();
-                    if (line == null)
+                    if (line is null)
                         break;
 
-                    if (line.StartsWith("TITLE") && title == null)
+                    if (line.StartsWith("TITLE") && title is null)
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                         title = line["TITLE: ".Length..];
 #else
                         title = line.Substring("TITLE: ".Length);
 #endif
-                    else if (line.StartsWith("DISC_ID") && version == null)
+                    else if (line.StartsWith("DISC_ID") && version is null)
                         serial = line.Split(' ')[1];
-                    else if (line.StartsWith("DISC_VERSION") && version == null)
+                    else if (line.StartsWith("DISC_VERSION") && version is null)
                         version = line.Split(' ')[1];
                     else if (line.StartsWith("pspUmdTypes"))
                         category = ProcessingTool.GetUMDCategory(line.Split(' ')[2]);
@@ -239,7 +239,7 @@ namespace MPF.Processors
 
                 string volType = "UNKNOWN";
                 string label;
-                while (line != null)
+                while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
@@ -285,7 +285,7 @@ namespace MPF.Processors
 #endif
 
                         // Skip if label is blank
-                        if (label == null || label.Length <= 0)
+                        if (label is null || label.Length <= 0)
                         {
                             volType = "UNKNOWN";
                             line = sr.ReadLine();

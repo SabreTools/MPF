@@ -60,12 +60,13 @@ namespace MPF.Processors
             if (GetReadErrors(logPath, out long readErrors))
                 info.CommonDiscInfo.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
+#pragma warning disable IDE0010
             switch (System)
             {
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
                     var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
-                    if (xmid != null)
+                    if (xmid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
@@ -90,7 +91,7 @@ namespace MPF.Processors
                     // Parse DMI.bin
                     string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
                     var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
-                    if (xemid != null)
+                    if (xemid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
                         info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
@@ -102,6 +103,7 @@ namespace MPF.Processors
 
                     break;
             }
+#pragma warning restore IDE0010
 
             // Get the output file paths
             string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
@@ -600,7 +602,7 @@ namespace MPF.Processors
                             if (i >= 4 && i <= 7)
                             {
                                 byte[]? angles = line!.Substring(34, 10).FromHexString();
-                                if (angles == null || angles.Length != 5)
+                                if (angles is null || angles.Length != 5)
                                     return false;
                                 responses[i - 4] = angles!;
                             }

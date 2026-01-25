@@ -109,7 +109,7 @@ namespace MPF.Frontend.Tools
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
-            if (volLabels != null)
+            if (volLabels is not null)
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
@@ -119,7 +119,7 @@ namespace MPF.Frontend.Tools
             ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
-            if (drive != null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
+            if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
             {
                 resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
                 info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
@@ -137,7 +137,7 @@ namespace MPF.Frontend.Tools
                     if (options.ScanForProtection)
                     {
                         // Explicitly note missing/invalid device paths
-                        if (drive?.Name == null)
+                        if (drive?.Name is null)
                             resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
 
                         protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
@@ -177,7 +177,7 @@ namespace MPF.Frontend.Tools
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public async static Task<bool> FillFromRedump(Options options,
+        public static async Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {
@@ -194,7 +194,7 @@ namespace MPF.Frontend.Tools
             if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
             {
                 bool? loggedIn = await wc.Login(options.RedumpUsername!, options.RedumpPassword!);
-                if (loggedIn == null)
+                if (loggedIn is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
                     return false;
@@ -266,9 +266,9 @@ namespace MPF.Frontend.Tools
                 }
 
                 var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
-                if (foundIds != null && foundIds.Count == 1)
+                if (foundIds is not null && foundIds.Count == 1)
                     resultProgress?.Report(ResultEventArgs.Success($"Single match found for {sha1}"));
-                else if (foundIds != null && foundIds.Count != 1)
+                else if (foundIds is not null && foundIds.Count != 1)
                     resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for {sha1}"));
                 else
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for {sha1}"));
@@ -277,7 +277,7 @@ namespace MPF.Frontend.Tools
                 foundIdSets.Add(foundIds?.ToArray() ?? []);
 
                 // Ensure that all tracks are found
-                allFound &= (foundIds != null && foundIds.Count >= 1);
+                allFound &= foundIds is not null && foundIds.Count >= 1;
             }
 
             // If all tracks were found, check if there are any fully-matched IDs
@@ -288,7 +288,7 @@ namespace MPF.Frontend.Tools
                 foreach (var set in foundIdSets)
                 {
                     // First track is always all IDs
-                    if (fullyMatchedIdsSet == null)
+                    if (fullyMatchedIdsSet is null)
                     {
                         fullyMatchedIdsSet = [.. set];
                         continue;
@@ -306,25 +306,25 @@ namespace MPF.Frontend.Tools
             {
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
-                if (foundIds != null && foundIds.Count == 1)
+                if (foundIds is not null && foundIds.Count == 1)
                     resultProgress?.Report(ResultEventArgs.Success($"Single match found for universal hash {sha1}"));
-                else if (foundIds != null && foundIds.Count != 1)
+                else if (foundIds is not null && foundIds.Count != 1)
                     resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
                 else
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
 
                 // Ensure that the hash is found
-                allFound = (foundIds != null && foundIds.Count == 1);
+                allFound = foundIds is not null && foundIds.Count == 1;
 
                 // If we found a match, then the disc is a match
-                if (foundIds != null && foundIds.Count == 1)
+                if (foundIds is not null && foundIds.Count == 1)
                     fullyMatchedIdsSet = [.. foundIds];
                 else
                     fullyMatchedIdsSet = [];
             }
 
             // Get a list version of the fully matched IDs
-            List<int> fullyMatchedIdsList = fullyMatchedIdsSet != null ? [.. fullyMatchedIdsSet] : [];
+            List<int> fullyMatchedIdsList = fullyMatchedIdsSet is not null ? [.. fullyMatchedIdsSet] : [];
 
             // Make sure we only have unique IDs
             var partiallyMatchedIds = new HashSet<int>();
@@ -332,12 +332,12 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [.. partiallyMatchedIds];
             info.PartiallyMatchedIDs.Sort();
 
-            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList != null && fullyMatchedIdsList.Count > 0
+            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
                 ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
                 : "No matches found")));
 
             // Exit early if one failed or there are no matched IDs
-            if (!allFound || fullyMatchedIdsList == null || fullyMatchedIdsList.Count == 0)
+            if (!allFound || fullyMatchedIdsList is null || fullyMatchedIdsList.Count == 0)
                 return false;
 
             // Find the first matched ID where the track count matches, we can grab a bunch of info from it
@@ -421,7 +421,7 @@ namespace MPF.Frontend.Tools
             // Map to the internal program
             InternalProgram? internalProgram = processor switch
             {
-                Processors.Aaru => InternalProgram.Aaru,
+                Aaru => InternalProgram.Aaru,
                 CleanRip => InternalProgram.CleanRip,
                 DiscImageCreator => InternalProgram.DiscImageCreator,
                 PS3CFW => InternalProgram.PS3CFW,
@@ -443,7 +443,7 @@ namespace MPF.Frontend.Tools
         private static string? SimplifyVolumeLabel(string? label)
         {
             // Ignore empty labels
-            if (label == null || label.Length == 0)
+            if (label is null || label.Length == 0)
                 return null;
 
             // Take only ASCII alphanumeric characters
@@ -460,7 +460,7 @@ namespace MPF.Frontend.Tools
 
             // Ignore non-ASCII labels
             string? simpleLabel = labelBuilder.ToString();
-            if (simpleLabel == null || simpleLabel.Length == 0)
+            if (simpleLabel is null || simpleLabel.Length == 0)
                 return null;
 
             return simpleLabel;
@@ -474,23 +474,23 @@ namespace MPF.Frontend.Tools
         private static string? FormatVolumeLabels(string? driveLabel, Dictionary<string, List<string>>? labels)
         {
             // Treat empty label as null
-            if (driveLabel != null && driveLabel.Length == 0)
+            if (driveLabel is not null && driveLabel.Length == 0)
                 driveLabel = null;
 
             // Treat "path" labels as null -- Indicates a mounted path
             // This can over-match if a label contains a directory separator somehow
-            if (driveLabel != null && (driveLabel.Contains("/") || driveLabel.Contains("\\")))
+            if (driveLabel is not null && (driveLabel.Contains("/") || driveLabel.Contains("\\")))
                 driveLabel = null;
 
             // Must have at least one label to format
-            if (driveLabel == null && (labels == null || labels.Count == 0))
+            if (driveLabel is null && (labels is null || labels.Count == 0))
                 return null;
 
             // If no labels given, use drive label
-            if (labels == null || labels.Count == 0)
+            if (labels is null || labels.Count == 0)
             {
                 // Ignore common volume labels
-                if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is not null)
                     return null;
 
                 return driveLabel;
@@ -499,7 +499,7 @@ namespace MPF.Frontend.Tools
             // Get the default label to compare against
             // TODO: Full pairwise comparison of all labels, not just comparing against drive/UDF label.
             string? defaultLabel = null;
-            if (driveLabel != null && driveLabel.Length != 0)
+            if (driveLabel is not null && driveLabel.Length != 0)
             {
                 defaultLabel = SimplifyVolumeLabel(driveLabel);
             }
@@ -514,7 +514,7 @@ namespace MPF.Frontend.Tools
 #endif
 
             // Remove duplicate/useless volume labels
-            if (defaultLabel != null && defaultLabel.Length != 0)
+            if (defaultLabel is not null && defaultLabel.Length != 0)
             {
                 List<string> keys = [.. labels.Keys];
                 foreach (var label in keys)
@@ -528,7 +528,7 @@ namespace MPF.Frontend.Tools
 
                     // Get upper-case ASCII variant of the label
                     string? tempLabel = SimplifyVolumeLabel(label);
-                    if (tempLabel == null)
+                    if (tempLabel is null)
                         continue;
 
                     // Remove duplicate volume labels
@@ -538,10 +538,10 @@ namespace MPF.Frontend.Tools
             }
 
             // If no labels are left, use drive label
-            if (labels == null || labels.Count == 0)
+            if (labels is null || labels.Count == 0)
             {
                 // Ignore common volume labels
-                if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) != null)
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is not null)
                     return null;
 
                 return driveLabel;
@@ -554,10 +554,10 @@ namespace MPF.Frontend.Tools
 #else
             string firstLabel = labels.First().Key;
 #endif
-            if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel == null))
+            if (labels.Count == 1 && (firstLabel == driveLabel || driveLabel is null))
             {
                 // Ignore common volume labels
-                if (FrontendTool.GetRedumpSystemFromVolumeLabel(firstLabel) != null)
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(firstLabel) is not null)
                     return null;
 
                 return firstLabel;
@@ -567,14 +567,14 @@ namespace MPF.Frontend.Tools
             List<string> volLabels = [];
 
             // Begin formatted output with the label from Windows, if it is unique and not a common volume label
-            if (driveLabel != null && !labels.TryGetValue(driveLabel, out List<string>? value) && FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) == null)
+            if (driveLabel is not null && !labels.TryGetValue(driveLabel, out List<string>? value) && FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is null)
                 volLabels.Add(driveLabel);
 
             // Add remaining labels with their corresponding filesystems
             foreach (var kvp in labels)
             {
                 // Ignore common volume labels
-                if (FrontendTool.GetRedumpSystemFromVolumeLabel(kvp.Key) == null)
+                if (FrontendTool.GetRedumpSystemFromVolumeLabel(kvp.Key) is null)
                     volLabels.Add($"{kvp.Key} ({string.Join(", ", [.. kvp.Value])})");
             }
 
@@ -593,6 +593,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         private static bool ProcessMediaType(SubmissionInfo info, MediaType? mediaType, bool addPlaceholders)
         {
+#pragma warning disable IDE0010
             switch (mediaType)
             {
                 case MediaType.CDROM:
@@ -736,6 +737,7 @@ namespace MPF.Frontend.Tools
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
+#pragma warning restore IDE0010
 
             return true;
         }
@@ -745,6 +747,7 @@ namespace MPF.Frontend.Tools
         /// </summary>
         private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
         {
+#pragma warning disable IDE0010
             // Extract info based specifically on RedumpSystem
             switch (system)
             {
@@ -984,6 +987,7 @@ namespace MPF.Frontend.Tools
                     info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
+#pragma warning restore IDE0010
 
             return true;
         }
@@ -1006,7 +1010,7 @@ namespace MPF.Frontend.Tools
         private static bool CommentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the comments fields exist
-            if (info.CommonDiscInfo.CommentsSpecialFields == null)
+            if (info.CommonDiscInfo.CommentsSpecialFields is null)
                 info.CommonDiscInfo.CommentsSpecialFields = [];
 
             // Check if the field exists
@@ -1022,7 +1026,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a comment field if it doesn't already have a value
         /// </summary>
-        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, System.Func<Drive?, string?> valueFunc)
+        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (CommentFieldExists(info, key, out _))
@@ -1030,7 +1034,7 @@ namespace MPF.Frontend.Tools
 
             // Set the value
             string? value = valueFunc(drive);
-            if (value != null)
+            if (value is not null)
                 info.CommonDiscInfo.CommentsSpecialFields[key] = value;
         }
 
@@ -1040,7 +1044,7 @@ namespace MPF.Frontend.Tools
         private static bool ContentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the contents fields exist
-            if (info.CommonDiscInfo.ContentsSpecialFields == null)
+            if (info.CommonDiscInfo.ContentsSpecialFields is null)
                 info.CommonDiscInfo.ContentsSpecialFields = [];
 
             // Check if the field exists
@@ -1064,7 +1068,7 @@ namespace MPF.Frontend.Tools
 
             // Set the value
             string? value = valueFunc(drive);
-            if (value != null)
+            if (value is not null)
                 info.CommonDiscInfo.ContentsSpecialFields![key] = value;
         }
 
@@ -1089,7 +1093,7 @@ namespace MPF.Frontend.Tools
         private static Dictionary<string, List<string>?> ReformatProtectionDictionary(Dictionary<string, List<string>>? oldDict)
         {
             // Null or empty protections return empty
-            if (oldDict == null || oldDict.Count == 0)
+            if (oldDict is null || oldDict.Count == 0)
                 return [];
 
             // Reformat each set into a List

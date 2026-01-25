@@ -160,7 +160,7 @@ namespace MPF.ExecutionContexts
         /// Returns if the current Parameter object is valid
         /// </summary>
         /// <returns></returns>
-        public bool IsValid() => GenerateParameters() != null;
+        public bool IsValid() => GenerateParameters() is not null;
 
         /// <summary>
         /// Reset all special variables to have default values
@@ -222,7 +222,7 @@ namespace MPF.ExecutionContexts
         {
             try
             {
-                while (process != null && !process.HasExited)
+                while (process is not null && !process.HasExited)
                 {
                     process.Kill();
                 }
@@ -331,9 +331,9 @@ namespace MPF.ExecutionContexts
         /// <returns>True if the flag value is supported, false otherwise</returns>
         protected bool IsFlagSupported(string flag)
         {
-            if (CommandSupport == null)
+            if (CommandSupport is null)
                 return false;
-            if (BaseCommand == null)
+            if (BaseCommand is null)
                 return false;
             if (!CommandSupport.TryGetValue(BaseCommand, out var supported))
                 return false;
@@ -360,9 +360,9 @@ namespace MPF.ExecutionContexts
             string value = ExtractFactorFromValue(parameter, out _);
             if (!sbyte.TryParse(value, out sbyte temp))
                 return false;
-            else if (lowerBound != null && temp < lowerBound)
+            else if (lowerBound is not null && temp < lowerBound)
                 return false;
-            else if (upperBound != null && temp > upperBound)
+            else if (upperBound is not null && temp > upperBound)
                 return false;
 
             return true;
@@ -380,9 +380,9 @@ namespace MPF.ExecutionContexts
             string value = ExtractFactorFromValue(parameter, out _);
             if (!short.TryParse(value, out short temp))
                 return false;
-            else if (lowerBound != null && temp < lowerBound)
+            else if (lowerBound is not null && temp < lowerBound)
                 return false;
-            else if (upperBound != null && temp > upperBound)
+            else if (upperBound is not null && temp > upperBound)
                 return false;
 
             return true;
@@ -400,9 +400,9 @@ namespace MPF.ExecutionContexts
             string value = ExtractFactorFromValue(parameter, out _);
             if (!int.TryParse(value, out int temp))
                 return false;
-            else if (lowerBound != null && temp < lowerBound)
+            else if (lowerBound is not null && temp < lowerBound)
                 return false;
-            else if (upperBound != null && temp > upperBound)
+            else if (upperBound is not null && temp > upperBound)
                 return false;
 
             return true;
@@ -420,9 +420,9 @@ namespace MPF.ExecutionContexts
             string value = ExtractFactorFromValue(parameter, out _);
             if (!long.TryParse(value, out long temp))
                 return false;
-            else if (lowerBound != null && temp < lowerBound)
+            else if (lowerBound is not null && temp < lowerBound)
                 return false;
-            else if (upperBound != null && temp > upperBound)
+            else if (upperBound is not null && temp > upperBound)
                 return false;
 
             return true;
@@ -448,7 +448,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
         protected bool ProcessFlagParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i)
         {
-            if (parts == null)
+            if (parts is null)
                 return false;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -484,7 +484,7 @@ namespace MPF.ExecutionContexts
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
         protected bool ProcessBooleanParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return false;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -559,7 +559,7 @@ namespace MPF.ExecutionContexts
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
         protected sbyte? ProcessInt8Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -622,7 +622,7 @@ namespace MPF.ExecutionContexts
                 return null;
             }
 
-            return SByte.MinValue;
+            return sbyte.MinValue;
         }
 
         /// <summary>
@@ -647,7 +647,7 @@ namespace MPF.ExecutionContexts
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
         protected short? ProcessInt16Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -709,7 +709,7 @@ namespace MPF.ExecutionContexts
                 return null;
             }
 
-            return Int16.MinValue;
+            return short.MinValue;
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace MPF.ExecutionContexts
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
         protected int? ProcessInt32Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -821,7 +821,7 @@ namespace MPF.ExecutionContexts
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
         protected long? ProcessInt64Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -856,10 +856,10 @@ namespace MPF.ExecutionContexts
                 i++;
                 string value = ExtractFactorFromValue(parts[i], out long factor);
                 if (long.TryParse(value, out long longValue))
-                    return (long)(longValue * factor);
+                    return longValue * factor;
                 string hexValue = RemoveHexIdentifier(value);
                 if (long.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
-                    return (long)(longHexValue * factor);
+                    return longHexValue * factor;
                 return null;
             }
             else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
@@ -876,10 +876,10 @@ namespace MPF.ExecutionContexts
                 this[longFlagString] = true;
                 string value = ExtractFactorFromValue(valuePart, out long factor);
                 if (long.TryParse(value, out long longValue))
-                    return (long)(longValue * factor);
+                    return longValue * factor;
                 string hexValue = RemoveHexIdentifier(value);
                 if (long.TryParse(hexValue, NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out long longHexValue))
-                    return (long)(longHexValue * factor);
+                    return longHexValue * factor;
                 return null;
             }
 
@@ -908,7 +908,7 @@ namespace MPF.ExecutionContexts
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
         protected string? ProcessStringParameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -981,7 +981,7 @@ namespace MPF.ExecutionContexts
         /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
         protected byte? ProcessUInt8Parameter(string[] parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
         {
-            if (parts == null)
+            if (parts is null)
                 return null;
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
@@ -1044,7 +1044,7 @@ namespace MPF.ExecutionContexts
                 return null;
             }
 
-            return Byte.MinValue;
+            return byte.MinValue;
         }
 
         /// <summary>

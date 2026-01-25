@@ -18,11 +18,11 @@ namespace MPF.UI
         public static TDependencyObject? FindChild<TDependencyObject>(DependencyObject? parent, string childName) where TDependencyObject : DependencyObject
         {
             // Confirm parent and childName are valid.
-            if (parent == null) return null;
+            if (parent is null) return null;
 
             TDependencyObject? foundChild = null;
 
-            if (parent is ItemsControl itemsControl && itemsControl.Items != null)
+            if (parent is ItemsControl itemsControl && itemsControl.Items is not null)
             {
                 int childrenCount = itemsControl.Items.Count;
                 for (int i = 0; i < childrenCount; i++)
@@ -36,7 +36,7 @@ namespace MPF.UI
                         foundChild = FindChild<TDependencyObject>(child, childName);
 
                         // If the child is found, break so we do not overwrite the found child.
-                        if (foundChild != null)
+                        if (foundChild is not null)
                             break;
                     }
                     else if (!string.IsNullOrEmpty(childName))
@@ -57,7 +57,7 @@ namespace MPF.UI
                     }
                 }
             }
-            else if (parent is ContentControl contentControl && contentControl.Content != null)
+            else if (parent is ContentControl contentControl && contentControl.Content is not null)
             {
                 var child = contentControl.Content as DependencyObject;
 
@@ -96,7 +96,7 @@ namespace MPF.UI
                         foundChild = FindChild<TDependencyObject>(child, childName);
 
                         // If the child is found, break so we do not overwrite the found child.
-                        if (foundChild != null)
+                        if (foundChild is not null)
                             break;
                     }
                     else if (!string.IsNullOrEmpty(childName))

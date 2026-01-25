@@ -61,7 +61,7 @@ namespace MPF.Frontend.Tools
             try
             {
                 // Fail on a missing disc key
-                if (discKey == null)
+                if (discKey is null)
                     return false;
 
                 // Output IRD file path
@@ -79,9 +79,9 @@ namespace MPF.Frontend.Tools
                     new LibIRD.ReIRD(isoPath, discKey, layerbreak, uid));
 
                 // Set optional fields if valid
-                if (pic != null)
+                if (pic is not null)
                     ird.PIC = pic;
-                if (discID != null && ird.DiscID[15] != 0x00)
+                if (discID is not null && ird.DiscID[15] != 0x00)
                     ird.DiscID = discID;
 
                 // Write IRD to file

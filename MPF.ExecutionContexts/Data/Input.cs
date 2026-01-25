@@ -238,7 +238,7 @@ namespace MPF.ExecutionContexts.Data
         public T? Value { get; protected set; }
 
         /// <inheritdoc/>
-        public override bool ValueSet => Value != null;
+        public override bool ValueSet => Value is not null;
 
         #endregion
 

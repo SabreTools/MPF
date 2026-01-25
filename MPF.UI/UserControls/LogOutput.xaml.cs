@@ -70,7 +70,7 @@ namespace MPF.UI.UserControls
         public void EnqueueLog(LogLevel logLevel, string text)
         {
             // Null text gets ignored
-            if (text == null)
+            if (text is null)
                 return;
 
             // Create a new log line
@@ -109,6 +109,7 @@ namespace MPF.UI.UserControls
             /// <returns>Brush representing the color</returns>
             public Brush GetForegroundColor()
             {
+#pragma warning disable IDE0072
                 return LogLevel switch
                 {
                     LogLevel.SECRET => Brushes.DarkGray,
@@ -116,6 +117,7 @@ namespace MPF.UI.UserControls
                     LogLevel.VERBOSE => Brushes.Yellow,
                     _ => Brushes.White,
                 };
+#pragma warning restore IDE0072
             }
 
             /// <summary>

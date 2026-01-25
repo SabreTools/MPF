@@ -33,7 +33,7 @@ namespace MPF.ExecutionContexts.Redumper
             }
             set
             {
-                if (value != null && value > 0)
+                if (value is not null && value > 0)
                 {
                     this[FlagStrings.Speed] = true;
                     (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(value);
@@ -295,13 +295,13 @@ namespace MPF.ExecutionContexts.Redumper
         {
             BaseCommand = CommandStrings.Disc;
 
-            if (drivePath != null)
+            if (drivePath is not null)
             {
                 this[FlagStrings.Drive] = true;
                 (_inputs[FlagStrings.Drive] as StringInput)?.SetValue(drivePath);
             }
 
-            if (driveSpeed != null && driveSpeed > 0)
+            if (driveSpeed is not null && driveSpeed > 0)
             {
                 this[FlagStrings.Speed] = true;
                 (_inputs[FlagStrings.Speed] as Int32Input)?.SetValue(driveSpeed);
@@ -318,8 +318,10 @@ namespace MPF.ExecutionContexts.Redumper
                 this[FlagStrings.Verbose] = true;
                 (_inputs[FlagStrings.Verbose] as FlagInput)?.SetValue(true);
             }
+
             if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
             {
+#pragma warning disable IDE0010
                 switch (RedumpSystem)
                 {
                     // Systems known to have significant data outside the ISO9660 filesystem
@@ -341,11 +343,12 @@ namespace MPF.ExecutionContexts.Redumper
                         {
                             case SabreTools.RedumpLib.Data.MediaType.CDROM:
                             case SabreTools.RedumpLib.Data.MediaType.DVD:
-                                {
-                                    this[FlagStrings.Skeleton] = true;
-                                    (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
-                                }
-                                break;
+                            {
+                                this[FlagStrings.Skeleton] = true;
+                                (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);
+                            }
+
+                            break;
 
                             // If the type is unknown, also enable
                             case null:
@@ -356,8 +359,10 @@ namespace MPF.ExecutionContexts.Redumper
                             default:
                                 break;
                         }
+
                         break;
                 }
+#pragma warning restore IDE0010
             }
 
             string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
@@ -473,7 +478,7 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.DebugFlip:
                     case CommandStrings.DriveTest:
                         // Only allow one mode per command
-                        if (BaseCommand != null)
+                        if (BaseCommand is not null)
                             continue;
 
                         BaseCommand = part;
