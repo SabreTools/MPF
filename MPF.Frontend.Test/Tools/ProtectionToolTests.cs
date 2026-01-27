@@ -364,6 +364,19 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
+        public void SanitizeFoundProtections_MPRESS()
+        {
+            List<string> protections =
+            [
+                "MPRESS",
+                "MPRESS ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
         public void SanitizeFoundProtections_NeoLite()
         {
             List<string> protections =

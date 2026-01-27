@@ -43,6 +43,7 @@ namespace MPF.Frontend.Tools
             "Installer VISE",
             "Intel Installation Framework",
             "Microsoft CAB SFX",
+            "MPRESS",
             "NeoLite",
             "NSIS",
             "PE Compact",
