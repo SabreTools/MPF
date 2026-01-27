@@ -12,6 +12,7 @@
 - Add editorconfig, fix issues
 - Add MPRESS to packer filters
 - Update RedumpLib to 1.9.1
+- Split path creation in OptionsLoader
 
 ### 3.6.0 (2025-11-28)
 

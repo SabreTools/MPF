@@ -238,27 +238,17 @@ namespace MPF.Frontend.Tools
         /// </summary>
         private static string GetConfigurationPath()
         {
-            // User home directory
-#if NET20 || NET35
-            string homeDir = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-            homeDir = Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
-#else
-            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            homeDir = Path.Combine(homeDir, ".config", "mpf");
-#endif
+            // User configuration
+            string homeDir = GetUserConfigurationPath();
             if (File.Exists(Path.Combine(homeDir, ConfigurationFileName)))
                 return Path.Combine(homeDir, ConfigurationFileName);
 
-            // Local folder
-#if NET20 || NET35 || NET40 || NET452
-            string runtimeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-#else
-            string runtimeDir = AppContext.BaseDirectory;
-#endif
+            // Portable configuration
+            string runtimeDir = GetRuntimeConfigurationPath();
             if (File.Exists(Path.Combine(runtimeDir, ConfigurationFileName)))
                 return Path.Combine(runtimeDir, ConfigurationFileName);
 
-            // Attempt to use local folder
+            // Attempt portable configuration
             try
             {
                 Directory.CreateDirectory(runtimeDir);
@@ -267,7 +257,7 @@ namespace MPF.Frontend.Tools
             }
             catch { }
 
-            // Attempt to use home directory
+            // Attempt user configuration
             try
             {
                 Directory.CreateDirectory(homeDir);
@@ -278,6 +268,34 @@ namespace MPF.Frontend.Tools
 
             // This should not happen
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Get the runtime configuration path
+        /// </summary>
+        private static string GetRuntimeConfigurationPath()
+        {
+#if NET20 || NET35 || NET40 || NET452
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+#else
+            return AppContext.BaseDirectory;
+#endif
+        }
+
+        /// <summary>
+        /// Get the user configuration path
+        /// </summary>
+        /// <remarks>Typically this is located in the profile or home directory</remarks>
+        private static string GetUserConfigurationPath()
+        {
+#if NET20 || NET35
+            string homeDir = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            homeDir = Path.Combine(Path.Combine(homeDir, ".config"), "mpf");
+#else
+            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            homeDir = Path.Combine(homeDir, ".config", "mpf");
+#endif
+            return homeDir;
         }
 
         #endregion
