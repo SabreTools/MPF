@@ -222,6 +222,8 @@
                             <GroupBox Header="{DynamicResource PublisherIdentifiersGroupBoxString}" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID"
+                                                        Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)TwoKGamesID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)AcclaimID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"

@@ -24,13 +24,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeCoverage" Version="18.0.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="Microsoft.CodeCoverage" Version="18.0.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="[1.9.0]" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="[1.9.1]" />
         <PackageReference Include="xunit" Version="2.9.3" />
         <PackageReference Include="xunit.abstractions" Version="2.0.3" />
-        <PackageReference Include="xunit.analyzers" Version="1.25.0" />
+        <PackageReference Include="xunit.analyzers" Version="1.27.0" />
         <PackageReference Include="xunit.assert" Version="2.9.3" />
         <PackageReference Include="xunit.core" Version="2.9.3" />
         <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
