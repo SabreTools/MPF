@@ -294,6 +294,28 @@ namespace MPF.ExecutionContexts
                 return defaultValue;
         }
 
+        /// <summary>
+        /// Get an UInt8 setting from a settings, dictionary
+        /// </summary>
+        /// <param name="settings">Dictionary representing the settings</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        internal static byte GetUInt8Setting(Dictionary<string, string?> settings, string key, byte defaultValue)
+        {
+            if (settings.ContainsKey(key))
+            {
+                if (byte.TryParse(settings[key], out byte value))
+                    return value;
+                else
+                    return defaultValue;
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
         #endregion
 
         #region Parameter Parsing

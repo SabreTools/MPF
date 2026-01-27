@@ -349,7 +349,17 @@ namespace MPF.Frontend.ViewModels
             InternalProgram internalProgram = Options.InternalProgram;
 
             // Create a static list of supported Check programs, not everything
-            var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.Aaru, InternalProgram.DiscImageCreator, InternalProgram.CleanRip, InternalProgram.PS3CFW, InternalProgram.UmdImageCreator, InternalProgram.XboxBackupCreator };
+            var internalPrograms = new List<InternalProgram>
+            {
+                InternalProgram.Redumper,
+                InternalProgram.Aaru,
+                InternalProgram.DiscImageCreator,
+                // InternalProgram.Dreamdump,
+                InternalProgram.CleanRip,
+                InternalProgram.PS3CFW,
+                InternalProgram.UmdImageCreator,
+                InternalProgram.XboxBackupCreator
+            };
             InternalPrograms = internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
 
             // Select the current default dumping program

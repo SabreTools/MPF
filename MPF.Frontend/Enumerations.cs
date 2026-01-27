@@ -48,6 +48,7 @@ namespace MPF.Frontend
         // Dumping support
         Aaru,
         DiscImageCreator,
+        // Dreamdump,
         Redumper,
 
         // Verification support only

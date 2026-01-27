@@ -135,6 +135,15 @@ namespace MPF.CLI.Features
 
                     break;
 
+                // case InternalProgram.Dreamdump:
+                //     if (!File.Exists(Options.DreamdumpPath))
+                //     {
+                //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
+                //         return false;
+                //     }
+
+                //     break;
+
                 case InternalProgram.Redumper:
                     if (!File.Exists(Options.RedumperPath))
                     {

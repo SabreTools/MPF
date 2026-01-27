@@ -106,7 +106,13 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
-            var internalPrograms = new List<InternalProgram> { InternalProgram.Redumper, InternalProgram.DiscImageCreator, InternalProgram.Aaru };
+            var internalPrograms = new List<InternalProgram>
+            {
+                InternalProgram.Redumper,
+                InternalProgram.DiscImageCreator,
+                InternalProgram.Aaru,
+                // InternalProgram.Dreamdump,
+            };
             return internalPrograms.ConvertAll(ip => new Element<InternalProgram>(ip));
         }
 

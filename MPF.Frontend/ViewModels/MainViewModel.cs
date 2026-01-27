@@ -2164,6 +2164,9 @@ namespace MPF.Frontend.ViewModels
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
                 InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.SDCard => true,
 
+                // Dreamdump
+                // InternalProgram.Dreamdump when CurrentMediaType == MediaType.GDROM => true,
+
                 // Redumper
                 InternalProgram.Redumper when CurrentMediaType == MediaType.BluRay => true,
                 InternalProgram.Redumper when CurrentMediaType == MediaType.CDROM => true,
@@ -2444,9 +2447,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Redumper => File.Exists(Options.RedumperPath),
                     InternalProgram.Aaru => File.Exists(Options.AaruPath),
                     InternalProgram.DiscImageCreator => File.Exists(Options.DiscImageCreatorPath),
+                    // InternalProgram.Dreamdump => File.Exists(Options.DreamdumpPath),
+                    InternalProgram.Redumper => File.Exists(Options.RedumperPath),
                     _ => false,
                 };
 #pragma warning restore IDE0072

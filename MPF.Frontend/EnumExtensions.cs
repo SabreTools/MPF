@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 #endif
 using System.Reflection;
 using SabreTools.RedumpLib.Data;
+using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
@@ -118,6 +119,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "Aaru",
                 InternalProgram.DiscImageCreator => "DiscImageCreator",
+                // InternalProgram.Dreamdump => "Dreamdump",
                 InternalProgram.Redumper => "Redumper",
 
                 #endregion
@@ -295,6 +297,7 @@ namespace MPF.Frontend
 
                 InternalProgram.Aaru => "aaru",
                 InternalProgram.DiscImageCreator => "dic",
+                // InternalProgram.Dreamdump => "dreamdump",
                 InternalProgram.Redumper => "redumper",
 
                 #endregion
@@ -316,6 +319,36 @@ namespace MPF.Frontend
         #endregion
 
         #region Convert from String
+
+        /// <summary>
+        /// Get the DreamdumpSectorOrder enum value for a given string
+        /// </summary>
+        /// <param name="order">String value to convert</param>
+        /// <returns>DreamdumpSectorOrder represented by the string, if possible</returns>
+        public static DreamdumpSectorOrder ToDreamdumpSectorOrder(this string? order)
+        {
+            return (order?.ToLowerInvariant()) switch
+            {
+                "data_c2_sub"
+                    or "data c2 sub"
+                    or "data-c2-sub"
+                    or "datac2sub" => DreamdumpSectorOrder.DATA_C2_SUB,
+                "data_sub_c2"
+                    or "data sub c2"
+                    or "data-sub-c2"
+                    or "datasubc2" => DreamdumpSectorOrder.DATA_SUB_C2,
+                "data_sub"
+                    or "data sub"
+                    or "data-sub"
+                    or "datasub" => DreamdumpSectorOrder.DATA_SUB,
+                "data_c2"
+                    or "data c2"
+                    or "data-c2"
+                    or "datac2" => DreamdumpSectorOrder.DATA_C2,
+
+                _ => DreamdumpSectorOrder.NONE,
+            };
+        }
 
         /// <summary>
         /// Get the InterfaceLanguage enum value for a given string
@@ -362,6 +395,7 @@ namespace MPF.Frontend
                     or "dic"
                     or "dicreator"
                     or "discimagecreator" => InternalProgram.DiscImageCreator,
+                // "dreamdump" => InternalProgram.Dreamdump,
                 "rd"
                     or "redumper" => InternalProgram.Redumper,
 

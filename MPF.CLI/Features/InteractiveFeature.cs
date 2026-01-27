@@ -123,6 +123,7 @@ namespace MPF.CLI.Features
             Console.WriteLine($"{InternalProgram.Redumper.ToString().ToLowerInvariant(),-15} => {InternalProgram.Redumper.LongName()}");
             Console.WriteLine($"{InternalProgram.DiscImageCreator.ToString().ToLowerInvariant(),-15} => {InternalProgram.DiscImageCreator.LongName()}");
             Console.WriteLine($"{InternalProgram.Aaru.ToString().ToLowerInvariant(),-15} => {InternalProgram.Aaru.LongName()}");
+            // Console.WriteLine($"{InternalProgram.Dreamdump.ToString().ToLowerInvariant(),-15} => {InternalProgram.Dreamdump.LongName()}");
             Console.WriteLine();
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");

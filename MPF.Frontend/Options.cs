@@ -4,6 +4,8 @@ using System.IO;
 using SabreTools.RedumpLib.Data;
 using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
+// using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
+// using DreamdumpSettings = MPF.ExecutionContexts.Dreamdump.SettingConstants;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
 using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
@@ -64,6 +66,32 @@ namespace MPF.Frontend
             }
         }
 
+#pragma warning disable IDE0051
+        /// <summary>
+        /// Default Dreamdump path
+        /// </summary>
+        private static string DefaultDreamdumpPath
+        {
+            get
+            {
+#pragma warning disable IDE0072
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "dreamdump",
+                    PlatformID.MacOSX => "dreamdump",
+                    _ => "dreamdump.exe"
+                };
+#pragma warning restore IDE0072
+
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Dreamdump", executableName));
+#else
+                return Path.Combine("Programs", "Dreamdump", executableName);
+#endif
+            }
+        }
+#pragma warning restore IDE0051
+
         /// <summary>
         /// Default Redumper path
         /// </summary>
@@ -123,6 +151,15 @@ namespace MPF.Frontend
             get { return GetStringSetting(Settings, "DiscImageCreatorPath", DefaultDiscImageCreatorPath); }
             set { Settings["DiscImageCreatorPath"] = value; }
         }
+
+        // /// <summary>
+        // /// Path to Dreamdump
+        // /// </summary>
+        // public string? DreamdumpPath
+        // {
+        //     get { return GetStringSetting(Settings, "DreamdumpPath", DefaultDreamdumpPath); }
+        //     set { Settings["DreamdumpPath"] = value; }
+        // }
 
         /// <summary>
         /// Path to Redumper
@@ -432,6 +469,44 @@ namespace MPF.Frontend
             get { return GetBooleanSetting(Settings, DICSettings.UseCMIFlag, DICSettings.UseCMIFlagDefault); }
             set { Settings[DICSettings.UseCMIFlag] = value.ToString(); }
         }
+
+        #endregion
+
+        #region Dreamdump
+
+        // /// <summary>
+        // /// Enable options incompatible with redump submissions
+        // /// </summary>
+        // public bool DreamdumpNonRedumpMode
+        // {
+        //     get { return GetBooleanSetting(Settings, "DreamdumpNonRedumpMode", false); }
+        //     set { Settings["DreamdumpNonRedumpMode"] = value.ToString(); }
+        // }
+
+        // /// <summary>
+        // /// Currently selected default Dreamdump sector order
+        // /// </summary>
+        // public DreamdumpSectorOrder DreamdumpSectorOrder
+        // {
+        //     get
+        //     {
+        //         var valueString = GetStringSetting(Settings, DreamdumpSettings.SectorOrder, DreamdumpSettings.SectorOrderDefault);
+        //         return valueString.ToDreamdumpSectorOrder();
+        //     }
+        //     set
+        //     {
+        //         Settings[DreamdumpSettings.SectorOrder] = value.ToString();
+        //     }
+        // }
+
+        // /// <summary>
+        // /// Default number of rereads
+        // /// </summary>
+        // public int DreamdumpRereadCount
+        // {
+        //     get { return GetInt32Setting(Settings, DreamdumpSettings.RereadCount, DreamdumpSettings.RereadCountDefault); }
+        //     set { Settings[DreamdumpSettings.RereadCount] = value.ToString(); }
+        // }
 
         #endregion
 

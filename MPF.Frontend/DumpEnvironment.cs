@@ -157,6 +157,14 @@ namespace MPF.Frontend
                     programFound = InternalProgram.Aaru;
             }
 
+            // if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
+            // {
+            //     var processor = new Dreamdump(_system);
+            //     var missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
+            //     if (missingFiles.Count == 0)
+            //         programFound = InternalProgram.Dreamdump;
+            // }
+
             return programFound;
         }
 
@@ -188,6 +196,13 @@ namespace MPF.Frontend
                     programFound = InternalProgram.Aaru;
             }
 
+            // if (programFound is null && _internalProgram != InternalProgram.Dreamdump)
+            // {
+            //     var processor = new Dreamdump(_system);
+            //     if (processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename))
+            //         programFound = InternalProgram.Dreamdump;
+            // }
+
             return programFound;
         }
 
@@ -203,6 +218,7 @@ namespace MPF.Frontend
             {
                 InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.AaruPath },
                 InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = _options.DiscImageCreatorPath },
+                // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(parameters) { ExecutablePath = _options.DreamdumpPath },
                 InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = _options.RedumperPath },
 
                 // If no dumping program found, set to null
@@ -235,6 +251,7 @@ namespace MPF.Frontend
                 InternalProgram.Aaru => new Aaru(_system),
                 InternalProgram.CleanRip => new CleanRip(_system),
                 InternalProgram.DiscImageCreator => new DiscImageCreator(_system),
+                // InternalProgram.Dreamdump => new Dreamdump(_system),
                 InternalProgram.PS3CFW => new PS3CFW(_system),
                 InternalProgram.Redumper => new Redumper(_system),
                 InternalProgram.UmdImageCreator => new UmdImageCreator(_system),
@@ -269,6 +286,7 @@ namespace MPF.Frontend
                 {
                     InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
                     InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
                     InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
 
                     // If no dumping program found, set to null

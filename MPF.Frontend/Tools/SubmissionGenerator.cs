@@ -424,6 +424,7 @@ namespace MPF.Frontend.Tools
                 Aaru => InternalProgram.Aaru,
                 CleanRip => InternalProgram.CleanRip,
                 DiscImageCreator => InternalProgram.DiscImageCreator,
+                // Dreamdump => InternalProgram.Dreamdump,
                 PS3CFW => InternalProgram.PS3CFW,
                 Redumper => InternalProgram.Redumper,
                 UmdImageCreator => InternalProgram.UmdImageCreator,
