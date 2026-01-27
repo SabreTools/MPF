@@ -71,7 +71,8 @@ namespace MPF.Frontend.Tools
             List<string> missingFiles = processor.FoundAllFiles(mediaType, outputDirectory, outputFilename);
             if (missingFiles.Count > 0)
             {
-                resultProgress?.Report(ResultEventArgs.Failure($"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}\nThis may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
+                resultProgress?.Report(ResultEventArgs.Failure(
+                    $"There were files missing from the output:\n{string.Join("\n", [.. missingFiles])}\nThis may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
                 return null;
             }
 
@@ -100,7 +101,8 @@ namespace MPF.Frontend.Tools
 
                 // Add a placeholder for the logs link if not a verification
                 if (!filledInfo)
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] =
+                        "[Please provide a link to your logs here]";
             }
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
@@ -121,15 +123,19 @@ namespace MPF.Frontend.Tools
             // Run anti-modchip check, if necessary
             if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
-                info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
+                resultProgress?.Report(
+                    ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
+                info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name)
+                    ? YesNo.Yes
+                    : YesNo.No;
                 resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
             }
 
             // Run copy protection, if possible or necessary
             if (system.SupportsCopyProtectionScans())
             {
-                resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
+                resultProgress?.Report(
+                    ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
 
                 try
                 {
@@ -138,9 +144,13 @@ namespace MPF.Frontend.Tools
                     {
                         // Explicitly note missing/invalid device paths
                         if (drive?.Name is null)
-                            resultProgress?.Report(ResultEventArgs.Success("No mounted device path found, protection outputs may be incomplete!"));
+                            resultProgress?.Report(
+                                ResultEventArgs.Success(
+                                    "No mounted device path found, protection outputs may be incomplete!"));
 
-                        protections = await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options, protectionProgress);
+                        protections =
+                            await ProtectionTool.RunCombinedProtectionScans(basePath, drive, options,
+                                protectionProgress);
                     }
 
                     var protectionString = ProtectionTool.FormatProtections(protections, drive);
@@ -196,12 +206,14 @@ namespace MPF.Frontend.Tools
                 bool? loggedIn = await wc.Login(options.RedumpUsername!, options.RedumpPassword!);
                 if (loggedIn is null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
+                    resultProgress?.Report(
+                        ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
                     return false;
                 }
                 else if (loggedIn == false)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("Provided Redump credentials were invalid, not using..."));
+                    resultProgress?.Report(
+                        ResultEventArgs.Failure("Provided Redump credentials were invalid, not using..."));
                 }
             }
 
@@ -302,14 +314,16 @@ namespace MPF.Frontend.Tools
             }
 
             // If we don't have any matches but we have a universal hash
-            if (info.PartiallyMatchedIDs.Count == 0 && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+            if (info.PartiallyMatchedIDs.Count == 0 &&
+                info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
             {
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
                 if (foundIds is not null && foundIds.Count == 1)
                     resultProgress?.Report(ResultEventArgs.Success($"Single match found for universal hash {sha1}"));
                 else if (foundIds is not null && foundIds.Count != 1)
-                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
+                    resultProgress?.Report(
+                        ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
                 else
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
 
@@ -332,9 +346,14 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [.. partiallyMatchedIds];
             info.PartiallyMatchedIDs.Sort();
 
-            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
-                ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
-                : "No matches found")));
+            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " +
+                                                           (fullyMatchedIdsList is not null &&
+                                                            fullyMatchedIdsList.Count > 0
+                                                               ? "Fully Matched IDs: " + string.Join(",",
+                                                               [
+                                                                   .. fullyMatchedIdsList.ConvertAll(i => i.ToString())
+                                                               ])
+                                                               : "No matches found")));
 
             // Exit early if one failed or there are no matched IDs
             if (!allFound || fullyMatchedIdsList is null || fullyMatchedIdsList.Count == 0)
@@ -349,7 +368,8 @@ namespace MPF.Frontend.Tools
                     continue;
 
                 // Fill in the fields from the existing ID
-                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
+                resultProgress?.Report(
+                    ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
@@ -377,7 +397,8 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Creates a default SubmissionInfo object based on the current system and media type
         /// </summary>
-        private static SubmissionInfo CreateDefaultSubmissionInfo(BaseProcessor processor, RedumpSystem? system, MediaType? mediaType, bool addPlaceholders)
+        private static SubmissionInfo CreateDefaultSubmissionInfo(BaseProcessor processor, RedumpSystem? system,
+            MediaType? mediaType, bool addPlaceholders)
         {
             // Create the template object
             var info = new SubmissionInfo()
@@ -397,10 +418,11 @@ namespace MPF.Frontend.Tools
                     Barcode = addPlaceholders ? OptionalValue : string.Empty,
                     Contents = string.Empty,
                 },
-                VersionAndEditions = new VersionAndEditionsSection()
-                {
-                    OtherEditions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
-                },
+                VersionAndEditions =
+                    new VersionAndEditionsSection()
+                    {
+                        OtherEditions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
+                    },
                 DumpingInfo = new DumpingInfoSection()
                 {
                     FrontendVersion = FrontendTool.GetCurrentVersion(),
@@ -568,7 +590,8 @@ namespace MPF.Frontend.Tools
             List<string> volLabels = [];
 
             // Begin formatted output with the label from Windows, if it is unique and not a common volume label
-            if (driveLabel is not null && !labels.TryGetValue(driveLabel, out List<string>? value) && FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is null)
+            if (driveLabel is not null && !labels.TryGetValue(driveLabel, out List<string>? value) &&
+                FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is null)
                 volLabels.Add(driveLabel);
 
             // Add remaining labels with their corresponding filesystems
@@ -601,7 +624,8 @@ namespace MPF.Frontend.Tools
                 case MediaType.GDROM:
                     info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                        addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -614,66 +638,90 @@ namespace MPF.Frontend.Tools
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else if (info.SizeAndChecksums.Layerbreak2 == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a triple-layer disc
                     else if (info.SizeAndChecksums.Layerbreak3 == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a quad-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer2ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer3MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer3ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer3ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
                     break;
@@ -681,7 +729,8 @@ namespace MPF.Frontend.Tools
                 case MediaType.NintendoGameCubeGameDisc:
                     info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                        addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
@@ -694,25 +743,33 @@ namespace MPF.Frontend.Tools
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringRing =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode =
+                            addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
@@ -725,16 +782,24 @@ namespace MPF.Frontend.Tools
                     // Both single- and dual-layer discs have two "layers" for the ring
                     info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode =
+                        addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1ToolstampMasteringCode =
+                        addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                    info.SizeAndChecksums.CRC32 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.CRC32 ??= (addPlaceholders
+                        ? RequiredValue + " [Not automatically generated for UMD]"
+                        : string.Empty);
+                    info.SizeAndChecksums.MD5 ??= (addPlaceholders
+                        ? RequiredValue + " [Not automatically generated for UMD]"
+                        : string.Empty);
+                    info.SizeAndChecksums.SHA1 ??= (addPlaceholders
+                        ? RequiredValue + " [Not automatically generated for UMD]"
+                        : string.Empty);
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
@@ -746,7 +811,8 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Processes default data based on system type
         /// </summary>
-        private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders, bool isDiscImageCreator, string basePath)
+        private static bool ProcessSystem(SubmissionInfo info, RedumpSystem? system, Drive? drive, bool addPlaceholders,
+            bool isDiscImageCreator, string basePath)
         {
 #pragma warning disable IDE0010
             // Extract info based specifically on RedumpSystem
@@ -822,6 +888,16 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Category ??= DiscCategory.Multimedia;
                     break;
 
+                case RedumpSystem.IBMPCcompatible:
+                case RedumpSystem.AppleMacintosh:
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SteamAppID] =
+                        PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
+                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
+                        PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
+                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
+                        PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
+                    break;
+
                 case RedumpSystem.IncredibleTechnologiesEagle:
                     info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
@@ -839,10 +915,13 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
+                        info.CommonDiscInfo.EXEDateBuildDate =
+                            DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo.EXEDateBuildDate ??=
+                        PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
@@ -867,13 +946,17 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] =
+                        PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] =
+                        PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] =
+                        PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] =
+                        PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
@@ -931,10 +1014,13 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
+                        info.CommonDiscInfo.EXEDateBuildDate =
+                            DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo.EXEDateBuildDate ??=
+                        PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps1Exe);
@@ -947,10 +1033,13 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
+                        info.CommonDiscInfo.EXEDateBuildDate =
+                            DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStationSerial);
+                    info.CommonDiscInfo.EXEDateBuildDate ??=
+                        PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
                         info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
@@ -962,19 +1051,22 @@ namespace MPF.Frontend.Tools
                     info.Extras.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
                     info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
 
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStation3Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
                     SetContentFieldIfNotExists(info, SiteCode.Patches, drive, FormatPlayStation3FirmwareVersion);
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation4Serial);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStation4Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation4Version);
                     SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation4PkgInfo);
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation5Serial);
+                    SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive,
+                        PhysicalTool.GetPlayStation5Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation5Version);
                     SetContentFieldIfNotExists(info, SiteCode.Games, drive, PhysicalTool.GetPlayStation5PkgInfo);
                     break;
@@ -1027,7 +1119,8 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a comment field if it doesn't already have a value
         /// </summary>
-        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetCommentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive,
+            Func<Drive?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (CommentFieldExists(info, key, out _))
@@ -1061,7 +1154,8 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Set a content field if it doesn't already have a value
         /// </summary>
-        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive, Func<Drive?, string?> valueFunc)
+        private static void SetContentFieldIfNotExists(SubmissionInfo info, SiteCode key, Drive? drive,
+            Func<Drive?, string?> valueFunc)
         {
             // If the field has a valid value, skip
             if (ContentFieldExists(info, key, out _))
@@ -1091,7 +1185,8 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="oldDict">ProtectionDictionary to format</param>
         /// <returns>Reformatted dictionary on success, empty on error</returns>
-        private static Dictionary<string, List<string>?> ReformatProtectionDictionary(Dictionary<string, List<string>>? oldDict)
+        private static Dictionary<string, List<string>?> ReformatProtectionDictionary(
+            Dictionary<string, List<string>>? oldDict)
         {
             // Null or empty protections return empty
             if (oldDict is null || oldDict.Count == 0)

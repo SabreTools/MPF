@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -152,6 +153,303 @@ namespace MPF.Frontend.Tools
             {
                 // Absorb the exception
                 return false;
+            }
+        }
+
+        #endregion
+
+                #region Computer
+
+        /// <summary>
+        /// Get info for discs containing Steam2 (sis/sim/sid) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam2 information on success, null otherwise</returns>
+        public static string? GetSteamSimSidInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't get any sis files
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamDepotIdList = new List<string>();
+
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
+
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+
+                    string filename = Path.GetFileName(sis);
+
+                    // Skips csm/csd sku sis files
+                    if (filename.ToLower() == "sku.sis")
+                        continue;
+
+                    long sisSize = new FileInfo(sis).Length;
+
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
+                    if (sisSize > 10000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+
+                        // One single case is known where this isn't true, RID 70147. As of writing, the page claims
+                        // it's .sis/.csm/.csd, this isn't true, it's .sis/.sim/.sid. It's one of the latest
+                        // .sis/.sim/.sim discs, if not the latest, and the only one currently known to use "sku" instead
+                        // of "SKU". It's most likely safe to remove this, but to err on the side of caution, this should
+                        // remain to avoid any risk of double-filling info until a much larger amount of testing is done.
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steamSimSidValue))
+                            upper = steamSimSidValue;
+
+                        if (upper == null)
+                            continue;
+
+                        if (upper["depots"] == null)
+                            continue;
+
+                        var depotArr = upper["depots"]?.ToObject<Dictionary<string, string>>();
+
+                        if (depotArr == null)
+                            continue;
+
+                        steamDepotIdList.AddRange(depotArr.Values.ToList());
+                    }
+                }
+
+                var sortedArray = steamDepotIdList.Select(long.Parse).ToArray();
+                Array.Sort(sortedArray);
+
+#if NET20 || NET35
+                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
+                steamInfo = string.Join("\n", compatibilitySortedArray);
+#else
+                steamInfo = string.Join("\n", sortedArray);
+#endif
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get info for discs containing Steam3 (sis/csm/csd) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam Csm/Csd information on success, null otherwise</returns>
+        public static string? GetSteamCsmCsdInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamDepotIdDict = new SortedDictionary<long, long>();
+
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
+
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+
+                    string filename = Path.GetFileName(sis);
+
+                    // Skips steam2 sku sis files
+                    if (filename.ToLower() != "sku.sis")
+                        continue;
+
+                    long sisSize = new FileInfo(sis).Length;
+
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
+                    if (sisSize > 10000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+
+                        if (skuSis.VDFObject.TryGetValue("sku", out var steamCsmCsdValue))
+                            upper = steamCsmCsdValue;
+
+                        if (upper == null)
+                            continue;
+
+                        if (upper["manifests"] == null)
+                            continue;
+
+                        var depotArr = upper["manifests"]?.ToObject<Dictionary<long, long>>();
+
+                        if (depotArr == null)
+                            continue;
+
+                        foreach (var depot in depotArr)
+#if NETFRAMEWORK
+                            steamDepotIdDict.Add(depot.Key, depot.Value); // Always fine in practice.
+#else
+                            steamDepotIdDict.TryAdd(depot.Key, depot.Value); // Mainly here to allow easier bulk testing.
+#endif
+                    }
+                }
+
+                foreach (var depot in steamDepotIdDict)
+                {
+                    steamInfo += $"{depot.Key} ({depot.Value})\n";
+                }
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get info for discs containing Steam2 (sis/sim/sid) depots
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Steam2 information on success, null otherwise</returns>
+        public static string? GetSteamAppInfo(Drive? drive)
+        {
+            // If there's no drive path, we can't get exe name
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get any information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            try
+            {
+                string? steamInfo = "";
+                var steamAppIdList = new List<string>();
+
+                // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
+#if NETFRAMEWORK
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
+#else
+                var options = new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true };
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#endif
+
+                // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
+                foreach (string sis in sisPaths)
+                {
+                    if (!File.Exists(sis))
+                        continue;
+
+                    string filename = Path.GetFileName(sis);
+
+                    long sisSize = new FileInfo(sis).Length;
+
+                    // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
+                    if (sisSize > 10000)
+                        continue;
+
+                    // Read the sku sis file
+                    using var fileStream = new FileStream(sis, FileMode.Open, FileAccess.Read);
+                    var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
+                    var skuSis = skuSisDeserializer.Deserialize(fileStream);
+
+                    if (skuSis != null && skuSis.VDFObject != null)
+                    {
+                        JToken? upper = null;
+
+                        if (skuSis.VDFObject.TryGetValue("SKU", out var steamSimSidValue))
+                            upper = steamSimSidValue;
+                        else if (skuSis.VDFObject.TryGetValue("sku", out var steamCsmCsdValue))
+                            upper = steamCsmCsdValue;
+
+                        if (upper == null)
+                            continue;
+
+                        string? appsString = null;
+
+                        // Some newer Steam3 discs (RID 114373 & 114374, 126740) use Apps instead of apps.
+                        if (upper["apps"] != null)
+                            appsString = "apps";
+                        else if (upper["Apps"] != null)
+                            appsString = "Apps";
+                        else
+                            continue;
+
+                        var appArr = upper[appsString]?.ToObject<Dictionary<string, string>>();
+
+                        if (appArr == null)
+                                continue;
+
+                        steamAppIdList.AddRange(appArr.Values.ToList());
+                    }
+                }
+
+                var sortedArray = steamAppIdList.Select(long.Parse).ToArray();
+                Array.Sort(sortedArray);
+
+#if NET20 || NET35
+                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
+                steamInfo = string.Join(", ", compatibilitySortedArray);
+#else
+                steamInfo = string.Join(", ", sortedArray);
+#endif
+
+                if (steamInfo == "")
+                    return null;
+                else
+                    return steamInfo;
+            }
+            catch
+            {
+                // Absorb the exception
+                return null;
             }
         }
 
