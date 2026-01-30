@@ -79,6 +79,9 @@ namespace MPF.Check.Features
                 return false;
             }
 
+            // Log the system being used, in case it came from config
+            Console.WriteLine($"Using system: {System.LongName()}");
+
             // Validate a program is provided
             if (Options.InternalProgram == InternalProgram.NONE)
             {

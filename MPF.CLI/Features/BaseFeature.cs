@@ -104,6 +104,9 @@ namespace MPF.CLI.Features
                 return false;
             }
 
+            // Log the system being used, in case it came from config
+            Console.WriteLine($"Using system: {System.LongName()}");
+
             // Validate the supplied credentials
             if (Options.RetrieveMatchInformation
                 && !string.IsNullOrEmpty(Options.RedumpUsername)
