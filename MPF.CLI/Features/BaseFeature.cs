@@ -97,6 +97,13 @@ namespace MPF.CLI.Features
         /// <inheritdoc/>
         public override bool Execute()
         {
+            // Validate a system type is provided
+            if (System == null)
+            {
+                Console.Error.WriteLine("A system name needs to be provided");
+                return false;
+            }
+
             // Validate the supplied credentials
             if (Options.RetrieveMatchInformation
                 && !string.IsNullOrEmpty(Options.RedumpUsername)

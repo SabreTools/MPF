@@ -72,6 +72,14 @@ namespace MPF.Check.Features
         /// <inheritdoc/>
         public override bool Execute()
         {
+            // Validate a system type is provided
+            if (System == null)
+            {
+                Console.Error.WriteLine("A system name needs to be provided");
+                return false;
+            }
+
+            // Validate a program is provided
             if (Options.InternalProgram == InternalProgram.NONE)
             {
                 Console.Error.WriteLine("A program name needs to be provided");
