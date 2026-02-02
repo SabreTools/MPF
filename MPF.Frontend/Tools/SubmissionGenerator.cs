@@ -268,7 +268,7 @@ namespace MPF.Frontend.Tools
                 var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
                 if (foundIds is null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure($"Error accessing redump.org"));
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
                     return false;
                 }
                 else if (foundIds.Count == 0)
@@ -312,7 +312,7 @@ namespace MPF.Frontend.Tools
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
                 if (foundIds is null)
-                    resultProgress?.Report(ResultEventArgs.Failure($"Error accessing redump.org"));
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
                 else if (foundIds.Count == 0)
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
                 else if (foundIds.Count == 1)
@@ -340,7 +340,7 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs.Sort();
 
             resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
-                ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertA ll(i => i.ToString())])
+                ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
                 : "No matches found")));
 
             // Exit early if one failed or there are no matched IDs
