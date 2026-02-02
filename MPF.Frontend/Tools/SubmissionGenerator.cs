@@ -121,7 +121,7 @@ namespace MPF.Frontend.Tools
             // Run anti-modchip check, if necessary
             if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
+                resultProgress?.Report(ResultEventArgs.Neutral("Checking for anti-modchip strings... this might take a while!"));
                 info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
                 resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
             }
@@ -129,7 +129,7 @@ namespace MPF.Frontend.Tools
             // Run copy protection, if possible or necessary
             if (system.SupportsCopyProtectionScans())
             {
-                resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
+                resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
 
                 try
                 {
@@ -210,7 +210,7 @@ namespace MPF.Frontend.Tools
             List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
+            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on Redump..."));
             var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
@@ -219,7 +219,7 @@ namespace MPF.Frontend.Tools
                 if (string.IsNullOrEmpty(hashData))
                 {
                     trackCount--;
-                    resultProgress?.Report(ResultEventArgs.Success("Blank line found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Blank line found, skipping!"));
                     continue;
                 }
 
@@ -254,7 +254,7 @@ namespace MPF.Frontend.Tools
                     || hashData.Contains("(Track AA.5).bin"))
                 {
                     trackCount--;
-                    resultProgress?.Report(ResultEventArgs.Success("Extra track found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Extra track found, skipping!"));
                     continue;
                 }
 
@@ -349,7 +349,7 @@ namespace MPF.Frontend.Tools
                     continue;
 
                 // Fill in the fields from the existing ID
-                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
+                resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
                 _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 

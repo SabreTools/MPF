@@ -5,6 +5,23 @@ namespace MPF.Frontend.Test
     public class ResultEventArgsTests
     {
         [Fact]
+        public void EmptyNeutralTest()
+        {
+            var actual = ResultEventArgs.Neutral();
+            Assert.Null((bool?)actual);
+            Assert.Empty(actual.Message);
+        }
+
+        [Fact]
+        public void CustomMessageNeutralTest()
+        {
+            string message = "Success!";
+            var actual = ResultEventArgs.Neutral(message);
+            Assert.Null((bool?)actual);
+            Assert.Equal(message, actual.Message);
+        }
+
+        [Fact]
         public void EmptySuccessTest()
         {
             var actual = ResultEventArgs.Success();

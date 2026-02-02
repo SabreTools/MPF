@@ -1121,7 +1121,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void Log(string text)
         {
-            _logger?.Invoke(LogLevel.USER, text);
+            _logger?.Invoke(LogLevel.USER_GENERIC, text);
         }
 
         /// <summary>
@@ -1159,6 +1159,21 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         private void SecretLogLn(string text) => SecretLog(text + "\n");
+
+        /// <summary>
+        /// Enqueue success text to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        private void SuccessLog(string text)
+        {
+            _logger?.Invoke(LogLevel.USER_SUCCESS, text);
+        }
+
+        /// <summary>
+        /// Enqueue text with a newline to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        private void SuccessLogLn(string text) => SuccessLog(text + "\n");
 
         /// <summary>
         /// Enqueue verbose text to the log
@@ -1360,7 +1375,7 @@ namespace MPF.Frontend.ViewModels
                 Status = result.Message;
 
             // Enable or disable the button
-            StartStopButtonEnabled = result && ShouldEnableDumpingButton();
+            StartStopButtonEnabled = result == true && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
             DriveSpeedComboBoxEnabled = DumpEnvironment.DoesSupportDriveSpeed(CurrentMediaType);
@@ -2231,7 +2246,7 @@ namespace MPF.Frontend.ViewModels
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
                 {
-                    LogLn("No dumping command was run, submission information will not be gathered.");
+                    SuccessLogLn("No dumping command was run, submission information will not be gathered.");
                     Status = "Execution complete!";
 
                     // Re-allow quick exiting
@@ -2243,14 +2258,14 @@ namespace MPF.Frontend.ViewModels
                 }
 
                 // Verify dump output and save it
-                if (result)
+                if (result == true)
                 {
                     result = await _environment.VerifyAndSaveDumpOutput(
                         resultProgress: resultProgress,
                         protectionProgress: protectionProgress,
                         processUserInfo: _processUserInfo);
 
-                    if (!result)
+                    if (result == false)
                         ErrorLogLn(result.Message);
                 }
                 else
@@ -2507,7 +2522,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            var message = value?.Message;
+            var message = value.Message;
 
             // Update the label with only the first line of output
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
@@ -2520,9 +2535,11 @@ namespace MPF.Frontend.ViewModels
                 Status = message ?? string.Empty;
 
             // Log based on success or failure
-            if (value is not null && value)
-                VerboseLogLn(message ?? string.Empty);
-            else if (value is not null && !value)
+            if ((bool?)value is null)
+                LogLn(message ?? string.Empty);
+            else if (value == true)
+                SuccessLogLn(message ?? string.Empty);
+            else if (value == false)
                 ErrorLogLn(message ?? string.Empty);
         }
 

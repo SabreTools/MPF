@@ -455,11 +455,11 @@ namespace MPF.Frontend
 
             // Check that we have the basics for dumping
             ResultEventArgs result = IsValidForDump(mediaType);
-            if (!result)
+            if (result == false)
                 return result;
 
             // Execute internal tool
-            progress?.Report(ResultEventArgs.Success($"Executing {_internalProgram}... please wait!"));
+            progress?.Report(ResultEventArgs.Neutral($"Executing {_internalProgram}... please wait!"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
@@ -507,7 +507,7 @@ namespace MPF.Frontend
                 protectionProgress = temp;
             }
 
-            resultProgress.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
+            resultProgress.Report(ResultEventArgs.Neutral("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
             var outputDirectory = Path.GetDirectoryName(OutputPath);
@@ -530,7 +530,7 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
             // Extract the information from the output files
-            resultProgress.Report(ResultEventArgs.Success("Extracting output information from output files..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Extracting output information from output files..."));
             var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
                 OutputPath,
                 _drive,
@@ -548,7 +548,7 @@ namespace MPF.Frontend
             // Inject seed submission info data, if necessary
             if (seedInfo is not null)
             {
-                resultProgress.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Injecting user-supplied information..."));
                 submissionInfo = Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress.Report(ResultEventArgs.Success("Information injection complete!"));
             }
@@ -556,7 +556,7 @@ namespace MPF.Frontend
             // Get user-modifiable information if configured to
             if (_options.PromptForDiscInformation && processUserInfo is not null)
             {
-                resultProgress.Report(ResultEventArgs.Success("Waiting for additional media information..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Waiting for additional media information..."));
                 bool? filledInfo = processUserInfo.Invoke(_options, ref submissionInfo);
                 if (filledInfo == true)
                     resultProgress.Report(ResultEventArgs.Success("Additional media information added!"));
@@ -565,12 +565,12 @@ namespace MPF.Frontend
             }
 
             // Process special fields for site codes
-            resultProgress.Report(ResultEventArgs.Success("Processing site codes..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Processing site codes..."));
             Formatter.ProcessSpecialFields(submissionInfo!);
             resultProgress.Report(ResultEventArgs.Success("Processing complete!"));
 
             // Format the information for the text output
-            resultProgress.Report(ResultEventArgs.Success("Formatting information..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Formatting information..."));
             var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility, out string? formatResult);
             if (formattedValues is null)
                 resultProgress.Report(ResultEventArgs.Failure(formatResult));
@@ -581,7 +581,7 @@ namespace MPF.Frontend
             var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
-            resultProgress.Report(ResultEventArgs.Success("Writing submission information file..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Writing submission information file..."));
             bool txtSuccess = WriteOutputData(outputDirectory, filenameSuffix, formattedValues, out string txtResult);
             if (txtSuccess)
                 resultProgress.Report(ResultEventArgs.Success(txtResult));
@@ -593,7 +593,7 @@ namespace MPF.Frontend
             {
                 if (_options.ScanForProtection)
                 {
-                    resultProgress.Report(ResultEventArgs.Success("Writing protection information file..."));
+                    resultProgress.Report(ResultEventArgs.Neutral("Writing protection information file..."));
                     bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
@@ -605,7 +605,7 @@ namespace MPF.Frontend
             // Write the JSON output, if required
             if (_options.OutputSubmissionJSON)
             {
-                resultProgress.Report(ResultEventArgs.Success($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
+                resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
                 bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
@@ -616,7 +616,7 @@ namespace MPF.Frontend
             // Compress the logs, if required
             if (_options.CompressLogFiles)
             {
-                resultProgress.Report(ResultEventArgs.Success("Compressing log files..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Compressing log files..."));
 #if NET40
                 await Task.Factory.StartNew(() =>
 #else
@@ -636,7 +636,7 @@ namespace MPF.Frontend
             // Delete unnecessary files, if required
             if (_options.DeleteUnnecessaryFiles)
             {
-                resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Deleting unnecessary files..."));
                 bool deleteSuccess = _processor.DeleteUnnecessaryFiles(mediaType, outputDirectory, outputFilename, out string deleteResult);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success(deleteResult));
@@ -647,7 +647,7 @@ namespace MPF.Frontend
             // Create PS3 IRD, if required
             if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
-                resultProgress.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
+                resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
                 bool deleteSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums.Layerbreak, submissionInfo?.SizeAndChecksums.CRC32);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success("IRD created!"));

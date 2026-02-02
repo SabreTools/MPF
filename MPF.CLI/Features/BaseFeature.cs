@@ -235,7 +235,7 @@ namespace MPF.CLI.Features
             Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
             var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
-            if (!dumpResult)
+            if (dumpResult == false)
                 return false;
 
             // If it was not a dumping command

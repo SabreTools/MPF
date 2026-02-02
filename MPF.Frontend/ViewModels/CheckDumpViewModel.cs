@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !(NET20 || NET35 || NET40)
+using System;
+#endif
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;

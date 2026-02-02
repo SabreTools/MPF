@@ -109,15 +109,17 @@ namespace MPF.UI.UserControls
             /// <returns>Brush representing the color</returns>
             public Brush GetForegroundColor()
             {
-#pragma warning disable IDE0072
                 return LogLevel switch
                 {
                     LogLevel.SECRET => Brushes.DarkGray,
                     LogLevel.ERROR => Brushes.Red,
                     LogLevel.VERBOSE => Brushes.Yellow,
-                    _ => Brushes.White,
+                    LogLevel.USER_SUCCESS => Brushes.ForestGreen,
+                    LogLevel.USER_GENERIC => Brushes.White,
+
+                    // Make unmatched log levels obvious
+                    _ => Brushes.Pink,
                 };
-#pragma warning restore IDE0072
             }
 
             /// <summary>

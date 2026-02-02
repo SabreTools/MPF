@@ -159,7 +159,7 @@ namespace MPF.UI.Windows
         private async void OnCheckDumpClick(object sender, EventArgs e)
         {
             var result = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
-            if (result)
+            if (result == true)
             {
                 bool? checkAgain = DisplayUserMessage("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
                 if (checkAgain == false)
