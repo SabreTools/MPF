@@ -197,7 +197,7 @@ namespace MPF.Frontend.Tools
             using var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
 
-            return new SegmentedOptions(new Options(settings));
+            return new SegmentedOptions(settings);
         }
 
         /// <summary>
@@ -234,6 +234,9 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
 
+            // Convert to an Options object
+            var tempOptions = options.ConvertToOptions();
+
             // Ensure default values are included
             PropertyInfo[] properties = typeof(Options).GetProperties();
             foreach (var property in properties)
@@ -246,8 +249,8 @@ namespace MPF.Frontend.Tools
                 if (property.Name == "Settings" || property.Name == "HasRedumpLogin")
                     continue;
 
-                var val = property.GetValue(options, null);
-                property.SetValue(options, val, null);
+                var val = property.GetValue(tempOptions, null);
+                property.SetValue(tempOptions, val, null);
             }
 
             var serializer = JsonSerializer.Create();
@@ -255,7 +258,7 @@ namespace MPF.Frontend.Tools
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
-            serializer.Serialize(writer, options.Settings, typeof(Dictionary<string, string>));
+            serializer.Serialize(writer, tempOptions.Settings, typeof(Dictionary<string, string>));
         }
 
         /// <summary>

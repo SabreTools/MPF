@@ -86,98 +86,13 @@ namespace MPF.Frontend
         public SegmentedOptions() { }
 
         /// <summary>
-        /// Constructor that converts from an existing Options object
+        /// Constructor taking a dictionary for settings
         /// </summary>
-        /// <param name="source">Options object to read from</param>
+        /// <param name="source">Dictionary representing settings</param>
         /// TODO: Remove when Options is no longer relevant
-        public SegmentedOptions(Options? source)
+        public SegmentedOptions(Dictionary<string, string?>? source = null)
+            : this(new Options(source))
         {
-            source ??= new Options();
-
-            FirstRun = source.FirstRun;
-            CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;
-            VerboseLogging = source.VerboseLogging;
-            InternalProgram = source.InternalProgram;
-
-            GUI.CopyUpdateUrlToClipboard = source.CopyUpdateUrlToClipboard;
-
-            GUI.DefaultInterfaceLanguage = source.DefaultInterfaceLanguage;
-            GUI.ShowDebugViewMenuItem = source.ShowDebugViewMenuItem;
-            GUI.OpenLogWindowAtStartup = source.OpenLogWindowAtStartup;
-            GUI.Theming.EnableDarkMode = source.EnableDarkMode;
-            GUI.Theming.EnablePurpMode = source.EnablePurpMode;
-            GUI.Theming.CustomBackgroundColor = source.CustomBackgroundColor;
-            GUI.Theming.CustomTextColor = source.CustomTextColor;
-
-            GUI.FastUpdateLabel = source.FastUpdateLabel;
-            GUI.IgnoreFixedDrives = source.IgnoreFixedDrives;
-            GUI.SkipSystemDetection = source.SkipSystemDetection;
-
-            Dumping.AaruPath = source.AaruPath ?? DumpSettings.DefaultAaruPath;
-            Dumping.DiscImageCreatorPath = source.DiscImageCreatorPath ?? DumpSettings.DefaultDiscImageCreatorPath;
-            // Dumping.DreamdumpPath = source.DreamdumpPath ?? DumpSettings.DefaultDreamdumpPath;
-            Dumping.RedumperPath = source.RedumperPath ?? DumpSettings.DefaultRedumperPath;
-
-            Dumping.DefaultOutputPath = source.DefaultOutputPath;
-            Dumping.DefaultSystem = source.DefaultSystem;
-
-            Dumping.DumpSpeeds.PreferredCD = source.PreferredDumpSpeedCD;
-            Dumping.DumpSpeeds.PreferredDVD = source.PreferredDumpSpeedDVD;
-            Dumping.DumpSpeeds.PreferredHDDVD = source.PreferredDumpSpeedHDDVD;
-            Dumping.DumpSpeeds.PreferredBD = source.PreferredDumpSpeedBD;
-
-            Dumping.Aaru.EnableDebug = source.AaruEnableDebug;
-            Dumping.Aaru.EnableVerbose = source.AaruEnableVerbose;
-            Dumping.Aaru.ForceDumping = source.AaruForceDumping;
-            Dumping.Aaru.RereadCount = source.AaruRereadCount;
-            Dumping.Aaru.StripPersonalData = source.AaruStripPersonalData;
-
-            Dumping.DIC.MultiSectorRead = source.DICMultiSectorRead;
-            Dumping.DIC.MultiSectorReadValue = source.DICMultiSectorReadValue;
-            Dumping.DIC.ParanoidMode = source.DICParanoidMode;
-            Dumping.DIC.QuietMode = source.DICQuietMode;
-            Dumping.DIC.RereadCount = source.DICRereadCount;
-            Dumping.DIC.DVDRereadCount = source.DICDVDRereadCount;
-            Dumping.DIC.UseCMIFlag = source.DICUseCMIFlag;
-
-            // Dumping.Dreamdump.NonRedumpMode = source.DreamdumpNonRedumpMode;
-            // Dumping.Dreamdump.SectorOrder = source.DreamdumpSectorOrder;
-            // Dumping.Dreamdump.RereadCount = source.DreamdumpRereadCount;
-
-            Dumping.Redumper.EnableSkeleton = source.RedumperEnableSkeleton;
-            Dumping.Redumper.EnableVerbose = source.RedumperEnableVerbose;
-            Dumping.Redumper.LeadinRetryCount = source.RedumperLeadinRetryCount;
-            Dumping.Redumper.NonRedumpMode = source.RedumperNonRedumpMode;
-            Dumping.Redumper.DriveType = source.RedumperDriveType;
-            Dumping.Redumper.DrivePregapStart = source.RedumperDrivePregapStart;
-            Dumping.Redumper.ReadMethod = source.RedumperReadMethod;
-            Dumping.Redumper.SectorOrder = source.RedumperSectorOrder;
-            Dumping.Redumper.RereadCount = source.RedumperRereadCount;
-            Dumping.Redumper.RefineSectorMode = source.RedumperRefineSectorMode;
-
-            Processing.ProtectionScanning.ScanForProtection = source.ScanForProtection;
-            Processing.ProtectionScanning.ScanArchivesForProtection = source.ScanArchivesForProtection;
-            Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.IncludeDebugProtectionInformation;
-            Processing.ProtectionScanning.HideDriveLetters = source.HideDriveLetters;
-
-            Processing.Login.RetrieveMatchInformation = source.RetrieveMatchInformation;
-            Processing.Login.RedumpUsername = source.RedumpUsername;
-            Processing.Login.RedumpPassword = source.RedumpPassword;
-
-            Processing.MediaInformation.AddPlaceholders = source.AddPlaceholders;
-            Processing.MediaInformation.PromptForDiscInformation = source.PromptForDiscInformation;
-            Processing.MediaInformation.PullAllInformation = source.PullAllInformation;
-            Processing.MediaInformation.EnableTabsInInputFields = source.EnableTabsInInputFields;
-            Processing.MediaInformation.EnableRedumpCompatibility = source.EnableRedumpCompatibility;
-
-            Processing.ShowDiscEjectReminder = source.ShowDiscEjectReminder;
-            Processing.AddFilenameSuffix = source.AddFilenameSuffix;
-            Processing.CreateIRDAfterDumping = source.CreateIRDAfterDumping;
-            Processing.OutputSubmissionJSON = source.OutputSubmissionJSON;
-            Processing.IncludeArtifacts = source.IncludeArtifacts;
-            Processing.CompressLogFiles = source.CompressLogFiles;
-            Processing.LogCompression = source.LogCompression;
-            Processing.DeleteUnnecessaryFiles = source.DeleteUnnecessaryFiles;
         }
 
         /// <summary>
@@ -274,13 +189,106 @@ namespace MPF.Frontend
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
         }
 
+        /// <summary>
+        /// Constructor that converts from an existing Options object
+        /// </summary>
+        /// <param name="source">Options object to read from</param>
+        /// TODO: Remove when Options is no longer relevant
+        private SegmentedOptions(Options source)
+        {
+            FirstRun = source.FirstRun;
+            CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;
+            VerboseLogging = source.VerboseLogging;
+            InternalProgram = source.InternalProgram;
+
+            GUI.CopyUpdateUrlToClipboard = source.CopyUpdateUrlToClipboard;
+
+            GUI.DefaultInterfaceLanguage = source.DefaultInterfaceLanguage;
+            GUI.ShowDebugViewMenuItem = source.ShowDebugViewMenuItem;
+            GUI.OpenLogWindowAtStartup = source.OpenLogWindowAtStartup;
+            GUI.Theming.EnableDarkMode = source.EnableDarkMode;
+            GUI.Theming.EnablePurpMode = source.EnablePurpMode;
+            GUI.Theming.CustomBackgroundColor = source.CustomBackgroundColor;
+            GUI.Theming.CustomTextColor = source.CustomTextColor;
+
+            GUI.FastUpdateLabel = source.FastUpdateLabel;
+            GUI.IgnoreFixedDrives = source.IgnoreFixedDrives;
+            GUI.SkipSystemDetection = source.SkipSystemDetection;
+
+            Dumping.AaruPath = source.AaruPath ?? DumpSettings.DefaultAaruPath;
+            Dumping.DiscImageCreatorPath = source.DiscImageCreatorPath ?? DumpSettings.DefaultDiscImageCreatorPath;
+            // Dumping.DreamdumpPath = source.DreamdumpPath ?? DumpSettings.DefaultDreamdumpPath;
+            Dumping.RedumperPath = source.RedumperPath ?? DumpSettings.DefaultRedumperPath;
+
+            Dumping.DefaultOutputPath = source.DefaultOutputPath;
+            Dumping.DefaultSystem = source.DefaultSystem;
+
+            Dumping.DumpSpeeds.PreferredCD = source.PreferredDumpSpeedCD;
+            Dumping.DumpSpeeds.PreferredDVD = source.PreferredDumpSpeedDVD;
+            Dumping.DumpSpeeds.PreferredHDDVD = source.PreferredDumpSpeedHDDVD;
+            Dumping.DumpSpeeds.PreferredBD = source.PreferredDumpSpeedBD;
+
+            Dumping.Aaru.EnableDebug = source.AaruEnableDebug;
+            Dumping.Aaru.EnableVerbose = source.AaruEnableVerbose;
+            Dumping.Aaru.ForceDumping = source.AaruForceDumping;
+            Dumping.Aaru.RereadCount = source.AaruRereadCount;
+            Dumping.Aaru.StripPersonalData = source.AaruStripPersonalData;
+
+            Dumping.DIC.MultiSectorRead = source.DICMultiSectorRead;
+            Dumping.DIC.MultiSectorReadValue = source.DICMultiSectorReadValue;
+            Dumping.DIC.ParanoidMode = source.DICParanoidMode;
+            Dumping.DIC.QuietMode = source.DICQuietMode;
+            Dumping.DIC.RereadCount = source.DICRereadCount;
+            Dumping.DIC.DVDRereadCount = source.DICDVDRereadCount;
+            Dumping.DIC.UseCMIFlag = source.DICUseCMIFlag;
+
+            // Dumping.Dreamdump.NonRedumpMode = source.DreamdumpNonRedumpMode;
+            // Dumping.Dreamdump.SectorOrder = source.DreamdumpSectorOrder;
+            // Dumping.Dreamdump.RereadCount = source.DreamdumpRereadCount;
+
+            Dumping.Redumper.EnableSkeleton = source.RedumperEnableSkeleton;
+            Dumping.Redumper.EnableVerbose = source.RedumperEnableVerbose;
+            Dumping.Redumper.LeadinRetryCount = source.RedumperLeadinRetryCount;
+            Dumping.Redumper.NonRedumpMode = source.RedumperNonRedumpMode;
+            Dumping.Redumper.DriveType = source.RedumperDriveType;
+            Dumping.Redumper.DrivePregapStart = source.RedumperDrivePregapStart;
+            Dumping.Redumper.ReadMethod = source.RedumperReadMethod;
+            Dumping.Redumper.SectorOrder = source.RedumperSectorOrder;
+            Dumping.Redumper.RereadCount = source.RedumperRereadCount;
+            Dumping.Redumper.RefineSectorMode = source.RedumperRefineSectorMode;
+
+            Processing.ProtectionScanning.ScanForProtection = source.ScanForProtection;
+            Processing.ProtectionScanning.ScanArchivesForProtection = source.ScanArchivesForProtection;
+            Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.IncludeDebugProtectionInformation;
+            Processing.ProtectionScanning.HideDriveLetters = source.HideDriveLetters;
+
+            Processing.Login.RetrieveMatchInformation = source.RetrieveMatchInformation;
+            Processing.Login.RedumpUsername = source.RedumpUsername;
+            Processing.Login.RedumpPassword = source.RedumpPassword;
+
+            Processing.MediaInformation.AddPlaceholders = source.AddPlaceholders;
+            Processing.MediaInformation.PromptForDiscInformation = source.PromptForDiscInformation;
+            Processing.MediaInformation.PullAllInformation = source.PullAllInformation;
+            Processing.MediaInformation.EnableTabsInInputFields = source.EnableTabsInInputFields;
+            Processing.MediaInformation.EnableRedumpCompatibility = source.EnableRedumpCompatibility;
+
+            Processing.ShowDiscEjectReminder = source.ShowDiscEjectReminder;
+            Processing.AddFilenameSuffix = source.AddFilenameSuffix;
+            Processing.CreateIRDAfterDumping = source.CreateIRDAfterDumping;
+            Processing.OutputSubmissionJSON = source.OutputSubmissionJSON;
+            Processing.IncludeArtifacts = source.IncludeArtifacts;
+            Processing.CompressLogFiles = source.CompressLogFiles;
+            Processing.LogCompression = source.LogCompression;
+            Processing.DeleteUnnecessaryFiles = source.DeleteUnnecessaryFiles;
+        }
+
         #endregion
 
         /// <summary>
         /// Convert to an Options object
         /// </summary>
         /// TODO: Remove when Options is no longer relevant
-        private Options ConvertToOptions()
+        internal Options ConvertToOptions()
         {
             return new Options
             {

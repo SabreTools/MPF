@@ -17,7 +17,7 @@ namespace MPF.Frontend
     /// <summary>
     /// Options that use a flat, dictionary-based structure
     /// </summary>
-    public class Options
+    internal class Options
     {
         #region Default Paths
 
@@ -874,24 +874,6 @@ namespace MPF.Frontend
         public Options(Dictionary<string, string?>? settings = null)
         {
             Settings = settings ?? [];
-        }
-
-        /// <summary>
-        /// Constructor taking an existing Options object
-        /// </summary>
-        /// <param name="source"></param>
-        public Options(Options? source)
-        {
-            Settings = new Dictionary<string, string?>(source?.Settings ?? []);
-        }
-
-        /// <summary>
-        /// Accessor for the internal dictionary
-        /// </summary>
-        public string? this[string key]
-        {
-            get => Settings[key];
-            set => Settings[key] = value;
         }
 
         #region Helpers
