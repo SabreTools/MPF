@@ -201,6 +201,31 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        public static SegmentedOptions LoadFromConfigSegmented()
+        {
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return new SegmentedOptions();
+
+            // If the file does not exist
+            if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
+                return new SegmentedOptions();
+
+            var serializer = JsonSerializer.Create();
+            serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+            serializer.MissingMemberHandling = MissingMemberHandling.Ignore;
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
+            using var sr = new StreamReader(stream);
+            var reader = new JsonTextReader(sr);
+
+            return serializer.Deserialize<SegmentedOptions>(reader) ?? new SegmentedOptions();
+        }
+
+        /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
         public static void SaveToConfig(Options options)
@@ -231,6 +256,23 @@ namespace MPF.Frontend.Tools
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
             serializer.Serialize(writer, options.Settings, typeof(Dictionary<string, string>));
+        }
+
+        /// <summary>
+        /// Save the current set of options to the application configuration
+        /// </summary>
+        public static void SaveToConfig(SegmentedOptions options)
+        {
+            // If no options path can be found
+            if (string.IsNullOrEmpty(ConfigurationPath))
+                return;
+
+            var serializer = JsonSerializer.Create();
+            var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            using var sw = new StreamWriter(stream) { AutoFlush = true };
+            var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+
+            serializer.Serialize(writer, options);
         }
 
         /// <summary>
