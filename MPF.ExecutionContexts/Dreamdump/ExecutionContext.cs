@@ -183,7 +183,7 @@ namespace MPF.ExecutionContexts.Dreamdump
             }
 
             // Set user-defined options
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault);
+            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault.ToString());
             if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
             {
                 this[FlagStrings.SectorOrder] = true;

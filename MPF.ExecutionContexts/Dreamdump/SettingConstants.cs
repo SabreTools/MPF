@@ -6,6 +6,6 @@ namespace MPF.ExecutionContexts.Dreamdump
         public const int RereadCountDefault = 20;
 
         public const string SectorOrder = "DreamdumpSectorOrder";
-        public static readonly string SectorOrderDefault = Dreamdump.SectorOrder.NONE.ToString();
+        public static readonly SectorOrder SectorOrderDefault = Dreamdump.SectorOrder.NONE;
     }
 }

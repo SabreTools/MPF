@@ -3,7 +3,7 @@ namespace MPF.ExecutionContexts.Redumper
     public static class SettingConstants
     {
         public const string DriveType = "RedumperDriveType";
-        public static readonly string DriveTypeDefault = Redumper.DriveType.NONE.ToString();
+        public static readonly DriveType DriveTypeDefault = Redumper.DriveType.NONE;
 
         public const string EnableSkeleton = "RedumperEnableSkeleton";
         public const bool EnableSkeletonDefault = true;
@@ -18,7 +18,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const int DrivePregapStartDefault = 0;
 
         public const string ReadMethod = "RedumperReadMethod";
-        public static readonly string ReadMethodDefault = Redumper.ReadMethod.NONE.ToString();
+        public static readonly ReadMethod ReadMethodDefault = Redumper.ReadMethod.NONE;
 
         public const string RefineSectorMode = "RedumperRefineSectorMode";
         public const bool RefineSectorModeDefault = false;
@@ -27,6 +27,6 @@ namespace MPF.ExecutionContexts.Redumper
         public const int RereadCountDefault = 20;
 
         public const string SectorOrder = "RedumperSectorOrder";
-        public static readonly string SectorOrderDefault = Redumper.SectorOrder.NONE.ToString();
+        public static readonly SectorOrder SectorOrderDefault = Redumper.SectorOrder.NONE;
     }
 }

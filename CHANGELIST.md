@@ -17,6 +17,7 @@
 - Validate a system is provided for CLI applications
 - Log the system being used, in case it came from config
 - Extend logging with a new state
+- Add currently-unused new options class
 
 ### 3.6.0 (2025-11-28)
 

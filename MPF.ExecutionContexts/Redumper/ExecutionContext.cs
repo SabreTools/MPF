@@ -365,7 +365,7 @@ namespace MPF.ExecutionContexts.Redumper
 #pragma warning restore IDE0010
             }
 
-            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault);
+            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault.ToString());
             if (!string.IsNullOrEmpty(readMethod) && readMethod != ReadMethod.NONE.ToString())
             {
                 this[FlagStrings.DriveReadMethod] = true;
@@ -379,14 +379,14 @@ namespace MPF.ExecutionContexts.Redumper
                 (_inputs[FlagStrings.DrivePregapStart] as Int32Input)?.SetValue(drivePregapStart);
             }
 
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault);
+            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault.ToString());
             if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
             {
                 this[FlagStrings.DriveSectorOrder] = true;
                 (_inputs[FlagStrings.DriveSectorOrder] as StringInput)?.SetValue(sectorOrder!);
             }
 
-            string? driveType = GetStringSetting(options, SettingConstants.DriveType, SettingConstants.DriveTypeDefault);
+            string? driveType = GetStringSetting(options, SettingConstants.DriveType, SettingConstants.DriveTypeDefault.ToString());
             if (!string.IsNullOrEmpty(driveType) && driveType != DriveType.NONE.ToString())
             {
                 this[FlagStrings.DriveType] = true;

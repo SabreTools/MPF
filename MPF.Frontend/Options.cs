@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using SabreTools.RedumpLib.Data;
@@ -14,6 +14,9 @@ using RedumperSettings = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend
 {
+    /// <summary>
+    /// Options that use a flat, dictionary-based structure
+    /// </summary>
     public class Options
     {
         #region Default Paths
@@ -556,7 +559,7 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, RedumperSettings.DriveType, RedumperSettings.DriveTypeDefault);
+                var valueString = GetStringSetting(Settings, RedumperSettings.DriveType, RedumperSettings.DriveTypeDefault.ToString());
                 return valueString.ToRedumperDriveType();
             }
             set
@@ -581,7 +584,7 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, RedumperSettings.ReadMethod, RedumperSettings.ReadMethodDefault);
+                var valueString = GetStringSetting(Settings, RedumperSettings.ReadMethod, RedumperSettings.ReadMethodDefault.ToString());
                 return valueString.ToRedumperReadMethod();
             }
             set
@@ -597,7 +600,7 @@ namespace MPF.Frontend
         {
             get
             {
-                var valueString = GetStringSetting(Settings, RedumperSettings.SectorOrder, RedumperSettings.SectorOrderDefault);
+                var valueString = GetStringSetting(Settings, RedumperSettings.SectorOrder, RedumperSettings.SectorOrderDefault.ToString());
                 return valueString.ToRedumperSectorOrder();
             }
             set
