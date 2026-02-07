@@ -13,6 +13,8 @@ namespace MPF.Frontend
     /// </summary>
     public class SegmentedOptions
     {
+        #region Properties
+
         /// <summary>
         /// Internal structure version
         /// </summary>
@@ -37,6 +39,12 @@ namespace MPF.Frontend
         public bool VerboseLogging { get; set; } = true;
 
         /// <summary>
+        /// Currently selected dumping program
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public InternalProgram InternalProgram { get; set; } = InternalProgram.Redumper;
+
+        /// <summary>
         /// GUI settings
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
@@ -53,6 +61,10 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public ProcessingSettings Processing { get; set; } = new ProcessingSettings();
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Empty constructor for serialization
@@ -71,6 +83,7 @@ namespace MPF.Frontend
             FirstRun = source.FirstRun;
             CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;
             VerboseLogging = source.VerboseLogging;
+            InternalProgram = source.InternalProgram;
 
             GUI.CopyUpdateUrlToClipboard = source.CopyUpdateUrlToClipboard;
 
@@ -90,15 +103,14 @@ namespace MPF.Frontend
             Dumping.DiscImageCreatorPath = source.DiscImageCreatorPath ?? DumpSettings.DefaultDiscImageCreatorPath;
             // Dumping.DreamdumpPath = source.DreamdumpPath ?? DumpSettings.DefaultDreamdumpPath;
             Dumping.RedumperPath = source.RedumperPath ?? DumpSettings.DefaultRedumperPath;
-            Dumping.InternalProgram = source.InternalProgram;
 
             Dumping.DefaultOutputPath = source.DefaultOutputPath;
             Dumping.DefaultSystem = source.DefaultSystem;
 
-            Dumping.PreferredDumpSpeedCD = source.PreferredDumpSpeedCD;
-            Dumping.PreferredDumpSpeedDVD = source.PreferredDumpSpeedDVD;
-            Dumping.PreferredDumpSpeedHDDVD = source.PreferredDumpSpeedHDDVD;
-            Dumping.PreferredDumpSpeedBD = source.PreferredDumpSpeedBD;
+            Dumping.DumpSpeeds.PreferredCD = source.PreferredDumpSpeedCD;
+            Dumping.DumpSpeeds.PreferredDVD = source.PreferredDumpSpeedDVD;
+            Dumping.DumpSpeeds.PreferredHDDVD = source.PreferredDumpSpeedHDDVD;
+            Dumping.DumpSpeeds.PreferredBD = source.PreferredDumpSpeedBD;
 
             Dumping.Aaru.EnableDebug = source.AaruEnableDebug;
             Dumping.Aaru.EnableVerbose = source.AaruEnableVerbose;
@@ -165,6 +177,7 @@ namespace MPF.Frontend
             FirstRun = source.FirstRun;
             CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;
             VerboseLogging = source.VerboseLogging;
+            InternalProgram = source.InternalProgram;
 
             GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
 
@@ -184,15 +197,14 @@ namespace MPF.Frontend
             Dumping.DiscImageCreatorPath = source.Dumping.DiscImageCreatorPath;
             Dumping.DreamdumpPath = source.Dumping.DreamdumpPath;
             Dumping.RedumperPath = source.Dumping.RedumperPath;
-            Dumping.InternalProgram = source.Dumping.InternalProgram;
 
             Dumping.DefaultOutputPath = source.Dumping.DefaultOutputPath;
             Dumping.DefaultSystem = source.Dumping.DefaultSystem;
 
-            Dumping.PreferredDumpSpeedCD = source.Dumping.PreferredDumpSpeedCD;
-            Dumping.PreferredDumpSpeedDVD = source.Dumping.PreferredDumpSpeedDVD;
-            Dumping.PreferredDumpSpeedHDDVD = source.Dumping.PreferredDumpSpeedHDDVD;
-            Dumping.PreferredDumpSpeedBD = source.Dumping.PreferredDumpSpeedBD;
+            Dumping.DumpSpeeds.PreferredCD = source.Dumping.DumpSpeeds.PreferredCD;
+            Dumping.DumpSpeeds.PreferredDVD = source.Dumping.DumpSpeeds.PreferredDVD;
+            Dumping.DumpSpeeds.PreferredHDDVD = source.Dumping.DumpSpeeds.PreferredHDDVD;
+            Dumping.DumpSpeeds.PreferredBD = source.Dumping.DumpSpeeds.PreferredBD;
 
             Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
             Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
@@ -248,6 +260,8 @@ namespace MPF.Frontend
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
         }
 
+        #endregion
+
         /// <summary>
         /// Convert to an Options object
         /// </summary>
@@ -262,7 +276,7 @@ namespace MPF.Frontend
                 DiscImageCreatorPath = Dumping.DiscImageCreatorPath,
                 // DreamdumpPath = Dumping.DreamdumpPath,
                 RedumperPath = Dumping.RedumperPath,
-                InternalProgram = Dumping.InternalProgram,
+                InternalProgram = InternalProgram,
 
                 EnableDarkMode = GUI.Theming.EnableDarkMode,
                 EnablePurpMode = GUI.Theming.EnablePurpMode,
@@ -276,10 +290,10 @@ namespace MPF.Frontend
                 DefaultSystem = Dumping.DefaultSystem,
                 ShowDebugViewMenuItem = GUI.ShowDebugViewMenuItem,
 
-                PreferredDumpSpeedCD = Dumping.PreferredDumpSpeedCD,
-                PreferredDumpSpeedDVD = Dumping.PreferredDumpSpeedDVD,
-                PreferredDumpSpeedHDDVD = Dumping.PreferredDumpSpeedHDDVD,
-                PreferredDumpSpeedBD = Dumping.PreferredDumpSpeedBD,
+                PreferredDumpSpeedCD = Dumping.DumpSpeeds.PreferredCD,
+                PreferredDumpSpeedDVD = Dumping.DumpSpeeds.PreferredDVD,
+                PreferredDumpSpeedHDDVD = Dumping.DumpSpeeds.PreferredHDDVD,
+                PreferredDumpSpeedBD = Dumping.DumpSpeeds.PreferredBD,
 
                 AaruEnableDebug = Dumping.Aaru.EnableDebug,
                 AaruEnableVerbose = Dumping.Aaru.EnableVerbose,
@@ -345,119 +359,6 @@ namespace MPF.Frontend
     #region Nested Option Types
 
     /// <summary>
-    /// Settings related to the dumping step (Aaru)
-    /// </summary>
-    public class AaruDumpSettings
-    {
-        /// <summary>
-        /// Enable debug output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableDebug { get; set; } = AaruConstants.EnableDebugDefault;
-
-        /// <summary>
-        /// Enable verbose output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableVerbose { get; set; } = AaruConstants.EnableVerboseDefault;
-
-        /// <summary>
-        /// Enable force dumping of media by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool ForceDumping { get; set; } = AaruConstants.ForceDumpingDefault;
-
-        /// <summary>
-        /// Default number of sector/subchannel rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = AaruConstants.RereadCountDefault;
-
-        /// <summary>
-        /// Strip personal data information from Aaru metadata by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool StripPersonalData { get; set; } = AaruConstants.StripPersonalDataDefault;
-    }
-
-    /// <summary>
-    /// Settings related to the dumping step (DIC)
-    /// </summary>
-    public class DiscImageCreatorDumpSettings
-    {
-        /// <summary>
-        /// Enable multi-sector read flag by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool MultiSectorRead { get; set; } = DiscImageCreatorConstants.MultiSectorReadDefault;
-
-        /// <summary>
-        /// Include a default multi-sector read value
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int MultiSectorReadValue { get; set; } = DiscImageCreatorConstants.MultiSectorReadValueDefault;
-
-        /// <summary>
-        /// Enable overly-secure dumping flags by default
-        /// </summary>
-        /// <remarks>
-        /// Version 1 and greater
-        /// Split this into component parts later. Currently does:
-        /// - Scan sector protection and set subchannel read level to 2 for CD
-        /// - Set scan file protect flag for DVD
-        /// </remarks>
-        public bool ParanoidMode { get; set; } = DiscImageCreatorConstants.ParanoidModeDefault;
-
-        /// <summary>
-        /// Enable the Quiet flag by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool QuietMode { get; set; } = DiscImageCreatorConstants.QuietModeDefault;
-
-        /// <summary>
-        /// Default number of C2 rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = DiscImageCreatorConstants.RereadCountDefault;
-
-        /// <summary>
-        /// Default number of DVD/HD-DVD/BD rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int DVDRereadCount { get; set; } = DiscImageCreatorConstants.DVDRereadCountDefault;
-
-        /// <summary>
-        /// Use the CMI flag for supported disc types
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool UseCMIFlag { get; set; } = DiscImageCreatorConstants.UseCMIFlagDefault;
-    }
-
-    /// <summary>
-    /// Settings related to the dumping step (Dreamdump)
-    /// </summary>
-    public class DreamdumpDumpSettings
-    {
-        /// <summary>
-        /// Enable options incompatible with redump submissions
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool NonRedumpMode { get; set; } = false;
-
-        /// <summary>
-        /// Currently selected default Dreamdump sector order
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public ExecutionContexts.Dreamdump.SectorOrder SectorOrder { get; set; } = DreamdumpConstants.SectorOrderDefault;
-
-        /// <summary>
-        /// Default number of rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = DreamdumpConstants.RereadCountDefault;
-    }
-
-    /// <summary>
     /// Settings related to the dumping step
     /// </summary>
     public class DumpSettings
@@ -467,7 +368,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Aaru path
         /// </summary>
-        public static string DefaultAaruPath
+        internal static string DefaultAaruPath
         {
             get
             {
@@ -491,7 +392,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default DiscImageCreator path
         /// </summary>
-        public static string DefaultDiscImageCreatorPath
+        internal static string DefaultDiscImageCreatorPath
         {
             get
             {
@@ -515,7 +416,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Dreamdump path
         /// </summary>
-        public static string DefaultDreamdumpPath
+        internal static string DefaultDreamdumpPath
         {
             get
             {
@@ -539,7 +440,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Redumper path
         /// </summary>
-        public static string DefaultRedumperPath
+        internal static string DefaultRedumperPath
         {
             get
             {
@@ -616,12 +517,6 @@ namespace MPF.Frontend
             }
         } = DefaultRedumperPath;
 
-        /// <summary>
-        /// Currently selected dumping program
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public InternalProgram InternalProgram { get; set; } = InternalProgram.Redumper;
-
         #endregion
 
         #region Default Values
@@ -650,28 +545,9 @@ namespace MPF.Frontend
         #region Dumping Speeds
 
         /// <summary>
-        /// Default CD dumping speed
+        /// Default preferred dumping speeds per media type
         /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int PreferredDumpSpeedCD { get; set; } = 24;
-
-        /// <summary>
-        /// Default DVD dumping speed
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int PreferredDumpSpeedDVD { get; set; } = 16;
-
-        /// <summary>
-        /// Default HD-DVD dumping speed
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int PreferredDumpSpeedHDDVD { get; set; } = 8;
-
-        /// <summary>
-        /// Default BD dumping speed
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int PreferredDumpSpeedBD { get; set; } = 8;
+        public DumpSpeeds DumpSpeeds { get; set; } = new DumpSpeeds();
 
         #endregion
 
@@ -702,6 +578,36 @@ namespace MPF.Frontend
         public RedumperDumpSettings Redumper { get; set; } = new RedumperDumpSettings();
 
         #endregion
+    }
+
+    /// <summary>
+    /// Settings related to dumping speeds
+    /// </summary>
+    public class DumpSpeeds
+    {
+        /// <summary>
+        /// Default CD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int PreferredCD { get; set; } = 24;
+
+        /// <summary>
+        /// Default DVD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int PreferredDVD { get; set; } = 16;
+
+        /// <summary>
+        /// Default HD-DVD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int PreferredHDDVD { get; set; } = 8;
+
+        /// <summary>
+        /// Default BD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int PreferredBD { get; set; } = 8;
     }
 
     /// <summary>
@@ -925,6 +831,170 @@ namespace MPF.Frontend
     }
 
     /// <summary>
+    /// Settings related to site logins
+    /// </summary>
+    public class SiteLoginSettings
+    {
+        /// <summary>
+        /// Enable retrieving match information from Redump
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool RetrieveMatchInformation { get; set; } = true;
+
+        /// <remarks>Version 1 and greater</remarks>
+        public string? RedumpUsername { get; set; } = string.Empty;
+
+        /// <remarks>Version 1 and greater</remarks>
+        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
+        public string? RedumpPassword { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// Settings related to themes
+    /// </summary>
+    public class ThemeSettings
+    {
+        /// <summary>
+        /// Enable dark mode for UI elements
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableDarkMode { get; set; } = false;
+
+        /// <summary>
+        /// Enable purple mode for UI elements
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public bool EnablePurpMode { get; set; } = false;
+
+        /// <summary>
+        /// Custom color setting
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public string? CustomBackgroundColor { get; set; } = null;
+
+        /// <summary>
+        /// Custom color setting
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public string? CustomTextColor { get; set; } = null;
+    }
+
+    #region Per-Program Dump Settings
+
+    /// <summary>
+    /// Settings related to the dumping step (Aaru)
+    /// </summary>
+    public class AaruDumpSettings
+    {
+        /// <summary>
+        /// Enable debug output while dumping by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableDebug { get; set; } = AaruConstants.EnableDebugDefault;
+
+        /// <summary>
+        /// Enable verbose output while dumping by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableVerbose { get; set; } = AaruConstants.EnableVerboseDefault;
+
+        /// <summary>
+        /// Enable force dumping of media by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool ForceDumping { get; set; } = AaruConstants.ForceDumpingDefault;
+
+        /// <summary>
+        /// Default number of sector/subchannel rereads
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int RereadCount { get; set; } = AaruConstants.RereadCountDefault;
+
+        /// <summary>
+        /// Strip personal data information from Aaru metadata by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool StripPersonalData { get; set; } = AaruConstants.StripPersonalDataDefault;
+    }
+
+    /// <summary>
+    /// Settings related to the dumping step (DIC)
+    /// </summary>
+    public class DiscImageCreatorDumpSettings
+    {
+        /// <summary>
+        /// Enable multi-sector read flag by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool MultiSectorRead { get; set; } = DiscImageCreatorConstants.MultiSectorReadDefault;
+
+        /// <summary>
+        /// Include a default multi-sector read value
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int MultiSectorReadValue { get; set; } = DiscImageCreatorConstants.MultiSectorReadValueDefault;
+
+        /// <summary>
+        /// Enable overly-secure dumping flags by default
+        /// </summary>
+        /// <remarks>
+        /// Version 1 and greater
+        /// Split this into component parts later. Currently does:
+        /// - Scan sector protection and set subchannel read level to 2 for CD
+        /// - Set scan file protect flag for DVD
+        /// </remarks>
+        public bool ParanoidMode { get; set; } = DiscImageCreatorConstants.ParanoidModeDefault;
+
+        /// <summary>
+        /// Enable the Quiet flag by default
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool QuietMode { get; set; } = DiscImageCreatorConstants.QuietModeDefault;
+
+        /// <summary>
+        /// Default number of C2 rereads
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int RereadCount { get; set; } = DiscImageCreatorConstants.RereadCountDefault;
+
+        /// <summary>
+        /// Default number of DVD/HD-DVD/BD rereads
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int DVDRereadCount { get; set; } = DiscImageCreatorConstants.DVDRereadCountDefault;
+
+        /// <summary>
+        /// Use the CMI flag for supported disc types
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool UseCMIFlag { get; set; } = DiscImageCreatorConstants.UseCMIFlagDefault;
+    }
+
+    /// <summary>
+    /// Settings related to the dumping step (Dreamdump)
+    /// </summary>
+    public class DreamdumpDumpSettings
+    {
+        /// <summary>
+        /// Enable options incompatible with redump submissions
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool NonRedumpMode { get; set; } = false;
+
+        /// <summary>
+        /// Currently selected default Dreamdump sector order
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public ExecutionContexts.Dreamdump.SectorOrder SectorOrder { get; set; } = DreamdumpConstants.SectorOrderDefault;
+
+        /// <summary>
+        /// Default number of rereads
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int RereadCount { get; set; } = DreamdumpConstants.RereadCountDefault;
+    }
+
+    /// <summary>
     /// Settings related to the dumping step (Redumper)
     /// </summary>
     public class RedumperDumpSettings
@@ -990,54 +1060,7 @@ namespace MPF.Frontend
         public bool RefineSectorMode { get; set; } = RedumperConstants.RefineSectorModeDefault;
     }
 
-    /// <summary>
-    /// Settings related to site logins
-    /// </summary>
-    public class SiteLoginSettings
-    {
-        /// <summary>
-        /// Enable retrieving match information from Redump
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool RetrieveMatchInformation { get; set; } = true;
-
-        /// <remarks>Version 1 and greater</remarks>
-        public string? RedumpUsername { get; set; } = string.Empty;
-
-        /// <remarks>Version 1 and greater</remarks>
-        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string? RedumpPassword { get; set; } = string.Empty;
-    }
-
-    /// <summary>
-    /// Settings related to themes
-    /// </summary>
-    public class ThemeSettings
-    {
-        /// <summary>
-        /// Enable dark mode for UI elements
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableDarkMode { get; set; } = false;
-
-        /// <summary>
-        /// Enable purple mode for UI elements
-        /// </summary>
-        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
-        public bool EnablePurpMode { get; set; } = false;
-
-        /// <summary>
-        /// Custom color setting
-        /// </summary>
-        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
-        public string? CustomBackgroundColor { get; set; } = null;
-
-        /// <summary>
-        /// Custom color setting
-        /// </summary>
-        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
-        public string? CustomTextColor { get; set; } = null;
-    }
+    #endregion
 
     #endregion
 }

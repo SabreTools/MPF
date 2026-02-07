@@ -55,7 +55,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("-------------------------");
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.Dumping.InternalProgram}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
             Console.WriteLine($"3) Set media type (Currently '{MediaType}')");
             Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
@@ -128,7 +128,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            Options.Dumping.InternalProgram = result.ToInternalProgram();
+            Options.InternalProgram = result.ToInternalProgram();
             goto root;
 
         mediaType:

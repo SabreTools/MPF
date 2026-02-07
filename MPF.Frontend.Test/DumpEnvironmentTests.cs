@@ -16,7 +16,7 @@ namespace MPF.Frontend.Test
         public void ParametersValidSegmentedTest(string? parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
             var options = new SegmentedOptions();
-            options.Dumping.InternalProgram = InternalProgram.DiscImageCreator;
+            options.InternalProgram = InternalProgram.DiscImageCreator;
 
             // TODO: This relies on creating real objects for the drive. Can we mock this out instead?
             var drive = isFloppy

@@ -24,6 +24,7 @@
 - Add conversion method from new options type
 - Replace Options with SegmentedOptions in most places
 - Fix ListConfig feature with new layout
+- Move InternalProgram up a level in options, fix XAML
 
 ### 3.6.0 (2025-11-28)
 

@@ -348,7 +348,7 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Get the current internal program
-            InternalProgram internalProgram = Options.Dumping.InternalProgram;
+            InternalProgram internalProgram = Options.InternalProgram;
 
             // Create a static list of supported Check programs, not everything
             var internalPrograms = new List<InternalProgram>

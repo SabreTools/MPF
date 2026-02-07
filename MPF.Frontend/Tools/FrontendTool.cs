@@ -20,23 +20,23 @@ namespace MPF.Frontend.Tools
             return mediaType switch
             {
                 // CD dump speed
-                MediaType.CDROM => options.Dumping.PreferredDumpSpeedCD,
-                MediaType.GDROM => options.Dumping.PreferredDumpSpeedCD,
+                MediaType.CDROM => options.Dumping.DumpSpeeds.PreferredCD,
+                MediaType.GDROM => options.Dumping.DumpSpeeds.PreferredCD,
 
                 // DVD dump speed
-                MediaType.DVD => options.Dumping.PreferredDumpSpeedDVD,
-                MediaType.NintendoGameCubeGameDisc => options.Dumping.PreferredDumpSpeedDVD,
-                MediaType.NintendoWiiOpticalDisc => options.Dumping.PreferredDumpSpeedDVD,
+                MediaType.DVD => options.Dumping.DumpSpeeds.PreferredDVD,
+                MediaType.NintendoGameCubeGameDisc => options.Dumping.DumpSpeeds.PreferredDVD,
+                MediaType.NintendoWiiOpticalDisc => options.Dumping.DumpSpeeds.PreferredDVD,
 
                 // HD-DVD dump speed
-                MediaType.HDDVD => options.Dumping.PreferredDumpSpeedHDDVD,
+                MediaType.HDDVD => options.Dumping.DumpSpeeds.PreferredHDDVD,
 
                 // BD dump speed
-                MediaType.BluRay => options.Dumping.PreferredDumpSpeedBD,
-                MediaType.NintendoWiiUOpticalDisc => options.Dumping.PreferredDumpSpeedBD,
+                MediaType.BluRay => options.Dumping.DumpSpeeds.PreferredBD,
+                MediaType.NintendoWiiUOpticalDisc => options.Dumping.DumpSpeeds.PreferredBD,
 
                 // Default
-                _ => options.Dumping.PreferredDumpSpeedCD,
+                _ => options.Dumping.DumpSpeeds.PreferredCD,
             };
 #pragma warning restore IDE0072
         }

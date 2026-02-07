@@ -747,7 +747,7 @@ namespace MPF.Frontend.ViewModels
             InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
 
             // Get the current internal program
-            InternalProgram internalProgram = Options.Dumping.InternalProgram;
+            InternalProgram internalProgram = Options.InternalProgram;
 
             // Select the current default dumping program
             if (InternalPrograms.Count == 0)

@@ -126,7 +126,7 @@ namespace MPF.Check.Features
                 Options = new SegmentedOptions();
 
                 // Internal Program
-                Options.Dumping.InternalProgram = InternalProgram.NONE;
+                Options.InternalProgram = InternalProgram.NONE;
 
                 // Protection Scanning Options
                 Options.Processing.ProtectionScanning.ScanForProtection = false;
@@ -165,7 +165,7 @@ namespace MPF.Check.Features
             {
                 // Use specific program
                 if (UseInput.ProcessInput(args, ref index))
-                    Options.Dumping.InternalProgram = UseInput.Value.ToInternalProgram();
+                    Options.InternalProgram = UseInput.Value.ToInternalProgram();
 
                 // Include seed info file
                 else if (LoadSeedInput.ProcessInput(args, ref index))

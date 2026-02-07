@@ -65,17 +65,17 @@ namespace MPF.Frontend.Features
 
             // Dump Defaults
             Console.WriteLine("Dump Defaults:");
-            Console.WriteLine($"  Default Program = {options.Dumping.InternalProgram.LongName()}");
+            Console.WriteLine($"  Default Program = {options.InternalProgram.LongName()}");
             Console.WriteLine($"  Default Output Path = {options.Dumping.DefaultOutputPath}");
             Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem.LongName()}");
             Console.WriteLine();
 
             // Dumping Speeds
             Console.WriteLine("Dumping Speeds:");
-            Console.WriteLine($"  Default CD Speed = {options.Dumping.PreferredDumpSpeedCD}");
-            Console.WriteLine($"  Default DVD Speed = {options.Dumping.PreferredDumpSpeedDVD}");
-            Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.PreferredDumpSpeedHDDVD}");
-            Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.PreferredDumpSpeedBD}");
+            Console.WriteLine($"  Default CD Speed = {options.Dumping.DumpSpeeds.PreferredCD}");
+            Console.WriteLine($"  Default DVD Speed = {options.Dumping.DumpSpeeds.PreferredDVD}");
+            Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.DumpSpeeds.PreferredHDDVD}");
+            Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.DumpSpeeds.PreferredBD}");
             Console.WriteLine();
 
             // Aaru

@@ -41,7 +41,7 @@ namespace MPF.Check.Features
                 Options = new SegmentedOptions();
 
                 // Internal Program
-                Options.Dumping.InternalProgram = InternalProgram.NONE;
+                Options.InternalProgram = InternalProgram.NONE;
 
                 // Protection Scanning Options
                 Options.Processing.ProtectionScanning.ScanForProtection = false;
@@ -86,7 +86,7 @@ namespace MPF.Check.Features
             Console.WriteLine("-------------------------");
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.Dumping.InternalProgram}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
@@ -220,7 +220,7 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            Options.Dumping.InternalProgram = result.ToInternalProgram();
+            Options.InternalProgram = result.ToInternalProgram();
             goto root;
 
         seedPath:

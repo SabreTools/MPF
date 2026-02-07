@@ -68,7 +68,7 @@ namespace MPF.CLI.Features
             Options = new SegmentedOptions();
 
             // Internal Program
-            Options.Dumping.InternalProgram = InternalProgram.NONE;
+            Options.InternalProgram = InternalProgram.NONE;
 
             // Protection Scanning Options
             Options.Processing.ProtectionScanning.ScanForProtection = false;
@@ -127,7 +127,7 @@ namespace MPF.CLI.Features
 
             // Validate the internal program
 #pragma warning disable IDE0010
-            switch (Options.Dumping.InternalProgram)
+            switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
                     if (!File.Exists(Options.Dumping.AaruPath))
@@ -166,7 +166,7 @@ namespace MPF.CLI.Features
                     break;
 
                 default:
-                    Console.Error.WriteLine($"{Options.Dumping.InternalProgram} is not a supported dumping program, exiting...");
+                    Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
                     break;
             }
 #pragma warning restore IDE0010
@@ -178,7 +178,7 @@ namespace MPF.CLI.Features
                 return false;
             }
 
-            if (Options.Dumping.InternalProgram == InternalProgram.DiscImageCreator
+            if (Options.InternalProgram == InternalProgram.DiscImageCreator
                 && CustomParams is null
                 && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
@@ -219,7 +219,7 @@ namespace MPF.CLI.Features
                 FilePath,
                 drive,
                 System,
-                Options.Dumping.InternalProgram);
+                Options.InternalProgram);
             env.SetExecutionContext(MediaType, null);
             env.SetProcessor();
 
@@ -234,7 +234,7 @@ namespace MPF.CLI.Features
             env.SetExecutionContext(MediaType, paramStr);
 
             // Invoke the dumping program
-            Console.WriteLine($"Invoking {Options.Dumping.InternalProgram} using '{paramStr}'");
+            Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
             var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (dumpResult == false)

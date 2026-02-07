@@ -121,7 +121,7 @@ namespace MPF.Frontend
             // UI information
             _drive = drive;
             _system = system ?? options.Dumping.DefaultSystem;
-            _internalProgram = internalProgram ?? options.Dumping.InternalProgram;
+            _internalProgram = internalProgram ?? options.InternalProgram;
         }
 
         #region Internal Program Management

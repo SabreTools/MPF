@@ -43,7 +43,7 @@ namespace MPF.Check.Features
             Options = new SegmentedOptions();
 
             // Internal Program
-            Options.Dumping.InternalProgram = InternalProgram.NONE;
+            Options.InternalProgram = InternalProgram.NONE;
 
             // Protection Scanning Options
             Options.Processing.ProtectionScanning.ScanForProtection = false;
@@ -84,7 +84,7 @@ namespace MPF.Check.Features
             Console.WriteLine($"Using system: {System.LongName()}");
 
             // Validate a program is provided
-            if (Options.Dumping.InternalProgram == InternalProgram.NONE)
+            if (Options.InternalProgram == InternalProgram.NONE)
             {
                 Console.Error.WriteLine("A program name needs to be provided");
                 return false;
