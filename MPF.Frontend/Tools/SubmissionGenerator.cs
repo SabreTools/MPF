@@ -37,7 +37,7 @@ namespace MPF.Frontend.Tools
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="system">Currently selected system</param>
         /// <param name="mediaType">Currently selected media type</param>
-        /// <param name="options">SegmentedOptions object representing user-defined options</param>
+        /// <param name="options">Options object representing user-defined options</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
@@ -47,7 +47,7 @@ namespace MPF.Frontend.Tools
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            SegmentedOptions options,
+            Options options,
             BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
@@ -174,10 +174,10 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Fill in a SubmissionInfo object from Redump, if possible
         /// </summary>
-        /// <param name="options">SegmentedOptions object representing user-defined options</param>
+        /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public static async Task<bool> FillFromRedump(SegmentedOptions options,
+        public static async Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {

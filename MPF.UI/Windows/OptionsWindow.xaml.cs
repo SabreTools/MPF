@@ -37,7 +37,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsWindow(SegmentedOptions options)
+        public OptionsWindow(Options options)
         {
 #if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();

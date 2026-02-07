@@ -14,7 +14,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the default speed for a given media type from the supplied options
         /// </summary>
-        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, SegmentedOptions options)
+        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, Options options)
         {
 #pragma warning disable IDE0072
             return mediaType switch

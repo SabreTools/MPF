@@ -32,7 +32,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current set of options
         /// </summary>
-        public SegmentedOptions Options { get; }
+        public Options Options { get; }
 
         /// <summary>
         /// Flag for if settings were saved or not
@@ -88,15 +88,15 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public OptionsViewModel()
         {
-            Options = new SegmentedOptions();
+            Options = new Options();
         }
 
         /// <summary>
         /// Constructor for in-code
         /// </summary>
-        public OptionsViewModel(SegmentedOptions baseOptions)
+        public OptionsViewModel(Options baseOptions)
         {
-            Options = new SegmentedOptions(baseOptions);
+            Options = new Options(baseOptions);
         }
 
         #region Population

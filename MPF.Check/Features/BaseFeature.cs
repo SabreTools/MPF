@@ -18,7 +18,7 @@ namespace MPF.Check.Features
         /// <summary>
         /// User-defined options
         /// </summary>
-        public SegmentedOptions Options { get; protected set; }
+        public Options Options { get; protected set; }
 
         /// <summary>
         /// Currently-selected system
@@ -40,7 +40,7 @@ namespace MPF.Check.Features
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            Options = new SegmentedOptions();
+            Options = new Options();
 
             // Internal Program
             Options.InternalProgram = InternalProgram.NONE;

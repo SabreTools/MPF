@@ -182,36 +182,36 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Load the current set of options from the application configuration
         /// </summary>
-        public static SegmentedOptions LoadFromConfig()
+        public static Options LoadFromConfig()
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
-                return new SegmentedOptions();
+                return new Options();
 
             // If the file does not exist
             if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new SegmentedOptions();
+                return new Options();
 
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Open, FileAccess.Read, FileShare.None);
             using var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
 
-            return new SegmentedOptions(settings);
+            return new Options(settings);
         }
 
         /// <summary>
         /// Load the current set of options from the application configuration
         /// </summary>
-        public static SegmentedOptions LoadFromConfigNative()
+        public static Options LoadFromConfigNative()
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
-                return new SegmentedOptions();
+                return new Options();
 
             // If the file does not exist
             if (!File.Exists(ConfigurationPath) || new FileInfo(ConfigurationPath).Length == 0)
-                return new SegmentedOptions();
+                return new Options();
 
             var serializer = JsonSerializer.Create();
             serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
@@ -222,13 +222,13 @@ namespace MPF.Frontend.Tools
             using var sr = new StreamReader(stream);
             var reader = new JsonTextReader(sr);
 
-            return serializer.Deserialize<SegmentedOptions>(reader) ?? new SegmentedOptions();
+            return serializer.Deserialize<Options>(reader) ?? new Options();
         }
 
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfig(SegmentedOptions options)
+        public static void SaveToConfig(Options options)
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
@@ -245,7 +245,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfigNative(SegmentedOptions options)
+        public static void SaveToConfigNative(Options options)
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
@@ -256,7 +256,7 @@ namespace MPF.Frontend.Tools
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
-            serializer.Serialize(writer, options, typeof(SegmentedOptions));
+            serializer.Serialize(writer, options, typeof(Options));
         }
 
         /// <summary>

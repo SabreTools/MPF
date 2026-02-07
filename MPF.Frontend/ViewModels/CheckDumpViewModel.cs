@@ -22,11 +22,11 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public SegmentedOptions Options
+        public Options Options
         {
             get => _options;
         }
-        private readonly SegmentedOptions _options;
+        private readonly Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed

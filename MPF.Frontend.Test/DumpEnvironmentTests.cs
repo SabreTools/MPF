@@ -15,7 +15,7 @@ namespace MPF.Frontend.Test
         [InlineData("stop D", 'D', false, MediaType.DVD, true)]
         public void ParametersValidSegmentedTest(string? parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
-            var options = new SegmentedOptions();
+            var options = new Options();
             options.InternalProgram = InternalProgram.DiscImageCreator;
 
             // TODO: This relies on creating real objects for the drive. Can we mock this out instead?

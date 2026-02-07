@@ -47,9 +47,9 @@ namespace MPF.Frontend
         private readonly InternalProgram _internalProgram;
 
         /// <summary>
-        /// SegmentedOptions object representing user-defined options
+        /// Options object representing user-defined options
         /// </summary>
-        private readonly SegmentedOptions _options;
+        private readonly Options _options;
 
         /// <summary>
         /// Processor object representing how to process the outputs
@@ -106,14 +106,14 @@ namespace MPF.Frontend
         /// <param name="drive"></param>
         /// <param name="system"></param>
         /// <param name="internalProgram"></param>
-        public DumpEnvironment(SegmentedOptions options,
+        public DumpEnvironment(Options options,
             string? outputPath,
             Drive? drive,
             RedumpSystem? system,
             InternalProgram? internalProgram)
         {
             // Set options object
-            _options = new SegmentedOptions(options);
+            _options = new Options(options);
 
             // Output paths
             OutputPath = FrontendTool.NormalizeOutputPaths(outputPath, false);

@@ -73,11 +73,11 @@ namespace MPF.Frontend.Tools
         /// </summary>
         /// <param name="basePath">Base output image path</param>
         /// <param name="drive">Drive object representing the current drive</param>
-        /// <param name="options">SegmentedOptions object that determines what to scan</param>
+        /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         public static async Task<Dictionary<string, List<string>>> RunCombinedProtectionScans(string basePath,
             Drive? drive,
-            SegmentedOptions options,
+            Options options,
             IProgress<ProtectionProgress>? protectionProgress = null)
         {
             // Setup the output protections dictionary
@@ -137,11 +137,11 @@ namespace MPF.Frontend.Tools
         /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
-        /// <param name="options">SegmentedOptions object that determines what to scan</param>
+        /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnPath(string path,
-            SegmentedOptions options,
+            Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
 #if NET40
@@ -173,11 +173,11 @@ namespace MPF.Frontend.Tools
         /// Run protection scan on a disc image
         /// </summary>
         /// <param name="image">Image path to scan for protection</param>
-        /// <param name="options">SegmentedOptions object that determines what to scan</param>
+        /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
         public static async Task<Dictionary<string, List<string>>> RunProtectionScanOnImage(string image,
-            SegmentedOptions options,
+            Options options,
             IProgress<ProtectionProgress>? progress = null)
         {
 #if NET40

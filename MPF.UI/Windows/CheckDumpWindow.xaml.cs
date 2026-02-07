@@ -128,9 +128,9 @@ namespace MPF.UI.Windows
         /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowMediaInformationWindow(SegmentedOptions? options, ref SubmissionInfo? submissionInfo)
+        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            var mediaInformationWindow = new MediaInformationWindow(options ?? new SegmentedOptions(), submissionInfo)
+            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,

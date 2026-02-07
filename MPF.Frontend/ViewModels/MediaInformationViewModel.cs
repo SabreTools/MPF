@@ -12,9 +12,9 @@ namespace MPF.Frontend.ViewModels
         #region Fields
 
         /// <summary>
-        /// Application-level SegmentedOptions object
+        /// Application-level Options object
         /// </summary>
-        public SegmentedOptions Options { get; private set; }
+        public Options Options { get; private set; }
 
         /// <summary>
         /// SubmissionInfo object to fill and save
@@ -195,7 +195,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MediaInformationViewModel(SegmentedOptions options, SubmissionInfo? submissionInfo)
+        public MediaInformationViewModel(Options options, SubmissionInfo? submissionInfo)
         {
             Options = options;
             SubmissionInfo = submissionInfo?.Clone() as SubmissionInfo ?? new SubmissionInfo();

@@ -13,7 +13,7 @@ namespace MPF.Frontend
     /// <summary>
     /// Options that use nested types for setting arrangement
     /// </summary>
-    public class SegmentedOptions
+    public class Options
     {
         #region Properties
 
@@ -84,14 +84,14 @@ namespace MPF.Frontend
         /// <summary>
         /// Empty constructor for serialization
         /// </summary>
-        public SegmentedOptions() { }
+        public Options() { }
 
         /// <summary>
         /// Constructor taking a dictionary for settings
         /// </summary>
         /// <param name="source">Dictionary representing settings</param>
         /// TODO: Remove when Options is no longer relevant
-        public SegmentedOptions(Dictionary<string, string?>? source = null)
+        public Options(Dictionary<string, string?>? source = null)
         {
             source ??= [];
 
@@ -191,12 +191,12 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Constructor that converts from an existing SegmentedOptions object
+        /// Constructor that converts from an existing Options object
         /// </summary>
-        /// <param name="source">SegmentedOptions object to read from</param>
-        public SegmentedOptions(SegmentedOptions? source)
+        /// <param name="source">Options object to read from</param>
+        public Options(Options? source)
         {
-            source ??= new SegmentedOptions();
+            source ??= new Options();
 
             FirstRun = source.FirstRun;
             CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;

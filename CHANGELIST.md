@@ -28,6 +28,7 @@
 - Fix path assignment from UI
 - Reduce reach of original Options type
 - Move dictionary logic to new Options object
+- Replace original Options object
 
 ### 3.6.0 (2025-11-28)
 

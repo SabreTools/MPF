@@ -21,7 +21,7 @@ namespace MPF.Frontend.Test.Tools
         [InlineData(MediaType.NintendoWiiUOpticalDisc, 16)]
         public void GetDefaultSpeedForMediaTypeSegmentedTest(MediaType? mediaType, int expected)
         {
-            var options = new SegmentedOptions();
+            var options = new Options();
             options.Dumping.DumpSpeeds.PreferredCD = 72;
             options.Dumping.DumpSpeeds.PreferredDVD = 24;
             options.Dumping.DumpSpeeds.PreferredHDDVD = 24;

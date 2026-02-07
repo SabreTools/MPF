@@ -38,7 +38,7 @@ namespace MPF.Check.Features
             Options = OptionsLoader.LoadFromConfig();
             if (Options.FirstRun)
             {
-                Options = new SegmentedOptions();
+                Options = new Options();
 
                 // Internal Program
                 Options.InternalProgram = InternalProgram.NONE;

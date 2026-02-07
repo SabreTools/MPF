@@ -112,12 +112,12 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Read-only access to the current media information view model
         /// </summary>
-        public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new SegmentedOptions(), new SubmissionInfo());
+        public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public MediaInformationWindow(SegmentedOptions options, SubmissionInfo? submissionInfo)
+        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
 #if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
@@ -156,7 +156,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Manipulate fields based on the current disc
         /// </summary>
-        private void ManipulateFields(SegmentedOptions options, SubmissionInfo? submissionInfo)
+        private void ManipulateFields(Options options, SubmissionInfo? submissionInfo)
         {
             // Enable tabs in all fields, if required
             if (options.Processing.MediaInformation.EnableTabsInInputFields)

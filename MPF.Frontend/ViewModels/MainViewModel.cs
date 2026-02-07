@@ -20,7 +20,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public SegmentedOptions Options
+        public Options Options
         {
             get => _options;
             set
@@ -29,7 +29,7 @@ namespace MPF.Frontend.ViewModels
                 OptionsLoader.SaveToConfig(_options);
             }
         }
-        private SegmentedOptions _options;
+        private Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -983,14 +983,14 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-        public void UpdateOptions(bool savedSettings, SegmentedOptions? newOptions)
+        public void UpdateOptions(bool savedSettings, Options? newOptions)
         {
             // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Ensure the first run flag is unset
-            var continuingOptions = new SegmentedOptions(optionsToSave) { FirstRun = false };
-            Options = new SegmentedOptions(continuingOptions);
+            var continuingOptions = new Options(optionsToSave) { FirstRun = false };
+            Options = new Options(continuingOptions);
 
             // If settings were changed, reinitialize the UI
             if (savedSettings)
