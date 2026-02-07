@@ -21,6 +21,7 @@
 - Allow Check and CLI to check for updates on startup
 - Check should not default to update checking
 - Add save and load for new options type
+- Add conversion method from new options type
 
 ### 3.6.0 (2025-11-28)
 

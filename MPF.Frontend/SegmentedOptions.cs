@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
@@ -56,26 +55,15 @@ namespace MPF.Frontend
         public ProcessingSettings Processing { get; set; } = new ProcessingSettings();
 
         /// <summary>
-        /// Placeholder empty constructor
+        /// Empty constructor for serialization
         /// </summary>
         public SegmentedOptions() { }
-
-        /// <summary>
-        /// Constructor using a generic deserialized dictionary
-        /// </summary>
-        /// <param name="settings">Dictionary to read from</param>
-        /// <remarks>Currently uses the Options object as an intermediary</remarks>
-        /// TODO: Remove constructor when Options is no longer relevant
-        public SegmentedOptions(Dictionary<string, string?>? source = null)
-            : this(new Options(source))
-        {
-        }
 
         /// <summary>
         /// Constructor that converts from an existing Options object
         /// </summary>
         /// <param name="source">Options object to read from</param>
-        /// TODO: Remove constructor when Options is no longer relevant
+        /// TODO: Remove when Options is no longer relevant
         public SegmentedOptions(Options? source)
         {
             source ??= new Options();
@@ -115,7 +103,7 @@ namespace MPF.Frontend
             Dumping.Aaru.EnableDebug = source.AaruEnableDebug;
             Dumping.Aaru.EnableVerbose = source.AaruEnableVerbose;
             Dumping.Aaru.ForceDumping = source.AaruForceDumping;
-            Dumping.Aaru.RereadCount = source.RedumperRereadCount;
+            Dumping.Aaru.RereadCount = source.AaruRereadCount;
             Dumping.Aaru.StripPersonalData = source.AaruStripPersonalData;
 
             Dumping.DIC.MultiSectorRead = source.DICMultiSectorRead;
@@ -164,6 +152,99 @@ namespace MPF.Frontend
             Processing.CompressLogFiles = source.CompressLogFiles;
             Processing.LogCompression = source.LogCompression;
             Processing.DeleteUnnecessaryFiles = source.DeleteUnnecessaryFiles;
+        }
+
+        /// <summary>
+        /// Convert to an Options object
+        /// </summary>
+        /// TODO: Remove when Options is no longer relevant
+        public Options ConvertToOptions()
+        {
+            return new Options
+            {
+                FirstRun = FirstRun,
+
+                AaruPath = Dumping.AaruPath,
+                DiscImageCreatorPath = Dumping.DiscImageCreatorPath,
+                // DreamdumpPath = Dumping.DreamdumpPath,
+                RedumperPath = Dumping.RedumperPath,
+                InternalProgram = Dumping.InternalProgram,
+
+                EnableDarkMode = GUI.Theming.EnableDarkMode,
+                EnablePurpMode = GUI.Theming.EnablePurpMode,
+                CustomBackgroundColor = GUI.Theming.CustomBackgroundColor,
+                CustomTextColor = GUI.Theming.CustomTextColor,
+                CheckForUpdatesOnStartup = CheckForUpdatesOnStartup,
+                CopyUpdateUrlToClipboard = GUI.CopyUpdateUrlToClipboard,
+                FastUpdateLabel = GUI.FastUpdateLabel,
+                DefaultInterfaceLanguage = GUI.DefaultInterfaceLanguage,
+                DefaultOutputPath = Dumping.DefaultOutputPath,
+                DefaultSystem = Dumping.DefaultSystem,
+                ShowDebugViewMenuItem = GUI.ShowDebugViewMenuItem,
+
+                PreferredDumpSpeedCD = Dumping.PreferredDumpSpeedCD,
+                PreferredDumpSpeedDVD = Dumping.PreferredDumpSpeedDVD,
+                PreferredDumpSpeedHDDVD = Dumping.PreferredDumpSpeedHDDVD,
+                PreferredDumpSpeedBD = Dumping.PreferredDumpSpeedBD,
+
+                AaruEnableDebug = Dumping.Aaru.EnableDebug,
+                AaruEnableVerbose = Dumping.Aaru.EnableVerbose,
+                AaruForceDumping = Dumping.Aaru.ForceDumping,
+                AaruRereadCount = Dumping.Aaru.RereadCount,
+                AaruStripPersonalData = Dumping.Aaru.StripPersonalData,
+
+                DICMultiSectorRead = Dumping.DIC.MultiSectorRead,
+                DICMultiSectorReadValue = Dumping.DIC.MultiSectorReadValue,
+                DICParanoidMode = Dumping.DIC.ParanoidMode,
+                DICQuietMode = Dumping.DIC.QuietMode,
+                DICRereadCount = Dumping.DIC.RereadCount,
+                DICDVDRereadCount = Dumping.DIC.DVDRereadCount,
+                DICUseCMIFlag = Dumping.DIC.UseCMIFlag,
+
+                // DreamdumpNonRedumpMode = Dumping.Dreamdump.NonRedumpMode,
+                // DreamdumpSectorOrder = Dumping.Dreamdump.SectorOrder,
+                // DreamdumpRereadCount = Dumping.Dreamdump.RereadCount,
+
+                RedumperEnableSkeleton = Dumping.Redumper.EnableSkeleton,
+                RedumperEnableVerbose = Dumping.Redumper.EnableVerbose,
+                RedumperLeadinRetryCount = Dumping.Redumper.LeadinRetryCount,
+                RedumperNonRedumpMode = Dumping.Redumper.NonRedumpMode,
+                RedumperDriveType = Dumping.Redumper.DriveType,
+                RedumperDrivePregapStart = Dumping.Redumper.DrivePregapStart,
+                RedumperReadMethod = Dumping.Redumper.ReadMethod,
+                RedumperSectorOrder = Dumping.Redumper.SectorOrder,
+                RedumperRereadCount = Dumping.Redumper.RereadCount,
+                RedumperRefineSectorMode = Dumping.Redumper.RefineSectorMode,
+
+                ScanForProtection = Processing.ProtectionScanning.ScanForProtection,
+                AddPlaceholders = Processing.MediaInformation.AddPlaceholders,
+                PromptForDiscInformation = Processing.MediaInformation.PromptForDiscInformation,
+                PullAllInformation = Processing.MediaInformation.PullAllInformation,
+                EnableTabsInInputFields = Processing.MediaInformation.EnableTabsInInputFields,
+                EnableRedumpCompatibility = Processing.MediaInformation.EnableRedumpCompatibility,
+                ShowDiscEjectReminder = Processing.ShowDiscEjectReminder,
+                IgnoreFixedDrives = GUI.IgnoreFixedDrives,
+                AddFilenameSuffix = Processing.AddFilenameSuffix,
+                OutputSubmissionJSON = Processing.OutputSubmissionJSON,
+                IncludeArtifacts = Processing.IncludeArtifacts,
+                CompressLogFiles = Processing.CompressLogFiles,
+                LogCompression = Processing.LogCompression,
+                DeleteUnnecessaryFiles = Processing.DeleteUnnecessaryFiles,
+                CreateIRDAfterDumping = Processing.CreateIRDAfterDumping,
+
+                SkipSystemDetection = GUI.SkipSystemDetection,
+
+                ScanArchivesForProtection = Processing.ProtectionScanning.ScanArchivesForProtection,
+                IncludeDebugProtectionInformation = Processing.ProtectionScanning.IncludeDebugProtectionInformation,
+                HideDriveLetters = Processing.ProtectionScanning.HideDriveLetters,
+
+                VerboseLogging = VerboseLogging,
+                OpenLogWindowAtStartup = GUI.OpenLogWindowAtStartup,
+
+                RetrieveMatchInformation = Processing.Login.RetrieveMatchInformation,
+                RedumpUsername = Processing.Login.RedumpUsername,
+                RedumpPassword = Processing.Login.RedumpPassword,
+            };
         }
     }
 
