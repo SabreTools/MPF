@@ -14,29 +14,29 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the default speed for a given media type from the supplied options
         /// </summary>
-        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, Options options)
+        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, SegmentedOptions options)
         {
 #pragma warning disable IDE0072
             return mediaType switch
             {
                 // CD dump speed
-                MediaType.CDROM => options.PreferredDumpSpeedCD,
-                MediaType.GDROM => options.PreferredDumpSpeedCD,
+                MediaType.CDROM => options.Dumping.PreferredDumpSpeedCD,
+                MediaType.GDROM => options.Dumping.PreferredDumpSpeedCD,
 
                 // DVD dump speed
-                MediaType.DVD => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoGameCubeGameDisc => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoWiiOpticalDisc => options.PreferredDumpSpeedDVD,
+                MediaType.DVD => options.Dumping.PreferredDumpSpeedDVD,
+                MediaType.NintendoGameCubeGameDisc => options.Dumping.PreferredDumpSpeedDVD,
+                MediaType.NintendoWiiOpticalDisc => options.Dumping.PreferredDumpSpeedDVD,
 
                 // HD-DVD dump speed
-                MediaType.HDDVD => options.PreferredDumpSpeedHDDVD,
+                MediaType.HDDVD => options.Dumping.PreferredDumpSpeedHDDVD,
 
                 // BD dump speed
-                MediaType.BluRay => options.PreferredDumpSpeedBD,
-                MediaType.NintendoWiiUOpticalDisc => options.PreferredDumpSpeedBD,
+                MediaType.BluRay => options.Dumping.PreferredDumpSpeedBD,
+                MediaType.NintendoWiiUOpticalDisc => options.Dumping.PreferredDumpSpeedBD,
 
                 // Default
-                _ => options.PreferredDumpSpeedCD,
+                _ => options.Dumping.PreferredDumpSpeedCD,
             };
 #pragma warning restore IDE0072
         }

@@ -38,33 +38,34 @@ namespace MPF.Check.Features
             Options = OptionsLoader.LoadFromConfig();
             if (Options.FirstRun)
             {
-                Options = new Options()
-                {
-                    // Internal Program
-                    InternalProgram = InternalProgram.NONE,
+                Options = new SegmentedOptions();
 
-                    // Extra Dumping Options
-                    ScanForProtection = false,
-                    AddPlaceholders = true,
-                    PullAllInformation = false,
-                    AddFilenameSuffix = false,
-                    OutputSubmissionJSON = false,
-                    IncludeArtifacts = false,
-                    CompressLogFiles = false,
-                    LogCompression = LogCompression.DeflateMaximum,
-                    DeleteUnnecessaryFiles = false,
-                    CreateIRDAfterDumping = false,
+                // Internal Program
+                Options.Dumping.InternalProgram = InternalProgram.NONE;
 
-                    // Protection Scanning Options
-                    ScanArchivesForProtection = true,
-                    IncludeDebugProtectionInformation = false,
-                    HideDriveLetters = false,
+                // Protection Scanning Options
+                Options.Processing.ProtectionScanning.ScanForProtection = false;
+                Options.Processing.ProtectionScanning.ScanArchivesForProtection = true;
+                Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
+                Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                    // Redump Login Information
-                    RetrieveMatchInformation = true,
-                    RedumpUsername = null,
-                    RedumpPassword = null,
-                };
+                // Redump Login Information
+                Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.RedumpUsername = null;
+                Options.Processing.Login.RedumpPassword = null;
+
+                // Media Information
+                Options.Processing.MediaInformation.AddPlaceholders = true;
+                Options.Processing.MediaInformation.PullAllInformation = false;
+
+                // Post-Information Options
+                Options.Processing.AddFilenameSuffix = false;
+                Options.Processing.CreateIRDAfterDumping = false;
+                Options.Processing.OutputSubmissionJSON = false;
+                Options.Processing.IncludeArtifacts = false;
+                Options.Processing.CompressLogFiles = false;
+                Options.Processing.LogCompression = LogCompression.DeflateMaximum;
+                Options.Processing.DeleteUnnecessaryFiles = false;
             }
 
             // Create return values
@@ -85,24 +86,24 @@ namespace MPF.Check.Features
             Console.WriteLine("-------------------------");
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.Dumping.InternalProgram}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
-            Console.WriteLine($"4) Add placeholders (Currently '{Options.AddPlaceholders}')");
-            Console.WriteLine($"5) Create IRD (Currently '{Options.CreateIRDAfterDumping}')");
-            Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.RetrieveMatchInformation}')");
-            Console.WriteLine($"7) Redump credentials (Currently '{Options.RedumpUsername}')");
-            Console.WriteLine($"8) Pull all information (Currently '{Options.PullAllInformation}')");
+            Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
+            Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
+            Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
+            Console.WriteLine($"7) Redump credentials (Currently '{Options.Processing.Login.RedumpUsername}')");
+            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.MediaInformation.PullAllInformation}')");
             Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
             Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
             Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
             Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"E) Hide filename suffix (Currently '{Options.AddFilenameSuffix}')");
-            Console.WriteLine($"F) Output submission JSON (Currently '{Options.OutputSubmissionJSON}')");
-            Console.WriteLine($"G) Include JSON artifacts (Currently '{Options.IncludeArtifacts}')");
-            Console.WriteLine($"H) Compress logs (Currently '{Options.CompressLogFiles}')");
-            Console.WriteLine($"I) Log compression (Currently '{Options.LogCompression.LongName()}')");
-            Console.WriteLine($"J) Delete unnecessary files (Currently '{Options.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"E) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
+            Console.WriteLine($"F) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
+            Console.WriteLine($"G) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
+            Console.WriteLine($"H) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
+            Console.WriteLine($"I) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
+            Console.WriteLine($"J) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -118,18 +119,18 @@ namespace MPF.Check.Features
                 case "3":
                     goto seedPath;
                 case "4":
-                    Options.AddPlaceholders = !Options.AddPlaceholders;
+                    Options.Processing.MediaInformation.AddPlaceholders = !Options.Processing.MediaInformation.AddPlaceholders;
                     goto root;
                 case "5":
-                    Options.CreateIRDAfterDumping = !Options.CreateIRDAfterDumping;
+                    Options.Processing.CreateIRDAfterDumping = !Options.Processing.CreateIRDAfterDumping;
                     goto root;
                 case "6":
-                    Options.RetrieveMatchInformation = !Options.RetrieveMatchInformation;
+                    Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
                     goto root;
                 case "7":
                     goto redumpCredentials;
                 case "8":
-                    Options.PullAllInformation = !Options.PullAllInformation;
+                    Options.Processing.MediaInformation.PullAllInformation = !Options.Processing.MediaInformation.PullAllInformation;
                     goto root;
                 case "9":
                     goto devicePath;
@@ -151,26 +152,26 @@ namespace MPF.Check.Features
                     goto root;
                 case "e":
                 case "E":
-                    Options.AddFilenameSuffix = !Options.AddFilenameSuffix;
+                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
                     goto root;
                 case "f":
                 case "F":
-                    Options.OutputSubmissionJSON = !Options.OutputSubmissionJSON;
+                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
                     goto root;
                 case "g":
                 case "G":
-                    Options.IncludeArtifacts = !Options.IncludeArtifacts;
+                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
                     goto root;
                 case "h":
                 case "H":
-                    Options.CompressLogFiles = !Options.CompressLogFiles;
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
                     goto root;
                 case "i":
                 case "I":
                     goto logCompression;
                 case "j":
                 case "J":
-                    Options.DeleteUnnecessaryFiles = !Options.DeleteUnnecessaryFiles;
+                    Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 
                 case "q":
@@ -219,7 +220,7 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            Options.InternalProgram = result.ToInternalProgram();
+            Options.Dumping.InternalProgram = result.ToInternalProgram();
             goto root;
 
         seedPath:
@@ -234,18 +235,18 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine("Enter your Redump username and press Enter:");
             Console.Write("> ");
-            Options.RedumpUsername = Console.ReadLine();
+            Options.Processing.Login.RedumpUsername = Console.ReadLine();
 
             Console.WriteLine("Enter your Redump password (hidden) and press Enter:");
             Console.Write("> ");
-            Options.RedumpPassword = string.Empty;
+            Options.Processing.Login.RedumpPassword = string.Empty;
             while (true)
             {
                 var key = Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter)
                     break;
 
-                Options.RedumpPassword += key.KeyChar;
+                Options.Processing.Login.RedumpPassword += key.KeyChar;
             }
 
             goto root;
@@ -269,15 +270,15 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the log compression type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            Options.LogCompression = result.ToLogCompression();
+            Options.Processing.LogCompression = result.ToLogCompression();
             goto root;
 
         exit:
             // Now deal with the complex options
-            Options.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
-            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
 
             return true;
         }

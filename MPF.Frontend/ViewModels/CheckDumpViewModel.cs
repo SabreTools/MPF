@@ -22,11 +22,11 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Options Options
+        public SegmentedOptions Options
         {
             get => _options;
         }
-        private readonly Options _options;
+        private readonly SegmentedOptions _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -348,7 +348,7 @@ namespace MPF.Frontend.ViewModels
             DisableEventHandlers();
 
             // Get the current internal program
-            InternalProgram internalProgram = Options.InternalProgram;
+            InternalProgram internalProgram = Options.Dumping.InternalProgram;
 
             // Create a static list of supported Check programs, not everything
             var internalPrograms = new List<InternalProgram>

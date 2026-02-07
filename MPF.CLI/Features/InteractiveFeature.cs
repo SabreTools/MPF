@@ -40,11 +40,11 @@ namespace MPF.CLI.Features
             MediaType = SabreTools.RedumpLib.Data.MediaType.NONE;
             string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
 #if NET20 || NET35
-            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", Path.Combine(defaultFileName, $"{defaultFileName}.bin"));
+            FilePath = Path.Combine(Options.Dumping.DefaultOutputPath ?? "ISO", Path.Combine(defaultFileName, $"{defaultFileName}.bin"));
 #else
-            FilePath = Path.Combine(Options.DefaultOutputPath ?? "ISO", defaultFileName, $"{defaultFileName}.bin");
+            FilePath = Path.Combine(Options.Dumping.DefaultOutputPath ?? "ISO", defaultFileName, $"{defaultFileName}.bin");
 #endif
-            System = Options.DefaultSystem;
+            System = Options.Dumping.DefaultSystem;
 
             // Create state values
             string? result;
@@ -55,7 +55,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("-------------------------");
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.Dumping.InternalProgram}')");
             Console.WriteLine($"3) Set media type (Currently '{MediaType}')");
             Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
@@ -128,7 +128,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the dumping program and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            Options.InternalProgram = result.ToInternalProgram();
+            Options.Dumping.InternalProgram = result.ToInternalProgram();
             goto root;
 
         mediaType:

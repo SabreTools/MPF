@@ -19,7 +19,7 @@ namespace MPF.CLI.Features
         /// <summary>
         /// User-defined options
         /// </summary>
-        public Options Options { get; protected set; }
+        public SegmentedOptions Options { get; protected set; }
 
         /// <summary>
         /// Currently-selected system
@@ -65,33 +65,35 @@ namespace MPF.CLI.Features
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            Options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
+            Options = new SegmentedOptions();
 
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                LogCompression = LogCompression.DeflateMaximum,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
+            // Internal Program
+            Options.Dumping.InternalProgram = InternalProgram.NONE;
 
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
+            // Protection Scanning Options
+            Options.Processing.ProtectionScanning.ScanForProtection = false;
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = true;
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
+            Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
+            // Redump Login Information
+            Options.Processing.Login.RetrieveMatchInformation = true;
+            Options.Processing.Login.RedumpUsername = null;
+            Options.Processing.Login.RedumpPassword = null;
+
+            // Media Information
+            Options.Processing.MediaInformation.AddPlaceholders = true;
+            Options.Processing.MediaInformation.PullAllInformation = false;
+
+            // Post-Information Options
+            Options.Processing.AddFilenameSuffix = false;
+            Options.Processing.CreateIRDAfterDumping = false;
+            Options.Processing.OutputSubmissionJSON = false;
+            Options.Processing.IncludeArtifacts = false;
+            Options.Processing.CompressLogFiles = false;
+            Options.Processing.LogCompression = LogCompression.DeflateMaximum;
+            Options.Processing.DeleteUnnecessaryFiles = false;
+
         }
 
         /// <inheritdoc/>
@@ -108,11 +110,11 @@ namespace MPF.CLI.Features
             Console.WriteLine($"Using system: {System.LongName()}");
 
             // Validate the supplied credentials
-            if (Options.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(Options.RedumpUsername)
-                && !string.IsNullOrEmpty(Options.RedumpPassword))
+            if (Options.Processing.Login.RetrieveMatchInformation
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpPassword))
             {
-                bool? validated = RedumpClient.ValidateCredentials(Options.RedumpUsername!, Options.RedumpPassword!).GetAwaiter().GetResult();
+                bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpUsername!, Options.Processing.Login.RedumpPassword!).GetAwaiter().GetResult();
                 string message = validated switch
                 {
                     true => "Redump username and password accepted!",
@@ -125,10 +127,10 @@ namespace MPF.CLI.Features
 
             // Validate the internal program
 #pragma warning disable IDE0010
-            switch (Options.InternalProgram)
+            switch (Options.Dumping.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    if (!File.Exists(Options.AaruPath))
+                    if (!File.Exists(Options.Dumping.AaruPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
                         return false;
@@ -137,7 +139,7 @@ namespace MPF.CLI.Features
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    if (!File.Exists(Options.DiscImageCreatorPath))
+                    if (!File.Exists(Options.Dumping.DiscImageCreatorPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
                         return false;
@@ -146,7 +148,7 @@ namespace MPF.CLI.Features
                     break;
 
                 // case InternalProgram.Dreamdump:
-                //     if (!File.Exists(Options.DreamdumpPath))
+                //     if (!File.Exists(Options.Dumping.DreamdumpPath))
                 //     {
                 //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
                 //         return false;
@@ -155,7 +157,7 @@ namespace MPF.CLI.Features
                 //     break;
 
                 case InternalProgram.Redumper:
-                    if (!File.Exists(Options.RedumperPath))
+                    if (!File.Exists(Options.Dumping.RedumperPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
                         return false;
@@ -164,7 +166,7 @@ namespace MPF.CLI.Features
                     break;
 
                 default:
-                    Console.Error.WriteLine($"{Options.InternalProgram} is not a supported dumping program, exiting...");
+                    Console.Error.WriteLine($"{Options.Dumping.InternalProgram} is not a supported dumping program, exiting...");
                     break;
             }
 #pragma warning restore IDE0010
@@ -176,7 +178,7 @@ namespace MPF.CLI.Features
                 return false;
             }
 
-            if (Options.InternalProgram == InternalProgram.DiscImageCreator
+            if (Options.Dumping.InternalProgram == InternalProgram.DiscImageCreator
                 && CustomParams is null
                 && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
             {
@@ -201,8 +203,8 @@ namespace MPF.CLI.Features
             {
                 string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                 FilePath = Path.Combine(defaultFileName, $"{defaultFileName}.bin");
-                if (Options.DefaultOutputPath is not null)
-                    FilePath = Path.Combine(Options.DefaultOutputPath, FilePath);
+                if (Options.Dumping.DefaultOutputPath is not null)
+                    FilePath = Path.Combine(Options.Dumping.DefaultOutputPath, FilePath);
             }
 
             if (FilePath is not null)
@@ -217,7 +219,7 @@ namespace MPF.CLI.Features
                 FilePath,
                 drive,
                 System,
-                Options.InternalProgram);
+                Options.Dumping.InternalProgram);
             env.SetExecutionContext(MediaType, null);
             env.SetProcessor();
 
@@ -232,7 +234,7 @@ namespace MPF.CLI.Features
             env.SetExecutionContext(MediaType, paramStr);
 
             // Invoke the dumping program
-            Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
+            Console.WriteLine($"Invoking {Options.Dumping.InternalProgram} using '{paramStr}'");
             var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (dumpResult == false)

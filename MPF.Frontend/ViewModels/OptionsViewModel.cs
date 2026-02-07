@@ -32,7 +32,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current set of options
         /// </summary>
-        public Options Options { get; }
+        public SegmentedOptions Options { get; }
 
         /// <summary>
         /// Flag for if settings were saved or not
@@ -88,15 +88,15 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public OptionsViewModel()
         {
-            Options = new Options();
+            Options = new SegmentedOptions();
         }
 
         /// <summary>
         /// Constructor for in-code
         /// </summary>
-        public OptionsViewModel(Options baseOptions)
+        public OptionsViewModel(SegmentedOptions baseOptions)
         {
-            Options = new Options(baseOptions);
+            Options = new SegmentedOptions(baseOptions);
         }
 
         #region Population
@@ -138,9 +138,9 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void NonRedumpModeUnChecked()
         {
-            Options.RedumperReadMethod = RedumperReadMethod.NONE;
-            Options.RedumperSectorOrder = RedumperSectorOrder.NONE;
-            Options.RedumperDriveType = RedumperDriveType.NONE;
+            Options.Dumping.Redumper.ReadMethod = RedumperReadMethod.NONE;
+            Options.Dumping.Redumper.SectorOrder = RedumperSectorOrder.NONE;
+            Options.Dumping.Redumper.DriveType = RedumperDriveType.NONE;
             TriggerPropertyChanged(nameof(Options));
         }
 

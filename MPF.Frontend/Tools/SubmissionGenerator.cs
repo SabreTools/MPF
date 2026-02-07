@@ -37,7 +37,7 @@ namespace MPF.Frontend.Tools
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="system">Currently selected system</param>
         /// <param name="mediaType">Currently selected media type</param>
-        /// <param name="options">Options object representing user-defined options</param>
+        /// <param name="options">SegmentedOptions object representing user-defined options</param>
         /// <param name="processor">Processor object representing how to process the outputs</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
@@ -47,7 +47,7 @@ namespace MPF.Frontend.Tools
             Drive? drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Options options,
+            SegmentedOptions options,
             BaseProcessor processor,
             IProgress<ResultEventArgs>? resultProgress = null,
             IProgress<ProtectionProgress>? protectionProgress = null)
@@ -86,11 +86,11 @@ namespace MPF.Frontend.Tools
                 basePath = Path.Combine(outputDirectory, basePath);
 
             // Create the default submission info
-            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
+            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.Processing.MediaInformation.AddPlaceholders);
 
             // Get specific tool output handling
-            processor.GenerateSubmissionInfo(info, mediaType, basePath, options.EnableRedumpCompatibility);
-            if (options.IncludeArtifacts)
+            processor.GenerateSubmissionInfo(info, mediaType, basePath, options.Processing.MediaInformation.EnableRedumpCompatibility);
+            if (options.Processing.IncludeArtifacts)
                 info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Get a list of matching IDs for each line in the DAT
@@ -113,10 +113,10 @@ namespace MPF.Frontend.Tools
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
-            ProcessMediaType(info, mediaType, options.AddPlaceholders);
+            ProcessMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, basePath);
+            ProcessSystem(info, system, drive, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
             if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
@@ -134,7 +134,7 @@ namespace MPF.Frontend.Tools
                 try
                 {
                     Dictionary<string, List<string>>? protections = null;
-                    if (options.ScanForProtection)
+                    if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
                         // Explicitly note missing/invalid device paths
                         if (drive?.Name is null)
@@ -157,13 +157,13 @@ namespace MPF.Frontend.Tools
 
             // Set fields that may have automatic filling otherwise
             info.CommonDiscInfo.Category ??= DiscCategory.Games;
-            info.VersionAndEditions.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+            info.VersionAndEditions.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = options.AddPlaceholders ? OptionalValue : string.Empty;
+                info.CommonDiscInfo.Comments = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = options.AddPlaceholders ? OptionalValue : string.Empty;
+                info.CommonDiscInfo.Contents = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
 
             // Normalize the disc type with all current information
             Validator.NormalizeDiscType(info);
@@ -174,26 +174,26 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Fill in a SubmissionInfo object from Redump, if possible
         /// </summary>
-        /// <param name="options">Options object representing user-defined options</param>
+        /// <param name="options">SegmentedOptions object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public static async Task<bool> FillFromRedump(Options options,
+        public static async Task<bool> FillFromRedump(SegmentedOptions options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {
             // If information should not be pulled at all
-            if (!options.RetrieveMatchInformation)
+            if (!options.Processing.Login.RetrieveMatchInformation)
                 return false;
 
             // Set the current dumper based on username
-            info.DumpersAndStatus.Dumpers = [options.RedumpUsername ?? "Anonymous User"];
+            info.DumpersAndStatus.Dumpers = [options.Processing.Login.RedumpUsername ?? "Anonymous User"];
             info.PartiallyMatchedIDs = [];
 
             // Login to Redump, if possible
             var wc = new RedumpClient();
-            if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
+            if (!string.IsNullOrEmpty(options.Processing.Login.RedumpUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpPassword))
             {
-                bool? loggedIn = await wc.Login(options.RedumpUsername!, options.RedumpPassword!);
+                bool? loggedIn = await wc.Login(options.Processing.Login.RedumpUsername!, options.Processing.Login.RedumpPassword!);
                 if (loggedIn is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
@@ -350,7 +350,7 @@ namespace MPF.Frontend.Tools
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
-                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
+                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.Processing.MediaInformation.PullAllInformation);
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current

@@ -18,7 +18,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Read-only access to the current options view model
         /// </summary>
-        public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel(new Options());
+        public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
 
 #if NET35
 
@@ -37,7 +37,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsWindow(Options options)
+        public OptionsWindow(SegmentedOptions options)
         {
 #if NET40_OR_GREATER || NETCOREAPP
             InitializeComponent();
@@ -61,7 +61,7 @@ namespace MPF.UI.Windows
             DataContext = new OptionsViewModel(options);
 
             // Set initial value for binding
-            RedumpPasswordBox!.Password = options.RedumpPassword;
+            RedumpPasswordBox!.Password = options.Processing.Login.RedumpPassword;
 
             // Add handlers
             AaruPathButton!.Click += BrowseForPathClick;
@@ -136,7 +136,7 @@ namespace MPF.UI.Windows
 
                     if (exists)
                     {
-                        OptionsViewModel.Options[pathSettingName] = path;
+                        OptionsViewModel.Options.ConvertToOptions()[pathSettingName] = path;
                         var textBox = TextBoxForPathSetting(parent, pathSettingName);
                         textBox?.Text = path;
                     }
@@ -213,7 +213,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private void NonRedumpModeClicked(object sender, EventArgs e)
         {
-            if (OptionsViewModel.Options.RedumperNonRedumpMode)
+            if (OptionsViewModel.Options.Dumping.Redumper.NonRedumpMode)
                 CustomMessageBox.Show(this, "All logs generated with these options will not be acceptable for Redump submission",
                     (string)System.Windows.Application.Current.FindResource("WarningMessageString"), MessageBoxButton.OK, MessageBoxImage.Warning);
             else
@@ -243,7 +243,7 @@ namespace MPF.UI.Windows
         /// </summary>
         private void OnPasswordChanged(object sender, EventArgs e)
         {
-            OptionsViewModel.Options.RedumpPassword = RedumpPasswordBox!.Password;
+            OptionsViewModel.Options.Processing.Login.RedumpPassword = RedumpPasswordBox!.Password;
         }
 
         /// <summary>

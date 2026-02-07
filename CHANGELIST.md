@@ -22,6 +22,7 @@
 - Check should not default to update checking
 - Add save and load for new options type
 - Add conversion method from new options type
+- Replace Options with SegmentedOptions in most places
 
 ### 3.6.0 (2025-11-28)
 

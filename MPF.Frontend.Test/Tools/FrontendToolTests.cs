@@ -19,15 +19,13 @@ namespace MPF.Frontend.Test.Tools
         [InlineData(MediaType.HDDVD, 24)]
         [InlineData(MediaType.BluRay, 16)]
         [InlineData(MediaType.NintendoWiiUOpticalDisc, 16)]
-        public void GetDefaultSpeedForMediaTypeTest(MediaType? mediaType, int expected)
+        public void GetDefaultSpeedForMediaTypeSegmentedTest(MediaType? mediaType, int expected)
         {
-            var options = new Options
-            {
-                PreferredDumpSpeedCD = 72,
-                PreferredDumpSpeedDVD = 24,
-                PreferredDumpSpeedHDDVD = 24,
-                PreferredDumpSpeedBD = 16,
-            };
+            var options = new SegmentedOptions();
+            options.Dumping.PreferredDumpSpeedCD = 72;
+            options.Dumping.PreferredDumpSpeedDVD = 24;
+            options.Dumping.PreferredDumpSpeedHDDVD = 24;
+            options.Dumping.PreferredDumpSpeedBD = 16;
 
             int actual = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
             Assert.Equal(expected, actual);

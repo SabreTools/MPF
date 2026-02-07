@@ -123,33 +123,34 @@ namespace MPF.Check.Features
             Options = OptionsLoader.LoadFromConfig();
             if (Options.FirstRun)
             {
-                Options = new Options()
-                {
-                    // Internal Program
-                    InternalProgram = InternalProgram.NONE,
+                Options = new SegmentedOptions();
 
-                    // Extra Dumping Options
-                    ScanForProtection = false,
-                    AddPlaceholders = true,
-                    PullAllInformation = false,
-                    AddFilenameSuffix = false,
-                    OutputSubmissionJSON = false,
-                    IncludeArtifacts = false,
-                    CompressLogFiles = false,
-                    LogCompression = LogCompression.DeflateMaximum,
-                    DeleteUnnecessaryFiles = false,
-                    CreateIRDAfterDumping = false,
+                // Internal Program
+                Options.Dumping.InternalProgram = InternalProgram.NONE;
 
-                    // Protection Scanning Options
-                    ScanArchivesForProtection = true,
-                    IncludeDebugProtectionInformation = false,
-                    HideDriveLetters = false,
+                // Protection Scanning Options
+                Options.Processing.ProtectionScanning.ScanForProtection = false;
+                Options.Processing.ProtectionScanning.ScanArchivesForProtection = true;
+                Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
+                Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                    // Redump Login Information
-                    RetrieveMatchInformation = true,
-                    RedumpUsername = null,
-                    RedumpPassword = null,
-                };
+                // Redump Login Information
+                Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.RedumpUsername = null;
+                Options.Processing.Login.RedumpPassword = null;
+
+                // Media Information
+                Options.Processing.MediaInformation.AddPlaceholders = true;
+                Options.Processing.MediaInformation.PullAllInformation = false;
+
+                // Post-Information Options
+                Options.Processing.AddFilenameSuffix = false;
+                Options.Processing.CreateIRDAfterDumping = false;
+                Options.Processing.OutputSubmissionJSON = false;
+                Options.Processing.IncludeArtifacts = false;
+                Options.Processing.CompressLogFiles = false;
+                Options.Processing.LogCompression = LogCompression.DeflateMaximum;
+                Options.Processing.DeleteUnnecessaryFiles = false;
             }
             else
             {
@@ -164,7 +165,7 @@ namespace MPF.Check.Features
             {
                 // Use specific program
                 if (UseInput.ProcessInput(args, ref index))
-                    Options.InternalProgram = UseInput.Value.ToInternalProgram();
+                    Options.Dumping.InternalProgram = UseInput.Value.ToInternalProgram();
 
                 // Include seed info file
                 else if (LoadSeedInput.ProcessInput(args, ref index))
@@ -172,45 +173,45 @@ namespace MPF.Check.Features
 
                 // Disable placeholder values in submission info
                 else if (NoPlaceholdersInput.ProcessInput(args, ref index))
-                    Options.AddPlaceholders = !Options.AddPlaceholders;
+                    Options.Processing.MediaInformation.AddPlaceholders = !Options.Processing.MediaInformation.AddPlaceholders;
 
                 // Create IRD from output files (PS3 only)
                 else if (CreateIrdInput.ProcessInput(args, ref index))
-                    Options.CreateIRDAfterDumping = !Options.CreateIRDAfterDumping;
+                    Options.Processing.CreateIRDAfterDumping = !Options.Processing.CreateIRDAfterDumping;
 
                 // Set the log compression type (requires compression enabled)
                 else if (LogCompressionInput.ProcessInput(args, ref index))
-                    Options.LogCompression = LogCompressionInput.Value.ToLogCompression();
+                    Options.Processing.LogCompression = LogCompressionInput.Value.ToLogCompression();
 
                 // Retrieve Redump match information
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
-                    Options.RetrieveMatchInformation = !Options.RetrieveMatchInformation;
+                    Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
 
                 // Redump login
                 else if (args[index].StartsWith("-c=") || args[index].StartsWith("--credentials="))
                 {
                     string[] credentials = args[index].Split('=')[1].Split(';');
-                    Options.RedumpUsername = credentials[0];
-                    Options.RedumpPassword = credentials[1];
+                    Options.Processing.Login.RedumpUsername = credentials[0];
+                    Options.Processing.Login.RedumpPassword = credentials[1];
                 }
                 else if (args[index] == "-c" || args[index] == "--credentials")
                 {
-                    Options.RedumpUsername = args[index + 1];
-                    Options.RedumpPassword = args[index + 2];
+                    Options.Processing.Login.RedumpUsername = args[index + 1];
+                    Options.Processing.Login.RedumpPassword = args[index + 2];
                     index += 2;
                 }
 
                 // Redump username
                 else if (UsernameInput.ProcessInput(args, ref index))
-                    Options.RedumpUsername = UsernameInput.Value;
+                    Options.Processing.Login.RedumpUsername = UsernameInput.Value;
 
                 // Redump password
                 else if (PasswordInput.ProcessInput(args, ref index))
-                    Options.RedumpPassword = PasswordInput.Value;
+                    Options.Processing.Login.RedumpPassword = PasswordInput.Value;
 
                 // Pull all information (requires Redump login)
                 else if (PullAllInput.ProcessInput(args, ref index))
-                    Options.PullAllInformation = !Options.PullAllInformation;
+                    Options.Processing.MediaInformation.PullAllInformation = !Options.Processing.MediaInformation.PullAllInformation;
 
                 // Use a device path for physical checks
                 else if (PathInput.ProcessInput(args, ref index))
@@ -234,23 +235,23 @@ namespace MPF.Check.Features
 
                 // Add filename suffix
                 else if (SuffixInput.ProcessInput(args, ref index))
-                    Options.AddFilenameSuffix = !Options.AddFilenameSuffix;
+                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
 
                 // Output submission JSON
                 else if (JsonInput.ProcessInput(args, ref index))
-                    Options.OutputSubmissionJSON = !Options.OutputSubmissionJSON;
+                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
 
                 // Include JSON artifacts
                 else if (IncludeArtifactsInput.ProcessInput(args, ref index))
-                    Options.IncludeArtifacts = !Options.IncludeArtifacts;
+                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
 
                 // Compress log and extraneous files
                 else if (ZipInput.ProcessInput(args, ref index))
-                    Options.CompressLogFiles = !Options.CompressLogFiles;
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
 
                 // Delete unnecessary files
                 else if (DeleteInput.ProcessInput(args, ref index))
-                    Options.DeleteUnnecessaryFiles = !Options.DeleteUnnecessaryFiles;
+                    Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
 
                 // Default, add to inputs
                 else
@@ -258,10 +259,10 @@ namespace MPF.Check.Features
             }
 
             // Now deal with the complex options
-            Options.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
-            Options.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
-            Options.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.ScanForProtection = scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = enableArchives && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = enableDebug && scan && !string.IsNullOrEmpty(DevicePath);
+            Options.Processing.ProtectionScanning.HideDriveLetters = hideDriveLetters && scan && !string.IsNullOrEmpty(DevicePath);
 
             return true;
         }

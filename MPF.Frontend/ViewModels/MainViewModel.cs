@@ -20,16 +20,16 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public Options Options
+        public SegmentedOptions Options
         {
             get => _options;
             set
             {
                 _options = value;
-                OptionsLoader.SaveToConfig(_options);
+                OptionsLoader.SaveToConfig(_options.ConvertToOptions());
             }
         }
-        private Options _options;
+        private SegmentedOptions _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -584,7 +584,7 @@ namespace MPF.Frontend.ViewModels
             MediaScanButtonEnabled = true;
             ParametersCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
-            LogPanelExpanded = _options.OpenLogWindowAtStartup;
+            LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
 
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
@@ -650,7 +650,7 @@ namespace MPF.Frontend.ViewModels
             char? lastSelectedDrive = CurrentDrive?.Name?[0] ?? null;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Drive.CreateListOfDrives(Options.IgnoreFixedDrives);
+            Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
 
             if (Drives.Count > 0)
             {
@@ -747,7 +747,7 @@ namespace MPF.Frontend.ViewModels
             InternalPrograms = [.. Array.ConvertAll(ipArr, ip => new Element<InternalProgram>(ip))];
 
             // Get the current internal program
-            InternalProgram internalProgram = Options.InternalProgram;
+            InternalProgram internalProgram = Options.Dumping.InternalProgram;
 
             // Select the current default dumping program
             if (InternalPrograms.Count == 0)
@@ -983,14 +983,14 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-        public void UpdateOptions(bool savedSettings, Options? newOptions)
+        public void UpdateOptions(bool savedSettings, SegmentedOptions? newOptions)
         {
             // Get which options to save
             var optionsToSave = savedSettings ? newOptions : Options;
 
             // Ensure the first run flag is unset
-            var continuingOptions = new Options(optionsToSave) { FirstRun = false };
-            Options = continuingOptions;
+            var continuingOptions = new SegmentedOptions(optionsToSave) { FirstRun = false };
+            Options = new SegmentedOptions(continuingOptions);
 
             // If settings were changed, reinitialize the UI
             if (savedSettings)
@@ -1267,7 +1267,7 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
-            else if (!Options.SkipSystemDetection)
+            else if (!Options.GUI.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
@@ -1275,7 +1275,7 @@ namespace MPF.Frontend.ViewModels
                     VerboseLogLn($"detected {currentSystem.LongName()}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
-                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.Dumping.DefaultSystem == RedumpSystem.IBMPCcompatible)
                 {
                     try
                     {
@@ -1292,7 +1292,7 @@ namespace MPF.Frontend.ViewModels
                 // Fallback to default system only if drive is active
                 if (currentSystem is null && CurrentDrive.MarkedActive)
                 {
-                    currentSystem = Options.DefaultSystem;
+                    currentSystem = Options.Dumping.DefaultSystem;
                     VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
                 }
 
@@ -1302,9 +1302,9 @@ namespace MPF.Frontend.ViewModels
                     CurrentSystem = Systems[sysIndex];
                 }
             }
-            else if (Options.SkipSystemDetection && Options.DefaultSystem is not null)
+            else if (Options.GUI.SkipSystemDetection && Options.Dumping.DefaultSystem is not null)
             {
-                var currentSystem = Options.DefaultSystem;
+                var currentSystem = Options.Dumping.DefaultSystem;
                 VerboseLogLn($"System detection disabled, defaulting to {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 CurrentSystem = Systems[sysIndex];
@@ -1446,7 +1446,7 @@ namespace MPF.Frontend.ViewModels
             }
 
             // Get path pieces that are used in all branches
-            string defaultOutputPath = Options.DefaultOutputPath ?? "ISO";
+            string defaultOutputPath = Options.Dumping.DefaultOutputPath ?? "ISO";
             string extension = _environment?.GetDefaultExtension(CurrentMediaType) ?? ".bin";
             string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
@@ -2462,10 +2462,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => File.Exists(Options.AaruPath),
-                    InternalProgram.DiscImageCreator => File.Exists(Options.DiscImageCreatorPath),
-                    // InternalProgram.Dreamdump => File.Exists(Options.DreamdumpPath),
-                    InternalProgram.Redumper => File.Exists(Options.RedumperPath),
+                    InternalProgram.Aaru => File.Exists(Options.Dumping.AaruPath),
+                    InternalProgram.DiscImageCreator => File.Exists(Options.Dumping.DiscImageCreatorPath),
+                    // InternalProgram.Dreamdump => File.Exists(Options.Dumping.DreamdumpPath),
+                    InternalProgram.Redumper => File.Exists(Options.Dumping.RedumperPath),
                     _ => false,
                 };
 #pragma warning restore IDE0072

@@ -119,8 +119,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.InputPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
-                currentPath = CreateIRDViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = CreateIRDViewModel.Options.Dumping.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
                 currentPath = AppDomain.CurrentDomain.BaseDirectory!;
 
@@ -147,8 +147,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.LogPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
-                currentPath = CreateIRDViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = CreateIRDViewModel.Options.Dumping.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
                 currentPath = AppDomain.CurrentDomain.BaseDirectory!;
 
@@ -175,8 +175,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.LogPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
-                currentPath = CreateIRDViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = CreateIRDViewModel.Options.Dumping.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
                 currentPath = AppDomain.CurrentDomain.BaseDirectory!;
 
@@ -204,8 +204,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.InputPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
-                currentPath = Path.Combine(CreateIRDViewModel.Options.DefaultOutputPath, "game.ird");
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = Path.Combine(CreateIRDViewModel.Options.Dumping.DefaultOutputPath, "game.ird");
             else if (string.IsNullOrEmpty(currentPath))
                 currentPath = "game.ird";
             if (string.IsNullOrEmpty(currentPath))
@@ -240,8 +240,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CreateIRDViewModel.LogPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.DefaultOutputPath))
-                currentPath = CreateIRDViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CreateIRDViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = CreateIRDViewModel.Options.Dumping.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
                 currentPath = AppDomain.CurrentDomain.BaseDirectory!;
 

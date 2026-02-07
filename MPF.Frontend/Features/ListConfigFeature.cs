@@ -23,6 +23,7 @@ namespace MPF.Frontend.Features
         }
 
         /// <inheritdoc/>
+        /// TODO: Restructure this to fit SegmentedOptions
         public override bool Execute()
         {
             // Try to load the current config
@@ -35,110 +36,118 @@ namespace MPF.Frontend.Features
 
             // Paths
             Console.WriteLine("Paths:");
-            Console.WriteLine($"  Aaru Path = {options.AaruPath}");
-            Console.WriteLine($"  DiscImageCreator Path = {options.DiscImageCreatorPath}");
-            Console.WriteLine($"  Redumper Path = {options.RedumperPath}");
-            Console.WriteLine($"  Default Program = {options.InternalProgram.LongName()}");
+            Console.WriteLine($"  Aaru Path = {options.Dumping.AaruPath}");
+            Console.WriteLine($"  DiscImageCreator Path = {options.Dumping.DiscImageCreatorPath}");
+            Console.WriteLine($"  Dreamdump Path = {options.Dumping.DreamdumpPath}");
+            Console.WriteLine($"  Redumper Path = {options.Dumping.RedumperPath}");
+            Console.WriteLine($"  Default Program = {options.Dumping.InternalProgram.LongName()}");
             Console.WriteLine();
 
             // UI Defaults
             Console.WriteLine("UI Defaults:");
-            Console.WriteLine($"  Dark Mode = {options.EnableDarkMode}");
-            Console.WriteLine($"  Purp Mode = {options.EnablePurpMode}");
-            Console.WriteLine($"  Custom Background Color = {options.CustomBackgroundColor}");
-            Console.WriteLine($"  Custom Text Color = {options.CustomTextColor}");
+            Console.WriteLine($"  Dark Mode = {options.GUI.Theming.EnableDarkMode}");
+            Console.WriteLine($"  Purp Mode = {options.GUI.Theming.EnablePurpMode}");
+            Console.WriteLine($"  Custom Background Color = {options.GUI.Theming.CustomBackgroundColor}");
+            Console.WriteLine($"  Custom Text Color = {options.GUI.Theming.CustomTextColor}");
             Console.WriteLine($"  Check for Updates on Startup = {options.CheckForUpdatesOnStartup}");
-            Console.WriteLine($"  Copy Update URL to Clipboard = {options.CopyUpdateUrlToClipboard}");
-            Console.WriteLine($"  Fast Label Update = {options.FastUpdateLabel}");
-            Console.WriteLine($"  Default Interface Language = {options.DefaultInterfaceLanguage.LongName()}");
-            Console.WriteLine($"  Default Output Path = {options.DefaultOutputPath}");
-            Console.WriteLine($"  Default System = {options.DefaultSystem.LongName()}");
-            Console.WriteLine($"  Show Debug Menu Item = {options.ShowDebugViewMenuItem}");
+            Console.WriteLine($"  Copy Update URL to Clipboard = {options.GUI.CopyUpdateUrlToClipboard}");
+            Console.WriteLine($"  Fast Label Update = {options.GUI.FastUpdateLabel}");
+            Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
+            Console.WriteLine($"  Default Output Path = {options.Dumping.DefaultOutputPath}");
+            Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem.LongName()}");
+            Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");
             Console.WriteLine();
 
             // Dumping Speeds
             Console.WriteLine("Dumping Speeds:");
-            Console.WriteLine($"  Default CD Speed = {options.PreferredDumpSpeedCD}");
-            Console.WriteLine($"  Default DVD Speed = {options.PreferredDumpSpeedDVD}");
-            Console.WriteLine($"  Default HD-DVD Speed = {options.PreferredDumpSpeedHDDVD}");
-            Console.WriteLine($"  Default Blu-ray Speed = {options.PreferredDumpSpeedBD}");
+            Console.WriteLine($"  Default CD Speed = {options.Dumping.PreferredDumpSpeedCD}");
+            Console.WriteLine($"  Default DVD Speed = {options.Dumping.PreferredDumpSpeedDVD}");
+            Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.PreferredDumpSpeedHDDVD}");
+            Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.PreferredDumpSpeedBD}");
             Console.WriteLine();
 
             // Aaru
             Console.WriteLine("Aaru-Specific Options:");
-            Console.WriteLine($"  Enable Debug = {options.AaruEnableDebug}");
-            Console.WriteLine($"  Enable Verbose = {options.AaruEnableVerbose}");
-            Console.WriteLine($"  Force Dumping = {options.AaruForceDumping}");
-            Console.WriteLine($"  Reread Count = {options.AaruRereadCount}");
-            Console.WriteLine($"  Strip Personal Data = {options.AaruStripPersonalData}");
+            Console.WriteLine($"  Enable Debug = {options.Dumping.Aaru.EnableDebug}");
+            Console.WriteLine($"  Enable Verbose = {options.Dumping.Aaru.EnableVerbose}");
+            Console.WriteLine($"  Force Dumping = {options.Dumping.Aaru.ForceDumping}");
+            Console.WriteLine($"  Reread Count = {options.Dumping.Aaru.RereadCount}");
+            Console.WriteLine($"  Strip Personal Data = {options.Dumping.Aaru.StripPersonalData}");
             Console.WriteLine();
 
             // DiscImageCreator
             Console.WriteLine("DiscImageCreator-Specific Options:");
-            Console.WriteLine($"  Multi-Sector Read Flag = {options.DICMultiSectorRead}");
-            Console.WriteLine($"  Multi-Sector Read Value = {options.DICMultiSectorReadValue}");
-            Console.WriteLine($"  Overly-Secure Flags = {options.DICParanoidMode}");
-            Console.WriteLine($"  Quiet Flag = {options.DICQuietMode}");
-            Console.WriteLine($"  CD Reread Count = {options.DICRereadCount}");
-            Console.WriteLine($"  DVD Reread Count = {options.DICDVDRereadCount}");
-            Console.WriteLine($"  Use CMI Flag = {options.DICUseCMIFlag}");
+            Console.WriteLine($"  Multi-Sector Read Flag = {options.Dumping.DIC.MultiSectorRead}");
+            Console.WriteLine($"  Multi-Sector Read Value = {options.Dumping.DIC.MultiSectorReadValue}");
+            Console.WriteLine($"  Overly-Secure Flags = {options.Dumping.DIC.ParanoidMode}");
+            Console.WriteLine($"  Quiet Flag = {options.Dumping.DIC.QuietMode}");
+            Console.WriteLine($"  CD Reread Count = {options.Dumping.DIC.RereadCount}");
+            Console.WriteLine($"  DVD Reread Count = {options.Dumping.DIC.DVDRereadCount}");
+            Console.WriteLine($"  Use CMI Flag = {options.Dumping.DIC.UseCMIFlag}");
+            Console.WriteLine();
+
+            // Dreamdump
+            Console.WriteLine("Dreamdump-Specific Options:");
+            Console.WriteLine($"  Non-Redump Mode = {options.Dumping.Dreamdump.NonRedumpMode}");
+            Console.WriteLine($"  Sector Order = {options.Dumping.Dreamdump.SectorOrder.LongName()}");
+            Console.WriteLine($"  Reread Count = {options.Dumping.Dreamdump.RereadCount}");
             Console.WriteLine();
 
             // Redumper
             Console.WriteLine("Redumper-Specific Options:");
-            Console.WriteLine($"  Enable Skeleton = {options.RedumperEnableSkeleton}");
-            Console.WriteLine($"  Enable Verbose = {options.RedumperEnableVerbose}");
-            Console.WriteLine($"  Lead-in Retry Count = {options.RedumperLeadinRetryCount}");
-            Console.WriteLine($"  Non-Redump Mode = {options.RedumperNonRedumpMode}");
-            Console.WriteLine($"  Drive Type = {options.RedumperDriveType.LongName()}");
-            Console.WriteLine($"  Read Method = {options.RedumperReadMethod.LongName()}");
-            Console.WriteLine($"  Sector Order = {options.RedumperSectorOrder.LongName()}");
-            Console.WriteLine($"  Reread Count = {options.RedumperRereadCount}");
-            Console.WriteLine($"  Refine Sector Mode = {options.RedumperRefineSectorMode}");
+            Console.WriteLine($"  Enable Skeleton = {options.Dumping.Redumper.EnableSkeleton}");
+            Console.WriteLine($"  Enable Verbose = {options.Dumping.Redumper.EnableVerbose}");
+            Console.WriteLine($"  Lead-in Retry Count = {options.Dumping.Redumper.LeadinRetryCount}");
+            Console.WriteLine($"  Non-Redump Mode = {options.Dumping.Redumper.NonRedumpMode}");
+            Console.WriteLine($"  Drive Type = {options.Dumping.Redumper.DriveType.LongName()}");
+            Console.WriteLine($"  Read Method = {options.Dumping.Redumper.ReadMethod.LongName()}");
+            Console.WriteLine($"  Sector Order = {options.Dumping.Redumper.SectorOrder.LongName()}");
+            Console.WriteLine($"  Reread Count = {options.Dumping.Redumper.RereadCount}");
+            Console.WriteLine($"  Refine Sector Mode = {options.Dumping.Redumper.RefineSectorMode}");
             Console.WriteLine();
 
             // Extra Dumping Options
             Console.WriteLine("Extra Dumping Options:");
-            Console.WriteLine($"  Scan for Protection = {options.ScanForProtection}");
-            Console.WriteLine($"  Add Placeholders = {options.AddPlaceholders}");
-            Console.WriteLine($"  Prompt for Media Information = {options.PromptForDiscInformation}");
-            Console.WriteLine($"  Pull All Information = {options.PullAllInformation}");
-            Console.WriteLine($"  Enable Tabs in Input Fields = {options.EnableTabsInInputFields}");
-            Console.WriteLine($"  Enable Redump Compatibility = {options.EnableRedumpCompatibility}");
-            Console.WriteLine($"  Show Disc Eject Reminder = {options.ShowDiscEjectReminder}");
-            Console.WriteLine($"  Ignore Fixed Drives = {options.IgnoreFixedDrives}");
-            Console.WriteLine($"  Add Filename Suffix = {options.AddFilenameSuffix}");
-            Console.WriteLine($"  Output Submission JSON = {options.OutputSubmissionJSON}");
-            Console.WriteLine($"  Include Artifacts = {options.IncludeArtifacts}");
-            Console.WriteLine($"  Compress Log Files = {options.CompressLogFiles}");
-            Console.WriteLine($"  Log Compression = {options.LogCompression.LongName()}");
-            Console.WriteLine($"  Delete Unnecessary Files = {options.DeleteUnnecessaryFiles}");
-            Console.WriteLine($"  Create IRD After Dumping = {options.CreateIRDAfterDumping}");
+            Console.WriteLine($"  Scan for Protection = {options.Processing.ProtectionScanning.ScanForProtection}");
+            Console.WriteLine($"  Add Placeholders = {options.Processing.MediaInformation.AddPlaceholders}");
+            Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");
+            Console.WriteLine($"  Pull All Information = {options.Processing.MediaInformation.PullAllInformation}");
+            Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
+            Console.WriteLine($"  Enable Redump Compatibility = {options.Processing.MediaInformation.EnableRedumpCompatibility}");
+            Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
+            Console.WriteLine($"  Ignore Fixed Drives = {options.GUI.IgnoreFixedDrives}");
+            Console.WriteLine($"  Add Filename Suffix = {options.Processing.AddFilenameSuffix}");
+            Console.WriteLine($"  Output Submission JSON = {options.Processing.OutputSubmissionJSON}");
+            Console.WriteLine($"  Include Artifacts = {options.Processing.IncludeArtifacts}");
+            Console.WriteLine($"  Compress Log Files = {options.Processing.CompressLogFiles}");
+            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
+            Console.WriteLine($"  Delete Unnecessary Files = {options.Processing.DeleteUnnecessaryFiles}");
+            Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
             Console.WriteLine();
 
             // Skip Options
             Console.WriteLine("Skip Options:");
-            Console.WriteLine($"  Skip System Detection = {options.SkipSystemDetection}");
+            Console.WriteLine($"  Skip System Detection = {options.GUI.SkipSystemDetection}");
             Console.WriteLine();
 
             // Protection Scanning Options
             Console.WriteLine("Protection Scanning Options:");
-            Console.WriteLine($"  Scan Archives for Protection = {options.ScanArchivesForProtection}");
-            Console.WriteLine($"  Include Debug Protection Information = {options.IncludeDebugProtectionInformation}");
-            Console.WriteLine($"  Hide Drive Letters = {options.HideDriveLetters}");
+            Console.WriteLine($"  Scan Archives for Protection = {options.Processing.ProtectionScanning.ScanArchivesForProtection}");
+            Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
+            Console.WriteLine($"  Hide Drive Letters = {options.Processing.ProtectionScanning.HideDriveLetters}");
             Console.WriteLine();
 
             // Logging Options
             Console.WriteLine("Logging Options:");
             Console.WriteLine($"  Verbose Logging = {options.VerboseLogging}");
-            Console.WriteLine($"  Open Log Window at Startup = {options.OpenLogWindowAtStartup}");
+            Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
             Console.WriteLine();
 
             // Redump Login Information
             Console.WriteLine("Redump Login Information:");
-            Console.WriteLine($"  Retrieve Match Information = {options.RetrieveMatchInformation}");
-            Console.WriteLine($"  Redump Username = {options.RedumpUsername}");
-            Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.RedumpPassword) ? "[UNSET]" : "[SET]")}");
+            Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
+            Console.WriteLine($"  Redump Username = {options.Processing.Login.RedumpUsername}");
+            Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpPassword) ? "[UNSET]" : "[SET]")}");
             Console.WriteLine();
 
             return true;

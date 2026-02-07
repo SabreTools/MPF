@@ -18,7 +18,7 @@ namespace MPF.Check.Features
         /// <summary>
         /// User-defined options
         /// </summary>
-        public Options Options { get; protected set; }
+        public SegmentedOptions Options { get; protected set; }
 
         /// <summary>
         /// Currently-selected system
@@ -40,36 +40,34 @@ namespace MPF.Check.Features
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            Options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
+            Options = new SegmentedOptions();
 
-                // UI Defaults
-                CheckForUpdatesOnStartup = false,
+            // Internal Program
+            Options.Dumping.InternalProgram = InternalProgram.NONE;
 
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                LogCompression = LogCompression.DeflateMaximum,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
+            // Protection Scanning Options
+            Options.Processing.ProtectionScanning.ScanForProtection = false;
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = true;
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
+            Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
+            // Redump Login Information
+            Options.Processing.Login.RetrieveMatchInformation = true;
+            Options.Processing.Login.RedumpUsername = null;
+            Options.Processing.Login.RedumpPassword = null;
 
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
+            // Media Information
+            Options.Processing.MediaInformation.AddPlaceholders = true;
+            Options.Processing.MediaInformation.PullAllInformation = false;
+
+            // Post-Information Options
+            Options.Processing.AddFilenameSuffix = false;
+            Options.Processing.CreateIRDAfterDumping = false;
+            Options.Processing.OutputSubmissionJSON = false;
+            Options.Processing.IncludeArtifacts = false;
+            Options.Processing.CompressLogFiles = false;
+            Options.Processing.LogCompression = LogCompression.DeflateMaximum;
+            Options.Processing.DeleteUnnecessaryFiles = false;
         }
 
         /// <inheritdoc/>
@@ -86,18 +84,18 @@ namespace MPF.Check.Features
             Console.WriteLine($"Using system: {System.LongName()}");
 
             // Validate a program is provided
-            if (Options.InternalProgram == InternalProgram.NONE)
+            if (Options.Dumping.InternalProgram == InternalProgram.NONE)
             {
                 Console.Error.WriteLine("A program name needs to be provided");
                 return false;
             }
 
             // Validate the supplied credentials
-            if (Options.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(Options.RedumpUsername)
-                && !string.IsNullOrEmpty(Options.RedumpPassword))
+            if (Options.Processing.Login.RetrieveMatchInformation
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpPassword))
             {
-                bool? validated = RedumpClient.ValidateCredentials(Options.RedumpUsername!, Options.RedumpPassword!).GetAwaiter().GetResult();
+                bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpUsername!, Options.Processing.Login.RedumpPassword!).GetAwaiter().GetResult();
                 string message = validated switch
                 {
                     true => "Redump username and password accepted!",

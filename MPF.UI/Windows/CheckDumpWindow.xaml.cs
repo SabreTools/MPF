@@ -101,8 +101,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string? currentPath = CheckDumpViewModel.InputPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CheckDumpViewModel.Options.DefaultOutputPath))
-                currentPath = CheckDumpViewModel.Options.DefaultOutputPath!;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(CheckDumpViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = CheckDumpViewModel.Options.Dumping.DefaultOutputPath!;
             if (string.IsNullOrEmpty(currentPath))
                 currentPath = AppDomain.CurrentDomain.BaseDirectory!;
 
@@ -128,9 +128,9 @@ namespace MPF.UI.Windows
         /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
+        public bool? ShowMediaInformationWindow(SegmentedOptions? options, ref SubmissionInfo? submissionInfo)
         {
-            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
+            var mediaInformationWindow = new MediaInformationWindow(options ?? new SegmentedOptions(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,

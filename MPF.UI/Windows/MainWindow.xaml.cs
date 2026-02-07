@@ -125,7 +125,7 @@ namespace MPF.UI.Windows
             AddEventHandlers();
 
             // Display the debug option in the menu, if necessary
-            if (MainViewModel.Options.ShowDebugViewMenuItem)
+            if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
 
             MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
@@ -139,7 +139,7 @@ namespace MPF.UI.Windows
             MainViewModel.TranslateStrings(translationStrings);
 
             // Set interface language according to the options
-            SetInterfaceLanguage(MainViewModel.Options.DefaultInterfaceLanguage);
+            SetInterfaceLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage);
 
             // Set the UI color scheme according to the options
             ApplyTheme();
@@ -321,8 +321,8 @@ namespace MPF.UI.Windows
         {
             // Get the current path, if possible
             string currentPath = MainViewModel.OutputPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.DefaultOutputPath))
-                currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = Path.Combine(MainViewModel.Options.Dumping.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
             else if (string.IsNullOrEmpty(currentPath))
                 currentPath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
             if (string.IsNullOrEmpty(currentPath))
@@ -363,7 +363,7 @@ namespace MPF.UI.Windows
                 message += $"{Environment.NewLine}You have the newest version!";
 
             // If we have a new version, put it in the clipboard
-            if (MainViewModel.Options.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
+            if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
             {
                 try
                 {
@@ -406,13 +406,13 @@ namespace MPF.UI.Windows
         /// <param name="options">Options set to pass to the information window</param>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
+        public bool? ShowMediaInformationWindow(SegmentedOptions? options, ref SubmissionInfo? submissionInfo)
         {
-            if (options?.ShowDiscEjectReminder == true)
+            if (options?.Processing?.ShowDiscEjectReminder == true)
                 CustomMessageBox.Show(this, (string)Application.Current.FindResource("EjectMessageString"),
                     (string)Application.Current.FindResource("EjectTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
 
-            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
+            var mediaInformationWindow = new MediaInformationWindow(options ?? new SegmentedOptions(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,
@@ -540,12 +540,12 @@ namespace MPF.UI.Windows
         private void ApplyTheme()
         {
             Theme theme;
-            if (MainViewModel.Options.EnableDarkMode)
+            if (MainViewModel.Options.GUI.Theming.EnableDarkMode)
                 theme = new DarkModeTheme();
-            else if (MainViewModel.Options.EnablePurpMode)
+            else if (MainViewModel.Options.GUI.Theming.EnablePurpMode)
                 theme = new CustomTheme("111111", "9A5EC0");
-            else if (IsHexColor(MainViewModel.Options.CustomBackgroundColor) && IsHexColor(MainViewModel.Options.CustomTextColor))
-                theme = new CustomTheme(MainViewModel.Options.CustomBackgroundColor, MainViewModel.Options.CustomTextColor);
+            else if (IsHexColor(MainViewModel.Options.GUI.Theming.CustomBackgroundColor) && IsHexColor(MainViewModel.Options.GUI.Theming.CustomTextColor))
+                theme = new CustomTheme(MainViewModel.Options.GUI.Theming.CustomBackgroundColor, MainViewModel.Options.GUI.Theming.CustomTextColor);
             else
                 theme = new LightModeTheme();
 
@@ -643,14 +643,14 @@ namespace MPF.UI.Windows
             var options = optionsWindow.OptionsViewModel.Options;
 
             // Force a refresh of the path, if necessary
-            if (MainViewModel.Options.DefaultOutputPath != options.DefaultOutputPath)
+            if (MainViewModel.Options.Dumping.DefaultOutputPath != options.Dumping.DefaultOutputPath)
                 MainViewModel.OutputPath = string.Empty;
 
             // Set the language according to the settings
             if (savedSettings)
             {
-                var oldDefaultLang = MainViewModel.Options.DefaultInterfaceLanguage;
-                var newDefaultLang = options.DefaultInterfaceLanguage;
+                var oldDefaultLang = MainViewModel.Options.GUI.DefaultInterfaceLanguage;
+                var newDefaultLang = options.GUI.DefaultInterfaceLanguage;
                 if (oldDefaultLang != newDefaultLang)
                 {
                     SetInterfaceLanguage(newDefaultLang);
@@ -869,7 +869,7 @@ namespace MPF.UI.Windows
         {
             if (MainViewModel.CanExecuteSelectionChanged)
             {
-                if (MainViewModel.Options.FastUpdateLabel)
+                if (MainViewModel.Options.GUI.FastUpdateLabel)
                     MainViewModel.FastUpdateLabel(removeEventHandlers: true);
                 else
                     MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);

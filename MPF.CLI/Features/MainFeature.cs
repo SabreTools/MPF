@@ -75,7 +75,7 @@ namespace MPF.CLI.Features
             {
                 // Use specific program
                 if (UseInput.ProcessInput(args, ref index))
-                    Options.InternalProgram = UseInput.Value.ToInternalProgram();
+                    Options.Dumping.InternalProgram = UseInput.Value.ToInternalProgram();
 
                 // Set a media type
                 else if (MediaTypeInput.ProcessInput(args, ref index))
