@@ -23,7 +23,6 @@ namespace MPF.Frontend.Features
         }
 
         /// <inheritdoc/>
-        /// TODO: Restructure this to fit SegmentedOptions
         public override bool Execute()
         {
             // Try to load the current config
@@ -34,28 +33,41 @@ namespace MPF.Frontend.Features
                 return true;
             }
 
-            // Paths
-            Console.WriteLine("Paths:");
+            // Root-level
+            Console.WriteLine($"Configuration Version = {options.Version}");
+            Console.WriteLine($"Check for Updates on Startup = {options.CheckForUpdatesOnStartup}");
+            Console.WriteLine($"Verbose Logging = {options.VerboseLogging}");
+            Console.WriteLine();
+
+            // GUI
+            Console.WriteLine("GUI:");
+            Console.WriteLine($"  Copy Update URL to Clipboard = {options.GUI.CopyUpdateUrlToClipboard}");
+            Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
+            Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");
+            Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
+            Console.WriteLine("  Theming:");
+            Console.WriteLine($"    Dark Mode = {options.GUI.Theming.EnableDarkMode}");
+            Console.WriteLine($"    Purp Mode = {options.GUI.Theming.EnablePurpMode}");
+            Console.WriteLine($"    Custom Background Color = {options.GUI.Theming.CustomBackgroundColor}");
+            Console.WriteLine($"    Custom Text Color = {options.GUI.Theming.CustomTextColor}");
+            Console.WriteLine($"  Fast Label Update = {options.GUI.FastUpdateLabel}");
+            Console.WriteLine($"  Ignore Fixed Drives = {options.GUI.IgnoreFixedDrives}");
+            Console.WriteLine($"  Skip System Detection = {options.GUI.SkipSystemDetection}");
+            Console.WriteLine();
+
+            // Dump Paths
+            Console.WriteLine("Dump Paths:");
             Console.WriteLine($"  Aaru Path = {options.Dumping.AaruPath}");
             Console.WriteLine($"  DiscImageCreator Path = {options.Dumping.DiscImageCreatorPath}");
             Console.WriteLine($"  Dreamdump Path = {options.Dumping.DreamdumpPath}");
             Console.WriteLine($"  Redumper Path = {options.Dumping.RedumperPath}");
-            Console.WriteLine($"  Default Program = {options.Dumping.InternalProgram.LongName()}");
             Console.WriteLine();
 
-            // UI Defaults
-            Console.WriteLine("UI Defaults:");
-            Console.WriteLine($"  Dark Mode = {options.GUI.Theming.EnableDarkMode}");
-            Console.WriteLine($"  Purp Mode = {options.GUI.Theming.EnablePurpMode}");
-            Console.WriteLine($"  Custom Background Color = {options.GUI.Theming.CustomBackgroundColor}");
-            Console.WriteLine($"  Custom Text Color = {options.GUI.Theming.CustomTextColor}");
-            Console.WriteLine($"  Check for Updates on Startup = {options.CheckForUpdatesOnStartup}");
-            Console.WriteLine($"  Copy Update URL to Clipboard = {options.GUI.CopyUpdateUrlToClipboard}");
-            Console.WriteLine($"  Fast Label Update = {options.GUI.FastUpdateLabel}");
-            Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
+            // Dump Defaults
+            Console.WriteLine("Dump Defaults:");
+            Console.WriteLine($"  Default Program = {options.Dumping.InternalProgram.LongName()}");
             Console.WriteLine($"  Default Output Path = {options.Dumping.DefaultOutputPath}");
             Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem.LongName()}");
-            Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");
             Console.WriteLine();
 
             // Dumping Speeds
@@ -106,41 +118,12 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Refine Sector Mode = {options.Dumping.Redumper.RefineSectorMode}");
             Console.WriteLine();
 
-            // Extra Dumping Options
-            Console.WriteLine("Extra Dumping Options:");
-            Console.WriteLine($"  Scan for Protection = {options.Processing.ProtectionScanning.ScanForProtection}");
-            Console.WriteLine($"  Add Placeholders = {options.Processing.MediaInformation.AddPlaceholders}");
-            Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");
-            Console.WriteLine($"  Pull All Information = {options.Processing.MediaInformation.PullAllInformation}");
-            Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
-            Console.WriteLine($"  Enable Redump Compatibility = {options.Processing.MediaInformation.EnableRedumpCompatibility}");
-            Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
-            Console.WriteLine($"  Ignore Fixed Drives = {options.GUI.IgnoreFixedDrives}");
-            Console.WriteLine($"  Add Filename Suffix = {options.Processing.AddFilenameSuffix}");
-            Console.WriteLine($"  Output Submission JSON = {options.Processing.OutputSubmissionJSON}");
-            Console.WriteLine($"  Include Artifacts = {options.Processing.IncludeArtifacts}");
-            Console.WriteLine($"  Compress Log Files = {options.Processing.CompressLogFiles}");
-            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
-            Console.WriteLine($"  Delete Unnecessary Files = {options.Processing.DeleteUnnecessaryFiles}");
-            Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
-            Console.WriteLine();
-
-            // Skip Options
-            Console.WriteLine("Skip Options:");
-            Console.WriteLine($"  Skip System Detection = {options.GUI.SkipSystemDetection}");
-            Console.WriteLine();
-
             // Protection Scanning Options
             Console.WriteLine("Protection Scanning Options:");
+            Console.WriteLine($"  Scan for Protection = {options.Processing.ProtectionScanning.ScanForProtection}");
             Console.WriteLine($"  Scan Archives for Protection = {options.Processing.ProtectionScanning.ScanArchivesForProtection}");
             Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
             Console.WriteLine($"  Hide Drive Letters = {options.Processing.ProtectionScanning.HideDriveLetters}");
-            Console.WriteLine();
-
-            // Logging Options
-            Console.WriteLine("Logging Options:");
-            Console.WriteLine($"  Verbose Logging = {options.VerboseLogging}");
-            Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
             Console.WriteLine();
 
             // Redump Login Information
@@ -148,6 +131,27 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
             Console.WriteLine($"  Redump Username = {options.Processing.Login.RedumpUsername}");
             Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpPassword) ? "[UNSET]" : "[SET]")}");
+            Console.WriteLine();
+
+            // Media Information
+            Console.WriteLine("Media Information:");
+            Console.WriteLine($"  Add Placeholders = {options.Processing.MediaInformation.AddPlaceholders}");
+            Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");
+            Console.WriteLine($"  Pull All Information = {options.Processing.MediaInformation.PullAllInformation}");
+            Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
+            Console.WriteLine($"  Enable Redump Compatibility = {options.Processing.MediaInformation.EnableRedumpCompatibility}");
+            Console.WriteLine();
+
+            // Output Options
+            Console.WriteLine("Output Options:");
+            Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
+            Console.WriteLine($"  Add Filename Suffix = {options.Processing.AddFilenameSuffix}");
+            Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
+            Console.WriteLine($"  Output Submission JSON = {options.Processing.OutputSubmissionJSON}");
+            Console.WriteLine($"  Include Artifacts = {options.Processing.IncludeArtifacts}");
+            Console.WriteLine($"  Compress Log Files = {options.Processing.CompressLogFiles}");
+            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
+            Console.WriteLine($"  Delete Unnecessary Files = {options.Processing.DeleteUnnecessaryFiles}");
             Console.WriteLine();
 
             return true;
