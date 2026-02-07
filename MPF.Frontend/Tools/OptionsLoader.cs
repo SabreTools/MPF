@@ -234,31 +234,12 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(ConfigurationPath))
                 return;
 
-            // Convert to an Options object
-            var tempOptions = options.ConvertToOptions();
-
-            // Ensure default values are included
-            PropertyInfo[] properties = typeof(Options).GetProperties();
-            foreach (var property in properties)
-            {
-                // Skip dictionary properties
-                if (property.Name == "Item")
-                    continue;
-
-                // Skip non-option properties
-                if (property.Name == "Settings" || property.Name == "HasRedumpLogin")
-                    continue;
-
-                var val = property.GetValue(tempOptions, null);
-                property.SetValue(tempOptions, val, null);
-            }
-
             var serializer = JsonSerializer.Create();
             var stream = File.Open(ConfigurationPath, FileMode.Create, FileAccess.Write, FileShare.None);
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
-            serializer.Serialize(writer, tempOptions.Settings, typeof(Dictionary<string, string>));
+            serializer.Serialize(writer, options.ConvertToDictionary(), typeof(Dictionary<string, string>));
         }
 
         /// <summary>
@@ -275,7 +256,7 @@ namespace MPF.Frontend.Tools
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
-            serializer.Serialize(writer, options);
+            serializer.Serialize(writer, options, typeof(SegmentedOptions));
         }
 
         /// <summary>
