@@ -606,12 +606,7 @@ namespace MPF.Frontend.Tools
                 // Get the latest tag from GitHub
                 _ = GetRemoteVersionAndUrl(out string? tag, out url);
                 different = version != tag && tag is not null;
-
-                message = $"Local version: {version}"
-                    + $"{Environment.NewLine}Remote version: {tag}"
-                    + (different
-                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
-                        : $"{Environment.NewLine}You have the newest version!");
+                message = $"Local version: {version}{Environment.NewLine}Remote version: {tag}";
             }
             catch (Exception ex)
             {

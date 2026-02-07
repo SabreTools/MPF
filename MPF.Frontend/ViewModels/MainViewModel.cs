@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -815,7 +815,7 @@ namespace MPF.Frontend.ViewModels
 
             SecretLogLn(message);
             if (url is null)
-                message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
+                message = "An exception occurred while checking for remote versions. See the log window for more details.";
         }
 
         /// <summary>

@@ -57,6 +57,9 @@ namespace MPF.CLI
 
                 // Interactive Mode
                 case InteractiveFeature interactive:
+                    if (interactive.Options.CheckForUpdatesOnStartup)
+                        CheckForUpdates();
+
                     if (!interactive.ProcessArgs(args, 0))
                     {
                         BaseFeature.DisplayHelp();
@@ -73,6 +76,9 @@ namespace MPF.CLI
 
                 // Default Behavior
                 default:
+                    if (mainFeature.Options.CheckForUpdatesOnStartup)
+                        CheckForUpdates();
+
                     if (!mainFeature.ProcessArgs(args, 0))
                     {
                         BaseFeature.DisplayHelp();
@@ -87,6 +93,24 @@ namespace MPF.CLI
 
                     break;
             }
+        }
+
+        /// <summary>
+        /// Check for available updates
+        /// </summary>
+        private static void CheckForUpdates()
+        {
+            FrontendTool.CheckForNewVersion(out bool different, out string message, out string? url);
+            if (url is null)
+                message = $"An exception occurred while checking for remote versions:{Environment.NewLine}{message}";
+
+            Console.WriteLine(message);
+            if (different && url is not null)
+                Console.WriteLine($"Update URL: {url}");
+            else if (!different && url is not null)
+                Console.WriteLine("You have the newest version!");
+
+            Console.WriteLine();
         }
 
         /// <summary>

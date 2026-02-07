@@ -18,6 +18,7 @@
 - Log the system being used, in case it came from config
 - Extend logging with a new state
 - Add currently-unused new options class
+- Allow Check and CLI to check for updates on startup
 
 ### 3.6.0 (2025-11-28)
 
