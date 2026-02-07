@@ -42,9 +42,9 @@ namespace MPF.Frontend.Features
             // GUI
             Console.WriteLine("GUI:");
             Console.WriteLine($"  Copy Update URL to Clipboard = {options.GUI.CopyUpdateUrlToClipboard}");
+            Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
             Console.WriteLine($"  Default Interface Language = {options.GUI.DefaultInterfaceLanguage.LongName()}");
             Console.WriteLine($"  Show Debug Menu Item = {options.GUI.ShowDebugViewMenuItem}");
-            Console.WriteLine($"  Open Log Window at Startup = {options.GUI.OpenLogWindowAtStartup}");
             Console.WriteLine("  Theming:");
             Console.WriteLine($"    Dark Mode = {options.GUI.Theming.EnableDarkMode}");
             Console.WriteLine($"    Purp Mode = {options.GUI.Theming.EnablePurpMode}");
@@ -68,14 +68,10 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Default Program = {options.InternalProgram.LongName()}");
             Console.WriteLine($"  Default Output Path = {options.Dumping.DefaultOutputPath}");
             Console.WriteLine($"  Default System = {options.Dumping.DefaultSystem.LongName()}");
-            Console.WriteLine();
-
-            // Dumping Speeds
-            Console.WriteLine("Dumping Speeds:");
-            Console.WriteLine($"  Default CD Speed = {options.Dumping.DumpSpeeds.PreferredCD}");
-            Console.WriteLine($"  Default DVD Speed = {options.Dumping.DumpSpeeds.PreferredDVD}");
-            Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.DumpSpeeds.PreferredHDDVD}");
-            Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.DumpSpeeds.PreferredBD}");
+            Console.WriteLine($"  Default CD Speed = {options.Dumping.DumpSpeeds.CD}");
+            Console.WriteLine($"  Default DVD Speed = {options.Dumping.DumpSpeeds.DVD}");
+            Console.WriteLine($"  Default HD-DVD Speed = {options.Dumping.DumpSpeeds.HDDVD}");
+            Console.WriteLine($"  Default Blu-ray Speed = {options.Dumping.DumpSpeeds.Bluray}");
             Console.WriteLine();
 
             // Aaru

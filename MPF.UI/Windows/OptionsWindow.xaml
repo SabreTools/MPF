@@ -310,28 +310,28 @@
                                 <Label Grid.Row="0" Grid.Column="0" Content="{DynamicResource CDLabelString}" />
                                 <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForCDAsCollection}}"
-                                    Value="{Binding Options.Dumping.DumpSpeeds.PreferredCD}" />
+                                    Value="{Binding Options.Dumping.DumpSpeeds.CD}" />
                                 <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                     Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="1" Grid.Column="0" Content="{DynamicResource DVDLabelString}" />
                                 <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForDVDAsCollection}}"
-                                    Value="{Binding Options.Dumping.DumpSpeeds.PreferredDVD}"  />
+                                    Value="{Binding Options.Dumping.DumpSpeeds.DVD}"  />
                                 <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="2" Grid.Column="0" Content="{DynamicResource HDDVDLabelString}" />
                                 <Slider x:Name="DumpSpeedHDDVDSlider" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForHDDVDAsCollection}}"
-                                    Value="{Binding Options.Dumping.DumpSpeeds.PreferredHDDVD}"  />
+                                    Value="{Binding Options.Dumping.DumpSpeeds.HDDVD}"  />
                                 <TextBox x:Name="DumpSpeedHDDVDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="3" Grid.Column="0" Content="{DynamicResource BDLabelString}" />
                                 <Slider x:Name="DumpSpeedBDSlider" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static core:Constants.SpeedsForBDAsCollection}}"
-                                    Value="{Binding Options.Dumping.DumpSpeeds.PreferredBD}"  />
+                                    Value="{Binding Options.Dumping.DumpSpeeds.Bluray}"  />
                                 <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="3" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
                             </Grid>

@@ -29,6 +29,7 @@
 - Reduce reach of original Options type
 - Move dictionary logic to new Options object
 - Replace original Options object
+- Clean up options serialization and ordering
 
 ### 3.6.0 (2025-11-28)
 

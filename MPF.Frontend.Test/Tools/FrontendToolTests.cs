@@ -22,10 +22,10 @@ namespace MPF.Frontend.Test.Tools
         public void GetDefaultSpeedForMediaTypeSegmentedTest(MediaType? mediaType, int expected)
         {
             var options = new Options();
-            options.Dumping.DumpSpeeds.PreferredCD = 72;
-            options.Dumping.DumpSpeeds.PreferredDVD = 24;
-            options.Dumping.DumpSpeeds.PreferredHDDVD = 24;
-            options.Dumping.DumpSpeeds.PreferredBD = 16;
+            options.Dumping.DumpSpeeds.CD = 72;
+            options.Dumping.DumpSpeeds.DVD = 24;
+            options.Dumping.DumpSpeeds.HDDVD = 24;
+            options.Dumping.DumpSpeeds.Bluray = 16;
 
             int actual = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
             Assert.Equal(expected, actual);

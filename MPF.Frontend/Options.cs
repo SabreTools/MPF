@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
@@ -72,6 +73,7 @@ namespace MPF.Frontend
         /// All settings in the form of a dictionary
         /// </summary>
         /// TODO: Remove when Options is no longer relevant
+        [JsonIgnore]
         public Dictionary<string, string?> Settings
         {
             get { return ConvertToDictionary(); }
@@ -103,11 +105,11 @@ namespace MPF.Frontend
             InternalProgram = tempInternalProgram == InternalProgram.NONE ? InternalProgram.Redumper : tempInternalProgram;
 
             GUI.CopyUpdateUrlToClipboard = GetBooleanSetting(source, "CopyUpdateUrlToClipboard", true);
+            GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
 
             valueString = GetStringSetting(source, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
             GUI.DefaultInterfaceLanguage = valueString.ToInterfaceLanguage();
             GUI.ShowDebugViewMenuItem = GetBooleanSetting(source, "ShowDebugViewMenuItem", false);
-            GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
             GUI.Theming.EnableDarkMode = GetBooleanSetting(source, "EnableDarkMode", false);
             GUI.Theming.EnablePurpMode = GetBooleanSetting(source, "EnablePurpMode", false);
             GUI.Theming.CustomBackgroundColor = GetStringSetting(source, "CustomBackgroundColor", null);
@@ -125,11 +127,10 @@ namespace MPF.Frontend
             Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
             valueString = GetStringSetting(source, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
             Dumping.DefaultSystem = (valueString ?? string.Empty).ToRedumpSystem();
-
-            Dumping.DumpSpeeds.PreferredCD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
-            Dumping.DumpSpeeds.PreferredDVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
-            Dumping.DumpSpeeds.PreferredHDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);
-            Dumping.DumpSpeeds.PreferredBD = GetInt32Setting(source, "PreferredDumpSpeedBD", 8);
+            Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
+            Dumping.DumpSpeeds.DVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
+            Dumping.DumpSpeeds.HDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);
+            Dumping.DumpSpeeds.Bluray = GetInt32Setting(source, "PreferredDumpSpeedBD", 8);
 
             Dumping.Aaru.EnableDebug = GetBooleanSetting(source, AaruConstants.EnableDebug, AaruConstants.EnableDebugDefault);
             Dumping.Aaru.EnableVerbose = GetBooleanSetting(source, AaruConstants.EnableVerbose, AaruConstants.EnableVerboseDefault);
@@ -204,10 +205,10 @@ namespace MPF.Frontend
             InternalProgram = source.InternalProgram;
 
             GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
+            GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
 
             GUI.DefaultInterfaceLanguage = source.GUI.DefaultInterfaceLanguage;
             GUI.ShowDebugViewMenuItem = source.GUI.ShowDebugViewMenuItem;
-            GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
             GUI.Theming.EnableDarkMode = source.GUI.Theming.EnableDarkMode;
             GUI.Theming.EnablePurpMode = source.GUI.Theming.EnablePurpMode;
             GUI.Theming.CustomBackgroundColor = source.GUI.Theming.CustomBackgroundColor;
@@ -224,11 +225,10 @@ namespace MPF.Frontend
 
             Dumping.DefaultOutputPath = source.Dumping.DefaultOutputPath;
             Dumping.DefaultSystem = source.Dumping.DefaultSystem;
-
-            Dumping.DumpSpeeds.PreferredCD = source.Dumping.DumpSpeeds.PreferredCD;
-            Dumping.DumpSpeeds.PreferredDVD = source.Dumping.DumpSpeeds.PreferredDVD;
-            Dumping.DumpSpeeds.PreferredHDDVD = source.Dumping.DumpSpeeds.PreferredHDDVD;
-            Dumping.DumpSpeeds.PreferredBD = source.Dumping.DumpSpeeds.PreferredBD;
+            Dumping.DumpSpeeds.CD = source.Dumping.DumpSpeeds.CD;
+            Dumping.DumpSpeeds.DVD = source.Dumping.DumpSpeeds.DVD;
+            Dumping.DumpSpeeds.HDDVD = source.Dumping.DumpSpeeds.HDDVD;
+            Dumping.DumpSpeeds.Bluray = source.Dumping.DumpSpeeds.Bluray;
 
             Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
             Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
@@ -313,10 +313,10 @@ namespace MPF.Frontend
                 { "DefaultSystem", Dumping.DefaultSystem.ToString() },
                 { "ShowDebugViewMenuItem", GUI.ShowDebugViewMenuItem.ToString() },
 
-                { "PreferredDumpSpeedCD", Dumping.DumpSpeeds.PreferredCD.ToString() },
-                { "PreferredDumpSpeedDVD", Dumping.DumpSpeeds.PreferredDVD.ToString() },
-                { "PreferredDumpSpeedHDDVD", Dumping.DumpSpeeds.PreferredHDDVD.ToString() },
-                { "PreferredDumpSpeedBD", Dumping.DumpSpeeds.PreferredBD.ToString() },
+                { "PreferredDumpSpeedCD", Dumping.DumpSpeeds.CD.ToString() },
+                { "PreferredDumpSpeedDVD", Dumping.DumpSpeeds.DVD.ToString() },
+                { "PreferredDumpSpeedHDDVD", Dumping.DumpSpeeds.HDDVD.ToString() },
+                { "PreferredDumpSpeedBD", Dumping.DumpSpeeds.Bluray.ToString() },
 
                 { AaruConstants.EnableDebug, Dumping.Aaru.EnableDebug.ToString() },
                 { AaruConstants.EnableVerbose, Dumping.Aaru.EnableVerbose.ToString() },
@@ -454,6 +454,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Aaru path
         /// </summary>
+        [JsonIgnore]
         internal static string DefaultAaruPath
         {
             get
@@ -478,6 +479,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default DiscImageCreator path
         /// </summary>
+        [JsonIgnore]
         internal static string DefaultDiscImageCreatorPath
         {
             get
@@ -502,6 +504,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Dreamdump path
         /// </summary>
+        [JsonIgnore]
         internal static string DefaultDreamdumpPath
         {
             get
@@ -526,6 +529,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Default Redumper path
         /// </summary>
+        [JsonIgnore]
         internal static string DefaultRedumperPath
         {
             get
@@ -626,10 +630,6 @@ namespace MPF.Frontend
         /// <remarks>Version 1 and greater</remarks>
         public RedumpSystem? DefaultSystem { get; set; } = RedumpSystem.IBMPCcompatible;
 
-        #endregion
-
-        #region Dumping Speeds
-
         /// <summary>
         /// Default preferred dumping speeds per media type
         /// </summary>
@@ -675,25 +675,25 @@ namespace MPF.Frontend
         /// Default CD dumping speed
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public int PreferredCD { get; set; } = 24;
+        public int CD { get; set; } = 24;
 
         /// <summary>
         /// Default DVD dumping speed
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public int PreferredDVD { get; set; } = 16;
+        public int DVD { get; set; } = 16;
 
         /// <summary>
         /// Default HD-DVD dumping speed
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public int PreferredHDDVD { get; set; } = 8;
+        public int HDDVD { get; set; } = 8;
 
         /// <summary>
         /// Default BD dumping speed
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public int PreferredBD { get; set; } = 8;
+        public int Bluray { get; set; } = 8;
     }
 
     /// <summary>
@@ -708,6 +708,12 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool CopyUpdateUrlToClipboard { get; set; } = true;
+
+        /// <summary>
+        /// Have the log panel expanded by default on startup
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool OpenLogWindowAtStartup { get; set; } = true;
 
         #endregion
 
@@ -724,12 +730,6 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
         public bool ShowDebugViewMenuItem { get; set; } = false;
-
-        /// <summary>
-        /// Have the log panel expanded by default on startup
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool OpenLogWindowAtStartup { get; set; } = true;
 
         /// <summary>
         /// Theme settings
