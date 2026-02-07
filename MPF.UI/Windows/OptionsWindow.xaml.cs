@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -64,10 +64,10 @@ namespace MPF.UI.Windows
             RedumpPasswordBox!.Password = options.Processing.Login.RedumpPassword;
 
             // Add handlers
-            AaruPathButton!.Click += BrowseForPathClick;
-            DiscImageCreatorPathButton!.Click += BrowseForPathClick;
-            RedumperPathButton!.Click += BrowseForPathClick;
-            DefaultOutputPathButton!.Click += BrowseForPathClick;
+            AaruPathButton!.Click += BrowseForAaruPathClick;
+            DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
+            RedumperPathButton!.Click += BrowseForRedumperPathClick;
+            DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
 
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
@@ -91,11 +91,11 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Browse and set a path based on the invoking button
         /// </summary>
-        private void BrowseForPath(Window parent, System.Windows.Controls.Button? button)
+        private string? BrowseForPath(Window parent, System.Windows.Controls.Button? button)
         {
             // If the button is null, we can't do anything
             if (button is null)
-                return;
+                return null;
 
             // Strips button prefix to obtain the setting name
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
@@ -118,38 +118,39 @@ namespace MPF.UI.Windows
             using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result != System.Windows.Forms.DialogResult.OK)
+                    return null;
+
+                string path = string.Empty;
+                bool exists = false;
+
+                if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
                 {
-                    string path = string.Empty;
-                    bool exists = false;
-
-                    if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
-                    {
-                        path = folderBrowserDialog.SelectedPath;
-                        exists = Directory.Exists(path);
-                    }
-                    else if (dialog is OpenFileDialog openFileDialog)
-                    {
-                        path = openFileDialog.FileName;
-                        exists = File.Exists(path);
-                    }
-
-                    if (exists)
-                    {
-                        OptionsViewModel.Options.ConvertToOptions()[pathSettingName] = path;
-                        var textBox = TextBoxForPathSetting(parent, pathSettingName);
-                        textBox?.Text = path;
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(
-                            "Specified path doesn't exist!",
-                            (string)System.Windows.Application.Current.FindResource("ErrorMessageString"),
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
-                    }
+                    path = folderBrowserDialog.SelectedPath;
+                    exists = Directory.Exists(path);
                 }
+                else if (dialog is OpenFileDialog openFileDialog)
+                {
+                    path = openFileDialog.FileName;
+                    exists = File.Exists(path);
+                }
+
+                if (exists)
+                {
+                    var textBox = TextBoxForPathSetting(parent, pathSettingName);
+                    textBox?.Text = path;
+                }
+                else
+                {
+                    CustomMessageBox.Show(
+                        "Specified path doesn't exist!",
+                        (string)System.Windows.Application.Current.FindResource("ErrorMessageString"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
+
+                return path;
             }
         }
 
@@ -205,8 +206,42 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Handler for generic Click event
         /// </summary>
-        private void BrowseForPathClick(object sender, EventArgs e)
-            => BrowseForPath(this, sender as System.Windows.Controls.Button);
+        private void BrowseForAaruPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.AaruPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private void BrowseForDefaultOutputPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.DefaultOutputPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private void BrowseForDiscImageCreatorPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
+        }
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private void BrowseForRedumperPathClick(object sender, EventArgs e)
+        {
+            string? result = BrowseForPath(this, sender as System.Windows.Controls.Button);
+            if (result is not null)
+                OptionsViewModel.Options.Dumping.RedumperPath = result;
+        }
 
         /// <summary>
         /// Alert user of non-redump mode implications

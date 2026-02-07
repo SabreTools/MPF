@@ -284,10 +284,10 @@ namespace MPF.Frontend
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.ConvertToOptions().Settings),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.ConvertToOptions().Settings),
-                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.ConvertToOptions().Settings),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.ConvertToOptions().Settings),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,

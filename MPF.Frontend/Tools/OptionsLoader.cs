@@ -228,7 +228,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfig(Options options)
+        public static void SaveToConfig(SegmentedOptions options)
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))
@@ -261,7 +261,7 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Save the current set of options to the application configuration
         /// </summary>
-        public static void SaveToConfig(SegmentedOptions options)
+        public static void SaveToConfigNative(SegmentedOptions options)
         {
             // If no options path can be found
             if (string.IsNullOrEmpty(ConfigurationPath))

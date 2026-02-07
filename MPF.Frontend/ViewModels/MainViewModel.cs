@@ -26,7 +26,7 @@ namespace MPF.Frontend.ViewModels
             set
             {
                 _options = value;
-                OptionsLoader.SaveToConfig(_options.ConvertToOptions());
+                OptionsLoader.SaveToConfig(_options);
             }
         }
         private SegmentedOptions _options;

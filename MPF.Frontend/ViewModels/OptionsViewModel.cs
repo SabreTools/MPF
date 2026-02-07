@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
 using LogCompression = MPF.Processors.LogCompression;

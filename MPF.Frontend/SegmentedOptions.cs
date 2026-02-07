@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
@@ -61,6 +62,19 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public ProcessingSettings Processing { get; set; } = new ProcessingSettings();
+
+        #endregion
+
+        #region Passthrough Properties
+
+        /// <summary>
+        /// All settings in the form of a dictionary
+        /// </summary>
+        /// TODO: Remove when Options is no longer relevant
+        public Dictionary<string, string?> Settings
+        {
+            get { return ConvertToOptions().Settings; }
+        }
 
         #endregion
 
@@ -266,7 +280,7 @@ namespace MPF.Frontend
         /// Convert to an Options object
         /// </summary>
         /// TODO: Remove when Options is no longer relevant
-        public Options ConvertToOptions()
+        private Options ConvertToOptions()
         {
             return new Options
             {

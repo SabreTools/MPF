@@ -25,6 +25,7 @@
 - Replace Options with SegmentedOptions in most places
 - Fix ListConfig feature with new layout
 - Move InternalProgram up a level in options, fix XAML
+- Fix path assignment from UI
 
 ### 3.6.0 (2025-11-28)
 
