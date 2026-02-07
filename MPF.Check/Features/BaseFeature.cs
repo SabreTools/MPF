@@ -45,6 +45,9 @@ namespace MPF.Check.Features
                 // Internal Program
                 InternalProgram = InternalProgram.NONE,
 
+                // UI Defaults
+                CheckForUpdatesOnStartup = false,
+
                 // Extra Dumping Options
                 ScanForProtection = false,
                 AddPlaceholders = true,

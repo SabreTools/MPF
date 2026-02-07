@@ -19,6 +19,7 @@
 - Extend logging with a new state
 - Add currently-unused new options class
 - Allow Check and CLI to check for updates on startup
+- Check should not default to update checking
 
 ### 3.6.0 (2025-11-28)
 
