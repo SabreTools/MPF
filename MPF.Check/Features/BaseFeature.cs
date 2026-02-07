@@ -125,7 +125,7 @@ namespace MPF.Check.Features
                 env.SetProcessor();
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(seedInfo: Seed)
+                var result = env.VerifyAndSaveDumpOutput(processUserInfo: ProcessUserInfo, seedInfo: Seed)
                     .ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
@@ -183,6 +183,22 @@ namespace MPF.Check.Features
             Console.WriteLine("WARNING: Check will overwrite both any existing submission information files as well");
             Console.WriteLine("as any log archives. Please make backups of those if you need to before running Check.");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Determines how user information is processed, if at all
+        /// </summary>
+        /// <param name="options">Options set that may impact processing</params>
+        /// <param name="info">Submission info that may be overwritten</param>
+        /// <returns>True for successful updating, false or null otherwise</returns>
+        public bool? ProcessUserInfo(Options? options, ref SubmissionInfo? submissionInfo)
+        {
+            // TODO: Somehow use the GUI strings here instead of hardcoding English
+            if (options?.Processing?.ShowDiscEjectReminder == true)
+                Console.WriteLine("It is now safe to eject the disc");
+
+            // TODO: Implement some sort of CLI-based processing of user information
+            return null;
         }
     }
 }

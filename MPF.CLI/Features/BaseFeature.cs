@@ -262,7 +262,7 @@ namespace MPF.CLI.Features
             }
 
             // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput()
+            var verifyResult = env.VerifyAndSaveDumpOutput(processUserInfo: ProcessUserInfo)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
 
@@ -312,6 +312,22 @@ namespace MPF.CLI.Features
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Determines how user information is processed, if at all
+        /// </summary>
+        /// <param name="options">Options set that may impact processing</params>
+        /// <param name="info">Submission info that may be overwritten</param>
+        /// <returns>True for successful updating, false or null otherwise</returns>
+        public bool? ProcessUserInfo(Options? options, ref SubmissionInfo? submissionInfo)
+        {
+            // TODO: Somehow use the GUI strings here instead of hardcoding English
+            if (options?.Processing?.ShowDiscEjectReminder == true)
+                Console.WriteLine("It is now safe to eject the disc");
+
+            // TODO: Implement some sort of CLI-based processing of user information
+            return null;
         }
     }
 }
