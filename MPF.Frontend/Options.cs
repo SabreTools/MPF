@@ -71,20 +71,6 @@ namespace MPF.Frontend
 
         #endregion
 
-        #region Passthrough Properties
-
-        /// <summary>
-        /// All settings in the form of a dictionary
-        /// </summary>
-        /// TODO: Remove when Options is no longer relevant
-        [JsonIgnore]
-        public Dictionary<string, string?> Settings
-        {
-            get { return ConvertToDictionary(); }
-        }
-
-        #endregion
-
         #region Constructors
 
         /// <summary>

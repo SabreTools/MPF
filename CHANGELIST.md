@@ -34,6 +34,7 @@
 - Further cleanup in Options
 - Move dump settings next to execution contexts
 - Introduce base dump settings type
+- Remove passthrough property on Options
 
 ### 3.6.0 (2025-11-28)
 
