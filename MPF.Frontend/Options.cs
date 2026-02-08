@@ -4,10 +4,14 @@ using System.IO;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
+using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
+using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
 using DreamdumpConstants = MPF.ExecutionContexts.Dreamdump.SettingConstants;
+using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DreamdumpDumpSettings;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperConstants = MPF.ExecutionContexts.Redumper.SettingConstants;
+using RedumperDumpSettings = MPF.ExecutionContexts.Redumper.DumpSettings;
 
 namespace MPF.Frontend
 {
@@ -970,189 +974,6 @@ namespace MPF.Frontend
         /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
         public string? CustomTextColor { get; set; } = null;
     }
-
-    #region Per-Program Dump Settings
-
-    /// <summary>
-    /// Settings related to the dumping step (Aaru)
-    /// </summary>
-    public class AaruDumpSettings
-    {
-        /// <summary>
-        /// Enable debug output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableDebug { get; set; } = AaruConstants.EnableDebugDefault;
-
-        /// <summary>
-        /// Enable verbose output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableVerbose { get; set; } = AaruConstants.EnableVerboseDefault;
-
-        /// <summary>
-        /// Enable force dumping of media by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool ForceDumping { get; set; } = AaruConstants.ForceDumpingDefault;
-
-        /// <summary>
-        /// Default number of sector/subchannel rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = AaruConstants.RereadCountDefault;
-
-        /// <summary>
-        /// Strip personal data information from Aaru metadata by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool StripPersonalData { get; set; } = AaruConstants.StripPersonalDataDefault;
-    }
-
-    /// <summary>
-    /// Settings related to the dumping step (DIC)
-    /// </summary>
-    public class DiscImageCreatorDumpSettings
-    {
-        /// <summary>
-        /// Enable multi-sector read flag by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool MultiSectorRead { get; set; } = DiscImageCreatorConstants.MultiSectorReadDefault;
-
-        /// <summary>
-        /// Include a default multi-sector read value
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int MultiSectorReadValue { get; set; } = DiscImageCreatorConstants.MultiSectorReadValueDefault;
-
-        /// <summary>
-        /// Enable overly-secure dumping flags by default
-        /// </summary>
-        /// <remarks>
-        /// Version 1 and greater
-        /// Split this into component parts later. Currently does:
-        /// - Scan sector protection and set subchannel read level to 2 for CD
-        /// - Set scan file protect flag for DVD
-        /// </remarks>
-        public bool ParanoidMode { get; set; } = DiscImageCreatorConstants.ParanoidModeDefault;
-
-        /// <summary>
-        /// Enable the Quiet flag by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool QuietMode { get; set; } = DiscImageCreatorConstants.QuietModeDefault;
-
-        /// <summary>
-        /// Default number of C2 rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = DiscImageCreatorConstants.RereadCountDefault;
-
-        /// <summary>
-        /// Default number of DVD/HD-DVD/BD rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int DVDRereadCount { get; set; } = DiscImageCreatorConstants.DVDRereadCountDefault;
-
-        /// <summary>
-        /// Use the CMI flag for supported disc types
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool UseCMIFlag { get; set; } = DiscImageCreatorConstants.UseCMIFlagDefault;
-    }
-
-    /// <summary>
-    /// Settings related to the dumping step (Dreamdump)
-    /// </summary>
-    public class DreamdumpDumpSettings
-    {
-        /// <summary>
-        /// Enable options incompatible with redump submissions
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool NonRedumpMode { get; set; } = false;
-
-        /// <summary>
-        /// Currently selected default Dreamdump sector order
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public ExecutionContexts.Dreamdump.SectorOrder SectorOrder { get; set; } = DreamdumpConstants.SectorOrderDefault;
-
-        /// <summary>
-        /// Default number of rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = DreamdumpConstants.RereadCountDefault;
-    }
-
-    /// <summary>
-    /// Settings related to the dumping step (Redumper)
-    /// </summary>
-    public class RedumperDumpSettings
-    {
-        /// <summary>
-        /// Enable skeleton output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
-        public bool EnableSkeleton { get; set; } = RedumperConstants.EnableSkeletonDefault;
-
-        /// <summary>
-        /// Enable verbose output while dumping by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool EnableVerbose { get; set; } = RedumperConstants.EnableVerboseDefault;
-
-        /// <summary>
-        /// Default number of redumper Plextor leadin retries
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int LeadinRetryCount { get; set; } = RedumperConstants.LeadinRetryCountDefault;
-
-        /// <summary>
-        /// Enable options incompatible with redump submissions
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool NonRedumpMode { get; set; } = false;
-
-        /// <summary>
-        /// Currently selected default redumper drive type
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public ExecutionContexts.Redumper.DriveType DriveType { get; set; } = RedumperConstants.DriveTypeDefault;
-
-        /// <summary>
-        /// Currently selected default redumper drive pregap start sector
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int DrivePregapStart { get; set; } = RedumperConstants.DrivePregapStartDefault;
-
-        /// <summary>
-        /// Currently selected default redumper read method
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public ExecutionContexts.Redumper.ReadMethod ReadMethod { get; set; } = RedumperConstants.ReadMethodDefault;
-
-        /// <summary>
-        /// Currently selected default redumper sector order
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public ExecutionContexts.Redumper.SectorOrder SectorOrder { get; set; } = RedumperConstants.SectorOrderDefault;
-
-        /// <summary>
-        /// Default number of rereads
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public int RereadCount { get; set; } = RedumperConstants.RereadCountDefault;
-
-        /// <summary>
-        /// Enable the refine sector mode flag by default
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool RefineSectorMode { get; set; } = RedumperConstants.RefineSectorModeDefault;
-    }
-
-    #endregion
 
     #endregion
 }
