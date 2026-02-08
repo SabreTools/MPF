@@ -1434,15 +1434,15 @@ namespace MPF.Processors
                 else
                     ss[ccrt_offset + i * 9] = ss[cOffset + 4];
                 if (!write && ss[ccrt_offset + i * 9 + 1] != ss[cOffset + 5])
-                    return false
+                    return false;
                 else
                     ss[ccrt_offset + i * 9 + 1] = ss[cOffset + 5];
                 if (!write && ss[ccrt_offset + i * 9 + 2] != ss[cOffset + 6])
-                    return false
+                    return false;
                 else
                     ss[ccrt_offset + i * 9 + 2] = ss[cOffset + 6];
                 if (!write && ss[ccrt_offset + i * 9 + 3] != ss[cOffset + 7])
-                    return false
+                    return false;
                 else
                     ss[ccrt_offset + i * 9 + 2] = ss[cOffset + 7];
 
