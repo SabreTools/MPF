@@ -350,7 +350,7 @@ namespace MPF.Frontend.Tools
 
                 // Fill in the fields from the existing ID
                 resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
-                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.Processing.MediaInformation.PullAllInformation);
+                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.Processing.Login.PullAllInformation);
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current

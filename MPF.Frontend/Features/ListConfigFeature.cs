@@ -118,36 +118,36 @@ namespace MPF.Frontend.Features
             Console.WriteLine("Protection Scanning Options:");
             Console.WriteLine($"  Scan for Protection = {options.Processing.ProtectionScanning.ScanForProtection}");
             Console.WriteLine($"  Scan Archives for Protection = {options.Processing.ProtectionScanning.ScanArchivesForProtection}");
-            Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
             Console.WriteLine($"  Hide Drive Letters = {options.Processing.ProtectionScanning.HideDriveLetters}");
+            Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
             Console.WriteLine();
 
             // Redump Login Information
             Console.WriteLine("Redump Login Information:");
-            Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
+            Console.WriteLine($"  Pull All Information = {options.Processing.Login.PullAllInformation}");
             Console.WriteLine($"  Redump Username = {options.Processing.Login.RedumpUsername}");
             Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpPassword) ? "[UNSET]" : "[SET]")}");
+            Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
             Console.WriteLine();
 
             // Media Information
             Console.WriteLine("Media Information:");
             Console.WriteLine($"  Add Placeholders = {options.Processing.MediaInformation.AddPlaceholders}");
-            Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");
-            Console.WriteLine($"  Pull All Information = {options.Processing.MediaInformation.PullAllInformation}");
-            Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
             Console.WriteLine($"  Enable Redump Compatibility = {options.Processing.MediaInformation.EnableRedumpCompatibility}");
+            Console.WriteLine($"  Enable Tabs in Input Fields = {options.Processing.MediaInformation.EnableTabsInInputFields}");
+            Console.WriteLine($"  Prompt for Media Information = {options.Processing.MediaInformation.PromptForDiscInformation}");
             Console.WriteLine();
 
-            // Output Options
-            Console.WriteLine("Output Options:");
-            Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
+            // Post-Information Options
+            Console.WriteLine("Post-Information Options:");
             Console.WriteLine($"  Add Filename Suffix = {options.Processing.AddFilenameSuffix}");
-            Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
-            Console.WriteLine($"  Output Submission JSON = {options.Processing.OutputSubmissionJSON}");
-            Console.WriteLine($"  Include Artifacts = {options.Processing.IncludeArtifacts}");
             Console.WriteLine($"  Compress Log Files = {options.Processing.CompressLogFiles}");
-            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
+            Console.WriteLine($"  Create IRD After Dumping = {options.Processing.CreateIRDAfterDumping}");
             Console.WriteLine($"  Delete Unnecessary Files = {options.Processing.DeleteUnnecessaryFiles}");
+            Console.WriteLine($"  Include Artifacts = {options.Processing.IncludeArtifacts}");
+            Console.WriteLine($"  Log Compression = {options.Processing.LogCompression.LongName()}");
+            Console.WriteLine($"  Output Submission JSON = {options.Processing.OutputSubmissionJSON}");
+            Console.WriteLine($"  Show Disc Eject Reminder = {options.Processing.ShowDiscEjectReminder}");
             Console.WriteLine();
 
             return true;

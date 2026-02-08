@@ -52,13 +52,13 @@ namespace MPF.Check.Features
             Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
             // Redump Login Information
-            Options.Processing.Login.RetrieveMatchInformation = true;
+            Options.Processing.Login.PullAllInformation = false;
             Options.Processing.Login.RedumpUsername = null;
             Options.Processing.Login.RedumpPassword = null;
+            Options.Processing.Login.RetrieveMatchInformation = true;
 
             // Media Information
             Options.Processing.MediaInformation.AddPlaceholders = true;
-            Options.Processing.MediaInformation.PullAllInformation = false;
 
             // Post-Information Options
             Options.Processing.AddFilenameSuffix = false;

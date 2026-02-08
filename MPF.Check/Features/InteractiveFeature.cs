@@ -50,13 +50,13 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
                 // Redump Login Information
-                Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.PullAllInformation = false;
                 Options.Processing.Login.RedumpUsername = null;
                 Options.Processing.Login.RedumpPassword = null;
+                Options.Processing.Login.RetrieveMatchInformation = true;
 
                 // Media Information
                 Options.Processing.MediaInformation.AddPlaceholders = true;
-                Options.Processing.MediaInformation.PullAllInformation = false;
 
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
@@ -92,7 +92,7 @@ namespace MPF.Check.Features
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
             Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
             Console.WriteLine($"7) Redump credentials (Currently '{Options.Processing.Login.RedumpUsername}')");
-            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.MediaInformation.PullAllInformation}')");
+            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
             Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
             Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
@@ -130,7 +130,7 @@ namespace MPF.Check.Features
                 case "7":
                     goto redumpCredentials;
                 case "8":
-                    Options.Processing.MediaInformation.PullAllInformation = !Options.Processing.MediaInformation.PullAllInformation;
+                    Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
                     goto root;
                 case "9":
                     goto devicePath;

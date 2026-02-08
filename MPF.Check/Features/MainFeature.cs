@@ -135,13 +135,13 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
                 // Redump Login Information
-                Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.PullAllInformation = false;
                 Options.Processing.Login.RedumpUsername = null;
                 Options.Processing.Login.RedumpPassword = null;
+                Options.Processing.Login.RetrieveMatchInformation = true;
 
                 // Media Information
                 Options.Processing.MediaInformation.AddPlaceholders = true;
-                Options.Processing.MediaInformation.PullAllInformation = false;
 
                 // Post-Information Options
                 Options.Processing.AddFilenameSuffix = false;
@@ -211,7 +211,7 @@ namespace MPF.Check.Features
 
                 // Pull all information (requires Redump login)
                 else if (PullAllInput.ProcessInput(args, ref index))
-                    Options.Processing.MediaInformation.PullAllInformation = !Options.Processing.MediaInformation.PullAllInformation;
+                    Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
 
                 // Use a device path for physical checks
                 else if (PathInput.ProcessInput(args, ref index))

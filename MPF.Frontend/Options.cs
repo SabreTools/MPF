@@ -167,28 +167,28 @@ namespace MPF.Frontend
 
             Processing.ProtectionScanning.ScanForProtection = GetBooleanSetting(source, "ScanForProtection", true);
             Processing.ProtectionScanning.ScanArchivesForProtection = GetBooleanSetting(source, "ScanArchivesForProtection", true);
-            Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
             Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
+            Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
-            Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
+            Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
             Processing.Login.RedumpUsername = GetStringSetting(source, "RedumpUsername", string.Empty);
             Processing.Login.RedumpPassword = GetStringSetting(source, "RedumpPassword", string.Empty);
+            Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
 
             Processing.MediaInformation.AddPlaceholders = GetBooleanSetting(source, "AddPlaceholders", true);
-            Processing.MediaInformation.PromptForDiscInformation = GetBooleanSetting(source, "PromptForDiscInformation", true);
-            Processing.MediaInformation.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
             Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
+            Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
+            Processing.MediaInformation.PromptForDiscInformation = GetBooleanSetting(source, "PromptForDiscInformation", true);
 
-            Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
             Processing.AddFilenameSuffix = GetBooleanSetting(source, "AddFilenameSuffix", false);
-            Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
-            Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
-            Processing.IncludeArtifacts = GetBooleanSetting(source, "IncludeArtifacts", false);
             Processing.CompressLogFiles = GetBooleanSetting(source, "CompressLogFiles", true);
+            Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
+            Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
+            Processing.IncludeArtifacts = GetBooleanSetting(source, "IncludeArtifacts", false);
             valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
             Processing.LogCompression = valueString.ToLogCompression();
-            Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
+            Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
+            Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
         }
 
         /// <summary>
@@ -261,27 +261,27 @@ namespace MPF.Frontend
 
             Processing.ProtectionScanning.ScanForProtection = source.Processing.ProtectionScanning.ScanForProtection;
             Processing.ProtectionScanning.ScanArchivesForProtection = source.Processing.ProtectionScanning.ScanArchivesForProtection;
-            Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
             Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
+            Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
-            Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
+            Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
             Processing.Login.RedumpUsername = source.Processing.Login.RedumpUsername;
             Processing.Login.RedumpPassword = source.Processing.Login.RedumpPassword;
+            Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
 
             Processing.MediaInformation.AddPlaceholders = source.Processing.MediaInformation.AddPlaceholders;
-            Processing.MediaInformation.PromptForDiscInformation = source.Processing.MediaInformation.PromptForDiscInformation;
-            Processing.MediaInformation.PullAllInformation = source.Processing.MediaInformation.PullAllInformation;
-            Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
             Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
+            Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
+            Processing.MediaInformation.PromptForDiscInformation = source.Processing.MediaInformation.PromptForDiscInformation;
 
-            Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
             Processing.AddFilenameSuffix = source.Processing.AddFilenameSuffix;
-            Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
-            Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
-            Processing.IncludeArtifacts = source.Processing.IncludeArtifacts;
             Processing.CompressLogFiles = source.Processing.CompressLogFiles;
-            Processing.LogCompression = source.Processing.LogCompression;
+            Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
             Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
+            Processing.IncludeArtifacts = source.Processing.IncludeArtifacts;
+            Processing.LogCompression = source.Processing.LogCompression;
+            Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
+            Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
         }
 
         #endregion
@@ -350,7 +350,7 @@ namespace MPF.Frontend
                 { "ScanForProtection", Processing.ProtectionScanning.ScanForProtection.ToString() },
                 { "AddPlaceholders", Processing.MediaInformation.AddPlaceholders.ToString() },
                 { "PromptForDiscInformation", Processing.MediaInformation.PromptForDiscInformation.ToString() },
-                { "PullAllInformation", Processing.MediaInformation.PullAllInformation.ToString() },
+                { "PullAllInformation", Processing.Login.PullAllInformation.ToString() },
                 { "EnableTabsInInputFields", Processing.MediaInformation.EnableTabsInInputFields.ToString() },
                 { "EnableRedumpCompatibility", Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
                 { "ShowDiscEjectReminder", Processing.ShowDiscEjectReminder.ToString() },
@@ -774,16 +774,10 @@ namespace MPF.Frontend
         public bool AddPlaceholders { get; set; } = true;
 
         /// <summary>
-        /// Show the media information window after dumping
+        /// Limit outputs to Redump-supported values only
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool PromptForDiscInformation { get; set; } = true;
-
-        /// <summary>
-        /// Pull all information from Redump if signed in
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool PullAllInformation { get; set; } = false;
+        public bool EnableRedumpCompatibility { get; set; } = true;
 
         /// <summary>
         /// Enable tabs in all input fields
@@ -792,10 +786,10 @@ namespace MPF.Frontend
         public bool EnableTabsInInputFields { get; set; } = true;
 
         /// <summary>
-        /// Limit outputs to Redump-supported values only
+        /// Show the media information window after dumping
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool EnableRedumpCompatibility { get; set; } = true;
+        public bool PromptForDiscInformation { get; set; } = true;
     }
 
     /// <summary>
@@ -833,13 +827,7 @@ namespace MPF.Frontend
 
         #endregion
 
-        #region Output
-
-        /// <summary>
-        /// Show disc eject reminder before the media information window is shown
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool ShowDiscEjectReminder { get; set; } = true;
+        #region Post-Information
 
         /// <summary>
         /// Add the dump filename as a suffix to the auto-generated files
@@ -848,16 +836,22 @@ namespace MPF.Frontend
         public bool AddFilenameSuffix { get; set; } = false;
 
         /// <summary>
+        /// Compress output log files to reduce space
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool CompressLogFiles { get; set; } = true;
+
+        /// <summary>
         /// Create a PS3 IRD file after dumping PS3 BD-ROM discs
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool CreateIRDAfterDumping { get; set; } = false;
 
         /// <summary>
-        /// Output the compressed JSON version of the submission info
+        /// Delete unnecessary files to reduce space
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool OutputSubmissionJSON { get; set; } = false;
+        public bool DeleteUnnecessaryFiles { get; set; } = false;
 
         /// <summary>
         /// Include log files in serialized JSON data
@@ -866,22 +860,22 @@ namespace MPF.Frontend
         public bool IncludeArtifacts { get; set; } = false;
 
         /// <summary>
-        /// Compress output log files to reduce space
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool CompressLogFiles { get; set; } = true;
-
-        /// <summary>
         /// Compression type used during log compression
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public LogCompression LogCompression { get; set; } = LogCompression.DeflateMaximum;
 
         /// <summary>
-        /// Delete unnecessary files to reduce space
+        /// Output the compressed JSON version of the submission info
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public bool DeleteUnnecessaryFiles { get; set; } = false;
+        public bool OutputSubmissionJSON { get; set; } = false;
+
+        /// <summary>
+        /// Show disc eject reminder before the media information window is shown
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool ShowDiscEjectReminder { get; set; } = true;
 
         #endregion
     }
@@ -904,16 +898,16 @@ namespace MPF.Frontend
         public bool ScanArchivesForProtection { get; set; } = true;
 
         /// <summary>
-        /// Include debug information with scan results
-        /// </summary>
-        /// <remarks>Version 1 and greater</remarks>
-        public bool IncludeDebugProtectionInformation { get; set; } = false;
-
-        /// <summary>
         /// Remove drive letters from protection scan output
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool HideDriveLetters { get; set; } = false;
+
+        /// <summary>
+        /// Include debug information with scan results
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool IncludeDebugProtectionInformation { get; set; } = false;
     }
 
     /// <summary>
@@ -922,17 +916,29 @@ namespace MPF.Frontend
     public class SiteLoginSettings
     {
         /// <summary>
+        /// Pull all information from Redump if signed in
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool PullAllInformation { get; set; } = false;
+
+        /// <summary>
+        /// Username for Redump, requires <see cref="RedumpPassword"/>
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string? RedumpUsername { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Password for Redump, requires <see cref="RedumpUsername"/>
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
+        public string? RedumpPassword { get; set; } = string.Empty;
+
+        /// <summary>
         /// Enable retrieving match information from Redump
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool RetrieveMatchInformation { get; set; } = true;
-
-        /// <remarks>Version 1 and greater</remarks>
-        public string? RedumpUsername { get; set; } = string.Empty;
-
-        /// <remarks>Version 1 and greater</remarks>
-        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string? RedumpPassword { get; set; } = string.Empty;
     }
 
     /// <summary>
