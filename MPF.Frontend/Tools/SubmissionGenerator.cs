@@ -266,12 +266,17 @@ namespace MPF.Frontend.Tools
                 }
 
                 var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
-                if (foundIds is not null && foundIds.Count == 1)
-                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for {sha1}"));
-                else if (foundIds is not null && foundIds.Count != 1)
-                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for {sha1}"));
-                else
+                if (foundIds is null)
+                {
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
+                    return false;
+                }
+                else if (foundIds.Count == 0)
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for {sha1}"));
+                else if (foundIds.Count == 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for {sha1}"));
+                else
+                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for {sha1}"));
 
                 // Add the found IDs to the map
                 foundIdSets.Add(foundIds?.ToArray() ?? []);
@@ -306,12 +311,14 @@ namespace MPF.Frontend.Tools
             {
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
-                if (foundIds is not null && foundIds.Count == 1)
-                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for universal hash {sha1}"));
-                else if (foundIds is not null && foundIds.Count != 1)
-                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
-                else
+                if (foundIds is null)
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
+                else if (foundIds.Count == 0)
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
+                else if (foundIds.Count == 1)
+                    resultProgress?.Report(ResultEventArgs.Success($"Single match found for universal hash {sha1}"));
+                else
+                    resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for universal hash {sha1}"));
 
                 // Ensure that the hash is found
                 allFound = foundIds is not null && foundIds.Count == 1;
