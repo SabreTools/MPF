@@ -35,6 +35,7 @@
 - Move dump settings next to execution contexts
 - Introduce base dump settings type
 - Remove passthrough property on Options
+- Move conversion method to options loader
 
 ### 3.6.0 (2025-11-28)
 

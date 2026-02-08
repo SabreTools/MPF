@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -239,7 +239,7 @@ namespace MPF.Frontend.Tools
             using var sw = new StreamWriter(stream) { AutoFlush = true };
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
-            serializer.Serialize(writer, options.ConvertToDictionary(), typeof(Dictionary<string, string>));
+            serializer.Serialize(writer, ConvertToDictionary(options), typeof(Dictionary<string, string>));
         }
 
         /// <summary>
@@ -257,6 +257,98 @@ namespace MPF.Frontend.Tools
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
             serializer.Serialize(writer, options, typeof(Options));
+        }
+
+        /// <summary>
+        /// Convert options object to a flat dictionary
+        /// </summary>
+        private static Dictionary<string, string?> ConvertToDictionary(Options options)
+        {
+            return new Dictionary<string, string?>
+            {
+                { "FirstRun", options.FirstRun.ToString()},
+
+                { "AaruPath", options.Dumping.AaruPath },
+                { "DiscImageCreatorPath", options.Dumping.DiscImageCreatorPath },
+                { "DreamdumpPath", options.Dumping.DreamdumpPath },
+                { "RedumperPath", options.Dumping.RedumperPath },
+                { "InternalProgram", options.InternalProgram.ToString() },
+
+                { "EnableDarkMode", options.GUI.Theming.EnableDarkMode.ToString() },
+                { "EnablePurpMode", options.GUI.Theming.EnablePurpMode.ToString() },
+                { "CustomBackgroundColor", options.GUI.Theming.CustomBackgroundColor },
+                { "CustomTextColor", options.GUI.Theming.CustomTextColor },
+                { "CheckForUpdatesOnStartup", options.CheckForUpdatesOnStartup.ToString() },
+                { "CopyUpdateUrlToClipboard", options.GUI.CopyUpdateUrlToClipboard.ToString() },
+                { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
+                { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
+                { "DefaultOutputPath", options.Dumping.DefaultOutputPath },
+                { "DefaultSystem", options.Dumping.DefaultSystem.ToString() },
+                { "ShowDebugViewMenuItem", options.GUI.ShowDebugViewMenuItem.ToString() },
+
+                { "PreferredDumpSpeedCD", options.Dumping.DumpSpeeds.CD.ToString() },
+                { "PreferredDumpSpeedDVD", options.Dumping.DumpSpeeds.DVD.ToString() },
+                { "PreferredDumpSpeedHDDVD", options.Dumping.DumpSpeeds.HDDVD.ToString() },
+                { "PreferredDumpSpeedBD", options.Dumping.DumpSpeeds.Bluray.ToString() },
+
+                { ExecutionContexts.Aaru.SettingConstants.EnableDebug, options.Dumping.Aaru.EnableDebug.ToString() },
+                { ExecutionContexts.Aaru.SettingConstants.EnableVerbose, options.Dumping.Aaru.EnableVerbose.ToString() },
+                { ExecutionContexts.Aaru.SettingConstants.ForceDumping, options.Dumping.Aaru.ForceDumping.ToString() },
+                { ExecutionContexts.Aaru.SettingConstants.RereadCount, options.Dumping.Aaru.RereadCount.ToString() },
+                { ExecutionContexts.Aaru.SettingConstants.StripPersonalData, options.Dumping.Aaru.StripPersonalData.ToString() },
+
+                { ExecutionContexts.DiscImageCreator.SettingConstants.MultiSectorRead, options.Dumping.DIC.MultiSectorRead.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.MultiSectorReadValue, options.Dumping.DIC.MultiSectorReadValue.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.ParanoidMode, options.Dumping.DIC.ParanoidMode.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.QuietMode, options.Dumping.DIC.QuietMode.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.RereadCount, options.Dumping.DIC.RereadCount.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.DVDRereadCount, options.Dumping.DIC.DVDRereadCount.ToString() },
+                { ExecutionContexts.DiscImageCreator.SettingConstants.UseCMIFlag, options.Dumping.DIC.UseCMIFlag.ToString() },
+
+                { "DreamdumpNonRedumpMode", options.Dumping.Dreamdump.NonRedumpMode.ToString() },
+                { ExecutionContexts.Dreamdump.SettingConstants.SectorOrder, options.Dumping.Dreamdump.SectorOrder.ToString() },
+                { ExecutionContexts.Dreamdump.SettingConstants.RereadCount, options.Dumping.Dreamdump.RereadCount.ToString() },
+
+                { ExecutionContexts.Redumper.SettingConstants.EnableSkeleton, options.Dumping.Redumper.EnableSkeleton.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.EnableVerbose, options.Dumping.Redumper.EnableVerbose.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.LeadinRetryCount, options.Dumping.Redumper.LeadinRetryCount.ToString() },
+                { "RedumperNonRedumpMode", options.Dumping.Redumper.NonRedumpMode.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.DriveType, options.Dumping.Redumper.DriveType.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.DrivePregapStart, options.Dumping.Redumper.DrivePregapStart.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.ReadMethod, options.Dumping.Redumper.ReadMethod.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.SectorOrder, options.Dumping.Redumper.SectorOrder.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.RereadCount, options.Dumping.Redumper.RereadCount.ToString() },
+                { ExecutionContexts.Redumper.SettingConstants.RefineSectorMode, options.Dumping.Redumper.RefineSectorMode.ToString() },
+
+                { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
+                { "AddPlaceholders", options.Processing.MediaInformation.AddPlaceholders.ToString() },
+                { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
+                { "PullAllInformation", options.Processing.Login.PullAllInformation.ToString() },
+                { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
+                { "EnableRedumpCompatibility", options.Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
+                { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
+                { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
+                { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
+                { "OutputSubmissionJSON", options.Processing.OutputSubmissionJSON.ToString() },
+                { "IncludeArtifacts", options.Processing.IncludeArtifacts.ToString() },
+                { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
+                { "LogCompression", options.Processing.LogCompression.ToString() },
+                { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },
+                { "CreateIRDAfterDumping", options.Processing.CreateIRDAfterDumping.ToString() },
+
+                { "SkipSystemDetection", options.GUI.SkipSystemDetection.ToString() },
+
+                { "ScanArchivesForProtection", options.Processing.ProtectionScanning.ScanArchivesForProtection.ToString() },
+                { "IncludeDebugProtectionInformation", options.Processing.ProtectionScanning.IncludeDebugProtectionInformation.ToString() },
+                { "HideDriveLetters", options.Processing.ProtectionScanning.HideDriveLetters.ToString() },
+
+                { "VerboseLogging", options.VerboseLogging.ToString() },
+                { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
+
+                { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
+                { "RedumpUsername", options.Processing.Login.RedumpUsername },
+                { "RedumpPassword", options.Processing.Login.RedumpPassword },
+            };
         }
 
         /// <summary>
