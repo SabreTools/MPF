@@ -1,9 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if NET20 || NET35 || NET40 || NET452
 using System.Reflection;
+#endif
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
+using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
+using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
+using DreamdumpConstants = MPF.ExecutionContexts.Dreamdump.SettingConstants;
+using LogCompression = MPF.Processors.LogCompression;
+using RedumperConstants = MPF.ExecutionContexts.Redumper.SettingConstants;
 
 namespace MPF.Frontend.Tools
 {
@@ -197,7 +204,7 @@ namespace MPF.Frontend.Tools
             using var reader = new StreamReader(stream);
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
 
-            return new Options(settings);
+            return ConvertFromDictionary(settings);
         }
 
         /// <summary>
@@ -257,98 +264,6 @@ namespace MPF.Frontend.Tools
             var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
 
             serializer.Serialize(writer, options, typeof(Options));
-        }
-
-        /// <summary>
-        /// Convert options object to a flat dictionary
-        /// </summary>
-        private static Dictionary<string, string?> ConvertToDictionary(Options options)
-        {
-            return new Dictionary<string, string?>
-            {
-                { "FirstRun", options.FirstRun.ToString()},
-
-                { "AaruPath", options.Dumping.AaruPath },
-                { "DiscImageCreatorPath", options.Dumping.DiscImageCreatorPath },
-                { "DreamdumpPath", options.Dumping.DreamdumpPath },
-                { "RedumperPath", options.Dumping.RedumperPath },
-                { "InternalProgram", options.InternalProgram.ToString() },
-
-                { "EnableDarkMode", options.GUI.Theming.EnableDarkMode.ToString() },
-                { "EnablePurpMode", options.GUI.Theming.EnablePurpMode.ToString() },
-                { "CustomBackgroundColor", options.GUI.Theming.CustomBackgroundColor },
-                { "CustomTextColor", options.GUI.Theming.CustomTextColor },
-                { "CheckForUpdatesOnStartup", options.CheckForUpdatesOnStartup.ToString() },
-                { "CopyUpdateUrlToClipboard", options.GUI.CopyUpdateUrlToClipboard.ToString() },
-                { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
-                { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
-                { "DefaultOutputPath", options.Dumping.DefaultOutputPath },
-                { "DefaultSystem", options.Dumping.DefaultSystem.ToString() },
-                { "ShowDebugViewMenuItem", options.GUI.ShowDebugViewMenuItem.ToString() },
-
-                { "PreferredDumpSpeedCD", options.Dumping.DumpSpeeds.CD.ToString() },
-                { "PreferredDumpSpeedDVD", options.Dumping.DumpSpeeds.DVD.ToString() },
-                { "PreferredDumpSpeedHDDVD", options.Dumping.DumpSpeeds.HDDVD.ToString() },
-                { "PreferredDumpSpeedBD", options.Dumping.DumpSpeeds.Bluray.ToString() },
-
-                { ExecutionContexts.Aaru.SettingConstants.EnableDebug, options.Dumping.Aaru.EnableDebug.ToString() },
-                { ExecutionContexts.Aaru.SettingConstants.EnableVerbose, options.Dumping.Aaru.EnableVerbose.ToString() },
-                { ExecutionContexts.Aaru.SettingConstants.ForceDumping, options.Dumping.Aaru.ForceDumping.ToString() },
-                { ExecutionContexts.Aaru.SettingConstants.RereadCount, options.Dumping.Aaru.RereadCount.ToString() },
-                { ExecutionContexts.Aaru.SettingConstants.StripPersonalData, options.Dumping.Aaru.StripPersonalData.ToString() },
-
-                { ExecutionContexts.DiscImageCreator.SettingConstants.MultiSectorRead, options.Dumping.DIC.MultiSectorRead.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.MultiSectorReadValue, options.Dumping.DIC.MultiSectorReadValue.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.ParanoidMode, options.Dumping.DIC.ParanoidMode.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.QuietMode, options.Dumping.DIC.QuietMode.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.RereadCount, options.Dumping.DIC.RereadCount.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.DVDRereadCount, options.Dumping.DIC.DVDRereadCount.ToString() },
-                { ExecutionContexts.DiscImageCreator.SettingConstants.UseCMIFlag, options.Dumping.DIC.UseCMIFlag.ToString() },
-
-                { "DreamdumpNonRedumpMode", options.Dumping.Dreamdump.NonRedumpMode.ToString() },
-                { ExecutionContexts.Dreamdump.SettingConstants.SectorOrder, options.Dumping.Dreamdump.SectorOrder.ToString() },
-                { ExecutionContexts.Dreamdump.SettingConstants.RereadCount, options.Dumping.Dreamdump.RereadCount.ToString() },
-
-                { ExecutionContexts.Redumper.SettingConstants.EnableSkeleton, options.Dumping.Redumper.EnableSkeleton.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.EnableVerbose, options.Dumping.Redumper.EnableVerbose.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.LeadinRetryCount, options.Dumping.Redumper.LeadinRetryCount.ToString() },
-                { "RedumperNonRedumpMode", options.Dumping.Redumper.NonRedumpMode.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.DriveType, options.Dumping.Redumper.DriveType.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.DrivePregapStart, options.Dumping.Redumper.DrivePregapStart.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.ReadMethod, options.Dumping.Redumper.ReadMethod.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.SectorOrder, options.Dumping.Redumper.SectorOrder.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.RereadCount, options.Dumping.Redumper.RereadCount.ToString() },
-                { ExecutionContexts.Redumper.SettingConstants.RefineSectorMode, options.Dumping.Redumper.RefineSectorMode.ToString() },
-
-                { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
-                { "AddPlaceholders", options.Processing.MediaInformation.AddPlaceholders.ToString() },
-                { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
-                { "PullAllInformation", options.Processing.Login.PullAllInformation.ToString() },
-                { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
-                { "EnableRedumpCompatibility", options.Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
-                { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
-                { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
-                { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
-                { "OutputSubmissionJSON", options.Processing.OutputSubmissionJSON.ToString() },
-                { "IncludeArtifacts", options.Processing.IncludeArtifacts.ToString() },
-                { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
-                { "LogCompression", options.Processing.LogCompression.ToString() },
-                { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },
-                { "CreateIRDAfterDumping", options.Processing.CreateIRDAfterDumping.ToString() },
-
-                { "SkipSystemDetection", options.GUI.SkipSystemDetection.ToString() },
-
-                { "ScanArchivesForProtection", options.Processing.ProtectionScanning.ScanArchivesForProtection.ToString() },
-                { "IncludeDebugProtectionInformation", options.Processing.ProtectionScanning.IncludeDebugProtectionInformation.ToString() },
-                { "HideDriveLetters", options.Processing.ProtectionScanning.HideDriveLetters.ToString() },
-
-                { "VerboseLogging", options.VerboseLogging.ToString() },
-                { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
-
-                { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
-                { "RedumpUsername", options.Processing.Login.RedumpUsername },
-                { "RedumpPassword", options.Processing.Login.RedumpPassword },
-            };
         }
 
         /// <summary>
@@ -414,6 +329,266 @@ namespace MPF.Frontend.Tools
             homeDir = Path.Combine(homeDir, ".config", "mpf");
 #endif
             return homeDir;
+        }
+
+        #endregion
+
+        #region Options Helpers
+
+        /// <summary>
+        /// Convert a flat dictionary to an options object
+        /// </summary>
+        private static Options ConvertFromDictionary(Dictionary<string, string?>? source)
+        {
+            source ??= [];
+
+            var options = new Options();
+
+            options.FirstRun = GetBooleanSetting(source, "FirstRun", true);
+            options.CheckForUpdatesOnStartup = GetBooleanSetting(source, "CheckForUpdatesOnStartup", true);
+            options.VerboseLogging = GetBooleanSetting(source, "VerboseLogging", true);
+            var valueString = GetStringSetting(source, "InternalProgram", InternalProgram.Redumper.ToString());
+            var tempInternalProgram = valueString.ToInternalProgram();
+            options.InternalProgram = tempInternalProgram == InternalProgram.NONE ? InternalProgram.Redumper : tempInternalProgram;
+
+            options.GUI.CopyUpdateUrlToClipboard = GetBooleanSetting(source, "CopyUpdateUrlToClipboard", true);
+            options.GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
+
+            valueString = GetStringSetting(source, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
+            options.GUI.DefaultInterfaceLanguage = valueString.ToInterfaceLanguage();
+            options.GUI.ShowDebugViewMenuItem = GetBooleanSetting(source, "ShowDebugViewMenuItem", false);
+            options.GUI.Theming.EnableDarkMode = GetBooleanSetting(source, "EnableDarkMode", false);
+            options.GUI.Theming.EnablePurpMode = GetBooleanSetting(source, "EnablePurpMode", false);
+            options.GUI.Theming.CustomBackgroundColor = GetStringSetting(source, "CustomBackgroundColor", null);
+            options.GUI.Theming.CustomTextColor = GetStringSetting(source, "CustomTextColor", null);
+
+            options.GUI.FastUpdateLabel = GetBooleanSetting(source, "FastUpdateLabel", false);
+            options.GUI.IgnoreFixedDrives = GetBooleanSetting(source, "IgnoreFixedDrives", true);
+            options.GUI.SkipSystemDetection = GetBooleanSetting(source, "SkipSystemDetection", false);
+
+            options.Dumping.AaruPath = GetStringSetting(source, "AaruPath", DumpSettings.DefaultAaruPath) ?? DumpSettings.DefaultAaruPath;
+            options.Dumping.DiscImageCreatorPath = GetStringSetting(source, "DiscImageCreatorPath", DumpSettings.DefaultDiscImageCreatorPath) ?? DumpSettings.DefaultDiscImageCreatorPath;
+            options.Dumping.DreamdumpPath = GetStringSetting(source, "DreamdumpPath", DumpSettings.DefaultDreamdumpPath) ?? DumpSettings.DefaultDreamdumpPath;
+            options.Dumping.RedumperPath = GetStringSetting(source, "RedumperPath", DumpSettings.DefaultRedumperPath) ?? DumpSettings.DefaultRedumperPath;
+
+            options.Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
+            valueString = GetStringSetting(source, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
+            options.Dumping.DefaultSystem = (valueString ?? string.Empty).ToRedumpSystem();
+            options.Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
+            options.Dumping.DumpSpeeds.DVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
+            options.Dumping.DumpSpeeds.HDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);
+            options.Dumping.DumpSpeeds.Bluray = GetInt32Setting(source, "PreferredDumpSpeedBD", 8);
+
+            options.Dumping.Aaru.EnableDebug = GetBooleanSetting(source, AaruConstants.EnableDebug, AaruConstants.EnableDebugDefault);
+            options.Dumping.Aaru.EnableVerbose = GetBooleanSetting(source, AaruConstants.EnableVerbose, AaruConstants.EnableVerboseDefault);
+            options.Dumping.Aaru.ForceDumping = GetBooleanSetting(source, AaruConstants.ForceDumping, AaruConstants.ForceDumpingDefault);
+            options.Dumping.Aaru.RereadCount = GetInt32Setting(source, AaruConstants.RereadCount, AaruConstants.RereadCountDefault);
+            options.Dumping.Aaru.StripPersonalData = GetBooleanSetting(source, AaruConstants.StripPersonalData, AaruConstants.StripPersonalDataDefault);
+
+            options.Dumping.DIC.MultiSectorRead = GetBooleanSetting(source, DiscImageCreatorConstants.MultiSectorRead, DiscImageCreatorConstants.MultiSectorReadDefault);
+            options.Dumping.DIC.MultiSectorReadValue = GetInt32Setting(source, DiscImageCreatorConstants.MultiSectorReadValue, DiscImageCreatorConstants.MultiSectorReadValueDefault);
+            options.Dumping.DIC.ParanoidMode = GetBooleanSetting(source, DiscImageCreatorConstants.ParanoidMode, DiscImageCreatorConstants.ParanoidModeDefault);
+            options.Dumping.DIC.QuietMode = GetBooleanSetting(source, DiscImageCreatorConstants.QuietMode, DiscImageCreatorConstants.QuietModeDefault);
+            options.Dumping.DIC.RereadCount = GetInt32Setting(source, DiscImageCreatorConstants.RereadCount, DiscImageCreatorConstants.RereadCountDefault);
+            options.Dumping.DIC.DVDRereadCount = GetInt32Setting(source, DiscImageCreatorConstants.DVDRereadCount, DiscImageCreatorConstants.DVDRereadCountDefault);
+            options.Dumping.DIC.UseCMIFlag = GetBooleanSetting(source, DiscImageCreatorConstants.UseCMIFlag, DiscImageCreatorConstants.UseCMIFlagDefault);
+
+            options.Dumping.Dreamdump.NonRedumpMode = GetBooleanSetting(source, "DreamdumpNonRedumpMode", false);
+            valueString = GetStringSetting(source, DreamdumpConstants.SectorOrder, DreamdumpConstants.SectorOrderDefault.ToString());
+            options.Dumping.Dreamdump.SectorOrder = valueString.ToDreamdumpSectorOrder();
+            options.Dumping.Dreamdump.RereadCount = GetInt32Setting(source, DreamdumpConstants.RereadCount, DreamdumpConstants.RereadCountDefault);
+
+            options.Dumping.Redumper.EnableSkeleton = GetBooleanSetting(source, RedumperConstants.EnableSkeleton, RedumperConstants.EnableSkeletonDefault);
+            options.Dumping.Redumper.EnableVerbose = GetBooleanSetting(source, RedumperConstants.EnableVerbose, RedumperConstants.EnableVerboseDefault);
+            options.Dumping.Redumper.LeadinRetryCount = GetInt32Setting(source, RedumperConstants.LeadinRetryCount, RedumperConstants.LeadinRetryCountDefault);
+            options.Dumping.Redumper.NonRedumpMode = GetBooleanSetting(source, "RedumperNonRedumpMode", false);
+            valueString = GetStringSetting(source, RedumperConstants.DriveType, RedumperConstants.DriveTypeDefault.ToString());
+            options.Dumping.Redumper.DriveType = valueString.ToRedumperDriveType();
+            options.Dumping.Redumper.DrivePregapStart = GetInt32Setting(source, RedumperConstants.DrivePregapStart, RedumperConstants.DrivePregapStartDefault);
+            valueString = GetStringSetting(source, RedumperConstants.ReadMethod, RedumperConstants.ReadMethodDefault.ToString());
+            options.Dumping.Redumper.ReadMethod = valueString.ToRedumperReadMethod();
+            valueString = GetStringSetting(source, RedumperConstants.SectorOrder, RedumperConstants.SectorOrderDefault.ToString());
+            options.Dumping.Redumper.SectorOrder = valueString.ToRedumperSectorOrder();
+            options.Dumping.Redumper.RereadCount = GetInt32Setting(source, RedumperConstants.RereadCount, RedumperConstants.RereadCountDefault);
+            options.Dumping.Redumper.RefineSectorMode = GetBooleanSetting(source, RedumperConstants.RefineSectorMode, RedumperConstants.RefineSectorModeDefault);
+
+            options.Processing.ProtectionScanning.ScanForProtection = GetBooleanSetting(source, "ScanForProtection", true);
+            options.Processing.ProtectionScanning.ScanArchivesForProtection = GetBooleanSetting(source, "ScanArchivesForProtection", true);
+            options.Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
+            options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
+
+            options.Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
+            options.Processing.Login.RedumpUsername = GetStringSetting(source, "RedumpUsername", string.Empty);
+            options.Processing.Login.RedumpPassword = GetStringSetting(source, "RedumpPassword", string.Empty);
+            options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
+
+            options.Processing.MediaInformation.AddPlaceholders = GetBooleanSetting(source, "AddPlaceholders", true);
+            options.Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
+            options.Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
+            options.Processing.MediaInformation.PromptForDiscInformation = GetBooleanSetting(source, "PromptForDiscInformation", true);
+
+            options.Processing.AddFilenameSuffix = GetBooleanSetting(source, "AddFilenameSuffix", false);
+            options.Processing.CompressLogFiles = GetBooleanSetting(source, "CompressLogFiles", true);
+            options.Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
+            options.Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
+            options.Processing.IncludeArtifacts = GetBooleanSetting(source, "IncludeArtifacts", false);
+            valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
+            options.Processing.LogCompression = valueString.ToLogCompression();
+            options.Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
+            options.Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
+
+            return options;
+        }
+
+        /// <summary>
+        /// Convert options object to a flat dictionary
+        /// </summary>
+        private static Dictionary<string, string?> ConvertToDictionary(Options options)
+        {
+            return new Dictionary<string, string?>
+            {
+                { "FirstRun", options.FirstRun.ToString()},
+
+                { "AaruPath", options.Dumping.AaruPath },
+                { "DiscImageCreatorPath", options.Dumping.DiscImageCreatorPath },
+                { "DreamdumpPath", options.Dumping.DreamdumpPath },
+                { "RedumperPath", options.Dumping.RedumperPath },
+                { "InternalProgram", options.InternalProgram.ToString() },
+
+                { "EnableDarkMode", options.GUI.Theming.EnableDarkMode.ToString() },
+                { "EnablePurpMode", options.GUI.Theming.EnablePurpMode.ToString() },
+                { "CustomBackgroundColor", options.GUI.Theming.CustomBackgroundColor },
+                { "CustomTextColor", options.GUI.Theming.CustomTextColor },
+                { "CheckForUpdatesOnStartup", options.CheckForUpdatesOnStartup.ToString() },
+                { "CopyUpdateUrlToClipboard", options.GUI.CopyUpdateUrlToClipboard.ToString() },
+                { "FastUpdateLabel", options.GUI.FastUpdateLabel.ToString() },
+                { "DefaultInterfaceLanguage", options.GUI.DefaultInterfaceLanguage.ShortName() },
+                { "DefaultOutputPath", options.Dumping.DefaultOutputPath },
+                { "DefaultSystem", options.Dumping.DefaultSystem.ToString() },
+                { "ShowDebugViewMenuItem", options.GUI.ShowDebugViewMenuItem.ToString() },
+
+                { "PreferredDumpSpeedCD", options.Dumping.DumpSpeeds.CD.ToString() },
+                { "PreferredDumpSpeedDVD", options.Dumping.DumpSpeeds.DVD.ToString() },
+                { "PreferredDumpSpeedHDDVD", options.Dumping.DumpSpeeds.HDDVD.ToString() },
+                { "PreferredDumpSpeedBD", options.Dumping.DumpSpeeds.Bluray.ToString() },
+
+                { AaruConstants.EnableDebug, options.Dumping.Aaru.EnableDebug.ToString() },
+                { AaruConstants.EnableVerbose, options.Dumping.Aaru.EnableVerbose.ToString() },
+                { AaruConstants.ForceDumping, options.Dumping.Aaru.ForceDumping.ToString() },
+                { AaruConstants.RereadCount, options.Dumping.Aaru.RereadCount.ToString() },
+                { AaruConstants.StripPersonalData, options.Dumping.Aaru.StripPersonalData.ToString() },
+
+                { DiscImageCreatorConstants.MultiSectorRead, options.Dumping.DIC.MultiSectorRead.ToString() },
+                { DiscImageCreatorConstants.MultiSectorReadValue, options.Dumping.DIC.MultiSectorReadValue.ToString() },
+                { DiscImageCreatorConstants.ParanoidMode, options.Dumping.DIC.ParanoidMode.ToString() },
+                { DiscImageCreatorConstants.QuietMode, options.Dumping.DIC.QuietMode.ToString() },
+                { DiscImageCreatorConstants.RereadCount, options.Dumping.DIC.RereadCount.ToString() },
+                { DiscImageCreatorConstants.DVDRereadCount, options.Dumping.DIC.DVDRereadCount.ToString() },
+                { DiscImageCreatorConstants.UseCMIFlag, options.Dumping.DIC.UseCMIFlag.ToString() },
+
+                { "DreamdumpNonRedumpMode", options.Dumping.Dreamdump.NonRedumpMode.ToString() },
+                { DreamdumpConstants.SectorOrder, options.Dumping.Dreamdump.SectorOrder.ToString() },
+                { DreamdumpConstants.RereadCount, options.Dumping.Dreamdump.RereadCount.ToString() },
+
+                { RedumperConstants.EnableSkeleton, options.Dumping.Redumper.EnableSkeleton.ToString() },
+                { RedumperConstants.EnableVerbose, options.Dumping.Redumper.EnableVerbose.ToString() },
+                { RedumperConstants.LeadinRetryCount, options.Dumping.Redumper.LeadinRetryCount.ToString() },
+                { "RedumperNonRedumpMode", options.Dumping.Redumper.NonRedumpMode.ToString() },
+                { RedumperConstants.DriveType, options.Dumping.Redumper.DriveType.ToString() },
+                { RedumperConstants.DrivePregapStart, options.Dumping.Redumper.DrivePregapStart.ToString() },
+                { RedumperConstants.ReadMethod, options.Dumping.Redumper.ReadMethod.ToString() },
+                { RedumperConstants.SectorOrder, options.Dumping.Redumper.SectorOrder.ToString() },
+                { RedumperConstants.RereadCount, options.Dumping.Redumper.RereadCount.ToString() },
+                { RedumperConstants.RefineSectorMode, options.Dumping.Redumper.RefineSectorMode.ToString() },
+
+                { "ScanForProtection", options.Processing.ProtectionScanning.ScanForProtection.ToString() },
+                { "AddPlaceholders", options.Processing.MediaInformation.AddPlaceholders.ToString() },
+                { "PromptForDiscInformation", options.Processing.MediaInformation.PromptForDiscInformation.ToString() },
+                { "PullAllInformation", options.Processing.Login.PullAllInformation.ToString() },
+                { "EnableTabsInInputFields", options.Processing.MediaInformation.EnableTabsInInputFields.ToString() },
+                { "EnableRedumpCompatibility", options.Processing.MediaInformation.EnableRedumpCompatibility.ToString() },
+                { "ShowDiscEjectReminder", options.Processing.ShowDiscEjectReminder.ToString() },
+                { "IgnoreFixedDrives", options.GUI.IgnoreFixedDrives.ToString() },
+                { "AddFilenameSuffix", options.Processing.AddFilenameSuffix.ToString() },
+                { "OutputSubmissionJSON", options.Processing.OutputSubmissionJSON.ToString() },
+                { "IncludeArtifacts", options.Processing.IncludeArtifacts.ToString() },
+                { "CompressLogFiles", options.Processing.CompressLogFiles.ToString() },
+                { "LogCompression", options.Processing.LogCompression.ToString() },
+                { "DeleteUnnecessaryFiles", options.Processing.DeleteUnnecessaryFiles.ToString() },
+                { "CreateIRDAfterDumping", options.Processing.CreateIRDAfterDumping.ToString() },
+
+                { "SkipSystemDetection", options.GUI.SkipSystemDetection.ToString() },
+
+                { "ScanArchivesForProtection", options.Processing.ProtectionScanning.ScanArchivesForProtection.ToString() },
+                { "IncludeDebugProtectionInformation", options.Processing.ProtectionScanning.IncludeDebugProtectionInformation.ToString() },
+                { "HideDriveLetters", options.Processing.ProtectionScanning.HideDriveLetters.ToString() },
+
+                { "VerboseLogging", options.VerboseLogging.ToString() },
+                { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
+
+                { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
+                { "RedumpUsername", options.Processing.Login.RedumpUsername },
+                { "RedumpPassword", options.Processing.Login.RedumpPassword },
+            };
+        }
+
+        /// <summary>
+        /// Get a Boolean setting from a settings, dictionary
+        /// </summary>
+        /// <param name="settings">Dictionary representing the settings</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        private static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
+        {
+            if (settings.ContainsKey(key))
+            {
+                if (bool.TryParse(settings[key], out bool value))
+                    return value;
+                else
+                    return defaultValue;
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get an Int32 setting from a settings, dictionary
+        /// </summary>
+        /// <param name="settings">Dictionary representing the settings</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        private static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
+        {
+            if (settings.ContainsKey(key))
+            {
+                if (int.TryParse(settings[key], out int value))
+                    return value;
+                else
+                    return defaultValue;
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get a String setting from a settings, dictionary
+        /// </summary>
+        /// <param name="settings">Dictionary representing the settings</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        private static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
+        {
+            if (settings.ContainsKey(key))
+                return settings[key];
+            else
+                return defaultValue;
         }
 
         #endregion

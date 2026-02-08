@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
-using AaruConstants = MPF.ExecutionContexts.Aaru.SettingConstants;
 using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
-using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
 using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
-using DreamdumpConstants = MPF.ExecutionContexts.Dreamdump.SettingConstants;
 using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DumpSettings;
 using LogCompression = MPF.Processors.LogCompression;
-using RedumperConstants = MPF.ExecutionContexts.Redumper.SettingConstants;
 using RedumperDumpSettings = MPF.ExecutionContexts.Redumper.DumpSettings;
 
 namespace MPF.Frontend
@@ -77,109 +73,6 @@ namespace MPF.Frontend
         /// Empty constructor for serialization
         /// </summary>
         public Options() { }
-
-        /// <summary>
-        /// Constructor taking a dictionary for settings
-        /// </summary>
-        /// <param name="source">Dictionary representing settings</param>
-        /// TODO: Remove when Options is no longer relevant
-        public Options(Dictionary<string, string?>? source = null)
-        {
-            source ??= [];
-
-            FirstRun = GetBooleanSetting(source, "FirstRun", true);
-            CheckForUpdatesOnStartup = GetBooleanSetting(source, "CheckForUpdatesOnStartup", true);
-            VerboseLogging = GetBooleanSetting(source, "VerboseLogging", true);
-            var valueString = GetStringSetting(source, "InternalProgram", InternalProgram.Redumper.ToString());
-            var tempInternalProgram = valueString.ToInternalProgram();
-            InternalProgram = tempInternalProgram == InternalProgram.NONE ? InternalProgram.Redumper : tempInternalProgram;
-
-            GUI.CopyUpdateUrlToClipboard = GetBooleanSetting(source, "CopyUpdateUrlToClipboard", true);
-            GUI.OpenLogWindowAtStartup = GetBooleanSetting(source, "OpenLogWindowAtStartup", true);
-
-            valueString = GetStringSetting(source, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
-            GUI.DefaultInterfaceLanguage = valueString.ToInterfaceLanguage();
-            GUI.ShowDebugViewMenuItem = GetBooleanSetting(source, "ShowDebugViewMenuItem", false);
-            GUI.Theming.EnableDarkMode = GetBooleanSetting(source, "EnableDarkMode", false);
-            GUI.Theming.EnablePurpMode = GetBooleanSetting(source, "EnablePurpMode", false);
-            GUI.Theming.CustomBackgroundColor = GetStringSetting(source, "CustomBackgroundColor", null);
-            GUI.Theming.CustomTextColor = GetStringSetting(source, "CustomTextColor", null);
-
-            GUI.FastUpdateLabel = GetBooleanSetting(source, "FastUpdateLabel", false);
-            GUI.IgnoreFixedDrives = GetBooleanSetting(source, "IgnoreFixedDrives", true);
-            GUI.SkipSystemDetection = GetBooleanSetting(source, "SkipSystemDetection", false);
-
-            Dumping.AaruPath = GetStringSetting(source, "AaruPath", DumpSettings.DefaultAaruPath) ?? DumpSettings.DefaultAaruPath;
-            Dumping.DiscImageCreatorPath = GetStringSetting(source, "DiscImageCreatorPath", DumpSettings.DefaultDiscImageCreatorPath) ?? DumpSettings.DefaultDiscImageCreatorPath;
-            Dumping.DreamdumpPath = GetStringSetting(source, "DreamdumpPath", DumpSettings.DefaultDreamdumpPath) ?? DumpSettings.DefaultDreamdumpPath;
-            Dumping.RedumperPath = GetStringSetting(source, "RedumperPath", DumpSettings.DefaultRedumperPath) ?? DumpSettings.DefaultRedumperPath;
-
-            Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
-            valueString = GetStringSetting(source, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
-            Dumping.DefaultSystem = (valueString ?? string.Empty).ToRedumpSystem();
-            Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
-            Dumping.DumpSpeeds.DVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
-            Dumping.DumpSpeeds.HDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);
-            Dumping.DumpSpeeds.Bluray = GetInt32Setting(source, "PreferredDumpSpeedBD", 8);
-
-            Dumping.Aaru.EnableDebug = GetBooleanSetting(source, AaruConstants.EnableDebug, AaruConstants.EnableDebugDefault);
-            Dumping.Aaru.EnableVerbose = GetBooleanSetting(source, AaruConstants.EnableVerbose, AaruConstants.EnableVerboseDefault);
-            Dumping.Aaru.ForceDumping = GetBooleanSetting(source, AaruConstants.ForceDumping, AaruConstants.ForceDumpingDefault);
-            Dumping.Aaru.RereadCount = GetInt32Setting(source, AaruConstants.RereadCount, AaruConstants.RereadCountDefault);
-            Dumping.Aaru.StripPersonalData = GetBooleanSetting(source, AaruConstants.StripPersonalData, AaruConstants.StripPersonalDataDefault);
-
-            Dumping.DIC.MultiSectorRead = GetBooleanSetting(source, DiscImageCreatorConstants.MultiSectorRead, DiscImageCreatorConstants.MultiSectorReadDefault);
-            Dumping.DIC.MultiSectorReadValue = GetInt32Setting(source, DiscImageCreatorConstants.MultiSectorReadValue, DiscImageCreatorConstants.MultiSectorReadValueDefault);
-            Dumping.DIC.ParanoidMode = GetBooleanSetting(source, DiscImageCreatorConstants.ParanoidMode, DiscImageCreatorConstants.ParanoidModeDefault);
-            Dumping.DIC.QuietMode = GetBooleanSetting(source, DiscImageCreatorConstants.QuietMode, DiscImageCreatorConstants.QuietModeDefault);
-            Dumping.DIC.RereadCount = GetInt32Setting(source, DiscImageCreatorConstants.RereadCount, DiscImageCreatorConstants.RereadCountDefault);
-            Dumping.DIC.DVDRereadCount = GetInt32Setting(source, DiscImageCreatorConstants.DVDRereadCount, DiscImageCreatorConstants.DVDRereadCountDefault);
-            Dumping.DIC.UseCMIFlag = GetBooleanSetting(source, DiscImageCreatorConstants.UseCMIFlag, DiscImageCreatorConstants.UseCMIFlagDefault);
-
-            Dumping.Dreamdump.NonRedumpMode = GetBooleanSetting(source, "DreamdumpNonRedumpMode", false);
-            valueString = GetStringSetting(source, DreamdumpConstants.SectorOrder, DreamdumpConstants.SectorOrderDefault.ToString());
-            Dumping.Dreamdump.SectorOrder = valueString.ToDreamdumpSectorOrder();
-            Dumping.Dreamdump.RereadCount = GetInt32Setting(source, DreamdumpConstants.RereadCount, DreamdumpConstants.RereadCountDefault);
-
-            Dumping.Redumper.EnableSkeleton = GetBooleanSetting(source, RedumperConstants.EnableSkeleton, RedumperConstants.EnableSkeletonDefault);
-            Dumping.Redumper.EnableVerbose = GetBooleanSetting(source, RedumperConstants.EnableVerbose, RedumperConstants.EnableVerboseDefault);
-            Dumping.Redumper.LeadinRetryCount = GetInt32Setting(source, RedumperConstants.LeadinRetryCount, RedumperConstants.LeadinRetryCountDefault);
-            Dumping.Redumper.NonRedumpMode = GetBooleanSetting(source, "RedumperNonRedumpMode", false);
-            valueString = GetStringSetting(source, RedumperConstants.DriveType, RedumperConstants.DriveTypeDefault.ToString());
-            Dumping.Redumper.DriveType = valueString.ToRedumperDriveType();
-            Dumping.Redumper.DrivePregapStart = GetInt32Setting(source, RedumperConstants.DrivePregapStart, RedumperConstants.DrivePregapStartDefault);
-            valueString = GetStringSetting(source, RedumperConstants.ReadMethod, RedumperConstants.ReadMethodDefault.ToString());
-            Dumping.Redumper.ReadMethod = valueString.ToRedumperReadMethod();
-            valueString = GetStringSetting(source, RedumperConstants.SectorOrder, RedumperConstants.SectorOrderDefault.ToString());
-            Dumping.Redumper.SectorOrder = valueString.ToRedumperSectorOrder();
-            Dumping.Redumper.RereadCount = GetInt32Setting(source, RedumperConstants.RereadCount, RedumperConstants.RereadCountDefault);
-            Dumping.Redumper.RefineSectorMode = GetBooleanSetting(source, RedumperConstants.RefineSectorMode, RedumperConstants.RefineSectorModeDefault);
-
-            Processing.ProtectionScanning.ScanForProtection = GetBooleanSetting(source, "ScanForProtection", true);
-            Processing.ProtectionScanning.ScanArchivesForProtection = GetBooleanSetting(source, "ScanArchivesForProtection", true);
-            Processing.ProtectionScanning.HideDriveLetters = GetBooleanSetting(source, "HideDriveLetters", false);
-            Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
-
-            Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            Processing.Login.RedumpUsername = GetStringSetting(source, "RedumpUsername", string.Empty);
-            Processing.Login.RedumpPassword = GetStringSetting(source, "RedumpPassword", string.Empty);
-            Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
-
-            Processing.MediaInformation.AddPlaceholders = GetBooleanSetting(source, "AddPlaceholders", true);
-            Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
-            Processing.MediaInformation.EnableTabsInInputFields = GetBooleanSetting(source, "EnableTabsInInputFields", true);
-            Processing.MediaInformation.PromptForDiscInformation = GetBooleanSetting(source, "PromptForDiscInformation", true);
-
-            Processing.AddFilenameSuffix = GetBooleanSetting(source, "AddFilenameSuffix", false);
-            Processing.CompressLogFiles = GetBooleanSetting(source, "CompressLogFiles", true);
-            Processing.CreateIRDAfterDumping = GetBooleanSetting(source, "CreateIRDAfterDumping", false);
-            Processing.DeleteUnnecessaryFiles = GetBooleanSetting(source, "DeleteUnnecessaryFiles", false);
-            Processing.IncludeArtifacts = GetBooleanSetting(source, "IncludeArtifacts", false);
-            valueString = GetStringSetting(source, "LogCompression", LogCompression.DeflateMaximum.ToString());
-            Processing.LogCompression = valueString.ToLogCompression();
-            Processing.OutputSubmissionJSON = GetBooleanSetting(source, "OutputSubmissionJSON", false);
-            Processing.ShowDiscEjectReminder = GetBooleanSetting(source, "ShowDiscEjectReminder", true);
-        }
 
         /// <summary>
         /// Constructor that converts from an existing Options object
