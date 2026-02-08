@@ -20,23 +20,23 @@ namespace MPF.Frontend.Tools
             return mediaType switch
             {
                 // CD dump speed
-                MediaType.CDROM => options.PreferredDumpSpeedCD,
-                MediaType.GDROM => options.PreferredDumpSpeedCD,
+                MediaType.CDROM => options.Dumping.DumpSpeeds.CD,
+                MediaType.GDROM => options.Dumping.DumpSpeeds.CD,
 
                 // DVD dump speed
-                MediaType.DVD => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoGameCubeGameDisc => options.PreferredDumpSpeedDVD,
-                MediaType.NintendoWiiOpticalDisc => options.PreferredDumpSpeedDVD,
+                MediaType.DVD => options.Dumping.DumpSpeeds.DVD,
+                MediaType.NintendoGameCubeGameDisc => options.Dumping.DumpSpeeds.DVD,
+                MediaType.NintendoWiiOpticalDisc => options.Dumping.DumpSpeeds.DVD,
 
                 // HD-DVD dump speed
-                MediaType.HDDVD => options.PreferredDumpSpeedHDDVD,
+                MediaType.HDDVD => options.Dumping.DumpSpeeds.HDDVD,
 
                 // BD dump speed
-                MediaType.BluRay => options.PreferredDumpSpeedBD,
-                MediaType.NintendoWiiUOpticalDisc => options.PreferredDumpSpeedBD,
+                MediaType.BluRay => options.Dumping.DumpSpeeds.Bluray,
+                MediaType.NintendoWiiUOpticalDisc => options.Dumping.DumpSpeeds.Bluray,
 
                 // Default
-                _ => options.PreferredDumpSpeedCD,
+                _ => options.Dumping.DumpSpeeds.CD,
             };
 #pragma warning restore IDE0072
         }
@@ -606,12 +606,7 @@ namespace MPF.Frontend.Tools
                 // Get the latest tag from GitHub
                 _ = GetRemoteVersionAndUrl(out string? tag, out url);
                 different = version != tag && tag is not null;
-
-                message = $"Local version: {version}"
-                    + $"{Environment.NewLine}Remote version: {tag}"
-                    + (different
-                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
-                        : $"{Environment.NewLine}You have the newest version!");
+                message = $"Local version: {version}{Environment.NewLine}Remote version: {tag}";
             }
             catch (Exception ex)
             {

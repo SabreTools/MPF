@@ -10,7 +10,14 @@ namespace MPF.Frontend
         /// </summary>
         public static void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            Console.WriteLine(value.Message);
+            string prefix = (bool?)value switch
+            {
+                true => "SUCCESS: ",
+                false => "FAILURE: ",
+                _ => "",
+            };
+
+            Console.WriteLine($"{prefix}{value.Message}");
         }
 
         /// <summary>

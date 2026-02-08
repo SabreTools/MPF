@@ -136,7 +136,7 @@ namespace MPF.UI.Windows
             MediaInformationViewModel.Load();
 
             // Limit lists, if necessary
-            if (options.EnableRedumpCompatibility)
+            if (options.Processing.MediaInformation.EnableRedumpCompatibility)
             {
                 MediaInformationViewModel.SetRedumpRegions();
                 MediaInformationViewModel.SetRedumpLanguages();
@@ -159,7 +159,7 @@ namespace MPF.UI.Windows
         private void ManipulateFields(Options options, SubmissionInfo? submissionInfo)
         {
             // Enable tabs in all fields, if required
-            if (options.EnableTabsInInputFields)
+            if (options.Processing.MediaInformation.EnableTabsInInputFields)
                 EnableTabsInInputFields();
 
             // Hide read-only fields that don't have values set

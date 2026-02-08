@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -113,14 +113,14 @@ namespace MPF.Frontend
             InternalProgram? internalProgram)
         {
             // Set options object
-            _options = options;
+            _options = new Options(options);
 
             // Output paths
             OutputPath = FrontendTool.NormalizeOutputPaths(outputPath, false);
 
             // UI information
             _drive = drive;
-            _system = system ?? options.DefaultSystem;
+            _system = system ?? options.Dumping.DefaultSystem;
             _internalProgram = internalProgram ?? options.InternalProgram;
         }
 
@@ -216,10 +216,10 @@ namespace MPF.Frontend
 #pragma warning disable IDE0072
             _executionContext = _internalProgram switch
             {
-                InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.AaruPath },
-                InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = _options.DiscImageCreatorPath },
-                // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(parameters) { ExecutablePath = _options.DreamdumpPath },
-                InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = _options.RedumperPath },
+                InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.AaruPath },
+                InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.DiscImageCreatorPath },
+                // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.DreamdumpPath },
+                InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(parameters) { ExecutablePath = _options.Dumping.RedumperPath },
 
                 // If no dumping program found, set to null
                 InternalProgram.NONE => null,
@@ -284,10 +284,33 @@ namespace MPF.Frontend
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.Aaru),
+
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.DIC),
+
+                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system,
+                    //     mediaType,
+                    //     _drive.Name,
+                    //     OutputPath,
+                    //     driveSpeed,
+                    //     _options.Dumping.Dreamdump),
+
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.Redumper),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,
@@ -455,11 +478,11 @@ namespace MPF.Frontend
 
             // Check that we have the basics for dumping
             ResultEventArgs result = IsValidForDump(mediaType);
-            if (!result)
+            if (result == false)
                 return result;
 
             // Execute internal tool
-            progress?.Report(ResultEventArgs.Success($"Executing {_internalProgram}... please wait!"));
+            progress?.Report(ResultEventArgs.Neutral($"Executing {_internalProgram}... please wait!"));
 
             var directoryName = Path.GetDirectoryName(OutputPath);
             if (!string.IsNullOrEmpty(directoryName))
@@ -507,7 +530,7 @@ namespace MPF.Frontend
                 protectionProgress = temp;
             }
 
-            resultProgress.Report(ResultEventArgs.Success("Gathering submission information... please wait!"));
+            resultProgress.Report(ResultEventArgs.Neutral("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
             var outputDirectory = Path.GetDirectoryName(OutputPath);
@@ -530,7 +553,7 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
             // Extract the information from the output files
-            resultProgress.Report(ResultEventArgs.Success("Extracting output information from output files..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Extracting output information from output files..."));
             var submissionInfo = await SubmissionGenerator.ExtractOutputInformation(
                 OutputPath,
                 _drive,
@@ -548,15 +571,15 @@ namespace MPF.Frontend
             // Inject seed submission info data, if necessary
             if (seedInfo is not null)
             {
-                resultProgress.Report(ResultEventArgs.Success("Injecting user-supplied information..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Injecting user-supplied information..."));
                 submissionInfo = Builder.InjectSubmissionInformation(submissionInfo, seedInfo);
                 resultProgress.Report(ResultEventArgs.Success("Information injection complete!"));
             }
 
             // Get user-modifiable information if configured to
-            if (_options.PromptForDiscInformation && processUserInfo is not null)
+            if (_options.Processing.MediaInformation.PromptForDiscInformation && processUserInfo is not null)
             {
-                resultProgress.Report(ResultEventArgs.Success("Waiting for additional media information..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Waiting for additional media information..."));
                 bool? filledInfo = processUserInfo.Invoke(_options, ref submissionInfo);
                 if (filledInfo == true)
                     resultProgress.Report(ResultEventArgs.Success("Additional media information added!"));
@@ -565,23 +588,23 @@ namespace MPF.Frontend
             }
 
             // Process special fields for site codes
-            resultProgress.Report(ResultEventArgs.Success("Processing site codes..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Processing site codes..."));
             Formatter.ProcessSpecialFields(submissionInfo!);
             resultProgress.Report(ResultEventArgs.Success("Processing complete!"));
 
             // Format the information for the text output
-            resultProgress.Report(ResultEventArgs.Success("Formatting information..."));
-            var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.EnableRedumpCompatibility, out string? formatResult);
+            resultProgress.Report(ResultEventArgs.Neutral("Formatting information..."));
+            var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.Processing.MediaInformation.EnableRedumpCompatibility, out string? formatResult);
             if (formattedValues is null)
                 resultProgress.Report(ResultEventArgs.Failure(formatResult));
             else
                 resultProgress.Report(ResultEventArgs.Success(formatResult));
 
             // Get the filename suffix for auto-generated files
-            var filenameSuffix = _options.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
+            var filenameSuffix = _options.Processing.AddFilenameSuffix ? Path.GetFileNameWithoutExtension(outputFilename) : null;
 
             // Write the text output
-            resultProgress.Report(ResultEventArgs.Success("Writing submission information file..."));
+            resultProgress.Report(ResultEventArgs.Neutral("Writing submission information file..."));
             bool txtSuccess = WriteOutputData(outputDirectory, filenameSuffix, formattedValues, out string txtResult);
             if (txtSuccess)
                 resultProgress.Report(ResultEventArgs.Success(txtResult));
@@ -591,10 +614,10 @@ namespace MPF.Frontend
             // Write the copy protection output
             if (submissionInfo?.CopyProtection?.FullProtections is not null && submissionInfo.CopyProtection.FullProtections.Count > 0)
             {
-                if (_options.ScanForProtection)
+                if (_options.Processing.ProtectionScanning.ScanForProtection)
                 {
-                    resultProgress.Report(ResultEventArgs.Success("Writing protection information file..."));
-                    bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.HideDriveLetters);
+                    resultProgress.Report(ResultEventArgs.Neutral("Writing protection information file..."));
+                    bool scanSuccess = WriteProtectionData(outputDirectory, filenameSuffix, submissionInfo, _options.Processing.ProtectionScanning.HideDriveLetters);
                     if (scanSuccess)
                         resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                     else
@@ -603,10 +626,10 @@ namespace MPF.Frontend
             }
 
             // Write the JSON output, if required
-            if (_options.OutputSubmissionJSON)
+            if (_options.Processing.OutputSubmissionJSON)
             {
-                resultProgress.Report(ResultEventArgs.Success($"Writing submission information JSON file{(_options.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
-                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.IncludeArtifacts);
+                resultProgress.Report(ResultEventArgs.Neutral($"Writing submission information JSON file{(_options.Processing.IncludeArtifacts ? " with artifacts" : string.Empty)}..."));
+                bool jsonSuccess = WriteOutputData(outputDirectory, filenameSuffix, submissionInfo, _options.Processing.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress.Report(ResultEventArgs.Success("Writing complete!"));
                 else
@@ -614,16 +637,16 @@ namespace MPF.Frontend
             }
 
             // Compress the logs, if required
-            if (_options.CompressLogFiles)
+            if (_options.Processing.CompressLogFiles)
             {
-                resultProgress.Report(ResultEventArgs.Success("Compressing log files..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Compressing log files..."));
 #if NET40
                 await Task.Factory.StartNew(() =>
 #else
                 await Task.Run(() =>
 #endif
                 {
-                    bool compressSuccess = _processor.CompressLogFiles(mediaType, _options.LogCompression, outputDirectory, outputFilename, filenameSuffix, out string compressResult);
+                    bool compressSuccess = _processor.CompressLogFiles(mediaType, _options.Processing.LogCompression, outputDirectory, outputFilename, filenameSuffix, out string compressResult);
                     if (compressSuccess)
                         resultProgress.Report(ResultEventArgs.Success(compressResult));
                     else
@@ -634,9 +657,9 @@ namespace MPF.Frontend
             }
 
             // Delete unnecessary files, if required
-            if (_options.DeleteUnnecessaryFiles)
+            if (_options.Processing.DeleteUnnecessaryFiles)
             {
-                resultProgress.Report(ResultEventArgs.Success("Deleting unnecessary files..."));
+                resultProgress.Report(ResultEventArgs.Neutral("Deleting unnecessary files..."));
                 bool deleteSuccess = _processor.DeleteUnnecessaryFiles(mediaType, outputDirectory, outputFilename, out string deleteResult);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success(deleteResult));
@@ -645,9 +668,9 @@ namespace MPF.Frontend
             }
 
             // Create PS3 IRD, if required
-            if (_options.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
+            if (_options.Processing.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
-                resultProgress.Report(ResultEventArgs.Success("Creating IRD... please wait!"));
+                resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
                 bool deleteSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums.Layerbreak, submissionInfo?.SizeAndChecksums.CRC32);
                 if (deleteSuccess)
                     resultProgress.Report(ResultEventArgs.Success("IRD created!"));

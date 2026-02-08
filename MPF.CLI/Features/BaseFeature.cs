@@ -65,33 +65,35 @@ namespace MPF.CLI.Features
         protected BaseFeature(string name, string[] flags, string description, string? detailed = null)
             : base(name, flags, description, detailed)
         {
-            Options = new Options()
-            {
-                // Internal Program
-                InternalProgram = InternalProgram.NONE,
+            Options = new Options();
 
-                // Extra Dumping Options
-                ScanForProtection = false,
-                AddPlaceholders = true,
-                PullAllInformation = false,
-                AddFilenameSuffix = false,
-                OutputSubmissionJSON = false,
-                IncludeArtifacts = false,
-                CompressLogFiles = false,
-                LogCompression = LogCompression.DeflateMaximum,
-                DeleteUnnecessaryFiles = false,
-                CreateIRDAfterDumping = false,
+            // Internal Program
+            Options.InternalProgram = InternalProgram.NONE;
 
-                // Protection Scanning Options
-                ScanArchivesForProtection = true,
-                IncludeDebugProtectionInformation = false,
-                HideDriveLetters = false,
+            // Protection Scanning Options
+            Options.Processing.ProtectionScanning.ScanForProtection = false;
+            Options.Processing.ProtectionScanning.ScanArchivesForProtection = true;
+            Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
+            Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Redump Login Information
-                RetrieveMatchInformation = true,
-                RedumpUsername = null,
-                RedumpPassword = null,
-            };
+            // Redump Login Information
+            Options.Processing.Login.PullAllInformation = false;
+            Options.Processing.Login.RedumpUsername = null;
+            Options.Processing.Login.RedumpPassword = null;
+            Options.Processing.Login.RetrieveMatchInformation = true;
+
+            // Media Information
+            Options.Processing.MediaInformation.AddPlaceholders = true;
+
+            // Post-Information Options
+            Options.Processing.AddFilenameSuffix = false;
+            Options.Processing.CreateIRDAfterDumping = false;
+            Options.Processing.OutputSubmissionJSON = false;
+            Options.Processing.IncludeArtifacts = false;
+            Options.Processing.CompressLogFiles = false;
+            Options.Processing.LogCompression = LogCompression.DeflateMaximum;
+            Options.Processing.DeleteUnnecessaryFiles = false;
+
         }
 
         /// <inheritdoc/>
@@ -104,12 +106,15 @@ namespace MPF.CLI.Features
                 return false;
             }
 
+            // Log the system being used, in case it came from config
+            Console.WriteLine($"Using system: {System.LongName()}");
+
             // Validate the supplied credentials
-            if (Options.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(Options.RedumpUsername)
-                && !string.IsNullOrEmpty(Options.RedumpPassword))
+            if (Options.Processing.Login.RetrieveMatchInformation
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)
+                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpPassword))
             {
-                bool? validated = RedumpClient.ValidateCredentials(Options.RedumpUsername!, Options.RedumpPassword!).GetAwaiter().GetResult();
+                bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpUsername!, Options.Processing.Login.RedumpPassword!).GetAwaiter().GetResult();
                 string message = validated switch
                 {
                     true => "Redump username and password accepted!",
@@ -125,7 +130,7 @@ namespace MPF.CLI.Features
             switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    if (!File.Exists(Options.AaruPath))
+                    if (!File.Exists(Options.Dumping.AaruPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
                         return false;
@@ -134,7 +139,7 @@ namespace MPF.CLI.Features
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    if (!File.Exists(Options.DiscImageCreatorPath))
+                    if (!File.Exists(Options.Dumping.DiscImageCreatorPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
                         return false;
@@ -143,7 +148,7 @@ namespace MPF.CLI.Features
                     break;
 
                 // case InternalProgram.Dreamdump:
-                //     if (!File.Exists(Options.DreamdumpPath))
+                //     if (!File.Exists(Options.Dumping.DreamdumpPath))
                 //     {
                 //         Console.Error.WriteLine("A path needs to be supplied in config.json for Dreamdump, exiting...");
                 //         return false;
@@ -152,7 +157,7 @@ namespace MPF.CLI.Features
                 //     break;
 
                 case InternalProgram.Redumper:
-                    if (!File.Exists(Options.RedumperPath))
+                    if (!File.Exists(Options.Dumping.RedumperPath))
                     {
                         Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
                         return false;
@@ -198,8 +203,8 @@ namespace MPF.CLI.Features
             {
                 string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                 FilePath = Path.Combine(defaultFileName, $"{defaultFileName}.bin");
-                if (Options.DefaultOutputPath is not null)
-                    FilePath = Path.Combine(Options.DefaultOutputPath, FilePath);
+                if (Options.Dumping.DefaultOutputPath is not null)
+                    FilePath = Path.Combine(Options.Dumping.DefaultOutputPath, FilePath);
             }
 
             if (FilePath is not null)
@@ -232,7 +237,7 @@ namespace MPF.CLI.Features
             Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
             var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
-            if (!dumpResult)
+            if (dumpResult == false)
                 return false;
 
             // If it was not a dumping command
@@ -257,7 +262,7 @@ namespace MPF.CLI.Features
             }
 
             // Finally, attempt to do the output dance
-            var verifyResult = env.VerifyAndSaveDumpOutput()
+            var verifyResult = env.VerifyAndSaveDumpOutput(processUserInfo: ProcessUserInfo)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             Console.WriteLine(verifyResult.Message);
 
@@ -307,6 +312,22 @@ namespace MPF.CLI.Features
             Console.WriteLine("Mounted filesystem path is only recommended on OSes that require block");
             Console.WriteLine("device dumping, usually Linux and macOS.");
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Determines how user information is processed, if at all
+        /// </summary>
+        /// <param name="options">Options set that may impact processing</params>
+        /// <param name="info">Submission info that may be overwritten</param>
+        /// <returns>True for successful updating, false or null otherwise</returns>
+        public bool? ProcessUserInfo(Options? options, ref SubmissionInfo? submissionInfo)
+        {
+            // TODO: Somehow use the GUI strings here instead of hardcoding English
+            if (options?.Processing?.ShowDiscEjectReminder == true)
+                Console.WriteLine("It is now safe to eject the disc");
+
+            // TODO: Implement some sort of CLI-based processing of user information
+            return null;
         }
     }
 }

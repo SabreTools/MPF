@@ -1,895 +1,173 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
-using AaruSettings = MPF.ExecutionContexts.Aaru.SettingConstants;
-using DICSettings = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
-// using DreamdumpSectorOrder = MPF.ExecutionContexts.Dreamdump.SectorOrder;
-// using DreamdumpSettings = MPF.ExecutionContexts.Dreamdump.SettingConstants;
+using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
+using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
+using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DumpSettings;
 using LogCompression = MPF.Processors.LogCompression;
-using RedumperDriveType = MPF.ExecutionContexts.Redumper.DriveType;
-using RedumperReadMethod = MPF.ExecutionContexts.Redumper.ReadMethod;
-using RedumperSectorOrder = MPF.ExecutionContexts.Redumper.SectorOrder;
-using RedumperSettings = MPF.ExecutionContexts.Redumper.SettingConstants;
+using RedumperDumpSettings = MPF.ExecutionContexts.Redumper.DumpSettings;
 
 namespace MPF.Frontend
 {
+    /// <summary>
+    /// Options that use nested types for setting arrangement
+    /// </summary>
     public class Options
     {
-        #region Default Paths
+        #region Properties
 
         /// <summary>
-        /// Default Aaru path
+        /// Internal structure version
         /// </summary>
-        private static string DefaultAaruPath
-        {
-            get
-            {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "aaru",
-                    PlatformID.MacOSX => "aaru",
-                    _ => "aaru.exe"
-                };
-#pragma warning restore IDE0072
-
-#if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Aaru", executableName));
-#else
-                return Path.Combine("Programs", "Aaru", executableName);
-#endif
-            }
-        }
-
-        /// <summary>
-        /// Default DiscImageCreator path
-        /// </summary>
-        private static string DefaultDiscImageCreatorPath
-        {
-            get
-            {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "DiscImageCreator.out",
-                    PlatformID.MacOSX => "DiscImageCreator",
-                    _ => "DiscImageCreator.exe"
-                };
-#pragma warning restore IDE0072
-
-#if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Creator", executableName));
-#else
-                return Path.Combine("Programs", "Creator", executableName);
-#endif
-            }
-        }
-
-#pragma warning disable IDE0051
-        /// <summary>
-        /// Default Dreamdump path
-        /// </summary>
-        private static string DefaultDreamdumpPath
-        {
-            get
-            {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "dreamdump",
-                    PlatformID.MacOSX => "dreamdump",
-                    _ => "dreamdump.exe"
-                };
-#pragma warning restore IDE0072
-
-#if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Dreamdump", executableName));
-#else
-                return Path.Combine("Programs", "Dreamdump", executableName);
-#endif
-            }
-        }
-#pragma warning restore IDE0051
-
-        /// <summary>
-        /// Default Redumper path
-        /// </summary>
-        private static string DefaultRedumperPath
-        {
-            get
-            {
-#pragma warning disable IDE0072
-                string executableName = Environment.OSVersion.Platform switch
-                {
-                    PlatformID.Unix => "redumper",
-                    PlatformID.MacOSX => "redumper",
-                    _ => "redumper.exe"
-                };
-#pragma warning restore IDE0072
-
-#if NET20 || NET35
-                return Path.Combine("Programs", Path.Combine("Redumper", executableName));
-#else
-                return Path.Combine("Programs", "Redumper", executableName);
-#endif
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// All settings in the form of a dictionary
-        /// </summary>
-        public Dictionary<string, string?> Settings { get; private set; }
+        public int Version { get; set; } = 1;
 
         /// <summary>
         /// Indicate if the program is being run with a clean configuration
         /// </summary>
-        public bool FirstRun
-        {
-            get { return GetBooleanSetting(Settings, "FirstRun", true); }
-            set { Settings["FirstRun"] = value.ToString(); }
-        }
-
-        #region Internal Program
-
-        /// <summary>
-        /// Path to Aaru
-        /// </summary>
-        public string? AaruPath
-        {
-            get { return GetStringSetting(Settings, "AaruPath", DefaultAaruPath); }
-            set { Settings["AaruPath"] = value; }
-        }
-
-        /// <summary>
-        /// Path to DiscImageCreator
-        /// </summary>
-        public string? DiscImageCreatorPath
-        {
-            get { return GetStringSetting(Settings, "DiscImageCreatorPath", DefaultDiscImageCreatorPath); }
-            set { Settings["DiscImageCreatorPath"] = value; }
-        }
-
-        // /// <summary>
-        // /// Path to Dreamdump
-        // /// </summary>
-        // public string? DreamdumpPath
-        // {
-        //     get { return GetStringSetting(Settings, "DreamdumpPath", DefaultDreamdumpPath); }
-        //     set { Settings["DreamdumpPath"] = value; }
-        // }
-
-        /// <summary>
-        /// Path to Redumper
-        /// </summary>
-        public string? RedumperPath
-        {
-            get { return GetStringSetting(Settings, "RedumperPath", DefaultRedumperPath); }
-            set { Settings["RedumperPath"] = value; }
-        }
-
-        /// <summary>
-        /// Currently selected dumping program
-        /// </summary>
-        public InternalProgram InternalProgram
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.Redumper.ToString());
-                var valueEnum = valueString.ToInternalProgram();
-                return valueEnum == InternalProgram.NONE ? InternalProgram.Redumper : valueEnum;
-            }
-            set
-            {
-                Settings["InternalProgram"] = value.ToString();
-            }
-        }
-
-        #endregion
-
-        #region UI Defaults
-
-        /// <summary>
-        /// Enable dark mode for UI elements
-        /// </summary>
-        public bool EnableDarkMode
-        {
-            get { return GetBooleanSetting(Settings, "EnableDarkMode", false); }
-            set { Settings["EnableDarkMode"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable purple mode for UI elements
-        /// </summary>
-        /// <remarks>This is a hidden setting</remarks>
-        public bool EnablePurpMode
-        {
-            get { return GetBooleanSetting(Settings, "EnablePurpMode", false); }
-            set { Settings["EnablePurpMode"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Custom color setting
-        /// </summary>
-        /// <remarks>This is a hidden setting</remarks>
-        public string? CustomBackgroundColor
-        {
-            get { return GetStringSetting(Settings, "CustomBackgroundColor", null); }
-            set { Settings["CustomBackgroundColor"] = value; }
-        }
-
-        /// <summary>
-        /// Custom color setting
-        /// </summary>
-        /// <remarks>This is a hidden setting</remarks>
-        public string? CustomTextColor
-        {
-            get { return GetStringSetting(Settings, "CustomTextColor", null); }
-            set { Settings["CustomTextColor"] = value; }
-        }
+        /// <remarks>Version 1 and greater</remarks>
+        public bool FirstRun { get; set; } = true;
 
         /// <summary>
         /// Check for updates on startup
         /// </summary>
-        public bool CheckForUpdatesOnStartup
-        {
-            get { return GetBooleanSetting(Settings, "CheckForUpdatesOnStartup", true); }
-            set { Settings["CheckForUpdatesOnStartup"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Try to copy the update URL to the clipboard if one is found
-        /// </summary>
-        public bool CopyUpdateUrlToClipboard
-        {
-            get { return GetBooleanSetting(Settings, "CopyUpdateUrlToClipboard", true); }
-            set { Settings["CopyUpdateUrlToClipboard"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Fast update label - Skips disc checks and updates path only
-        /// </summary>
-        public bool FastUpdateLabel
-        {
-            get { return GetBooleanSetting(Settings, "FastUpdateLabel", false); }
-            set { Settings["FastUpdateLabel"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default interface language to launch MPF into
-        /// </summary>
-        public InterfaceLanguage DefaultInterfaceLanguage
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, "DefaultInterfaceLanguage", InterfaceLanguage.AutoDetect.ShortName());
-                return valueString.ToInterfaceLanguage();
-            }
-            set
-            {
-                Settings["DefaultInterfaceLanguage"] = value.ShortName();
-            }
-        }
-
-        /// <summary>
-        /// Default output path for dumps
-        /// </summary>
-        public string? DefaultOutputPath
-        {
-            get { return GetStringSetting(Settings, "DefaultOutputPath", "ISO"); }
-            set { Settings["DefaultOutputPath"] = value; }
-        }
-
-        /// <summary>
-        /// Default system if none can be detected
-        /// </summary>
-        public RedumpSystem? DefaultSystem
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
-                var valueEnum = (valueString ?? string.Empty).ToRedumpSystem();
-                return valueEnum;
-            }
-            set
-            {
-                Settings["DefaultSystem"] = value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Show the debug menu item
-        /// </summary>
-        /// <remarks>This is a hidden setting</remarks>
-        public bool ShowDebugViewMenuItem
-        {
-            get { return GetBooleanSetting(Settings, "ShowDebugViewMenuItem", false); }
-            set { Settings["ShowDebugViewMenuItem"] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Dumping Speeds
-
-        /// <summary>
-        /// Default CD dumping speed
-        /// </summary>
-        public int PreferredDumpSpeedCD
-        {
-            get { return GetInt32Setting(Settings, "PreferredDumpSpeedCD", 24); }
-            set { Settings["PreferredDumpSpeedCD"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default DVD dumping speed
-        /// </summary>
-        public int PreferredDumpSpeedDVD
-        {
-            get { return GetInt32Setting(Settings, "PreferredDumpSpeedDVD", 16); }
-            set { Settings["PreferredDumpSpeedDVD"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default HD-DVD dumping speed
-        /// </summary>
-        public int PreferredDumpSpeedHDDVD
-        {
-            get { return GetInt32Setting(Settings, "PreferredDumpSpeedHDDVD", 8); }
-            set { Settings["PreferredDumpSpeedHDDVD"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default BD dumping speed
-        /// </summary>
-        public int PreferredDumpSpeedBD
-        {
-            get { return GetInt32Setting(Settings, "PreferredDumpSpeedBD", 8); }
-            set { Settings["PreferredDumpSpeedBD"] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Aaru
-
-        /// <summary>
-        /// Enable debug output while dumping by default
-        /// </summary>
-        public bool AaruEnableDebug
-        {
-            get { return GetBooleanSetting(Settings, AaruSettings.EnableDebug, AaruSettings.EnableDebugDefault); }
-            set { Settings[AaruSettings.EnableDebug] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable verbose output while dumping by default
-        /// </summary>
-        public bool AaruEnableVerbose
-        {
-            get { return GetBooleanSetting(Settings, AaruSettings.EnableVerbose, AaruSettings.EnableVerboseDefault); }
-            set { Settings[AaruSettings.EnableVerbose] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable force dumping of media by default
-        /// </summary>
-        public bool AaruForceDumping
-        {
-            get { return GetBooleanSetting(Settings, AaruSettings.ForceDumping, AaruSettings.ForceDumpingDefault); }
-            set { Settings[AaruSettings.ForceDumping] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default number of sector/subchannel rereads
-        /// </summary>
-        public int AaruRereadCount
-        {
-            get { return GetInt32Setting(Settings, AaruSettings.RereadCount, AaruSettings.RereadCountDefault); }
-            set { Settings[AaruSettings.RereadCount] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Strip personal data information from Aaru metadata by default
-        /// </summary>
-        public bool AaruStripPersonalData
-        {
-            get { return GetBooleanSetting(Settings, AaruSettings.StripPersonalData, AaruSettings.StripPersonalDataDefault); }
-            set { Settings[AaruSettings.StripPersonalData] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region DiscImageCreator
-
-        /// <summary>
-        /// Enable multi-sector read flag by default
-        /// </summary>
-        public bool DICMultiSectorRead
-        {
-            get { return GetBooleanSetting(Settings, DICSettings.MultiSectorRead, DICSettings.MultiSectorReadDefault); }
-            set { Settings[DICSettings.MultiSectorRead] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Include a default multi-sector read value
-        /// </summary>
-        public int DICMultiSectorReadValue
-        {
-            get { return GetInt32Setting(Settings, DICSettings.MultiSectorReadValue, DICSettings.MultiSectorReadValueDefault); }
-            set { Settings[DICSettings.MultiSectorReadValue] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable overly-secure dumping flags by default
-        /// </summary>
-        /// <remarks>
-        /// Split this into component parts later. Currently does:
-        /// - Scan sector protection and set subchannel read level to 2 for CD
-        /// - Set scan file protect flag for DVD
-        /// </remarks>
-        public bool DICParanoidMode
-        {
-            get { return GetBooleanSetting(Settings, DICSettings.ParanoidMode, DICSettings.ParanoidModeDefault); }
-            set { Settings[DICSettings.ParanoidMode] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable the Quiet flag by default
-        /// </summary>
-        public bool DICQuietMode
-        {
-            get { return GetBooleanSetting(Settings, DICSettings.QuietMode, DICSettings.QuietModeDefault); }
-            set { Settings[DICSettings.QuietMode] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default number of C2 rereads
-        /// </summary>
-        public int DICRereadCount
-        {
-            get { return GetInt32Setting(Settings, DICSettings.RereadCount, DICSettings.RereadCountDefault); }
-            set { Settings[DICSettings.RereadCount] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default number of DVD/HD-DVD/BD rereads
-        /// </summary>
-        public int DICDVDRereadCount
-        {
-            get { return GetInt32Setting(Settings, DICSettings.DVDRereadCount, DICSettings.DVDRereadCountDefault); }
-            set { Settings[DICSettings.DVDRereadCount] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Use the CMI flag for supported disc types
-        /// </summary>
-        public bool DICUseCMIFlag
-        {
-            get { return GetBooleanSetting(Settings, DICSettings.UseCMIFlag, DICSettings.UseCMIFlagDefault); }
-            set { Settings[DICSettings.UseCMIFlag] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Dreamdump
-
-        // /// <summary>
-        // /// Enable options incompatible with redump submissions
-        // /// </summary>
-        // public bool DreamdumpNonRedumpMode
-        // {
-        //     get { return GetBooleanSetting(Settings, "DreamdumpNonRedumpMode", false); }
-        //     set { Settings["DreamdumpNonRedumpMode"] = value.ToString(); }
-        // }
-
-        // /// <summary>
-        // /// Currently selected default Dreamdump sector order
-        // /// </summary>
-        // public DreamdumpSectorOrder DreamdumpSectorOrder
-        // {
-        //     get
-        //     {
-        //         var valueString = GetStringSetting(Settings, DreamdumpSettings.SectorOrder, DreamdumpSettings.SectorOrderDefault);
-        //         return valueString.ToDreamdumpSectorOrder();
-        //     }
-        //     set
-        //     {
-        //         Settings[DreamdumpSettings.SectorOrder] = value.ToString();
-        //     }
-        // }
-
-        // /// <summary>
-        // /// Default number of rereads
-        // /// </summary>
-        // public int DreamdumpRereadCount
-        // {
-        //     get { return GetInt32Setting(Settings, DreamdumpSettings.RereadCount, DreamdumpSettings.RereadCountDefault); }
-        //     set { Settings[DreamdumpSettings.RereadCount] = value.ToString(); }
-        // }
-
-        #endregion
-
-        #region Redumper
-
-        /// <summary>
-        /// Enable skeleton output while dumping by default
-        /// </summary>
-        /// <remarks>This is a hidden setting</remarks>
-        public bool RedumperEnableSkeleton
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableSkeleton, RedumperSettings.EnableSkeletonDefault); }
-            set { Settings[RedumperSettings.EnableSkeleton] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable verbose output while dumping by default
-        /// </summary>
-        public bool RedumperEnableVerbose
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.EnableVerbose, RedumperSettings.EnableVerboseDefault); }
-            set { Settings[RedumperSettings.EnableVerbose] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Default number of redumper Plextor leadin retries
-        /// </summary>
-        public int RedumperLeadinRetryCount
-        {
-            get { return GetInt32Setting(Settings, RedumperSettings.LeadinRetryCount, RedumperSettings.LeadinRetryCountDefault); }
-            set { Settings[RedumperSettings.LeadinRetryCount] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable options incompatible with redump submissions
-        /// </summary>
-        public bool RedumperNonRedumpMode
-        {
-            get { return GetBooleanSetting(Settings, "RedumperNonRedumpMode", false); }
-            set { Settings["RedumperNonRedumpMode"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Currently selected default redumper drive type
-        /// </summary>
-        public RedumperDriveType RedumperDriveType
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, RedumperSettings.DriveType, RedumperSettings.DriveTypeDefault);
-                return valueString.ToRedumperDriveType();
-            }
-            set
-            {
-                Settings[RedumperSettings.DriveType] = value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Currently selected default redumper drive pregap start sector
-        /// </summary>
-        public int RedumperDrivePregapStart
-        {
-            get { return GetInt32Setting(Settings, RedumperSettings.DrivePregapStart, RedumperSettings.DrivePregapStartDefault); }
-            set { Settings[RedumperSettings.DrivePregapStart] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Currently selected default redumper read method
-        /// </summary>
-        public RedumperReadMethod RedumperReadMethod
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, RedumperSettings.ReadMethod, RedumperSettings.ReadMethodDefault);
-                return valueString.ToRedumperReadMethod();
-            }
-            set
-            {
-                Settings[RedumperSettings.ReadMethod] = value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Currently selected default redumper sector order
-        /// </summary>
-        public RedumperSectorOrder RedumperSectorOrder
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, RedumperSettings.SectorOrder, RedumperSettings.SectorOrderDefault);
-                return valueString.ToRedumperSectorOrder();
-            }
-            set
-            {
-                Settings[RedumperSettings.SectorOrder] = value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Default number of rereads
-        /// </summary>
-        public int RedumperRereadCount
-        {
-            get { return GetInt32Setting(Settings, RedumperSettings.RereadCount, RedumperSettings.RereadCountDefault); }
-            set { Settings[RedumperSettings.RereadCount] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable the refine sector mode flag by default
-        /// </summary>
-        public bool RedumperRefineSectorMode
-        {
-            get { return GetBooleanSetting(Settings, RedumperSettings.RefineSectorMode, RedumperSettings.RefineSectorModeDefault); }
-            set { Settings[RedumperSettings.RefineSectorMode] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Extra Dumping Options
-
-        /// <summary>
-        /// Scan the disc for protection after dumping
-        /// </summary>
-        public bool ScanForProtection
-        {
-            get { return GetBooleanSetting(Settings, "ScanForProtection", true); }
-            set { Settings["ScanForProtection"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Add placeholder values in the submission info
-        /// </summary>
-        public bool AddPlaceholders
-        {
-            get { return GetBooleanSetting(Settings, "AddPlaceholders", true); }
-            set { Settings["AddPlaceholders"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Show the media information window after dumping
-        /// </summary>
-        public bool PromptForDiscInformation
-        {
-            get { return GetBooleanSetting(Settings, "PromptForDiscInformation", true); }
-            set { Settings["PromptForDiscInformation"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Pull all information from Redump if signed in
-        /// </summary>
-        public bool PullAllInformation
-        {
-            get { return GetBooleanSetting(Settings, "PullAllInformation", false); }
-            set { Settings["PullAllInformation"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable tabs in all input fields
-        /// </summary>
-        public bool EnableTabsInInputFields
-        {
-            get { return GetBooleanSetting(Settings, "EnableTabsInInputFields", true); }
-            set { Settings["EnableTabsInInputFields"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Limit outputs to Redump-supported values only
-        /// </summary>
-        public bool EnableRedumpCompatibility
-        {
-            get { return GetBooleanSetting(Settings, "EnableRedumpCompatibility", true); }
-            set { Settings["EnableRedumpCompatibility"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Show disc eject reminder before the media information window is shown
-        /// </summary>
-        public bool ShowDiscEjectReminder
-        {
-            get { return GetBooleanSetting(Settings, "ShowDiscEjectReminder", true); }
-            set { Settings["ShowDiscEjectReminder"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Ignore fixed drives when populating the list
-        /// </summary>
-        public bool IgnoreFixedDrives
-        {
-            get { return GetBooleanSetting(Settings, "IgnoreFixedDrives", true); }
-            set { Settings["IgnoreFixedDrives"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Add the dump filename as a suffix to the auto-generated files
-        /// </summary>
-        public bool AddFilenameSuffix
-        {
-            get { return GetBooleanSetting(Settings, "AddFilenameSuffix", false); }
-            set { Settings["AddFilenameSuffix"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Output the compressed JSON version of the submission info
-        /// </summary>
-        public bool OutputSubmissionJSON
-        {
-            get { return GetBooleanSetting(Settings, "OutputSubmissionJSON", false); }
-            set { Settings["OutputSubmissionJSON"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Include log files in serialized JSON data
-        /// </summary>
-        public bool IncludeArtifacts
-        {
-            get { return GetBooleanSetting(Settings, "IncludeArtifacts", false); }
-            set { Settings["IncludeArtifacts"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Compress output log files to reduce space
-        /// </summary>
-        public bool CompressLogFiles
-        {
-            get { return GetBooleanSetting(Settings, "CompressLogFiles", true); }
-            set { Settings["CompressLogFiles"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Compression type used during log compression
-        /// </summary>
-        public LogCompression LogCompression
-        {
-            get
-            {
-                var valueString = GetStringSetting(Settings, "LogCompression", LogCompression.DeflateMaximum.ToString());
-                return valueString.ToLogCompression();
-            }
-            set
-            {
-                Settings["LogCompression"] = value.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Delete unnecessary files to reduce space
-        /// </summary>
-        public bool DeleteUnnecessaryFiles
-        {
-            get { return GetBooleanSetting(Settings, "DeleteUnnecessaryFiles", false); }
-            set { Settings["DeleteUnnecessaryFiles"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Create a PS3 IRD file after dumping PS3 BD-ROM discs
-        /// </summary>
-        public bool CreateIRDAfterDumping
-        {
-            get { return GetBooleanSetting(Settings, "CreateIRDAfterDumping", false); }
-            set { Settings["CreateIRDAfterDumping"] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Skip Options
-
-        /// <summary>
-        /// Skip detecting known system on disc scan
-        /// </summary>
-        public bool SkipSystemDetection
-        {
-            get { return GetBooleanSetting(Settings, "SkipSystemDetection", false); }
-            set { Settings["SkipSystemDetection"] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Protection Scanning Options
-
-        /// <summary>
-        /// Scan archive contents during protection scanning
-        /// </summary>
-        public bool ScanArchivesForProtection
-        {
-            get { return GetBooleanSetting(Settings, "ScanArchivesForProtection", true); }
-            set { Settings["ScanArchivesForProtection"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Include debug information with scan results
-        /// </summary>
-        public bool IncludeDebugProtectionInformation
-        {
-            get { return GetBooleanSetting(Settings, "IncludeDebugProtectionInformation", false); }
-            set { Settings["IncludeDebugProtectionInformation"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Remove drive letters from protection scan output
-        /// </summary>
-        public bool HideDriveLetters
-        {
-            get { return GetBooleanSetting(Settings, "HideDriveLetters", false); }
-            set { Settings["HideDriveLetters"] = value.ToString(); }
-        }
-
-        #endregion
-
-        #region Logging Options
+        /// <remarks>Version 1 and greater</remarks>
+        public bool CheckForUpdatesOnStartup { get; set; } = true;
 
         /// <summary>
         /// Enable verbose and debug logs to be written
         /// </summary>
-        public bool VerboseLogging
-        {
-            get { return GetBooleanSetting(Settings, "VerboseLogging", true); }
-            set { Settings["VerboseLogging"] = value.ToString(); }
-        }
+        /// <remarks>Version 1 and greater</remarks>
+        public bool VerboseLogging { get; set; } = true;
 
         /// <summary>
-        /// Have the log panel expanded by default on startup
+        /// Currently selected dumping program
         /// </summary>
-        public bool OpenLogWindowAtStartup
-        {
-            get { return GetBooleanSetting(Settings, "OpenLogWindowAtStartup", true); }
-            set { Settings["OpenLogWindowAtStartup"] = value.ToString(); }
-        }
+        /// <remarks>Version 1 and greater</remarks>
+        public InternalProgram InternalProgram { get; set; } = InternalProgram.Redumper;
+
+        /// <summary>
+        /// GUI settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public GuiSettings GUI { get; set; } = new GuiSettings();
+
+        /// <summary>
+        /// Dumping settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public DumpSettings Dumping { get; set; } = new DumpSettings();
+
+        /// <summary>
+        /// Processing settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public ProcessingSettings Processing { get; set; } = new ProcessingSettings();
 
         #endregion
 
-        #region Redump Login Information
+        #region Constructors
 
         /// <summary>
-        /// Enable retrieving match information from Redump
+        /// Empty constructor for serialization
         /// </summary>
-        public bool RetrieveMatchInformation
-        {
-            get { return GetBooleanSetting(Settings, "RetrieveMatchInformation", true); }
-            set { Settings["RetrieveMatchInformation"] = value.ToString(); }
-        }
-
-        public string? RedumpUsername
-        {
-            get { return GetStringSetting(Settings, "RedumpUsername", ""); }
-            set { Settings["RedumpUsername"] = value; }
-        }
-
-        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string? RedumpPassword
-        {
-            get { return GetStringSetting(Settings, "RedumpPassword", ""); }
-            set { Settings["RedumpPassword"] = value; }
-        }
-
-        #endregion
+        public Options() { }
 
         /// <summary>
-        /// Constructor taking a dictionary for settings
+        /// Constructor that converts from an existing Options object
         /// </summary>
-        /// <param name="settings"></param>
-        public Options(Dictionary<string, string?>? settings = null)
-        {
-            Settings = settings ?? [];
-        }
-
-        /// <summary>
-        /// Constructor taking an existing Options object
-        /// </summary>
-        /// <param name="source"></param>
+        /// <param name="source">Options object to read from</param>
         public Options(Options? source)
         {
-            Settings = new Dictionary<string, string?>(source?.Settings ?? []);
+            source ??= new Options();
+
+            FirstRun = source.FirstRun;
+            CheckForUpdatesOnStartup = source.CheckForUpdatesOnStartup;
+            VerboseLogging = source.VerboseLogging;
+            InternalProgram = source.InternalProgram;
+
+            GUI.CopyUpdateUrlToClipboard = source.GUI.CopyUpdateUrlToClipboard;
+            GUI.OpenLogWindowAtStartup = source.GUI.OpenLogWindowAtStartup;
+
+            GUI.DefaultInterfaceLanguage = source.GUI.DefaultInterfaceLanguage;
+            GUI.ShowDebugViewMenuItem = source.GUI.ShowDebugViewMenuItem;
+            GUI.Theming.EnableDarkMode = source.GUI.Theming.EnableDarkMode;
+            GUI.Theming.EnablePurpMode = source.GUI.Theming.EnablePurpMode;
+            GUI.Theming.CustomBackgroundColor = source.GUI.Theming.CustomBackgroundColor;
+            GUI.Theming.CustomTextColor = source.GUI.Theming.CustomTextColor;
+
+            GUI.FastUpdateLabel = source.GUI.FastUpdateLabel;
+            GUI.IgnoreFixedDrives = source.GUI.IgnoreFixedDrives;
+            GUI.SkipSystemDetection = source.GUI.SkipSystemDetection;
+
+            Dumping.AaruPath = source.Dumping.AaruPath;
+            Dumping.DiscImageCreatorPath = source.Dumping.DiscImageCreatorPath;
+            Dumping.DreamdumpPath = source.Dumping.DreamdumpPath;
+            Dumping.RedumperPath = source.Dumping.RedumperPath;
+
+            Dumping.DefaultOutputPath = source.Dumping.DefaultOutputPath;
+            Dumping.DefaultSystem = source.Dumping.DefaultSystem;
+            Dumping.DumpSpeeds.CD = source.Dumping.DumpSpeeds.CD;
+            Dumping.DumpSpeeds.DVD = source.Dumping.DumpSpeeds.DVD;
+            Dumping.DumpSpeeds.HDDVD = source.Dumping.DumpSpeeds.HDDVD;
+            Dumping.DumpSpeeds.Bluray = source.Dumping.DumpSpeeds.Bluray;
+
+            Dumping.Aaru.EnableDebug = source.Dumping.Aaru.EnableDebug;
+            Dumping.Aaru.EnableVerbose = source.Dumping.Aaru.EnableVerbose;
+            Dumping.Aaru.ForceDumping = source.Dumping.Aaru.ForceDumping;
+            Dumping.Aaru.RereadCount = source.Dumping.Aaru.RereadCount;
+            Dumping.Aaru.StripPersonalData = source.Dumping.Aaru.StripPersonalData;
+
+            Dumping.DIC.MultiSectorRead = source.Dumping.DIC.MultiSectorRead;
+            Dumping.DIC.MultiSectorReadValue = source.Dumping.DIC.MultiSectorReadValue;
+            Dumping.DIC.ParanoidMode = source.Dumping.DIC.ParanoidMode;
+            Dumping.DIC.QuietMode = source.Dumping.DIC.QuietMode;
+            Dumping.DIC.RereadCount = source.Dumping.DIC.RereadCount;
+            Dumping.DIC.DVDRereadCount = source.Dumping.DIC.DVDRereadCount;
+            Dumping.DIC.UseCMIFlag = source.Dumping.DIC.UseCMIFlag;
+
+            Dumping.Dreamdump.NonRedumpMode = source.Dumping.Dreamdump.NonRedumpMode;
+            Dumping.Dreamdump.SectorOrder = source.Dumping.Dreamdump.SectorOrder;
+            Dumping.Dreamdump.RereadCount = source.Dumping.Dreamdump.RereadCount;
+
+            Dumping.Redumper.EnableSkeleton = source.Dumping.Redumper.EnableSkeleton;
+            Dumping.Redumper.EnableVerbose = source.Dumping.Redumper.EnableVerbose;
+            Dumping.Redumper.LeadinRetryCount = source.Dumping.Redumper.LeadinRetryCount;
+            Dumping.Redumper.NonRedumpMode = source.Dumping.Redumper.NonRedumpMode;
+            Dumping.Redumper.DriveType = source.Dumping.Redumper.DriveType;
+            Dumping.Redumper.DrivePregapStart = source.Dumping.Redumper.DrivePregapStart;
+            Dumping.Redumper.ReadMethod = source.Dumping.Redumper.ReadMethod;
+            Dumping.Redumper.SectorOrder = source.Dumping.Redumper.SectorOrder;
+            Dumping.Redumper.RereadCount = source.Dumping.Redumper.RereadCount;
+            Dumping.Redumper.RefineSectorMode = source.Dumping.Redumper.RefineSectorMode;
+
+            Processing.ProtectionScanning.ScanForProtection = source.Processing.ProtectionScanning.ScanForProtection;
+            Processing.ProtectionScanning.ScanArchivesForProtection = source.Processing.ProtectionScanning.ScanArchivesForProtection;
+            Processing.ProtectionScanning.HideDriveLetters = source.Processing.ProtectionScanning.HideDriveLetters;
+            Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
+
+            Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
+            Processing.Login.RedumpUsername = source.Processing.Login.RedumpUsername;
+            Processing.Login.RedumpPassword = source.Processing.Login.RedumpPassword;
+            Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
+
+            Processing.MediaInformation.AddPlaceholders = source.Processing.MediaInformation.AddPlaceholders;
+            Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
+            Processing.MediaInformation.EnableTabsInInputFields = source.Processing.MediaInformation.EnableTabsInInputFields;
+            Processing.MediaInformation.PromptForDiscInformation = source.Processing.MediaInformation.PromptForDiscInformation;
+
+            Processing.AddFilenameSuffix = source.Processing.AddFilenameSuffix;
+            Processing.CompressLogFiles = source.Processing.CompressLogFiles;
+            Processing.CreateIRDAfterDumping = source.Processing.CreateIRDAfterDumping;
+            Processing.DeleteUnnecessaryFiles = source.Processing.DeleteUnnecessaryFiles;
+            Processing.IncludeArtifacts = source.Processing.IncludeArtifacts;
+            Processing.LogCompression = source.Processing.LogCompression;
+            Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
+            Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
         }
 
-        /// <summary>
-        /// Accessor for the internal dictionary
-        /// </summary>
-        public string? this[string key]
-        {
-            get => Settings[key];
-            set => Settings[key] = value;
-        }
+        #endregion
 
         #region Helpers
 
@@ -954,4 +232,535 @@ namespace MPF.Frontend
 
         #endregion
     }
+
+    #region Nested Option Types
+
+    /// <summary>
+    /// Context-specific settings that can be used by caller
+    /// </summary>
+    public class DumpSettings
+    {
+        #region Default Paths
+
+        /// <summary>
+        /// Default Aaru path
+        /// </summary>
+        [JsonIgnore]
+        internal static string DefaultAaruPath
+        {
+            get
+            {
+#pragma warning disable IDE0072
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "aaru",
+                    PlatformID.MacOSX => "aaru",
+                    _ => "aaru.exe"
+                };
+#pragma warning restore IDE0072
+
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Aaru", executableName));
+#else
+                return Path.Combine("Programs", "Aaru", executableName);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Default DiscImageCreator path
+        /// </summary>
+        [JsonIgnore]
+        internal static string DefaultDiscImageCreatorPath
+        {
+            get
+            {
+#pragma warning disable IDE0072
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "DiscImageCreator.out",
+                    PlatformID.MacOSX => "DiscImageCreator",
+                    _ => "DiscImageCreator.exe"
+                };
+#pragma warning restore IDE0072
+
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Creator", executableName));
+#else
+                return Path.Combine("Programs", "Creator", executableName);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Default Dreamdump path
+        /// </summary>
+        [JsonIgnore]
+        internal static string DefaultDreamdumpPath
+        {
+            get
+            {
+#pragma warning disable IDE0072
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "dreamdump",
+                    PlatformID.MacOSX => "dreamdump",
+                    _ => "dreamdump.exe"
+                };
+#pragma warning restore IDE0072
+
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Dreamdump", executableName));
+#else
+                return Path.Combine("Programs", "Dreamdump", executableName);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Default Redumper path
+        /// </summary>
+        [JsonIgnore]
+        internal static string DefaultRedumperPath
+        {
+            get
+            {
+#pragma warning disable IDE0072
+                string executableName = Environment.OSVersion.Platform switch
+                {
+                    PlatformID.Unix => "redumper",
+                    PlatformID.MacOSX => "redumper",
+                    _ => "redumper.exe"
+                };
+#pragma warning restore IDE0072
+
+#if NET20 || NET35
+                return Path.Combine("Programs", Path.Combine("Redumper", executableName));
+#else
+                return Path.Combine("Programs", "Redumper", executableName);
+#endif
+            }
+        }
+
+        #endregion
+
+        #region Internal Program
+
+        /// <summary>
+        /// Path to Aaru
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string AaruPath
+        {
+            get;
+            set
+            {
+                field = value ?? DefaultAaruPath;
+            }
+        } = DefaultAaruPath;
+
+        /// <summary>
+        /// Path to DiscImageCreator
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string DiscImageCreatorPath
+        {
+            get;
+            set
+            {
+                field = value ?? DefaultDiscImageCreatorPath;
+            }
+        } = DefaultDiscImageCreatorPath;
+
+        /// <summary>
+        /// Path to Dreamdump
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string DreamdumpPath
+        {
+            get;
+            set
+            {
+                field = value ?? DefaultDreamdumpPath;
+            }
+        } = DefaultDreamdumpPath;
+
+        /// <summary>
+        /// Path to Redumper
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string RedumperPath
+        {
+            get;
+            set
+            {
+                field = value ?? DefaultRedumperPath;
+            }
+        } = DefaultRedumperPath;
+
+        #endregion
+
+        #region Default Values
+
+        /// <summary>
+        /// Default output path for dumps
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string? DefaultOutputPath
+        {
+            get;
+            set
+            {
+                field = value ?? "ISO";
+            }
+        } = "ISO";
+
+        /// <summary>
+        /// Default system if none can be detected
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public RedumpSystem? DefaultSystem { get; set; } = RedumpSystem.IBMPCcompatible;
+
+        /// <summary>
+        /// Default preferred dumping speeds per media type
+        /// </summary>
+        public DumpSpeeds DumpSpeeds { get; set; } = new DumpSpeeds();
+
+        #endregion
+
+        #region Per-Program
+
+        /// <summary>
+        /// Aaru-specific dump settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public AaruDumpSettings Aaru { get; set; } = new AaruDumpSettings();
+
+        /// <summary>
+        /// DiscImageCreator-specific dump settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public DiscImageCreatorDumpSettings DIC { get; set; } = new DiscImageCreatorDumpSettings();
+
+        /// <summary>
+        /// Dreamdump-specific dump settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public DreamdumpDumpSettings Dreamdump { get; set; } = new DreamdumpDumpSettings();
+
+        /// <summary>
+        /// Redumper-specific dump settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public RedumperDumpSettings Redumper { get; set; } = new RedumperDumpSettings();
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Settings related to dumping speeds
+    /// </summary>
+    public class DumpSpeeds
+    {
+        /// <summary>
+        /// Default CD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int CD { get; set; } = 24;
+
+        /// <summary>
+        /// Default DVD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int DVD { get; set; } = 16;
+
+        /// <summary>
+        /// Default HD-DVD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int HDDVD { get; set; } = 8;
+
+        /// <summary>
+        /// Default BD dumping speed
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public int Bluray { get; set; } = 8;
+    }
+
+    /// <summary>
+    /// Settings related to the GUI
+    /// </summary>
+    public class GuiSettings
+    {
+        #region Startup
+
+        /// <summary>
+        /// Try to copy the update URL to the clipboard if one is found
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool CopyUpdateUrlToClipboard { get; set; } = true;
+
+        /// <summary>
+        /// Have the log panel expanded by default on startup
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool OpenLogWindowAtStartup { get; set; } = true;
+
+        #endregion
+
+        #region Interface
+
+        /// <summary>
+        /// Default interface language to launch MPF into
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public InterfaceLanguage DefaultInterfaceLanguage { get; set; } = InterfaceLanguage.AutoDetect;
+
+        /// <summary>
+        /// Show the debug menu item
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public bool ShowDebugViewMenuItem { get; set; } = false;
+
+        /// <summary>
+        /// Theme settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public ThemeSettings Theming { get; set; } = new ThemeSettings();
+
+        #endregion
+
+        #region Input
+
+        /// <summary>
+        /// Fast update label. Skips disc checks and updates path only
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool FastUpdateLabel { get; set; } = false;
+
+        /// <summary>
+        /// Ignore fixed drives when populating the list
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool IgnoreFixedDrives { get; set; } = true;
+
+        /// <summary>
+        /// Skip detecting known system on disc scan
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool SkipSystemDetection { get; set; } = false;
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Settings related to the media information input
+    /// </summary>
+    public class MediaInformationSettings
+    {
+        /// <summary>
+        /// Add placeholder values in the submission info
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool AddPlaceholders { get; set; } = true;
+
+        /// <summary>
+        /// Limit outputs to Redump-supported values only
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableRedumpCompatibility { get; set; } = true;
+
+        /// <summary>
+        /// Enable tabs in all input fields
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableTabsInInputFields { get; set; } = true;
+
+        /// <summary>
+        /// Show the media information window after dumping
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool PromptForDiscInformation { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Settings related to the processing step
+    /// </summary>
+    public class ProcessingSettings
+    {
+        #region Protection Scanning
+
+        /// <summary>
+        /// Protection scanning settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public ProtectionScanningSettings ProtectionScanning { get; set; } = new ProtectionScanningSettings();
+
+        #endregion
+
+        #region Site Login
+
+        /// <summary>
+        /// Site login information for retrieval
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public SiteLoginSettings Login { get; set; } = new SiteLoginSettings();
+
+        #endregion
+
+        #region User Input
+
+        /// <summary>
+        /// Media information input settings
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public MediaInformationSettings MediaInformation { get; set; } = new MediaInformationSettings();
+
+        #endregion
+
+        #region Post-Information
+
+        /// <summary>
+        /// Add the dump filename as a suffix to the auto-generated files
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool AddFilenameSuffix { get; set; } = false;
+
+        /// <summary>
+        /// Compress output log files to reduce space
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool CompressLogFiles { get; set; } = true;
+
+        /// <summary>
+        /// Create a PS3 IRD file after dumping PS3 BD-ROM discs
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool CreateIRDAfterDumping { get; set; } = false;
+
+        /// <summary>
+        /// Delete unnecessary files to reduce space
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool DeleteUnnecessaryFiles { get; set; } = false;
+
+        /// <summary>
+        /// Include log files in serialized JSON data
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool IncludeArtifacts { get; set; } = false;
+
+        /// <summary>
+        /// Compression type used during log compression
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public LogCompression LogCompression { get; set; } = LogCompression.DeflateMaximum;
+
+        /// <summary>
+        /// Output the compressed JSON version of the submission info
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool OutputSubmissionJSON { get; set; } = false;
+
+        /// <summary>
+        /// Show disc eject reminder before the media information window is shown
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool ShowDiscEjectReminder { get; set; } = true;
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Settings related to protection scanning
+    /// </summary>
+    public class ProtectionScanningSettings
+    {
+        /// <summary>
+        /// Scan the disc for protection after dumping
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool ScanForProtection { get; set; } = true;
+
+        /// <summary>
+        /// Scan archive contents during protection scanning
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool ScanArchivesForProtection { get; set; } = true;
+
+        /// <summary>
+        /// Remove drive letters from protection scan output
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool HideDriveLetters { get; set; } = false;
+
+        /// <summary>
+        /// Include debug information with scan results
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool IncludeDebugProtectionInformation { get; set; } = false;
+    }
+
+    /// <summary>
+    /// Settings related to site logins
+    /// </summary>
+    public class SiteLoginSettings
+    {
+        /// <summary>
+        /// Pull all information from Redump if signed in
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool PullAllInformation { get; set; } = false;
+
+        /// <summary>
+        /// Username for Redump, requires <see cref="RedumpPassword"/>
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public string? RedumpUsername { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Password for Redump, requires <see cref="RedumpUsername"/>
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
+        public string? RedumpPassword { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Enable retrieving match information from Redump
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool RetrieveMatchInformation { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Settings related to themes
+    /// </summary>
+    public class ThemeSettings
+    {
+        /// <summary>
+        /// Enable dark mode for UI elements
+        /// </summary>
+        /// <remarks>Version 1 and greater</remarks>
+        public bool EnableDarkMode { get; set; } = false;
+
+        /// <summary>
+        /// Enable purple mode for UI elements
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public bool EnablePurpMode { get; set; } = false;
+
+        /// <summary>
+        /// Custom color setting
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public string? CustomBackgroundColor { get; set; } = null;
+
+        /// <summary>
+        /// Custom color setting
+        /// </summary>
+        /// <remarks>Version 1 and greater; This is a hidden setting</remarks>
+        public string? CustomTextColor { get; set; } = null;
+    }
+
+    #endregion
 }

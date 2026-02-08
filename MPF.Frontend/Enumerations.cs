@@ -63,7 +63,8 @@ namespace MPF.Frontend
     /// </summary>
     public enum LogLevel
     {
-        USER,
+        USER_GENERIC,
+        USER_SUCCESS,
         VERBOSE,
         ERROR,
         SECRET,

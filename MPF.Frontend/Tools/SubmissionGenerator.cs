@@ -86,11 +86,11 @@ namespace MPF.Frontend.Tools
                 basePath = Path.Combine(outputDirectory, basePath);
 
             // Create the default submission info
-            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.AddPlaceholders);
+            SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.Processing.MediaInformation.AddPlaceholders);
 
             // Get specific tool output handling
-            processor.GenerateSubmissionInfo(info, mediaType, basePath, options.EnableRedumpCompatibility);
-            if (options.IncludeArtifacts)
+            processor.GenerateSubmissionInfo(info, mediaType, basePath, options.Processing.MediaInformation.EnableRedumpCompatibility);
+            if (options.Processing.IncludeArtifacts)
                 info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Get a list of matching IDs for each line in the DAT
@@ -113,15 +113,15 @@ namespace MPF.Frontend.Tools
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on MediaType
-            ProcessMediaType(info, mediaType, options.AddPlaceholders);
+            ProcessMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
 
             // Extract info based specifically on RedumpSystem
-            ProcessSystem(info, system, drive, options.AddPlaceholders, processor is DiscImageCreator, basePath);
+            ProcessSystem(info, system, drive, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
             if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
             {
-                resultProgress?.Report(ResultEventArgs.Success("Checking for anti-modchip strings... this might take a while!"));
+                resultProgress?.Report(ResultEventArgs.Neutral("Checking for anti-modchip strings... this might take a while!"));
                 info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
                 resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
             }
@@ -129,12 +129,12 @@ namespace MPF.Frontend.Tools
             // Run copy protection, if possible or necessary
             if (system.SupportsCopyProtectionScans())
             {
-                resultProgress?.Report(ResultEventArgs.Success("Running copy protection scan... this might take a while!"));
+                resultProgress?.Report(ResultEventArgs.Neutral("Running copy protection scan... this might take a while!"));
 
                 try
                 {
                     Dictionary<string, List<string>>? protections = null;
-                    if (options.ScanForProtection)
+                    if (options.Processing.ProtectionScanning.ScanForProtection)
                     {
                         // Explicitly note missing/invalid device paths
                         if (drive?.Name is null)
@@ -157,13 +157,13 @@ namespace MPF.Frontend.Tools
 
             // Set fields that may have automatic filling otherwise
             info.CommonDiscInfo.Category ??= DiscCategory.Games;
-            info.VersionAndEditions.Version ??= options.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+            info.VersionAndEditions.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = options.AddPlaceholders ? OptionalValue : string.Empty;
+                info.CommonDiscInfo.Comments = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = options.AddPlaceholders ? OptionalValue : string.Empty;
+                info.CommonDiscInfo.Contents = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
 
             // Normalize the disc type with all current information
             Validator.NormalizeDiscType(info);
@@ -182,18 +182,18 @@ namespace MPF.Frontend.Tools
             IProgress<ResultEventArgs>? resultProgress = null)
         {
             // If information should not be pulled at all
-            if (!options.RetrieveMatchInformation)
+            if (!options.Processing.Login.RetrieveMatchInformation)
                 return false;
 
             // Set the current dumper based on username
-            info.DumpersAndStatus.Dumpers = [options.RedumpUsername ?? "Anonymous User"];
+            info.DumpersAndStatus.Dumpers = [options.Processing.Login.RedumpUsername ?? "Anonymous User"];
             info.PartiallyMatchedIDs = [];
 
             // Login to Redump, if possible
             var wc = new RedumpClient();
-            if (!string.IsNullOrEmpty(options.RedumpUsername) && !string.IsNullOrEmpty(options.RedumpPassword))
+            if (!string.IsNullOrEmpty(options.Processing.Login.RedumpUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpPassword))
             {
-                bool? loggedIn = await wc.Login(options.RedumpUsername!, options.RedumpPassword!);
+                bool? loggedIn = await wc.Login(options.Processing.Login.RedumpUsername!, options.Processing.Login.RedumpPassword!);
                 if (loggedIn is null)
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
@@ -210,7 +210,7 @@ namespace MPF.Frontend.Tools
             List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(ResultEventArgs.Success("Finding disc matches on Redump..."));
+            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on Redump..."));
             var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
@@ -219,7 +219,7 @@ namespace MPF.Frontend.Tools
                 if (string.IsNullOrEmpty(hashData))
                 {
                     trackCount--;
-                    resultProgress?.Report(ResultEventArgs.Success("Blank line found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Blank line found, skipping!"));
                     continue;
                 }
 
@@ -254,7 +254,7 @@ namespace MPF.Frontend.Tools
                     || hashData.Contains("(Track AA.5).bin"))
                 {
                     trackCount--;
-                    resultProgress?.Report(ResultEventArgs.Success("Extra track found, skipping!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Extra track found, skipping!"));
                     continue;
                 }
 
@@ -349,8 +349,8 @@ namespace MPF.Frontend.Tools
                     continue;
 
                 // Fill in the fields from the existing ID
-                resultProgress?.Report(ResultEventArgs.Success($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
-                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.PullAllInformation);
+                resultProgress?.Report(ResultEventArgs.Neutral($"Filling fields from existing ID {fullyMatchedIdsList[i]}..."));
+                _ = await Builder.FillFromId(wc, info, fullyMatchedIdsList[i], options.Processing.Login.PullAllInformation);
                 resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
                 // Set the fully matched ID to the current

@@ -63,7 +63,34 @@ namespace MPF.Frontend
             }
         }
 
+       /// <summary>
+        /// Get the string representation of the DreamdumpSectorOrder enum values
+        /// </summary>
+        /// <param name="order">DreamdumpSectorOrder value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this DreamdumpSectorOrder order)
+            => ((DreamdumpSectorOrder?)order).LongName();
+
         /// <summary>
+        /// Get the string representation of the DreamdumpSectorOrder enum values
+        /// </summary>
+        /// <param name="order">DreamdumpSectorOrder value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this DreamdumpSectorOrder? order)
+        {
+            return order switch
+            {
+                DreamdumpSectorOrder.DATA_C2_SUB => "DATA_C2_SUB",
+                DreamdumpSectorOrder.DATA_SUB_C2 => "DATA_SUB_C2",
+                DreamdumpSectorOrder.DATA_SUB => "DATA_SUB",
+                DreamdumpSectorOrder.DATA_C2 => "DATA_C2",
+
+                DreamdumpSectorOrder.NONE => "Default",
+                _ => "Unknown",
+            };
+        }
+
+         /// <summary>
         /// Get the string representation of the InterfaceLanguage enum values
         /// </summary>
         /// <param name="lang">InterfaceLanguage value to convert</param>

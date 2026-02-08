@@ -549,11 +549,13 @@ namespace MPF.Frontend.ViewModels
                 CreateIRDStatus = "Please provide an ISO";
                 return false;
             }
+
             if (string.IsNullOrEmpty(LogPath) && string.IsNullOrEmpty(HexKey) && string.IsNullOrEmpty(KeyPath))
             {
                 CreateIRDStatus = "Please provide a GetKey log or Disc Key";
                 return false;
             }
+
             CreateIRDStatus = "Ready to create IRD";
             return true;
         }
@@ -654,6 +656,7 @@ namespace MPF.Frontend.ViewModels
                     DiscIDStatus = "ERROR: Invalid *.getkey.log path";
                     PICStatus = "ERROR: Invalid *.getkey.log path";
                 }
+
                 CreateIRDButtonEnabled = false;
             }
         }

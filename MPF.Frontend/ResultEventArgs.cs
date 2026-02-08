@@ -10,18 +10,29 @@ namespace MPF.Frontend
         /// <summary>
         /// Internal representation of success
         /// </summary>
-        private readonly bool _success;
+        private readonly bool? _success;
 
         /// <summary>
         /// Optional message for the result
         /// </summary>
         public string Message { get; }
 
-        private ResultEventArgs(bool success, string message)
+        private ResultEventArgs(bool? success, string message)
         {
             _success = success;
             Message = message;
         }
+
+        /// <summary>
+        /// Create a default neutral result with no message
+        /// </summary>
+        public static ResultEventArgs Neutral() => new(null, string.Empty);
+
+        /// <summary>
+        /// Create a neutral result with a custom message
+        /// </summary>
+        /// <param name="message">String to add as a message</param>
+        public static ResultEventArgs Neutral(string? message) => new(null, message ?? string.Empty);
 
         /// <summary>
         /// Create a default success result with no message
@@ -49,7 +60,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Results can be compared to boolean values based on the success value
         /// </summary>
-        public static implicit operator bool(ResultEventArgs result) => result._success;
+        public static implicit operator bool?(ResultEventArgs result) => result._success;
 
         /// <summary>
         /// Results can be compared to boolean values based on the success value

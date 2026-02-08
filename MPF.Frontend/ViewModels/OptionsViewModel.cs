@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using MPF.Frontend.ComboBoxItems;
 using LogCompression = MPF.Processors.LogCompression;
@@ -138,9 +138,9 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         public void NonRedumpModeUnChecked()
         {
-            Options.RedumperReadMethod = RedumperReadMethod.NONE;
-            Options.RedumperSectorOrder = RedumperSectorOrder.NONE;
-            Options.RedumperDriveType = RedumperDriveType.NONE;
+            Options.Dumping.Redumper.ReadMethod = RedumperReadMethod.NONE;
+            Options.Dumping.Redumper.SectorOrder = RedumperSectorOrder.NONE;
+            Options.Dumping.Redumper.DriveType = RedumperDriveType.NONE;
             TriggerPropertyChanged(nameof(Options));
         }
 

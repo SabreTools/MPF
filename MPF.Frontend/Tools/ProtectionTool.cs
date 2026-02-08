@@ -151,11 +151,11 @@ namespace MPF.Frontend.Tools
 #endif
             {
                 var scanner = new Scanner(
-                    options.ScanArchivesForProtection,
+                    options.Processing.ProtectionScanning.ScanArchivesForProtection,
                     scanContents: true, // Hardcoded value to avoid issues
                     scanPaths: true, // Hardcoded value to avoid issues
                     scanSubdirectories: true, // Hardcoded value to avoid issues
-                    options.IncludeDebugProtectionInformation,
+                    options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
                     progress);
 
                 return scanner.GetProtections(path);
@@ -191,7 +191,7 @@ namespace MPF.Frontend.Tools
                     scanContents: false, // Disabled for image scanning
                     scanPaths: false, // Disabled for image scanning
                     scanSubdirectories: false, // Disabled for image scanning
-                    options.IncludeDebugProtectionInformation,
+                    options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
                     progress);
 
                 return scanner.GetProtections(image);

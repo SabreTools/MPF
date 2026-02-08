@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -584,7 +584,7 @@ namespace MPF.Frontend.ViewModels
             MediaScanButtonEnabled = true;
             ParametersCheckBoxEnabled = true;
             EnableParametersCheckBoxEnabled = true;
-            LogPanelExpanded = _options.OpenLogWindowAtStartup;
+            LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
 
             MediaTypes = [];
             Systems = RedumpSystemComboBoxItem.GenerateElements();
@@ -650,7 +650,7 @@ namespace MPF.Frontend.ViewModels
             char? lastSelectedDrive = CurrentDrive?.Name?[0] ?? null;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Drive.CreateListOfDrives(Options.IgnoreFixedDrives);
+            Drives = Drive.CreateListOfDrives(Options.GUI.IgnoreFixedDrives);
 
             if (Drives.Count > 0)
             {
@@ -815,7 +815,7 @@ namespace MPF.Frontend.ViewModels
 
             SecretLogLn(message);
             if (url is null)
-                message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
+                message = "An exception occurred while checking for remote versions. See the log window for more details.";
         }
 
         /// <summary>
@@ -990,7 +990,7 @@ namespace MPF.Frontend.ViewModels
 
             // Ensure the first run flag is unset
             var continuingOptions = new Options(optionsToSave) { FirstRun = false };
-            Options = continuingOptions;
+            Options = new Options(continuingOptions);
 
             // If settings were changed, reinitialize the UI
             if (savedSettings)
@@ -1121,7 +1121,7 @@ namespace MPF.Frontend.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void Log(string text)
         {
-            _logger?.Invoke(LogLevel.USER, text);
+            _logger?.Invoke(LogLevel.USER_GENERIC, text);
         }
 
         /// <summary>
@@ -1159,6 +1159,21 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         private void SecretLogLn(string text) => SecretLog(text + "\n");
+
+        /// <summary>
+        /// Enqueue success text to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        private void SuccessLog(string text)
+        {
+            _logger?.Invoke(LogLevel.USER_SUCCESS, text);
+        }
+
+        /// <summary>
+        /// Enqueue text with a newline to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        private void SuccessLogLn(string text) => SuccessLog(text + "\n");
 
         /// <summary>
         /// Enqueue verbose text to the log
@@ -1252,7 +1267,7 @@ namespace MPF.Frontend.ViewModels
             {
                 VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
-            else if (!Options.SkipSystemDetection)
+            else if (!Options.GUI.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
                 var currentSystem = GetRedumpSystem(CurrentDrive);
@@ -1260,7 +1275,7 @@ namespace MPF.Frontend.ViewModels
                     VerboseLogLn($"detected {currentSystem.LongName()}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
-                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.Dumping.DefaultSystem == RedumpSystem.IBMPCcompatible)
                 {
                     try
                     {
@@ -1277,7 +1292,7 @@ namespace MPF.Frontend.ViewModels
                 // Fallback to default system only if drive is active
                 if (currentSystem is null && CurrentDrive.MarkedActive)
                 {
-                    currentSystem = Options.DefaultSystem;
+                    currentSystem = Options.Dumping.DefaultSystem;
                     VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
                 }
 
@@ -1287,9 +1302,9 @@ namespace MPF.Frontend.ViewModels
                     CurrentSystem = Systems[sysIndex];
                 }
             }
-            else if (Options.SkipSystemDetection && Options.DefaultSystem is not null)
+            else if (Options.GUI.SkipSystemDetection && Options.Dumping.DefaultSystem is not null)
             {
-                var currentSystem = Options.DefaultSystem;
+                var currentSystem = Options.Dumping.DefaultSystem;
                 VerboseLogLn($"System detection disabled, defaulting to {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 CurrentSystem = Systems[sysIndex];
@@ -1360,7 +1375,7 @@ namespace MPF.Frontend.ViewModels
                 Status = result.Message;
 
             // Enable or disable the button
-            StartStopButtonEnabled = result && ShouldEnableDumpingButton();
+            StartStopButtonEnabled = result == true && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
             DriveSpeedComboBoxEnabled = DumpEnvironment.DoesSupportDriveSpeed(CurrentMediaType);
@@ -1431,7 +1446,7 @@ namespace MPF.Frontend.ViewModels
             }
 
             // Get path pieces that are used in all branches
-            string defaultOutputPath = Options.DefaultOutputPath ?? "ISO";
+            string defaultOutputPath = Options.Dumping.DefaultOutputPath ?? "ISO";
             string extension = _environment?.GetDefaultExtension(CurrentMediaType) ?? ".bin";
             string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
@@ -2231,7 +2246,7 @@ namespace MPF.Frontend.ViewModels
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
                 {
-                    LogLn("No dumping command was run, submission information will not be gathered.");
+                    SuccessLogLn("No dumping command was run, submission information will not be gathered.");
                     Status = "Execution complete!";
 
                     // Re-allow quick exiting
@@ -2243,14 +2258,14 @@ namespace MPF.Frontend.ViewModels
                 }
 
                 // Verify dump output and save it
-                if (result)
+                if (result == true)
                 {
                     result = await _environment.VerifyAndSaveDumpOutput(
                         resultProgress: resultProgress,
                         protectionProgress: protectionProgress,
                         processUserInfo: _processUserInfo);
 
-                    if (!result)
+                    if (result == false)
                         ErrorLogLn(result.Message);
                 }
                 else
@@ -2447,10 +2462,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => File.Exists(Options.AaruPath),
-                    InternalProgram.DiscImageCreator => File.Exists(Options.DiscImageCreatorPath),
-                    // InternalProgram.Dreamdump => File.Exists(Options.DreamdumpPath),
-                    InternalProgram.Redumper => File.Exists(Options.RedumperPath),
+                    InternalProgram.Aaru => File.Exists(Options.Dumping.AaruPath),
+                    InternalProgram.DiscImageCreator => File.Exists(Options.Dumping.DiscImageCreatorPath),
+                    // InternalProgram.Dreamdump => File.Exists(Options.Dumping.DreamdumpPath),
+                    InternalProgram.Redumper => File.Exists(Options.Dumping.RedumperPath),
                     _ => false,
                 };
 #pragma warning restore IDE0072
@@ -2507,7 +2522,7 @@ namespace MPF.Frontend.ViewModels
         /// </summary>
         private void ProgressUpdated(object? sender, ResultEventArgs value)
         {
-            var message = value?.Message;
+            var message = value.Message;
 
             // Update the label with only the first line of output
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
@@ -2520,9 +2535,11 @@ namespace MPF.Frontend.ViewModels
                 Status = message ?? string.Empty;
 
             // Log based on success or failure
-            if (value is not null && value)
-                VerboseLogLn(message ?? string.Empty);
-            else if (value is not null && !value)
+            if ((bool?)value is null)
+                LogLn(message ?? string.Empty);
+            else if (value == true)
+                SuccessLogLn(message ?? string.Empty);
+            else if (value == false)
                 ErrorLogLn(message ?? string.Empty);
         }
 

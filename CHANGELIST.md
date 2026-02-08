@@ -15,6 +15,28 @@
 - Split path creation in OptionsLoader
 - Add unused Dreamdump execution context
 - Validate a system is provided for CLI applications
+- Log the system being used, in case it came from config
+- Extend logging with a new state
+- Add currently-unused new options class
+- Allow Check and CLI to check for updates on startup
+- Check should not default to update checking
+- Add save and load for new options type
+- Add conversion method from new options type
+- Replace Options with SegmentedOptions in most places
+- Fix ListConfig feature with new layout
+- Move InternalProgram up a level in options, fix XAML
+- Fix path assignment from UI
+- Reduce reach of original Options type
+- Move dictionary logic to new Options object
+- Replace original Options object
+- Clean up options serialization and ordering
+- Add placeholder CLI media info methods
+- Further cleanup in Options
+- Move dump settings next to execution contexts
+- Introduce base dump settings type
+- Remove passthrough property on Options
+- Move conversion method to options loader
+- Move other conversion method to options loader
 
 ### 3.6.0 (2025-11-28)
 
