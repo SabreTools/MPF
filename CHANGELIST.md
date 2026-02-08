@@ -33,6 +33,7 @@
 - Add placeholder CLI media info methods
 - Further cleanup in Options
 - Move dump settings next to execution contexts
+- Introduce base dump settings type
 
 ### 3.6.0 (2025-11-28)
 

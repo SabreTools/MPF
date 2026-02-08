@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -83,8 +83,8 @@ namespace MPF.ExecutionContexts.Dreamdump
             string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
-            : base(system, type, drivePath, filename, driveSpeed, options)
+            BaseDumpSettings baseDumpSettings)
+            : base(system, type, drivePath, filename, driveSpeed, baseDumpSettings)
         {
         }
 
@@ -161,8 +161,11 @@ namespace MPF.ExecutionContexts.Dreamdump
         protected override void SetDefaultParameters(string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
+            BaseDumpSettings baseDumpSettings)
         {
+            // Get the base settings, if possible
+            var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
+
             BaseCommand = CommandStrings.NONE;
 
             if (drivePath is not null)
@@ -183,11 +186,10 @@ namespace MPF.ExecutionContexts.Dreamdump
             }
 
             // Set user-defined options
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault.ToString());
-            if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
+            if (dumpSettings.SectorOrder != SectorOrder.NONE)
             {
                 this[FlagStrings.SectorOrder] = true;
-                (_inputs[FlagStrings.SectorOrder] as StringInput)?.SetValue(sectorOrder!);
+                (_inputs[FlagStrings.SectorOrder] as StringInput)?.SetValue(dumpSettings.SectorOrder.ToString());
             }
 
             // Set the output paths
@@ -208,11 +210,10 @@ namespace MPF.ExecutionContexts.Dreamdump
                 }
             }
 
-            byte retries = GetUInt8Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
-            if (retries > 0)
+            if (dumpSettings.RereadCount > 0)
             {
                 this[FlagStrings.Retries] = true;
-                (_inputs[FlagStrings.Retries] as UInt8Input)?.SetValue(retries);
+                (_inputs[FlagStrings.Retries] as UInt8Input)?.SetValue((byte)dumpSettings.RereadCount);
             }
         }
 

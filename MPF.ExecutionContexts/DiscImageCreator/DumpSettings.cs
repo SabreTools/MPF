@@ -1,9 +1,9 @@
 namespace MPF.ExecutionContexts.DiscImageCreator
 {
     /// <summary>
-    /// Settings related to the dumping step (DIC)
+    /// Context-specific settings that can be used by caller
     /// </summary>
-    public class DumpSettings
+    public class DumpSettings : BaseDumpSettings
     {
         /// <summary>
         /// Enable multi-sector read flag by default

@@ -168,8 +168,8 @@ namespace MPF.ExecutionContexts.Aaru
             string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
-            : base(system, type, drivePath, filename, driveSpeed, options)
+            BaseDumpSettings baseDumpSettings)
+            : base(system, type, drivePath, filename, driveSpeed, baseDumpSettings)
         {
         }
 
@@ -631,8 +631,11 @@ namespace MPF.ExecutionContexts.Aaru
         protected override void SetDefaultParameters(string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
+            BaseDumpSettings baseDumpSettings)
         {
+            // Get the base settings, if possible
+            var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
+
             BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
             InputValue = drivePath;
@@ -645,33 +648,32 @@ namespace MPF.ExecutionContexts.Aaru
             }
 
             // Set retry count
-            int rereadCount = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
-            if (rereadCount > 0)
+            if (dumpSettings.RereadCount > 0)
             {
                 this[FlagStrings.RetryPassesLong] = true;
-                (_inputs[FlagStrings.RetryPassesLong] as Int16Input)?.SetValue((short)rereadCount);
+                (_inputs[FlagStrings.RetryPassesLong] as Int16Input)?.SetValue((short)dumpSettings.RereadCount);
             }
 
             // Set user-defined options
-            if (GetBooleanSetting(options, SettingConstants.EnableDebug, SettingConstants.EnableDebugDefault))
+            if (dumpSettings.EnableDebug)
             {
                 this[FlagStrings.DebugLong] = true;
                 _preCommandInputs[FlagStrings.DebugLong].SetValue(true);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
+            if (dumpSettings.EnableVerbose)
             {
                 this[FlagStrings.VerboseLong] = true;
                 _preCommandInputs[FlagStrings.VerboseLong].SetValue(true);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.ForceDumping, SettingConstants.ForceDumpingDefault))
+            if (dumpSettings.ForceDumping)
             {
                 this[FlagStrings.ForceLong] = true;
                 (_inputs[FlagStrings.ForceLong] as BooleanInput)?.SetValue(true);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.StripPersonalData, SettingConstants.StripPersonalDataDefault))
+            if (dumpSettings.StripPersonalData)
             {
                 this[FlagStrings.PrivateLong] = true;
                 (_inputs[FlagStrings.PrivateLong] as BooleanInput)?.SetValue(true);

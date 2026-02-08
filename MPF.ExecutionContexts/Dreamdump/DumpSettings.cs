@@ -1,9 +1,9 @@
 namespace MPF.ExecutionContexts.Dreamdump
 {
     /// <summary>
-    /// Settings related to the dumping step (Dreamdump)
+    /// Context-specific settings that can be used by caller
     /// </summary>
-    public class DreamdumpDumpSettings
+    public class DumpSettings : BaseDumpSettings
     {
         /// <summary>
         /// Enable options incompatible with redump submissions

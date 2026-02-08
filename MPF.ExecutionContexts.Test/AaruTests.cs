@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MPF.ExecutionContexts.Aaru;
 using SabreTools.RedumpLib.Data;
 using Xunit;
@@ -29,13 +28,13 @@ namespace MPF.ExecutionContexts.Test
 
         #region Default Values
 
-        private static readonly Dictionary<string, string?> AllOptions = new()
+        private static readonly BaseDumpSettings AllOptions = new DumpSettings()
         {
-            [SettingConstants.EnableDebug] = "true",
-            [SettingConstants.EnableVerbose] = "true",
-            [SettingConstants.ForceDumping] = "true",
-            [SettingConstants.RereadCount] = "1000",
-            [SettingConstants.StripPersonalData] = "true",
+            EnableDebug = true,
+            EnableVerbose = true,
+            ForceDumping = true,
+            RereadCount = 1000,
+            StripPersonalData = true,
         };
 
         [Theory]

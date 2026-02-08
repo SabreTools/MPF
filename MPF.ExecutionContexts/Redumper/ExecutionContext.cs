@@ -140,8 +140,8 @@ namespace MPF.ExecutionContexts.Redumper
             string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
-            : base(system, type, drivePath, filename, driveSpeed, options)
+            BaseDumpSettings baseDumpSettings)
+            : base(system, type, drivePath, filename, driveSpeed, baseDumpSettings)
         {
         }
 
@@ -291,8 +291,11 @@ namespace MPF.ExecutionContexts.Redumper
         protected override void SetDefaultParameters(string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
+            BaseDumpSettings baseDumpSettings)
         {
+            // Get the base settings, if possible
+            var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
+
             BaseCommand = CommandStrings.Disc;
 
             if (drivePath is not null)
@@ -313,13 +316,13 @@ namespace MPF.ExecutionContexts.Redumper
             }
 
             // Set user-defined options
-            if (GetBooleanSetting(options, SettingConstants.EnableVerbose, SettingConstants.EnableVerboseDefault))
+            if (dumpSettings.EnableVerbose)
             {
                 this[FlagStrings.Verbose] = true;
                 (_inputs[FlagStrings.Verbose] as FlagInput)?.SetValue(true);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.EnableSkeleton, SettingConstants.EnableSkeletonDefault))
+            if (dumpSettings.EnableSkeleton)
             {
 #pragma warning disable IDE0010
                 switch (RedumpSystem)
@@ -365,32 +368,28 @@ namespace MPF.ExecutionContexts.Redumper
 #pragma warning restore IDE0010
             }
 
-            string? readMethod = GetStringSetting(options, SettingConstants.ReadMethod, SettingConstants.ReadMethodDefault.ToString());
-            if (!string.IsNullOrEmpty(readMethod) && readMethod != ReadMethod.NONE.ToString())
+            if (dumpSettings.ReadMethod != ReadMethod.NONE)
             {
                 this[FlagStrings.DriveReadMethod] = true;
-                (_inputs[FlagStrings.DriveReadMethod] as StringInput)?.SetValue(readMethod!);
+                (_inputs[FlagStrings.DriveReadMethod] as StringInput)?.SetValue(dumpSettings.ReadMethod.ToString());
             }
 
-            int drivePregapStart = GetInt32Setting(options, SettingConstants.DrivePregapStart, SettingConstants.DrivePregapStartDefault);
-            if (drivePregapStart != SettingConstants.DrivePregapStartDefault)
+            if (dumpSettings.DrivePregapStart != SettingConstants.DrivePregapStartDefault)
             {
                 this[FlagStrings.DrivePregapStart] = true;
-                (_inputs[FlagStrings.DrivePregapStart] as Int32Input)?.SetValue(drivePregapStart);
+                (_inputs[FlagStrings.DrivePregapStart] as Int32Input)?.SetValue(dumpSettings.DrivePregapStart);
             }
 
-            string? sectorOrder = GetStringSetting(options, SettingConstants.SectorOrder, SettingConstants.SectorOrderDefault.ToString());
-            if (!string.IsNullOrEmpty(sectorOrder) && sectorOrder != SectorOrder.NONE.ToString())
+            if (dumpSettings.SectorOrder != SectorOrder.NONE)
             {
                 this[FlagStrings.DriveSectorOrder] = true;
-                (_inputs[FlagStrings.DriveSectorOrder] as StringInput)?.SetValue(sectorOrder!);
+                (_inputs[FlagStrings.DriveSectorOrder] as StringInput)?.SetValue(dumpSettings.SectorOrder.ToString());
             }
 
-            string? driveType = GetStringSetting(options, SettingConstants.DriveType, SettingConstants.DriveTypeDefault.ToString());
-            if (!string.IsNullOrEmpty(driveType) && driveType != DriveType.NONE.ToString())
+            if (dumpSettings.DriveType != DriveType.NONE)
             {
                 this[FlagStrings.DriveType] = true;
-                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue(driveType!);
+                (_inputs[FlagStrings.DriveType] as StringInput)?.SetValue(dumpSettings.DriveType.ToString());
             }
 
             // Set the output paths
@@ -411,21 +410,19 @@ namespace MPF.ExecutionContexts.Redumper
                 }
             }
 
-            int retries = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
-            if (retries > 0)
+            if (dumpSettings.RereadCount > 0)
             {
                 this[FlagStrings.Retries] = true;
-                (_inputs[FlagStrings.Retries] as Int32Input)?.SetValue(retries);
+                (_inputs[FlagStrings.Retries] as Int32Input)?.SetValue(dumpSettings.RereadCount);
             }
 
-            int leadinRetries = GetInt32Setting(options, SettingConstants.LeadinRetryCount, SettingConstants.LeadinRetryCountDefault);
-            if (leadinRetries != SettingConstants.LeadinRetryCountDefault)
+            if (dumpSettings.LeadinRetryCount != SettingConstants.LeadinRetryCountDefault)
             {
                 this[FlagStrings.PlextorLeadinRetries] = true;
-                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(leadinRetries);
+                (_inputs[FlagStrings.PlextorLeadinRetries] as Int32Input)?.SetValue(dumpSettings.LeadinRetryCount);
             }
 
-            if (GetBooleanSetting(options, SettingConstants.RefineSectorMode, SettingConstants.RefineSectorModeDefault))
+            if (dumpSettings.RefineSectorMode)
             {
                 this[FlagStrings.RefineSectorMode] = true;
                 (_inputs[FlagStrings.RefineSectorMode] as FlagInput)?.SetValue(true);

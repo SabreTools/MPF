@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -284,10 +284,33 @@ namespace MPF.Frontend
                 // Set the proper parameters
                 _executionContext = _internalProgram switch
                 {
-                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
-                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system, mediaType, _drive.Name, OutputPath, driveSpeed, _options.Settings),
+                    InternalProgram.Aaru => new ExecutionContexts.Aaru.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.Aaru),
+
+                    InternalProgram.DiscImageCreator => new ExecutionContexts.DiscImageCreator.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.DIC),
+
+                    // InternalProgram.Dreamdump => new ExecutionContexts.Dreamdump.ExecutionContext(_system,
+                    //     mediaType,
+                    //     _drive.Name,
+                    //     OutputPath,
+                    //     driveSpeed,
+                    //     _options.Dumping.Dreamdump),
+
+                    InternalProgram.Redumper => new ExecutionContexts.Redumper.ExecutionContext(_system,
+                        mediaType,
+                        _drive.Name,
+                        OutputPath,
+                        driveSpeed,
+                        _options.Dumping.Redumper),
 
                     // If no dumping program found, set to null
                     InternalProgram.NONE => null,

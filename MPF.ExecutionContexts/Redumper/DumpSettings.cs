@@ -1,9 +1,9 @@
 namespace MPF.ExecutionContexts.Redumper
 {
     /// <summary>
-    /// Settings related to the dumping step (Redumper)
+    /// Context-specific settings that can be used by caller
     /// </summary>
-    public class DumpSettings
+    public class DumpSettings : BaseDumpSettings
     {
         /// <summary>
         /// Enable skeleton output while dumping by default

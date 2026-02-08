@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MPF.ExecutionContexts.DiscImageCreator;
+﻿using MPF.ExecutionContexts.DiscImageCreator;
 using SabreTools.RedumpLib.Data;
 using Xunit;
 
@@ -42,15 +41,15 @@ namespace MPF.ExecutionContexts.Test
 
         #region Default Values
 
-        private static readonly Dictionary<string, string?> AllOptions = new()
+        private static readonly BaseDumpSettings AllOptions = new DumpSettings()
         {
-            [SettingConstants.DVDRereadCount] = "1000",
-            [SettingConstants.MultiSectorRead] = "true",
-            [SettingConstants.MultiSectorReadValue] = "1000",
-            [SettingConstants.ParanoidMode] = "true",
-            [SettingConstants.QuietMode] = "true",
-            [SettingConstants.RereadCount] = "1000",
-            [SettingConstants.UseCMIFlag] = "true",
+            DVDRereadCount = 1000,
+            MultiSectorRead = true,
+            MultiSectorReadValue = 1000,
+            ParanoidMode = true,
+            QuietMode = true,
+            RereadCount = 1000,
+            UseCMIFlag = true,
         };
 
         [Theory]

@@ -8,7 +8,7 @@ using AaruDumpSettings = MPF.ExecutionContexts.Aaru.DumpSettings;
 using DiscImageCreatorConstants = MPF.ExecutionContexts.DiscImageCreator.SettingConstants;
 using DiscImageCreatorDumpSettings = MPF.ExecutionContexts.DiscImageCreator.DumpSettings;
 using DreamdumpConstants = MPF.ExecutionContexts.Dreamdump.SettingConstants;
-using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DreamdumpDumpSettings;
+using DreamdumpDumpSettings = MPF.ExecutionContexts.Dreamdump.DumpSettings;
 using LogCompression = MPF.Processors.LogCompression;
 using RedumperConstants = MPF.ExecutionContexts.Redumper.SettingConstants;
 using RedumperDumpSettings = MPF.ExecutionContexts.Redumper.DumpSettings;
@@ -449,7 +449,7 @@ namespace MPF.Frontend
     #region Nested Option Types
 
     /// <summary>
-    /// Settings related to the dumping step
+    /// Context-specific settings that can be used by caller
     /// </summary>
     public class DumpSettings
     {

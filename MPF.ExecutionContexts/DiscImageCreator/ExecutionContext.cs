@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using SabreTools.RedumpLib.Data;
 
@@ -175,8 +175,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
-            : base(system, type, drivePath, filename, driveSpeed, options)
+            BaseDumpSettings baseDumpSettings)
+            : base(system, type, drivePath, filename, driveSpeed, baseDumpSettings)
         {
         }
 
@@ -1038,8 +1038,11 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         protected override void SetDefaultParameters(string? drivePath,
             string filename,
             int? driveSpeed,
-            Dictionary<string, string?> options)
+            BaseDumpSettings baseDumpSettings)
         {
+            // Get the base settings, if possible
+            var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
+
             SetBaseCommand(RedumpSystem, MediaType);
 
             DrivePath = drivePath;
@@ -1052,25 +1055,23 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                 return;
 
             // Set disable beep flag, if needed
-            if (GetBooleanSetting(options, SettingConstants.QuietMode, SettingConstants.QuietModeDefault))
+            if (dumpSettings.QuietMode)
                 this[FlagStrings.DisableBeep] = true;
 
             // Set the C2 reread count
-            int cdRereadCount = GetInt32Setting(options, SettingConstants.RereadCount, SettingConstants.RereadCountDefault);
-            C2OpcodeValue[0] = cdRereadCount switch
+            C2OpcodeValue[0] = dumpSettings.RereadCount switch
             {
                 -1 => null,
                 0 => 20,
-                _ => cdRereadCount,
+                _ => dumpSettings.RereadCount,
             };
 
             // Set the DVD/HD-DVD/BD reread count
-            int dvdRereadCount = GetInt32Setting(options, SettingConstants.DVDRereadCount, SettingConstants.DVDRereadCountDefault);
-            DVDRereadValue = dvdRereadCount switch
+            DVDRereadValue = dumpSettings.DVDRereadCount switch
             {
                 -1 => null,
                 0 => 10,
-                _ => dvdRereadCount,
+                _ => dumpSettings.DVDRereadCount,
             };
 
             // Now sort based on disc type
@@ -1079,9 +1080,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             {
                 case SabreTools.RedumpLib.Data.MediaType.CDROM:
                     this[FlagStrings.C2Opcode] = true;
-                    this[FlagStrings.MultiSectorRead] = GetBooleanSetting(options, SettingConstants.MultiSectorRead, SettingConstants.MultiSectorReadDefault);
-                    if (this[FlagStrings.MultiSectorRead] == true)
-                        MultiSectorReadValue = GetInt32Setting(options, SettingConstants.MultiSectorReadValue, SettingConstants.MultiSectorReadValueDefault);
+                    this[FlagStrings.MultiSectorRead] = dumpSettings.MultiSectorRead;
+                    if (dumpSettings.MultiSectorRead)
+                        MultiSectorReadValue = dumpSettings.MultiSectorReadValue;
 
                     switch (RedumpSystem)
                     {
@@ -1089,8 +1090,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                         case SabreTools.RedumpLib.Data.RedumpSystem.IBMPCcompatible:
                             this[FlagStrings.NoFixSubQSecuROM] = true;
                             this[FlagStrings.ScanFileProtect] = true;
-                            this[FlagStrings.ScanSectorProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
-                            this[FlagStrings.SubchannelReadLevel] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
+                            this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
+                            this[FlagStrings.SubchannelReadLevel] = dumpSettings.ParanoidMode;
                             if (this[FlagStrings.SubchannelReadLevel] == true)
                                 SubchannelReadLevelValue = 2;
 
@@ -1113,15 +1114,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.DVD:
-                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, SettingConstants.UseCMIFlagDefault);
-                    this[FlagStrings.ScanFileProtect] = GetBooleanSetting(options, SettingConstants.ParanoidMode, SettingConstants.ParanoidModeDefault);
+                    this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
+                    this[FlagStrings.ScanFileProtect] = dumpSettings.ParanoidMode;
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.GDROM:
                     this[FlagStrings.C2Opcode] = true;
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.HDDVD:
-                    this[FlagStrings.CopyrightManagementInformation] = GetBooleanSetting(options, SettingConstants.UseCMIFlag, SettingConstants.UseCMIFlagDefault);
+                    this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
                     this[FlagStrings.DVDReread] = true;
                     break;
                 case SabreTools.RedumpLib.Data.MediaType.BluRay:

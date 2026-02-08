@@ -1,9 +1,9 @@
 namespace MPF.ExecutionContexts.Aaru
 {
     /// <summary>
-    /// Settings related to the dumping step
+    /// Context-specific settings that can be used by caller
     /// </summary>
-    public class DumpSettings
+    public class DumpSettings : BaseDumpSettings
     {
         /// <summary>
         /// Enable debug output while dumping by default
