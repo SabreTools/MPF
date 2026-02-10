@@ -37,6 +37,7 @@ namespace MPF.Frontend.Tools
             "Embedded",
             "EXE Stealth",
             "Gentee Installer",
+            "GP-Install",
             "HyperTech CrackProof",
             "Inno Setup",
             "InstallAnywhere",
