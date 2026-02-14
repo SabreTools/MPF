@@ -81,14 +81,14 @@ function download_programs() {
     declare -A DL_MAP
 
     # Aaru
-    DL_MAP["Aaru_linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_arm64.tar.gz"
-    #DL_MAP["Aaru_linux-armhf"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_armhf.tar.gz"
-    DL_MAP["Aaru_linux-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_linux_amd64.tar.gz"
-    DL_MAP["Aaru_osx-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos-aarch64.zip"
-    DL_MAP["Aaru_osx-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_macos.zip"
-    DL_MAP["Aaru_win-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_aarch64.zip"
-    DL_MAP["Aaru_win-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_x64.zip"
-    DL_MAP["Aaru_win-x86"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.1/aaru-5.4.1_windows_x64.zip"
+    DL_MAP["Aaru_linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.gz"
+    #DL_MAP["Aaru_linux-armhf"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.gz"
+    DL_MAP["Aaru_linux-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.gz"
+    DL_MAP["Aaru_osx-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
+    DL_MAP["Aaru_osx-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
+    DL_MAP["Aaru_win-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
+    DL_MAP["Aaru_win-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x64.zip"
+    DL_MAP["Aaru_win-x86"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_x86.zip"
 
     # DiscImageCreator
     DL_MAP["Creator_linux-arm64"]=""
