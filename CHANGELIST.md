@@ -39,6 +39,7 @@
 - Move other conversion method to options loader
 - Add GP-Install to packer filters
 - Update Aaru to 5.4.2 LTS
+- Use prefixing protection scan output
 
 ### 3.6.0 (2025-11-28)
 
