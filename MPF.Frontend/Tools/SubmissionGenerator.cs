@@ -272,11 +272,17 @@ namespace MPF.Frontend.Tools
                     return false;
                 }
                 else if (foundIds.Count == 0)
+                {
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for {sha1}"));
+                }
                 else if (foundIds.Count == 1)
+                {
                     resultProgress?.Report(ResultEventArgs.Success($"Single match found for {sha1}"));
+                }
                 else
+                {
                     resultProgress?.Report(ResultEventArgs.Success($"Multiple matches found for {sha1}"));
+                }
 
                 // Add the found IDs to the map
                 foundIdSets.Add(foundIds?.ToArray() ?? []);
