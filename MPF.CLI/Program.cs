@@ -119,7 +119,7 @@ namespace MPF.CLI
         private static CommandSet CreateCommands(MainFeature mainFeature)
         {
             List<string> header = [
-                "MPF.CLI [standalone|system] [options] <path> ...",
+                "MPF.CLI [standalone|system] [options]",
                 string.Empty,
             ];
 

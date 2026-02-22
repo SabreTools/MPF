@@ -91,7 +91,8 @@ namespace MPF.Check.Features
             Add(NoPlaceholdersInput);
             Add(CreateIrdInput);
             Add(NoRetrieveInput);
-            // TODO: Figure out how to work with the credentials input
+            Add(UsernameInput);
+            Add(PasswordInput);
             Add(PullAllInput);
             Add(PathInput);
             Add(ScanInput);
@@ -186,20 +187,6 @@ namespace MPF.Check.Features
                 // Retrieve Redump match information
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
                     Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
-
-                // Redump login
-                else if (args[index].StartsWith("-c=") || args[index].StartsWith("--credentials="))
-                {
-                    string[] credentials = args[index].Split('=')[1].Split(';');
-                    Options.Processing.Login.RedumpUsername = credentials[0];
-                    Options.Processing.Login.RedumpPassword = credentials[1];
-                }
-                else if (args[index] == "-c" || args[index] == "--credentials")
-                {
-                    Options.Processing.Login.RedumpUsername = args[index + 1];
-                    Options.Processing.Login.RedumpPassword = args[index + 2];
-                    index += 2;
-                }
 
                 // Redump username
                 else if (UsernameInput.ProcessInput(args, ref index))

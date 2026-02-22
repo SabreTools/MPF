@@ -159,7 +159,6 @@ namespace MPF.Check.Features
             Console.WriteLine("    --no-placeholders          Disable placeholder values in submission info");
             Console.WriteLine("    --create-ird               Create IRD from output files (PS3 only)");
             Console.WriteLine("    --no-retrieve              Disable retrieving match information from Redump");
-            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password (incompatible with --no-retrieve) [WILL BE REMOVED]");
             Console.WriteLine("-U, --username <user>          Redump username (incompatible with --no-retrieve)");
             Console.WriteLine("-P, --password <pw>            Redump password (incompatible with --no-retrieve)");
             Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --username and --password)");
