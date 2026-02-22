@@ -993,6 +993,17 @@ namespace MPF.Processors
 #endif
                     }
 
+                    // The profile is listed in a single line
+                    if (line.StartsWith("profile:"))
+                    {
+                        // current profile: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        discProfile = line["profile: ".Length..];
+#else
+                        discProfile = line.Substring("profile: ".Length);
+#endif
+                    }
+
                     line = sr.ReadLine();
                 }
 
