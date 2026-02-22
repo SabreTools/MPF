@@ -41,6 +41,7 @@
 - Update Aaru to 5.4.2 LTS
 - Use prefixing protection scan output
 - Print error when redump is down
+- Support new redumper log for current profile
 
 ### 3.6.0 (2025-11-28)
 
