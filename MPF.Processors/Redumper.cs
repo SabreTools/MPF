@@ -534,6 +534,7 @@ namespace MPF.Processors
                             | OutputFileFlags.Zippable,
                             "pma"),
                         new([$"{outputFilename}.scram", $"{outputFilename}.scrap"], OutputFileFlags.Deleteable),
+                        new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
                         new($"{outputFilename}.state", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "state"),
