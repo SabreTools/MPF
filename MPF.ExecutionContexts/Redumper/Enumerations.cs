@@ -14,6 +14,7 @@ namespace MPF.ExecutionContexts.Redumper
         MTK8C,
         MTK3,
         MTK2,
+        MTK2B,
     }
 
     /// <summary>

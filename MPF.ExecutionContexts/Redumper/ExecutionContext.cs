@@ -121,6 +121,7 @@ namespace MPF.ExecutionContexts.Redumper
             //[FlagStrings.Firmware] = new StringInput(FlagStrings.Firmware) { Quotes = true },
             [FlagStrings.ForceFlash] = new FlagInput(FlagStrings.ForceFlash),
             [FlagStrings.SkipSubcodeDesync] = new FlagInput(FlagStrings.SkipSubcodeDesync),
+            [FlagStrings.Rings] = new FlagInput(FlagStrings.Rings),
             [FlagStrings.CdrErrorThreshold] = new Int32Input(FlagStrings.CdrErrorThreshold),
             [FlagStrings.ScsiTimeout] = new Int32Input(FlagStrings.ScsiTimeout),
 
@@ -222,6 +223,7 @@ namespace MPF.ExecutionContexts.Redumper
                     //FlagStrings.Firmware,
                     FlagStrings.ForceFlash,
                     FlagStrings.SkipSubcodeDesync,
+                    FlagStrings.Rings,
                     FlagStrings.CdrErrorThreshold,
                     FlagStrings.ScsiTimeout,
 

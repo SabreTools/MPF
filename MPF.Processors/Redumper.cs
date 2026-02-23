@@ -634,6 +634,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
+                        new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
                         new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
@@ -691,6 +692,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.3.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_3"),
+                        new([$"{outputFilename}.sbram"], OutputFileFlags.Deleteable),
                         new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
