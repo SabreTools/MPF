@@ -43,6 +43,7 @@
 - Print error when redump is down
 - Support new redumper log for current profile
 - Minor commandline program cleanup
+- This might take a while... 
 - Support new redumper changes
 
 ### 3.6.0 (2025-11-28)
