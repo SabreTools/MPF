@@ -193,6 +193,7 @@ namespace MPF.Frontend.Tools
             var wc = new RedumpClient();
             if (!string.IsNullOrEmpty(options.Processing.Login.RedumpUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpPassword))
             {
+                resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to Redump, this might take a while..."));
                 bool? loggedIn = await wc.Login(options.Processing.Login.RedumpUsername!, options.Processing.Login.RedumpPassword!);
                 if (loggedIn is null)
                 {
@@ -203,6 +204,10 @@ namespace MPF.Frontend.Tools
                 {
                     resultProgress?.Report(ResultEventArgs.Failure("Provided Redump credentials were invalid, not using..."));
                 }
+                else
+                {
+                    resultProgress?.Report(ResultEventArgs.Success("Successfully logged into Redump!"));
+                }
             }
 
             // Setup the checks
@@ -210,7 +215,7 @@ namespace MPF.Frontend.Tools
             List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on Redump..."));
+            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on Redump, this might take a while..."));
             var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
