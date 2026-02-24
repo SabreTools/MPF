@@ -1337,7 +1337,7 @@ namespace MPF.Processors
             Array.Copy(ss, 0x304 + 240, dcrt, 240, 12);
 
             // Rebuild challenge response table
-            var cids = new Dictionary<byte, byte>();
+            var cids = new Dictionary<byte, int>();
             for (int i = 0; i < dcrt.Length; i+=12)
             {
                 // Validate challenge type 1
@@ -1376,7 +1376,7 @@ namespace MPF.Processors
             for (int i = 0; i < 23; i++)
             {
                 // Cannot rebuild SS with orphan challenge ID
-                if (!cids.TryGetValue(ss[0x730 + i * 9 + 1], out byte cOffset))
+                if (!cids.TryGetValue(ss[0x730 + i * 9 + 1], out int cOffset))
                     return false;
 
                 // Validate challenge type with response type
