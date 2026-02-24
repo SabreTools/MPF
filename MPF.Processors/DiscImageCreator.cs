@@ -372,9 +372,11 @@ namespace MPF.Processors
                     if (File.Exists(xgd1SSPath) && ProcessingTool.IsValidSS(xgd1SSPath))
                     {
                         // Save untouched SS
-                        if (!File.Exists(xgd1RawSSPath))
-                            File.Move(xgd1SSPath, xgd1RawSSPath);
-
+                        try
+                        {
+                            if (!File.Exists(xgd1RawSSPath))
+                                File.Move(xgd1SSPath, xgd1RawSSPath);
+                        }
                         
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
@@ -434,9 +436,11 @@ namespace MPF.Processors
                     if (File.Exists(xgd2SSPath) && ProcessingTool.IsValidSS(xgd2SSPath))
                     {
                         // Save untouched SS
-                        if (!File.Exists(xgd2RawSSPath))
-                            File.Move(xgd2SSPath, xgd2RawSSPath);
-
+                        try
+                        {
+                            if (!File.Exists(xgd2RawSSPath))
+                                File.Move(xgd2SSPath, xgd2RawSSPath);
+                        }
                         
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))

@@ -1099,17 +1099,11 @@ namespace MPF.Processors
                 return false;
             
             // Drive entry table must be duplicated exactly
-            bool mismatch = false;
             for (int i = 0; i < 207; i++)
             {
                 if (ss[0x661 + i] != ss[0x730 + i])
-                {
-                    mismatch = true;
-                    break;
-                }
+                    return false;
             }
-            if (mismatch)
-                return false;
 
             // Remaining checks are only for Xbox360 SS
             if (xgdType == 1)
@@ -1118,13 +1112,12 @@ namespace MPF.Processors
             // Determine if XGD3 SS is invalid SSv1 (Original Kreon) or valid SSv2 (0800 / Custom Kreon)
             if (xgdType == 3)
             {
-                bool bad_xgd3 = false;
 #if NET20
                 var checkArr = new byte[72];
                 Array.Copy(ss, 32, checkArr, 0, 72);
-                bad_xgd3 = Array.Exists(checkArr, x => x != 0);
+                if(Array.Exists(checkArr, x => x != 0))
 #else
-                bad_xgd3 = ss.Skip(32).Take(72).Any(x => x != 0);
+                if(ss.Skip(32).Take(72).Any(x => x != 0))
 #endif
                 if (bad_xgd3)
                     return false;
@@ -1172,44 +1165,8 @@ namespace MPF.Processors
             
             // XGD1 can't be fixed
             if (xgdType == 1)
-                return true;
-
-            if (xgdType == 3)
             {
-                // Check for a cleaned SSv2
-                int rtOffset = 0x24;
-                if (ss[rtOffset + 36] != 0x01)
-                    return false;
-                if (ss[rtOffset + 37] != 0x00)
-                    return false;
-                if (ss[rtOffset + 39] != 0x01)
-                    return false;
-                if (ss[rtOffset + 40] != 0x00)
-                    return false;
-                if (ss[rtOffset + 45] != 0x5B)
-                    return false;
-                if (ss[rtOffset + 46] != 0x00)
-                    return false;
-                if (ss[rtOffset + 48] != 0x5B)
-                    return false;
-                if (ss[rtOffset + 49] != 0x00)
-                    return false;
-                if (ss[rtOffset + 54] != 0xB5)
-                    return false;
-                if (ss[rtOffset + 55] != 0x00)
-                    return false;
-                if (ss[rtOffset + 57] != 0xB5)
-                    return false;
-                if (ss[rtOffset + 58] != 0x00)
-                    return false;
-                if (ss[rtOffset + 63] != 0x0F)
-                    return false;
-                if (ss[rtOffset + 64] != 0x01)
-                    return false;
-                if (ss[rtOffset + 66] != 0x0F)
-                    return false;
-                if (ss[rtOffset + 67] != 0x01)
-                    return false;
+                return true;
             }
             else if (xgdType == 2)
             {
@@ -1248,6 +1205,47 @@ namespace MPF.Processors
                 if (ss[rtOffset + 67] != 0x00)
                     return false;
             }
+            else if (xgdType == 3)
+            {
+                // Check for a cleaned SSv2
+                int rtOffset = 0x24;
+                if (ss[rtOffset + 36] != 0x01)
+                    return false;
+                if (ss[rtOffset + 37] != 0x00)
+                    return false;
+                if (ss[rtOffset + 39] != 0x01)
+                    return false;
+                if (ss[rtOffset + 40] != 0x00)
+                    return false;
+                if (ss[rtOffset + 45] != 0x5B)
+                    return false;
+                if (ss[rtOffset + 46] != 0x00)
+                    return false;
+                if (ss[rtOffset + 48] != 0x5B)
+                    return false;
+                if (ss[rtOffset + 49] != 0x00)
+                    return false;
+                if (ss[rtOffset + 54] != 0xB5)
+                    return false;
+                if (ss[rtOffset + 55] != 0x00)
+                    return false;
+                if (ss[rtOffset + 57] != 0xB5)
+                    return false;
+                if (ss[rtOffset + 58] != 0x00)
+                    return false;
+                if (ss[rtOffset + 63] != 0x0F)
+                    return false;
+                if (ss[rtOffset + 64] != 0x01)
+                    return false;
+                if (ss[rtOffset + 66] != 0x0F)
+                    return false;
+                if (ss[rtOffset + 67] != 0x01)
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
 
             // Check challenge responses (don't write)
             return FixSS(ss, false);
@@ -1277,10 +1275,10 @@ namespace MPF.Processors
 
         /// <summary>
         /// Repair and clean a SS sector to its valid, predictable clean form.
-        /// Note: Also see ss_sector_range and abgx360
         /// </summary>
         /// <param name="ss">Byte array of raw SS sector</param>
         /// <returns>True if successful, false otherwise</returns>
+        /// <remarks>Also see ss_sector_range and abgx360</remarks>
         public static bool FixSS(byte[] ss, bool write = true)
         {
             // Must be entire sector
@@ -1318,26 +1316,27 @@ namespace MPF.Processors
 
             // Setup decryptor
 #if NET20
-            using RijndaelManaged aes = new RijndaelManaged();
+            using var aes = new RijndaelManaged();
             aes.BlockSize = 128;
 #else
-            using Aes aes = Aes.Create();
+            using var aes = Aes.Create();
 #endif
-            aes.Key = new byte[] { 0xD1, 0xE3, 0xB3, 0x3A, 0x6C, 0x1E, 0xF7, 0x70, 0x5F, 0x6D, 0xE9, 0x3B, 0xB6, 0xC0, 0xDC, 0x71 };
+            aes.Key = [0xD1, 0xE3, 0xB3, 0x3A, 0x6C, 0x1E, 0xF7, 0x70, 0x5F, 0x6D, 0xE9, 0x3B, 0xB6, 0xC0, 0xDC, 0x71];
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.None;
-            using ICryptoTransform decryptor = aes.CreateDecryptor();
+            using var decryptor = aes.CreateDecryptor();
 
             // Perform decryption
-            byte[] iv = new byte[16];
             byte[] dcrt = new byte[252];
             bool ct01_found = false;
             for (int i = 0; i < 240; i+=16)
+            {
                 decryptor.TransformBlock(ss, 0x304 + i, 16, dcrt, i);
+            }
             Array.Copy(ss, 0x304 + 240, dcrt, 240, 12);
 
             // Rebuild challenge response table
-            var cids = new Dictionary<byte, int>();
+            Dictionary<byte, int> cids = [];
             for (int i = 0; i < dcrt.Length; i+=12)
             {
                 // Validate challenge type 1
@@ -1346,6 +1345,7 @@ namespace MPF.Processors
                     // Cannot fix SS with two type 1 challenges
                     if (ct01_found)
                         return false;
+
                     ct01_found = true;
                     // Challenge type 1 must match CPR_MAI
                     int cpr_mai_offset = (xgdType == 3) ? 0xF0 : 0x2D0;
@@ -1362,7 +1362,9 @@ namespace MPF.Processors
                 }
                 // Cannot fix SS with unknown challenge types
                 else
+                {
                     return false;
+                }
             }
 
             // Determine challenge table offset
@@ -1373,6 +1375,7 @@ namespace MPF.Processors
                 ccrt_offset = 0x20;
 
             // Repair challenge table
+            int challenge_count = 0;
             for (int i = 0; i < 23; i++)
             {
                 // Cannot rebuild SS with orphan challenge ID
@@ -1383,41 +1386,48 @@ namespace MPF.Processors
                 int rOffset = 0x730 + i * 9;
                 bool angle_challenge = false;
                 bool other_challenge = false;
-                int challenge_count = 0;
                 switch (ss[cOffset])
                 {
                     case 0x14:
                         if (ss[rOffset] != 3)
                             return false;
+
                         challenge_count += 1;
                         // Challenge must be in expected order
                         if (challenge_count > 5)
                             return false;
+
                         break;
                     case 0x15:
                         if (ss[rOffset] != 1)
                             return false;
+
                         challenge_count += 1;
                         // Challenge must be in expected order
                         if (challenge_count < 5)
                             return false;
+
                         break;
                     case 0x24:
                         if (ss[rOffset] != 7)
                             return false;
+
                         challenge_count += 1;
                         // Challenge must be in expected order
                         if (challenge_count < 5 || challenge_count > 8)
                             return false;
+
                         angle_challenge = true;
                         break;
                     case 0x25:
                         if (ss[rOffset] != 9)
                             return false;
+
                         challenge_count += 1;
                         // Challenge must be in expected order
                         if (challenge_count < 5 || challenge_count > 8)
                             return false;
+
                         angle_challenge = true;
                         break;
                     default:
@@ -1445,7 +1455,7 @@ namespace MPF.Processors
                 if (!write && ss[ccrt_offset + i * 9 + 3] != ss[cOffset + 7])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 2] = ss[cOffset + 7];
+                    ss[ccrt_offset + i * 9 + 3] = ss[cOffset + 7];
 
                 // Set challenge response for non-angle challenges
                 if (!angle_challenge)

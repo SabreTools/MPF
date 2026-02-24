@@ -109,6 +109,7 @@ namespace MPF.Processors
             string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
             if (File.Exists(dmiPath))
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+
             string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
             if (File.Exists(pfiPath))
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
@@ -135,7 +136,6 @@ namespace MPF.Processors
                     if (ssCrc is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                 }
-
             }
         }
 
