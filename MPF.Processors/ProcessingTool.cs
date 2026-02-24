@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 #if NET35_OR_GREATER || NETCOREAPP
 using System.Linq;
@@ -1376,10 +1377,10 @@ namespace MPF.Processors
             {
                 // Cannot rebuild SS with orphan challenge ID
                 if (!cids.TryGetValue(ss[0x730 + i * 9 + 1], out byte cOffset))
-                    return;
+                    return false;
 
                 // Validate challenge type with response type
-                byte rOffset = 0x730 + i * 9;
+                int rOffset = 0x730 + i * 9);
                 bool angle_challenge = false;
                 bool other_challenge = false;
                 int challenge_count = 0;
