@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BinaryObjectScanner;
 
 namespace MPF.Frontend
@@ -25,7 +25,13 @@ namespace MPF.Frontend
         /// </summary>
         public static void ProgressUpdated(object? sender, ProtectionProgress value)
         {
-            Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
+            string prefix = string.Empty;
+            for (int i = 0; i < value.Depth; i++)
+            {
+                prefix += "--> ";
+            }
+
+            Console.WriteLine($"{prefix}{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
         }
     }
 }

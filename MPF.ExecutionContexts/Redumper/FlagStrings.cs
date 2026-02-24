@@ -91,6 +91,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Firmware = "--firmware";
         public const string ForceFlash = "--force-flash";
         public const string SkipSubcodeDesync = "--skip-subcode-desync";
+        public const string Rings = "--rings";
         public const string CdrErrorThreshold = "--cdr-error-threshold";
         public const string ScsiTimeout = "--scsi-timeout";
 

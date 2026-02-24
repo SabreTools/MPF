@@ -643,6 +643,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.1.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_1"),
+                        new([$"{outputFilename}.sdram"], OutputFileFlags.Deleteable),
                         new($"{outputFilename}.security", System.IsXGD() && !IsManufacturerEmpty($"{basePath}.manufacturer")
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
@@ -700,6 +701,7 @@ namespace MPF.Processors
                         new($"{outputFilename}.3.physical", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "physical_3"),
+                        new([$"{outputFilename}.sbram"], OutputFileFlags.Deleteable),
                         new($"{outputFilename}.skeleton", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "skeleton"),
@@ -999,6 +1001,17 @@ namespace MPF.Processors
                         discProfile = line["current profile: ".Length..];
 #else
                         discProfile = line.Substring("current profile: ".Length);
+#endif
+                    }
+
+                    // The profile is listed in a single line
+                    if (line.StartsWith("profile:"))
+                    {
+                        // current profile: <discType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        discProfile = line["profile: ".Length..];
+#else
+                        discProfile = line.Substring("profile: ".Length);
 #endif
                     }
 

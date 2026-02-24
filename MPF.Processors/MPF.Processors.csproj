@@ -35,7 +35,7 @@
         <PackageReference Include="GrindCore.SharpCompress" Version="0.41.1" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
         <PackageReference Include="SabreTools.Hashing" Version="[1.6.0]" />
         <PackageReference Include="SabreTools.IO" Version="[1.9.0]" />
-        <PackageReference Include="SabreTools.RedumpLib" Version="[1.9.1]" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="[1.9.2]" />
         <PackageReference Include="SabreTools.Serialization" Version="[2.2.1]" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.0" Condition="!$(TargetFramework.StartsWith(`net2`)) AND !$(TargetFramework.StartsWith(`net3`)) AND !$(TargetFramework.StartsWith(`net40`)) AND !$(TargetFramework.StartsWith(`net452`))" />
     </ItemGroup>

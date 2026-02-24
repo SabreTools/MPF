@@ -37,6 +37,14 @@
 - Remove passthrough property on Options
 - Move conversion method to options loader
 - Move other conversion method to options loader
+- Add GP-Install to packer filters
+- Update Aaru to 5.4.2 LTS
+- Use prefixing protection scan output
+- Print error when redump is down
+- Support new redumper log for current profile
+- Minor commandline program cleanup
+- This might take a while... 
+- Support new redumper changes
 
 ### 3.6.0 (2025-11-28)
 

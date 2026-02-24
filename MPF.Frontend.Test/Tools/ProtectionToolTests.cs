@@ -286,6 +286,19 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
+        public void SanitizeFoundProtections_GPInstall()
+        {
+            List<string> protections =
+            [
+                "GP-Install",
+                "GP-Install ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
         public void SanitizeFoundProtections_HyperTechCrackProof()
         {
             List<string> protections =
