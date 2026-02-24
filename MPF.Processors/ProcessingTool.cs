@@ -1380,7 +1380,7 @@ namespace MPF.Processors
                     return false;
 
                 // Validate challenge type with response type
-                int rOffset = 0x730 + i * 9);
+                int rOffset = 0x730 + i * 9;
                 bool angle_challenge = false;
                 bool other_challenge = false;
                 int challenge_count = 0;
@@ -1471,7 +1471,6 @@ namespace MPF.Processors
                     else
                         ss[ccrt_offset + i * 9 + 8] = 0;
                 }
-                
             }
 
             // Clean SS (set fixed angles)
