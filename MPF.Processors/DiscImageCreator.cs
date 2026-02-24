@@ -377,6 +377,7 @@ namespace MPF.Processors
                             if (!File.Exists(xgd1RawSSPath))
                                 File.Move(xgd1SSPath, xgd1RawSSPath);
                         }
+                        catch { }
                         
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
@@ -441,6 +442,7 @@ namespace MPF.Processors
                             if (!File.Exists(xgd2RawSSPath))
                                 File.Move(xgd2SSPath, xgd2RawSSPath);
                         }
+                        catch { }
                         
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
