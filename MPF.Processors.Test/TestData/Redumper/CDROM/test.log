@@ -37,6 +37,13 @@ REDUMP.ORG errors: 2
 
 C2: 12 samples
 
+<< GetGameCubeWiiInfo >>
+GC [
+    version: version
+    serial: serial
+    title: title
+    disc number: 01
+
 << GetGDROMHeader >>
 DC [
     build date: date

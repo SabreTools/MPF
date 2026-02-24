@@ -345,6 +345,19 @@ namespace MPF.Processors
 
                     break;
 
+                case RedumpSystem.NintendoGameCube:
+                case RedumpSystem.NintendoWii:
+                    if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
+                    {
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
+
+                        if (!redumpCompat)
+                            info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
+                    }
+
+                    break;
+
                 case RedumpSystem.SegaMegaCDSegaCD:
                     info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
@@ -1348,6 +1361,91 @@ namespace MPF.Processors
             {
                 // Absorb the exception
                 redumpErrors = -1; c2Errors = -1;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the info from a GameCube disc, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if section found, null on error</returns>
+        internal static bool GetGameCubeWiiInfo(string log, out string? version, out string? serial, out string? title, out string? discNumber)
+        {
+            // Set the default values
+            version = null; serial = null; title = null; discNumber = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                // Fast forward to the GC info line
+                using var sr = File.OpenText(log);
+                string? line;
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("GC") == true ||
+                        line?.StartsWith("WII [") == true)
+                        break;
+                }
+
+                if (sr.EndOfStream)
+                    return false;
+
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line is null)
+                        break;
+
+                    if (line.StartsWith("version:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
+                        version = line.Substring("version: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
+                        serial = line.Substring("serial: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("title:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        title = line["title: ".Length..].Trim();
+#else
+                        title = line.Substring("title: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("disc number:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        discNumber = line["disc number: ".Length..].Trim();
+#else
+                        discNumber = line.Substring("disc number: ".Length).Trim();
+#endif
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                // Absorb the exception
                 return false;
             }
         }

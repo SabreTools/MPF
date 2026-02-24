@@ -597,6 +597,66 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetGameCubeWiiInfo
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Empty_Null()
+        {
+            string log = string.Empty;
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.False(actual);
+            Assert.Null(version);
+            Assert.Null(serial);
+            Assert.Null(title);
+            Assert.Null(discNumber);
+        }
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Invalid_Null()
+        {
+            string log = "INVALID";
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.False(actual);
+            Assert.Null(version);
+            Assert.Null(serial);
+            Assert.Null(title);
+            Assert.Null(discNumber);
+        }
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Valid_Filled()
+        {
+            string? expectedVersion = "version";
+            string? expectedSerial = "serial";
+            string? expectedTitle = "title";
+            string? expectedDiscNumber = "01";
+
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.True(actual);
+            Assert.Equal(expectedVersion, version);
+            Assert.Equal(expectedSerial, serial);
+            Assert.Equal(expectedTitle, title);
+            Assert.Equal(expectedDiscNumber, discNumber);
+        }
+
+        #endregion
+
         #region GetGDROMHeader
 
         [Fact]
