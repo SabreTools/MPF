@@ -1119,7 +1119,6 @@ namespace MPF.Processors
 #else
                 if(ss.Skip(32).Take(72).Any(x => x != 0))
 #endif
-                if (bad_xgd3)
                     return false;
             }
 
