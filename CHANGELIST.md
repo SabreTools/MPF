@@ -46,6 +46,7 @@
 - This might take a while...
 - Support new redumper changes
 - Support more new redumper changes
+- Update Redumper to build 699
 
 ### 3.6.0 (2025-11-28)
 
