@@ -88,7 +88,7 @@ namespace MPF.ExecutionContexts.Data
                 return false;
 
             // Check for space-separated
-            string part = parts[index];
+            string part = parts[index].TrimStart('"');
             if (part == Name || (_altNames.Length > 0 && Array.FindIndex(_altNames, n => n == part) > -1))
             {
                 // Ensure the value exists
@@ -123,7 +123,7 @@ namespace MPF.ExecutionContexts.Data
                 // Split the string, using the first equal sign as the separator
                 string[] tempSplit = part.Split('=');
                 string key = tempSplit[0];
-                string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1);
+                string val = string.Join("=", tempSplit, 1, tempSplit.Length - 1).Trim('"');
 
                 // Ensure the value exists
                 if (string.IsNullOrEmpty(val))

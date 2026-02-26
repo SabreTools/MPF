@@ -63,6 +63,15 @@ namespace MPF.ExecutionContexts.Test
             Assert.True(expected.SequenceEqual(actual));
         }
 
+        [Fact]
+        public void SplitParameterString_SplitEqualsExternalQuotes_Multiple()
+        {
+            string[] expected = ["\"-flag1=value1 value2\"", "-flag2"];
+            string parameters = "\"-flag1=value1 value2\" -flag2";
+            string[] actual = BaseExecutionContext.SplitParameterString(parameters);
+            Assert.True(expected.SequenceEqual(actual));
+        }
+
         #endregion
 
         #region DoesExist
@@ -182,20 +191,20 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData("", null, null, false)]
-        [InlineData("", (int)0, (int)1, false)]
-        [InlineData("", (int)0, int.MaxValue, false)]
+        [InlineData("", 0, 1, false)]
+        [InlineData("", 0, int.MaxValue, false)]
         [InlineData("-2", null, null, true)]
-        [InlineData("-2", (int)0, (int)1, false)]
-        [InlineData("-2", (int)0, int.MaxValue, false)]
+        [InlineData("-2", 0, 1, false)]
+        [InlineData("-2", 0, int.MaxValue, false)]
         [InlineData("0", null, null, true)]
-        [InlineData("0", (int)0, (int)1, true)]
-        [InlineData("0", (int)0, int.MaxValue, true)]
+        [InlineData("0", 0, 1, true)]
+        [InlineData("0", 0, int.MaxValue, true)]
         [InlineData("2", null, null, true)]
-        [InlineData("2", (int)0, (int)1, false)]
-        [InlineData("2", (int)0, int.MaxValue, true)]
+        [InlineData("2", 0, 1, false)]
+        [InlineData("2", 0, int.MaxValue, true)]
         [InlineData("Invalid", null, null, false)]
-        [InlineData("Invalid", (int)0, (int)1, false)]
-        [InlineData("Invalid", (int)0, int.MaxValue, false)]
+        [InlineData("Invalid", 0, 1, false)]
+        [InlineData("Invalid", 0, int.MaxValue, false)]
         public void IsValidInt32Test(string parameter, int? lowerBound, int? upperBound, bool expected)
         {
             bool actual = BaseExecutionContext.IsValidInt32(parameter, lowerBound, upperBound);

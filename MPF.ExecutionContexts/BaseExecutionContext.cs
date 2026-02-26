@@ -244,7 +244,7 @@ namespace MPF.ExecutionContexts
             parameters = parameters.Trim();
 
             // Split the string using Regex
-            var matches = Regex.Matches(parameters, @"([a-zA-Z0-9\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
+            var matches = Regex.Matches(parameters, @"([\""]?[a-zA-Z0-9\-]*=)?[\""].+?[\""]|[^ ]+", RegexOptions.Compiled);
 
             // Get just the values from the matches
             var matchArr = new Match[matches.Count];
