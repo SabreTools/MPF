@@ -209,6 +209,9 @@ namespace MPF.Processors
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
 
+                    // Get BCA information, if available
+                    info.Extras.BCA = GetBCA($"{basePath}.bca");
+
                     // Bluray-specific options
                     if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
                     {
@@ -217,6 +220,7 @@ namespace MPF.Processors
                         {
                             case RedumpSystem.MicrosoftXboxOne:
                             case RedumpSystem.MicrosoftXboxSeriesXS:
+                            case RedumpSystem.NintendoWiiU:
                             case RedumpSystem.SonyPlayStation3:
                             case RedumpSystem.SonyPlayStation4:
                             case RedumpSystem.SonyPlayStation5:
@@ -867,6 +871,47 @@ namespace MPF.Processors
         #endregion
 
         #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the hex contents of the BCA file
+        /// </summary>
+        /// <param name="bcaPath">Path to the BCA file associated with the dump</param>
+        /// <returns>BCA data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        internal static string? GetBCA(string bcaPath)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (string.IsNullOrEmpty(bcaPath))
+                return null;
+            if (!File.Exists(bcaPath))
+                return null;
+
+            try
+            {
+                var hex = ProcessingTool.GetFullFile(bcaPath, true);
+                if (hex is null)
+                    return null;
+
+                // Separate into blocks of 4 hex digits and newlines
+                // Skips the 4-byte header
+                var bca = new StringBuilder();
+                for (int i = 4; i < hex.Length; i++)
+                {
+                    bca.Append(hex[i]);
+                    if ((i + 1) % 32 == 0)
+                        bca.AppendLine();
+                    else if ((i + 1) % 4 == 0)
+                        bca.Append(' ');
+                }
+
+                return bca.ToString();
+            }
+            catch
+            {
+                // Absorb the exception right now
+                return null;
+            }
+        }
 
         /// <summary>
         /// Get the cuesheet from the input file, if possible

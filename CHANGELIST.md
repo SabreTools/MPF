@@ -48,6 +48,7 @@
 - Support more new redumper changes
 - Update Redumper to build 699
 - Handle quoted flags, more quoted value types
+- Update Redumper to build 700
 
 ### 3.6.0 (2025-11-28)
 
