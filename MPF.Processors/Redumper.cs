@@ -622,6 +622,9 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
+                        new($"{outputFilename}.bca", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "bca"),
                         new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
@@ -687,6 +690,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
+                        new($"{outputFilename}.bca", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "bca"),
                         new($"{outputFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"),
