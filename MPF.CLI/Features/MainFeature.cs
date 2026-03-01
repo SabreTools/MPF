@@ -37,6 +37,9 @@ namespace MPF.CLI.Features
         private const string _mountedName = "mounted";
         internal readonly StringInput MountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
 
+        private const string _retriesName = "retries";
+        internal readonly Int32Input RetriesInput = new(_retriesName, ["-r", "--retries"], "Override default retry count");
+
         private const string _speedName = "speed";
         internal readonly Int32Input SpeedInput = new(_speedName, ["-s", "--speed"], "Override default dumping speed");
 
@@ -54,6 +57,7 @@ namespace MPF.CLI.Features
             Add(MountedInput);
             Add(FileInput);
             Add(SpeedInput);
+            Add(RetriesInput);
             Add(CustomInput);
         }
 
@@ -96,6 +100,10 @@ namespace MPF.CLI.Features
                 // Set an override speed
                 else if (SpeedInput.ProcessInput(args, ref index))
                     DriveSpeed = SpeedInput.Value;
+
+                // Set an override retry count
+                else if (RetriesInput.ProcessInput(args, ref index))
+                    Retries = RetriesInput.Value;
 
                 // Use a custom parameters
                 else if (CustomInput.ProcessInput(args, ref index))

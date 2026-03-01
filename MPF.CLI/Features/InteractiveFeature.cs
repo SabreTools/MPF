@@ -61,7 +61,8 @@ namespace MPF.CLI.Features
             Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
             Console.WriteLine($"6) Set file path (Currently '{FilePath}')");
             Console.WriteLine($"7) Set override speed (Currently '{DriveSpeed}')");
-            Console.WriteLine($"8) Set custom parameters (Currently '{CustomParams}')");
+            Console.WriteLine($"8) Set override retries (Currently '{Retries}')");
+            Console.WriteLine($"9) Set custom parameters (Currently '{CustomParams}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start dumping");
@@ -85,6 +86,8 @@ namespace MPF.CLI.Features
                 case "7":
                     goto overrideSpeed;
                 case "8":
+                    goto overrideRetries;
+                case "9":
                     goto customParams;
 
                 case "q":
@@ -177,6 +180,18 @@ namespace MPF.CLI.Features
                 speed = -1;
 
             DriveSpeed = speed;
+            goto root;
+
+        overrideRetries:
+            Console.WriteLine();
+            Console.WriteLine("Input the retry count and press Enter:");
+            Console.Write("> ");
+
+            result = Console.ReadLine();
+            if (!int.TryParse(result, out int retries))
+                retries = -1;
+
+            Retries = retries;
             goto root;
 
         customParams:

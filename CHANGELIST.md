@@ -50,6 +50,7 @@
 - Handle quoted flags, more quoted value types
 - Update Redumper to build 700
 - Include BCA in zipped files for Redumper
+- Add retry override for MPF.CLI
 
 ### 3.6.0 (2025-11-28)
 
