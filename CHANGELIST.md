@@ -51,6 +51,7 @@
 - Update Redumper to build 700
 - Include BCA in zipped files for Redumper
 - Add retry override for MPF.CLI
+- Limit BCA read to 64 bytes for Redumper
 
 ### 3.6.0 (2025-11-28)
 

@@ -898,10 +898,12 @@ namespace MPF.Processors
                 if (hex is null)
                     return null;
 
+                // Get the starting index to read at most the last 64 bytes
+                int startingIndex = hex.Length >= 64 ? hex.Length - 64 : 0;
+
                 // Separate into blocks of 4 hex digits and newlines
-                // Skips the 4-byte header
                 var bca = new StringBuilder();
-                for (int i = 4; i < hex.Length; i++)
+                for (int i = startingIndex; i < hex.Length; i++)
                 {
                     bca.Append(hex[i]);
                     if ((i + 1) % 32 == 0)
