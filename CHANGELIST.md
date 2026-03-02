@@ -52,6 +52,7 @@
 - Include BCA in zipped files for Redumper
 - Add retry override for MPF.CLI
 - Limit BCA read to 64 bytes for Redumper
+- Support more Redumper log outputs
 
 ### 3.6.0 (2025-11-28)
 

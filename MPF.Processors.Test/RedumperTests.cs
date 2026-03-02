@@ -306,6 +306,61 @@ namespace MPF.Processors.Test
 
         #endregion
 
+        #region GetBCA
+
+        [Fact]
+        public void GetBCA_InvalidPath_Null()
+        {
+            string bcaPath = "INVALID";
+            string? actual = Redumper.GetBCA(bcaPath);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetBCA_ValidPath_Formatted()
+        {
+            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
+            string bcaPath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.bca");
+
+            string? actual = Redumper.GetBCA(bcaPath);
+            Assert.NotNull(actual);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region GetBookType
+
+        [Fact]
+        public void GetBookType_Empty_Null()
+        {
+            string log = string.Empty;
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.False(actual);
+            Assert.Null(bookType);
+        }
+
+        [Fact]
+        public void GetBookType_Invalid_Null()
+        {
+            string log = "INVALID";
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.False(actual);
+            Assert.Null(bookType);
+        }
+
+        [Fact]
+        public void GetBookType_Valid_Filled()
+        {
+            MediaType? expected = MediaType.DVD;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.True(actual);
+            Assert.Equal(expected, bookType);
+        }
+
+        #endregion
+
         #region GetCuesheet
 
         [Fact]
@@ -507,6 +562,8 @@ namespace MPF.Processors.Test
         [InlineData("HD DVD-RW", MediaType.HDDVD)]
         [InlineData("HD DVD-R DL", MediaType.HDDVD)]
         [InlineData("HD DVD-RW DL", MediaType.HDDVD)]
+        [InlineData("NINTENDO", MediaType.NintendoWiiOpticalDisc)]
+        [InlineData("RESERVED5", MediaType.NintendoWiiOpticalDisc)]
         [InlineData("NON STANDARD", null)]
         public void GetDiscTypeFromProfileTest(string? profile, MediaType? expected)
         {
@@ -755,7 +812,7 @@ namespace MPF.Processors.Test
         {
             string? expectedManufacturer = "manufacturer";
             string? expectedModel = "model";
-            string? expectedFirmware = "revision (vendor)";
+            string? expectedFirmware = "revision (vendor), firmware";
 
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             bool actual = Redumper.GetHardwareInfo(log,
