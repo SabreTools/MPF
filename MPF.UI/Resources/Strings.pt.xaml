@@ -22,7 +22,7 @@
     <!-- Top Menu Bar -->
     <system:String x:Key="FileMenuString">_Ficheiro</system:String>
     <system:String x:Key="ExitMenuItemString">_Sair</system:String>
-    <system:String x:Key="ToolsMenuString">Ferra_mentas</system:String>
+    <system:String x:Key="ToolsMenuString">_Recursos</system:String>
     <system:String x:Key="CheckDumpMenuItemString">_Verificar dump</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Criar _IRD PS3</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Opções</system:String>
@@ -132,7 +132,7 @@
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Info de login</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Obtenção</system:String>
-    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Obter info correspondente</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Obter info quando corresponde</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Utilizador</system:String>
     <system:String x:Key="PasswordLabelString">Palavra-passe</system:String>
@@ -165,17 +165,17 @@
 
     <!-- Media Information Guide Window -->
     <system:String x:Key="MediaInformationTitleString">Informação da mídia</system:String>
-    <system:String x:Key="RingCodeGuideButtonString">Guia de códigos dos anéis</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">Guia códigos anéis</system:String>
     <!-- Common Info Tab -->
     <system:String x:Key="CommonInfoTabString">Info comum</system:String>
-    <system:String x:Key="CommonMediaInfoGroupBoxString">Informação comum da mídia</system:String>
+    <system:String x:Key="CommonMediaInfoGroupBoxString">Info comum da mídia</system:String>
     <system:String x:Key="TitleInputString">Título</system:String>
     <system:String x:Key="AlternativeTitleInputString">Título alternativo</system:String>
-    <system:String x:Key="ForeignTitleNonLatinInputString">Título estrangeiro (não latino)</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">Título estrangeiro (não-latim)</system:String>
     <system:String x:Key="AlternativeForeignTitleInputString">Título estrangeiro alternativo</system:String>
     <system:String x:Key="DiscNumberLetterInputString">Número/letra do disco</system:String>
     <system:String x:Key="DiscTitleInputString">Título do disco</system:String>
-    <system:String x:Key="DiscTitleNonLatinInputString">Título do disco (não latino)</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">Título do disco (não-latim)</system:String>
     <system:String x:Key="CategoryLabelString">Categoria</system:String>
     <system:String x:Key="RegionLabelString">Região</system:String>
     <system:String x:Key="LanguagesLabelString">Idiomas</system:String>
@@ -185,7 +185,7 @@
     <system:String x:Key="VersionsAndEditionGroupBoxString">Versão e edições</system:String>
     <system:String x:Key="VersionInputString">Versão</system:String>
     <system:String x:Key="EditionInputString">Edição</system:String>
-    <system:String x:Key="EditionNonLatinInputString">Edição (não latina)</system:String>
+    <system:String x:Key="EditionNonLatinInputString">Edição (não-latim)</system:String>
     <!-- Additional Info Tab -->
     <system:String x:Key="AdditionalInfoTabString">Info adicional</system:String>
     <system:String x:Key="CommentsInputString">Comentários</system:String>
@@ -193,20 +193,20 @@
     <system:String x:Key="ProtectionInputString">Proteção</system:String>
     <system:String x:Key="ExtrasGroupBoxString">Extras</system:String>
     <system:String x:Key="PhysicalIdentifiersGroupBoxString">Identificadores físicos</system:String>
-    <system:String x:Key="PublisherIdentifiersGroupBoxString">Identificadores de editor</system:String>
+    <system:String x:Key="PublisherIdentifiersGroupBoxString">Identificadores de editores</system:String>
     <!-- Contents Tab -->
     <system:String x:Key="ContentsTabString">Conteúdo</system:String>
     <!-- Ringcodes Tab -->
     <system:String x:Key="RingcodesTabString">Códigos dos anéis</system:String>
-    <system:String x:Key="L0InfoGroupBoxString">Dados/info L0</system:String>
-    <system:String x:Key="L1InfoGroupBoxString">Etiqueta/info L1</system:String>
+    <system:String x:Key="L0InfoGroupBoxString">Dados/Info L0</system:String>
+    <system:String x:Key="L1InfoGroupBoxString">Etiqueta/Info L1</system:String>
     <system:String x:Key="L2InfoGroupBoxString">Info L2</system:String>
     <system:String x:Key="L3InfoGroupBoxString">Info L3</system:String>
     <!-- Read-Only Info Tab -->
     <system:String x:Key="ReadOnlyInfoTabString">Info de leitura apenas</system:String>
 
     <!-- Ring Code Guide Window -->
-    <system:String x:Key="RingCodeGuideTitleString">Guia de códigos dos anéis</system:String>
+    <system:String x:Key="RingCodeGuideTitleString">Guia códigos dos anéis</system:String>
 
     <!-- About Window -->
     <system:String x:Key="AboutTitleString">Sobre</system:String>
