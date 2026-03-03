@@ -319,7 +319,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetBCA_ValidPath_Formatted()
         {
-            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
+            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
             string bcaPath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.bca");
 
             string? actual = Redumper.GetBCA(bcaPath);

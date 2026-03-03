@@ -902,8 +902,8 @@ namespace MPF.Processors
                 if (hex is null)
                     return null;
 
-                // Get the starting index to read at most the last 64 bytes
-                int startingIndex = hex.Length >= 64 ? hex.Length - 64 : 0;
+                // Get the starting index to read at most the last 64 bytes (128 characters)
+                int startingIndex = hex.Length >= 128 ? hex.Length - 128 : 0;
 
                 // Separate into blocks of 4 hex digits and newlines
                 var bca = new StringBuilder();
