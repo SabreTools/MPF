@@ -26,7 +26,7 @@
     <system:String x:Key="CheckDumpMenuItemString">_Verificar dump</system:String>
     <system:String x:Key="CreatePS3IRDDumpMenuItemString">Criar _IRD PS3</system:String>
     <system:String x:Key="OptionsDumpMenuItemString">_Opções</system:String>
-    <system:String x:Key="DebugInfoWindowMenuItemString">_Janela de info de depuração</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">Info de _depuração</system:String>
     <system:String x:Key="HelpMenuString">_Ajuda</system:String>
     <system:String x:Key="AboutMenuItemString">_Sobre</system:String>
     <system:String x:Key="CheckForUpdateMenuItemString">_Procurar atualizações</system:String>
