@@ -54,7 +54,7 @@
     <!-- Options Window -->
     <system:String x:Key="OptionsTitleString">Opções</system:String>
     <system:String x:Key="OptionsFirstRunTitleString">Bem-vindo ao MPF, explora as opções</system:String>
-    <system:String x:Key="OptionsRetrievalWarningString">Se escolheres ativar a validação e obtenção de informação, és responsável por assegurar que todos os dados inseridos correspondem à tua mídia. Alguma informação pode ser marcada com um lembrete de verificar mas toda a informação deve passar pelo mesmo nível de escrutínio.</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">Se escolheres ativar a validação e obtenção de informação, és responsável por assegurar que todos os dados inseridos correspondem à tua mídia. Alguma informação pode conter um lembrete de a verificar, mas toda a informação deve passar pelo mesmo nível de escrutínio.</system:String>
     <!-- General Tab -->
     <system:String x:Key="GeneralTabString">Geral</system:String>
     <system:String x:Key="UserInterfaceGroupBoxString">Interface</system:String>
@@ -128,11 +128,11 @@
     <system:String x:Key="DefaultReadMethodLabelString">Método de leitura padrão:</system:String>
     <system:String x:Key="DefaultSectorOrderLabelString">Ordem padrão de setores:</system:String>
     <system:String x:Key="DefaultDriveTypeLabelString">Tipo de unidade padrão:</system:String>
-    <system:String x:Key="DefaultDrivePregapStartLabelString">Começo pregap da unidade padrão:</system:String>
+    <system:String x:Key="DefaultDrivePregapStartLabelString">Pregap start da unidade padrão:</system:String>
     <!-- Login Info Tab -->
     <system:String x:Key="LoginInfoTabString">Info de login</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Obtenção</system:String>
-    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Obter informação correspondente</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">Obter info correspondente</system:String>
     <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
     <system:String x:Key="UsernameLabelString">Utilizador</system:String>
     <system:String x:Key="PasswordLabelString">Palavra-passe</system:String>
@@ -142,7 +142,7 @@
     <system:String x:Key="CheckDumpTitleString">Verificar dump existente</system:String>
     <system:String x:Key="InputPathLabelString">Caminho do ficheiro</system:String>
     <system:String x:Key="CheckDumpButtonString">Verificar dump</system:String>
-    <system:String x:Key="CheckDumpWarningString">Verificar vai substituir qualquer ficheiro de info de submissão existente. Por favor faz backups deles se precisares, antes de fazer a verificação.</system:String>
+    <system:String x:Key="CheckDumpWarningString">A verificação vai substituir qualquer ficheiro de info de submissão existente. Por favor faz cópias deles se precisares, antes de iniciar a verificação.</system:String>
 
     <!-- Create PS3 IRD Window -->
     <system:String x:Key="CreatePS3IRDTitleString">Criar IRD PS3</system:String>
@@ -180,7 +180,7 @@
     <system:String x:Key="RegionLabelString">Região</system:String>
     <system:String x:Key="LanguagesLabelString">Idiomas</system:String>
     <system:String x:Key="LanguageSelectionViaLabelString">Seleção de idioma via</system:String>
-    <system:String x:Key="SerialInputString">Serial</system:String>
+    <system:String x:Key="SerialInputString">Número de série</system:String>
     <system:String x:Key="BarcodeInputString">Código de barras</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">Versão e edições</system:String>
     <system:String x:Key="VersionInputString">Versão</system:String>
