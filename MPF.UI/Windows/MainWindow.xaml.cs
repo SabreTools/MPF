@@ -195,6 +195,7 @@ namespace MPF.UI.Windows
                     InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
                     InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
                     InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                    InterfaceLanguage.Portuguese => new Uri("../Resources/Strings.pt.xaml", UriKind.Relative),
                     InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
                     InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
                     InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
@@ -240,6 +241,7 @@ namespace MPF.UI.Windows
                 case "ja": SetInterfaceLanguage(InterfaceLanguage.Japanese); break;
                 case "ko": SetInterfaceLanguage(InterfaceLanguage.Korean); break;
                 case "pl": SetInterfaceLanguage(InterfaceLanguage.Polish); break;
+                case "pt": SetInterfaceLanguage(InterfaceLanguage.Portuguese); break;
                 case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
                 case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
                 case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
