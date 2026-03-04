@@ -56,6 +56,7 @@
 - Bytes, not characters
 - Add Portuguese translation (Kokasgui)
 - Wire up Portuguese translation, fix Redumper enum
+- Add Portuguese to UI code
 
 ### 3.6.0 (2025-11-28)
 

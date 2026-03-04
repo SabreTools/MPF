@@ -47,6 +47,7 @@ namespace MPF.UI.Windows
         private MenuItem? JapaneseMenuItem => ItemHelper.FindChild<MenuItem>(this, "JapaneseMenuItem");
         private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
         private MenuItem? PolishMenuItem => ItemHelper.FindChild<MenuItem>(this, "PolishMenuItem");
+        private MenuItem? PortugueseMenuItem => ItemHelper.FindChild<MenuItem>(this, "PortugueseMenuItem");
         private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
         private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
         private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
@@ -292,6 +293,7 @@ namespace MPF.UI.Windows
             JapaneseMenuItem!.Click += LanguageMenuItemClick;
             KoreanMenuItem!.Click += LanguageMenuItemClick;
             PolishMenuItem!.Click += LanguageMenuItemClick;
+            PortugueseMenuItem!.Click += LanguageMenuItemClick;
             RussianMenuItem!.Click += LanguageMenuItemClick;
             SpanishMenuItem!.Click += LanguageMenuItemClick;
             SwedishMenuItem!.Click += LanguageMenuItemClick;
