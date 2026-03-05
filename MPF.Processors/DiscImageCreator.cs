@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
+using SabreTools.Hashing;
 using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
@@ -345,7 +346,8 @@ namespace MPF.Processors
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                         }
 
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd1SS))
@@ -359,8 +361,30 @@ namespace MPF.Processors
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
+                        }
+                    }
+
+                    string xgd1SSPath = $"{basePath}_SS.bin";
+                    string xgd1RawSSPath = $"{basePath}_RawSS.bin";
+                    if (File.Exists(xgd1SSPath) && ProcessingTool.IsValidSS(xgd1SSPath))
+                    {
+                        // Save untouched SS
+                        try
+                        {
+                            if (!File.Exists(xgd1RawSSPath))
+                                File.Move(xgd1SSPath, xgd1RawSSPath);
+                        }
+                        catch { }
+                        
+                        // Repair, clean, and validate SS before adding hash to submission info
+                        if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
+                        {
+                            string? xgd1SSCrc = HashTool.GetFileHash(xgd1SSPath, HashType.CRC32);
+                            if (xgd1SSCrc is not null)
+                                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSCrc.ToUpperInvariant();
                         }
                     }
 
@@ -387,7 +411,8 @@ namespace MPF.Processors
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                         }
 
                         if (GetXGDAuxInfo($"{basePath}_disc.txt", out _, out _, out _, out var xgd23SS))
@@ -401,8 +426,30 @@ namespace MPF.Processors
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                            // Don't put raw SS hash from _suppl.dat / _disc.txt in submission info
+                            //info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
                             info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
+                        }
+                    }
+
+                    string xgd2SSPath = $"{basePath}_SS.bin";
+                    string xgd2RawSSPath = $"{basePath}_RawSS.bin";
+                    if (File.Exists(xgd2SSPath) && ProcessingTool.IsValidSS(xgd2SSPath))
+                    {
+                        // Save untouched SS
+                        try
+                        {
+                            if (!File.Exists(xgd2RawSSPath))
+                                File.Move(xgd2SSPath, xgd2RawSSPath);
+                        }
+                        catch { }
+                        
+                        // Repair, clean, and validate SS before adding hash to submission info
+                        if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
+                        {
+                            string? xgd2SSCrc = HashTool.GetFileHash(xgd2SSPath, HashType.CRC32);
+                            if (xgd2SSCrc is not null)
+                                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd2SSCrc.ToUpperInvariant();
                         }
                     }
 
@@ -787,6 +834,9 @@ namespace MPF.Processors
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "ss"),
+                        new($"{outputFilename}_RawSS.bin", 
+                            OutputFileFlags.Binary | OutputFileFlags.Zippable,
+                            "raw_ss"),
                     ];
 
                 case MediaType.HDDVD:

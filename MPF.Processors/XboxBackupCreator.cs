@@ -105,33 +105,38 @@ namespace MPF.Processors
             }
 #pragma warning restore IDE0010
 
-            // Get the output file paths
+            // Hash DMI/PFI
             string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
-            string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
-            string ssPath = Path.Combine(outputDirectory, "SS.bin");
-
-            // Deal with SS.bin
-            if (File.Exists(ssPath))
-            {
-                // Save security sector ranges
-                string? ranges = ProcessingTool.GetSSRanges(ssPath);
-                if (!string.IsNullOrEmpty(ranges))
-                    info.Extras.SecuritySectorRanges = ranges;
-
-                // Recreate RawSS.bin
-                RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
-
-                // Run ss_sector_range to get repeatable SS hash
-                ProcessingTool.CleanSS(ssPath, ssPath);
-            }
-
-            // DMI/PFI/SS CRC32 hashes
             if (File.Exists(dmiPath))
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+
+            string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
             if (File.Exists(pfiPath))
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+
+            // Deal with SS.bin
+            string ssPath = Path.Combine(outputDirectory, "SS.bin");
             if (File.Exists(ssPath))
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = HashTool.GetFileHash(ssPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+            {
+                // Ensure a raw SS is saved (recreate from log if needed)
+                RecreateSS(logPath!, ssPath, Path.Combine(outputDirectory, "RawSS.bin"));
+
+                if (ProcessingTool.IsValidSS(ssPath))
+                {
+                    // Save security sector ranges
+                    string? ranges = ProcessingTool.GetSSRanges(ssPath);
+                    if (!string.IsNullOrEmpty(ranges))
+                        info.Extras.SecuritySectorRanges = ranges;
+                }
+
+                // Repair and clean SS, only hash SS if successful
+                if (ProcessingTool.FixSS(ssPath, ssPath))
+                {
+                    string? ssCrc = HashTool.GetFileHash(ssPath, HashType.CRC32);
+                    if (ssCrc is not null)
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -507,18 +512,18 @@ namespace MPF.Processors
         }
 
         /// <summary>
-        /// Recreate an SS.bin file from XBC log and write it to a file
+        /// Recreate a RawSS.bin file from XBC log and write it to a file
         /// </summary>
         /// <param name="log">Path to XBC log</param>
-        /// <param name="cleanSS">Path to the clean SS file to read from</param>
-        /// <param name="rawSS">Path to the raw SS file to write to</param>
+        /// <param name="currentSS">Path to the provided SS file to read from</param>
+        /// <param name="rawSS">Path to the recreated SS file to write to</param>
         /// <returns>True if successful, false otherwise</returns>
-        private static bool RecreateSS(string log, string cleanSS, string rawSS)
+        private static bool RecreateSS(string log, string currentSS, string rawSS)
         {
-            if (!File.Exists(log) || !File.Exists(cleanSS))
+            if (!File.Exists(log) || !File.Exists(currentSS) || File.Exists(rawSS))
                 return false;
 
-            byte[] ss = File.ReadAllBytes(cleanSS);
+            byte[] ss = File.ReadAllBytes(currentSS);
             if (ss.Length != 2048)
                 return false;
 
@@ -551,11 +556,6 @@ namespace MPF.Processors
                 return false;
             if (xgdType == 0)
                 return false;
-
-            // Don't recreate an already raw SS
-            // (but do save to file, so return true)
-            if (!ProcessingTool.IsCleanSS(ss))
-                return true;
 
             // Example replay table:
             /*
