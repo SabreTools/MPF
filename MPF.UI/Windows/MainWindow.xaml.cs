@@ -47,6 +47,7 @@ namespace MPF.UI.Windows
         private MenuItem? JapaneseMenuItem => ItemHelper.FindChild<MenuItem>(this, "JapaneseMenuItem");
         private MenuItem? KoreanMenuItem => ItemHelper.FindChild<MenuItem>(this, "KoreanMenuItem");
         private MenuItem? PolishMenuItem => ItemHelper.FindChild<MenuItem>(this, "PolishMenuItem");
+        private MenuItem? PortugueseMenuItem => ItemHelper.FindChild<MenuItem>(this, "PortugueseMenuItem");
         private MenuItem? RussianMenuItem => ItemHelper.FindChild<MenuItem>(this, "RussianMenuItem");
         private MenuItem? SpanishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SpanishMenuItem");
         private MenuItem? SwedishMenuItem => ItemHelper.FindChild<MenuItem>(this, "SwedishMenuItem");
@@ -195,6 +196,7 @@ namespace MPF.UI.Windows
                     InterfaceLanguage.Japanese => new Uri("../Resources/Strings.ja.xaml", UriKind.Relative),
                     InterfaceLanguage.Korean => new Uri("../Resources/Strings.ko.xaml", UriKind.Relative),
                     InterfaceLanguage.Polish => new Uri("../Resources/Strings.pl.xaml", UriKind.Relative),
+                    InterfaceLanguage.Portuguese => new Uri("../Resources/Strings.pt.xaml", UriKind.Relative),
                     InterfaceLanguage.Russian => new Uri("../Resources/Strings.ru.xaml", UriKind.Relative),
                     InterfaceLanguage.Spanish => new Uri("../Resources/Strings.es.xaml", UriKind.Relative),
                     InterfaceLanguage.Swedish => new Uri("../Resources/Strings.sv.xaml", UriKind.Relative),
@@ -240,6 +242,7 @@ namespace MPF.UI.Windows
                 case "ja": SetInterfaceLanguage(InterfaceLanguage.Japanese); break;
                 case "ko": SetInterfaceLanguage(InterfaceLanguage.Korean); break;
                 case "pl": SetInterfaceLanguage(InterfaceLanguage.Polish); break;
+                case "pt": SetInterfaceLanguage(InterfaceLanguage.Portuguese); break;
                 case "ru": SetInterfaceLanguage(InterfaceLanguage.Russian); break;
                 case "es": SetInterfaceLanguage(InterfaceLanguage.Spanish); break;
                 case "sv": SetInterfaceLanguage(InterfaceLanguage.Swedish); break;
@@ -290,6 +293,7 @@ namespace MPF.UI.Windows
             JapaneseMenuItem!.Click += LanguageMenuItemClick;
             KoreanMenuItem!.Click += LanguageMenuItemClick;
             PolishMenuItem!.Click += LanguageMenuItemClick;
+            PortugueseMenuItem!.Click += LanguageMenuItemClick;
             RussianMenuItem!.Click += LanguageMenuItemClick;
             SpanishMenuItem!.Click += LanguageMenuItemClick;
             SwedishMenuItem!.Click += LanguageMenuItemClick;

@@ -43,8 +43,20 @@
 - Print error when redump is down
 - Support new redumper log for current profile
 - Minor commandline program cleanup
-- This might take a while... 
+- This might take a while...
 - Support new redumper changes
+- Support more new redumper changes
+- Update Redumper to build 699
+- Handle quoted flags, more quoted value types
+- Update Redumper to build 700
+- Include BCA in zipped files for Redumper
+- Add retry override for MPF.CLI
+- Limit BCA read to 64 bytes for Redumper
+- Support more Redumper log outputs
+- Bytes, not characters
+- Add Portuguese translation (Kokasgui)
+- Wire up Portuguese translation, fix Redumper enum
+- Add Portuguese to UI code
 
 ### 3.6.0 (2025-11-28)
 

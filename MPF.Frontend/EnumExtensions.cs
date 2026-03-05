@@ -115,6 +115,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Japanese => "日本語",
                 InterfaceLanguage.Korean => "한국어",
                 InterfaceLanguage.Polish => "Polski",
+                InterfaceLanguage.Portuguese => "Português",
                 InterfaceLanguage.Russian => "Русский",
                 InterfaceLanguage.Spanish => "Español",
                 InterfaceLanguage.Swedish => "Svenska",
@@ -266,8 +267,10 @@ namespace MPF.Frontend
                 RedumperDriveType.MTK8C => "MTK8C",
                 RedumperDriveType.MTK3 => "MTK3",
                 RedumperDriveType.MTK2 => "MTK2",
+                RedumperDriveType.MTK2B => "MTK2B",
 
                 RedumperDriveType.NONE => "Default",
+
                 _ => "Unknown",
             };
         }
@@ -301,6 +304,7 @@ namespace MPF.Frontend
                 InterfaceLanguage.Japanese => "jpn",
                 InterfaceLanguage.Korean => "kor",
                 InterfaceLanguage.Polish => "pol",
+                InterfaceLanguage.Portuguese => "por",
                 InterfaceLanguage.Russian => "rus",
                 InterfaceLanguage.Spanish => "spa",
                 InterfaceLanguage.Swedish => "swe",
@@ -394,6 +398,7 @@ namespace MPF.Frontend
                 "jpn" or "japanese" or "日本語" => InterfaceLanguage.Japanese,
                 "kor" or "korean" or "한국어" => InterfaceLanguage.Korean,
                 "pol" or "polish" or "polski" => InterfaceLanguage.Polish,
+                "por" or "portuguese" or "português" => InterfaceLanguage.Portuguese,
                 "rus" or "russian" or "русский" => InterfaceLanguage.Russian,
                 "spa" or "spanish" or "español" => InterfaceLanguage.Spanish,
                 "swe" or "swedish" or "svenska" => InterfaceLanguage.Swedish,
@@ -587,6 +592,18 @@ namespace MPF.Frontend
                     or "lgasu2"
                     or "lg_asu_2"
                     or "lg-asu-2" => RedumperDriveType.MTK2,
+                "mtk2b"
+                    or "mtk2b"
+                    or "lg_asus2b"
+                    or "lg-asus2b"
+                    or "lgasus2b"
+                    or "lg_asus_2b"
+                    or "lg-asus-2b"
+                    or "lg_asu2b"
+                    or "lg-asu2b"
+                    or "lgasu2b"
+                    or "lg_asu_2b"
+                    or "lg-asu-2b" => RedumperDriveType.MTK2B,
 
                 _ => RedumperDriveType.NONE,
             };

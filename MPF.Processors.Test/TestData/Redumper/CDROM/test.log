@@ -13,9 +13,6 @@ CUE [
 dat:
     <rom name="INVALID" size="12345" crc="00000000" md5="d41d8cd98f00b204e9800998ecf8427e" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />
 
-<< GetDiscProfile >>
-current profile: CD-ROM
-
 << GetDiscType >>
     disc type: INVALID
 disc type: CD
@@ -37,6 +34,13 @@ REDUMP.ORG errors: 2
 
 C2: 12 samples
 
+<< GetGameCubeWiiInfo >>
+GC [
+    version: version
+    serial: serial
+    title: title
+    disc number: 01
+
 << GetGDROMHeader >>
 DC [
     build date: date
@@ -56,9 +60,12 @@ DC [
         0090 TEST DATA
         00A0 TEST DATA
 
+<< GetDiscProfile >>
 << GetHardwareInfo >>
-drive path:
-    drive: manufacturer - model (revision level: revision, vendor specific: vendor)
+drive information
+    inquiry: manufacturer - model (revision level: revision, vendor specific: vendor)
+    profile: CD-ROM
+    firmware: firmware
 
 << GetLayerbreaks >>
 layer break (layer: 0): 12345

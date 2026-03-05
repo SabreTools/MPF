@@ -1,3 +1,6 @@
+<< GetBookType >>
+  book type: DVD-ROM
+
 << GetDiscType >>
     disc type: INVALID
 disc type: DVD

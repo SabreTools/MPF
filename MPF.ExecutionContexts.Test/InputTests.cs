@@ -53,6 +53,10 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag", "false" }, 0, true, false)]
         [InlineData("flag", true, new string[] { "flag=true" }, 0, true, true)]
         [InlineData("flag", true, new string[] { "flag=false" }, 0, true, false)]
+        [InlineData("flag", true, new string[] { "\"flag=true\"" }, 0, true, true)]
+        [InlineData("flag", true, new string[] { "\"flag=false\"" }, 0, true, false)]
+        [InlineData("flag", true, new string[] { "flag=\"true\"" }, 0, true, true)]
+        [InlineData("flag", true, new string[] { "flag=\"false\"" }, 0, true, false)]
         public void BooleanInputTest(string name, bool required, string[] parts, int index, bool success, bool? expected)
         {
             var input = new BooleanInput(name, required);
@@ -88,6 +92,10 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (sbyte)-1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (sbyte)1)]
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (sbyte)-1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (sbyte)1)]
+        [InlineData("flag", true, new string[] { "\"flag=-1\"" }, 0, true, (sbyte)-1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (sbyte)1)]
+        [InlineData("flag", true, new string[] { "flag=\"-1\"" }, 0, true, (sbyte)-1)]
         public void Int8InputTest(string name, bool required, string[] parts, int index, bool success, sbyte? expected)
         {
             var input = new Int8Input(name, required);
@@ -121,6 +129,8 @@ namespace MPF.ExecutionContexts.Test
         // Valid name, valid following
         [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (byte)1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (byte)1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (byte)1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (byte)1)]
         public void UInt8InputTest(string name, bool required, string[] parts, int index, bool success, byte? expected)
         {
             var input = new UInt8Input(name, required);
@@ -156,6 +166,10 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (short)-1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (short)1)]
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (short)-1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (short)1)]
+        [InlineData("flag", true, new string[] { "\"flag=-1\"" }, 0, true, (short)-1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (short)1)]
+        [InlineData("flag", true, new string[] { "flag=\"-1\"" }, 0, true, (short)-1)]
         public void Int16InputTest(string name, bool required, string[] parts, int index, bool success, short? expected)
         {
             var input = new Int16Input(name, required);
@@ -189,6 +203,8 @@ namespace MPF.ExecutionContexts.Test
         // Valid name, valid following
         [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (ushort)1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (ushort)1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (ushort)1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (ushort)1)]
         public void UInt16InputTest(string name, bool required, string[] parts, int index, bool success, ushort? expected)
         {
             var input = new UInt16Input(name, required);
@@ -220,10 +236,14 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag=invalid" }, 0, false, null)]
         [InlineData("flag", false, new string[] { "flag=invalid" }, 0, true, int.MinValue)]
         // Valid name, valid following
-        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (int)1)]
-        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (int)-1)]
-        [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (int)1)]
-        [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (int)-1)]
+        [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, 1)]
+        [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, -1)]
+        [InlineData("flag", true, new string[] { "flag=1" }, 0, true, 1)]
+        [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, -1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, 1)]
+        [InlineData("flag", true, new string[] { "\"flag=-1\"" }, 0, true, -1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, 1)]
+        [InlineData("flag", true, new string[] { "flag=\"-1\"" }, 0, true, -1)]
         public void Int32InputTest(string name, bool required, string[] parts, int index, bool success, int? expected)
         {
             var input = new Int32Input(name, required);
@@ -257,6 +277,8 @@ namespace MPF.ExecutionContexts.Test
         // Valid name, valid following
         [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (uint)1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (uint)1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (uint)1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (uint)1)]
         public void UInt32InputTest(string name, bool required, string[] parts, int index, bool success, uint? expected)
         {
             var input = new UInt32Input(name, required);
@@ -292,6 +314,10 @@ namespace MPF.ExecutionContexts.Test
         [InlineData("flag", true, new string[] { "flag", "-1" }, 0, true, (long)-1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (long)1)]
         [InlineData("flag", true, new string[] { "flag=-1" }, 0, true, (long)-1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (long)1)]
+        [InlineData("flag", true, new string[] { "\"flag=-1\"" }, 0, true, (long)-1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (long)1)]
+        [InlineData("flag", true, new string[] { "flag=\"-1\"" }, 0, true, (long)-1)]
         public void Int64InputTest(string name, bool required, string[] parts, int index, bool success, long? expected)
         {
             var input = new Int64Input(name, required);
@@ -325,6 +351,8 @@ namespace MPF.ExecutionContexts.Test
         // Valid name, valid following
         [InlineData("flag", true, new string[] { "flag", "1" }, 0, true, (ulong)1)]
         [InlineData("flag", true, new string[] { "flag=1" }, 0, true, (ulong)1)]
+        [InlineData("flag", true, new string[] { "\"flag=1\"" }, 0, true, (ulong)1)]
+        [InlineData("flag", true, new string[] { "flag=\"1\"" }, 0, true, (ulong)1)]
         public void UInt64InputTest(string name, bool required, string[] parts, int index, bool success, ulong? expected)
         {
             var input = new UInt64Input(name, required);
@@ -353,6 +381,8 @@ namespace MPF.ExecutionContexts.Test
         // Valid name, following
         [InlineData("flag", true, new string[] { "flag", "value" }, 0, true, "value")]
         [InlineData("flag", true, new string[] { "flag=value" }, 0, true, "value")]
+        [InlineData("flag", true, new string[] { "\"flag=value\"" }, 0, true, "value")]
+        [InlineData("flag", true, new string[] { "flag=\"value\"" }, 0, true, "value")]
         public void StringInputTest(string name, bool required, string[] parts, int index, bool success, string? expected)
         {
             var input = new StringInput(name, required);

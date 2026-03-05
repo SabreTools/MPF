@@ -114,7 +114,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
-            Assert.Equal(18, actual.Count);
+            Assert.Equal(19, actual.Count);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
-            Assert.Equal(13, actual.Count);
+            Assert.Equal(14, actual.Count);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
-            Assert.Equal(13, actual.Count);
+            Assert.Equal(14, actual.Count);
         }
 
         [Fact]
@@ -302,6 +302,61 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
             var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
             Assert.Single(actual);
+        }
+
+        #endregion
+
+        #region GetBCA
+
+        [Fact]
+        public void GetBCA_InvalidPath_Null()
+        {
+            string bcaPath = "INVALID";
+            string? actual = Redumper.GetBCA(bcaPath);
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public void GetBCA_ValidPath_Formatted()
+        {
+            string expected = "0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n0001 0203 0405 0607 0809 0A0B 0C0D 0E0F\n";
+            string bcaPath = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.bca");
+
+            string? actual = Redumper.GetBCA(bcaPath);
+            Assert.NotNull(actual);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
+
+        #region GetBookType
+
+        [Fact]
+        public void GetBookType_Empty_Null()
+        {
+            string log = string.Empty;
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.False(actual);
+            Assert.Null(bookType);
+        }
+
+        [Fact]
+        public void GetBookType_Invalid_Null()
+        {
+            string log = "INVALID";
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.False(actual);
+            Assert.Null(bookType);
+        }
+
+        [Fact]
+        public void GetBookType_Valid_Filled()
+        {
+            MediaType? expected = MediaType.DVD;
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
+            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            Assert.True(actual);
+            Assert.Equal(expected, bookType);
         }
 
         #endregion
@@ -507,6 +562,8 @@ namespace MPF.Processors.Test
         [InlineData("HD DVD-RW", MediaType.HDDVD)]
         [InlineData("HD DVD-R DL", MediaType.HDDVD)]
         [InlineData("HD DVD-RW DL", MediaType.HDDVD)]
+        [InlineData("NINTENDO", MediaType.NintendoWiiOpticalDisc)]
+        [InlineData("RESERVED5", MediaType.NintendoWiiOpticalDisc)]
         [InlineData("NON STANDARD", null)]
         public void GetDiscTypeFromProfileTest(string? profile, MediaType? expected)
         {
@@ -593,6 +650,66 @@ namespace MPF.Processors.Test
             Assert.True(actual);
             Assert.Equal(expectedRedumpErrors, redumpErrors);
             Assert.Equal(expectedC2Errors, c2Errors);
+        }
+
+        #endregion
+
+        #region GetGameCubeWiiInfo
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Empty_Null()
+        {
+            string log = string.Empty;
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.False(actual);
+            Assert.Null(version);
+            Assert.Null(serial);
+            Assert.Null(title);
+            Assert.Null(discNumber);
+        }
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Invalid_Null()
+        {
+            string log = "INVALID";
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.False(actual);
+            Assert.Null(version);
+            Assert.Null(serial);
+            Assert.Null(title);
+            Assert.Null(discNumber);
+        }
+
+        [Fact]
+        public void GetGameCubeWiiInfo_Valid_Filled()
+        {
+            string? expectedVersion = "version";
+            string? expectedSerial = "serial";
+            string? expectedTitle = "title";
+            string? expectedDiscNumber = "01";
+
+            string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
+            bool actual = Redumper.GetGameCubeWiiInfo(log,
+                out string? version,
+                out string? serial,
+                out string? title,
+                out string? discNumber);
+
+            Assert.True(actual);
+            Assert.Equal(expectedVersion, version);
+            Assert.Equal(expectedSerial, serial);
+            Assert.Equal(expectedTitle, title);
+            Assert.Equal(expectedDiscNumber, discNumber);
         }
 
         #endregion
@@ -695,7 +812,7 @@ namespace MPF.Processors.Test
         {
             string? expectedManufacturer = "manufacturer";
             string? expectedModel = "model";
-            string? expectedFirmware = "revision (vendor)";
+            string? expectedFirmware = "revision (vendor), firmware";
 
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             bool actual = Redumper.GetHardwareInfo(log,

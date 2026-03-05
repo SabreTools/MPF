@@ -58,11 +58,15 @@ namespace MPF.Processors
             }
 #endif
 
-            // Use the log first, if it exists
-            if (GetDiscType($"{basePath}.log", out MediaType? mediaType))
-                return mediaType;
+            // Use the disc type, if possible
+            if (GetDiscType($"{basePath}.log", out MediaType? discType))
+                return discType;
 
-            // Use the profile for older Redumper versions
+            // Use the book type, if possible
+            if (GetBookType($"{basePath}.log", out MediaType? bookType))
+                return bookType;
+
+            // Use the profile, if possible
             if (GetDiscProfile($"{basePath}.log", out string? discProfile))
                 return GetDiscTypeFromProfile(discProfile);
 
@@ -209,6 +213,9 @@ namespace MPF.Processors
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
 
+                    // Get BCA information, if available
+                    info.Extras.BCA = GetBCA($"{basePath}.bca");
+
                     // Bluray-specific options
                     if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
                     {
@@ -217,6 +224,7 @@ namespace MPF.Processors
                         {
                             case RedumpSystem.MicrosoftXboxOne:
                             case RedumpSystem.MicrosoftXboxSeriesXS:
+                            case RedumpSystem.NintendoWiiU:
                             case RedumpSystem.SonyPlayStation3:
                             case RedumpSystem.SonyPlayStation4:
                             case RedumpSystem.SonyPlayStation5:
@@ -350,6 +358,19 @@ namespace MPF.Processors
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                         // TODO: Support region setting from parsed value
                         info.VersionAndEditions.Version = version ?? string.Empty;
+                    }
+
+                    break;
+
+                case RedumpSystem.NintendoGameCube:
+                case RedumpSystem.NintendoWii:
+                    if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
+                    {
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = gcTitle ?? string.Empty;
+
+                        if (!redumpCompat)
+                            info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
                     }
 
                     break;
@@ -614,6 +635,9 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return [
+                        new($"{outputFilename}.bca", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "bca"),
                         new($"{outputFilename}.dmi", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "dmi"),
@@ -679,6 +703,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "asus"),
+                        new($"{outputFilename}.bca", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "bca"),
                         new($"{outputFilename}.hash", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "hash"),
@@ -863,6 +890,123 @@ namespace MPF.Processors
         #endregion
 
         #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the hex contents of the BCA file
+        /// </summary>
+        /// <param name="bcaPath">Path to the BCA file associated with the dump</param>
+        /// <returns>BCA data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        internal static string? GetBCA(string bcaPath)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (string.IsNullOrEmpty(bcaPath))
+                return null;
+            if (!File.Exists(bcaPath))
+                return null;
+
+            try
+            {
+                var hex = ProcessingTool.GetFullFile(bcaPath, true);
+                if (hex is null)
+                    return null;
+
+                // Get the starting index to read at most the last 64 bytes (128 characters)
+                int startingIndex = hex.Length >= 128 ? hex.Length - 128 : 0;
+
+                // Separate into blocks of 4 hex digits and newlines
+                var bca = new StringBuilder();
+                for (int i = startingIndex; i < hex.Length; i++)
+                {
+                    bca.Append(hex[i]);
+                    if ((i + 1) % 32 == 0)
+                        bca.AppendLine();
+                    else if ((i + 1) % 4 == 0)
+                        bca.Append(' ');
+                }
+
+                return bca.ToString();
+            }
+            catch
+            {
+                // Absorb the exception right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get reported book type, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if book type was set, false otherwise</returns>
+        internal static bool GetBookType(string log, out MediaType? bookType)
+        {
+            // Set the default values
+            bookType = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                using var sr = File.OpenText(log);
+                var line = sr.ReadLine()?.Trim();
+                while (line is not null)
+                {
+                    // If the line isn't the book type, skip
+                    if (!line.StartsWith("book type:"))
+                    {
+                        line = sr.ReadLine()?.Trim();
+                        continue;
+                    }
+
+                    // book type: <bookType>
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                    string bookTypeStr = line["book type: ".Length..];
+#else
+                    string bookTypeStr = line.Substring("book type: ".Length);
+#endif
+
+                    // Set the media type based on the string
+                    bookType = bookTypeStr switch
+                    {
+                        "DVD-ROM" => MediaType.DVD,
+                        "DVD-RAM" => MediaType.DVD,
+                        "DVD-R" => MediaType.DVD,
+                        "DVD-RW" => MediaType.DVD,
+                        "DVD+RW" => MediaType.DVD,
+                        "DVD+R" => MediaType.DVD,
+                        "DVD+RW DL" => MediaType.DVD,
+                        "DVD+R DL" => MediaType.DVD,
+
+                        "HD DVD-ROM" => MediaType.HDDVD,
+                        "HD DVD-RAM" => MediaType.HDDVD,
+                        "HD DVD-R" => MediaType.HDDVD,
+
+                        "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                        "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+
+                        "RESERVED1" => null,
+                        "RESERVED2" => null,
+                        "RESERVED3" => null,
+                        "RESERVED4" => null,
+                        _ => null,
+                    };
+                    return bookType is not null;
+                }
+
+                return false;
+            }
+            catch
+            {
+                // Absorb the exception
+                bookType = null;
+                return false;
+            }
+        }
 
         /// <summary>
         /// Get the cuesheet from the input file, if possible
@@ -1136,6 +1280,9 @@ namespace MPF.Processors
                 "HD DVD-R DL" => MediaType.HDDVD,
                 "HD DVD-RW DL" => MediaType.HDDVD,
 
+                "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+
                 "NON STANDARD" => null,
 
                 _ => null,
@@ -1362,6 +1509,91 @@ namespace MPF.Processors
         }
 
         /// <summary>
+        /// Get the info from a GameCube disc, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if section found, null on error</returns>
+        internal static bool GetGameCubeWiiInfo(string log, out string? version, out string? serial, out string? title, out string? discNumber)
+        {
+            // Set the default values
+            version = null; serial = null; title = null; discNumber = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (string.IsNullOrEmpty(log))
+                return false;
+            if (!File.Exists(log))
+                return false;
+
+            try
+            {
+                // Fast forward to the GC info line
+                using var sr = File.OpenText(log);
+                string? line;
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line?.StartsWith("GC") == true ||
+                        line?.StartsWith("WII [") == true)
+                        break;
+                }
+
+                if (sr.EndOfStream)
+                    return false;
+
+                while (!sr.EndOfStream)
+                {
+                    line = sr.ReadLine()?.TrimStart();
+                    if (line is null)
+                        break;
+
+                    if (line.StartsWith("version:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        version = line["version: ".Length..].Trim();
+#else
+                        version = line.Substring("version: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("serial:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        serial = line["serial: ".Length..].Trim();
+#else
+                        serial = line.Substring("serial: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("title:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        title = line["title: ".Length..].Trim();
+#else
+                        title = line.Substring("title: ".Length).Trim();
+#endif
+                    }
+                    else if (line.StartsWith("disc number:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        discNumber = line["disc number: ".Length..].Trim();
+#else
+                        discNumber = line.Substring("disc number: ".Length).Trim();
+#endif
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                // Absorb the exception
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Get the header from a GD-ROM LD area, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
@@ -1472,32 +1704,85 @@ namespace MPF.Processors
             if (!File.Exists(log))
                 return false;
 
+            // Firmware can be split into different lines
+            List<string> firmwarePieces = [];
+
             try
             {
-                // Fast forward to the drive information line
+                // Fast forward to the drive information section
                 using var sr = File.OpenText(log);
-                while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
+                do
+                {
+                    // Read the next line until EOF
+                    string? tempLine = sr.ReadLine()?.Trim();
+                    if (tempLine is null)
+                        break;
+
+                    // Check old and new drive information sections
+                    if (tempLine.StartsWith("drive path:"))
+                        break;
+                    else if (tempLine.StartsWith("drive information"))
+                        break;
+
+                } while (true);
 
                 // If we find the hardware info line, return each value
                 // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
-                var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
+                var oldRegex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
+
+                // inquiry: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
+                var newRegex = new Regex(@"inquiry: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)", RegexOptions.Compiled);
 
                 string? line;
-                while ((line = sr.ReadLine()) is not null)
+                while ((line = sr.ReadLine()?.Trim()) is not null)
                 {
-                    var match = regex.Match(line.Trim());
+                    // Check old version of line
+                    var match = oldRegex.Match(line);
                     if (match.Success)
                     {
                         manufacturer = match.Groups[1].Value;
                         model = match.Groups[2].Value;
-                        firmware = match.Groups[3].Value;
-                        firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
-                        return true;
+
+                        string revisionLevel = match.Groups[3].Value;
+                        revisionLevel += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
+                        firmwarePieces.Add(revisionLevel);
+                    }
+
+                    // Check new version of line
+                    match = newRegex.Match(line);
+                    if (match.Success)
+                    {
+                        manufacturer = match.Groups[1].Value;
+                        model = match.Groups[2].Value;
+
+                        string revisionLevel = match.Groups[3].Value;
+                        revisionLevel += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
+                        firmwarePieces.Add(revisionLevel);
+                    }
+
+                    // Distinct additional firmware
+                    if (line.StartsWith("firmware:"))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string exactFirmware = line["firmware: ".Length..].Trim();
+#else
+                        string exactFirmware = line.Substring("firmware: ".Length).Trim();
+#endif
+                        firmwarePieces.Add(exactFirmware);
+                    }
+
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        // An empty line indicates the end of the section
+                        break;
                     }
                 }
 
-                // Required lines were not found
-                return false;
+                // Assemble the firmware string, if needed
+                firmware = string.Join(", ", [.. firmwarePieces]);
+
+                // Return if the fields are filled
+                return manufacturer is not null && model is not null && firmware is not null;
             }
             catch
             {

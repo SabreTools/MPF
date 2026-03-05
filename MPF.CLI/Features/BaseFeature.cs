@@ -56,6 +56,11 @@ namespace MPF.CLI.Features
         public int? DriveSpeed { get; protected set; }
 
         /// <summary>
+        /// Override retry count
+        /// </summary>
+        public int? Retries { get; protected set; }
+
+        /// <summary>
         /// Custom parameters for dumping
         /// </summary>
         public string? CustomParams { get; protected set; }
@@ -213,6 +218,17 @@ namespace MPF.CLI.Features
             // Get the speed from the options
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(MediaType, Options);
 
+            // Get the retry count and override if needed
+            if (Retries != null && Retries >= 0)
+            {
+                // Set all possible reread options
+                Options.Dumping.Aaru.RereadCount = Retries.Value;
+                Options.Dumping.DIC.DVDRereadCount = Retries.Value;
+                Options.Dumping.DIC.RereadCount = Retries.Value;
+                Options.Dumping.Dreamdump.RereadCount = Retries.Value;
+                Options.Dumping.Redumper.RereadCount = Retries.Value;
+            }
+
             // Populate an environment
             var drive = Drive.Create(null, DevicePath ?? string.Empty);
             var env = new DumpEnvironment(Options,
@@ -296,6 +312,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("-m, --mounted <dirpath>        Mounted filesystem path for additional checks");
             Console.WriteLine("-f, --file \"<filepath>\"        Output file path (Recommended, uses defaults otherwise)");
             Console.WriteLine("-s, --speed <speed>            Override default dumping speed");
+            Console.WriteLine("-r, --retries <retries>        Override default retry count");
             Console.WriteLine("-c, --custom \"<params>\"        Custom parameters to use");
             Console.WriteLine();
 

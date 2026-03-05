@@ -95,7 +95,7 @@ namespace MPF.ExecutionContexts.Data
                 return false;
 
             // Check for space-separated
-            string part = parts[index];
+            string part = parts[index].TrimStart('"');
             if (part == Name || (_altNames.Length > 0 && Array.FindIndex(_altNames, n => n == part) > -1))
             {
                 Value = new int?[Size];
