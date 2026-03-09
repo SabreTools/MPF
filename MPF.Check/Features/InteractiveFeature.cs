@@ -265,7 +265,7 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine("Enter your attempt count and press Enter:");
             Console.Write("> ");
-            string possibleAttemptCount = Console.ReadLine();
+            string? possibleAttemptCount = Console.ReadLine();
             if (int.TryParse(possibleAttemptCount, out int attemptCount) && attemptCount > 0)
                 Options.Processing.Login.AttemptCount = attemptCount;
 
@@ -275,7 +275,7 @@ namespace MPF.Check.Features
             Console.WriteLine();
             Console.WriteLine("Enter your timeout in seconds and press Enter:");
             Console.Write("> ");
-            string possibleTimeout = Console.ReadLine();
+            string? possibleTimeout = Console.ReadLine();
             if (int.TryParse(possibleTimeout, out int timeoutSeconds) && timeoutSeconds > 0)
                 Options.Processing.Login.TimeoutSeconds = timeoutSeconds;
 
