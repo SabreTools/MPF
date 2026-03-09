@@ -59,6 +59,7 @@
 - Add Portuguese to UI code
 - Update RedumpLib to 1.10.0
 - Fix build because of nullability
+- Update Redumper to build 704
 
 ### 3.6.0 (2025-11-28)
 
