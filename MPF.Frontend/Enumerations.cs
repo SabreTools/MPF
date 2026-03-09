@@ -18,6 +18,7 @@ namespace MPF.Frontend
         Japanese,
         Korean,
         Polish,
+        Portuguese,
         Russian,
         Spanish,
         Swedish,

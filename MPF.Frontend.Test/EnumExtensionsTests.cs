@@ -24,6 +24,7 @@ namespace MPF.Frontend.Test
         [InlineData(InterfaceLanguage.Japanese, "日本語")]
         [InlineData(InterfaceLanguage.Korean, "한국어")]
         [InlineData(InterfaceLanguage.Polish, "Polski")]
+        [InlineData(InterfaceLanguage.Portuguese, "Português")]
         [InlineData(InterfaceLanguage.Russian, "Русский")]
         [InlineData(InterfaceLanguage.Spanish, "Español")]
         [InlineData(InterfaceLanguage.Swedish, "Svenska")]
@@ -127,6 +128,7 @@ namespace MPF.Frontend.Test
         [InlineData(RedumperDriveType.MTK8C, "MTK8C")]
         [InlineData(RedumperDriveType.MTK3, "MTK3")]
         [InlineData(RedumperDriveType.MTK2, "MTK2")]
+        [InlineData(RedumperDriveType.MTK2B, "MTK2B")]
         public void LongName_RedumperDriveType(RedumperDriveType? type, string? expected)
         {
             string? actual = type.LongName();
@@ -153,6 +155,7 @@ namespace MPF.Frontend.Test
         [InlineData(InterfaceLanguage.Japanese, "jpn")]
         [InlineData(InterfaceLanguage.Korean, "kor")]
         [InlineData(InterfaceLanguage.Polish, "pol")]
+        [InlineData(InterfaceLanguage.Portuguese, "por")]
         [InlineData(InterfaceLanguage.Russian, "rus")]
         [InlineData(InterfaceLanguage.Spanish, "spa")]
         [InlineData(InterfaceLanguage.Swedish, "swe")]
@@ -196,6 +199,7 @@ namespace MPF.Frontend.Test
         [InlineData("jpn", InterfaceLanguage.Japanese)]
         [InlineData("kor", InterfaceLanguage.Korean)]
         [InlineData("pol", InterfaceLanguage.Polish)]
+        [InlineData("por", InterfaceLanguage.Portuguese)]
         [InlineData("rus", InterfaceLanguage.Russian)]
         [InlineData("spa", InterfaceLanguage.Spanish)]
         [InlineData("swe", InterfaceLanguage.Swedish)]
