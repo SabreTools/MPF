@@ -60,6 +60,7 @@
 - Update RedumpLib to 1.10.0
 - Fix build because of nullability
 - Update Redumper to build 704
+- Fix Redumper publish links
 
 ### 3.6.0 (2025-11-28)
 

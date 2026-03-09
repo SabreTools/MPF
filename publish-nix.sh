@@ -100,14 +100,14 @@ function download_programs() {
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-x64.zip"
-    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-x86.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-macos-x64.zip"
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-arm64.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-x64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-x86.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-x64.zip"
+    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
