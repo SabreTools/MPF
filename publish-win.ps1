@@ -70,9 +70,9 @@ function Download-Programs {
     $DL_PREFIXES = ("Aaru", "Creator", "Redumper")
     $DL_MAP = @{
         # Aaru
-        "Aaru_linux-arm64"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.gz"
-        #"Aaru_linux-armhf"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.gz"
-        "Aaru_linux-x64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.gz"
+        "Aaru_linux-arm64"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
+        #"Aaru_linux-armhf"     = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.xz"
+        "Aaru_linux-x64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.xz"
         "Aaru_osx-arm64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
         "Aaru_osx-x64"         = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
         "Aaru_win-arm64"       = "https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
