@@ -190,7 +190,14 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [];
 
             // Login to Redump, if possible
-            var wc = new RedumpClient();
+            int attemptCount = options.Processing.Login.AttemptCount;
+            int timeoutSeconds = options.Processing.Login.TimeoutSeconds;
+            var wc = new RedumpClient
+            {
+                AttemptCount = attemptCount > 0 ? attemptCount : 3,
+                Timeout = TimeSpan.FromSeconds(timeoutSeconds > 0 ? timeoutSeconds : 30),
+            };
+
             if (!string.IsNullOrEmpty(options.Processing.Login.RedumpUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpPassword))
             {
                 resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to Redump, this might take a while..."));

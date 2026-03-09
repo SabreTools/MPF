@@ -54,6 +54,8 @@ namespace MPF.Check.Features
                 Options.Processing.Login.RedumpUsername = null;
                 Options.Processing.Login.RedumpPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.AttemptCount = 3;
+                Options.Processing.Login.TimeoutSeconds = 30;
 
                 // Media Information
                 Options.Processing.MediaInformation.AddPlaceholders = true;
@@ -92,18 +94,20 @@ namespace MPF.Check.Features
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
             Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
             Console.WriteLine($"7) Redump credentials (Currently '{Options.Processing.Login.RedumpUsername}')");
-            Console.WriteLine($"8) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
-            Console.WriteLine($"9) Set device path (Currently '{DevicePath}')");
-            Console.WriteLine($"A) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"B) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"C) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"D) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"E) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
-            Console.WriteLine($"F) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
-            Console.WriteLine($"G) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
-            Console.WriteLine($"H) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
-            Console.WriteLine($"I) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
-            Console.WriteLine($"J) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
+            Console.WriteLine($"8) Redump client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
+            Console.WriteLine($"9) Redump client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
+            Console.WriteLine($"A) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
+            Console.WriteLine($"B) Set device path (Currently '{DevicePath}')");
+            Console.WriteLine($"C) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"D) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"E) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"F) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"G) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
+            Console.WriteLine($"H) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
+            Console.WriteLine($"I) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
+            Console.WriteLine($"J) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
+            Console.WriteLine($"K) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
+            Console.WriteLine($"L) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -130,47 +134,53 @@ namespace MPF.Check.Features
                 case "7":
                     goto redumpCredentials;
                 case "8":
-                    Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
-                    goto root;
+                    goto attemptCount;
                 case "9":
-                    goto devicePath;
+                    goto timeoutSeconds;
                 case "a":
                 case "A":
-                    scan = !scan;
+                    Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
                     goto root;
                 case "b":
                 case "B":
-                    enableArchives = !enableArchives;
-                    goto root;
+                    goto devicePath;
                 case "c":
                 case "C":
-                    enableDebug = !enableDebug;
+                    scan = !scan;
                     goto root;
                 case "d":
                 case "D":
-                    hideDriveLetters = !hideDriveLetters;
+                    enableArchives = !enableArchives;
                     goto root;
                 case "e":
                 case "E":
-                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
+                    enableDebug = !enableDebug;
                     goto root;
                 case "f":
                 case "F":
-                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
+                    hideDriveLetters = !hideDriveLetters;
                     goto root;
                 case "g":
                 case "G":
-                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
+                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
                     goto root;
                 case "h":
                 case "H":
-                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
+                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
                     goto root;
                 case "i":
                 case "I":
-                    goto logCompression;
+                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
+                    goto root;
                 case "j":
                 case "J":
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
+                    goto root;
+                case "k":
+                case "K":
+                    goto logCompression;
+                case "l":
+                case "L":
                     Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -248,6 +258,26 @@ namespace MPF.Check.Features
 
                 Options.Processing.Login.RedumpPassword += key.KeyChar;
             }
+
+            goto root;
+
+        attemptCount:
+            Console.WriteLine();
+            Console.WriteLine("Enter your attempt count and press Enter:");
+            Console.Write("> ");
+            string possibleAttemptCount = Console.ReadLine();
+            if (int.TryParse(possibleAttemptCount, out int attemptCount) && attemptCount > 0)
+                Options.Processing.Login.AttemptCount = attemptCount;
+
+            goto root;
+
+        timeoutSeconds:
+            Console.WriteLine();
+            Console.WriteLine("Enter your timeout in seconds and press Enter:");
+            Console.Write("> ");
+            string possibleTimeout = Console.ReadLine();
+            if (int.TryParse(possibleTimeout, out int timeoutSeconds) && timeoutSeconds > 0)
+                Options.Processing.Login.TimeoutSeconds = timeoutSeconds;
 
             goto root;
 

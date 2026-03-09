@@ -57,6 +57,7 @@
 - Add Portuguese translation (Kokasgui)
 - Wire up Portuguese translation, fix Redumper enum
 - Add Portuguese to UI code
+- Update RedumpLib to 1.10.0
 
 ### 3.6.0 (2025-11-28)
 

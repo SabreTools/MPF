@@ -24,6 +24,9 @@ namespace MPF.Check.Features
 
         #region Inputs
 
+        private const string _attemptCountName = "attempt-count";
+        internal readonly Int32Input AttemptCountInput = new(_attemptCountName, "--attempt-count", "Set Redump client attempt count (must be greater than 0)");
+
         private const string _createIrdName = "create-ird";
         internal readonly FlagInput CreateIrdInput = new(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)");
 
@@ -72,6 +75,9 @@ namespace MPF.Check.Features
         private const string _suffixName = "suffix";
         internal readonly FlagInput SuffixInput = new(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix");
 
+        private const string _timeoutSecondsName = "timeout-secondss";
+        internal readonly Int32Input TimeoutSecondsInput = new(_timeoutSecondsName, "--timeout-seconds", "Set Redump client timeout in seconds (must be greater than 0)");
+
         private const string _useName = "use";
         internal readonly StringInput UseInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
 
@@ -93,6 +99,8 @@ namespace MPF.Check.Features
             Add(NoRetrieveInput);
             Add(UsernameInput);
             Add(PasswordInput);
+            Add(AttemptCountInput);
+            Add(TimeoutSecondsInput);
             Add(PullAllInput);
             Add(PathInput);
             Add(ScanInput);
@@ -140,6 +148,8 @@ namespace MPF.Check.Features
                 Options.Processing.Login.RedumpUsername = null;
                 Options.Processing.Login.RedumpPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
+                Options.Processing.Login.AttemptCount = 3;
+                Options.Processing.Login.TimeoutSeconds = 30;
 
                 // Media Information
                 Options.Processing.MediaInformation.AddPlaceholders = true;
@@ -195,6 +205,14 @@ namespace MPF.Check.Features
                 // Redump password
                 else if (PasswordInput.ProcessInput(args, ref index))
                     Options.Processing.Login.RedumpPassword = PasswordInput.Value;
+
+                // Attempt count
+                else if (AttemptCountInput.ProcessInput(args, ref index) && AttemptCountInput.Value > 0)
+                    Options.Processing.Login.AttemptCount = AttemptCountInput.Value ?? 3;
+
+                // Timeout seconds
+                else if (TimeoutSecondsInput.ProcessInput(args, ref index) && TimeoutSecondsInput.Value > 0)
+                    Options.Processing.Login.TimeoutSeconds = TimeoutSecondsInput.Value ?? 30;
 
                 // Pull all information (requires Redump login)
                 else if (PullAllInput.ProcessInput(args, ref index))
