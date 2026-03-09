@@ -119,7 +119,7 @@ function Download-Programs {
             $OUTDIR = $PREFIX + "_" + $RUNTIME + "-dir"
 
             # Handle gzipped files separately
-            if ($EXT -eq ".gz") {
+            if ($EXT -eq ".gz" -or $EXT -eq ".xz") {
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
             }
