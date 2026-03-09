@@ -11,7 +11,6 @@ namespace MPF.ExecutionContexts.Redumper
         public const string Dump = "dump";
         public const string DumpExtra = "dump::extra";
         public const string Refine = "refine";
-        public const string Verify = "verify";
         public const string DVDKey = "dvdkey";
         public const string Eject = "eject";
         public const string DVDIsoKey = "dvdisokey";
