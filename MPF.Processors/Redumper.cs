@@ -332,10 +332,10 @@ namespace MPF.Processors
                         if (ssCrc is not null)
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }
-                    else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.ss"))
+                    else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
                     {
                         // Attempt to repair bad .ss file succeeded, hash it
-                        string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                        string? ssCrc = HashTool.GetFileHash($"{basePath}.fixed.ss", HashType.CRC32);
                         if (ssCrc is not null)
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }

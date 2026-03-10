@@ -1364,6 +1364,8 @@ namespace MPF.Processors
                 {
                     return false;
                 }
+                
+                // Map challenge ID to challenge type
                 cids.Add(dcrt[i + 1], i);
             }
 
@@ -1374,19 +1376,21 @@ namespace MPF.Processors
             else if (xgdType == 3)
                 ccrt_offset = 0x20;
 
-            // Repair challenge table
+            // Repair challenge table (challenge entries 22 and 23 are zeroed)
             int challenge_count = 0;
             for (int i = 0; i < 21; i++)
             {
+                // Offset into SS for the response type
+                int rOffset = 0x730 + i * 9;
+
                 // Cannot rebuild SS with orphan challenge ID
-                if (!cids.TryGetValue(ss[0x730 + i * 9 + 1], out int cOffset))
+                if (!cids.TryGetValue(ss[rOffset + 1], out int cOffset))
                     return false;
 
                 // Validate challenge type with response type
-                int rOffset = 0x730 + i * 9;
                 bool angle_challenge = false;
                 bool other_challenge = false;
-                switch (ss[cOffset])
+                switch (dcrt[cOffset])
                 {
                     case 0x14:
                         if (ss[rOffset] != 3)
@@ -1404,7 +1408,7 @@ namespace MPF.Processors
 
                         challenge_count += 1;
                         // Challenge must be in expected order
-                        if (challenge_count < 5)
+                        if (challenge_count > 5)
                             return false;
 
                         break;
@@ -1420,7 +1424,7 @@ namespace MPF.Processors
                         angle_challenge = true;
                         break;
                     case 0x25:
-                        if (ss[rOffset] != 9)
+                        if (ss[rOffset] != 5)
                             return false;
 
                         challenge_count += 1;
@@ -1440,42 +1444,42 @@ namespace MPF.Processors
                     continue;
 
                 // Set/check challenge data
-                if (!write && ss[ccrt_offset + i * 9] != ss[cOffset + 4])
+                if (!write && ss[ccrt_offset + i * 9] != dcrt[cOffset + 4])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9] = ss[cOffset + 4];
-                if (!write && ss[ccrt_offset + i * 9 + 1] != ss[cOffset + 5])
+                    ss[ccrt_offset + i * 9] = dcrt[cOffset + 4];
+                if (!write && ss[ccrt_offset + i * 9 + 1] != dcrt[cOffset + 5])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 1] = ss[cOffset + 5];
-                if (!write && ss[ccrt_offset + i * 9 + 2] != ss[cOffset + 6])
+                    ss[ccrt_offset + i * 9 + 1] = dcrt[cOffset + 5];
+                if (!write && ss[ccrt_offset + i * 9 + 2] != dcrt[cOffset + 6])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 2] = ss[cOffset + 6];
-                if (!write && ss[ccrt_offset + i * 9 + 3] != ss[cOffset + 7])
+                    ss[ccrt_offset + i * 9 + 2] = dcrt[cOffset + 6];
+                if (!write && ss[ccrt_offset + i * 9 + 3] != dcrt[cOffset + 7])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 3] = ss[cOffset + 7];
+                    ss[ccrt_offset + i * 9 + 3] = dcrt[cOffset + 7];
 
                 // Set challenge response for non-angle challenges
                 if (!angle_challenge)
                 {
-                    if(!write && ss[ccrt_offset + i * 9 + 4] != ss[cOffset + 8])
+                    if(!write && ss[ccrt_offset + i * 9 + 4] != dcrt[cOffset + 8])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 4] = ss[cOffset + 8];
-                    if(!write && ss[ccrt_offset + i * 9 + 5] != ss[cOffset + 9])
+                        ss[ccrt_offset + i * 9 + 4] = dcrt[cOffset + 8];
+                    if(!write && ss[ccrt_offset + i * 9 + 5] != dcrt[cOffset + 9])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 5] = ss[cOffset + 9];
-                    if(!write && ss[ccrt_offset + i * 9 + 6] != ss[cOffset + 10])
+                        ss[ccrt_offset + i * 9 + 5] = dcrt[cOffset + 9];
+                    if(!write && ss[ccrt_offset + i * 9 + 6] != dcrt[cOffset + 10])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 6] = ss[cOffset + 10];
-                    if(!write && ss[ccrt_offset + i * 9 + 7] != ss[cOffset + 11])
+                        ss[ccrt_offset + i * 9 + 6] = dcrt[cOffset + 10];
+                    if(!write && ss[ccrt_offset + i * 9 + 7] != dcrt[cOffset + 11])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 7] = ss[cOffset + 11];
+                        ss[ccrt_offset + i * 9 + 7] = dcrt[cOffset + 11];
                     if(!write && ss[ccrt_offset + i * 9 + 8] != 0)
                         return false;
                     else
