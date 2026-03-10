@@ -324,7 +324,7 @@ namespace MPF.Processors
                     string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfiCrc is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
-                    
+
                     // Only record SS hash if it is valid
                     if (ProcessingTool.IsFixedSS($"{basePath}.ss"))
                     {

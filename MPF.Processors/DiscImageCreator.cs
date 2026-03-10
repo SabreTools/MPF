@@ -378,7 +378,7 @@ namespace MPF.Processors
                                 File.Copy(xgd1SSPath, xgd1RawSSPath);
                         }
                         catch { }
-                        
+
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd1SSPath, xgd1SSPath))
                         {
@@ -443,7 +443,7 @@ namespace MPF.Processors
                                 File.Copy(xgd2SSPath, xgd2RawSSPath);
                         }
                         catch { }
-                        
+
                         // Repair, clean, and validate SS before adding hash to submission info
                         if (ProcessingTool.FixSS(xgd2SSPath, xgd2SSPath))
                         {
@@ -834,7 +834,7 @@ namespace MPF.Processors
                             ? OutputFileFlags.Required | OutputFileFlags.Binary | OutputFileFlags.Zippable
                             : OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "ss"),
-                        new($"{outputFilename}_RawSS.bin", 
+                        new($"{outputFilename}_RawSS.bin",
                             OutputFileFlags.Binary | OutputFileFlags.Zippable,
                             "raw_ss"),
                     ];

@@ -66,6 +66,7 @@
 - Repair incomplete SS files
 - Cleanup of processing code
 - Options helper cleanup
+- Miscellaneous formatting cleanup
 
 ### 3.6.0 (2025-11-28)
 

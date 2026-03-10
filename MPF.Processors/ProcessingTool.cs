@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if NET35_OR_GREATER || NETCOREAPP
-using System.Linq;
-#endif
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
