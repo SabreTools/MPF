@@ -290,7 +290,7 @@ namespace MPF.Processors
                     if (!File.Exists($"{basePath}.pfi"))
                         RemoveHeaderAndTrim($"{basePath}.physical", $"{basePath}.pfi");
                     if (!File.Exists($"{basePath}.ss"))
-                        ProcessingTool.CleanSS($"{basePath}.security", $"{basePath}.ss");
+                        ProcessingTool.FixSS($"{basePath}.security", $"{basePath}.ss");
 
                     string xmidString = ProcessingTool.GetXMID($"{basePath}.dmi").Trim('\0');
                     if (!string.IsNullOrEmpty(xmidString))
@@ -324,9 +324,18 @@ namespace MPF.Processors
                     string? pfiCrc = HashTool.GetFileHash($"{basePath}.pfi", HashType.CRC32);
                     if (pfiCrc is not null)
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = pfiCrc.ToUpperInvariant();
-                    if (ProcessingTool.IsValidSS($"{basePath}.ss") && !ProcessingTool.IsValidPartialSS($"{basePath}.ss"))
+                    
+                    // Only record SS hash if it is valid
+                    if (ProcessingTool.IsFixedSS($"{basePath}.ss"))
                     {
                         string? ssCrc = HashTool.GetFileHash($"{basePath}.ss", HashType.CRC32);
+                        if (ssCrc is not null)
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                    }
+                    else if (ProcessingTool.FixSS($"{basePath}.ss", $"{basePath}.fixed.ss"))
+                    {
+                        // Attempt to repair bad .ss file succeeded, hash it
+                        string? ssCrc = HashTool.GetFileHash($"{basePath}.fixed.ss", HashType.CRC32);
                         if (ssCrc is not null)
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                     }

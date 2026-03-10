@@ -117,7 +117,7 @@ namespace MPF.Processors.Test
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
-            Assert.Equal(16, actual.Count);
+            Assert.Equal(17, actual.Count);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace MPF.Processors.Test
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.NintendoGameCubeGameDisc, outputDirectory, outputFilename);
-            Assert.Equal(16, actual.Count);
+            Assert.Equal(17, actual.Count);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace MPF.Processors.Test
             var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.NintendoWiiOpticalDisc, outputDirectory, outputFilename);
-            Assert.Equal(16, actual.Count);
+            Assert.Equal(17, actual.Count);
         }
 
         [Fact]
