@@ -545,9 +545,9 @@ namespace MPF.Frontend.Tools
         /// <returns>Setting value if possible, default value otherwise</returns>
         private static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
         {
-            if (settings.ContainsKey(key))
+            if (settings.TryGetValue(key, out string? strValue))
             {
-                if (bool.TryParse(settings[key], out bool value))
+                if (bool.TryParse(strValue, out bool value))
                     return value;
                 else
                     return defaultValue;
@@ -567,9 +567,9 @@ namespace MPF.Frontend.Tools
         /// <returns>Setting value if possible, default value otherwise</returns>
         private static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
         {
-            if (settings.ContainsKey(key))
+            if (settings.TryGetValue(key, out string? strValue))
             {
-                if (int.TryParse(settings[key], out int value))
+                if (int.TryParse(strValue, out int value))
                     return value;
                 else
                     return defaultValue;
@@ -589,8 +589,8 @@ namespace MPF.Frontend.Tools
         /// <returns>Setting value if possible, default value otherwise</returns>
         private static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
         {
-            if (settings.ContainsKey(key))
-                return settings[key];
+            if (settings.TryGetValue(key, out string? strValue))
+                return strValue;
             else
                 return defaultValue;
         }

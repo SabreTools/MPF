@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
@@ -167,69 +166,6 @@ namespace MPF.Frontend
             Processing.LogCompression = source.Processing.LogCompression;
             Processing.OutputSubmissionJSON = source.Processing.OutputSubmissionJSON;
             Processing.ShowDiscEjectReminder = source.Processing.ShowDiscEjectReminder;
-        }
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Get a Boolean setting from a settings, dictionary
-        /// </summary>
-        /// <param name="settings">Dictionary representing the settings</param>
-        /// <param name="key">Setting key to get a value for</param>
-        /// <param name="defaultValue">Default value to return if no value is found</param>
-        /// <returns>Setting value if possible, default value otherwise</returns>
-        internal static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
-        {
-            if (settings.ContainsKey(key))
-            {
-                if (bool.TryParse(settings[key], out bool value))
-                    return value;
-                else
-                    return defaultValue;
-            }
-            else
-            {
-                return defaultValue;
-            }
-        }
-
-        /// <summary>
-        /// Get an Int32 setting from a settings, dictionary
-        /// </summary>
-        /// <param name="settings">Dictionary representing the settings</param>
-        /// <param name="key">Setting key to get a value for</param>
-        /// <param name="defaultValue">Default value to return if no value is found</param>
-        /// <returns>Setting value if possible, default value otherwise</returns>
-        internal static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
-        {
-            if (settings.ContainsKey(key))
-            {
-                if (int.TryParse(settings[key], out int value))
-                    return value;
-                else
-                    return defaultValue;
-            }
-            else
-            {
-                return defaultValue;
-            }
-        }
-
-        /// <summary>
-        /// Get a String setting from a settings, dictionary
-        /// </summary>
-        /// <param name="settings">Dictionary representing the settings</param>
-        /// <param name="key">Setting key to get a value for</param>
-        /// <param name="defaultValue">Default value to return if no value is found</param>
-        /// <returns>Setting value if possible, default value otherwise</returns>
-        internal static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
-        {
-            if (settings.ContainsKey(key))
-                return settings[key];
-            else
-                return defaultValue;
         }
 
         #endregion

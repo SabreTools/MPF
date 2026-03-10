@@ -65,6 +65,7 @@
 - Aaru Linux packages use xz now
 - Repair incomplete SS files
 - Cleanup of processing code
+- Options helper cleanup
 
 ### 3.6.0 (2025-11-28)
 
