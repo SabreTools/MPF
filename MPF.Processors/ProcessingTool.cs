@@ -1323,6 +1323,7 @@ namespace MPF.Processors
             aes.Key = [0xD1, 0xE3, 0xB3, 0x3A, 0x6C, 0x1E, 0xF7, 0x70, 0x5F, 0x6D, 0xE9, 0x3B, 0xB6, 0xC0, 0xDC, 0x71];
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.None;
+            aes.IV = new byte[16];
             using var decryptor = aes.CreateDecryptor();
 
             // Perform decryption
@@ -1357,13 +1358,13 @@ namespace MPF.Processors
                     // Cannot fix SS with duplicate Challenge IDs
                     if (cids.ContainsKey(dcrt[i + 1]))
                         return false;
-                    cids.Add(dcrt[i + 1], i);
                 }
                 // Cannot fix SS with unknown challenge types
                 else
                 {
                     return false;
                 }
+                cids.Add(dcrt[i + 1], i);
             }
 
             // Determine challenge table offset
