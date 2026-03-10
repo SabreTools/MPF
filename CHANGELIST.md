@@ -64,6 +64,7 @@
 - Specify why this matters at all
 - Aaru Linux packages use xz now
 - Repair incomplete SS files
+- Cleanup of processing code
 
 ### 3.6.0 (2025-11-28)
 

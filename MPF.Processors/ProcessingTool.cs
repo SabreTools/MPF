@@ -1027,10 +1027,9 @@ namespace MPF.Processors
                 return false;
 
             using FileStream fs = File.OpenRead(ss);
-            byte[] buf = new byte[3];
-            int numBytes = fs.Read(buf, 13, 16);
-
-            if (numBytes != 3)
+            byte[] buf = new byte[16];
+            int numBytes = fs.Read(buf, 0, 16);
+            if (numBytes != 16)
                 return false;
 
             return GetXGDType(buf, out xgdType);
@@ -1047,7 +1046,7 @@ namespace MPF.Processors
             xgdType = 0;
 
             // Concatenate the last three values
-            long lastThree = (((ss[13] << 8) | ss[14]) << 8) | ss[15];
+            int lastThree = (ss[13] << 16) | (ss[14] << 8) | ss[15];
 
             // Return XGD type based on value
             switch (lastThree)
@@ -1097,7 +1096,7 @@ namespace MPF.Processors
             // Must be a valid XGD type
             if (!GetXGDType(ss, out int xgdType))
                 return false;
-            
+
             // Drive entry table must be duplicated exactly
             for (int i = 0; i < 207; i++)
             {
@@ -1112,20 +1111,14 @@ namespace MPF.Processors
             // Determine if XGD3 SS is invalid SSv1 (Original Kreon) or valid SSv2 (0800 / Custom Kreon)
             if (xgdType == 3)
             {
-#if NET20
-                var checkArr = new byte[72];
-                Array.Copy(ss, 32, checkArr, 0, 72);
-                if(Array.Exists(checkArr, x => x != 0))
-#else
-                if(ss.Skip(32).Take(72).Any(x => x != 0))
-#endif
+                if (Array.FindIndex(ss, 32, 72, x => x != 0) >= 0)
                     return false;
             }
 
             // XGD2 must have correct version (2) and number of CCRT entries (21)
             if (ss[0x300] != 2 || ss[0x301] != 21 || ss[0x65F] != 2)
                 return false;
-            
+
             return true;
         }
 
@@ -1161,7 +1154,7 @@ namespace MPF.Processors
 
             if (!GetXGDType(ss, out int xgdType))
                 return false;
-            
+
             // XGD1 can't be fixed
             if (xgdType == 1)
             {
@@ -1297,13 +1290,7 @@ namespace MPF.Processors
                 return true;
 
             // Determine if XGD3 SS.bin is SSv1 (Original Kreon) or SSv2 (0800 / Repaired Kreon)
-#if NET20
-            var checkArr = new byte[72];
-            Array.Copy(ss, 32, checkArr, 0, 72);
-            bool ssv2 = Array.Exists(checkArr, x => x != 0);
-#else
-            bool ssv2 = ss.Skip(32).Take(72).Any(x => x != 0);
-#endif
+            bool ssv2 = Array.FindIndex(ss, 32, 72, x => x != 0) >= 0;
 
             // Do not produce an SS hash for bad SS (SSv1 XGD3 / Unrepaired Kreon SS)
             if (xgdType == 3 && !ssv2)
@@ -1329,15 +1316,16 @@ namespace MPF.Processors
             // Perform decryption
             byte[] dcrt = new byte[252];
             bool ct01_found = false;
-            for (int i = 0; i < 240; i+=16)
+            for (int i = 0; i < 240; i += 16)
             {
                 decryptor.TransformBlock(ss, 0x304 + i, 16, dcrt, i);
             }
+
             Array.Copy(ss, 0x304 + 240, dcrt, 240, 12);
 
             // Rebuild challenge response table
             Dictionary<byte, int> cids = [];
-            for (int i = 0; i < dcrt.Length; i+=12)
+            for (int i = 0; i < dcrt.Length; i += 12)
             {
                 // Validate challenge type 1
                 if (dcrt[i] == 1)
@@ -1347,6 +1335,7 @@ namespace MPF.Processors
                         return false;
 
                     ct01_found = true;
+
                     // Challenge type 1 must match CPR_MAI
                     int cpr_mai_offset = (xgdType == 3) ? 0xF0 : 0x2D0;
                     if (dcrt[i + 4] != ss[cpr_mai_offset] || dcrt[i + 5] != ss[cpr_mai_offset + 1] || dcrt[i + 6] != ss[cpr_mai_offset + 2] || dcrt[i + 7] != ss[cpr_mai_offset + 3])
@@ -1364,24 +1353,25 @@ namespace MPF.Processors
                 {
                     return false;
                 }
-                
+
                 // Map challenge ID to challenge type
                 cids.Add(dcrt[i + 1], i);
             }
 
             // Determine challenge table offset
-            int ccrt_offset = 0;
-            if (xgdType == 2)
-                ccrt_offset = 0x200;
-            else if (xgdType == 3)
-                ccrt_offset = 0x20;
+            int ccrt_offset = xgdType switch
+            {
+                2 => 0x200,
+                3 => 0x20,
+                _ => 0,
+            };
 
             // Repair challenge table (challenge entries 22 and 23 are zeroed)
             int challenge_count = 0;
             for (int i = 0; i < 21; i++)
             {
                 // Offset into SS for the response type
-                int rOffset = 0x730 + i * 9;
+                int rOffset = 0x730 + (i * 9);
 
                 // Cannot rebuild SS with orphan challenge ID
                 if (!cids.TryGetValue(ss[rOffset + 1], out int cOffset))
@@ -1444,46 +1434,46 @@ namespace MPF.Processors
                     continue;
 
                 // Set/check challenge data
-                if (!write && ss[ccrt_offset + i * 9] != dcrt[cOffset + 4])
+                if (!write && ss[ccrt_offset + (i * 9)] != dcrt[cOffset + 4])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9] = dcrt[cOffset + 4];
-                if (!write && ss[ccrt_offset + i * 9 + 1] != dcrt[cOffset + 5])
+                    ss[ccrt_offset + (i * 9)] = dcrt[cOffset + 4];
+                if (!write && ss[ccrt_offset + (i * 9) + 1] != dcrt[cOffset + 5])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 1] = dcrt[cOffset + 5];
-                if (!write && ss[ccrt_offset + i * 9 + 2] != dcrt[cOffset + 6])
+                    ss[ccrt_offset + (i * 9) + 1] = dcrt[cOffset + 5];
+                if (!write && ss[ccrt_offset + (i * 9) + 2] != dcrt[cOffset + 6])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 2] = dcrt[cOffset + 6];
-                if (!write && ss[ccrt_offset + i * 9 + 3] != dcrt[cOffset + 7])
+                    ss[ccrt_offset + (i * 9) + 2] = dcrt[cOffset + 6];
+                if (!write && ss[ccrt_offset + (i * 9) + 3] != dcrt[cOffset + 7])
                     return false;
                 else
-                    ss[ccrt_offset + i * 9 + 3] = dcrt[cOffset + 7];
+                    ss[ccrt_offset + (i * 9) + 3] = dcrt[cOffset + 7];
 
                 // Set challenge response for non-angle challenges
                 if (!angle_challenge)
                 {
-                    if(!write && ss[ccrt_offset + i * 9 + 4] != dcrt[cOffset + 8])
+                    if (!write && ss[ccrt_offset + (i * 9) + 4] != dcrt[cOffset + 8])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 4] = dcrt[cOffset + 8];
-                    if(!write && ss[ccrt_offset + i * 9 + 5] != dcrt[cOffset + 9])
+                        ss[ccrt_offset + (i * 9) + 4] = dcrt[cOffset + 8];
+                    if (!write && ss[ccrt_offset + (i * 9) + 5] != dcrt[cOffset + 9])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 5] = dcrt[cOffset + 9];
-                    if(!write && ss[ccrt_offset + i * 9 + 6] != dcrt[cOffset + 10])
+                        ss[ccrt_offset + (i * 9) + 5] = dcrt[cOffset + 9];
+                    if (!write && ss[ccrt_offset + (i * 9) + 6] != dcrt[cOffset + 10])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 6] = dcrt[cOffset + 10];
-                    if(!write && ss[ccrt_offset + i * 9 + 7] != dcrt[cOffset + 11])
+                        ss[ccrt_offset + (i * 9) + 6] = dcrt[cOffset + 10];
+                    if (!write && ss[ccrt_offset + (i * 9) + 7] != dcrt[cOffset + 11])
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 7] = dcrt[cOffset + 11];
-                    if(!write && ss[ccrt_offset + i * 9 + 8] != 0)
+                        ss[ccrt_offset + (i * 9) + 7] = dcrt[cOffset + 11];
+                    if (!write && ss[ccrt_offset + (i * 9) + 8] != 0)
                         return false;
                     else
-                        ss[ccrt_offset + i * 9 + 8] = 0;
+                        ss[ccrt_offset + (i * 9) + 8] = 0;
                 }
             }
 
@@ -1514,6 +1504,7 @@ namespace MPF.Processors
                         ss[582] = 0;   // 0x00
                         ss[583] = 0;   // 0x00
                     }
+
                     break;
 
                 case 3:
@@ -1539,6 +1530,7 @@ namespace MPF.Processors
                         ss[102] = 15;  // 0x0F
                         ss[103] = 1;   // 0x01
                     }
+
                     break;
 
                 default:
