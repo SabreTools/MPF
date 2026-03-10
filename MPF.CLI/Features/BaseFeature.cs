@@ -200,7 +200,7 @@ namespace MPF.CLI.Features
                 if (MediaType == SabreTools.RedumpLib.Data.MediaType.NONE)
                     MediaType = SabreTools.RedumpLib.Data.MediaType.CDROM;
 
-                Console.WriteLine($"No media type was provided, using {MediaType.LongName()}");
+                Console.WriteLine($"No media type was provided, using {MediaType.LongName()} for default parameter creation");
             }
 
             // Normalize the file path

@@ -43,6 +43,7 @@ namespace MPF.ExecutionContexts.Redumper
         public const string PlextorLeadinForceStore = "--plextor-leadin-force-store";
         public const string KreonPartialSS = "--kreon-partial-ss";
         public const string DvdRaw = "--dvd-raw";
+        public const string BdRaw = "--bd-raw";
         public const string MediatekSkipLeadout = "--mediatek-skip-leadout";
         public const string MediatekLeadoutRetries = "--mediatek-leadout-retries";
         public const string DisableCDText = "--disable-cdtext";

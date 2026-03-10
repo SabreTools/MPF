@@ -57,6 +57,12 @@
 - Add Portuguese translation (Kokasgui)
 - Wire up Portuguese translation, fix Redumper enum
 - Add Portuguese to UI code
+- Update RedumpLib to 1.10.0
+- Fix build because of nullability
+- Update Redumper to build 704
+- Fix Redumper publish links
+- Specify why this matters at all
+- Aaru Linux packages use xz now
 
 ### 3.6.0 (2025-11-28)
 

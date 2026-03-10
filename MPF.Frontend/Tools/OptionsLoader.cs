@@ -421,6 +421,8 @@ namespace MPF.Frontend.Tools
             options.Processing.Login.RedumpUsername = GetStringSetting(source, "RedumpUsername", string.Empty);
             options.Processing.Login.RedumpPassword = GetStringSetting(source, "RedumpPassword", string.Empty);
             options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
+            options.Processing.Login.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
+            options.Processing.Login.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
 
             options.Processing.MediaInformation.AddPlaceholders = GetBooleanSetting(source, "AddPlaceholders", true);
             options.Processing.MediaInformation.EnableRedumpCompatibility = GetBooleanSetting(source, "EnableRedumpCompatibility", true);
@@ -529,6 +531,8 @@ namespace MPF.Frontend.Tools
                 { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
                 { "RedumpUsername", options.Processing.Login.RedumpUsername },
                 { "RedumpPassword", options.Processing.Login.RedumpPassword },
+                { "AttemptCount", options.Processing.Login.AttemptCount.ToString() },
+                { "TimeoutSeconds", options.Processing.Login.TimeoutSeconds.ToString() },
             };
         }
 

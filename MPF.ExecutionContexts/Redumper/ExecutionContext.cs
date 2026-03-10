@@ -85,6 +85,7 @@ namespace MPF.ExecutionContexts.Redumper
             [FlagStrings.PlextorLeadinForceStore] = new FlagInput(FlagStrings.PlextorLeadinForceStore),
             [FlagStrings.KreonPartialSS] = new FlagInput(FlagStrings.KreonPartialSS),
             [FlagStrings.DvdRaw] = new FlagInput(FlagStrings.DvdRaw),
+            [FlagStrings.BdRaw] = new FlagInput(FlagStrings.BdRaw),
             [FlagStrings.MediatekSkipLeadout] = new FlagInput(FlagStrings.MediatekSkipLeadout),
             [FlagStrings.MediatekLeadoutRetries] = new Int32Input(FlagStrings.MediatekLeadoutRetries),
             [FlagStrings.DisableCDText] = new FlagInput(FlagStrings.DisableCDText),
@@ -188,6 +189,7 @@ namespace MPF.ExecutionContexts.Redumper
                     FlagStrings.PlextorLeadinForceStore,
                     FlagStrings.KreonPartialSS,
                     FlagStrings.DvdRaw,
+                    FlagStrings.BdRaw,
                     FlagStrings.MediatekSkipLeadout,
                     FlagStrings.MediatekLeadoutRetries,
                     FlagStrings.DisableCDText,
@@ -461,7 +463,6 @@ namespace MPF.ExecutionContexts.Redumper
                     case CommandStrings.Dump:
                     case CommandStrings.DumpExtra:
                     case CommandStrings.Refine:
-                    case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
                     case CommandStrings.Eject:
                     case CommandStrings.DVDIsoKey:

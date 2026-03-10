@@ -151,6 +151,8 @@ namespace MPF.Frontend
             Processing.Login.RedumpUsername = source.Processing.Login.RedumpUsername;
             Processing.Login.RedumpPassword = source.Processing.Login.RedumpPassword;
             Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
+            Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
+            Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
 
             Processing.MediaInformation.AddPlaceholders = source.Processing.MediaInformation.AddPlaceholders;
             Processing.MediaInformation.EnableRedumpCompatibility = source.Processing.MediaInformation.EnableRedumpCompatibility;
@@ -730,6 +732,18 @@ namespace MPF.Frontend
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool RetrieveMatchInformation { get; set; } = true;
+
+        /// <summary>
+        /// Maximum attempt count for any operation
+        /// </summary>
+        /// <remarks>Value has to be greater than 0</remarks>
+        public int AttemptCount { get; set; } = 3;
+
+        /// <summary>
+        /// The timespan to wait before the request times out.
+        /// </summary>
+        /// <remarks>Value has to be greater than 0</remarks>
+        public int TimeoutSeconds { get; set; } = 30;
     }
 
     /// <summary>

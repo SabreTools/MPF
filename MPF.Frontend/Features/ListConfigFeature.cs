@@ -128,6 +128,8 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Redump Username = {options.Processing.Login.RedumpUsername}");
             Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpPassword) ? "[UNSET]" : "[SET]")}");
             Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
+            Console.WriteLine($"  Redump client attempt count = {options.Processing.Login.AttemptCount}");
+            Console.WriteLine($"  Redump client timeout in seconds = {options.Processing.Login.TimeoutSeconds}");
             Console.WriteLine();
 
             // Media Information
