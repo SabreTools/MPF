@@ -1376,7 +1376,7 @@ namespace MPF.Processors
 
             // Repair challenge table
             int challenge_count = 0;
-            for (int i = 0; i < 23; i++)
+            for (int i = 0; i < 21; i++)
             {
                 // Cannot rebuild SS with orphan challenge ID
                 if (!cids.TryGetValue(ss[0x730 + i * 9 + 1], out int cOffset))

@@ -375,7 +375,7 @@ namespace MPF.Processors
                         try
                         {
                             if (!File.Exists(xgd1RawSSPath))
-                                File.Move(xgd1SSPath, xgd1RawSSPath);
+                                File.Copy(xgd1SSPath, xgd1RawSSPath);
                         }
                         catch { }
                         
@@ -440,7 +440,7 @@ namespace MPF.Processors
                         try
                         {
                             if (!File.Exists(xgd2RawSSPath))
-                                File.Move(xgd2SSPath, xgd2RawSSPath);
+                                File.Copy(xgd2SSPath, xgd2RawSSPath);
                         }
                         catch { }
                         
