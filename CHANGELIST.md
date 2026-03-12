@@ -67,6 +67,7 @@
 - Cleanup of processing code
 - Options helper cleanup
 - Miscellaneous formatting cleanup
+- Fix XGD3 SS validity check
 
 ### 3.6.0 (2025-11-28)
 
