@@ -1108,7 +1108,7 @@ namespace MPF.Processors
             // Determine if XGD3 SS is invalid SSv1 (Original Kreon) or valid SSv2 (0800 / Custom Kreon)
             if (xgdType == 3)
             {
-                if (Array.FindIndex(ss, 32, 72, x => x != 0) >= 0)
+                if (Array.FindIndex(ss, 32, 72, x => x != 0) == -1)
                     return false;
             }
 
