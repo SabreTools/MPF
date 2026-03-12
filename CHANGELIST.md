@@ -68,6 +68,7 @@
 - Options helper cleanup
 - Miscellaneous formatting cleanup
 - Fix XGD3 SS validity check
+- Update Portuguese translation
 
 ### 3.6.0 (2025-11-28)
 
