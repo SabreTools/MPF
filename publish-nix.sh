@@ -81,9 +81,9 @@ function download_programs() {
     declare -A DL_MAP
 
     # Aaru
-    DL_MAP["Aaru_linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.gz"
-    #DL_MAP["Aaru_linux-armhf"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.gz"
-    DL_MAP["Aaru_linux-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.gz"
+    DL_MAP["Aaru_linux-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_arm64.tar.xz"
+    #DL_MAP["Aaru_linux-armhf"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_armhf.tar.xz"
+    DL_MAP["Aaru_linux-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_linux_amd64.tar.xz"
     DL_MAP["Aaru_osx-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos-aarch64.zip"
     DL_MAP["Aaru_osx-x64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_macos.zip"
     DL_MAP["Aaru_win-arm64"]="https://github.com/aaru-dps/Aaru/releases/download/v5.4.2/aaru-5.4.2_windows_aarch64.zip"
@@ -100,14 +100,14 @@ function download_programs() {
     DL_MAP["Creator_win-x86"]="https://github.com/user-attachments/files/24401506/DiscImageCreator_20260101.zip"
 
     # Redumper
-    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-arm64.zip"
-    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-x64.zip"
-    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-linux-x86.zip"
-    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-macos-arm64.zip"
-    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-macos-x64.zip"
-    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-arm64.zip"
-    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-x64.zip"
-    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b700/redumper-b704-windows-x86.zip"
+    DL_MAP["Redumper_linux-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-arm64.zip"
+    DL_MAP["Redumper_linux-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-x64.zip"
+    #DL_MAP["Redumper_linux_x86"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-linux-x86.zip"
+    DL_MAP["Redumper_osx-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-macos-arm64.zip"
+    DL_MAP["Redumper_osx-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-macos-x64.zip"
+    DL_MAP["Redumper_win-arm64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-arm64.zip"
+    DL_MAP["Redumper_win-x64"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-x64.zip"
+    DL_MAP["Redumper_win-x86"]="https://github.com/superg/redumper/releases/download/b704/redumper-b704-windows-x86.zip"
 
     # Download and extract files
     echo "===== Downloading Required Programs ====="
@@ -129,7 +129,7 @@ function download_programs() {
             OUTDIR=$PREFIX"_"$RUNTIME-dir
 
             # Handle gzipped files separately
-            if [[ $URL =~ \.tar\.gz$ ]]; then
+            if [[ $URL =~ \.tar\.gz$ || $URL =~ \.tar\.xz$ ]]; then
                 mkdir $TEMPDIR
                 tar -xvf $OUTNAME -C $TEMPDIR
             else

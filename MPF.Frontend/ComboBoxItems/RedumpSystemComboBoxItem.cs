@@ -61,7 +61,7 @@ namespace MPF.Frontend.ComboBoxItems
 
 #if NET20
             // The resulting dictionary does not have ordered value lists
-            var mapping = new Dictionary<SystemCategory, List<RedumpSystem?>>();
+            Dictionary<SystemCategory, List<RedumpSystem?>> mapping = [];
             foreach (var knownSystem in knownSystems)
             {
                 var category = knownSystem.GetCategory();
