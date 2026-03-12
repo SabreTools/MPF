@@ -36,7 +36,7 @@
     <system:String x:Key="NoSystemSelectedString">Nenhum sistema escolhido</system:String>
     <system:String x:Key="OutputPathLabelString">Caminho de saída</system:String>
     <system:String x:Key="DriveLetterLabelString">Letra da unidade</system:String>
-    <system:String x:Key="DriveSpeedLabelString">Rapidez da unidade</system:String>
+    <system:String x:Key="DriveSpeedLabelString">Velocidade da unidade</system:String>
     <system:String x:Key="DumpingProgramLabelString">Programa para dump</system:String>
     <system:String x:Key="ParametersLabelString">Parâmetros</system:String>
     <!-- Controls Group Box-->
@@ -148,7 +148,7 @@
     <system:String x:Key="CreatePS3IRDTitleString">Criar IRD PS3</system:String>
     <system:String x:Key="InputGroupBoxString">Entrada</system:String>
     <system:String x:Key="PS3ISOPathLabelString">Caminho do ISO PS3</system:String>
-    <system:String x:Key="GetKeyPathLabelString">Caminho do ficheiro *.getkey.log</system:String>
+    <system:String x:Key="GetKeyPathLabelString">Caminho de *.getkey.log</system:String>
     <system:String x:Key="KeyExpanderString">Definir manualmente a chave de encriptação do disco PS3</system:String>
     <system:String x:Key="HexadecimalKeyLabelString">Chave hexadecimal</system:String>
     <system:String x:Key="KeyFilePathLabelString">Caminho do ficheiro chave</system:String>
@@ -189,7 +189,7 @@
     <!-- Additional Info Tab -->
     <system:String x:Key="AdditionalInfoTabString">Info adicional</system:String>
     <system:String x:Key="CommentsInputString">Comentários</system:String>
-    <system:String x:Key="CompatibleOSInputString">Sistemas operativos compatíveis</system:String>
+    <system:String x:Key="CompatibleOSInputString">Sistemas operativ. compatív.</system:String>
     <system:String x:Key="ProtectionInputString">Proteção</system:String>
     <system:String x:Key="ExtrasGroupBoxString">Extras</system:String>
     <system:String x:Key="PhysicalIdentifiersGroupBoxString">Identificadores físicos</system:String>
@@ -222,7 +222,7 @@
 
     <!-- Eject Window -->
     <system:String x:Key="EjectTitleString">Ejetar</system:String>
-    <system:String x:Key="EjectMessageString">Agora é seguro ejetar o disco</system:String>
+    <system:String x:Key="EjectMessageString">Já é seguro ejetar o disco</system:String>
 
     <!-- Ask Before Quit Window -->
     <system:String x:Key="QuitTitleString">Sair</system:String>
