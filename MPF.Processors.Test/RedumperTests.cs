@@ -114,7 +114,7 @@ namespace MPF.Processors.Test
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
-            Assert.Equal(19, actual.Count);
+            Assert.Equal(20, actual.Count);
         }
 
         [Fact]
