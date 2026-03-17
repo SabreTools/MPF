@@ -213,8 +213,9 @@ namespace MPF.Processors
                     long scsiErrors = GetSCSIErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
 
-                    // Get BCA information, if available
-                    info.Extras.BCA = GetBCA($"{basePath}.bca");
+                    // Get BCA information, if available, for Nintendo discs only
+                    if (mediaType == MediaType.NintendoGameCubeGameDisc || mediaType == MediaType.NintendoWiiOpticalDisc)
+                        info.Extras.BCA = GetBCA($"{basePath}.bca");
 
                     // Bluray-specific options
                     if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
@@ -372,6 +373,10 @@ namespace MPF.Processors
                         if (!redumpCompat)
                             info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
                     }
+
+                    // Get BCA information, if available, and not already set
+                    if (!string.IsNullOrEmpty(info.Extras.BCA))
+                        info.Extras.BCA = GetBCA($"{basePath}.bca");
 
                     break;
 
@@ -989,8 +994,8 @@ namespace MPF.Processors
                         "HD DVD-RAM" => MediaType.HDDVD,
                         "HD DVD-R" => MediaType.HDDVD,
 
-                        "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
-                        "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                        "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Also GC
+                        "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Also GC
 
                         "RESERVED1" => null,
                         "RESERVED2" => null,
