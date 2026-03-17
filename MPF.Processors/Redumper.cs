@@ -681,6 +681,9 @@ namespace MPF.Processors
                         new($"{outputFilename}.ss", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
                             "ss"),
+                        new($"{outputFilename}.fixed.ss", OutputFileFlags.Binary
+                            | OutputFileFlags.Zippable,
+                            "ss_fixed"),
                         // ssv1 and ssv2 extensions are obsolete
                         new($"{outputFilename}.ssv1", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,

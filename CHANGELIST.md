@@ -69,6 +69,7 @@
 - Miscellaneous formatting cleanup
 - Fix XGD3 SS validity check
 - Update Portuguese translation
+- Compress fixed SS
 
 ### 3.6.0 (2025-11-28)
 
