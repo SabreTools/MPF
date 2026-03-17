@@ -71,6 +71,7 @@
 - Update Portuguese translation
 - Compress fixed SS
 - Only print BCA for nintendo dumps
+- Update packages
 
 ### 3.6.0 (2025-11-28)
 

@@ -16,7 +16,7 @@ using Schemas;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Common;
+using SharpCompress.Readers;
 #endif
 
 #pragma warning disable CS0618 // Ignore "Type or member is obsolete"
@@ -54,10 +54,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
                     string sidecarName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml";
                     var sidecarEntry = logArchive.Entries.FirstOrDefault(e => e.Key == sidecarName && !e.IsDirectory);
-                    sidecarEntry?.WriteToFile(sidecarPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
+                    sidecarEntry?.WriteToFile(sidecarPath);
                 }
                 catch { }
 

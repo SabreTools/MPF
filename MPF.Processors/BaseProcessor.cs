@@ -130,7 +130,7 @@ namespace MPF.Processors
             bool disposed = false;
             try
             {
-                zf = ZipArchive.Create();
+                zf = (ZipArchive)ZipArchive.CreateArchive();
 
                 List<string> successful = AddToArchive(zf, zippableFiles, outputDirectory);
                 _ = AddToArchive(zf, generatedFiles, outputDirectory);
@@ -141,7 +141,7 @@ namespace MPF.Processors
                         zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.Deflate, CompressionLevel.BestCompression) { UseZip64 = true });
                         break;
                     case LogCompression.Zstd19:
-                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.ZStandard, (CompressionLevel)19) { UseZip64 = true, CompressionBufferSize = 0x20000 });
+                        zf.SaveTo(archiveName, new ZipWriterOptions(CompressionType.ZStandard, (CompressionLevel)19) { UseZip64 = true });
                         break;
                     case LogCompression.DeflateDefault:
                     default:
@@ -248,7 +248,7 @@ namespace MPF.Processors
                 try
                 {
                     // Try to open the archive
-                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
                 }
                 catch
                 {
@@ -325,7 +325,7 @@ namespace MPF.Processors
             ZipArchive? logArchive = null;
             try
             {
-                logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
                 foreach (var outputFile in outputFiles)
                 {
                     outputFile.Extract(logArchive, outputDirectory ?? string.Empty);

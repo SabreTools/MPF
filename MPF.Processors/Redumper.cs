@@ -12,7 +12,7 @@ using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Common;
+using SharpCompress.Readers;
 #endif
 
 namespace MPF.Processors
@@ -47,10 +47,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
                     string logName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
                     var logEntry = logArchive.Entries.FirstOrDefault(e => e.Key == logName && !e.IsDirectory);
-                    logEntry?.WriteToFile(logPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
+                    logEntry?.WriteToFile(logPath);
                 }
                 catch { }
 
@@ -788,7 +788,7 @@ namespace MPF.Processors
             try
             {
                 // Try to open the archive
-                using ZipArchive archive = ZipArchive.Open($"{basePath}_logs.zip");
+                using ZipArchive archive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
 
                 // Get the log entry and check it, if possible
                 ZipArchiveEntry? logEntry = null;
@@ -2939,8 +2939,8 @@ namespace MPF.Processors
                         if (label is null || label.Length <= 0)
                             break;
 
-                        if (volLabels.ContainsKey(label))
-                            volLabels[label].Add("ISO");
+                        if (volLabels.TryGetValue(label, out List<string>? value))
+                            value.Add("ISO");
                         else
                             volLabels[label] = ["ISO"];
 

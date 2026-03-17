@@ -12,7 +12,7 @@ using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Common;
+using SharpCompress.Readers;
 #endif
 
 /*
@@ -94,10 +94,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = ZipArchive.Open($"{basePath}_logs.zip");
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
                     string discName = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
                     var discEntry = logArchive.Entries.FirstOrDefault(e => e.Key == discName && !e.IsDirectory);
-                    discEntry?.WriteToFile(discPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
+                    discEntry?.WriteToFile(discPath);
                 }
                 catch { }
 
@@ -342,7 +342,7 @@ namespace MPF.Processors
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
                         var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                        if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash))
+                        if (GetXGDAuxHashInfo(suppl, out var xgd1DMIHash, out var xgd1PFIHash, out _))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
@@ -357,7 +357,7 @@ namespace MPF.Processors
                     }
                     else
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var xgd1SS))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd1DMIHash, out var xgd1PFIHash, out _, out var xgd1SS))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
@@ -407,7 +407,7 @@ namespace MPF.Processors
                     if (File.Exists($"{basePath}_suppl.dat"))
                     {
                         var suppl = ProcessingTool.GetDatafile($"{basePath}_suppl.dat");
-                        if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash))
+                        if (GetXGDAuxHashInfo(suppl, out var xgd23DMIHash, out var xgd23PFIHash, out _))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
@@ -422,7 +422,7 @@ namespace MPF.Processors
                     }
                     else
                     {
-                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var xgd23SS))
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out var xgd23DMIHash, out var xgd23PFIHash, out _, out var xgd23SS))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
@@ -2307,8 +2307,8 @@ namespace MPF.Processors
                             continue;
                         }
 
-                        if (volLabels.ContainsKey(label))
-                            volLabels[label].Add(volType);
+                        if (volLabels.TryGetValue(label, out List<string>? value))
+                            value.Add(volType);
                         else
                             volLabels.Add(label, [volType]);
 
