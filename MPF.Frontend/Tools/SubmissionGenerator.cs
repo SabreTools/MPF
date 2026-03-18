@@ -570,6 +570,10 @@ namespace MPF.Frontend.Tools
                 if (FrontendTool.GetRedumpSystemFromVolumeLabel(driveLabel) is not null)
                     return null;
 
+                // Ignore "DVD_ROM" / "CD_ROM" labels
+                if (driveLabel == "DVD_ROM" || driveLabel == "CD_ROM")
+                    return null;
+
                 return driveLabel;
             }
 
