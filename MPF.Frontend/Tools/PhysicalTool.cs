@@ -177,18 +177,18 @@ namespace MPF.Frontend.Tools
 
             try
             {
-                string? steamInfo = "";
+                string steamInfo = string.Empty;
                 var steamDepotIdList = new List<long>();
 
                 // ? needed due to note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETFRAMEWORK
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
-#else
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 var options = new EnumerationOptions
                 {
                     MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true
                 };
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#else
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 foreach (string sis in sisPaths)
@@ -207,36 +207,31 @@ namespace MPF.Frontend.Tools
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
 
-                    if (skuSis != null && skuSis.Sku != null)
+                    if (skuSis?.Sku is not null)
                     {
                         var sku = skuSis.Sku;
 
                         // Skips csm/csd sku sis files
-                        if (sku.Manifests != null)
+                        if (sku.Manifests is not null)
                             continue;
 
                         // There should always be depots.
-                        if (sku.Depots == null)
+                        if (sku.Depots is null)
                             continue;
 
-                        steamDepotIdList.AddRange(sku.Depots.Values.ToList());
+                        steamDepotIdList.AddRange([.. sku.Depots.Values]);
                     }
                 }
 
-                var sortedArray = steamDepotIdList.ToArray();
+                long[] sortedArray = [.. steamDepotIdList.Distinct()];
                 Array.Sort(sortedArray);
 
-#if NET20 || NET35
-                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
-                steamInfo = string.Join("\n", compatibilitySortedArray);
-#else
-                steamInfo = string.Join("\n", sortedArray);
-#endif
+                steamInfo = string.Join("\n", Array.ConvertAll(sortedArray, l => l.ToString()));
 
-                if (steamInfo == "")
+                if (string.IsNullOrEmpty(steamInfo))
                     return null;
-                else
-                    return steamInfo;
+
+                return steamInfo;
             }
             catch
             {
@@ -262,18 +257,18 @@ namespace MPF.Frontend.Tools
 
             try
             {
-                string? steamInfo = "";
+                string steamInfo = string.Empty;
                 var steamDepotIdDict = new SortedDictionary<long, long>();
 
                 // ? needed due to note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETFRAMEWORK
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
-#else
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 var options = new EnumerationOptions
                 {
                     MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true
                 };
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#else
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 foreach (string sis in sisPaths)
@@ -292,15 +287,15 @@ namespace MPF.Frontend.Tools
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
 
-                    if (skuSis != null && skuSis.Sku != null)
+                    if (skuSis?.Sku is not null)
                     {
                         var sku = skuSis.Sku;
 
-                        if (sku == null)
+                        if (sku is null)
                             continue;
 
                         // Skips steam2 sku sis files. Steam3 csm/csd sis files always have manifests.
-                        if (sku.Manifests != null)
+                        if (sku.Manifests is not null)
                         {
                             foreach (var depot in sku.Manifests)
                             {
@@ -320,10 +315,10 @@ namespace MPF.Frontend.Tools
                     steamInfo += $"{depot.Key} ({depot.Value})\n";
                 }
 
-                if (steamInfo == "")
+                if (string.IsNullOrEmpty(steamInfo))
                     return null;
-                else
-                    return steamInfo;
+
+                return steamInfo;
             }
             catch
             {
@@ -349,18 +344,18 @@ namespace MPF.Frontend.Tools
 
             try
             {
-                string? steamInfo = "";
+                string steamInfo = string.Empty;
                 var steamAppIdList = new List<long>();
 
                 // ? needed due to note in note in https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles
-#if NETFRAMEWORK
-                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
-#else
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                 var options = new EnumerationOptions
                 {
                     MatchCasing = MatchCasing.CaseInsensitive, RecurseSubdirectories = true
                 };
                 string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", options);
+#else
+                string[] sisPaths = Directory.GetFiles(drive.Name, "?*.sis", SearchOption.AllDirectories);
 #endif
 
                 // Looping needed in case i.e. this is a coverdisc with multiple steam game installers on it.
@@ -371,9 +366,8 @@ namespace MPF.Frontend.Tools
 
                     string filename = Path.GetFileName(sis);
 
-                    long sisSize = new FileInfo(sis).Length;
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
+                    long sisSize = new FileInfo(sis).Length;
                     if (sisSize > 10000)
                         continue;
 
@@ -382,32 +376,27 @@ namespace MPF.Frontend.Tools
                     var skuSisDeserializer = new SabreTools.Serialization.Readers.SkuSis();
                     var skuSis = skuSisDeserializer.Deserialize(fileStream);
 
-                    if (skuSis != null && skuSis.Sku != null)
+                    if (skuSis?.Sku is not null)
                     {
                         var sku = skuSis.Sku;
 
                         // There should always be apps
-                        if (sku.Apps == null)
+                        if (sku.Apps is null)
                             continue;
 
-                        steamAppIdList.AddRange(sku.Apps.Values.ToList());
+                        steamAppIdList.AddRange([.. sku.Apps.Values]);
                     }
                 }
 
-                var sortedArray = steamAppIdList.ToArray();
+                long[] sortedArray = [.. steamAppIdList.Distinct()];
                 Array.Sort(sortedArray);
 
-#if NET20 || NET35
-                var compatibilitySortedArray = sortedArray.Select(x => x.ToString()).ToArray();
-                steamInfo = string.Join(", ", compatibilitySortedArray);
-#else
-                steamInfo = string.Join(", ", sortedArray);
-#endif
+                steamInfo = string.Join(", ", Array.ConvertAll(sortedArray, l => l.ToString()));
 
-                if (steamInfo == "")
+                if (string.IsNullOrEmpty(steamInfo))
                     return null;
-                else
-                    return steamInfo;
+
+                return steamInfo;
             }
             catch
             {
