@@ -88,12 +88,12 @@ namespace MPF.Frontend.Tools
             if (File.Exists($"{basePath}.iso"))
             {
                 var imageProtections = await RunProtectionScanOnImage($"{basePath}.iso", options, protectionProgress);
-                MergeDictionaries(protections, imageProtections);
+                protections.MergeWith(imageProtections);
             }
             else if (File.Exists($"{basePath}.bin"))
             {
                 var imageProtections = await RunProtectionScanOnImage($"{basePath}.bin", options, protectionProgress);
-                MergeDictionaries(protections, imageProtections);
+                protections.MergeWith(imageProtections);
             }
             else if (File.Exists($"{basePath}.cue"))
             {
@@ -119,7 +119,7 @@ namespace MPF.Frontend.Tools
                     if (File.Exists($"{trackPath}.bin"))
                     {
                         var trackProtections = await RunProtectionScanOnImage($"{trackPath}.bin", options, protectionProgress);
-                        MergeDictionaries(protections, trackProtections);
+                        protections.MergeWith(trackProtections);
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace MPF.Frontend.Tools
             if (drive?.Name is not null)
             {
                 var driveProtections = await RunProtectionScanOnPath(drive.Name, options, protectionProgress);
-                MergeDictionaries(protections, driveProtections);
+                protections.MergeWith(driveProtections);
             }
 
             return protections;
@@ -159,7 +159,7 @@ namespace MPF.Frontend.Tools
                     options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
                     progress);
 
-                return scanner.GetProtections(path);
+                return scanner.GetProtections(Path.GetFullPath(path));
             });
 
             // If nothing was returned, return
@@ -189,13 +189,13 @@ namespace MPF.Frontend.Tools
             {
                 var scanner = new Scanner(
                     scanArchives: false, // Disable extracting disc images for now
-                    scanContents: false, // Disabled for image scanning
+                    scanContents: true, // Enabled for image scanning
                     scanPaths: false, // Disabled for image scanning
                     scanSubdirectories: false, // Disabled for image scanning
                     options.Processing.ProtectionScanning.IncludeDebugProtectionInformation,
                     progress);
 
-                return scanner.GetProtections(image);
+                return scanner.GetProtections(Path.GetFullPath(image));
             });
 
             // If nothing was returned, return
@@ -671,32 +671,6 @@ namespace MPF.Frontend.Tools
             // Sort and return the protections
             foundProtections.Sort();
             return string.Join(", ", [.. foundProtections]);
-        }
-
-        /// <summary>
-        /// Merge two dictionaries together based on keys
-        /// </summary>
-        /// <param name="original">Source dictionary to add to</param>
-        /// <param name="add">Second dictionary to add from</param>
-        /// TODO: Remove from here when IO is updated
-        private static void MergeDictionaries(Dictionary<string, List<string>> original, Dictionary<string, List<string>> add)
-        {
-            // Ignore if there are no values to append
-            if (add.Count == 0)
-                return;
-
-            // Loop through and add from the new dictionary
-            foreach (var kvp in add)
-            {
-                // Ignore empty values
-                if (kvp.Value.Count == 0)
-                    continue;
-
-                if (!original.ContainsKey(kvp.Key))
-                    original[kvp.Key] = [];
-
-                original[kvp.Key].AddRange(kvp.Value);
-            }
         }
     }
 }

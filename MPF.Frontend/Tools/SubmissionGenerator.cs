@@ -56,6 +56,11 @@ namespace MPF.Frontend.Tools
             var outputDirectory = Path.GetDirectoryName(outputPath);
             string outputFilename = Path.GetFileName(outputPath);
 
+            // Assemble a base path
+            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
+            if (!string.IsNullOrEmpty(outputDirectory))
+                basePath = Path.Combine(outputDirectory, basePath);
+
             // If a standard log zip was provided, replace the suffix with ".tmp" for easier processing
             if (outputFilename.EndsWith("_logs.zip", StringComparison.OrdinalIgnoreCase))
             {
@@ -79,11 +84,6 @@ namespace MPF.Frontend.Tools
 #if NET462_OR_GREATER || NETCOREAPP
             processor.ExtractFromLogs(mediaType, outputDirectory, outputFilename);
 #endif
-
-            // Assemble a base path
-            string basePath = Path.GetFileNameWithoutExtension(outputFilename);
-            if (!string.IsNullOrEmpty(outputDirectory))
-                basePath = Path.Combine(outputDirectory, basePath);
 
             // Create the default submission info
             SubmissionInfo info = CreateDefaultSubmissionInfo(processor, system, mediaType, options.Processing.MediaInformation.AddPlaceholders);
