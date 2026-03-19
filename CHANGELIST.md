@@ -79,6 +79,7 @@
 - Add Steam filter if specific example exists
 - Update Redumper to build 705
 - Inform users of unused commandline inputs
+- Limit post-dump IRD creation to PS3 CFW
 
 ### 3.6.0 (2025-11-28)
 
