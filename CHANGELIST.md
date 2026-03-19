@@ -77,6 +77,7 @@
 - Parse and process Steam AppIDs and DepotIDs (Bestest)
 - Minor cleanup from missed recommendations
 - Add Steam filter if specific example exists
+- Update Redumper to build 705
 
 ### 3.6.0 (2025-11-28)
 
