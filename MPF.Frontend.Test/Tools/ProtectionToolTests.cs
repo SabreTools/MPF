@@ -818,6 +818,19 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
+        public void SanitizeFoundProtections_Steam()
+        {
+            List<string> protections =
+            [
+                "Steam",
+                "Steam (.sis/.csm/.csd)",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Equal("Steam (.sis/.csm/.csd)", sanitized);
+        }
+
+        [Fact]
         public void SanitizeFoundProtections_Sysiphus()
         {
             List<string> protections =

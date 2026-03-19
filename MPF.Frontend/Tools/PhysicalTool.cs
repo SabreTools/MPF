@@ -195,9 +195,8 @@ namespace MPF.Frontend.Tools
                     if (!File.Exists(sis))
                         continue;
 
-                    long sisSize = new FileInfo(sis).Length;
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this
+                    long sisSize = new FileInfo(sis).Length;
                     if (sisSize > 10_000)
                         continue;
 
@@ -268,9 +267,8 @@ namespace MPF.Frontend.Tools
                     if (!File.Exists(sis))
                         continue;
 
-                    long sisSize = new FileInfo(sis).Length;
-
                     // Arbitrary filesize cap, a disc would need over 100x the normal amount of depots to go over this.
+                    long sisSize = new FileInfo(sis).Length;
                     if (sisSize > 10_000)
                         continue;
 

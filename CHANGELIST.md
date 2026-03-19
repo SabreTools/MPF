@@ -76,6 +76,7 @@
 - Attempt to fix image scanning issues
 - Parse and process Steam AppIDs and DepotIDs (Bestest)
 - Minor cleanup from missed recommendations
+- Add Steam filter if specific example exists
 
 ### 3.6.0 (2025-11-28)
 

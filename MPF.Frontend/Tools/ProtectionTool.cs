@@ -651,6 +651,14 @@ namespace MPF.Frontend.Tools
                 foundProtections.Add("StarForce Keyless");
             }
 
+            // Steam
+            if (foundProtections.Exists(p => p == "Steam")
+                && foundProtections.Exists(p => p.StartsWith("Steam")
+                    && p.Length > "Steam".Length))
+            {
+                foundProtections = foundProtections.FindAll(p => p != "Steam");
+            }
+
             // Sysiphus
             if (foundProtections.Exists(p => p == "Sysiphus")
                 && foundProtections.Exists(p => p.StartsWith("Sysiphus") && p.Length > "Sysiphus".Length))
