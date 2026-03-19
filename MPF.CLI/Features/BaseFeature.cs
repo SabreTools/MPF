@@ -114,6 +114,14 @@ namespace MPF.CLI.Features
             // Log the system being used, in case it came from config
             Console.WriteLine($"Using system: {System.LongName()}");
 
+            // If "extra" parameters were provided, inform the user
+            if (Inputs.Count > 0)
+            {
+                string extraInputs = string.Join(", ", [.. Inputs]);
+                Console.Error.WriteLine("The following arguments were provided but not recognized/required:");
+                Console.Error.WriteLine(extraInputs);
+            }
+
             // Validate the supplied credentials
             if (Options.Processing.Login.RetrieveMatchInformation
                 && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)

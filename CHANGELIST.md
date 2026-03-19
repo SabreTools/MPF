@@ -78,6 +78,7 @@
 - Minor cleanup from missed recommendations
 - Add Steam filter if specific example exists
 - Update Redumper to build 705
+- Inform users of unused commandline inputs
 
 ### 3.6.0 (2025-11-28)
 
