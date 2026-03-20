@@ -668,10 +668,7 @@ namespace MPF.Frontend
             }
 
             // Create PS3 IRD, if required
-            if (_options.Processing.CreateIRDAfterDumping
-                && _processor is PS3CFW
-                && _system == RedumpSystem.SonyPlayStation3
-                && mediaType == MediaType.BluRay)
+            if (_options.Processing.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
                 resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
                 bool irdCreateSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums.Layerbreak, submissionInfo?.SizeAndChecksums.CRC32);
