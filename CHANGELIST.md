@@ -81,6 +81,7 @@
 - Inform users of unused commandline inputs
 - ~~Limit post-dump IRD creation to PS3 CFW~~
 - Revert previous change
+- Update LibIRD to 1.0.4
 
 ### 3.6.0 (2025-11-28)
 
