@@ -111,6 +111,7 @@ namespace MPF.Check.Features
             {
                 // Get the full file path
                 string filepath = Path.GetFullPath(Inputs[i].Trim('"'));
+                Console.WriteLine($"Processing input path: {filepath}");
 
                 // Now populate an environment
                 Drive? drive = null;

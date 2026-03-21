@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET40
-using System.Threading.Tasks;
-#endif
 using MPF.Check.Features;
 using MPF.Frontend.Features;
 using MPF.Frontend.Tools;

@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Display the path being processed in Check since multiple are allowed
+
 ### 3.7.0 (2026-03-20)
 
 - Check for null or empty layerbreak arrays
