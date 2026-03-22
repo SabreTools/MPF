@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 #endif
 using MPF.Frontend;
 using MPF.Frontend.Tools;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using LogCompression = MPF.Processors.LogCompression;
@@ -221,7 +222,7 @@ namespace MPF.CLI.Features
             }
 
             if (FilePath is not null)
-                FilePath = FrontendTool.NormalizeOutputPaths(FilePath, getFullPath: true);
+                FilePath = PathTool.NormalizeFilePath(FilePath, fullPath: true);
 
             // Get the speed from the options
             int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(MediaType, Options);

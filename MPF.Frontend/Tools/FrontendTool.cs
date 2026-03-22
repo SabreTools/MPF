@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
@@ -527,52 +525,6 @@ namespace MPF.Frontend.Tools
                 newTitle = $"{newTitle}, {firstItem}";
 
             return newTitle;
-        }
-
-        /// <summary>
-        /// Normalize a split set of paths
-        /// </summary>
-        /// <param name="path">Path value to normalize</param>
-        public static string NormalizeOutputPaths(string? path, bool getFullPath)
-        {
-            try
-            {
-                // If we have an invalid path
-                if (string.IsNullOrEmpty(path))
-                    return string.Empty;
-
-                // Remove quotes and angle brackets from path
-                path = path!.Trim('\"');
-                path = path!.Trim('<');
-                path = path!.Trim('>');
-
-                // Remove invalid path characters
-                foreach (char c in Path.GetInvalidPathChars())
-                {
-                    path = path.Replace(c, '_');
-                }
-
-                // Try getting the combined path and returning that directly
-                string fullPath = getFullPath ? Path.GetFullPath(path) : path;
-                var fullDirectory = Path.GetDirectoryName(fullPath)?.Trim();
-                string fullFile = Path.GetFileName(fullPath).Trim();
-
-                // Remove invalid filename characters
-                foreach (char c in Path.GetInvalidFileNameChars())
-                {
-                    fullFile = fullFile.Replace(c, '_');
-                }
-
-                // Rebuild the path, if necessary
-                if (!string.IsNullOrEmpty(fullDirectory))
-                    fullFile = Path.Combine(fullDirectory, fullFile);
-
-                // Remove spaces before and after separators
-                return Regex.Replace(fullFile, @"\s*([\\|/])\s*", @"$1");
-            }
-            catch { }
-
-            return path ?? string.Empty;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Display the path being processed in Check since multiple are allowed
+- Replace method already ported to IO
 
 ### 3.7.0 (2026-03-20)
 

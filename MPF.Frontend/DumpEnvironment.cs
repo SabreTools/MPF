@@ -9,6 +9,7 @@ using MPF.ExecutionContexts;
 using MPF.Frontend.Tools;
 using MPF.Processors;
 using Newtonsoft.Json;
+using SabreTools.IO;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -116,7 +117,7 @@ namespace MPF.Frontend
             _options = new Options(options);
 
             // Output paths
-            OutputPath = FrontendTool.NormalizeOutputPaths(outputPath, false);
+            OutputPath = PathTool.NormalizeFilePath(outputPath, fullPath: false);
 
             // UI information
             _drive = drive;
@@ -713,7 +714,7 @@ namespace MPF.Frontend
                 return ResultEventArgs.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            OutputPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
+            OutputPath = PathTool.NormalizeFilePath(OutputPath, fullPath: false);
 
             // Validate that the output path isn't on the dumping drive
             if (_drive?.Name is not null && OutputPath.StartsWith(_drive.Name))

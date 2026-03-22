@@ -1463,7 +1463,7 @@ namespace MPF.Frontend.ViewModels
             }
 
             // For all other cases, separate the last path
-            string lastPath = FrontendTool.NormalizeOutputPaths(OutputPath, false);
+            string lastPath = PathTool.NormalizeFilePath(OutputPath, fullPath: false);
             string lastDirectory = Path.GetDirectoryName(lastPath) ?? string.Empty;
             string lastFilename = Path.GetFileNameWithoutExtension(lastPath);
 
@@ -1918,7 +1918,7 @@ namespace MPF.Frontend.ViewModels
             // Disable change handling
             DisableEventHandlers();
 
-            OutputPath = FrontendTool.NormalizeOutputPaths(_environment.ContextOutputPath, false);
+            OutputPath = PathTool.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
             if (MediaTypes is not null)
             {
