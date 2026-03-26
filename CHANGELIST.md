@@ -2,6 +2,7 @@
 
 - Display the path being processed in Check since multiple are allowed
 - Replace method already ported to IO
+- Read cuesheet from Redumper log, if possible
 
 ### 3.7.0 (2026-03-20)
 
