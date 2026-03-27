@@ -1900,6 +1900,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Formatted multisession information, null on error</returns>
+        /// TODO: Make this more generic to any number of sessions
         internal static string? GetMultisessionInformation(string log)
         {
             // If the file doesn't exist, we can't get info from it
@@ -1917,7 +1918,7 @@ namespace MPF.Processors
                     return null;
 
                 // Now that we're at the relevant lines, find the session info
-                string? firstSession = null, secondSession = null;
+                string? firstSession = null, secondSession = null, thirdSession = null;
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
@@ -1941,6 +1942,14 @@ namespace MPF.Processors
 #else
                         secondSession = line.Substring("session 2: ".Length).Trim();
 #endif
+
+                    // Store the third session range
+                    else if (line.Contains("session 3:"))
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        thirdSession = line["session 3: ".Length..].Trim();
+#else
+                        thirdSession = line.Substring("session 3: ".Length).Trim();
+#endif
                 }
 
                 // If either is blank, we don't have multisession
@@ -1948,7 +1957,10 @@ namespace MPF.Processors
                     return null;
 
                 // Create and return the formatted output
-                return $"Session 1: {firstSession}\nSession 2: {secondSession}";
+                if (!string.IsNullOrEmpty(thirdSession))
+                    return $"Session 1: {firstSession}\nSession 2: {secondSession}\nSession 3: {thirdSession}";
+                else
+                    return $"Session 1: {firstSession}\nSession 2: {secondSession}";
             }
             catch
             {
