@@ -23,6 +23,7 @@ namespace MPF.Frontend.Tools
         #region Constants
 
         private const string RequiredValue = "(REQUIRED)";
+        private const string RequiredIfCFW = "(REQUIRED, IF CFW)";
         private const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
         private const string OptionalValue = "(OPTIONAL)";
 
@@ -998,8 +999,8 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.Extras.DiscKey ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.Extras.DiscID ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.Extras.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+                    info.Extras.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);

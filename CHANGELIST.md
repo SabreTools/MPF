@@ -4,6 +4,7 @@
 - Replace method already ported to IO
 - Read cuesheet from Redumper log, if possible
 - Allow 3 session multisession discs
+- Add better required text for CFW-specific fields
 
 ### 3.7.0 (2026-03-20)
 
