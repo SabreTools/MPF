@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.7.1 (2026-03-30)
 
 - Display the path being processed in Check since multiple are allowed
 - Replace method already ported to IO
@@ -6,6 +6,7 @@
 - Allow 3 session multisession discs
 - Add better required text for CFW-specific fields
 - Update Redumper to build 706
+- Update copyright years
 
 ### 3.7.0 (2026-03-20)
 
