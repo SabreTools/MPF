@@ -1042,12 +1042,12 @@ namespace MPF.Processors
 
                 // Now that we're at the relevant entries, read each line in and concatenate
                 var sb = new StringBuilder();
-                string? line = sr.ReadLine()?.Trim();
-                while (!string.IsNullOrEmpty(line))
+                string? line = sr.ReadLine();
+                while (!string.IsNullOrEmpty(line?.Trim()))
                 {
                     // TODO: Figure out how to use NormalizeShiftJIS here
                     sb.AppendLine(line);
-                    line = sr.ReadLine()?.Trim();
+                    line = sr.ReadLine();
                 }
 
                 return sb.ToString().TrimEnd('\n');

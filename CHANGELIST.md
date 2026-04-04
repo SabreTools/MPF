@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Don't remove whitespace from cuesheets
+
 ### 3.7.1 (2026-03-30)
 
 - Display the path being processed in Check since multiple are allowed
