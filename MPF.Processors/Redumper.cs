@@ -1046,7 +1046,7 @@ namespace MPF.Processors
                 while (!string.IsNullOrEmpty(line?.Trim()))
                 {
                     // TODO: Figure out how to use NormalizeShiftJIS here
-                    sb.AppendLine(line);
+                    sb.AppendLine(line?.TrimEnd());
                     line = sr.ReadLine();
                 }
 

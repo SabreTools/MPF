@@ -382,7 +382,7 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetCuesheet_Valid_Filled()
         {
-            string? expected = "cuesheet";
+            string? expected = "    cuesheet";
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
             string? actual = Redumper.GetCuesheet(log);
             Assert.Equal(expected, actual);
