@@ -21,6 +21,7 @@
         <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
