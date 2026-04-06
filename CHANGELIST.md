@@ -2,6 +2,7 @@
 
 - Don't remove whitespace from cuesheets
 - Fix tests from last change
+- Migrate to public domain CICM implementation
 
 ### 3.7.1 (2026-03-30)
 

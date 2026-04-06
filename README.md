@@ -99,6 +99,14 @@ MPF uses some external libraries to assist with additional information gathering
 - **Binary Object Scanner** - Protection scanning - [GitHub](https://github.com/SabreTools/BinaryObjectScanner)
 - **WPFCustomMessageBox.thabse** - Custom message boxes in UI - [GitHub](https://github.com/thabse/WPFCustomMessageBox)
 
+Additionally, included in this program is public domain code from the [Aaru Data Preservation Suite](https://github.com/aaru-dps/Aaru/tree/v5.4/CICMMetadata). The code consists of the auto-generated code relating to CICM sidecar data as used in versions of Aaru prior to version 6. The terms from which the included code are released are as follows:
+
+> The sidecar schema is under public domain as long as any change you made is compatible and upstreamed, or you change the root element type from CICMMetadata to anything else. Besides that, you can use it anywhere.
+>
+> If you want to give due credit, this schema is created by Natalia Portillo.
+
+Please see the link above for the full text.
+
 ## Contributors
 
 Here are the talented people who have contributed to the project so far in ways that GitHub doesn't like to track:

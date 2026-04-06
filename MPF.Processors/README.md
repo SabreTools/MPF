@@ -17,3 +17,13 @@ Each processor also includes the ability to clean up the output files, including
 There is no requirement that the original media is present for any of the processing to be done, though additional checks may be made if the media is present and made available to the library.
 
 Additionally, there is a specialized tool included that allows for information extraction from potentially generic sources. This tool is used across many of the processors and can be invoked separately by any calling library.
+
+## Notice of External Code
+
+Included in this library is public domain code from the [Aaru Data Preservation Suite](https://github.com/aaru-dps/Aaru/tree/v5.4/CICMMetadata). The code consists of the auto-generated code relating to CICM sidecar data as used in versions of Aaru prior to version 6. The terms from which the included code are released are as follows:
+
+> The sidecar schema is under public domain as long as any change you made is compatible and upstreamed, or you change the root element type from CICMMetadata to anything else. Besides that, you can use it anywhere.
+>
+> If you want to give due credit, this schema is created by Natalia Portillo.
+
+Please see the link above for the full text.
