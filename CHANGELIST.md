@@ -4,6 +4,7 @@
 - Fix tests from last change
 - Migrate to public domain CICM implementation
 - Relicense from GPLv3 to MIT
+- User-friendly error message if checking for updates fails
 
 ### 3.7.1 (2026-03-30)
 

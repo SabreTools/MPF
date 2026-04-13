@@ -560,10 +560,10 @@ namespace MPF.Frontend.Tools
                 different = version != tag && tag is not null;
                 message = $"Local version: {version}{Environment.NewLine}Remote version: {tag}";
             }
-            catch (Exception ex)
+            catch
             {
                 different = false;
-                message = ex.ToString();
+                message = "An error occurred while checking for versions";  // ex.ToString();
                 url = null;
             }
         }
