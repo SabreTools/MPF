@@ -906,12 +906,19 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
+                case RedumpSystem.MicrosoftXbox:
+                case RedumpSystem.MicrosoftXbox360:
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    break;
+
                 case RedumpSystem.MicrosoftXboxOne:
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
