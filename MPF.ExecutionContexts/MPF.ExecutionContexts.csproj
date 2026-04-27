@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SabreTools.RedumpLib" Version="[1.10.0]" />
+        <PackageReference Include="SabreTools.RedumpLib" Version="[1.10.1]" />
     </ItemGroup>
 
 </Project>

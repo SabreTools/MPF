@@ -6,6 +6,7 @@
 - Relicense from GPLv3 to MIT
 - User-friendly error message if checking for updates fails
 - Add Disc Hologram ID placeholders for all Xbox discs
+- Update RedumpLib to 1.10.1
 
 ### 3.7.1 (2026-03-30)
 
