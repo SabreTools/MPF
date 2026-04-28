@@ -979,6 +979,11 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Region ??= Region.Japan;
                     break;
 
+                case RedumpSystem.NintendoGameCube:
+                case RedumpSystem.NintendoWii:
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.CoverID] ??= addPlaceholders ? RequiredValue : string.Empty;
+                    break;
+
                 case RedumpSystem.SegaChihiro:
                     info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;

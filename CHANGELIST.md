@@ -11,6 +11,7 @@
 - Add more placeholder values for output
 - Update RedumpLib to 1.10.2
 - Fix name conflict
+- Sync with Redump wiki
 
 ### 3.7.1 (2026-03-30)
 
