@@ -9,6 +9,7 @@
 - Update RedumpLib to 1.10.1
 - Ensure Wii and WiiU are output with correct fields
 - Add more placeholder values for output
+- Update RedumpLib to 1.10.2
 
 ### 3.7.1 (2026-03-30)
 
