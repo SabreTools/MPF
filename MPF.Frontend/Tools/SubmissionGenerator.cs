@@ -715,6 +715,7 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
@@ -729,6 +730,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
@@ -743,6 +745,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
                     info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
@@ -760,6 +763,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
@@ -774,6 +778,7 @@ namespace MPF.Frontend.Tools
                         info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                         info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
                     info.Extras.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
