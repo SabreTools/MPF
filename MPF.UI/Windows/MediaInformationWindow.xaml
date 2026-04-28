@@ -208,7 +208,7 @@
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DiscHologramID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DNASDiscID], Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID"
+                                    <controls:UserInput x:Name="CommentDiscIDTextBox" Label="Disc ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)DiscID], Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="CoverIDTextBox" Label="Cover ID"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)CoverID], Mode=TwoWay}"/>
