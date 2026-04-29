@@ -1,0 +1,31 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:windows="using:MPF.Avalonia.Windows"
+             x:Class="MPF.Avalonia.App">
+  <Application.Styles>
+    <FluentTheme />
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="MinHeight" Value="28" />
+      <Setter Property="Margin" Value="2" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="MinHeight" Value="28" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="MinHeight" Value="28" />
+    </Style>
+  </Application.Styles>
+
+  <Application.Resources>
+    <SolidColorBrush x:Key="AppBackgroundBrush">#FFF5F5F5</SolidColorBrush>
+    <SolidColorBrush x:Key="AppForegroundBrush">#FF111111</SolidColorBrush>
+    <SolidColorBrush x:Key="PanelBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush">#FFD0D0D0</SolidColorBrush>
+    <SolidColorBrush x:Key="LogBackgroundBrush">#FF202020</SolidColorBrush>
+    <SolidColorBrush x:Key="LogForegroundBrush">#FFF0F0F0</SolidColorBrush>
+  </Application.Resources>
+</Application>

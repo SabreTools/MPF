@@ -1,0 +1,77 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  x:Class="MPF.Avalonia.Windows.CreateIRDWindow"
+                  Width="720"
+                  Height="520"
+                  Title="{DynamicResource CreatePS3IRDTitleString}">
+  <Border Padding="12">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="10">
+      <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{DynamicResource InputGroupBoxString}" FontWeight="Bold" />
+          <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+          <TextBlock Grid.Row="0" Text="{DynamicResource PS3ISOPathLabelString}" VerticalAlignment="Center" />
+          <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding InputPath, Mode=TwoWay}" />
+          <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" />
+
+          <TextBlock Grid.Row="1" Text="{DynamicResource GetKeyPathLabelString}" VerticalAlignment="Center" />
+          <TextBox x:Name="LogPathTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding LogPath, Mode=TwoWay}" />
+          <Button x:Name="LogPathBrowseButton" Grid.Row="1" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <ScrollViewer Grid.Row="1">
+        <StackPanel Spacing="8">
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{DynamicResource KeyExpanderString}" FontWeight="Bold" />
+              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <TextBlock Grid.Row="0" Text="{DynamicResource HexadecimalKeyLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="KeyTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding HexKey, Mode=TwoWay}" />
+              <TextBlock Grid.Row="1" Text="{DynamicResource KeyFilePathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="KeyPathTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding KeyPath, Mode=TwoWay}" />
+              <Button x:Name="KeyPathBrowseButton" Grid.Row="1" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" />
+              <TextBlock Grid.Row="2" Text="{Binding KeyStatus}" Grid.Column="1" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{DynamicResource DiscIDExpanderString}" FontWeight="Bold" />
+              <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <TextBlock Grid.Row="0" Text="{DynamicResource DiscIDLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="DiscIDTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding DiscIDString, Mode=TwoWay}" />
+              <TextBlock Grid.Row="1" Text="{Binding DiscIDStatus}" Grid.Column="1" />
+              </Grid>
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+            <StackPanel Spacing="8">
+              <TextBlock Text="{DynamicResource PICExpanderString}" FontWeight="Bold" />
+              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <TextBlock Grid.Row="0" Text="{DynamicResource LayerbreakLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="LayerbreakTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding LayerbreakAsString, Mode=TwoWay}" />
+              <TextBlock Grid.Row="1" Text="{DynamicResource PICLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="PICTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding PICString, Mode=TwoWay}" />
+              <TextBlock Grid.Row="2" Text="{DynamicResource PICFilePathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="PICPathTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding PICPath, Mode=TwoWay}" />
+              <Button x:Name="PICPathBrowseButton" Grid.Row="2" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" />
+              <TextBlock Grid.Row="3" Text="{Binding PICStatus}" Grid.Column="1" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
+
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <TextBlock VerticalAlignment="Center" Text="{Binding CreateIRDStatus}" Margin="0,0,12,0" />
+        <Button x:Name="CreateIRDButton" Content="{DynamicResource CreateIRDButtonString}" IsEnabled="{Binding CreateIRDButtonEnabled}" />
+        <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" IsEnabled="{Binding CancelButtonEnabled}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</local:WindowBase>

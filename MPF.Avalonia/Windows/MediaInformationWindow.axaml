@@ -1,0 +1,285 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  xmlns:controls="using:MPF.Avalonia.UserControls"
+                  xmlns:converters="using:MPF.Avalonia"
+                  x:Class="MPF.Avalonia.Windows.MediaInformationWindow"
+                  Width="900"
+                  Height="640"
+                  Title="{DynamicResource MediaInformationTitleString}">
+  <local:WindowBase.Resources>
+    <converters:ElementConverter x:Key="ElementConverter" />
+  </local:WindowBase.Resources>
+
+  <Border Padding="12">
+    <Grid RowDefinitions="*,Auto" RowSpacing="10">
+      <TabControl>
+        <TabItem Header="{DynamicResource CommonInfoTabString}">
+          <ScrollViewer>
+            <StackPanel Spacing="12" Margin="0,0,4,0">
+              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource CommonMediaInfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput Label="{DynamicResource TitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}" />
+                  <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}" />
+                  <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource DiscTitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}" />
+
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                    <TextBlock Text="{DynamicResource CategoryLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <ComboBox x:Name="CategoryComboBox" Grid.Column="1"
+                              SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                  </Grid>
+
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                    <TextBlock Text="{DynamicResource RegionLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <ComboBox x:Name="RegionComboBox" Grid.Column="1"
+                              SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                  </Grid>
+
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                    <TextBlock Text="{DynamicResource LanguagesLabelString}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,0,0" />
+                    <Border Grid.Column="1" Padding="8" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
+                      <ItemsControl x:Name="LanguagesItemsControl">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <WrapPanel />
+                          </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox Margin="0,0,12,8" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </Border>
+                  </Grid>
+
+                  <Grid x:Name="LanguageSelectionSection" ColumnDefinitions="3*,7*" ColumnSpacing="8" IsVisible="False">
+                    <TextBlock Text="{DynamicResource LanguageSelectionViaLabelString}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,0,0" />
+                    <Border Grid.Column="1" Padding="8" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
+                      <ItemsControl x:Name="LanguageSelectionsItemsControl">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <WrapPanel />
+                          </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <CheckBox Margin="0,0,12,8" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </Border>
+                  </Grid>
+
+                  <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+
+              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource VersionsAndEditionGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource AdditionalInfoTabString}">
+          <ScrollViewer>
+            <StackPanel Spacing="12" Margin="0,0,4,0">
+              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource ExtrasGroupBoxString}" FontWeight="Bold" />
+                  <CheckBox x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" IsVisible="False" />
+                  <controls:UserInput Label="{DynamicResource CommentsInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                  <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}" IsVisible="False" />
+                  <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" IsVisible="False" />
+                  <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" IsVisible="False" />
+                  <controls:UserInput Label="{DynamicResource ProtectionInputString}" Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+
+              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource PhysicalIdentifiersGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No." />
+                  <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID" />
+                  <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID" />
+                  <controls:UserInput x:Name="CommentDiscIDTextBox" Label="Disc ID" />
+                  <controls:UserInput x:Name="CoverIDTextBox" Label="Cover ID" />
+                  <controls:UserInput x:Name="ISBNTextBox" Label="ISBN" />
+                  <controls:UserInput x:Name="ISSNTextBox" Label="ISSN" />
+                  <controls:UserInput x:Name="PPNTextBox" Label="PPN" />
+                  <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code" />
+                </StackPanel>
+              </Border>
+
+              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource PublisherIdentifiersGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID" />
+                  <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID" />
+                  <controls:UserInput x:Name="AccoladeIDTextBox" Label="Accolade ID" />
+                  <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID" />
+                  <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID" />
+                  <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bethesda ID" />
+                  <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID" />
+                  <controls:UserInput x:Name="DisneyInteractiveIDTextBox" Label="Disney Interactive ID" />
+                  <controls:UserInput x:Name="EidosIDTextBox" Label="Eidos ID" />
+                  <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID" />
+                  <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID" />
+                  <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID" />
+                  <controls:UserInput x:Name="InterplayIDTextBox" Label="Interplay ID" />
+                  <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID" />
+                  <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID" />
+                  <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID" />
+                  <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID" />
+                  <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID" />
+                  <controls:UserInput x:Name="MicrosoftIDTextBox" Label="Microsoft ID" />
+                  <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID" />
+                  <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID" />
+                  <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID" />
+                  <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID" />
+                  <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID" />
+                  <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID" />
+                  <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID" />
+                  <controls:UserInput x:Name="SierraIDTextBox" Label="Sierra ID" />
+                  <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID" />
+                  <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID" />
+                  <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource ContentsTabString}">
+          <ScrollViewer>
+            <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
+              <StackPanel Spacing="8">
+                <controls:UserInput Label="General" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="ApplicationsTextBox" Label="Applications" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="GamesTextBox" Label="Games" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="75" Enter="True" TextWrapping="Wrap" IsVisible="False" />
+                <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource RingcodesTabString}">
+          <ScrollViewer>
+            <StackPanel Spacing="12" Margin="0,0,4,0">
+              <Border x:Name="L0InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Name="L0HeaderText" Text="{DynamicResource L0InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MouldSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+
+              <Border x:Name="L1InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Name="L1HeaderText" Text="{DynamicResource L1InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MouldSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+
+              <Border x:Name="L2InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Name="L2HeaderText" Text="{DynamicResource L2InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+
+              <Border x:Name="L3InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+                <StackPanel Spacing="8">
+                  <TextBlock x:Name="L3HeaderText" Text="{DynamicResource L3InfoGroupBoxString}" FontWeight="Bold" />
+                  <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+
+        <TabItem Header="{DynamicResource ReadOnlyInfoTabString}">
+          <ScrollViewer>
+            <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
+              <StackPanel Spacing="8">
+                <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True" Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}" />
+                <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True" />
+                <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True" Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="HashDataSize" Label="Size" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Size, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataCRC" Label="CRC-32" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.CRC32, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataMD5" Label="MD5" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.MD5, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataSHA1" Label="SHA-1" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.SHA1, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataLayerbreak1" Label="Layerbreak 1" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataLayerbreak2" Label="Layerbreak 2" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak2, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataLayerbreak3" Label="Layerbreak 3" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak3, Mode=TwoWay}" />
+                <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.AntiModchip, Mode=TwoWay}" />
+                <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True" Text="{Binding SubmissionInfo.TracksAndWriteOffsets.OtherWriteOffsets, Mode=TwoWay}" />
+                <controls:UserInput x:Name="DMIHash" Label="DMI Hash" IsReadOnly="True" />
+                <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True" Text="{Binding SubmissionInfo.EDC.EDC, Mode=TwoWay}" />
+                <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True" Text="{Binding SubmissionInfo.CommonDiscInfo.ErrorsCount, Mode=TwoWay}" />
+                <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsReadOnly="True" Text="{Binding SubmissionInfo.CommonDiscInfo.EXEDateBuildDate, Mode=TwoWay}" />
+                <controls:UserInput x:Name="Filename" Label="Filename" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="Header" Label="Header" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="InternalName" Label="Internal Names" IsReadOnly="True" />
+                <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsReadOnly="True" />
+                <controls:UserInput x:Name="Multisession" Label="Multisession" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.LibCrypt, Mode=TwoWay}" />
+                <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PFIHash" Label="PFI Hash" IsReadOnly="True" />
+                <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" IsReadOnly="True" />
+                <controls:UserInput x:Name="RingPerfectAudioOffset" Label="Ring Perfect Audio Offset" IsReadOnly="True" />
+                <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" IsReadOnly="True" />
+                <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SSVersion" Label="Security Sector Version" IsReadOnly="True" />
+                <controls:UserInput x:Name="UniversalHash" Label="Universal Hash (SHA-1)" IsReadOnly="True" />
+                <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsReadOnly="True" />
+                <controls:UserInput x:Name="XeMID" Label="XeMID" IsReadOnly="True" />
+                <controls:UserInput x:Name="XMID" Label="XMID" IsReadOnly="True" />
+              </StackPanel>
+            </Border>
+          </ScrollViewer>
+        </TabItem>
+      </TabControl>
+
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button x:Name="RingCodeGuideButton" Content="{DynamicResource RingCodeGuideButtonString}" />
+        <Button x:Name="AcceptButton" Content="{DynamicResource AcceptButtonString}" />
+        <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</local:WindowBase>

@@ -1,0 +1,14 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  x:Class="MPF.Avalonia.Windows.RingCodeGuideWindow"
+                  Width="860"
+                  Height="640"
+                  Title="{DynamicResource RingCodeGuideTitleString}">
+  <ScrollViewer>
+    <StackPanel Margin="12" Spacing="12">
+      <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-1-layer.png" Stretch="Uniform" />
+      <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-2-layer.png" Stretch="Uniform" />
+    </StackPanel>
+  </ScrollViewer>
+</local:WindowBase>

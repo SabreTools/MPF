@@ -1,0 +1,237 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Language Name: L337 -->
+    <system:String x:Key="LanguageMenuString">L37</system:String>
+
+    <!-- Common Elements -->
+    <system:String x:Key="AcceptButtonString">4cc3p7</system:String>
+    <system:String x:Key="BrowseButtonString">8r0wz3</system:String>
+    <system:String x:Key="CancelButtonString">C4nc31</system:String>
+    <system:String x:Key="MinimizeMenuItemString">M1n1m1z3</system:String>
+    <system:String x:Key="CloseMenuItemString">C10z3</system:String>
+    <system:String x:Key="SettingsGroupBoxString">z3771n9z</system:String>
+    <system:String x:Key="StatusGroupBoxString">z747uz</system:String>
+    <system:String x:Key="WarningLabelString">W4RN1N9:</system:String>
+    <system:String x:Key="WarningMessageString">W4rn1n9</system:String>
+    <system:String x:Key="ErrorMessageString">3rr0r</system:String>
+
+    <!-- Main Window -->
+    <system:String x:Key="AppTitleString">M3d14 Pr3z3rv4710n Fr0n73nd</system:String>
+    <!-- Top Menu Bar -->
+    <system:String x:Key="FileMenuString">_F113</system:String>
+    <system:String x:Key="ExitMenuItemString">3_x17</system:String>
+    <system:String x:Key="ToolsMenuString">_7001z</system:String>
+    <system:String x:Key="CheckDumpMenuItemString">_Ch3ck Dump</system:String>
+    <system:String x:Key="CreatePS3IRDDumpMenuItemString">Cr3473 _Pz3 1RD</system:String>
+    <system:String x:Key="OptionsDumpMenuItemString">_0p710nz</system:String>
+    <system:String x:Key="DebugInfoWindowMenuItemString">_D38u9 1nf0 W1nd0w</system:String>
+    <system:String x:Key="HelpMenuString">_H31p</system:String>
+    <system:String x:Key="AboutMenuItemString">_480u7</system:String>
+    <system:String x:Key="CheckForUpdateMenuItemString">_Ch3ck f0r Upd473z</system:String>
+    <!-- Settings Group Box-->
+    <system:String x:Key="SystemLabelString">zyz73m 7yp3</system:String>
+    <system:String x:Key="SystemMediaTypeLabelString">zyz73m/M3d14 7yp3</system:String>
+    <system:String x:Key="NoSystemSelectedString">N0 zyz73m z313c73d</system:String>
+    <system:String x:Key="OutputPathLabelString">0u7pu7 P47h</system:String>
+    <system:String x:Key="DriveLetterLabelString">Dr1v3 13773r</system:String>
+    <system:String x:Key="DriveSpeedLabelString">Dr1v3 zp33d</system:String>
+    <system:String x:Key="DumpingProgramLabelString">Dump1n9 Pr09r4m</system:String>
+    <system:String x:Key="ParametersLabelString">P4r4m373rz</system:String>
+    <!-- Controls Group Box-->
+    <system:String x:Key="ControlsGroupBoxString">C0n7r01z</system:String>
+    <system:String x:Key="StartDumpingButtonString">z74r7 Dump1n9</system:String>
+    <system:String x:Key="StopDumpingButtonString">z70p Dump1n9</system:String>
+    <system:String x:Key="ScanButtonString">zc4n f0r D1zcz</system:String>
+    <system:String x:Key="UpdateLabelButtonString">Upd473 14831</system:String>
+    <system:String x:Key="ProtectionScanButtonString">zc4n f0r Pr073c710n</system:String>
+    <!-- Log Output -->
+    <system:String x:Key="LogOutputExpanderString">109 0u7pu7</system:String>
+    <system:String x:Key="ClearButtonString">C134r 109</system:String>
+    <system:String x:Key="SaveButtonString">z4v3 109</system:String>
+
+    <!-- Options Window -->
+    <system:String x:Key="OptionsTitleString">0p710nz</system:String>
+    <system:String x:Key="OptionsFirstRunTitleString">W31c0m3 70 MPF, 3xp10r3 7h3 0p710nz</system:String>
+    <system:String x:Key="OptionsRetrievalWarningString">1f y0u ch00z3 70 3n4813 v411d4710n 4nd 1nf0rm4710n r37r13v41, y0u 4r3 r3zp0nz1813 f0r 3nzur1n9 7h47 411 d474 p0pu1473d m47ch3z y0ur 4c7u41 m3d14. z0m3 1nf0rm4710n m4y 83 m4rk3d 70 ch3ck f0r v411d17y 4z 4 r3m1nd3r, 8u7 411 1nf0rm4710n zh0u1d 83 zu8j3c7 70 7h3 z4m3 zcru71ny.</system:String>
+    <!-- General Tab -->
+    <system:String x:Key="GeneralTabString">93n3r41</system:String>
+    <system:String x:Key="UserInterfaceGroupBoxString">Uz3r 1n73rf4c3</system:String>
+    <system:String x:Key="EnableDarkModeCheckBoxString">3n4813 D4rk M0d3</system:String>
+    <system:String x:Key="CheckForUpdatesCheckBoxString">Ch3ck f0r Upd473z 0n z74r7up</system:String>
+    <system:String x:Key="CopyURLToClipboardCheckBoxString">C0py Upd473 UR1 70 C11p804rd</system:String>
+    <system:String x:Key="FastUpdateLabelCheckBoxString">F4z7 Upd473 14831</system:String>
+    <system:String x:Key="DefaultUILanguageLabelString">D3f4u17 U1 14n9u493:</system:String>
+    <system:String x:Key="DetectionGroupBoxString">D373c710n</system:String>
+    <system:String x:Key="SkipSystemDetectCheckBoxString">zk1p zyz73m D373c7</system:String>
+    <system:String x:Key="NoFixedDrivesCheckBoxString">N0 F1x3d Dr1v3z</system:String>
+    <system:String x:Key="DefaultSystemLabelString">D3f4u17 zyz73m:</system:String>
+    <system:String x:Key="LoggingGroupBoxString">10991n9</system:String>
+    <system:String x:Key="VerboseLoggingCheckBoxString">V3r80z3 10991n9</system:String>
+    <system:String x:Key="AutoOpenLogCheckBoxString">4u70-0p3n 109z</system:String>
+    <!-- Paths Tab -->
+    <system:String x:Key="PathsTabString">P47hz</system:String>
+    <system:String x:Key="AaruPathLabelString">44ru P47h</system:String>
+    <system:String x:Key="DiscImageCreatorPathLabelString">D1zc1m493Cr3470r P47h</system:String>
+    <system:String x:Key="RedumperPathLabelString">R3dump3r P47h</system:String>
+    <system:String x:Key="DefaultDumpingProgramLabelString">D3f4u17 Dump1n9 Pr09r4m</system:String>
+    <system:String x:Key="DefaultOutputPathLabelString">D3f4u17 0u7pu7 P47h</system:String>
+    <!-- Dumping Tab -->
+    <system:String x:Key="DumpingTabString">Dump1n9</system:String>
+    <system:String x:Key="DumpingGroupBoxString">Dump1n9</system:String>
+    <system:String x:Key="ShowDiscInfoCheckBoxString">zh0w D1zc 1nf0</system:String>
+    <system:String x:Key="PullAllInformationCheckBoxString">Pu11 411 1nf0rm4710n</system:String>
+    <system:String x:Key="EnableTabInputCheckBoxString">3n4813 748 1npu7</system:String>
+    <system:String x:Key="EnableRedumpCompatibilityCheckBoxString">3n4813 R3dump C0mp47181117y</system:String>
+    <system:String x:Key="ShowEjectReminderCheckBoxString">zh0w 3j3c7 R3m1nd3r</system:String>
+    <system:String x:Key="AddPlaceholdersCheckBoxString">4dd P14c3h01d3rz</system:String>
+    <system:String x:Key="AddFilenameSuffixCheckBoxString">4dd F113n4m3 zuff1x</system:String>
+    <system:String x:Key="OutputSubmissionJSONCheckBoxString">0u7pu7 zu8m1zz10n Jz0N</system:String>
+    <system:String x:Key="IncludeArtifactsCheckBoxString">[D38U9] 1nc1ud3 4r71f4c7z</system:String>
+    <system:String x:Key="CompressLogFilesCheckBoxString">C0mpr3zz 109 F113z</system:String>
+    <system:String x:Key="LogCompressionLabelString">109 C0mpr3zz10n:</system:String>
+    <system:String x:Key="DeleteUnnecessaryFilesCheckBoxString">D31373 Unn3c3zz4ry F113z</system:String>
+    <system:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Cr3473 Pz3 1RD 4f73r Dump1n9</system:String>
+    <system:String x:Key="ProtectionGroupBoxString">Pr073c710n</system:String>
+    <system:String x:Key="EnableProtectionScanCheckBoxString">3n4813 Pr073c710n zc4n</system:String>
+    <system:String x:Key="ScanArchiveContentsCheckBoxString">zc4n 4rch1v3 C0n73n7z</system:String>
+    <system:String x:Key="IncludeDebugInformationCheckBoxString">1nc1ud3 D38u9 1nf0rm4710n</system:String>
+    <system:String x:Key="HideDriveLettersCheckBoxString">H1d3 Dr1v3 13773rz</system:String>
+    <system:String x:Key="DefaultSpeedsGroupBoxString">D3f4u17 zp33dz</system:String>
+    <system:String x:Key="CDLabelString">CD</system:String>
+    <system:String x:Key="DVDLabelString">DVD</system:String>
+    <system:String x:Key="HDDVDLabelString">HD-DVD</system:String>
+    <system:String x:Key="BDLabelString">8D</system:String>
+    <!-- Programs Tab -->
+    <system:String x:Key="ProgramsTabString">Pr09r4mz</system:String>
+    <system:String x:Key="AaruGroupBoxString">44ru</system:String>
+    <system:String x:Key="EnableDebugOutputCheckBoxString">3n4813 D38u9 0u7pu7</system:String>
+    <system:String x:Key="AaruEnableVerboseOutputCheckBoxString">3n4813 V3r80z3 0u7pu7</system:String>
+    <system:String x:Key="ForceDumpingCheckBoxString">F0rc3 Dump1n9</system:String>
+    <system:String x:Key="StripPersonalDataCheckBoxString">z7r1p P3rz0n41 D474</system:String>
+    <system:String x:Key="AaruRereadTriesLabelString">R3r34d 7r13z:</system:String>
+    <system:String x:Key="DiscImageCreatorGroupBoxString">D1zc1m493Cr3470r</system:String>
+    <system:String x:Key="QuietModeCheckBoxString">Qu137 M0d3</system:String>
+    <system:String x:Key="ParanoidModeCheckBoxString">P4r4n01d M0d3</system:String>
+    <system:String x:Key="UseCMIFlagCheckBoxString">Uz3 CM1 F149</system:String>
+    <system:String x:Key="MultiSectorReadCheckBoxString">Mu171-z3c70r R34d</system:String>
+    <system:String x:Key="MultiSectorReadValueLabelString">Mu171-z3c70r R34d V41u3:</system:String>
+    <system:String x:Key="DICCDRereadTriesLabelString">CD R3r34d 7r13z:</system:String>
+    <system:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/8D R3r34d 7r13z:</system:String>
+    <system:String x:Key="RedumperGroupBoxString">R3dump3r</system:String>
+    <system:String x:Key="RedumperEnableVerboseOutputCheckBoxString">3n4813 V3r80z3 0u7pu7</system:String>
+    <system:String x:Key="EnableRefineSectorModeFlagCheckBoxString">3n4813 R3f1n3 z3c70r M0d3 F149</system:String>
+    <system:String x:Key="RedumperRereadTriesLabelString">R3r34d 7r13z:</system:String>
+    <system:String x:Key="PlextorLeadinRetriesLabelString">P13x70r 134d-1n R37r13z:</system:String>
+    <system:String x:Key="NonRedumpOptionsCheckBoxString">N0n-R3dump 0p710nz</system:String>
+    <system:String x:Key="DefaultReadMethodLabelString">D3f4u17 R34d M37h0d:</system:String>
+    <system:String x:Key="DefaultSectorOrderLabelString">D3f4u17 z3c70r 0rd3r:</system:String>
+    <system:String x:Key="DefaultDriveTypeLabelString">D3f4u17 Dr1v3 7yp3:</system:String>
+    <!-- Login Info Tab -->
+    <system:String x:Key="LoginInfoTabString">1091n 1nf0</system:String>
+    <system:String x:Key="RetrievalGroupBoxString">R37r13v41</system:String>
+    <system:String x:Key="RetrieveMatchInformationCheckBoxString">R37r13v3 M47ch 1nf0rm4710n</system:String>
+    <system:String x:Key="RedumpGroupBoxString">R3dump</system:String>
+    <system:String x:Key="UsernameLabelString">Uz3rn4m3</system:String>
+    <system:String x:Key="PasswordLabelString">P4zzw0rd</system:String>
+    <system:String x:Key="TestLoginButtonString">73z7 1091n</system:String>
+
+    <!-- Check Dump Window -->
+    <system:String x:Key="CheckDumpTitleString">Ch3ck 3x1z71n9 Dump</system:String>
+    <system:String x:Key="InputPathLabelString">1npu7 P47h</system:String>
+    <system:String x:Key="CheckDumpButtonString">Ch3ck Dump</system:String>
+    <system:String x:Key="CheckDumpWarningString">Ch3ck w111 0v3rwr173 4ny 3x1z71n9 zu8m1zz10n 1nf0rm4710n f113z. P134z3 m4k3 84ckupz 0f 7h0z3 1f y0u n33d 70 83f0r3 runn1n9 Ch3ck.</system:String>
+
+    <!-- Create PS3 IRD Window -->
+    <system:String x:Key="CreatePS3IRDTitleString">Cr3473 Pz3 1RD</system:String>
+    <system:String x:Key="InputGroupBoxString">1npu7</system:String>
+    <system:String x:Key="PS3ISOPathLabelString">Pz3 1z0 P47h</system:String>
+    <system:String x:Key="GetKeyPathLabelString">*.937k3y.109 F113 P47h</system:String>
+    <system:String x:Key="KeyExpanderString">M4nu411y d3f1n3 Pz3 D1zc 3ncryp710n K3y</system:String>
+    <system:String x:Key="HexadecimalKeyLabelString">H3x4d3c1m41 K3y</system:String>
+    <system:String x:Key="KeyFilePathLabelString">K3y F113 P47h</system:String>
+    <system:String x:Key="KeyStatusLabelString">K3y z747uz</system:String>
+    <system:String x:Key="DiscIDExpanderString">M4nu411y d3f1n3 Pz3 D1zc 1D</system:String>
+    <system:String x:Key="DiscIDLabelString">D1zc 1D</system:String>
+    <system:String x:Key="DiscIDStatusLabelString">D1zc 1D z747uz</system:String>
+    <system:String x:Key="PICExpanderString">M4nu411y d3f1n3 P3rm4n3n7 1nf0rm4710n &#x26; C0n7r01 (P1C)</system:String>
+    <system:String x:Key="LayerbreakLabelString">14y3r8r34k (z3c70rz)</system:String>
+    <system:String x:Key="PICLabelString">P1C</system:String>
+    <system:String x:Key="PICFilePathLabelString">P1C F113 P47h</system:String>
+    <system:String x:Key="PICStatusLabelString">P1C z747uz</system:String>
+    <system:String x:Key="CreateIRDButtonString">Cr3473 1RD</system:String>
+
+    <!-- Media Information Guide Window -->
+    <system:String x:Key="MediaInformationTitleString">M3d14 1nf0rm4710n</system:String>
+    <system:String x:Key="RingCodeGuideButtonString">R1n9 C0d3 9u1d3</system:String>
+    <!-- Common Info Tab -->
+    <system:String x:Key="CommonInfoTabString">C0mm0n 1nf0</system:String>
+    <system:String x:Key="CommonMediaInfoGroupBoxString">C0mm0n M3d14 1nf0rm4710n</system:String>
+    <system:String x:Key="TitleInputString">71713</system:String>
+    <system:String x:Key="AlternativeTitleInputString">4173rn471v3 71713</system:String>
+    <system:String x:Key="ForeignTitleNonLatinInputString">F0r319n 71713 (N0n-1471n)</system:String>
+    <system:String x:Key="AlternativeForeignTitleInputString">4173rn471v3 F0r319n 71713</system:String>
+    <system:String x:Key="DiscNumberLetterInputString">D1zc Num83r / 13773r</system:String>
+    <system:String x:Key="DiscTitleInputString">D1zc 71713</system:String>
+    <system:String x:Key="DiscTitleNonLatinInputString">D1zc 71713 (n0n-1471n)</system:String>
+    <system:String x:Key="CategoryLabelString">C47390ry</system:String>
+    <system:String x:Key="RegionLabelString">R3910n</system:String>
+    <system:String x:Key="LanguagesLabelString">14n9u493z</system:String>
+    <system:String x:Key="LanguageSelectionViaLabelString">14n9u493 z313c710n V14</system:String>
+    <system:String x:Key="SerialInputString">z3r141</system:String>
+    <system:String x:Key="BarcodeInputString">84rc0d3</system:String>
+    <system:String x:Key="VersionsAndEditionGroupBoxString">V3rz10n 4nd 3d1710nz</system:String>
+    <system:String x:Key="VersionInputString">V3rz10n</system:String>
+    <system:String x:Key="EditionInputString">3d1710n</system:String>
+    <system:String x:Key="EditionNonLatinInputString">3d1710n (n0n-1471n)</system:String>
+    <!-- Additional Info Tab -->
+    <system:String x:Key="AdditionalInfoTabString">4dd1710n41 1nf0</system:String>
+    <system:String x:Key="CommentsInputString">C0mm3n7z</system:String>
+    <system:String x:Key="CompatibleOSInputString">C0mp471813 0z</system:String>
+    <system:String x:Key="ProtectionInputString">Pr073c710n</system:String>
+    <system:String x:Key="ExtrasGroupBoxString">3x7r4z</system:String>
+    <system:String x:Key="PhysicalIdentifiersGroupBoxString">Phyz1c41 1d3n71f13rz</system:String>
+    <system:String x:Key="PublisherIdentifiersGroupBoxString">Pu811zh3r 1d3n71f13rz</system:String>
+    <!-- Contents Tab -->
+    <system:String x:Key="ContentsTabString">C0n73n7z</system:String>
+    <!-- Ringcodes Tab -->
+    <system:String x:Key="RingcodesTabString">R1n9c0d3z</system:String>
+    <system:String x:Key="L0InfoGroupBoxString">D474/10 1nf0</system:String>
+    <system:String x:Key="L1InfoGroupBoxString">14831/11 1nf0</system:String>
+    <system:String x:Key="L2InfoGroupBoxString">12 1nf0</system:String>
+    <system:String x:Key="L3InfoGroupBoxString">13 1nf0</system:String>
+    <!-- Read-Only Info Tab -->
+    <system:String x:Key="ReadOnlyInfoTabString">R34d-0n1y 1nf0</system:String>
+
+    <!-- Ring Code Guide Window -->
+    <system:String x:Key="RingCodeGuideTitleString">R1n9 C0d3 9u1d3</system:String>
+
+    <!-- About Window -->
+    <system:String x:Key="AboutTitleString">480u7</system:String>
+    <system:String x:Key="AppTitleFullString">M3d14 Pr3z3rv4710n Fr0n73nd (MPF)</system:String>
+    <system:String x:Key="AboutLine1String">4 c0mmun17y pr3z3rv4710n fr0n73nd d3v310p3d 1n C#.</system:String>
+    <system:String x:Key="AboutLine2String">zupp0r7z R3dump3r, 44ru, 4nd D1zc1m493Cr3470r.</system:String>
+    <system:String x:Key="AboutLine3String">0r191n411y cr3473d 70 h31p 7h3 R3dump pr0j3c7.</system:String>
+    <system:String x:Key="AboutThanksString">7h4nkz 70 3v3ry0n3 wh0 h4z zupp0r73d 7h1z pr0j3c7!</system:String>
+    <system:String x:Key="VersionLabelString">V3rz10n</system:String>
+
+    <!-- Check for Updates Window -->
+    <system:String x:Key="CheckForUpdatesTitleString">V3rz10n Upd473 Ch3ck</system:String>
+
+    <!-- Eject Window -->
+    <system:String x:Key="EjectTitleString">3j3c7</system:String>
+    <system:String x:Key="EjectMessageString">17 1z n0w z4f3 70 3j3c7 7h3 d1zc</system:String>
+
+    <!-- Ask Before Quit Window -->
+    <system:String x:Key="QuitTitleString">Qu17</system:String>
+    <system:String x:Key="QuitMessageString">4 dump 1z z7111 831n9 pr0c3zz3d, 4r3 y0u zur3 y0u w4n7 70 qu17?</system:String>
+
+    <!-- Protection Error Window -->
+    <system:String x:Key="ProtectionErrorTitleString">3rr0r!</system:String>
+    <system:String x:Key="ProtectionErrorMessageString">4n 3xc3p710n 0ccurr3d, z33 7h3 109 f0r d37411z</system:String>
+
+    <!-- Protection Detected Window -->
+    <system:String x:Key="ProtectionDetectedTitleString">D373c73d Pr073c710n(z)</system:String>
+
+</ResourceDictionary>

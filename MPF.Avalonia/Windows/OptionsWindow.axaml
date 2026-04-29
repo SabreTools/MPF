@@ -1,0 +1,89 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  xmlns:converters="using:MPF.Avalonia"
+                  x:Class="MPF.Avalonia.Windows.OptionsWindow"
+                  Width="820"
+                  Height="720">
+  <local:WindowBase.Resources>
+    <converters:ElementConverter x:Key="ElementConverter" />
+  </local:WindowBase.Resources>
+
+  <Border Padding="12">
+    <Grid RowDefinitions="*,Auto" RowSpacing="10">
+      <TabControl>
+        <TabItem Header="{DynamicResource GeneralTabString}">
+          <ScrollViewer>
+            <StackPanel Margin="8" Spacing="10">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource UserInterfaceGroupBoxString}" FontWeight="Bold" />
+                  <CheckBox Content="{DynamicResource EnableDarkModeCheckBoxString}" IsChecked="{Binding Options.GUI.Theming.EnableDarkMode}" />
+                  <CheckBox Content="{DynamicResource CheckForUpdatesCheckBoxString}" IsChecked="{Binding Options.CheckForUpdatesOnStartup}" />
+                  <CheckBox Content="{DynamicResource CopyURLToClipboardCheckBoxString}" IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" />
+                  <CheckBox Content="{DynamicResource FastUpdateLabelCheckBoxString}" IsChecked="{Binding Options.GUI.FastUpdateLabel}" />
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource DefaultUILanguageLabelString}" />
+                    <ComboBox x:Name="DefaultInterfaceLanguageComboBox" Width="220" ItemsSource="{Binding InterfaceLanguages}" SelectedItem="{Binding Options.GUI.DefaultInterfaceLanguage, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+                <StackPanel Spacing="8">
+                  <TextBlock Text="{DynamicResource DetectionGroupBoxString}" FontWeight="Bold" />
+                  <CheckBox Content="{DynamicResource SkipSystemDetectCheckBoxString}" IsChecked="{Binding Options.GUI.SkipSystemDetection}" />
+                  <CheckBox Content="{DynamicResource NoFixedDrivesCheckBoxString}" IsChecked="{Binding Options.GUI.IgnoreFixedDrives}" />
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource DefaultSystemLabelString}" />
+                    <ComboBox x:Name="DefaultSystemComboBox" Width="240" ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.GUI.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </TabItem>
+        <TabItem Header="{DynamicResource PathsTabString}">
+          <StackPanel Margin="8" Spacing="8">
+            <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <TextBlock Grid.Row="0" Text="{DynamicResource AaruPathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Options.Dumping.AaruPath, Mode=TwoWay}" />
+              <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Content="..." />
+
+              <TextBlock Grid.Row="1" Text="{DynamicResource DiscImageCreatorPathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Options.Dumping.DiscImageCreatorPath, Mode=TwoWay}" />
+              <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Content="..." />
+
+              <TextBlock Grid.Row="2" Text="{DynamicResource RedumperPathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}" />
+              <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Content="..." />
+
+              <TextBlock Grid.Row="3" Text="{DynamicResource DefaultDumpingProgramLabelString}" VerticalAlignment="Center" />
+              <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Width="240" HorizontalAlignment="Left" ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+
+              <TextBlock Grid.Row="4" Text="{DynamicResource DefaultOutputPathLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Text="{Binding Options.Dumping.DefaultOutputPath, Mode=TwoWay}" />
+              <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Content="..." />
+            </Grid>
+          </StackPanel>
+        </TabItem>
+        <TabItem Header="{DynamicResource LoginInfoTabString}">
+          <StackPanel Margin="8" Spacing="8">
+            <CheckBox Content="{DynamicResource RetrieveMatchInformationCheckBoxString}" IsChecked="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
+            <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <TextBlock Grid.Row="0" Text="{DynamicResource UsernameLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="RedumpUsernameTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpUsername, Mode=TwoWay}" />
+              <TextBlock Grid.Row="1" Text="{DynamicResource PasswordLabelString}" VerticalAlignment="Center" />
+              <TextBox x:Name="RedumpPasswordBox" Grid.Row="1" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpPassword, Mode=TwoWay}" />
+            </Grid>
+            <Button x:Name="RedumpLoginTestButton" Content="{DynamicResource TestLoginButtonString}" HorizontalAlignment="Left" Width="140" />
+          </StackPanel>
+        </TabItem>
+      </TabControl>
+
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button x:Name="AcceptButton" Content="{DynamicResource AcceptButtonString}" />
+        <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</local:WindowBase>

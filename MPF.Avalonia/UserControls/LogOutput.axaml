@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:MPF.Avalonia.UserControls"
+             x:Class="MPF.Avalonia.UserControls.LogOutput">
+  <Border Background="{DynamicResource PanelBackgroundBrush}"
+          BorderBrush="{DynamicResource PanelBorderBrush}"
+          BorderThickness="1"
+          CornerRadius="4"
+          Padding="6">
+    <Grid RowDefinitions="Auto,*">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Button x:Name="ClearButton" Content="{DynamicResource ClearButtonString}" />
+        <Button x:Name="SaveButton" Content="{DynamicResource SaveButtonString}" />
+      </StackPanel>
+      <Border Grid.Row="1"
+              Margin="0,6,0,0"
+              Background="{DynamicResource LogBackgroundBrush}"
+              CornerRadius="4">
+        <ScrollViewer x:Name="Scroller">
+          <ItemsControl x:Name="ItemsHost" ItemsSource="{Binding Entries, RelativeSource={RelativeSource AncestorType=local:LogOutput}}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding Text}" Foreground="{Binding Foreground}" FontFamily="Consolas, Menlo, monospace" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </Border>
+</UserControl>

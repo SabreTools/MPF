@@ -1,0 +1,36 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  xmlns:converters="using:MPF.Avalonia"
+                  xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
+                  x:Class="MPF.Avalonia.Windows.CheckDumpWindow"
+                  Width="620"
+                  Height="320"
+                  Title="{DynamicResource CheckDumpTitleString}">
+  <local:WindowBase.Resources>
+    <converters:ElementConverter x:Key="ElementConverter" />
+  </local:WindowBase.Resources>
+
+  <Border Padding="12">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="10">
+      <Grid ColumnDefinitions="160,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+        <TextBlock Grid.Row="0" Text="{DynamicResource InputPathLabelString}" VerticalAlignment="Center" />
+        <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding InputPath, Mode=TwoWay}" IsEnabled="{Binding InputPathTextBoxEnabled}" />
+        <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding InputPathBrowseButtonEnabled}" />
+
+        <TextBlock Grid.Row="1" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
+        <ComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Systems}" SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding SystemTypeComboBoxEnabled}" />
+        <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="1" Grid.Column="2" Width="180" ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding DumpingProgramComboBoxEnabled}" />
+      </Grid>
+
+      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+        <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" />
+      </Border>
+
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+        <Button x:Name="CheckDumpButton" Content="{DynamicResource CheckDumpButtonString}" IsEnabled="{Binding CheckDumpButtonEnabled}" />
+        <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" IsEnabled="{Binding CancelButtonEnabled}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</local:WindowBase>
