@@ -6,17 +6,18 @@
                   xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
                   xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.Avalonia.Windows.MainWindow"
-                  MinWidth="680"
-                  Width="680"
-                  Height="710"
+                  MinWidth="560"
+                  Width="560"
+                  Height="590"
+                  FontSize="10"
                   Title="{DynamicResource AppTitleString}">
   <local:WindowBase.Resources>
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border x:Name="RootBorder" Padding="10">
-    <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
-      <DockPanel x:Name="TopMenuBar" Margin="2,0,2,2" LastChildFill="False">
+  <Border x:Name="RootBorder" Padding="8">
+    <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+      <DockPanel x:Name="TopMenuBar" Margin="1,0,1,1" LastChildFill="False">
         <Menu x:Name="AppMenuBar" DockPanel.Dock="Left">
           <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
             <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
@@ -56,15 +57,15 @@
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="7,8">
+        <StackPanel Spacing="5">
           <TextBlock Text="{DynamicResource SettingsGroupBoxString}" FontWeight="Bold" />
-          <Grid ColumnDefinitions="120,*"
+          <Grid ColumnDefinitions="96,*"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                RowSpacing="6"
-                ColumnSpacing="18">
+                RowSpacing="5"
+                ColumnSpacing="14">
           <TextBlock Grid.Row="0" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
-          <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,140" ColumnSpacing="8">
+          <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,112" ColumnSpacing="6">
             <ComboBox x:Name="SystemTypeComboBox"
                       ItemsSource="{Binding Systems}"
                       SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
@@ -86,7 +87,7 @@
           <ComboBox x:Name="DriveLetterComboBox"
                     Grid.Row="2"
                     Grid.Column="1"
-                    Width="110"
+                    Width="88"
                     HorizontalAlignment="Left"
                     ItemsSource="{Binding Drives}"
                     SelectedItem="{Binding CurrentDrive, Mode=TwoWay}"
@@ -96,7 +97,7 @@
           <ComboBox x:Name="DriveSpeedComboBox"
                     Grid.Row="3"
                     Grid.Column="1"
-                    Width="110"
+                    Width="88"
                     HorizontalAlignment="Left"
                     ItemsSource="{Binding DriveSpeeds}"
                     SelectedItem="{Binding DriveSpeed, Mode=TwoWay}"
@@ -106,7 +107,7 @@
           <ComboBox x:Name="DumpingProgramComboBox"
                     Grid.Row="4"
                     Grid.Column="1"
-                    Width="230"
+                    Width="184"
                     HorizontalAlignment="Left"
                     ItemsSource="{Binding InternalPrograms}"
                     SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
@@ -120,10 +121,10 @@
                       IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}"
                       IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
                       Content=""
-                      Width="20"
-                      Height="20"
-                      MinWidth="20"
-                      MinHeight="20"
+                      Width="16"
+                      Height="16"
+                      MinWidth="16"
+                      MinHeight="16"
                       Padding="0"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center" />
@@ -137,14 +138,14 @@
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="7,8">
+        <StackPanel Spacing="5">
           <TextBlock Text="{DynamicResource ControlsGroupBoxString}" FontWeight="Bold" />
-          <StackPanel Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-          <Button x:Name="StartStopButton" Width="145" Padding="4,1" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
-          <Button x:Name="MediaScanButton" Width="145" Padding="4,1" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
-          <Button x:Name="UpdateVolumeLabel" Width="145" Padding="4,1" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
-          <Button x:Name="CopyProtectScanButton" Width="145" Padding="4,1" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
+          <StackPanel Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+          <Button x:Name="StartStopButton" Width="116" Padding="3,1" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
+          <Button x:Name="MediaScanButton" Width="116" Padding="3,1" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
+          <Button x:Name="UpdateVolumeLabel" Width="116" Padding="3,1" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
+          <Button x:Name="CopyProtectScanButton" Width="116" Padding="3,1" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
           </StackPanel>
         </StackPanel>
       </Border>
@@ -154,10 +155,10 @@
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="7,8">
+        <StackPanel Spacing="5">
           <TextBlock Text="{DynamicResource StatusGroupBoxString}" FontWeight="Bold" />
-          <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,2" />
+          <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,1" />
         </StackPanel>
       </Border>
 
@@ -168,7 +169,7 @@
                 Padding="0"
                 IsExpanded="{Binding LogPanelExpanded, Mode=TwoWay}">
         <Expander.Header>
-          <TextBlock Margin="12,0,0,0"
+          <TextBlock Margin="10,0,0,0"
                      Text="{DynamicResource LogOutputExpanderString}"
                      VerticalAlignment="Center"
                      FontWeight="Bold" />
