@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SabreTools.Hashing;
 using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
@@ -107,6 +108,47 @@ namespace MPF.Frontend.Tools
         #region BD-Video
 
         /// <summary>
+        /// Get Blu-ray protection information
+        /// </summary>
+        /// <param name="drive">Drive to extract information from</param>
+        /// <returns>Formatted string representing the protection on success, null otherwise</returns>
+        public static string? GetBluRayProtection(Drive? drive)
+        {
+            // If there's no drive path, we can't get information
+            if (string.IsNullOrEmpty(drive?.Name))
+                return null;
+
+            // If the folder no longer exists, we can't get information
+            if (!Directory.Exists(drive!.Name))
+                return null;
+
+            // Generate unit key file hash
+            string? unitKeyFileHash = null;
+#if NET20 || NET35
+            string unitKeyPath = Path.Combine(Path.Combine(drive.Name, "AACS"), "Unit_Key_RO.inf ");
+#else
+            string unitKeyPath = Path.Combine(drive.Name, "AACS", "Unit_Key_RO.inf ");
+#endif
+            if (File.Exists(unitKeyPath))
+                unitKeyFileHash = HashTool.GetFileHash(unitKeyPath, HashType.SHA1)?.ToUpperInvariant();
+
+            // Determine if BEE is set
+            bool busEncryptionEnabled = GetBusEncryptionEnabled(drive);
+
+            // Generate the output strings
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Media Key: (OPTIONAL)");
+            sb.AppendLine($"Volume ID: (OPTIONAL)");
+            sb.AppendLine($"Volume Unique Key: (OPTIONAL)");
+            sb.AppendLine($"Unit Key File Hash (DiscID): {unitKeyFileHash ?? "(OPTIONAL)"}");
+            if (busEncryptionEnabled)
+                sb.AppendLine("Bus encryption enabled flag set");
+
+            return sb.ToString();
+        }
+
+        /// <summary>
         /// Get if the Bus Encryption Enabled (BEE) flag is set in a path
         /// </summary>
         /// <param name="drive">Drive to extract information from</param>
@@ -117,7 +159,7 @@ namespace MPF.Frontend.Tools
             if (string.IsNullOrEmpty(drive?.Name))
                 return false;
 
-            // If the folder no longer exists, we can't get exe name
+            // If the folder no longer exists, we can't get BEE flag
             if (!Directory.Exists(drive!.Name))
                 return false;
 

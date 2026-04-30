@@ -12,6 +12,7 @@
 - Update RedumpLib to 1.10.2
 - Fix name conflict
 - Sync with Redump wiki
+- Add BD protection info, fix Cover ID setting
 
 ### 3.7.1 (2026-03-30)
 
