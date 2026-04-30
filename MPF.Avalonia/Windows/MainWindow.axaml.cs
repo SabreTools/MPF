@@ -67,7 +67,7 @@ namespace MPF.Avalonia.Windows
 
             this.FindControl<DockPanel>("TopMenuBar")!.IsVisible = false;
             this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
-            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(12, 2, 12, 6);
+            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(10, 2, 10, 6);
 
             var nativeMenu = new NativeMenu();
             nativeMenu.Add(CreateNativeMenuGroup(
