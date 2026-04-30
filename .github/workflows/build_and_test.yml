@@ -2,7 +2,8 @@ name: Build and Test
 
 on:
     push:
-        branches: ["master"]
+        branches: ["master", "feature/avalonia-port"]
+    pull_request:
 
 jobs:
     build:
