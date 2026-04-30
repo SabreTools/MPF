@@ -33,8 +33,17 @@ jobs:
             - name: Run tests
               run: dotnet test
 
-            - name: Run publish script
-              run: ./publish-nix.sh -dp
+            - name: Publish Avalonia builds
+              run: |
+                  mkdir -p artifacts publish
+
+                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/linux-x64
+                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/win-x64
+                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/osx-arm64
+
+                  (cd publish/linux-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_linux-x64_release.zip .)
+                  (cd publish/win-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_win-x64_release.zip .)
+                  (cd publish/osx-arm64 && zip -r ../../artifacts/MPF-UI_Avalonia_osx-arm64_release.zip .)
 
             - name: Update rolling tag
               run: |
@@ -48,14 +57,12 @@ jobs:
               uses: ncipollo/release-action@v1.20.0
               with:
                   allowUpdates: True
-                  artifacts: "*.nupkg,*.snupkg,*.zip"
+                  artifacts: "artifacts/*.zip"
                   body: "Last built commit: ${{ github.sha }}
 
-                      ## UI Builds
+                      ## Avalonia Builds
 
-                      [Windows x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
-
-                      [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)"
+                      This rolling release contains Avalonia UI build artifacts only."
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True
