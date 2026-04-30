@@ -834,6 +834,8 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category ??= DiscCategory.Video;
+
+                    // General protection info
                     string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
                     if (bdProtection is not null && string.IsNullOrEmpty(info.CopyProtection.Protection))
                         info.CopyProtection.Protection = bdProtection;
@@ -841,6 +843,13 @@ namespace MPF.Frontend.Tools
                         info.CopyProtection.Protection += $"\n{bdProtection}";
                     else
                         info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    // Determine if BEE is set
+                    bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
+                    if (busEncryptionEnabled && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
+                    else if (busEncryptionEnabled && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.CopyProtection.Protection += $"\nBus Encryption Enabled";
 
                     break;
 

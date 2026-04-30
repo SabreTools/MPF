@@ -132,9 +132,6 @@ namespace MPF.Frontend.Tools
             if (File.Exists(unitKeyPath))
                 unitKeyFileHash = HashTool.GetFileHash(unitKeyPath, HashType.SHA1)?.ToUpperInvariant();
 
-            // Determine if BEE is set
-            bool busEncryptionEnabled = GetBusEncryptionEnabled(drive);
-
             // Generate the output strings
             var sb = new StringBuilder();
 
@@ -142,8 +139,6 @@ namespace MPF.Frontend.Tools
             sb.AppendLine($"Volume ID: (OPTIONAL)");
             sb.AppendLine($"Volume Unique Key: (OPTIONAL)");
             sb.AppendLine($"Unit Key File Hash (DiscID): {unitKeyFileHash ?? "(OPTIONAL)"}");
-            if (busEncryptionEnabled)
-                sb.AppendLine("Bus encryption enabled flag set");
 
             return sb.ToString();
         }

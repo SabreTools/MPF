@@ -13,6 +13,7 @@
 - Fix name conflict
 - Sync with Redump wiki
 - Add BD protection info, fix Cover ID setting
+- Separate BEE
 
 ### 3.7.1 (2026-03-30)
 
