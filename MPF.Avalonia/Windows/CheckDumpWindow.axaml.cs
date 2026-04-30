@@ -14,11 +14,21 @@ namespace MPF.Avalonia.Windows
 {
     public partial class CheckDumpWindow : WindowBase
     {
-        private readonly MainWindow? _parent;
+        private MainWindow? _parent;
 
         public CheckDumpViewModel CheckDumpViewModel => DataContext as CheckDumpViewModel ?? new CheckDumpViewModel();
 
+        public CheckDumpWindow()
+        {
+            InitializeWindow(null);
+        }
+
         public CheckDumpWindow(MainWindow parent)
+        {
+            InitializeWindow(parent);
+        }
+
+        private void InitializeWindow(MainWindow? parent)
         {
             InitializeComponent();
             _parent = parent;

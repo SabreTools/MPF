@@ -1,14 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MPF.Avalonia.Windows.MessageBoxWindow"
-        Width="420"
-        SizeToContent="Height"
+        MinWidth="260"
+        MaxWidth="420"
+        SizeToContent="WidthAndHeight"
         CanResize="False"
         WindowStartupLocation="CenterOwner">
-  <Border Padding="16">
+  <Border Padding="18">
     <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
-      <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" />
-      <StackPanel x:Name="ButtonPanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" />
+      <TextBlock x:Name="MessageTextBlock"
+                 MaxWidth="280"
+                 HorizontalAlignment="Center"
+                 TextAlignment="Center"
+                 TextWrapping="Wrap" />
+      <StackPanel x:Name="ButtonPanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" />
     </Grid>
   </Border>
 </Window>

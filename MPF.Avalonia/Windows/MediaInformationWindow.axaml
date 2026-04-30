@@ -13,7 +13,7 @@
 
   <Border Padding="12">
     <Grid RowDefinitions="*,Auto" RowSpacing="10">
-      <TabControl>
+      <TabControl HorizontalContentAlignment="Center">
         <TabItem Header="{DynamicResource CommonInfoTabString}">
           <ScrollViewer>
             <StackPanel Spacing="12" Margin="0,0,4,0">

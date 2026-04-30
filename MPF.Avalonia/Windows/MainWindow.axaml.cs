@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using MPF.Avalonia.Services;
@@ -17,8 +19,13 @@ namespace MPF.Avalonia.Windows
 {
     public partial class MainWindow : WindowBase
     {
+        private const double ExpandedLogPanelExtraHeight = 40;
         private bool _allowCloseWithoutPrompt;
         private bool _closeConfirmationPending;
+        private double _lastLogPanelHeight;
+        private double _expandedWindowHeight;
+        private double _collapsedWindowHeight;
+        private bool _logPanelResizeInitialized;
 
         public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
@@ -28,6 +35,7 @@ namespace MPF.Avalonia.Windows
             DataContext = new MainViewModel();
             Opened += OnOpened;
             Closing += MainWindowClosing;
+            SizeChanged += OnMainWindowSizeChanged;
         }
 
         private void OnOpened(object? sender, EventArgs e)
@@ -35,6 +43,7 @@ namespace MPF.Avalonia.Windows
             WireEvents();
             StringResourceLoader.Load(Resources, MainViewModel.Options.GUI.DefaultInterfaceLanguage);
             ThemeService.Apply(global::Avalonia.Application.Current!.Resources, MainViewModel.Options);
+            ConfigurePlatformMenus();
 
             MainViewModel.Init(
                 this.FindControl<LogOutput>("LogOutput")!.EnqueueLog,
@@ -42,7 +51,76 @@ namespace MPF.Avalonia.Windows
                 ShowMediaInformationWindow);
 
             SetMediaTypeVisibility();
+            WireLogPanelResizing();
+
+            if (MainViewModel.Options.CheckForUpdatesOnStartup)
+                CheckForUpdatesClick(this, new RoutedEventArgs());
+
+            if (MainViewModel.Options.FirstRun)
+                ShowOptionsWindow(StringResource("OptionsFirstRunTitleString", "Welcome to MPF, Explore the Options"));
         }
+
+        private void ConfigurePlatformMenus()
+        {
+            if (!OperatingSystem.IsMacOS())
+                return;
+
+            this.FindControl<DockPanel>("TopMenuBar")!.IsVisible = false;
+            this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
+            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(12, 2, 12, 6);
+
+            var nativeMenu = new NativeMenu();
+            nativeMenu.Add(CreateNativeMenuGroup(
+                StringResource("FileMenuString", "File"),
+                CreateNativeMenuItem(StringResource("ExitMenuItemString", "Exit"), () => AppExitClick(this, new RoutedEventArgs()))));
+            nativeMenu.Add(CreateNativeMenuGroup(
+                StringResource("ToolsMenuString", "Tools"),
+                CreateNativeMenuItem(StringResource("CheckDumpMenuItemString", "Check Dump"), () => CheckDumpMenuItemClick(this, new RoutedEventArgs())),
+                CreateNativeMenuItem(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"), () => CreateIRDMenuItemClick(this, new RoutedEventArgs())),
+                CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), () => OptionsMenuItemClick(this, new RoutedEventArgs())),
+                CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), () => DebugViewClick(this, new RoutedEventArgs()))));
+            nativeMenu.Add(CreateNativeMenuGroup(
+                "Language",
+                CreateNativeMenuItem("English", () => LanguageMenuItemClick(this.FindControl<MenuItem>("EnglishMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Deutsch", () => LanguageMenuItemClick(this.FindControl<MenuItem>("GermanMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Español", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SpanishMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Français", () => LanguageMenuItemClick(this.FindControl<MenuItem>("FrenchMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Italiano", () => LanguageMenuItemClick(this.FindControl<MenuItem>("ItalianMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("日本語", () => LanguageMenuItemClick(this.FindControl<MenuItem>("JapaneseMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("한국어", () => LanguageMenuItemClick(this.FindControl<MenuItem>("KoreanMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Polski", () => LanguageMenuItemClick(this.FindControl<MenuItem>("PolishMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Português", () => LanguageMenuItemClick(this.FindControl<MenuItem>("PortugueseMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Русский", () => LanguageMenuItemClick(this.FindControl<MenuItem>("RussianMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Svenska", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SwedishMenuItem"), new RoutedEventArgs())),
+                CreateNativeMenuItem("Українська", () => LanguageMenuItemClick(this.FindControl<MenuItem>("UkrainianMenuItem"), new RoutedEventArgs()))));
+            nativeMenu.Add(CreateNativeMenuGroup(
+                StringResource("HelpMenuString", "Help"),
+                CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs())),
+                CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()))));
+
+            NativeMenu.SetMenu(this, nativeMenu);
+        }
+
+        private NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
+        {
+            var group = new NativeMenuItem { Header = CleanMenuHeader(header) };
+            var menu = new NativeMenu();
+            foreach (NativeMenuItem item in items)
+                menu.Add(item);
+
+            group.Menu = menu;
+            return group;
+        }
+
+        private static NativeMenuItem CreateNativeMenuItem(string header, Action action)
+        {
+            var item = new NativeMenuItem { Header = CleanMenuHeader(header) };
+            item.Click += (_, _) => action();
+            return item;
+        }
+
+        private static string CleanMenuHeader(string header)
+            => header.Replace("_", string.Empty);
 
         private void WireEvents()
         {
@@ -76,6 +154,88 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Button>("StartStopButton")!.Click += StartStopButtonClick;
             this.FindControl<ComboBox>("SystemTypeComboBox")!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
             this.FindControl<Button>("UpdateVolumeLabel")!.Click += UpdateVolumeLabelClick;
+        }
+
+        private void WireLogPanelResizing()
+        {
+            if (_logPanelResizeInitialized)
+                return;
+
+            Expander logPanel = this.FindControl<Expander>("LogPanel")!;
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                _expandedWindowHeight = Height;
+                if (logPanel.IsExpanded)
+                    Height = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
+
+                _lastLogPanelHeight = logPanel.Bounds.Height;
+                _logPanelResizeInitialized = true;
+                UpdateLogConsoleHeight();
+            }, DispatcherPriority.Background);
+
+            logPanel.PropertyChanged += (_, args) =>
+            {
+                if (args.Property != Expander.IsExpandedProperty)
+                    return;
+
+                if (!_logPanelResizeInitialized)
+                    return;
+
+                double previousLogPanelHeight = _lastLogPanelHeight;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    double currentLogPanelHeight = logPanel.Bounds.Height;
+                    if (previousLogPanelHeight <= 0 || currentLogPanelHeight <= 0)
+                    {
+                        _lastLogPanelHeight = currentLogPanelHeight;
+                        return;
+                    }
+
+                    if (logPanel.IsExpanded)
+                    {
+                        if (_expandedWindowHeight <= 0)
+                            _expandedWindowHeight = Height;
+
+                        Height = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
+                    }
+                    else
+                    {
+                        double collapsedDelta = Math.Max(0, previousLogPanelHeight - currentLogPanelHeight);
+                        _collapsedWindowHeight = Math.Max(300, _expandedWindowHeight - collapsedDelta + 40);
+                        Height = _collapsedWindowHeight;
+                    }
+
+                    _lastLogPanelHeight = currentLogPanelHeight;
+                    UpdateLogConsoleHeight();
+                }, DispatcherPriority.Background);
+            };
+        }
+
+        private void OnMainWindowSizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            if (!_logPanelResizeInitialized)
+                return;
+
+            UpdateLogConsoleHeight();
+        }
+
+        private void UpdateLogConsoleHeight()
+        {
+            Expander? logPanel = this.FindControl<Expander>("LogPanel");
+            LogOutput? logOutput = this.FindControl<LogOutput>("LogOutput");
+            if (logPanel is null || logOutput is null)
+                return;
+
+            if (!logPanel.IsExpanded)
+            {
+                logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
+                return;
+            }
+
+            double expandedBaseHeight = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
+            double extraHeight = Math.Max(0, Height - expandedBaseHeight);
+            logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight + extraHeight);
         }
 
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
@@ -158,9 +318,11 @@ namespace MPF.Avalonia.Windows
             };
 
             bool? result = await window.ShowDialog<bool?>(this);
-            if (result == true)
+            bool savedSettings = result == true && window.OptionsViewModel.SavedSettings;
+            MainViewModel.UpdateOptions(savedSettings, window.OptionsViewModel.Options);
+
+            if (savedSettings)
             {
-                MainViewModel.Options = window.OptionsViewModel.Options;
                 StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, MainViewModel.Options.GUI.DefaultInterfaceLanguage);
                 ThemeService.Apply(global::Avalonia.Application.Current.Resources, MainViewModel.Options);
                 SetMediaTypeVisibility();

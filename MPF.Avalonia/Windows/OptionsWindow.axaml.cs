@@ -14,6 +14,11 @@ namespace MPF.Avalonia.Windows
     {
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
 
+        public OptionsWindow()
+            : this(new Options())
+        {
+        }
+
         public OptionsWindow(Options options)
         {
             InitializeComponent();
@@ -34,6 +39,7 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Button>("AcceptButton")!.Click += OnAcceptClick;
             this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;
             this.FindControl<Button>("RedumpLoginTestButton")!.Click += OnRedumpTestClick;
+            this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.Click += NonRedumpModeClicked;
         }
 
         private async Task<string?> BrowseForExecutableAsync(string title)
@@ -91,6 +97,12 @@ namespace MPF.Avalonia.Windows
                 OptionsViewModel.Options.Processing.Login.RedumpPassword);
 
             _ = MessageBoxWindow.ShowAsync(this, "Redump", OptionsViewModel.GetRedumpLoginResult(success), 1, success == true);
+        }
+
+        private void NonRedumpModeClicked(object? sender, RoutedEventArgs e)
+        {
+            if (this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.IsChecked != true)
+                OptionsViewModel.NonRedumpModeUnChecked();
         }
     }
 }

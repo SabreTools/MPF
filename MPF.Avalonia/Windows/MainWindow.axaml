@@ -3,54 +3,66 @@
                   xmlns:local="using:MPF.Avalonia.Windows"
                   xmlns:converters="using:MPF.Avalonia"
                   xmlns:controls="using:MPF.Avalonia.UserControls"
+                  xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
                   xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.Avalonia.Windows.MainWindow"
-                  Width="760"
-                  Height="720"
+                  MinWidth="750"
+                  Width="700"
+                  Height="738"
                   Title="{DynamicResource AppTitleString}">
   <local:WindowBase.Resources>
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border Padding="10">
-    <Grid RowDefinitions="Auto,Auto,Auto,*" RowSpacing="8">
-      <Menu>
-        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
-          <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
-        </MenuItem>
-        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}">
-          <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" IsEnabled="{Binding CheckDumpMenuItemEnabled}" />
-          <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" IsEnabled="{Binding CreateIRDMenuItemEnabled}" />
-          <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" IsEnabled="{Binding OptionsMenuItemEnabled}" />
-          <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" />
-        </MenuItem>
-        <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}">
-          <MenuItem x:Name="EnglishMenuItem" Header="English" />
-          <MenuItem x:Name="GermanMenuItem" Header="Deutsch" />
-          <MenuItem x:Name="SpanishMenuItem" Header="Español" />
-          <MenuItem x:Name="FrenchMenuItem" Header="Français" />
-          <MenuItem x:Name="ItalianMenuItem" Header="Italiano" />
-          <MenuItem x:Name="JapaneseMenuItem" Header="日本語" />
-          <MenuItem x:Name="KoreanMenuItem" Header="한국어" />
-          <MenuItem x:Name="PolishMenuItem" Header="Polski" />
-          <MenuItem x:Name="PortugueseMenuItem" Header="Português" />
-          <MenuItem x:Name="RussianMenuItem" Header="Русский" />
-          <MenuItem x:Name="SwedishMenuItem" Header="Svenska" />
-          <MenuItem x:Name="UkrainianMenuItem" Header="Українська" />
-        </MenuItem>
-        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}">
-          <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" />
-          <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" />
-        </MenuItem>
-      </Menu>
+  <Border x:Name="RootBorder" Padding="12">
+    <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+      <DockPanel x:Name="TopMenuBar" Margin="4,0,4,4" LastChildFill="False">
+        <Menu x:Name="AppMenuBar" DockPanel.Dock="Left">
+          <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
+            <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
+          </MenuItem>
+          <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}">
+            <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" IsEnabled="{Binding CheckDumpMenuItemEnabled}" />
+            <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" IsEnabled="{Binding CreateIRDMenuItemEnabled}" />
+            <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" IsEnabled="{Binding OptionsMenuItemEnabled}" />
+            <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" />
+          </MenuItem>
+          <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}">
+            <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" />
+            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" />
+          </MenuItem>
+        </Menu>
 
-      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+        <Menu x:Name="LanguagesMenuBar" DockPanel.Dock="Right">
+          <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}">
+            <MenuItem x:Name="EnglishMenuItem" Header="English" />
+            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" />
+            <MenuItem x:Name="SpanishMenuItem" Header="Español" />
+            <MenuItem x:Name="FrenchMenuItem" Header="Français" />
+            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" />
+            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" />
+            <MenuItem x:Name="KoreanMenuItem" Header="한국어" />
+            <MenuItem x:Name="PolishMenuItem" Header="Polski" />
+            <MenuItem x:Name="PortugueseMenuItem" Header="Português" />
+            <MenuItem x:Name="RussianMenuItem" Header="Русский" />
+            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" />
+            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" />
+          </MenuItem>
+        </Menu>
+      </DockPanel>
+
+      <Border Grid.Row="1"
+              Background="{DynamicResource PanelBackgroundBrush}"
+              BorderBrush="{DynamicResource PanelBorderBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="10,12">
         <StackPanel Spacing="8">
           <TextBlock Text="{DynamicResource SettingsGroupBoxString}" FontWeight="Bold" />
-          <Grid ColumnDefinitions="180,*"
+          <Grid ColumnDefinitions="130,*"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                 RowSpacing="8"
-                ColumnSpacing="8">
+                ColumnSpacing="24">
           <TextBlock Grid.Row="0" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
           <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,150" ColumnSpacing="8">
             <ComboBox x:Name="SystemTypeComboBox"
@@ -103,39 +115,66 @@
           <TextBlock Grid.Row="5" Text="{DynamicResource ParametersLabelString}" VerticalAlignment="Center" />
           <Grid Grid.Row="5" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
             <TextBox x:Name="ParametersTextBox" Text="{Binding Parameters, Mode=TwoWay}" IsEnabled="{Binding ParametersTextBoxEnabled}" />
-            <CheckBox x:Name="EnableParametersCheckBox" Grid.Column="1" IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}" IsEnabled="{Binding EnableParametersCheckBoxEnabled}" VerticalAlignment="Center" />
+            <CheckBox x:Name="EnableParametersCheckBox"
+                      Grid.Column="1"
+                      IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}"
+                      IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
+                      Content=""
+                      Width="22"
+                      Height="22"
+                      MinWidth="22"
+                      MinHeight="22"
+                      Padding="0"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center" />
           </Grid>
           </Grid>
         </StackPanel>
       </Border>
 
-      <Border Grid.Row="2" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+      <Border Grid.Row="2"
+              Background="{DynamicResource PanelBackgroundBrush}"
+              BorderBrush="{DynamicResource PanelBorderBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="10,12">
         <StackPanel Spacing="8">
           <TextBlock Text="{DynamicResource ControlsGroupBoxString}" FontWeight="Bold" />
-          <UniformGrid Columns="4">
-          <Button x:Name="StartStopButton" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
-          <Button x:Name="MediaScanButton" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
-          <Button x:Name="UpdateVolumeLabel" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
-          <Button x:Name="CopyProtectScanButton" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
-          </UniformGrid>
+          <StackPanel Margin="2,2,2,0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+          <Button x:Name="StartStopButton" Width="160" Padding="5,2" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
+          <Button x:Name="MediaScanButton" Width="160" Padding="5,2" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
+          <Button x:Name="UpdateVolumeLabel" Width="160" Padding="5,2" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
+          <Button x:Name="CopyProtectScanButton" Width="160" Padding="5,2" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
+          </StackPanel>
         </StackPanel>
       </Border>
 
-      <Grid Grid.Row="3" RowDefinitions="Auto,*" RowSpacing="8">
-        <Border Background="{DynamicResource PanelBackgroundBrush}"
-                BorderBrush="{DynamicResource PanelBorderBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Padding="8">
-          <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" />
-        </Border>
-        <Expander x:Name="LogPanel"
-                  Grid.Row="1"
-                  Header="{DynamicResource LogOutputExpanderString}"
-                  IsExpanded="{Binding LogPanelExpanded, Mode=TwoWay}">
-          <controls:LogOutput x:Name="LogOutput" />
-        </Expander>
-      </Grid>
+      <Border Grid.Row="3"
+              Background="{DynamicResource PanelBackgroundBrush}"
+              BorderBrush="{DynamicResource PanelBorderBrush}"
+              BorderThickness="1"
+              CornerRadius="4"
+              Padding="10,12">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{DynamicResource StatusGroupBoxString}" FontWeight="Bold" />
+          <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,4" />
+        </StackPanel>
+      </Border>
+
+      <Expander x:Name="LogPanel"
+                Grid.Row="4"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Padding="0"
+                IsExpanded="{Binding LogPanelExpanded, Mode=TwoWay}">
+        <Expander.Header>
+          <TextBlock Margin="10,0,0,0"
+                     Text="{DynamicResource LogOutputExpanderString}"
+                     VerticalAlignment="Center"
+                     FontWeight="Bold" />
+        </Expander.Header>
+        <controls:LogOutput x:Name="LogOutput" HorizontalAlignment="Stretch" />
+      </Expander>
     </Grid>
   </Border>
 </local:WindowBase>

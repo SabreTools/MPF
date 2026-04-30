@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Layout;
 
 namespace MPF.Avalonia.Windows
 {
@@ -12,13 +13,16 @@ namespace MPF.Avalonia.Windows
         {
             Title = title;
             this.FindControl<TextBlock>("MessageTextBlock")!.Text = message;
-            this.FindControl<StackPanel>("ButtonPanel")!.Children.Clear();
+            StackPanel buttonPanel = this.FindControl<StackPanel>("ButtonPanel")!;
+            buttonPanel.Children.Clear();
+
+            buttonPanel.HorizontalAlignment = HorizontalAlignment.Center;
 
             Button button = CreateButton("OK", true);
-            this.FindControl<StackPanel>("ButtonPanel")!.Children.Add(button);
+            buttonPanel.Children.Add(button);
 
             if (optionCount > 1)
-                this.FindControl<StackPanel>("ButtonPanel")!.Children.Add(CreateButton("Cancel", false));
+                buttonPanel.Children.Add(CreateButton("Cancel", false));
         }
 
         public static Task ShowAsync(Window owner, string title, string message, int optionCount, bool flag)
@@ -37,7 +41,14 @@ namespace MPF.Avalonia.Windows
 
         private Button CreateButton(string content, bool result)
         {
-            var button = new Button { Content = content, MinWidth = 80 };
+            var button = new Button
+            {
+                Content = content,
+                MinWidth = 96,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalContentAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
+            };
             button.Click += (_, _) => Close(result);
             return button;
         }

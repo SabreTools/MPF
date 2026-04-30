@@ -1,7 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:windows="using:MPF.Avalonia.Windows"
-             x:Class="MPF.Avalonia.App">
+             x:Class="MPF.Avalonia.App"
+             RequestedThemeVariant="Light">
   <Application.Styles>
     <FluentTheme />
     <Style Selector="Window">
@@ -11,12 +12,59 @@
     <Style Selector="Button">
       <Setter Property="MinHeight" Value="28" />
       <Setter Property="Margin" Value="2" />
+      <Setter Property="Padding" Value="14,6" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="#FFE5E5E5" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="#FFB8B8B8" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="5" />
+    </Style>
+    <Style Selector="Button:pointerover">
+      <Setter Property="Background" Value="#FFEDEDED" />
+      <Setter Property="BorderBrush" Value="#FF9F9F9F" />
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="Background" Value="#FFD8D8D8" />
+      <Setter Property="BorderBrush" Value="#FF8E8E8E" />
+    </Style>
+    <Style Selector="Button:disabled">
+      <Setter Property="Background" Value="#FFE2E2E2" />
+      <Setter Property="Foreground" Value="#FF8A8A8A" />
+      <Setter Property="BorderBrush" Value="#FFD2D2D2" />
     </Style>
     <Style Selector="TextBox">
       <Setter Property="MinHeight" Value="28" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
     <Style Selector="ComboBox">
       <Setter Property="MinHeight" Value="28" />
+      <Setter Property="Padding" Value="10,0,28,0" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Slider.default-speed-slider /template/ Thumb">
+      <Setter Property="Width" Value="20" />
+      <Setter Property="Height" Value="20" />
+      <Setter Property="MinWidth" Value="20" />
+      <Setter Property="MinHeight" Value="20" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="16" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="10,6" />
+    </Style>
+    <Style Selector="TabControl /template/ TabStrip">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TabControl /template/ TabStrip /template/ ItemsPresenter">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Expander#LogPanel /template/ ToggleButton">
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Padding" Value="0,2" />
     </Style>
   </Application.Styles>
 

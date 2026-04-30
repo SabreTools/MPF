@@ -13,7 +13,17 @@ namespace MPF.Avalonia.Windows
     {
         public CreateIRDViewModel CreateIRDViewModel => DataContext as CreateIRDViewModel ?? new CreateIRDViewModel();
 
+        public CreateIRDWindow()
+        {
+            InitializeWindow();
+        }
+
         public CreateIRDWindow(MainWindow parent)
+        {
+            InitializeWindow();
+        }
+
+        private void InitializeWindow()
         {
             InitializeComponent();
             DataContext = new CreateIRDViewModel();

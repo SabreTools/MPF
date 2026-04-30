@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using Avalonia.Controls;
@@ -9,6 +10,7 @@ namespace MPF.Avalonia.UserControls
 {
     public partial class LogOutput : UserControl
     {
+        public const double DefaultConsoleHeight = 220;
         private const int MaxEntryCount = 5000;
 
         public ObservableCollection<LogEntry> Entries { get; } = [];
@@ -35,6 +37,13 @@ namespace MPF.Avalonia.UserControls
 
                 this.FindControl<ScrollViewer>("Scroller")?.ScrollToEnd();
             });
+        }
+
+        public void SetConsoleHeight(double height)
+        {
+            Border? logSurface = this.FindControl<Border>("LogSurface");
+            if (logSurface is not null)
+                logSurface.Height = Math.Max(DefaultConsoleHeight, height);
         }
 
         private static IBrush GetBrush(LogLevel logLevel)

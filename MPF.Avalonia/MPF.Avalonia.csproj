@@ -5,6 +5,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MPF.Avalonia</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
+    <Product>MPF</Product>
+    <Title>MPF</Title>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <NoWarn>NU1903</NoWarn>

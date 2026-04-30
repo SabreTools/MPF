@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Styling;
 using MPF.Frontend;
 
 namespace MPF.Avalonia.Services
@@ -30,6 +31,9 @@ namespace MPF.Avalonia.Services
             resources["PanelBorderBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF4A4A4A") : Color.Parse("#FFD0D0D0"));
             resources["LogBackgroundBrush"] = new SolidColorBrush(Color.Parse("#FF202020"));
             resources["LogForegroundBrush"] = new SolidColorBrush(Color.Parse("#FFF0F0F0"));
+
+            if (global::Avalonia.Application.Current is { } application)
+                application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
         }
     }
 }

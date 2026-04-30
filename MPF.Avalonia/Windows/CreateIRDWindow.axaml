@@ -3,10 +3,10 @@
                   xmlns:local="using:MPF.Avalonia.Windows"
                   x:Class="MPF.Avalonia.Windows.CreateIRDWindow"
                   Width="720"
-                  Height="520"
+                  Height="640"
                   Title="{DynamicResource CreatePS3IRDTitleString}">
   <Border Padding="12">
-    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="10">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
       <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
         <StackPanel Spacing="8">
           <TextBlock Text="{DynamicResource InputGroupBoxString}" FontWeight="Bold" />
@@ -22,7 +22,8 @@
         </StackPanel>
       </Border>
 
-      <ScrollViewer Grid.Row="1">
+      <ScrollViewer Grid.Row="1"
+                    VerticalScrollBarVisibility="Auto">
         <StackPanel Spacing="8">
           <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
             <StackPanel Spacing="8">
