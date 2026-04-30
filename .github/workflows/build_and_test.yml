@@ -41,9 +41,39 @@ jobs:
                   dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/win-x64
                   dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/osx-arm64
 
+                  mkdir -p publish/osx-arm64-app/MPF.app/Contents/MacOS publish/osx-arm64-app/MPF.app/Contents/Resources
+                  cp -R publish/osx-arm64/. publish/osx-arm64-app/MPF.app/Contents/MacOS/
+                  chmod +x publish/osx-arm64-app/MPF.app/Contents/MacOS/MPF.Avalonia
+                  cat > publish/osx-arm64-app/MPF.app/Contents/Info.plist <<'EOF'
+                  <?xml version="1.0" encoding="UTF-8"?>
+                  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+                  <plist version="1.0">
+                  <dict>
+                    <key>CFBundleExecutable</key>
+                    <string>MPF.Avalonia</string>
+                    <key>CFBundleIdentifier</key>
+                    <string>org.sabretools.mpf.avalonia</string>
+                    <key>CFBundleName</key>
+                    <string>Media Preservation Frontend</string>
+                    <key>CFBundleDisplayName</key>
+                    <string>Media Preservation Frontend</string>
+                    <key>CFBundlePackageType</key>
+                    <string>APPL</string>
+                    <key>CFBundleShortVersionString</key>
+                    <string>1.0.0</string>
+                    <key>CFBundleVersion</key>
+                    <string>1</string>
+                    <key>LSMinimumSystemVersion</key>
+                    <string>11.0</string>
+                    <key>NSHighResolutionCapable</key>
+                    <true/>
+                  </dict>
+                  </plist>
+                  EOF
+
                   (cd publish/linux-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_linux-x64_release.zip .)
                   (cd publish/win-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_win-x64_release.zip .)
-                  (cd publish/osx-arm64 && zip -r ../../artifacts/MPF-UI_Avalonia_osx-arm64_release.zip .)
+                  (cd publish/osx-arm64-app && zip -r ../../artifacts/MPF-UI_Avalonia_osx-arm64_release.zip MPF.app)
 
             - name: Update rolling tag
               run: |
