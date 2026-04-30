@@ -10,14 +10,9 @@ permissions:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
 
         steps:
-            - name: Free Disk Space (Ubuntu)
-              uses: jlumbroso/free-disk-space@v1.3.1
-              with:
-                  dotnet: false
-
             - uses: actions/checkout@v5
               with:
                   fetch-depth: 0
@@ -71,9 +66,11 @@ jobs:
                   </plist>
                   EOF
 
+                  codesign --force --deep --sign - publish/osx-arm64-app/MPF.app
+
                   (cd publish/linux-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_linux-x64_release.zip .)
                   (cd publish/win-x64 && zip -r ../../artifacts/MPF-UI_Avalonia_win-x64_release.zip .)
-                  (cd publish/osx-arm64-app && zip -r ../../artifacts/MPF-UI_Avalonia_osx-arm64_release.zip MPF.app)
+                  ditto -c -k --keepParent publish/osx-arm64-app/MPF.app artifacts/MPF-UI_Avalonia_osx-arm64_release.zip
 
             - name: Update rolling tag
               run: |
