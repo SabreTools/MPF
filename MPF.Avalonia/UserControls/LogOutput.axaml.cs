@@ -10,7 +10,7 @@ namespace MPF.Avalonia.UserControls
 {
     public partial class LogOutput : UserControl
     {
-        public const double DefaultConsoleHeight = 220;
+        public const double DefaultConsoleHeight = 170;
         private const int MaxEntryCount = 5000;
 
         public ObservableCollection<LogEntry> Entries { get; } = [];
@@ -52,7 +52,7 @@ namespace MPF.Avalonia.UserControls
             {
                 LogLevel.SECRET => Brushes.DarkGray,
                 LogLevel.ERROR => Brushes.IndianRed,
-                LogLevel.VERBOSE => Brushes.Gold,
+                LogLevel.VERBOSE => Brushes.Yellow,
                 LogLevel.USER_SUCCESS => Brushes.ForestGreen,
                 _ => Brushes.White,
             };

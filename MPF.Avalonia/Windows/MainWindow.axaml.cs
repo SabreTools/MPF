@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using MPF.Avalonia.Services;
@@ -14,6 +15,7 @@ using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using AvaloniaWindowState = Avalonia.Controls.WindowState;
 
 namespace MPF.Avalonia.Windows
 {
@@ -65,7 +67,7 @@ namespace MPF.Avalonia.Windows
             if (!OperatingSystem.IsMacOS())
                 return;
 
-            this.FindControl<DockPanel>("TopMenuBar")!.IsVisible = false;
+            this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
             this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
             this.FindControl<Border>("RootBorder")!.Padding = new Thickness(10, 2, 10, 6);
 
@@ -121,6 +123,32 @@ namespace MPF.Avalonia.Windows
 
         private static string CleanMenuHeader(string header)
             => header.Replace("_", string.Empty);
+
+        private void TitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            PointerPoint point = e.GetCurrentPoint(this);
+            if (!point.Properties.IsLeftButtonPressed)
+                return;
+
+            if (e.ClickCount == 2)
+            {
+                ToggleWindowState();
+                return;
+            }
+
+            BeginMoveDrag(e);
+        }
+
+        private void MinimizeButtonClick(object? sender, RoutedEventArgs e)
+            => WindowState = AvaloniaWindowState.Minimized;
+
+        private void CloseButtonClick(object? sender, RoutedEventArgs e)
+            => Close();
+
+        private void ToggleWindowState()
+            => WindowState = WindowState == AvaloniaWindowState.Maximized
+                ? AvaloniaWindowState.Normal
+                : AvaloniaWindowState.Maximized;
 
         private void WireEvents()
         {

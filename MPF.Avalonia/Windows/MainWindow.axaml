@@ -1,4 +1,4 @@
-<local:WindowBase xmlns="https://github.com/avaloniaui"
+﻿<local:WindowBase xmlns="https://github.com/avaloniaui"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:local="using:MPF.Avalonia.Windows"
                   xmlns:converters="using:MPF.Avalonia"
@@ -6,62 +6,104 @@
                   xmlns:primitives="clr-namespace:Avalonia.Controls.Primitives;assembly=Avalonia.Controls"
                   xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.Avalonia.Windows.MainWindow"
-                  MinWidth="680"
-                  Width="680"
-                  Height="710"
+                  MinWidth="612"
+                  Width="612"
+                  Height="595"
+                  SystemDecorations="None"
                   Title="{DynamicResource AppTitleString}">
   <local:WindowBase.Resources>
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border x:Name="RootBorder" Padding="10">
-    <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
-      <DockPanel x:Name="TopMenuBar" Margin="2,0,2,2" LastChildFill="False">
-        <Menu x:Name="AppMenuBar" DockPanel.Dock="Left">
-          <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
+  <local:WindowBase.Styles>
+    <Style Selector="Button.titlebar-button">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+    </Style>
+    <Style Selector="Button.titlebar-button:pointerover">
+      <Setter Property="Background" Value="#FFE5E5E5" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.titlebar-button:pressed">
+      <Setter Property="Background" Value="#FFD0D0D0" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+  </local:WindowBase.Styles>
+
+  <Border x:Name="RootBorder" Padding="0,0,0,10">
+    <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="3">
+      <Grid x:Name="TopMenuBar"
+            Height="26"
+            Margin="0,3,0,0"
+            ColumnDefinitions="Auto,*,Auto"
+            Background="Transparent">
+        <TextBlock Grid.ColumnSpan="3"
+                   Text="{DynamicResource AppTitleString}"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   IsHitTestVisible="False" />
+
+        <Menu x:Name="AppMenuBar" Grid.Column="0" Height="26" VerticalAlignment="Center" Background="Transparent" FontSize="12">
+          <MenuItem x:Name="FileMenuItem" Header="Files">
             <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
           </MenuItem>
-          <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}">
+          <MenuItem x:Name="ToolsMenuItem" Header="Tools">
             <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}" IsEnabled="{Binding CheckDumpMenuItemEnabled}" />
             <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}" IsEnabled="{Binding CreateIRDMenuItemEnabled}" />
             <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}" IsEnabled="{Binding OptionsMenuItemEnabled}" />
             <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}" />
           </MenuItem>
-          <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}">
+          <MenuItem x:Name="HelpMenuItem" Header="Help">
             <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" />
             <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" />
           </MenuItem>
         </Menu>
 
-        <Menu x:Name="LanguagesMenuBar" DockPanel.Dock="Right">
-          <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}">
-            <MenuItem x:Name="EnglishMenuItem" Header="English" />
-            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" />
-            <MenuItem x:Name="SpanishMenuItem" Header="Español" />
-            <MenuItem x:Name="FrenchMenuItem" Header="Français" />
-            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" />
-            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" />
-            <MenuItem x:Name="KoreanMenuItem" Header="한국어" />
-            <MenuItem x:Name="PolishMenuItem" Header="Polski" />
-            <MenuItem x:Name="PortugueseMenuItem" Header="Português" />
-            <MenuItem x:Name="RussianMenuItem" Header="Русский" />
-            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" />
-            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" />
-          </MenuItem>
-        </Menu>
-      </DockPanel>
+        <Border x:Name="TitleDragArea"
+                Grid.Column="1"
+                Background="Transparent"
+                PointerPressed="TitleBarPointerPressed" />
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
+          <Menu x:Name="LanguagesMenuBar" Height="26" VerticalAlignment="Center" Background="Transparent" FontSize="12">
+            <MenuItem x:Name="LanguagesMenuItem" Header="ENG">
+              <MenuItem x:Name="EnglishMenuItem" Header="English" />
+              <MenuItem x:Name="GermanMenuItem" Header="Deutsch" />
+              <MenuItem x:Name="SpanishMenuItem" Header="Español" />
+              <MenuItem x:Name="FrenchMenuItem" Header="Français" />
+              <MenuItem x:Name="ItalianMenuItem" Header="Italiano" />
+              <MenuItem x:Name="JapaneseMenuItem" Header="日本語" />
+              <MenuItem x:Name="KoreanMenuItem" Header="한국어" />
+              <MenuItem x:Name="PolishMenuItem" Header="Polski" />
+              <MenuItem x:Name="PortugueseMenuItem" Header="Português" />
+              <MenuItem x:Name="RussianMenuItem" Header="Русский" />
+              <MenuItem x:Name="SwedishMenuItem" Header="Svenska" />
+              <MenuItem x:Name="UkrainianMenuItem" Header="Українська" />
+            </MenuItem>
+          </Menu>
+          <Button x:Name="MinimizeButton" Classes="titlebar-button" Width="34" MinHeight="26" Padding="0" Margin="0" CornerRadius="0" Click="MinimizeButtonClick">
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="10" Text="&#xE921;" />
+          </Button>
+          <Button x:Name="CloseButton" Classes="titlebar-button" Width="38" MinHeight="26" Padding="0" Margin="0" CornerRadius="0" Click="CloseButtonClick">
+            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="10" Text="&#xE8BB;" />
+          </Button>
+        </StackPanel>
+      </Grid>
 
       <Border Grid.Row="1"
+              Margin="6,0,6,0"
               Background="{DynamicResource PanelBackgroundBrush}"
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="8,5">
+        <StackPanel Spacing="4">
           <TextBlock Text="{DynamicResource SettingsGroupBoxString}" FontWeight="Bold" />
           <Grid ColumnDefinitions="120,*"
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                RowSpacing="6"
+                RowSpacing="4"
                 ColumnSpacing="18">
           <TextBlock Grid.Row="0" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
           <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,140" ColumnSpacing="8">
@@ -78,8 +120,8 @@
 
           <TextBlock Grid.Row="1" Text="{DynamicResource OutputPathLabelString}" VerticalAlignment="Center" />
           <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <TextBox x:Name="OutputPathTextBox" Text="{Binding OutputPath, Mode=TwoWay}" IsEnabled="{Binding OutputPathTextBoxEnabled}" />
-            <Button x:Name="OutputPathBrowseButton" Grid.Column="1" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding OutputPathBrowseButtonEnabled}" />
+            <TextBox x:Name="OutputPathTextBox" Text="{Binding OutputPath, Mode=TwoWay}" IsEnabled="{Binding OutputPathTextBoxEnabled}" VerticalAlignment="Center" />
+            <Button x:Name="OutputPathBrowseButton" Grid.Column="1" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding OutputPathBrowseButtonEnabled}" MinHeight="23" Padding="10,2" VerticalAlignment="Center" />
           </Grid>
 
           <TextBlock Grid.Row="2" Text="{DynamicResource DriveLetterLabelString}" VerticalAlignment="Center" />
@@ -114,16 +156,13 @@
 
           <TextBlock Grid.Row="5" Text="{DynamicResource ParametersLabelString}" VerticalAlignment="Center" />
           <Grid Grid.Row="5" Grid.Column="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <TextBox x:Name="ParametersTextBox" Text="{Binding Parameters, Mode=TwoWay}" IsEnabled="{Binding ParametersTextBoxEnabled}" />
+            <TextBox x:Name="ParametersTextBox" Text="{Binding Parameters, Mode=TwoWay}" IsEnabled="{Binding ParametersTextBoxEnabled}" VerticalAlignment="Center" />
             <CheckBox x:Name="EnableParametersCheckBox"
                       Grid.Column="1"
                       IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}"
                       IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
                       Content=""
-                      Width="20"
-                      Height="20"
-                      MinWidth="20"
-                      MinHeight="20"
+                      Margin="0"
                       Padding="0"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center" />
@@ -133,29 +172,31 @@
       </Border>
 
       <Border Grid.Row="2"
+              Margin="6,0,6,0"
               Background="{DynamicResource PanelBackgroundBrush}"
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="8,5">
+        <StackPanel Spacing="4">
           <TextBlock Text="{DynamicResource ControlsGroupBoxString}" FontWeight="Bold" />
-          <StackPanel Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
-          <Button x:Name="StartStopButton" Width="145" Padding="4,1" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
-          <Button x:Name="MediaScanButton" Width="145" Padding="4,1" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
-          <Button x:Name="UpdateVolumeLabel" Width="145" Padding="4,1" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
-          <Button x:Name="CopyProtectScanButton" Width="145" Padding="4,1" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
+          <StackPanel Margin="0,0,0,0" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="6">
+          <Button x:Name="StartStopButton" Width="132" Padding="2,1" Content="{Binding StartStopButtonText}" IsEnabled="{Binding StartStopButtonEnabled}" />
+          <Button x:Name="MediaScanButton" Width="132" Padding="2,1" Content="{DynamicResource ScanButtonString}" IsEnabled="{Binding MediaScanButtonEnabled}" />
+          <Button x:Name="UpdateVolumeLabel" Width="132" Padding="2,1" Content="{DynamicResource UpdateLabelButtonString}" IsEnabled="{Binding UpdateVolumeLabelEnabled}" />
+          <Button x:Name="CopyProtectScanButton" Width="132" Padding="2,1" Content="{DynamicResource ProtectionScanButtonString}" IsEnabled="{Binding CopyProtectScanButtonEnabled}" />
           </StackPanel>
         </StackPanel>
       </Border>
 
       <Border Grid.Row="3"
+              Margin="6,0,6,0"
               Background="{DynamicResource PanelBackgroundBrush}"
               BorderBrush="{DynamicResource PanelBorderBrush}"
               BorderThickness="1"
               CornerRadius="4"
-              Padding="8,10">
-        <StackPanel Spacing="6">
+              Padding="8,5">
+        <StackPanel Spacing="4">
           <TextBlock Text="{DynamicResource StatusGroupBoxString}" FontWeight="Bold" />
           <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,2" />
         </StackPanel>
@@ -163,6 +204,7 @@
 
       <Expander x:Name="LogPanel"
                 Grid.Row="4"
+                Margin="6,0,6,0"
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Stretch"
                 Padding="0"
@@ -178,3 +220,5 @@
     </Grid>
   </Border>
 </local:WindowBase>
+
+
