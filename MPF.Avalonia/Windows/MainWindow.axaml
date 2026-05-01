@@ -8,7 +8,8 @@
                   x:Class="MPF.Avalonia.Windows.MainWindow"
                   MinWidth="612"
                   Width="612"
-                  Height="595"
+                  SizeToContent="Height"
+                  CanResize="False"
                   SystemDecorations="None"
                   Title="{DynamicResource AppTitleString}">
   <local:WindowBase.Resources>
@@ -31,7 +32,7 @@
     </Style>
   </local:WindowBase.Styles>
 
-  <Border x:Name="RootBorder" Padding="0,0,0,10">
+  <Border x:Name="RootBorder" Padding="0,0,0,7">
     <Grid x:Name="RootGrid" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="3">
       <Grid x:Name="TopMenuBar"
             Height="26"
@@ -45,7 +46,7 @@
                    VerticalAlignment="Center"
                    IsHitTestVisible="False" />
 
-        <Menu x:Name="AppMenuBar" Grid.Column="0" Height="26" VerticalAlignment="Center" Background="Transparent" FontSize="12">
+        <Menu x:Name="AppMenuBar" Grid.Column="0" Height="26" Margin="4,0,0,0" VerticalAlignment="Center" Background="Transparent" FontSize="12">
           <MenuItem x:Name="FileMenuItem" Header="Files">
             <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
           </MenuItem>

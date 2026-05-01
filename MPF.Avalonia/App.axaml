@@ -5,7 +5,7 @@
              x:Class="MPF.Avalonia.App"
              RequestedThemeVariant="Light">
   <Application.Styles>
-    <FluentTheme>
+    <FluentTheme DensityStyle="Compact">
       <FluentTheme.Palettes>
         <fluent:ColorPaletteResources x:Key="Light" Accent="#0078D4" />
         <fluent:ColorPaletteResources x:Key="Dark" Accent="#0078D4" />
@@ -51,6 +51,22 @@
       <Setter Property="Padding" Value="8,0,24,0" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+    <Style Selector="CheckBox">
+      <Setter Property="MinHeight" Value="23" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+      <Setter Property="Width" Value="15" />
+      <Setter Property="Height" Value="15" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="CheckBox /template/ Viewbox">
+      <Setter Property="Width" Value="15" />
+      <Setter Property="Height" Value="15" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
     <Style Selector="Slider.default-speed-slider /template/ Thumb">
       <Setter Property="Width" Value="20" />
       <Setter Property="Height" Value="20" />
@@ -58,11 +74,11 @@
       <Setter Property="MinHeight" Value="20" />
     </Style>
     <Style Selector="TabItem">
-      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontSize" Value="14.5" />
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="Padding" Value="10,6" />
+      <Setter Property="Padding" Value="10,2,10,13" />
     </Style>
     <Style Selector="TabControl /template/ TabStrip">
       <Setter Property="HorizontalAlignment" Value="Center" />

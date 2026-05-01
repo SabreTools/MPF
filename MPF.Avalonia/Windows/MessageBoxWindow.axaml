@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="MPF.Avalonia.Windows.MessageBoxWindow"
         MinWidth="260"
-        MaxWidth="420"
+        MaxWidth="450"
         SizeToContent="WidthAndHeight"
         CanResize="False"
         WindowStartupLocation="CenterOwner">
   <Border Padding="12">
     <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
       <TextBlock x:Name="MessageTextBlock"
-                 MaxWidth="280"
+                 MaxWidth="310"
                  HorizontalAlignment="Center"
                  TextAlignment="Center"
                  TextWrapping="Wrap" />

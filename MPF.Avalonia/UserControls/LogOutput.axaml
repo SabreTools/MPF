@@ -5,7 +5,7 @@
   <Grid RowDefinitions="*,Auto" RowSpacing="4" Margin="0">
     <Border x:Name="LogSurface"
             Grid.Row="0"
-            Height="170"
+            Height="180"
             Margin="0,0,0,2"
             Background="{DynamicResource LogBackgroundBrush}"
             CornerRadius="0,0,0,0">

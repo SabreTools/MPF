@@ -3,7 +3,8 @@
                   xmlns:local="using:MPF.Avalonia.Windows"
                   x:Class="MPF.Avalonia.Windows.RingCodeGuideWindow"
                   Width="860"
-                  Height="640"
+                  SizeToContent="Height"
+                  CanResize="False"
                   Title="{DynamicResource RingCodeGuideTitleString}">
   <ScrollViewer>
     <StackPanel Margin="12" Spacing="12">

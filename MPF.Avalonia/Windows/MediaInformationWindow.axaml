@@ -4,17 +4,22 @@
                   xmlns:controls="using:MPF.Avalonia.UserControls"
                   xmlns:converters="using:MPF.Avalonia"
                   x:Class="MPF.Avalonia.Windows.MediaInformationWindow"
-                  Width="900"
-                  Height="640"
+                  Width="540"
+                  SizeToContent="Height"
+                  CanResize="False"
                   Title="{DynamicResource MediaInformationTitleString}">
   <local:WindowBase.Resources>
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border Padding="8,5">
+  <Border Padding="6,0,6,3">
     <Grid RowDefinitions="*,Auto" RowSpacing="6">
-      <TabControl HorizontalContentAlignment="Center">
-        <TabItem Header="{DynamicResource CommonInfoTabString}">
+      <TabControl HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch">
+        <TabItem>
+          <TabItem.Header>
+            <TextBlock Text="{DynamicResource CommonInfoTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
+          </TabItem.Header>
           <ScrollViewer>
             <StackPanel Spacing="6" Margin="0,0,4,0">
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
@@ -93,7 +98,10 @@
           </ScrollViewer>
         </TabItem>
 
-        <TabItem Header="{DynamicResource AdditionalInfoTabString}">
+        <TabItem>
+          <TabItem.Header>
+            <TextBlock Text="{DynamicResource AdditionalInfoTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
+          </TabItem.Header>
           <ScrollViewer>
             <StackPanel Spacing="6" Margin="0,0,4,0">
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
@@ -162,7 +170,10 @@
           </ScrollViewer>
         </TabItem>
 
-        <TabItem Header="{DynamicResource ContentsTabString}">
+        <TabItem>
+          <TabItem.Header>
+            <TextBlock Text="{DynamicResource ContentsTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
+          </TabItem.Header>
           <ScrollViewer>
             <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
               <StackPanel Spacing="4">
@@ -183,7 +194,10 @@
           </ScrollViewer>
         </TabItem>
 
-        <TabItem Header="{DynamicResource RingcodesTabString}">
+        <TabItem>
+          <TabItem.Header>
+            <TextBlock Text="{DynamicResource RingcodesTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
+          </TabItem.Header>
           <ScrollViewer>
             <StackPanel Spacing="6" Margin="0,0,4,0">
               <Border x:Name="L0InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
@@ -229,7 +243,10 @@
           </ScrollViewer>
         </TabItem>
 
-        <TabItem Header="{DynamicResource ReadOnlyInfoTabString}">
+        <TabItem>
+          <TabItem.Header>
+            <TextBlock Text="{DynamicResource ReadOnlyInfoTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
+          </TabItem.Header>
           <ScrollViewer>
             <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
               <StackPanel Spacing="4">
@@ -275,11 +292,13 @@
         </TabItem>
       </TabControl>
 
-      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="4">
-        <Button x:Name="RingCodeGuideButton" Content="{DynamicResource RingCodeGuideButtonString}" />
-        <Button x:Name="AcceptButton" Content="{DynamicResource AcceptButtonString}" />
-        <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" />
-      </StackPanel>
+      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+          <Button x:Name="RingCodeGuideButton" Content="{DynamicResource RingCodeGuideButtonString}" />
+          <Button x:Name="AcceptButton" Width="100" Content="{DynamicResource AcceptButtonString}" />
+          <Button x:Name="CancelButton" Width="100" Content="{DynamicResource CancelButtonString}" />
+        </StackPanel>
+      </Border>
     </Grid>
   </Border>
 </local:WindowBase>
