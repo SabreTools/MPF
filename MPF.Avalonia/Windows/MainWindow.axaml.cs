@@ -35,6 +35,7 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+            ThemeService.SyncWithSystemTheme(MainViewModel.Options);
             Opened += OnOpened;
             Closing += MainWindowClosing;
             SizeChanged += OnMainWindowSizeChanged;

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using MPF.Frontend;
 
@@ -48,11 +49,13 @@ namespace MPF.Avalonia.UserControls
 
         private static IBrush GetBrush(LogLevel logLevel)
         {
+            bool darkMode = global::Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+
             return logLevel switch
             {
                 LogLevel.SECRET => Brushes.DarkGray,
                 LogLevel.ERROR => Brushes.IndianRed,
-                LogLevel.VERBOSE => Brushes.Yellow,
+                LogLevel.VERBOSE => darkMode ? new SolidColorBrush(Color.Parse("#FFE6D800")) : Brushes.Yellow,
                 LogLevel.USER_SUCCESS => Brushes.ForestGreen,
                 _ => Brushes.White,
             };

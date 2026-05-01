@@ -23,11 +23,11 @@
       <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
     </Style>
     <Style Selector="Button.titlebar-button:pointerover">
-      <Setter Property="Background" Value="#FFE5E5E5" />
+      <Setter Property="Background" Value="{DynamicResource TitleBarButtonHoverBrush}" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.titlebar-button:pressed">
-      <Setter Property="Background" Value="#FFD0D0D0" />
+      <Setter Property="Background" Value="{DynamicResource TitleBarButtonPressedBrush}" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
   </local:WindowBase.Styles>
