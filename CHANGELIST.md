@@ -15,6 +15,7 @@
 - Add BD protection info, fix Cover ID setting
 - Separate BEE
 - Convert type of reports from success to neutral for essential steps (shfil119)
+- Subtract fixed SCSI errors
 
 ### 3.7.1 (2026-03-30)
 
