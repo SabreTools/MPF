@@ -39,6 +39,34 @@ jobs:
                   mkdir -p publish/osx-arm64-app/MPF.app/Contents/MacOS publish/osx-arm64-app/MPF.app/Contents/Resources
                   cp -R publish/osx-arm64/. publish/osx-arm64-app/MPF.app/Contents/MacOS/
                   chmod +x publish/osx-arm64-app/MPF.app/Contents/MacOS/MPF.Avalonia
+                  python3 - <<'PY'
+                  import struct
+                  from pathlib import Path
+
+                  ico = Path("MPF.Avalonia/Assets/Icon.ico").read_bytes()
+                  count = struct.unpack_from("<H", ico, 4)[0]
+                  for index in range(count):
+                      entry_offset = 6 + index * 16
+                      width = ico[entry_offset] or 256
+                      height = ico[entry_offset + 1] or 256
+                      size, offset = struct.unpack_from("<II", ico, entry_offset + 8)
+                      image = ico[offset:offset + size]
+                      if width == 256 and height == 256 and image.startswith(b"\x89PNG\r\n\x1a\n"):
+                          Path("publish/osx-arm64-app/icon-source.png").write_bytes(image)
+                          break
+                  else:
+                      raise SystemExit("Could not find a 256x256 PNG image in Icon.ico")
+                  PY
+                  mkdir -p publish/osx-arm64-app/MPF.iconset
+                  sips -z 16 16 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_16x16.png
+                  sips -z 32 32 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_16x16@2x.png
+                  sips -z 32 32 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_32x32.png
+                  sips -z 64 64 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_32x32@2x.png
+                  sips -z 128 128 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_128x128.png
+                  sips -z 256 256 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_128x128@2x.png
+                  sips -z 256 256 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_256x256.png
+                  cp publish/osx-arm64-app/icon-source.png publish/osx-arm64-app/MPF.iconset/icon_256x256@2x.png
+                  iconutil -c icns publish/osx-arm64-app/MPF.iconset -o publish/osx-arm64-app/MPF.app/Contents/Resources/MPF.icns
                   cat > publish/osx-arm64-app/MPF.app/Contents/Info.plist <<'EOF'
                   <?xml version="1.0" encoding="UTF-8"?>
                   <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -52,6 +80,8 @@ jobs:
                     <string>Media Preservation Frontend</string>
                     <key>CFBundleDisplayName</key>
                     <string>Media Preservation Frontend</string>
+                    <key>CFBundleIconFile</key>
+                    <string>MPF.icns</string>
                     <key>CFBundlePackageType</key>
                     <string>APPL</string>
                     <key>CFBundleShortVersionString</key>
