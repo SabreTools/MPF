@@ -214,7 +214,7 @@ namespace MPF.Frontend.Tools
                 }
                 else
                 {
-                    resultProgress?.Report(ResultEventArgs.Success("Successfully logged into Redump!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into Redump!"));
                 }
             }
 
@@ -358,7 +358,7 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [.. partiallyMatchedIds];
             info.PartiallyMatchedIDs.Sort();
 
-            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
+            resultProgress?.Report(ResultEventArgs.Neutral("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
                 ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
                 : "No matches found")));
 
