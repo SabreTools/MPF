@@ -96,29 +96,30 @@
 
         <TabItem Header="{DynamicResource PathsTabString}">
           <ScrollViewer>
-            <Grid Margin="4" ColumnDefinitions="220,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="4" RowSpacing="6">
+            <Grid Margin="4" ColumnDefinitions="220,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="4">
               <TextBlock Grid.Row="0" Text="{DynamicResource AaruPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-              <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Options.Dumping.AaruPath, Mode=TwoWay}" />
-              <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Width="26" Content="..." />
+              <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Options.Dumping.AaruPath, Mode=TwoWay}" VerticalAlignment="Center" />
+              <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Width="26" MinHeight="23" Padding="0,2" Content="..." VerticalAlignment="Center" />
 
               <TextBlock Grid.Row="1" Text="{DynamicResource DiscImageCreatorPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-              <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Options.Dumping.DiscImageCreatorPath, Mode=TwoWay}" />
-              <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Width="26" Content="..." />
+              <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Options.Dumping.DiscImageCreatorPath, Mode=TwoWay}" VerticalAlignment="Center" />
+              <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Width="26" MinHeight="23" Padding="0,2" Content="..." VerticalAlignment="Center" />
 
               <TextBlock Grid.Row="2" Text="{DynamicResource RedumperPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-              <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}" />
-              <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Width="26" Content="..." />
+              <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Options.Dumping.RedumperPath, Mode=TwoWay}" VerticalAlignment="Center" />
+              <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Width="26" MinHeight="23" Padding="0,2" Content="..." VerticalAlignment="Center" />
 
               <TextBlock Grid.Row="3" Text="{DynamicResource DefaultDumpingProgramLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
               <ComboBox x:Name="InternalProgramComboBox"
                         Grid.Row="3"
                         Grid.Column="1"
                         ItemsSource="{Binding InternalPrograms}"
-                        SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                        SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                        VerticalAlignment="Center" />
 
               <TextBlock Grid.Row="4" Text="{DynamicResource DefaultOutputPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-              <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Text="{Binding Options.Dumping.DefaultOutputPath, Mode=TwoWay}" />
-              <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Width="26" Content="..." />
+              <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Text="{Binding Options.Dumping.DefaultOutputPath, Mode=TwoWay}" VerticalAlignment="Center" />
+              <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Width="26" MinHeight="23" Padding="0,2" Content="..." VerticalAlignment="Center" />
             </Grid>
           </ScrollViewer>
         </TabItem>
@@ -358,12 +359,12 @@
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource RedumpGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="Auto,140,Auto,140,Auto" ColumnSpacing="6">
+                  <Grid ColumnDefinitions="Auto,140,Auto,140,Auto" ColumnSpacing="8">
                     <TextBlock Text="{DynamicResource UsernameLabelString}" VerticalAlignment="Center" />
-                    <TextBox x:Name="RedumpUsernameTextBox" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpUsername, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
+                    <TextBox x:Name="RedumpUsernameTextBox" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpUsername, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="2" Text="{DynamicResource PasswordLabelString}" VerticalAlignment="Center" />
-                    <TextBox x:Name="RedumpPasswordBox" Grid.Column="3" Text="{Binding Options.Processing.Login.RedumpPassword, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
-                    <Button x:Name="RedumpLoginTestButton" Grid.Column="4" Content="{DynamicResource TestLoginButtonString}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
+                    <TextBox x:Name="RedumpPasswordBox" Grid.Column="3" Text="{Binding Options.Processing.Login.RedumpPassword, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
+                    <Button x:Name="RedumpLoginTestButton" Grid.Column="4" MinHeight="23" Padding="10,2" Content="{DynamicResource TestLoginButtonString}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
                   </Grid>
                 </StackPanel>
               </Border>
