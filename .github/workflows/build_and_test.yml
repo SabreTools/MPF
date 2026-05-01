@@ -3,6 +3,7 @@ name: Build and Test
 on:
     push:
         branches: ["master", "feature/avalonia-port"]
+        tags: ["v*"]
     pull_request:
 
 permissions:
@@ -103,6 +104,7 @@ jobs:
                   ditto -c -k --keepParent publish/osx-arm64-app/MPF.app artifacts/MPF-UI_Avalonia_osx-arm64_release.zip
 
             - name: Update rolling tag
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -111,6 +113,7 @@ jobs:
                   git push origin rolling --force
 
             - name: Upload to rolling
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
               uses: ncipollo/release-action@v1.20.0
               with:
                   allowUpdates: True
@@ -125,3 +128,18 @@ jobs:
                   replacesArtifacts: True
                   tag: "rolling"
                   updateOnlyUnreleased: True
+
+            - name: Upload to versioned release
+              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+              uses: ncipollo/release-action@v1.20.0
+              with:
+                  allowUpdates: False
+                  artifacts: "artifacts/*.zip"
+                  body: "Built commit: ${{ github.sha }}
+
+                      ## Avalonia Builds
+
+                      This versioned release preserves Avalonia UI build artifacts."
+                  name: "${{ github.ref_name }}"
+                  prerelease: False
+                  tag: "${{ github.ref_name }}"
