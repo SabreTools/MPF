@@ -11,9 +11,9 @@
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border Padding="12">
-    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="10">
-      <Grid ColumnDefinitions="160,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+  <Border Padding="8,5">
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="6">
+      <Grid ColumnDefinitions="160,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="6" RowSpacing="4">
         <TextBlock Grid.Row="0" Text="{DynamicResource InputPathLabelString}" VerticalAlignment="Center" />
         <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding InputPath, Mode=TwoWay}" IsEnabled="{Binding InputPathTextBoxEnabled}" />
         <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding InputPathBrowseButtonEnabled}" />
@@ -23,11 +23,11 @@
         <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="1" Grid.Column="2" Width="180" ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding DumpingProgramComboBoxEnabled}" />
       </Grid>
 
-      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
+      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
         <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" />
       </Border>
 
-      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="6">
         <Button x:Name="CheckDumpButton" Content="{DynamicResource CheckDumpButtonString}" IsEnabled="{Binding CheckDumpButtonEnabled}" />
         <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" IsEnabled="{Binding CancelButtonEnabled}" />
       </StackPanel>

@@ -6,14 +6,14 @@
         SizeToContent="WidthAndHeight"
         CanResize="False"
         WindowStartupLocation="CenterOwner">
-  <Border Padding="18">
-    <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+  <Border Padding="12">
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
       <TextBlock x:Name="MessageTextBlock"
                  MaxWidth="280"
                  HorizontalAlignment="Center"
                  TextAlignment="Center"
                  TextWrapping="Wrap" />
-      <StackPanel x:Name="ButtonPanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" />
+      <StackPanel x:Name="ButtonPanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8" />
     </Grid>
   </Border>
 </Window>

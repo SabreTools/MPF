@@ -5,12 +5,12 @@
                   Width="720"
                   Height="640"
                   Title="{DynamicResource CreatePS3IRDTitleString}">
-  <Border Padding="12">
-    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="10">
-      <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
-        <StackPanel Spacing="8">
+  <Border Padding="8,5">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="6">
+      <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <StackPanel Spacing="4">
           <TextBlock Text="{DynamicResource InputGroupBoxString}" FontWeight="Bold" />
-          <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+          <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="4" RowSpacing="4">
           <TextBlock Grid.Row="0" Text="{DynamicResource PS3ISOPathLabelString}" VerticalAlignment="Center" />
           <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding InputPath, Mode=TwoWay}" />
           <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" />
@@ -24,11 +24,11 @@
 
       <ScrollViewer Grid.Row="1"
                     VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="8">
-          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
-            <StackPanel Spacing="8">
+        <StackPanel Spacing="4">
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+            <StackPanel Spacing="4">
               <TextBlock Text="{DynamicResource KeyExpanderString}" FontWeight="Bold" />
-              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="4" RowSpacing="4">
               <TextBlock Grid.Row="0" Text="{DynamicResource HexadecimalKeyLabelString}" VerticalAlignment="Center" />
               <TextBox x:Name="KeyTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding HexKey, Mode=TwoWay}" />
               <TextBlock Grid.Row="1" Text="{DynamicResource KeyFilePathLabelString}" VerticalAlignment="Center" />
@@ -39,10 +39,10 @@
             </StackPanel>
           </Border>
 
-          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
-            <StackPanel Spacing="8">
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+            <StackPanel Spacing="4">
               <TextBlock Text="{DynamicResource DiscIDExpanderString}" FontWeight="Bold" />
-              <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto" ColumnSpacing="4" RowSpacing="4">
               <TextBlock Grid.Row="0" Text="{DynamicResource DiscIDLabelString}" VerticalAlignment="Center" />
               <TextBox x:Name="DiscIDTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding DiscIDString, Mode=TwoWay}" />
               <TextBlock Grid.Row="1" Text="{Binding DiscIDStatus}" Grid.Column="1" />
@@ -50,10 +50,10 @@
             </StackPanel>
           </Border>
 
-          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8">
-            <StackPanel Spacing="8">
+          <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+            <StackPanel Spacing="4">
               <TextBlock Text="{DynamicResource PICExpanderString}" FontWeight="Bold" />
-              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+              <Grid ColumnDefinitions="180,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="4" RowSpacing="4">
               <TextBlock Grid.Row="0" Text="{DynamicResource LayerbreakLabelString}" VerticalAlignment="Center" />
               <TextBox x:Name="LayerbreakTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding LayerbreakAsString, Mode=TwoWay}" />
               <TextBlock Grid.Row="1" Text="{DynamicResource PICLabelString}" VerticalAlignment="Center" />
@@ -68,8 +68,8 @@
         </StackPanel>
       </ScrollViewer>
 
-      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
-        <TextBlock VerticalAlignment="Center" Text="{Binding CreateIRDStatus}" Margin="0,0,12,0" />
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="4">
+        <TextBlock VerticalAlignment="Center" Text="{Binding CreateIRDStatus}" Margin="0,0,8,0" />
         <Button x:Name="CreateIRDButton" Content="{DynamicResource CreateIRDButtonString}" IsEnabled="{Binding CreateIRDButtonEnabled}" />
         <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" IsEnabled="{Binding CancelButtonEnabled}" />
       </StackPanel>

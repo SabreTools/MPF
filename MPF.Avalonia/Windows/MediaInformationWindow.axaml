@@ -11,14 +11,14 @@
     <converters:ElementConverter x:Key="ElementConverter" />
   </local:WindowBase.Resources>
 
-  <Border Padding="12">
-    <Grid RowDefinitions="*,Auto" RowSpacing="10">
+  <Border Padding="8,5">
+    <Grid RowDefinitions="*,Auto" RowSpacing="6">
       <TabControl HorizontalContentAlignment="Center">
         <TabItem Header="{DynamicResource CommonInfoTabString}">
           <ScrollViewer>
-            <StackPanel Spacing="12" Margin="0,0,4,0">
-              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+            <StackPanel Spacing="6" Margin="0,0,4,0">
+              <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource CommonMediaInfoGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput Label="{DynamicResource TitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}" />
                   <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}" />
@@ -28,21 +28,21 @@
                   <controls:UserInput Label="{DynamicResource DiscTitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}" />
                   <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}" />
 
-                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource CategoryLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <ComboBox x:Name="CategoryComboBox" Grid.Column="1"
                               SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                   </Grid>
 
-                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource RegionLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <ComboBox x:Name="RegionComboBox" Grid.Column="1"
                               SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                   </Grid>
 
-                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="3*,7*" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource LanguagesLabelString}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,0,0" />
-                    <Border Grid.Column="1" Padding="8" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
+                    <Border Grid.Column="1" Padding="6,4" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
                       <ItemsControl x:Name="LanguagesItemsControl">
                         <ItemsControl.ItemsPanel>
                           <ItemsPanelTemplate>
@@ -51,16 +51,16 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                           <DataTemplate>
-                            <CheckBox Margin="0,0,12,8" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                            <CheckBox Margin="0,0,10,4" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
                           </DataTemplate>
                         </ItemsControl.ItemTemplate>
                       </ItemsControl>
                     </Border>
                   </Grid>
 
-                  <Grid x:Name="LanguageSelectionSection" ColumnDefinitions="3*,7*" ColumnSpacing="8" IsVisible="False">
+                  <Grid x:Name="LanguageSelectionSection" ColumnDefinitions="3*,7*" ColumnSpacing="4" IsVisible="False">
                     <TextBlock Text="{DynamicResource LanguageSelectionViaLabelString}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,0,0" />
-                    <Border Grid.Column="1" Padding="8" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
+                    <Border Grid.Column="1" Padding="6,4" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="4">
                       <ItemsControl x:Name="LanguageSelectionsItemsControl">
                         <ItemsControl.ItemsPanel>
                           <ItemsPanelTemplate>
@@ -69,7 +69,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                           <DataTemplate>
-                            <CheckBox Margin="0,0,12,8" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                            <CheckBox Margin="0,0,10,4" Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
                           </DataTemplate>
                         </ItemsControl.ItemTemplate>
                       </ItemsControl>
@@ -81,8 +81,8 @@
                 </StackPanel>
               </Border>
 
-              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+              <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource VersionsAndEditionGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}" />
                   <controls:UserInput Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}" />
@@ -95,9 +95,9 @@
 
         <TabItem Header="{DynamicResource AdditionalInfoTabString}">
           <ScrollViewer>
-            <StackPanel Spacing="12" Margin="0,0,4,0">
-              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+            <StackPanel Spacing="6" Margin="0,0,4,0">
+              <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource ExtrasGroupBoxString}" FontWeight="Bold" />
                   <CheckBox x:Name="PCMacHybridCheckBox" Content="PC/Mac Hybrid" IsVisible="False" />
                   <controls:UserInput Label="{DynamicResource CommentsInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
@@ -108,8 +108,8 @@
                 </StackPanel>
               </Border>
 
-              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+              <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource PhysicalIdentifiersGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No." />
                   <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID" />
@@ -123,8 +123,8 @@
                 </StackPanel>
               </Border>
 
-              <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+              <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource PublisherIdentifiersGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID" />
                   <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID" />
@@ -164,8 +164,8 @@
 
         <TabItem Header="{DynamicResource ContentsTabString}">
           <ScrollViewer>
-            <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
-              <StackPanel Spacing="8">
+            <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
+              <StackPanel Spacing="4">
                 <controls:UserInput Label="General" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
                 <controls:UserInput x:Name="ApplicationsTextBox" Label="Applications" TextHeight="75" Enter="True" TextWrapping="Wrap" />
                 <controls:UserInput x:Name="GamesTextBox" Label="Games" TextHeight="75" Enter="True" TextWrapping="Wrap" />
@@ -185,9 +185,9 @@
 
         <TabItem Header="{DynamicResource RingcodesTabString}">
           <ScrollViewer>
-            <StackPanel Spacing="12" Margin="0,0,4,0">
-              <Border x:Name="L0InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+            <StackPanel Spacing="6" Margin="0,0,4,0">
+              <Border x:Name="L0InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock x:Name="L0HeaderText" Text="{DynamicResource L0InfoGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}" />
                   <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}" />
@@ -197,8 +197,8 @@
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L1InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
-                <StackPanel Spacing="8">
+              <Border x:Name="L1InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
+                <StackPanel Spacing="4">
                   <TextBlock x:Name="L1HeaderText" Text="{DynamicResource L1InfoGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}" />
                   <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}" />
@@ -208,8 +208,8 @@
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L2InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
-                <StackPanel Spacing="8">
+              <Border x:Name="L2InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+                <StackPanel Spacing="4">
                   <TextBlock x:Name="L2HeaderText" Text="{DynamicResource L2InfoGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}" />
                   <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}" />
@@ -217,8 +217,8 @@
                 </StackPanel>
               </Border>
 
-              <Border x:Name="L3InfoPanel" Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
-                <StackPanel Spacing="8">
+              <Border x:Name="L3InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
+                <StackPanel Spacing="4">
                   <TextBlock x:Name="L3HeaderText" Text="{DynamicResource L3InfoGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}" />
                   <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}" />
@@ -231,8 +231,8 @@
 
         <TabItem Header="{DynamicResource ReadOnlyInfoTabString}">
           <ScrollViewer>
-            <Border Padding="12" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
-              <StackPanel Spacing="8">
+            <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
+              <StackPanel Spacing="4">
                 <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True" Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}" />
                 <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True" />
                 <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True" Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
@@ -275,7 +275,7 @@
         </TabItem>
       </TabControl>
 
-      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+      <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="4">
         <Button x:Name="RingCodeGuideButton" Content="{DynamicResource RingCodeGuideButtonString}" />
         <Button x:Name="AcceptButton" Content="{DynamicResource AcceptButtonString}" />
         <Button x:Name="CancelButton" Content="{DynamicResource CancelButtonString}" />

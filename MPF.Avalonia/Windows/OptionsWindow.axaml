@@ -30,17 +30,17 @@
   </local:WindowBase.Styles>
 
   <Border Padding="8">
-    <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
       <TabControl x:Name="OptionsTabs"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Stretch">
         <TabItem Header="{DynamicResource GeneralTabString}">
           <ScrollViewer>
-            <StackPanel Margin="4" Spacing="10">
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+            <StackPanel Margin="4" Spacing="6">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource UserInterfaceGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto">
                     <CheckBox Content="{DynamicResource EnableDarkModeCheckBoxString}" IsChecked="{Binding Options.GUI.Theming.EnableDarkMode}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource CheckForUpdatesCheckBoxString}" IsChecked="{Binding Options.CheckForUpdatesOnStartup}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource CopyURLToClipboardCheckBoxString}" IsChecked="{Binding Options.GUI.CopyUpdateUrlToClipboard}" />
@@ -60,10 +60,10 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource DetectionGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
                     <CheckBox Content="{DynamicResource SkipSystemDetectCheckBoxString}" IsChecked="{Binding Options.GUI.SkipSystemDetection}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource NoFixedDrivesCheckBoxString}" IsChecked="{Binding Options.GUI.IgnoreFixedDrives}" />
                     <TextBlock Grid.Row="1"
@@ -81,10 +81,10 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource LoggingGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
                     <CheckBox Content="{DynamicResource VerboseLoggingCheckBoxString}" IsChecked="{Binding Options.VerboseLogging}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource AutoOpenLogCheckBoxString}" IsChecked="{Binding Options.GUI.OpenLogWindowAtStartup}" />
                   </Grid>
@@ -96,7 +96,7 @@
 
         <TabItem Header="{DynamicResource PathsTabString}">
           <ScrollViewer>
-            <Grid Margin="4" ColumnDefinitions="220,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="10">
+            <Grid Margin="4" ColumnDefinitions="220,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="4" RowSpacing="6">
               <TextBlock Grid.Row="0" Text="{DynamicResource AaruPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
               <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Options.Dumping.AaruPath, Mode=TwoWay}" />
               <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Width="26" Content="..." />
@@ -125,11 +125,11 @@
 
         <TabItem Header="{DynamicResource DumpingTabString}">
           <ScrollViewer>
-            <StackPanel Margin="4" Spacing="10">
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+            <StackPanel Margin="4" Spacing="6">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource DumpingGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                     <CheckBox Content="{DynamicResource ShowDiscInfoCheckBoxString}" IsChecked="{Binding Options.Processing.MediaInformation.PromptForDiscInformation}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource PullAllInformationCheckBoxString}" IsChecked="{Binding Options.Processing.Login.PullAllInformation}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource EnableTabInputCheckBoxString}" IsChecked="{Binding Options.Processing.MediaInformation.EnableTabsInInputFields}" />
@@ -158,10 +158,10 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource ProtectionGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto">
                     <CheckBox Content="{DynamicResource EnableProtectionScanCheckBoxString}" IsChecked="{Binding Options.Processing.ProtectionScanning.ScanForProtection}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource ScanArchiveContentsCheckBoxString}" IsChecked="{Binding Options.Processing.ProtectionScanning.ScanArchivesForProtection}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource IncludeDebugInformationCheckBoxString}" IsChecked="{Binding Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}" />
@@ -170,32 +170,32 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="2">
                   <TextBlock Text="{DynamicResource DefaultSpeedsGroupBoxString}" FontWeight="Bold" />
 
-                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource CDLabelString}" VerticalAlignment="Center" />
                     <Slider x:Name="DumpSpeedCDSlider" Classes="default-speed-slider" Grid.Column="1" Minimum="0" Maximum="72" Value="{Binding Options.Dumping.DumpSpeeds.CD, Mode=TwoWay}" TickFrequency="2" />
-                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="28" MinHeight="28" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.CD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="23" MinHeight="23" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.CD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                   </Grid>
 
-                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource DVDLabelString}" VerticalAlignment="Center" />
                     <Slider x:Name="DumpSpeedDVDSlider" Classes="default-speed-slider" Grid.Column="1" Minimum="0" Maximum="24" Value="{Binding Options.Dumping.DumpSpeeds.DVD, Mode=TwoWay}" TickFrequency="2" />
-                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="28" MinHeight="28" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.DVD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="23" MinHeight="23" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.DVD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                   </Grid>
 
-                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource HDDVDLabelString}" VerticalAlignment="Center" />
                     <Slider x:Name="DumpSpeedHDDVDSlider" Classes="default-speed-slider" Grid.Column="1" Minimum="0" Maximum="24" Value="{Binding Options.Dumping.DumpSpeeds.HDDVD, Mode=TwoWay}" TickFrequency="2" />
-                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="28" MinHeight="28" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.HDDVD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="23" MinHeight="23" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.HDDVD}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                   </Grid>
 
-                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="8">
+                  <Grid ColumnDefinitions="80,*,32" ColumnSpacing="4">
                     <TextBlock Text="{DynamicResource BDLabelString}" VerticalAlignment="Center" />
                     <Slider x:Name="DumpSpeedBDSlider" Classes="default-speed-slider" Grid.Column="1" Minimum="0" Maximum="16" Value="{Binding Options.Dumping.DumpSpeeds.Bluray, Mode=TwoWay}" TickFrequency="1" />
-                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="28" MinHeight="28" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.Bluray}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="2" Width="32" MinWidth="32" MaxWidth="32" Height="23" MinHeight="23" Padding="0" IsReadOnly="True" Text="{Binding Options.Dumping.DumpSpeeds.Bluray}" HorizontalContentAlignment="Center" VerticalAlignment="Center" />
                   </Grid>
                 </StackPanel>
               </Border>
@@ -205,11 +205,11 @@
 
         <TabItem Header="{DynamicResource ProgramsTabString}">
           <ScrollViewer>
-            <StackPanel Margin="4" Spacing="10">
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+            <StackPanel Margin="4" Spacing="6">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource AaruGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto">
                     <CheckBox Content="{DynamicResource EnableDebugOutputCheckBoxString}" IsChecked="{Binding Options.Dumping.Aaru.EnableDebug}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource AaruEnableVerboseOutputCheckBoxString}" IsChecked="{Binding Options.Dumping.Aaru.EnableVerbose}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource ForceDumpingCheckBoxString}" IsChecked="{Binding Options.Dumping.Aaru.ForceDumping}" />
@@ -227,10 +227,10 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource DiscImageCreatorGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                     <CheckBox Content="{DynamicResource QuietModeCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.QuietMode}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource ParanoidModeCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.ParanoidMode}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource UseCMIFlagCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.UseCMIFlag}" />
@@ -267,10 +267,10 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource RedumperGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="*,*" ColumnSpacing="24" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                  <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                     <CheckBox Content="{DynamicResource RedumperEnableVerboseOutputCheckBoxString}" IsChecked="{Binding Options.Dumping.Redumper.EnableVerbose}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource EnableRefineSectorModeFlagCheckBoxString}" IsChecked="{Binding Options.Dumping.Redumper.RefineSectorMode}" />
                     <TextBlock Grid.Row="1"
@@ -347,18 +347,18 @@
 
         <TabItem Header="{DynamicResource LoginInfoTabString}">
           <ScrollViewer>
-            <StackPanel Margin="4" Spacing="10">
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+            <StackPanel Margin="4" Spacing="6">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource RetrievalGroupBoxString}" FontWeight="Bold" />
                   <CheckBox Content="{DynamicResource RetrieveMatchInformationCheckBoxString}" IsChecked="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
-                <StackPanel Spacing="8">
+              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+                <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource RedumpGroupBoxString}" FontWeight="Bold" />
-                  <Grid ColumnDefinitions="Auto,140,Auto,140,Auto" ColumnSpacing="10">
+                  <Grid ColumnDefinitions="Auto,140,Auto,140,Auto" ColumnSpacing="6">
                     <TextBlock Text="{DynamicResource UsernameLabelString}" VerticalAlignment="Center" />
                     <TextBox x:Name="RedumpUsernameTextBox" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpUsername, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
                     <TextBlock Grid.Column="2" Text="{DynamicResource PasswordLabelString}" VerticalAlignment="Center" />
@@ -377,7 +377,7 @@
         </TabItem>
       </TabControl>
 
-      <Border Grid.Row="1" Margin="4,0,4,0" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10">
+      <Border Grid.Row="1" Margin="4,0,4,0" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
         <Grid ColumnDefinitions="*,Auto,Auto,*" ColumnSpacing="12">
           <Button x:Name="AcceptButton" Grid.Column="1" Width="100" Content="{DynamicResource AcceptButtonString}" />
           <Button x:Name="CancelButton" Grid.Column="2" Width="100" Content="{DynamicResource CancelButtonString}" />
