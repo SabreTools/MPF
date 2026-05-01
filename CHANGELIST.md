@@ -14,6 +14,7 @@
 - Sync with Redump wiki
 - Add BD protection info, fix Cover ID setting
 - Separate BEE
+- Convert type of reports from success to neutral for essential steps (shfil119)
 
 ### 3.7.1 (2026-03-30)
 
