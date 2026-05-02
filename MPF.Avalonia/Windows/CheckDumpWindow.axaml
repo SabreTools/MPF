@@ -4,7 +4,7 @@
                   xmlns:converters="using:MPF.Avalonia"
                   xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.Avalonia.Windows.CheckDumpWindow"
-                  Width="620"
+                  Width="540"
                   SizeToContent="Height"
                   CanResize="False"
                   Title="{DynamicResource CheckDumpTitleString}">

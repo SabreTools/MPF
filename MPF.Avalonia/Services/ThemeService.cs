@@ -1,3 +1,7 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -55,7 +59,44 @@ namespace MPF.Avalonia.Services
             resources["LogForegroundBrush"] = new SolidColorBrush(Color.Parse("#FFF0F0F0"));
 
             if (global::Avalonia.Application.Current is { } application)
+            {
                 application.RequestedThemeVariant = darkMode ? ThemeVariant.Dark : ThemeVariant.Light;
+                ApplyWindowsTitleBarTheme(darkMode);
+            }
+        }
+
+        public static void ApplyWindowTitleBarTheme(Window window)
+        {
+            if (global::Avalonia.Application.Current is null)
+                return;
+
+            ApplyWindowTitleBarTheme(window, global::Avalonia.Application.Current.RequestedThemeVariant == ThemeVariant.Dark);
+        }
+
+        private static void ApplyWindowsTitleBarTheme(bool darkMode)
+        {
+            if (!OperatingSystem.IsWindows())
+                return;
+
+            if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+                return;
+
+            foreach (Window window in desktop.Windows)
+                ApplyWindowTitleBarTheme(window, darkMode);
+        }
+
+        private static void ApplyWindowTitleBarTheme(Window window, bool darkMode)
+        {
+            if (!OperatingSystem.IsWindows())
+                return;
+
+            IntPtr hwnd = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            int enabled = darkMode ? 1 : 0;
+            if (DwmSetWindowAttribute(hwnd, DwmWindowAttributeUseImmersiveDarkMode, ref enabled, sizeof(int)) != 0)
+                _ = DwmSetWindowAttribute(hwnd, DwmWindowAttributeUseImmersiveDarkModeBefore20H1, ref enabled, sizeof(int));
         }
 
         private static bool IsSystemDarkMode()
@@ -65,7 +106,66 @@ namespace MPF.Avalonia.Services
                 .GetColorValues()
                 .ThemeVariant;
 
-            return themeVariant == PlatformThemeVariant.Dark;
+            if (themeVariant == PlatformThemeVariant.Dark)
+                return true;
+
+            if (!OperatingSystem.IsLinux())
+                return false;
+
+            return IsLinuxDarkMode();
         }
+
+        private static bool IsLinuxDarkMode()
+            => IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
+                || IsDarkThemeName(Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE"))
+                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface color-scheme"))
+                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme"))
+                || IsKdeColorSchemeDark();
+
+        private static bool IsKdeColorSchemeDark()
+        {
+            string? colorScheme = RunCommand("kreadconfig6", "--group General --key ColorScheme")
+                ?? RunCommand("kreadconfig5", "--group General --key ColorScheme");
+
+            return IsDarkThemeName(colorScheme);
+        }
+
+        private static bool IsDarkThemeName(string? value)
+            => value?.IndexOf("dark", StringComparison.OrdinalIgnoreCase) >= 0
+                || value?.IndexOf("prefer-dark", StringComparison.OrdinalIgnoreCase) >= 0;
+
+        private static string? RunCommand(string fileName, string arguments)
+        {
+            try
+            {
+                using Process process = Process.Start(new ProcessStartInfo
+                {
+                    FileName = fileName,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                })!;
+
+                if (!process.WaitForExit(1000))
+                {
+                    process.Kill(true);
+                    return null;
+                }
+
+                return process.ExitCode == 0 ? process.StandardOutput.ReadToEnd().Trim() : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
+        private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int attributeValue, int attributeSize);
     }
 }

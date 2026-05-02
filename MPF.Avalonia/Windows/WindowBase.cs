@@ -1,10 +1,16 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
+using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
 {
     public class WindowBase : Window
     {
+        public WindowBase()
+        {
+            Opened += (_, _) => WindowChromeService.Apply(this);
+        }
+
         protected string StringResource(string key, string fallback)
             => global::Avalonia.Application.Current?.TryFindResource(key, out object? value) == true ? value?.ToString() ?? fallback : fallback;
 

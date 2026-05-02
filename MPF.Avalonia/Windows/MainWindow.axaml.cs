@@ -34,6 +34,7 @@ namespace MPF.Avalonia.Windows
         public MainWindow()
         {
             InitializeComponent();
+            ConfigurePlatformChrome();
             DataContext = new MainViewModel();
             ThemeService.SyncWithSystemTheme(MainViewModel.Options);
             Opened += OnOpened;
@@ -63,14 +64,21 @@ namespace MPF.Avalonia.Windows
                 ShowOptionsWindow(StringResource("OptionsFirstRunTitleString", "Welcome to MPF, Explore the Options"));
         }
 
+        private void ConfigurePlatformChrome()
+        {
+            if (OperatingSystem.IsWindows())
+                return;
+
+            SystemDecorations = SystemDecorations.Full;
+            this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
+            this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
+            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(8, 2, 8, 8);
+        }
+
         private void ConfigurePlatformMenus()
         {
             if (!OperatingSystem.IsMacOS())
                 return;
-
-            this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
-            this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
-            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(10, 2, 10, 6);
 
             var nativeMenu = new NativeMenu();
             nativeMenu.Add(CreateNativeMenuGroup(
