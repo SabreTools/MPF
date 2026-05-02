@@ -39,7 +39,8 @@
             Margin="0,3,0,0"
             ColumnDefinitions="Auto,*,Auto"
             Background="Transparent">
-        <TextBlock Grid.ColumnSpan="3"
+        <TextBlock x:Name="AppTitleLabel"
+                   Grid.ColumnSpan="3"
                    Text="{DynamicResource AppTitleString}"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
@@ -47,7 +48,7 @@
                    IsHitTestVisible="False" />
 
         <Menu x:Name="AppMenuBar" Grid.Column="0" Height="26" Margin="4,0,0,0" VerticalAlignment="Center" Background="Transparent" FontSize="12">
-          <MenuItem x:Name="FileMenuItem" Header="Files">
+          <MenuItem x:Name="FileMenuItem" Header="File">
             <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" />
           </MenuItem>
           <MenuItem x:Name="ToolsMenuItem" Header="Tools">
@@ -221,5 +222,3 @@
     </Grid>
   </Border>
 </local:WindowBase>
-
-

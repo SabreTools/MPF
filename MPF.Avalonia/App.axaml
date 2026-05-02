@@ -103,6 +103,9 @@
       <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
       <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
     </Style>
+    <Style Selector="Expander#LogPanel /template/ ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+    </Style>
     <Style Selector="Expander#LogPanel /template/ ToggleButton:pressed">
       <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
       <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />

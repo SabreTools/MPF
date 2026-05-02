@@ -55,7 +55,7 @@ namespace MPF.Avalonia.UserControls
             {
                 LogLevel.SECRET => Brushes.DarkGray,
                 LogLevel.ERROR => Brushes.IndianRed,
-                LogLevel.VERBOSE => darkMode ? new SolidColorBrush(Color.Parse("#FFE6D800")) : Brushes.Yellow,
+                LogLevel.VERBOSE => darkMode ? new SolidColorBrush(Color.Parse("#FFCBBF00")) : Brushes.Yellow,
                 LogLevel.USER_SUCCESS => Brushes.ForestGreen,
                 _ => Brushes.White,
             };

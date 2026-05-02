@@ -1,5 +1,9 @@
+using System;
+using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
@@ -8,7 +12,23 @@ namespace MPF.Avalonia.Windows
     {
         public WindowBase()
         {
-            Opened += (_, _) => WindowChromeService.Apply(this);
+            Opened += (_, _) =>
+            {
+                WindowChromeService.Apply(this);
+                ApplyPlatformLayout();
+            };
+        }
+
+        private void ApplyPlatformLayout()
+        {
+            if (OperatingSystem.IsWindows())
+                return;
+
+            foreach (TabControl tabControl in this.GetVisualDescendants().OfType<TabControl>())
+            {
+                Thickness margin = tabControl.Margin;
+                tabControl.Margin = new Thickness(margin.Left, margin.Top + 4, margin.Right, margin.Bottom);
+            }
         }
 
         protected string StringResource(string key, string fallback)

@@ -28,6 +28,7 @@ namespace MPF.Avalonia.Windows
         private double _expandedWindowHeight;
         private double _collapsedWindowHeight;
         private bool _logPanelResizeInitialized;
+        private NativeMenuItem? _nativeLanguageMenuGroup;
 
         public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
@@ -70,9 +71,19 @@ namespace MPF.Avalonia.Windows
                 return;
 
             SystemDecorations = SystemDecorations.Full;
-            this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
-            this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
-            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(8, 2, 8, 8);
+            if (OperatingSystem.IsMacOS())
+            {
+                this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
+                this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
+            }
+            else
+            {
+                this.FindControl<TextBlock>("AppTitleLabel")!.IsVisible = false;
+                this.FindControl<Control>("TitleDragArea")!.IsVisible = false;
+                this.FindControl<Button>("CloseButton")!.IsVisible = false;
+            }
+
+            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
         }
 
         private void ConfigurePlatformMenus()
@@ -91,7 +102,11 @@ namespace MPF.Avalonia.Windows
                 CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), () => OptionsMenuItemClick(this, new RoutedEventArgs())),
                 CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), () => DebugViewClick(this, new RoutedEventArgs()))));
             nativeMenu.Add(CreateNativeMenuGroup(
-                "Language",
+                StringResource("HelpMenuString", "Help"),
+                CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs())),
+                CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()))));
+            _nativeLanguageMenuGroup = CreateNativeMenuGroup(
+                NativeLanguageMenuHeader(),
                 CreateNativeMenuItem("English", () => LanguageMenuItemClick(this.FindControl<MenuItem>("EnglishMenuItem"), new RoutedEventArgs())),
                 CreateNativeMenuItem("Deutsch", () => LanguageMenuItemClick(this.FindControl<MenuItem>("GermanMenuItem"), new RoutedEventArgs())),
                 CreateNativeMenuItem("Español", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SpanishMenuItem"), new RoutedEventArgs())),
@@ -103,11 +118,8 @@ namespace MPF.Avalonia.Windows
                 CreateNativeMenuItem("Português", () => LanguageMenuItemClick(this.FindControl<MenuItem>("PortugueseMenuItem"), new RoutedEventArgs())),
                 CreateNativeMenuItem("Русский", () => LanguageMenuItemClick(this.FindControl<MenuItem>("RussianMenuItem"), new RoutedEventArgs())),
                 CreateNativeMenuItem("Svenska", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SwedishMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Українська", () => LanguageMenuItemClick(this.FindControl<MenuItem>("UkrainianMenuItem"), new RoutedEventArgs()))));
-            nativeMenu.Add(CreateNativeMenuGroup(
-                StringResource("HelpMenuString", "Help"),
-                CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs())),
-                CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()))));
+                CreateNativeMenuItem("Українська", () => LanguageMenuItemClick(this.FindControl<MenuItem>("UkrainianMenuItem"), new RoutedEventArgs())));
+            nativeMenu.Add(_nativeLanguageMenuGroup);
 
             NativeMenu.SetMenu(this, nativeMenu);
         }
@@ -132,6 +144,15 @@ namespace MPF.Avalonia.Windows
 
         private static string CleanMenuHeader(string header)
             => header.Replace("_", string.Empty);
+
+        private string NativeLanguageMenuHeader()
+            => StringResource("LanguageMenuString", "ENG");
+
+        private void UpdateNativeLanguageMenuHeader()
+        {
+            if (_nativeLanguageMenuGroup is not null)
+                _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
+        }
 
         private void TitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
         {
@@ -428,6 +449,7 @@ namespace MPF.Avalonia.Windows
 
             MainViewModel.Options.GUI.DefaultInterfaceLanguage = language;
             StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, language);
+            UpdateNativeLanguageMenuHeader();
         }
 
         public async void CopyProtectScanButtonClick(object? sender, RoutedEventArgs e)

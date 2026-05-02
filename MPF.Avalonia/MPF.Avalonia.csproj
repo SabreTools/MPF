@@ -12,7 +12,7 @@
     <LangVersion>latest</LangVersion>
     <NoWarn>NU1903</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <VersionPrefix>0.1.1</VersionPrefix>
+    <VersionPrefix>0.1.2</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>

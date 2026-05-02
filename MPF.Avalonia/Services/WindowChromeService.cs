@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 namespace MPF.Avalonia.Services
 {
@@ -9,6 +10,7 @@ namespace MPF.Avalonia.Services
         public static void Apply(Window window)
         {
             HideMacOSZoomButton(window);
+            Dispatcher.UIThread.Post(() => HideMacOSZoomButton(window), DispatcherPriority.Loaded);
             ThemeService.ApplyWindowTitleBarTheme(window);
         }
 
@@ -25,8 +27,9 @@ namespace MPF.Avalonia.Services
             if (zoomButton == IntPtr.Zero)
                 return;
 
-            objc_msgSend_bool(zoomButton, sel_registerName("setEnabled:"), false);
+            objc_msgSend_double(zoomButton, sel_registerName("setAlphaValue:"), 0);
             objc_msgSend_bool(zoomButton, sel_registerName("setHidden:"), true);
+            objc_msgSend_bool(zoomButton, sel_registerName("setEnabled:"), false);
         }
 
         private const long NSWindowZoomButton = 2;
@@ -39,5 +42,8 @@ namespace MPF.Avalonia.Services
 
         [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
         private static extern void objc_msgSend_bool(IntPtr receiver, IntPtr selector, bool argument);
+
+        [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+        private static extern void objc_msgSend_double(IntPtr receiver, IntPtr selector, double argument);
     }
 }
