@@ -5,7 +5,7 @@
                   xmlns:localControls="using:MPF.Avalonia.Controls"
                   xmlns:converters="using:MPF.Avalonia"
                   x:Class="MPF.Avalonia.Windows.MediaInformationWindow"
-                  Width="800"
+                  Width="700"
                   MaxHeight="800"
                   SizeToContent="Height"
                   CanResize="False"

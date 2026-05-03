@@ -2,7 +2,7 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:local="using:MPF.Avalonia.Windows"
                   x:Class="MPF.Avalonia.Windows.RingCodeGuideWindow"
-                  Width="740"
+                  Width="600"
                   MaxHeight="1024"
                   SizeToContent="Height"
                   CanResize="False"
@@ -13,10 +13,9 @@
               HorizontalContentAlignment="Stretch">
     <TabItem Header="1-Layer Ringcode">
       <ScrollViewer>
-        <StackPanel Margin="6,6,6,6" Spacing="8">
+        <StackPanel Margin="6,6,6,18" Spacing="8">
           <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-1-layer.png"
                  HorizontalAlignment="Center"
-                 MaxWidth="724"
                  Stretch="Uniform" />
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
@@ -44,10 +43,9 @@
 
     <TabItem Header="2-Layer Ringcode">
       <ScrollViewer>
-        <StackPanel Margin="6,6,6,6" Spacing="8">
+        <StackPanel Margin="6,6,6,18" Spacing="8">
           <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-2-layer.png"
                  HorizontalAlignment="Center"
-                 MaxWidth="714"
                  Stretch="Uniform" />
 
           <TextBlock FontSize="16" TextWrapping="Wrap">

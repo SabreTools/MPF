@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Media;
 
 namespace MPF.Avalonia.UserControls
@@ -70,6 +71,20 @@ namespace MPF.Avalonia.UserControls
         }
 
         public UserInput()
-            => InitializeComponent();
+        {
+            InitializeComponent();
+            UpdateTextAlignment();
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+
+            if (change.Property == EnterProperty)
+                UpdateTextAlignment();
+        }
+
+        private void UpdateTextAlignment()
+            => InputTextBox.VerticalContentAlignment = Enter ? VerticalAlignment.Top : VerticalAlignment.Center;
     }
 }

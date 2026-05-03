@@ -8,12 +8,14 @@
                HorizontalAlignment="Right"
                VerticalAlignment="Center"
                Text="{Binding Label, RelativeSource={RelativeSource AncestorType=local:UserInput}}" />
-    <TextBox Grid.Column="1"
+    <TextBox x:Name="InputTextBox"
+             Grid.Column="1"
              MinHeight="{Binding TextHeight, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
              Text="{Binding Text, RelativeSource={RelativeSource AncestorType=local:UserInput}, Mode=TwoWay}"
              AcceptsTab="{Binding Tab, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
              AcceptsReturn="{Binding Enter, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
              TextWrapping="{Binding TextWrapping, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
+             HorizontalContentAlignment="Left"
              IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource AncestorType=local:UserInput}}" />
   </Grid>
 </UserControl>
