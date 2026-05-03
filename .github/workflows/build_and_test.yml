@@ -86,7 +86,7 @@ jobs:
                     <key>CFBundlePackageType</key>
                     <string>APPL</string>
                     <key>CFBundleShortVersionString</key>
-                    <string>0.1.3</string>
+                    <string>0.1.4</string>
                     <key>CFBundleVersion</key>
                     <string>3</string>
                     <key>LSMinimumSystemVersion</key>
@@ -109,19 +109,15 @@ jobs:
                   name: packaged-builds
                   path: artifacts/*
 
-    linux-appimage:
+    linux-build:
         strategy:
             fail-fast: false
             matrix:
                 include:
                     - runtime: linux-x64
                       runner: ubuntu-latest
-                      appimage_arch: x86_64
-                      appimagetool: appimagetool-x86_64.AppImage
                     - runtime: linux-arm64
                       runner: ubuntu-24.04-arm
-                      appimage_arch: aarch64
-                      appimagetool: appimagetool-aarch64.AppImage
 
         runs-on: ${{ matrix.runner }}
 
@@ -134,69 +130,24 @@ jobs:
                   dotnet-version: |
                       10.0.x
 
-            - name: Publish Linux AppImage
+            - name: Publish Linux build
               run: |
-                  mkdir -p artifacts publish/${{ matrix.runtime }} publish/appimage/AppDir/usr/bin publish/appimage/AppDir/usr/share/applications publish/appimage/AppDir/usr/share/icons/hicolor/256x256/apps
+                  mkdir -p artifacts publish/${{ matrix.runtime }}
 
                   dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/${{ matrix.runtime }}
-                  cp -R publish/${{ matrix.runtime }}/. publish/appimage/AppDir/usr/bin/
 
-                  python3 - <<'PY'
-                  import struct
-                  from pathlib import Path
+                  (cd publish/${{ matrix.runtime }} && zip -r ../../artifacts/MPF-UI_Avalonia_${{ matrix.runtime }}_release.zip .)
 
-                  ico = Path("MPF.Avalonia/Assets/Icon.ico").read_bytes()
-                  count = struct.unpack_from("<H", ico, 4)[0]
-                  for index in range(count):
-                      entry_offset = 6 + index * 16
-                      width = ico[entry_offset] or 256
-                      height = ico[entry_offset + 1] or 256
-                      size, offset = struct.unpack_from("<II", ico, entry_offset + 8)
-                      image = ico[offset:offset + size]
-                      if width == 256 and height == 256 and image.startswith(b"\x89PNG\r\n\x1a\n"):
-                          Path("publish/appimage/AppDir/usr/share/icons/hicolor/256x256/apps/mpf.png").write_bytes(image)
-                          Path("publish/appimage/AppDir/mpf.png").write_bytes(image)
-                          Path("publish/appimage/AppDir/.DirIcon").write_bytes(image)
-                          break
-                  else:
-                      raise SystemExit("Could not find a 256x256 PNG image in Icon.ico")
-                  PY
-
-                  cat > publish/appimage/AppDir/AppRun <<'EOF'
-                  #!/bin/sh
-                  HERE="$(dirname "$(readlink -f "$0")")"
-                  exec "$HERE/usr/bin/MPF.Avalonia" "$@"
-                  EOF
-                  chmod +x publish/appimage/AppDir/AppRun
-
-                  cat > publish/appimage/AppDir/mpf.desktop <<'EOF'
-                  [Desktop Entry]
-                  Type=Application
-                  Name=Media Preservation Frontend
-                  Exec=MPF.Avalonia
-                  Icon=mpf
-                  Categories=Utility;
-                  Terminal=false
-                  EOF
-                  cp publish/appimage/AppDir/mpf.desktop publish/appimage/AppDir/usr/share/applications/mpf.desktop
-
-                  curl -L -o ${{ matrix.appimagetool }} https://github.com/AppImage/appimagetool/releases/download/continuous/${{ matrix.appimagetool }}
-                  chmod +x ${{ matrix.appimagetool }}
-                  ./${{ matrix.appimagetool }} --appimage-extract
-                  ARCH=${{ matrix.appimage_arch }} ./squashfs-root/AppRun publish/appimage/AppDir artifacts/MPF-UI_Avalonia_${{ matrix.runtime }}_release.AppImage
-
-                  strings artifacts/MPF-UI_Avalonia_${{ matrix.runtime }}_release.AppImage | grep -q "squashfuse"
-
-            - name: Upload Linux AppImage
+            - name: Upload Linux build
               uses: actions/upload-artifact@v4
               with:
-                  name: ${{ matrix.runtime }}-appimage
+                  name: ${{ matrix.runtime }}-build
                   path: artifacts/*
 
     release:
         if: github.event_name == 'push'
         runs-on: ubuntu-latest
-        needs: [build, linux-appimage]
+        needs: [build, linux-build]
 
         steps:
             - uses: actions/checkout@v5
@@ -218,7 +169,7 @@ jobs:
                   git push origin :refs/tags/rolling || true
                   git push origin rolling --force
 
-            - name: Remove stale Linux zip asset
+            - name: Remove stale Linux AppImage assets
               env:
                   GITHUB_TOKEN: ${{ github.token }}
               run: |
@@ -227,7 +178,8 @@ jobs:
                       release_tag="rolling"
                   fi
 
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-x64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
+                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-x64_release.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
+                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-arm64_release.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
 
             - name: Upload to rolling
               if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
