@@ -112,6 +112,7 @@
           <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="Auto,180" ColumnSpacing="8">
             <localControls:MeasuredDropDownComboBox x:Name="SystemTypeComboBox"
                                                     IgnoreHeaderItemsInMeasurement="True"
+                                                    SizeToSelectedItem="True"
                                                     ItemsSource="{Binding Systems}"
                                                     SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                     IsEnabled="{Binding SystemTypeComboBoxEnabled}" />

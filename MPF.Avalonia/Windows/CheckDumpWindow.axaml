@@ -24,7 +24,7 @@
             <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding InputPathBrowseButtonEnabled}" MinHeight="23" Padding="10,2" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="1" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
-            <localControls:MeasuredDropDownComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" IgnoreHeaderItemsInMeasurement="True" ItemsSource="{Binding Systems}" SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding SystemTypeComboBoxEnabled}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <localControls:MeasuredDropDownComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" IgnoreHeaderItemsInMeasurement="True" SizeToSelectedItem="True" ItemsSource="{Binding Systems}" SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding SystemTypeComboBoxEnabled}" HorizontalAlignment="Left" VerticalAlignment="Center" />
 
             <TextBlock Grid.Row="2" Text="{DynamicResource DumpingProgramLabelString}" VerticalAlignment="Center" />
             <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding DumpingProgramComboBoxEnabled}" VerticalAlignment="Center" />

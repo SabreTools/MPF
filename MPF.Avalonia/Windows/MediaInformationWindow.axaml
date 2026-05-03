@@ -5,6 +5,7 @@
                   xmlns:converters="using:MPF.Avalonia"
                   x:Class="MPF.Avalonia.Windows.MediaInformationWindow"
                   Width="540"
+                  MaxHeight="800"
                   SizeToContent="Height"
                   CanResize="False"
                   Title="{DynamicResource MediaInformationTitleString}">

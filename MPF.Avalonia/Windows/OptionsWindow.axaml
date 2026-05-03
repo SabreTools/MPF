@@ -39,7 +39,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource GeneralTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Height="262" Margin="0,-4,0,0">
+          <ScrollViewer Margin="0,-4,0,0">
             <StackPanel Margin="0" Spacing="4">
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
@@ -250,7 +250,7 @@
                     <CheckBox Content="{DynamicResource QuietModeCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.QuietMode}" />
                     <CheckBox Grid.Column="1" Content="{DynamicResource ParanoidModeCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.ParanoidMode}" />
                     <CheckBox Grid.Row="1" Content="{DynamicResource UseCMIFlagCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.UseCMIFlag}" />
-                    <CheckBox Grid.Row="1" Grid.Column="1" Content="{DynamicResource MultiSectorReadCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.MultiSectorRead}" />
+                    <CheckBox x:Name="MultiSectorReadCheckBox" Grid.Row="1" Grid.Column="1" Content="{DynamicResource MultiSectorReadCheckBoxString}" IsChecked="{Binding Options.Dumping.DIC.MultiSectorRead}" />
                     <TextBlock Grid.Row="2"
                                Text="{DynamicResource MultiSectorReadValueLabelString}"
                                HorizontalAlignment="Right"
@@ -260,7 +260,7 @@
                              Width="220"
                              HorizontalAlignment="Left"
                              Text="{Binding Options.Dumping.DIC.MultiSectorReadValue, Mode=TwoWay}"
-                             IsEnabled="{Binding Options.Dumping.DIC.MultiSectorRead}" />
+                             IsEnabled="{Binding #MultiSectorReadCheckBox.IsChecked}" />
                     <TextBlock Grid.Row="3"
                                Text="{DynamicResource DICCDRereadTriesLabelString}"
                                HorizontalAlignment="Right"
@@ -319,7 +319,7 @@
                               HorizontalAlignment="Left"
                               ItemsSource="{Binding RedumperReadMethods}"
                               SelectedItem="{Binding Options.Dumping.Redumper.ReadMethod, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                              IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
+                              IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
                     <TextBlock Grid.Row="5"
                                Text="{DynamicResource DefaultSectorOrderLabelString}"
                                HorizontalAlignment="Right"
@@ -331,7 +331,7 @@
                               HorizontalAlignment="Left"
                               ItemsSource="{Binding RedumperSectorOrders}"
                               SelectedItem="{Binding Options.Dumping.Redumper.SectorOrder, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                              IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
+                              IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
                     <TextBlock Grid.Row="6"
                                Text="{DynamicResource DefaultDriveTypeLabelString}"
                                HorizontalAlignment="Right"
@@ -343,7 +343,7 @@
                               HorizontalAlignment="Left"
                               ItemsSource="{Binding RedumperDriveTypes}"
                               SelectedItem="{Binding Options.Dumping.Redumper.DriveType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
-                              IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
+                              IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
                     <TextBlock Grid.Row="7"
                                Text="{DynamicResource DefaultDrivePregapStartLabelString}"
                                HorizontalAlignment="Right"
@@ -353,7 +353,7 @@
                              Width="220"
                              HorizontalAlignment="Left"
                              Text="{Binding Options.Dumping.Redumper.DrivePregapStart, Mode=TwoWay}"
-                             IsEnabled="{Binding Options.Dumping.Redumper.NonRedumpMode}" />
+                             IsEnabled="{Binding #NonRedumpModeCheckBox.IsChecked}" />
                   </Grid>
                 </StackPanel>
               </Border>
