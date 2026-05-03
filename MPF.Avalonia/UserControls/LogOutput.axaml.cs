@@ -11,7 +11,7 @@ namespace MPF.Avalonia.UserControls
 {
     public partial class LogOutput : UserControl
     {
-        public const double DefaultConsoleHeight = 170;
+        public const double DefaultConsoleHeight = 180;
         private const int MaxEntryCount = 5000;
 
         public ObservableCollection<LogEntry> Entries { get; } = [];
@@ -32,9 +32,13 @@ namespace MPF.Avalonia.UserControls
 
             Dispatcher.UIThread.Post(() =>
             {
-                Entries.Add(new LogEntry(text, GetBrush(logLevel)));
-                if (Entries.Count > MaxEntryCount)
-                    Entries.RemoveAt(0);
+                IBrush brush = GetBrush(logLevel);
+                foreach (string line in text.Replace("\r\n", "\n").TrimEnd('\n').Split('\n'))
+                {
+                    Entries.Add(new LogEntry(line, brush));
+                    if (Entries.Count > MaxEntryCount)
+                        Entries.RemoveAt(0);
+                }
 
                 this.FindControl<ScrollViewer>("Scroller")?.ScrollToEnd();
             });
@@ -44,7 +48,7 @@ namespace MPF.Avalonia.UserControls
         {
             Border? logSurface = this.FindControl<Border>("LogSurface");
             if (logSurface is not null)
-                logSurface.Height = Math.Max(DefaultConsoleHeight, height);
+                logSurface.Height = DefaultConsoleHeight;
         }
 
         private static IBrush GetBrush(LogLevel logLevel)

@@ -7,14 +7,14 @@ namespace MPF.Avalonia.Services
 {
     internal static class WindowChromeService
     {
-        public static void Apply(Window window)
+        public static void Apply(Window window, bool hideMinimizeButton = false)
         {
-            HideMacOSZoomButton(window);
-            Dispatcher.UIThread.Post(() => HideMacOSZoomButton(window), DispatcherPriority.Loaded);
+            HideMacOSUnavailableWindowButtons(window, hideMinimizeButton);
+            Dispatcher.UIThread.Post(() => HideMacOSUnavailableWindowButtons(window, hideMinimizeButton), DispatcherPriority.Loaded);
             ThemeService.ApplyWindowTitleBarTheme(window);
         }
 
-        private static void HideMacOSZoomButton(Window window)
+        private static void HideMacOSUnavailableWindowButtons(Window window, bool hideMinimizeButton)
         {
             if (!OperatingSystem.IsMacOS())
                 return;
@@ -23,15 +23,36 @@ namespace MPF.Avalonia.Services
             if (nsWindow == IntPtr.Zero)
                 return;
 
-            IntPtr zoomButton = objc_msgSend_IntPtr_Int64(nsWindow, sel_registerName("standardWindowButton:"), NSWindowZoomButton);
-            if (zoomButton == IntPtr.Zero)
-                return;
+            ulong styleMask = objc_msgSend_ulong(nsWindow, sel_registerName("styleMask"));
+            if (hideMinimizeButton)
+                styleMask &= ~NSWindowStyleMaskMiniaturizable;
 
-            objc_msgSend_double(zoomButton, sel_registerName("setAlphaValue:"), 0);
-            objc_msgSend_bool(zoomButton, sel_registerName("setHidden:"), true);
-            objc_msgSend_bool(zoomButton, sel_registerName("setEnabled:"), false);
+            if (!window.CanResize)
+                styleMask &= ~NSWindowStyleMaskResizable;
+
+            objc_msgSend_ulong(nsWindow, sel_registerName("setStyleMask:"), styleMask);
+
+            if (hideMinimizeButton)
+                HideMacOSWindowButton(nsWindow, NSWindowMiniaturizeButton);
+
+            if (!window.CanResize)
+                HideMacOSWindowButton(nsWindow, NSWindowZoomButton);
         }
 
+        private static void HideMacOSWindowButton(IntPtr nsWindow, long button)
+        {
+            IntPtr windowButton = objc_msgSend_IntPtr_Int64(nsWindow, sel_registerName("standardWindowButton:"), button);
+            if (windowButton == IntPtr.Zero)
+                return;
+
+            objc_msgSend_double(windowButton, sel_registerName("setAlphaValue:"), 0);
+            objc_msgSend_bool(windowButton, sel_registerName("setHidden:"), true);
+            objc_msgSend_bool(windowButton, sel_registerName("setEnabled:"), false);
+        }
+
+        private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
+        private const ulong NSWindowStyleMaskResizable = 1UL << 3;
+        private const long NSWindowMiniaturizeButton = 1;
         private const long NSWindowZoomButton = 2;
 
         [DllImport("/usr/lib/libobjc.A.dylib")]
@@ -45,5 +66,11 @@ namespace MPF.Avalonia.Services
 
         [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
         private static extern void objc_msgSend_double(IntPtr receiver, IntPtr selector, double argument);
+
+        [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+        private static extern ulong objc_msgSend_ulong(IntPtr receiver, IntPtr selector);
+
+        [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
+        private static extern void objc_msgSend_ulong(IntPtr receiver, IntPtr selector, ulong argument);
     }
 }

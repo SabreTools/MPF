@@ -28,7 +28,17 @@ namespace MPF.Avalonia.Windows
         private double _expandedWindowHeight;
         private double _collapsedWindowHeight;
         private bool _logPanelResizeInitialized;
+        private NativeMenuItem? _nativeFileMenuGroup;
+        private NativeMenuItem? _nativeToolsMenuGroup;
+        private NativeMenuItem? _nativeHelpMenuGroup;
         private NativeMenuItem? _nativeLanguageMenuGroup;
+        private NativeMenuItem? _nativeExitMenuItem;
+        private NativeMenuItem? _nativeCheckDumpMenuItem;
+        private NativeMenuItem? _nativeCreateIrdMenuItem;
+        private NativeMenuItem? _nativeOptionsMenuItem;
+        private NativeMenuItem? _nativeDebugViewMenuItem;
+        private NativeMenuItem? _nativeAboutMenuItem;
+        private NativeMenuItem? _nativeCheckForUpdatesMenuItem;
 
         public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
@@ -46,7 +56,7 @@ namespace MPF.Avalonia.Windows
         private void OnOpened(object? sender, EventArgs e)
         {
             WireEvents();
-            StringResourceLoader.Load(Resources, MainViewModel.Options.GUI.DefaultInterfaceLanguage);
+            ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: false);
             ThemeService.Apply(global::Avalonia.Application.Current!.Resources, MainViewModel.Options);
             ConfigurePlatformMenus();
 
@@ -92,19 +102,30 @@ namespace MPF.Avalonia.Windows
                 return;
 
             var nativeMenu = new NativeMenu();
-            nativeMenu.Add(CreateNativeMenuGroup(
-                StringResource("FileMenuString", "File"),
-                CreateNativeMenuItem(StringResource("ExitMenuItemString", "Exit"), () => AppExitClick(this, new RoutedEventArgs()))));
-            nativeMenu.Add(CreateNativeMenuGroup(
+            _nativeExitMenuItem = CreateNativeMenuItem(StringResource("ExitMenuItemString", "Exit"), () => AppExitClick(this, new RoutedEventArgs()));
+            _nativeFileMenuGroup = CreateNativeMenuGroup(StringResource("FileMenuString", "File"), _nativeExitMenuItem);
+            nativeMenu.Add(_nativeFileMenuGroup);
+
+            _nativeCheckDumpMenuItem = CreateNativeMenuItem(StringResource("CheckDumpMenuItemString", "Check Dump"), () => CheckDumpMenuItemClick(this, new RoutedEventArgs()));
+            _nativeCreateIrdMenuItem = CreateNativeMenuItem(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"), () => CreateIRDMenuItemClick(this, new RoutedEventArgs()));
+            _nativeOptionsMenuItem = CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), () => OptionsMenuItemClick(this, new RoutedEventArgs()));
+            _nativeDebugViewMenuItem = CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), () => DebugViewClick(this, new RoutedEventArgs()));
+            _nativeToolsMenuGroup = CreateNativeMenuGroup(
                 StringResource("ToolsMenuString", "Tools"),
-                CreateNativeMenuItem(StringResource("CheckDumpMenuItemString", "Check Dump"), () => CheckDumpMenuItemClick(this, new RoutedEventArgs())),
-                CreateNativeMenuItem(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"), () => CreateIRDMenuItemClick(this, new RoutedEventArgs())),
-                CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), () => OptionsMenuItemClick(this, new RoutedEventArgs())),
-                CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), () => DebugViewClick(this, new RoutedEventArgs()))));
-            nativeMenu.Add(CreateNativeMenuGroup(
+                _nativeCheckDumpMenuItem,
+                _nativeCreateIrdMenuItem,
+                _nativeOptionsMenuItem,
+                _nativeDebugViewMenuItem);
+            nativeMenu.Add(_nativeToolsMenuGroup);
+
+            _nativeAboutMenuItem = CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs()));
+            _nativeCheckForUpdatesMenuItem = CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()));
+            _nativeHelpMenuGroup = CreateNativeMenuGroup(
                 StringResource("HelpMenuString", "Help"),
-                CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs())),
-                CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()))));
+                _nativeAboutMenuItem,
+                _nativeCheckForUpdatesMenuItem);
+            nativeMenu.Add(_nativeHelpMenuGroup);
+
             _nativeLanguageMenuGroup = CreateNativeMenuGroup(
                 NativeLanguageMenuHeader(),
                 CreateNativeMenuItem("English", () => LanguageMenuItemClick(this.FindControl<MenuItem>("EnglishMenuItem"), new RoutedEventArgs())),
@@ -152,6 +173,52 @@ namespace MPF.Avalonia.Windows
         {
             if (_nativeLanguageMenuGroup is not null)
                 _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
+        }
+
+        private void UpdateNativeMenuHeaders()
+        {
+            if (!OperatingSystem.IsMacOS())
+                return;
+
+            if (_nativeFileMenuGroup is not null)
+                _nativeFileMenuGroup.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
+            if (_nativeToolsMenuGroup is not null)
+                _nativeToolsMenuGroup.Header = CleanMenuHeader(StringResource("ToolsMenuString", "Tools"));
+            if (_nativeHelpMenuGroup is not null)
+                _nativeHelpMenuGroup.Header = CleanMenuHeader(StringResource("HelpMenuString", "Help"));
+            if (_nativeExitMenuItem is not null)
+                _nativeExitMenuItem.Header = CleanMenuHeader(StringResource("ExitMenuItemString", "Exit"));
+            if (_nativeCheckDumpMenuItem is not null)
+                _nativeCheckDumpMenuItem.Header = CleanMenuHeader(StringResource("CheckDumpMenuItemString", "Check Dump"));
+            if (_nativeCreateIrdMenuItem is not null)
+                _nativeCreateIrdMenuItem.Header = CleanMenuHeader(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"));
+            if (_nativeOptionsMenuItem is not null)
+                _nativeOptionsMenuItem.Header = CleanMenuHeader(StringResource("OptionsDumpMenuItemString", "Options"));
+            if (_nativeDebugViewMenuItem is not null)
+                _nativeDebugViewMenuItem.Header = CleanMenuHeader(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"));
+            if (_nativeAboutMenuItem is not null)
+                _nativeAboutMenuItem.Header = CleanMenuHeader(StringResource("AboutMenuItemString", "About"));
+            if (_nativeCheckForUpdatesMenuItem is not null)
+                _nativeCheckForUpdatesMenuItem.Header = CleanMenuHeader(StringResource("CheckForUpdateMenuItemString", "Check for Updates"));
+
+            UpdateNativeLanguageMenuHeader();
+        }
+
+        private void ApplyLanguage(InterfaceLanguage language, bool rebuildNativeMenus)
+        {
+            StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, language);
+            StringResourceLoader.Load(Resources, language);
+            UpdateTitleBarMenuHeaders();
+
+            UpdateNativeMenuHeaders();
+        }
+
+        private void UpdateTitleBarMenuHeaders()
+        {
+            this.FindControl<MenuItem>("FileMenuItem")!.Header = StringResource("FileMenuString", "File");
+            this.FindControl<MenuItem>("ToolsMenuItem")!.Header = StringResource("ToolsMenuString", "Tools");
+            this.FindControl<MenuItem>("HelpMenuItem")!.Header = StringResource("HelpMenuString", "Help");
+            this.FindControl<MenuItem>("LanguagesMenuItem")!.Header = StringResource("LanguageMenuString", "ENG");
         }
 
         private void TitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -381,15 +448,15 @@ namespace MPF.Avalonia.Windows
 
             if (savedSettings)
             {
-                StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, MainViewModel.Options.GUI.DefaultInterfaceLanguage);
-                ThemeService.Apply(global::Avalonia.Application.Current.Resources, MainViewModel.Options);
+                ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: true);
+                ThemeService.Apply(global::Avalonia.Application.Current!.Resources, MainViewModel.Options);
                 SetMediaTypeVisibility();
             }
         }
 
         public void SetMediaTypeVisibility()
         {
-            this.FindControl<ComboBox>("MediaTypeComboBox")!.IsVisible = MainViewModel.MediaTypeComboBoxEnabled;
+            this.FindControl<ComboBox>("MediaTypeComboBox")!.IsVisible = MainViewModel.CurrentProgram == InternalProgram.DiscImageCreator;
         }
 
         private string CreateAboutText()
@@ -448,8 +515,8 @@ namespace MPF.Avalonia.Windows
             };
 
             MainViewModel.Options.GUI.DefaultInterfaceLanguage = language;
-            StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, language);
-            UpdateNativeLanguageMenuHeader();
+            MainViewModel.Options = new Options(MainViewModel.Options);
+            ApplyLanguage(language, rebuildNativeMenus: true);
         }
 
         public async void CopyProtectScanButtonClick(object? sender, RoutedEventArgs e)
@@ -466,7 +533,10 @@ namespace MPF.Avalonia.Windows
         public void DriveLetterComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
+            {
                 MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
+                SetMediaTypeVisibility();
+            }
         }
 
         public void DriveSpeedComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -491,7 +561,10 @@ namespace MPF.Avalonia.Windows
         }
 
         public void MediaScanButtonClick(object? sender, RoutedEventArgs e)
-            => MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
+        {
+            MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
+            SetMediaTypeVisibility();
+        }
 
         public void MediaTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {

@@ -1,13 +1,17 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Layout;
+using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
 {
     public partial class MessageBoxWindow : Window
     {
         public MessageBoxWindow()
-            => InitializeComponent();
+        {
+            InitializeComponent();
+            Opened += (_, _) => WindowChromeService.Apply(this, hideMinimizeButton: true);
+        }
 
         private void Configure(string title, string message, int optionCount)
         {
