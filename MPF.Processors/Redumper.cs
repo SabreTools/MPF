@@ -1050,7 +1050,7 @@ namespace MPF.Processors
                     line = sr.ReadLine();
                 }
 
-                return sb.ToString().TrimEnd('\n');
+                return sb.ToString().TrimEnd('\r', '\n');
             }
             catch
             {

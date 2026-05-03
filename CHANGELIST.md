@@ -16,6 +16,7 @@
 - Separate BEE
 - Convert type of reports from success to neutral for essential steps (shfil119)
 - Subtract fixed SCSI errors
+- Fix trailing newline trimming for cue import (fuzz6001)
 
 ### 3.7.1 (2026-03-30)
 
