@@ -27,8 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{440776E0-E6E2-46C6-8E85-09E64A8FC7D6}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\build_check.yml = .github\workflows\build_check.yml
-		.github\workflows\build_ui.yml = .github\workflows\build_ui.yml
+		.github\workflows\build_and_test.yml = .github\workflows\build_and_test.yml
 		.github\workflows\check_pr.yml = .github\workflows\check_pr.yml
 	EndProjectSection
 EndProject
