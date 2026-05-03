@@ -2,14 +2,80 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:local="using:MPF.Avalonia.Windows"
                   x:Class="MPF.Avalonia.Windows.RingCodeGuideWindow"
-                  Width="440"
+                  Width="740"
+                  MaxHeight="1024"
                   SizeToContent="Height"
                   CanResize="False"
                   Title="{DynamicResource RingCodeGuideTitleString}">
-  <ScrollViewer>
-    <StackPanel Margin="12" Spacing="12" HorizontalAlignment="Center">
-      <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-1-layer.png" MaxWidth="360" Stretch="Uniform" />
-      <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-2-layer.png" MaxWidth="360" Stretch="Uniform" />
-    </StackPanel>
-  </ScrollViewer>
+  <TabControl Background="{DynamicResource AppBackgroundBrush}"
+              Foreground="{DynamicResource AppForegroundBrush}"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch">
+    <TabItem Header="1-Layer Ringcode">
+      <ScrollViewer>
+        <StackPanel Margin="6,6,6,6" Spacing="8">
+          <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-1-layer.png"
+                 HorizontalAlignment="Center"
+                 MaxWidth="724"
+                 Stretch="Uniform" />
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
+            <Run Text=" Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Green" Text="2. Mastering SID:" />
+            <Run Text=" IFPI L553" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
+            <Run Text=" A2" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
+            <Run Text=" IFPI 94V1" />
+          </TextBlock>
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+
+    <TabItem Header="2-Layer Ringcode">
+      <ScrollViewer>
+        <StackPanel Margin="6,6,6,6" Spacing="8">
+          <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-2-layer.png"
+                 HorizontalAlignment="Center"
+                 MaxWidth="714"
+                 Stretch="Uniform" />
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
+            <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
+            <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="Purple" Text="3. Outer Mastering SID:" />
+            <Run Text=" IFPI LB48" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Inner Mastering SID:" />
+            <Run Text=" IFPI LB48" />
+          </TextBlock>
+
+          <TextBlock FontSize="16" TextWrapping="Wrap">
+            <Run FontWeight="Bold" Text="Note:" />
+            <Run Text=" See the 1-Layer guide for more details on additional fields" />
+          </TextBlock>
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+  </TabControl>
 </local:WindowBase>

@@ -487,8 +487,28 @@ namespace MPF.Avalonia.Windows
             _ = MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
         }
 
+        public void ShowDebugDiscInfoWindow()
+        {
+            SubmissionInfo? submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
+            _ = ShowDebugDiscInfoWindowAsync(submissionInfo);
+        }
+
+        private async Task ShowDebugDiscInfoWindowAsync(SubmissionInfo submissionInfo)
+        {
+            var window = new MediaInformationWindow(MainViewModel.Options, submissionInfo, showPcMacHybridAlways: true)
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            bool? result = await window.ShowDialog<bool?>(this);
+            if (result == true)
+                submissionInfo = window.MediaInformationViewModel.SubmissionInfo;
+
+            Formatter.ProcessSpecialFields(submissionInfo);
+        }
+
         public void DebugViewClick(object? sender, RoutedEventArgs e)
-            => _ = new MediaInformationWindow(MainViewModel.Options, null).ShowDialog(this);
+            => ShowDebugDiscInfoWindow();
 
         public void OptionsMenuItemClick(object? sender, RoutedEventArgs e)
             => ShowOptionsWindow();

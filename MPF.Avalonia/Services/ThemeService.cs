@@ -53,6 +53,11 @@ namespace MPF.Avalonia.Services
             resources["ButtonPressedBorderBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF505050") : Color.Parse("#FF8E8E8E"));
             resources["ButtonDisabledBorderBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF333333") : Color.Parse("#FFD2D2D2"));
             resources["DisabledForegroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF5C5C5C") : Color.Parse("#FF8A8A8A"));
+            resources["MenuBackgroundBrush"] = new SolidColorBrush(Colors.Transparent);
+            resources["MenuSubMenuBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF292929") : Colors.White);
+            resources["MenuSubMenuBorderBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF4A4A4A") : Color.Parse("#FFD0D0D0"));
+            resources["MenuItemHoverBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF3D3D3D") : Color.Parse("#FFEDEDED"));
+            resources["MenuItemPressedBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF333333") : Color.Parse("#FFD8D8D8"));
             resources["TitleBarButtonHoverBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF333333") : Color.Parse("#FFE5E5E5"));
             resources["TitleBarButtonPressedBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF2A2A2A") : Color.Parse("#FFD0D0D0"));
             resources["LogBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF151515") : Color.Parse("#FF202020"));

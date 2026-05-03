@@ -45,6 +45,44 @@
       <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
       <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabledBorderBrush}" />
     </Style>
+    <Style Selector="Menu">
+      <Setter Property="Background" Value="{DynamicResource MenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="MenuItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:selected">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:open">
+      <Setter Property="Background" Value="{DynamicResource MenuItemPressedBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:pressed">
+      <Setter Property="Background" Value="{DynamicResource MenuItemPressedBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+    </Style>
+    <Style Selector="MenuFlyoutPresenter">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
+    <Style Selector="ContextMenu">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
+    <Style Selector="MenuItem /template/ Border#PART_PopupBorder">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
     <Style Selector="TextBox">
       <Setter Property="MinHeight" Value="23" />
       <Setter Property="Padding" Value="6,2" />
@@ -96,7 +134,10 @@
       <Setter Property="FontWeight" Value="Bold" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="Padding" Value="10,2,10,13" />
+      <Setter Property="Padding" Value="10,2,10,6" />
+    </Style>
+    <Style Selector="TabControl">
+      <Setter Property="Margin" Value="0,3,0,0" />
     </Style>
     <Style Selector="TabControl /template/ TabStrip">
       <Setter Property="HorizontalAlignment" Value="Center" />
@@ -146,6 +187,11 @@
     <SolidColorBrush x:Key="ButtonPressedBorderBrush">#FF8E8E8E</SolidColorBrush>
     <SolidColorBrush x:Key="ButtonDisabledBorderBrush">#FFD2D2D2</SolidColorBrush>
     <SolidColorBrush x:Key="DisabledForegroundBrush">#FF8A8A8A</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuBackgroundBrush">#00FFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuSubMenuBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuSubMenuBorderBrush">#FFD0D0D0</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuItemHoverBackgroundBrush">#FFEDEDED</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuItemPressedBackgroundBrush">#FFD8D8D8</SolidColorBrush>
     <SolidColorBrush x:Key="TitleBarButtonHoverBrush">#FFE5E5E5</SolidColorBrush>
     <SolidColorBrush x:Key="TitleBarButtonPressedBrush">#FFD0D0D0</SolidColorBrush>
     <SolidColorBrush x:Key="LogBackgroundBrush">#FF202020</SolidColorBrush>

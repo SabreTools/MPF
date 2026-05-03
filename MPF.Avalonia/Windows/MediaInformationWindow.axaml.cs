@@ -12,6 +12,8 @@ namespace MPF.Avalonia.Windows
 {
     public partial class MediaInformationWindow : WindowBase
     {
+        private readonly bool _showPcMacHybridAlways;
+
         private static readonly (string Name, SiteCode Code)[] CommentFields =
         [
             ("AlternativeTitleTextBox", SiteCode.AlternativeTitle),
@@ -92,12 +94,13 @@ namespace MPF.Avalonia.Windows
         public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         public MediaInformationWindow()
-            : this(new Options(), new SubmissionInfo())
+            : this(new Options(), new SubmissionInfo(), showPcMacHybridAlways: true)
         {
         }
 
-        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo)
+        public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo, bool showPcMacHybridAlways = false)
         {
+            _showPcMacHybridAlways = showPcMacHybridAlways;
             InitializeComponent();
             DataContext = new MediaInformationViewModel(options, submissionInfo);
             if (options.Processing.MediaInformation.EnableRedumpCompatibility)
@@ -133,8 +136,8 @@ namespace MPF.Avalonia.Windows
         {
             this.FindControl<ComboBox>("CategoryComboBox")!.ItemsSource = MediaInformationViewModel.Categories;
             this.FindControl<ComboBox>("RegionComboBox")!.ItemsSource = MediaInformationViewModel.Regions;
-            this.FindControl<ItemsControl>("LanguagesItemsControl")!.ItemsSource = MediaInformationViewModel.Languages;
-            this.FindControl<ItemsControl>("LanguageSelectionsItemsControl")!.ItemsSource = MediaInformationViewModel.LanguageSelections;
+            this.FindControl<MultiSelectDropDown>("LanguagesDropDown")!.ItemsSource = MediaInformationViewModel.Languages;
+            this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.ItemsSource = MediaInformationViewModel.LanguageSelections;
         }
 
         private void LoadMappedFields()
@@ -245,6 +248,8 @@ namespace MPF.Avalonia.Windows
             var system = submissionInfo?.CommonDiscInfo?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
+            this.FindControl<Grid>("PCMacHybridGrid")!.IsVisible = _showPcMacHybridAlways
+                || submissionInfo?.CommonDiscInfo?.Media == DiscType.CD;
             this.FindControl<Border>("L0InfoPanel")!.IsVisible = true;
             this.FindControl<Border>("L1InfoPanel")!.IsVisible = true;
             this.FindControl<Border>("L2InfoPanel")!.IsVisible = false;
@@ -290,7 +295,7 @@ namespace MPF.Avalonia.Windows
 
         private void SetLayerLabels(string? singleLayerDataHeader, string? singleLayerLabelHeader, bool supportExtraLayers, bool supportQuadLayers, bool reverseOrder, SubmissionInfo? submissionInfo)
         {
-            if (!supportExtraLayers || submissionInfo?.SizeAndChecksums.Layerbreak == 0)
+            if (!supportExtraLayers)
             {
                 SetLayerHeader("L0HeaderText", singleLayerDataHeader ?? "Data Side");
                 SetLayerHeader("L1HeaderText", singleLayerLabelHeader ?? "Label Side");
@@ -298,25 +303,45 @@ namespace MPF.Avalonia.Windows
                 return;
             }
 
-            SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
-            SetLayerHeader("L1HeaderText", submissionInfo!.SizeAndChecksums.Layerbreak2 == 0 && submissionInfo.SizeAndChecksums.Layerbreak3 == 0
-                ? (reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)")
-                : "Layer 1");
-            SetRingFieldLabels(true);
+            long layerbreak = submissionInfo?.SizeAndChecksums.Layerbreak ?? 0;
+            long layerbreak2 = submissionInfo?.SizeAndChecksums.Layerbreak2 ?? 0;
+            long layerbreak3 = submissionInfo?.SizeAndChecksums.Layerbreak3 ?? 0;
 
-            if (submissionInfo.SizeAndChecksums.Layerbreak2 != 0)
+            if (supportQuadLayers && layerbreak3 != 0)
             {
                 this.FindControl<Border>("L2InfoPanel")!.IsVisible = true;
-                SetLayerHeader("L2HeaderText", submissionInfo.SizeAndChecksums.Layerbreak3 == 0
-                    ? (reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)")
-                    : "Layer 2");
+                this.FindControl<Border>("L3InfoPanel")!.IsVisible = true;
+
+                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
+                SetLayerHeader("L1HeaderText", "Layer 1");
+                SetLayerHeader("L2HeaderText", "Layer 2");
+                SetLayerHeader("L3HeaderText", reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)");
+                SetRingFieldLabels(true);
+                return;
             }
 
-            if (supportQuadLayers && submissionInfo.SizeAndChecksums.Layerbreak3 != 0)
+            if (layerbreak2 != 0)
             {
-                this.FindControl<Border>("L3InfoPanel")!.IsVisible = true;
-                SetLayerHeader("L3HeaderText", reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)");
+                this.FindControl<Border>("L2InfoPanel")!.IsVisible = true;
+
+                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
+                SetLayerHeader("L1HeaderText", "Layer 1");
+                SetLayerHeader("L2HeaderText", reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)");
+                SetRingFieldLabels(true);
+                return;
             }
+
+            if (layerbreak != 0)
+            {
+                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
+                SetLayerHeader("L1HeaderText", reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)");
+                SetRingFieldLabels(true);
+                return;
+            }
+
+            SetLayerHeader("L0HeaderText", "Data Side");
+            SetLayerHeader("L1HeaderText", "Label Side");
+            SetRingFieldLabels(false);
         }
 
         private void SetRingFieldLabels(bool layered)
@@ -346,18 +371,16 @@ namespace MPF.Avalonia.Windows
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
 
-            this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsVisible = false;
             this.FindControl<UserInput>("CompatibleOSTextBox")!.IsVisible = false;
             this.FindControl<UserInput>("DiscKeyTextBox")!.IsVisible = false;
             this.FindControl<UserInput>("DiscIDTextBox")!.IsVisible = false;
             this.FindControl<UserInput>("NetYarozeGamesTextBox")!.IsVisible = false;
-            this.FindControl<Grid>("LanguageSelectionSection")!.IsVisible = false;
+            this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.IsVisible = false;
 
             switch (system)
             {
                 case RedumpSystem.AppleMacintosh:
                 case RedumpSystem.IBMPCcompatible:
-                    this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsVisible = true;
                     this.FindControl<UserInput>("CompatibleOSTextBox")!.IsVisible = true;
                     break;
 
@@ -370,7 +393,7 @@ namespace MPF.Avalonia.Windows
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    this.FindControl<Grid>("LanguageSelectionSection")!.IsVisible = true;
+                    this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.IsVisible = true;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:

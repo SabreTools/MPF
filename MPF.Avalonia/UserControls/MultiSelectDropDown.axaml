@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:MPF.Avalonia.UserControls"
+             x:Class="MPF.Avalonia.UserControls.MultiSelectDropDown">
+  <Grid ColumnDefinitions="3*,7*" HorizontalAlignment="Stretch">
+    <TextBlock Grid.Column="0"
+               Margin="0,0,6,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center"
+               Text="{Binding Label, RelativeSource={RelativeSource AncestorType=local:MultiSelectDropDown}}" />
+
+    <ToggleButton x:Name="DropDownButton"
+                  Grid.Column="1"
+                  MinHeight="28"
+                  Padding="6,2"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch"
+                  IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType=local:MultiSelectDropDown}, Mode=TwoWay}">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Text="{Binding SummaryText, RelativeSource={RelativeSource AncestorType=local:MultiSelectDropDown}}"
+                   TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1"
+                   Margin="8,0,0,0"
+                   FontSize="10"
+                   Text="v"
+                   VerticalAlignment="Center" />
+      </Grid>
+    </ToggleButton>
+
+    <Popup Grid.Column="1"
+           IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource AncestorType=local:MultiSelectDropDown}, Mode=TwoWay}"
+           PlacementTarget="{Binding #DropDownButton}"
+           Placement="BottomEdgeAlignedLeft"
+           IsLightDismissEnabled="True">
+      <Border MinWidth="{Binding Bounds.Width, ElementName=DropDownButton}"
+              MaxHeight="280"
+              Background="{DynamicResource PanelBackgroundBrush}"
+              BorderBrush="{DynamicResource PanelBorderBrush}"
+              BorderThickness="1"
+              Padding="4">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <ItemsControl x:Name="ItemsList">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <CheckBox Margin="2,1"
+                          Content="{Binding Name}"
+                          IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                          Click="SelectionCheckBoxClick" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Border>
+    </Popup>
+  </Grid>
+</UserControl>

@@ -39,7 +39,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource GeneralTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Margin="0,-4,0,0">
+          <ScrollViewer>
             <StackPanel Margin="0" Spacing="4">
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
@@ -102,7 +102,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource PathsTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Margin="0,-4,0,0">
+          <ScrollViewer>
             <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
               <Grid Margin="0" ColumnDefinitions="166,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="4">
                 <TextBlock Grid.Row="0" Text="{DynamicResource AaruPathLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -137,7 +137,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource DumpingTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Margin="0,-4,0,0">
+          <ScrollViewer>
             <StackPanel Margin="0" Spacing="4">
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
@@ -220,7 +220,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource ProgramsTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Margin="0,-4,0,0">
+          <ScrollViewer>
             <StackPanel Margin="0" Spacing="4">
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
@@ -365,7 +365,7 @@
           <TabItem.Header>
             <TextBlock Text="{DynamicResource LoginInfoTabString}" FontSize="13.75" FontWeight="Bold" Margin="0,0,0,2" />
           </TabItem.Header>
-          <ScrollViewer Margin="0,-4,0,0">
+          <ScrollViewer>
             <StackPanel Margin="0" Spacing="4">
               <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
