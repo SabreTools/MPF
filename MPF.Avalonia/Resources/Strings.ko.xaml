@@ -1,0 +1,232 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Language Name: KO / KOR / Korean / 한글 / 한국어 -->
+    <x:String x:Key="LanguageMenuString">한국어</x:String>
+
+    <!-- Common Elements -->
+    <x:String x:Key="AcceptButtonString">확인</x:String>
+    <x:String x:Key="BrowseButtonString">찾아보기</x:String>
+    <x:String x:Key="CancelButtonString">취소</x:String>
+    <x:String x:Key="MinimizeMenuItemString">최소화</x:String>
+    <x:String x:Key="CloseMenuItemString">끝내기</x:String>
+    <x:String x:Key="SettingsGroupBoxString">설정</x:String>
+    <x:String x:Key="StatusGroupBoxString">상태</x:String>
+    <x:String x:Key="WarningLabelString">경고:</x:String>
+    <x:String x:Key="WarningMessageString">경고</x:String>
+    <x:String x:Key="ErrorMessageString">오류</x:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <x:String x:Key="FileMenuString">파일</x:String>
+    <x:String x:Key="ExitMenuItemString">종료</x:String>
+    <x:String x:Key="ToolsMenuString">도구</x:String>
+    <x:String x:Key="CheckDumpMenuItemString">체크 덤프</x:String>
+    <x:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD 생성</x:String>
+    <x:String x:Key="OptionsDumpMenuItemString">옵션</x:String>
+    <x:String x:Key="DebugInfoWindowMenuItemString">디버그 정보 창</x:String>
+    <x:String x:Key="HelpMenuString">도움말</x:String>
+    <x:String x:Key="AboutMenuItemString">앱 정보</x:String>
+    <x:String x:Key="CheckForUpdateMenuItemString">업데이트 확인</x:String>
+    <!-- Settings Group Box-->
+    <x:String x:Key="SystemLabelString">시스템 유형</x:String>
+    <x:String x:Key="SystemMediaTypeLabelString">시스템/미디어 유형</x:String>
+    <x:String x:Key="NoSystemSelectedString">No system selected</x:String>
+    <x:String x:Key="OutputPathLabelString">출력 경로</x:String>
+    <x:String x:Key="DriveLetterLabelString">드라이브 문자</x:String>
+    <x:String x:Key="DriveSpeedLabelString">드라이브 속도</x:String>
+    <x:String x:Key="DumpingProgramLabelString">덤프 프로그램</x:String>
+    <x:String x:Key="ParametersLabelString">매개변수</x:String>
+    <!-- Controls Group Box-->
+    <x:String x:Key="ControlsGroupBoxString">컨트롤</x:String>
+    <x:String x:Key="StartDumpingButtonString">덤프 시작</x:String>
+    <x:String x:Key="StopDumpingButtonString">덤프 중지</x:String>
+    <x:String x:Key="ScanButtonString">디스크 스캔</x:String>
+    <x:String x:Key="UpdateLabelButtonString">레이블 갱신</x:String>
+    <x:String x:Key="ProtectionScanButtonString">보호 스캔</x:String>
+    <!-- Log Output -->
+    <x:String x:Key="LogOutputExpanderString">로그 출력</x:String>
+    <x:String x:Key="ClearButtonString">로그 지우기</x:String>
+    <x:String x:Key="SaveButtonString">로그 저장</x:String>
+
+    <!-- Options Window -->
+    <x:String x:Key="OptionsTitleString">옵션</x:String>
+    <x:String x:Key="OptionsFirstRunTitleString">MPF에 오신 것을 환영합니다. 옵션을 살펴보세요.</x:String>
+    <!-- <x:String x:Key="OptionsRetrievalWarningString">If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</x:String> -->
+    <!-- General Tab -->
+    <x:String x:Key="GeneralTabString">일반</x:String>
+    <x:String x:Key="UserInterfaceGroupBoxString">사용자 인터페이스</x:String>
+    <x:String x:Key="EnableDarkModeCheckBoxString">다크 모드 활성화</x:String>
+    <x:String x:Key="CheckForUpdatesCheckBoxString">시작 시 업데이트 확인</x:String>
+    <x:String x:Key="CopyURLToClipboardCheckBoxString">업데이트 URL을 클립보드에 복사</x:String>
+    <x:String x:Key="FastUpdateLabelCheckBoxString">빠른 업데이트 레이블</x:String>
+    <x:String x:Key="DefaultUILanguageLabelString">기본 UI 언어:</x:String>
+    <x:String x:Key="DetectionGroupBoxString">감지</x:String>
+    <x:String x:Key="SkipSystemDetectCheckBoxString">시스템 감지 건너뛰기</x:String>
+    <x:String x:Key="NoFixedDrivesCheckBoxString">고정 드라이브 없음</x:String>
+    <x:String x:Key="DefaultSystemLabelString">기본 시스템:</x:String>
+    <x:String x:Key="LoggingGroupBoxString">로그</x:String>
+    <x:String x:Key="VerboseLoggingCheckBoxString">상세 로그</x:String>
+    <x:String x:Key="AutoOpenLogCheckBoxString">로그 자동 열기</x:String>
+    <!-- Paths Tab -->
+    <x:String x:Key="PathsTabString">경로</x:String>
+    <x:String x:Key="AaruPathLabelString">Aaru 경로</x:String>
+    <x:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator 경로</x:String>
+    <x:String x:Key="RedumperPathLabelString">Redumper 경로</x:String>
+    <x:String x:Key="DefaultDumpingProgramLabelString">기본 덤핑 프로그램</x:String>
+    <x:String x:Key="DefaultOutputPathLabelString">기본 출력 경로</x:String>
+    <!-- Dumping Tab -->
+    <x:String x:Key="DumpingTabString">덤핑</x:String>
+    <x:String x:Key="DumpingGroupBoxString">덤핑</x:String>
+    <x:String x:Key="ShowDiscInfoCheckBoxString">디스크 정보 표시</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">모든 정보 가져오기</x:String>
+    <x:String x:Key="EnableTabInputCheckBoxString">탭 입력 활성화</x:String>
+    <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 호환성 활성화</x:String>
+    <x:String x:Key="ShowEjectReminderCheckBoxString">배출 알림 표시</x:String>
+    <x:String x:Key="AddPlaceholdersCheckBoxString">자리표시자 추가</x:String>
+    <x:String x:Key="AddFilenameSuffixCheckBoxString">파일명 접미사 추가</x:String>
+    <x:String x:Key="OutputSubmissionJSONCheckBoxString">제출 JSON 출력</x:String>
+    <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] 아티팩트 포함</x:String>
+    <x:String x:Key="CompressLogFilesCheckBoxString">로그 파일 압축</x:String>
+    <x:String x:Key="LogCompressionLabelString">로그 압축:</x:String>
+    <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">불필요한 파일 삭제</x:String>
+    <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">덤핑 후 PS3 IRD 생성</x:String>
+    <x:String x:Key="ProtectionGroupBoxString">보호</x:String>
+    <x:String x:Key="EnableProtectionScanCheckBoxString">보호 스캔 활성화</x:String>
+    <x:String x:Key="ScanArchiveContentsCheckBoxString">아카이브 내용 스캔</x:String>
+    <x:String x:Key="IncludeDebugInformationCheckBoxString">디버그 정보 포함</x:String>
+    <x:String x:Key="HideDriveLettersCheckBoxString">드라이브 문자 숨기기</x:String>
+    <x:String x:Key="DefaultSpeedsGroupBoxString">기본 속도</x:String>
+    <!-- Programs Tab -->
+    <x:String x:Key="ProgramsTabString">프로그램</x:String>
+    <x:String x:Key="AaruGroupBoxString">Aaru</x:String>
+    <x:String x:Key="EnableDebugOutputCheckBoxString">디버그 출력 활성화</x:String>
+    <x:String x:Key="AaruEnableVerboseOutputCheckBoxString">상세 출력 활성화</x:String>
+    <x:String x:Key="ForceDumpingCheckBoxString">강제 덤핑</x:String>
+    <x:String x:Key="StripPersonalDataCheckBoxString">개인 데이터 제거</x:String>
+    <x:String x:Key="AaruRereadTriesLabelString">재읽기 시도 횟수:</x:String>
+    <x:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</x:String>
+    <x:String x:Key="QuietModeCheckBoxString">조용한 모드</x:String>
+    <x:String x:Key="ParanoidModeCheckBoxString">안전 모드</x:String>
+    <x:String x:Key="UseCMIFlagCheckBoxString">CMI 플래그 사용</x:String>
+    <x:String x:Key="MultiSectorReadCheckBoxString">멀티 섹터 읽기</x:String>
+    <x:String x:Key="MultiSectorReadValueLabelString">멀티 섹터 읽기 값:</x:String>
+    <x:String x:Key="DICCDRereadTriesLabelString">CD 재읽기 시도 횟수:</x:String>
+    <x:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD 재읽기 시도 횟수:</x:String>
+    <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
+    <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">상세 출력 활성화</x:String>
+    <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine Sector 모드 플래그 활성화</x:String>
+    <x:String x:Key="RedumperRereadTriesLabelString">재읽기 시도 횟수:</x:String>
+    <x:String x:Key="PlextorLeadinRetriesLabelString">Plextor 리드인 재시도:</x:String>
+    <x:String x:Key="NonRedumpOptionsCheckBoxString">비-Redump 옵션</x:String>
+    <x:String x:Key="DefaultReadMethodLabelString">기본 읽기 방식:</x:String>
+    <x:String x:Key="DefaultSectorOrderLabelString">기본 섹터 순서:</x:String>
+    <x:String x:Key="DefaultDriveTypeLabelString">기본 드라이브 유형:</x:String>
+    <x:String x:Key="DefaultDrivePregapStartLabelString">기본 드라이브 프리갭 스타트:</x:String>
+    <!-- Login Info Tab -->
+    <x:String x:Key="LoginInfoTabString">로그인 정보</x:String>
+    <x:String x:Key="RetrievalGroupBoxString">검색</x:String>
+    <x:String x:Key="RetrieveMatchInformationCheckBoxString">일치 정보 가져오기</x:String>
+    <x:String x:Key="RedumpGroupBoxString">Redump</x:String>
+    <x:String x:Key="UsernameLabelString">사용자 이름</x:String>
+    <x:String x:Key="PasswordLabelString">비밀번호</x:String>
+    <x:String x:Key="TestLoginButtonString">로그인 테스트</x:String>
+
+    <!-- Check Dump Window -->
+    <x:String x:Key="CheckDumpTitleString">체크 기존 덤프</x:String>
+    <x:String x:Key="InputPathLabelString">입력 경로</x:String>
+    <x:String x:Key="CheckDumpButtonString">체크 덤프</x:String>
+    <!-- <x:String x:Key="CheckDumpWarningString">Check will overwrite any existing submission information files. Please make backups of those if you need to before running Check.</x:String> -->
+
+    <!-- Create PS3 IRD Window -->
+    <x:String x:Key="CreatePS3IRDTitleString">PS3 IRD 생성</x:String>
+    <x:String x:Key="InputGroupBoxString">입력</x:String>
+    <x:String x:Key="PS3ISOPathLabelString">PS3 ISO 경로</x:String>
+    <x:String x:Key="GetKeyPathLabelString">*.getkey.log 파일 경로</x:String>
+    <x:String x:Key="KeyExpanderString">PS3 디스크 암호화 키 수동 설정</x:String>
+    <x:String x:Key="HexadecimalKeyLabelString">헥스 키</x:String>
+    <x:String x:Key="KeyFilePathLabelString">키 파일 경로</x:String>
+    <x:String x:Key="KeyStatusLabelString">키 상태</x:String>
+    <x:String x:Key="DiscIDExpanderString">PS3 디스크 ID 수동 설정</x:String>
+    <x:String x:Key="DiscIDLabelString">디스크 ID</x:String>
+    <x:String x:Key="DiscIDStatusLabelString">디스크 ID 상태</x:String>
+    <x:String x:Key="PICExpanderString">Permanent Information &#x26; Control (PIC) 수동 설정</x:String>
+    <x:String x:Key="LayerbreakLabelString">Layerbreak (sectors)</x:String>
+    <x:String x:Key="PICLabelString">PIC</x:String>
+    <x:String x:Key="PICFilePathLabelString">PIC 파일 경로</x:String>
+    <x:String x:Key="PICStatusLabelString">PIC 상태</x:String>
+    <x:String x:Key="CreateIRDButtonString">IRD 생성</x:String>
+
+    <!-- Media Information Guide Window -->
+    <x:String x:Key="MediaInformationTitleString">미디어 정보</x:String>
+    <x:String x:Key="RingCodeGuideButtonString">링 코드 가이드</x:String>
+    <!-- Common Info Tab -->
+    <x:String x:Key="CommonInfoTabString">일반 정보</x:String>
+    <x:String x:Key="CommonMediaInfoGroupBoxString">일반 미디어 정보</x:String>
+    <x:String x:Key="TitleInputString">제목</x:String>
+    <x:String x:Key="AlternativeTitleInputString">대체 제목</x:String>
+    <x:String x:Key="ForeignTitleNonLatinInputString">외국어 제목 (비라틴 문자)</x:String>
+    <x:String x:Key="AlternativeForeignTitleInputString">대체 외국어 제목</x:String>
+    <x:String x:Key="DiscNumberLetterInputString">디스크 번호 / 문자</x:String>
+    <x:String x:Key="DiscTitleInputString">디스크 제목</x:String>
+    <x:String x:Key="DiscTitleNonLatinInputString">디스크 제목 (비라틴 문자)</x:String>
+    <x:String x:Key="CategoryLabelString">카테고리</x:String>
+    <x:String x:Key="RegionLabelString">지역</x:String>
+    <x:String x:Key="LanguagesLabelString">언어 (문자)</x:String>
+    <x:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</x:String>
+    <x:String x:Key="SerialInputString">시리얼</x:String>
+    <x:String x:Key="BarcodeInputString">바코드</x:String>
+    <x:String x:Key="VersionsAndEditionGroupBoxString">버전 및 에디션</x:String>
+    <x:String x:Key="VersionInputString">버전</x:String>
+    <x:String x:Key="EditionInputString">에디션</x:String>
+    <x:String x:Key="EditionNonLatinInputString">에디션 (비라틴 문자)</x:String>
+    <!-- Additional Info Tab -->
+    <x:String x:Key="AdditionalInfoTabString">추가 정보</x:String>
+    <x:String x:Key="CommentsInputString">코멘트</x:String>
+    <x:String x:Key="CompatibleOSInputString">호환 운영체제</x:String>
+    <x:String x:Key="ProtectionInputString">보호</x:String>
+    <x:String x:Key="ExtrasGroupBoxString">추가</x:String>
+    <x:String x:Key="PhysicalIdentifiersGroupBoxString">물리적 식별자</x:String>
+    <x:String x:Key="PublisherIdentifiersGroupBoxString">게시자 식별자</x:String>
+    <!-- Contents Tab -->
+    <x:String x:Key="ContentsTabString">내용물</x:String>
+    <!-- Ringcodes Tab -->
+    <x:String x:Key="RingcodesTabString">링 코드</x:String>
+    <x:String x:Key="L0InfoGroupBoxString">데이터/L0 정보</x:String>
+    <x:String x:Key="L1InfoGroupBoxString">라벨/L1 정보</x:String>
+    <x:String x:Key="L2InfoGroupBoxString">L2 정보</x:String>
+    <x:String x:Key="L3InfoGroupBoxString">L3 정보</x:String>
+    <!-- Read-Only Info Tab -->
+    <x:String x:Key="ReadOnlyInfoTabString">읽기 전용 정보</x:String>
+
+    <!-- Ring Code Guide Window -->
+    <x:String x:Key="RingCodeGuideTitleString">링 코드 가이드</x:String>
+
+    <!-- About Window -->
+    <x:String x:Key="AboutTitleString">앱 정보</x:String>
+    <!-- <x:String x:Key="AppTitleFullString">미디어 프리저베이션 프런트엔드 (MPF)</x:String>
+    <x:String x:Key="AboutLine1String">A community preservation frontend developed in C#.</x:String>
+    <x:String x:Key="AboutLine2String">Supports Redumper, Aaru, and DiscImageCreator.</x:String>
+    <x:String x:Key="AboutLine3String">Originally created to help the Redump project.</x:String>
+    <x:String x:Key="AboutThanksString">Thanks to everyone who has supported this project!</x:String> -->
+    <x:String x:Key="VersionLabelString">버전</x:String>
+
+    <!-- Check for Updates Window -->
+    <x:String x:Key="CheckForUpdatesTitleString">버전 업데이트 확인</x:String>
+
+    <!-- Eject Window -->
+    <x:String x:Key="EjectTitleString">꺼내다</x:String>
+    <x:String x:Key="EjectMessageString">이제 디스크를 꺼내셔도 됩니다</x:String>
+
+    <!-- Ask Before Quit Window -->
+    <x:String x:Key="QuitTitleString">종료</x:String>
+    <x:String x:Key="QuitMessageString">덤프가 아직 처리 중입니다. 종료하시겠습니까?</x:String>
+
+    <!-- Protection Error Window -->
+    <x:String x:Key="ProtectionErrorTitleString">오류!</x:String>
+    <x:String x:Key="ProtectionErrorMessageString">예외가 발생했습니다. 자세한 내용은 로그를 참조하세요</x:String>
+
+    <!-- Protection Detected Window -->
+    <x:String x:Key="ProtectionDetectedTitleString">감지된 보호</x:String>
+
+</ResourceDictionary>

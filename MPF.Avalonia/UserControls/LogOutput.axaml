@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:MPF.Avalonia.UserControls"
+             x:Class="MPF.Avalonia.UserControls.LogOutput">
+  <Grid RowDefinitions="*,Auto" RowSpacing="4" Margin="0">
+    <Border x:Name="LogSurface"
+            Grid.Row="0"
+            Height="180"
+            Margin="0,0,0,2"
+            Background="{DynamicResource LogBackgroundBrush}"
+            CornerRadius="0,0,0,0">
+      <ScrollViewer x:Name="Scroller"
+                    HorizontalScrollBarVisibility="Visible">
+        <ItemsControl x:Name="ItemsHost"
+                      Margin="0,6,0,0"
+                      ItemsSource="{Binding Entries, RelativeSource={RelativeSource AncestorType=local:LogOutput}}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Margin="10,0,0,2"
+                         Text="{Binding Text}"
+                         Foreground="{Binding Foreground}"
+                         FontFamily="Consolas, Menlo, monospace"
+                         FontSize="11"
+                         LineHeight="14" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Border>
+    <Border Grid.Row="1" Padding="0,0,0,4">
+      <StackPanel Margin="0,-2,0,0"
+                  Orientation="Horizontal"
+                  HorizontalAlignment="Center"
+                  Spacing="16">
+        <Button x:Name="ClearButton" Width="110" Content="{DynamicResource ClearButtonString}" />
+        <Button x:Name="SaveButton" Width="110" Content="{DynamicResource SaveButtonString}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

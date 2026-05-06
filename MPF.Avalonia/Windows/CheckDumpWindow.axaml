@@ -1,0 +1,58 @@
+<local:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="using:MPF.Avalonia.Windows"
+                  xmlns:converters="using:MPF.Avalonia"
+                  xmlns:localControls="using:MPF.Avalonia.Controls"
+                  xmlns:viewModels="using:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
+                  x:Class="MPF.Avalonia.Windows.CheckDumpWindow"
+                  Width="540"
+                  SizeToContent="Height"
+                  CanResize="False"
+                  Title="{DynamicResource CheckDumpTitleString}">
+  <local:WindowBase.Resources>
+    <converters:ElementConverter x:Key="ElementConverter" />
+  </local:WindowBase.Resources>
+
+  <Border Padding="8,5">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+      <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{DynamicResource SettingsGroupBoxString}" FontWeight="Bold" />
+          <Grid ColumnDefinitions="160,*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="6" RowSpacing="4">
+            <TextBlock Grid.Row="0" Text="{DynamicResource InputPathLabelString}" VerticalAlignment="Center" />
+            <TextBox x:Name="InputPathTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding InputPath, Mode=TwoWay}" IsEnabled="{Binding InputPathTextBoxEnabled}" VerticalAlignment="Center" />
+            <Button x:Name="InputPathBrowseButton" Grid.Row="0" Grid.Column="2" Content="{DynamicResource BrowseButtonString}" IsEnabled="{Binding InputPathBrowseButtonEnabled}" MinHeight="23" Padding="10,2" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Row="1" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
+            <localControls:MeasuredDropDownComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1" IgnoreHeaderItemsInMeasurement="True" SizeToSelectedItem="True" ItemsSource="{Binding Systems}" SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding SystemTypeComboBoxEnabled}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+
+            <TextBlock Grid.Row="2" Text="{DynamicResource DumpingProgramLabelString}" VerticalAlignment="Center" />
+            <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}" IsEnabled="{Binding DumpingProgramComboBoxEnabled}" VerticalAlignment="Center" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="1" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{DynamicResource StatusGroupBoxString}" FontWeight="Bold" />
+          <TextBlock x:Name="StatusLabel" Text="{Binding StatusFirstLine}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="2" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <TextBlock TextWrapping="Wrap">
+          <Run Text="{DynamicResource WarningLabelString}" FontWeight="Bold" Foreground="Red" />
+          <Run Text=" " />
+          <Run Text="{DynamicResource CheckDumpWarningString}" />
+        </TextBlock>
+      </Border>
+
+      <Border Grid.Row="3" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+          <Button x:Name="CheckDumpButton" Width="110" Content="{DynamicResource CheckDumpButtonString}" IsEnabled="{Binding CheckDumpButtonEnabled}" />
+          <Button x:Name="CancelButton" Width="110" Content="{DynamicResource CancelButtonString}" IsEnabled="{Binding CancelButtonEnabled}" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </Border>
+</local:WindowBase>

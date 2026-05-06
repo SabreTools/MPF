@@ -1,0 +1,200 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MPF.Avalonia.Controls"
+             xmlns:fluent="using:Avalonia.Themes.Fluent"
+             xmlns:windows="using:MPF.Avalonia.Windows"
+             x:Class="MPF.Avalonia.App"
+             RequestedThemeVariant="Light">
+  <Application.Styles>
+    <FluentTheme DensityStyle="Compact">
+      <FluentTheme.Palettes>
+        <fluent:ColorPaletteResources x:Key="Light" Accent="#0078D4" />
+        <fluent:ColorPaletteResources x:Key="Dark" Accent="#0078D4" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+    <Style Selector="TextBlock[FontWeight=Bold]">
+      <Setter Property="Foreground" Value="{DynamicResource HeadingForegroundBrush}" />
+    </Style>
+    <Style Selector="Button">
+      <Setter Property="MinHeight" Value="28" />
+      <Setter Property="Margin" Value="2" />
+      <Setter Property="Padding" Value="14,6" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="5" />
+    </Style>
+    <Style Selector="Button:pointerover">
+      <Setter Property="Background" Value="{DynamicResource ButtonHoverBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonHoverBorderBrush}" />
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="Background" Value="{DynamicResource ButtonPressedBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonPressedBorderBrush}" />
+    </Style>
+    <Style Selector="Button:disabled">
+      <Setter Property="Background" Value="{DynamicResource ButtonDisabledBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource ButtonDisabledBorderBrush}" />
+    </Style>
+    <Style Selector="Menu">
+      <Setter Property="Background" Value="{DynamicResource MenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="MenuItem:pointerover">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:selected">
+      <Setter Property="Background" Value="{DynamicResource MenuItemHoverBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:open">
+      <Setter Property="Background" Value="{DynamicResource MenuItemPressedBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:pressed">
+      <Setter Property="Background" Value="{DynamicResource MenuItemPressedBackgroundBrush}" />
+    </Style>
+    <Style Selector="MenuItem:disabled">
+      <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+    </Style>
+    <Style Selector="MenuFlyoutPresenter">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
+    <Style Selector="ContextMenu">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
+    <Style Selector="MenuItem /template/ Border#PART_PopupBorder">
+      <Setter Property="Background" Value="{DynamicResource MenuSubMenuBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource MenuSubMenuBorderBrush}" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="MinHeight" Value="23" />
+      <Setter Property="Padding" Value="6,2" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style Selector="ComboBox">
+      <Setter Property="MinHeight" Value="23" />
+      <Setter Property="Padding" Value="8,0,4,0" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style Selector="controls|MeasuredDropDownComboBox /template/ ToggleButton#DropDownButton">
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="MinWidth" Value="24" />
+      <Setter Property="Width" Value="24" />
+    </Style>
+    <Style Selector="controls|MeasuredDropDownComboBox /template/ PathIcon">
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="Width" Value="12" />
+      <Setter Property="Height" Value="12" />
+    </Style>
+    <Style Selector="CheckBox">
+      <Setter Property="MinHeight" Value="23" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+      <Setter Property="Width" Value="15" />
+      <Setter Property="Height" Value="15" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="CheckBox /template/ Viewbox">
+      <Setter Property="Width" Value="15" />
+      <Setter Property="Height" Value="15" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Slider.default-speed-slider /template/ Thumb">
+      <Setter Property="Width" Value="20" />
+      <Setter Property="Height" Value="20" />
+      <Setter Property="MinWidth" Value="20" />
+      <Setter Property="MinHeight" Value="20" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="14.5" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Padding" Value="10,2,10,6" />
+    </Style>
+    <Style Selector="TabControl">
+      <Setter Property="Margin" Value="0,3,0,0" />
+    </Style>
+    <Style Selector="TabControl /template/ TabStrip">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TabControl /template/ TabStrip /template/ ItemsPresenter">
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:pointerover">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:pointerover /template/ Border">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+    </Style>
+    <Style Selector="Expander /template/ ToggleButton:pressed">
+      <Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource PanelBorderBrush}" />
+    </Style>
+    <Style Selector="Expander#LogPanel /template/ ToggleButton">
+      <Setter Property="MinHeight" Value="22" />
+      <Setter Property="Padding" Value="0,2" />
+    </Style>
+  </Application.Styles>
+
+  <Application.Resources>
+    <SolidColorBrush x:Key="AppBackgroundBrush">#FFF5F5F5</SolidColorBrush>
+    <SolidColorBrush x:Key="AppForegroundBrush">#FF111111</SolidColorBrush>
+    <SolidColorBrush x:Key="HeadingForegroundBrush">#FF111111</SolidColorBrush>
+    <SolidColorBrush x:Key="PanelBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="PanelBorderBrush">#FFD0D0D0</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonBackgroundBrush">#FFE5E5E5</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonHoverBackgroundBrush">#FFEDEDED</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonPressedBackgroundBrush">#FFD8D8D8</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonDisabledBackgroundBrush">#FFE2E2E2</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush">#FFB8B8B8</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonHoverBorderBrush">#FF9F9F9F</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonPressedBorderBrush">#FF8E8E8E</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonDisabledBorderBrush">#FFD2D2D2</SolidColorBrush>
+    <SolidColorBrush x:Key="DisabledForegroundBrush">#FF8A8A8A</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuBackgroundBrush">#00FFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuSubMenuBackgroundBrush">#FFFFFFFF</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuSubMenuBorderBrush">#FFD0D0D0</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuItemHoverBackgroundBrush">#FFEDEDED</SolidColorBrush>
+    <SolidColorBrush x:Key="MenuItemPressedBackgroundBrush">#FFD8D8D8</SolidColorBrush>
+    <SolidColorBrush x:Key="TitleBarButtonHoverBrush">#FFE5E5E5</SolidColorBrush>
+    <SolidColorBrush x:Key="TitleBarButtonPressedBrush">#FFD0D0D0</SolidColorBrush>
+    <SolidColorBrush x:Key="LogBackgroundBrush">#FF202020</SolidColorBrush>
+    <SolidColorBrush x:Key="LogForegroundBrush">#FFF0F0F0</SolidColorBrush>
+  </Application.Resources>
+</Application>
