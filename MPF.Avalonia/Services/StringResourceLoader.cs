@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml.Linq;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
 using MPF.Frontend;
 
 namespace MPF.Avalonia.Services
@@ -26,21 +25,33 @@ namespace MPF.Avalonia.Services
             [InterfaceLanguage.L337] = "Strings.37.xaml",
         };
 
-        public static void LoadEnglish(IResourceDictionary resources)
-            => Load(resources, InterfaceLanguage.English);
-
         public static void Load(IResourceDictionary resources, InterfaceLanguage language)
         {
-            LoadFile(resources, "Strings.xaml");
+            resources.MergedDictionaries.Clear();
+
+            AddResource(resources, "Strings.xaml");
 
             if (language == InterfaceLanguage.AutoDetect)
                 language = FromCurrentCulture();
 
             if (language != InterfaceLanguage.English && LanguageFiles.TryGetValue(language, out string? fileName))
-                LoadFile(resources, fileName);
+                AddResource(resources, fileName);
         }
 
-        private static InterfaceLanguage FromCurrentCulture()
+        private static void AddResource(IResourceDictionary resources, string fileName)
+        {
+            string assemblyName = typeof(StringResourceLoader).Assembly.GetName().Name ?? "MPF";
+            var uri = new Uri($"avares://{assemblyName}/Assets/{fileName}");
+            
+            var resourceInclude = new ResourceInclude(uri)
+            {
+                Source = uri
+            };
+
+            resources.MergedDictionaries.Add(resourceInclude);
+        }
+
+        private static InterfaceLanguage FromCurrentCulture() 
         {
             return System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
             {
@@ -57,26 +68,6 @@ namespace MPF.Avalonia.Services
                 "uk" => InterfaceLanguage.Ukrainian,
                 _ => InterfaceLanguage.English,
             };
-        }
-
-        private static void LoadFile(IResourceDictionary resources, string fileName)
-        {
-            string baseDirectory = AppContext.BaseDirectory;
-            string resourcePath = Path.Combine(baseDirectory, "Resources", fileName);
-            if (!File.Exists(resourcePath))
-                return;
-
-            XDocument document = XDocument.Load(resourcePath);
-            XNamespace xNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
-
-            foreach (XElement element in document.Root?.Elements() ?? Array.Empty<XElement>())
-            {
-                XAttribute? keyAttribute = element.Attribute(xNamespace + "Key");
-                if (keyAttribute is null)
-                    continue;
-
-                resources[keyAttribute.Value] = element.Value;
-            }
         }
     }
 }

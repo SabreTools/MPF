@@ -1050,7 +1050,7 @@ namespace MPF.Processors
                     line = sr.ReadLine();
                 }
 
-                return sb.ToString().TrimEnd('\n');
+                return sb.ToString().TrimEnd('\r', '\n');
             }
             catch
             {
@@ -2590,15 +2590,29 @@ namespace MPF.Processors
                 using var sr = File.OpenText(log);
 
                 // Find the error counts
+                bool add = true;
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine()?.Trim();
                     if (line is null)
                         break;
 
+                    // If the media errors section is found, values are added
+                    if (line.StartsWith("media errors:"))
+                    {
+                        errorCount = 0;
+                        add = true;
+                    }
+
+                    // If the correction statistics section is found, values are subtracted
+                    else if (line.StartsWith("correction statistics:"))
+                    {
+                        add = false;
+                    }
+
                     // SCSI: <error count>
                     // SCSI: <error count> samples
-                    if (line.StartsWith("SCSI: "))
+                    else if (line.StartsWith("SCSI: "))
                     {
                         // Ensure there are the correct number of parts
                         string[] parts = line.Split(' ');
@@ -2615,22 +2629,19 @@ namespace MPF.Processors
                             break;
                         }
 
-                        // Standard error counts always add sectors
+                        // Standard error counts always update sectors
                         if (parts.Length == 2)
                         {
-                            errorCount += scsiErrors;
+                            if (add)
+                                errorCount += scsiErrors;
+                            else
+                                errorCount -= scsiErrors;
                         }
-                        // Correction counts are ignored for now
+                        // Old-style correction counts are ignored for now
                         else if (parts.Length > 2)
                         {
                             // No-op
                         }
-                    }
-
-                    // Reset SCSI errors when a media errors section is found
-                    else if (line.StartsWith("media errors:"))
-                    {
-                        errorCount = 0;
                     }
                 }
 

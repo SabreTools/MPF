@@ -2,18 +2,18 @@ name: Build and Test
 
 on:
     push:
-        branches: ["master", "feature/avalonia-port"]
-        tags: ["v*"]
-    pull_request:
-
-permissions:
-    contents: write
+        branches: ["master"]
 
 jobs:
     build:
-        runs-on: macos-latest
+        runs-on: ubuntu-latest
 
         steps:
+            - name: Free Disk Space (Ubuntu)
+              uses: jlumbroso/free-disk-space@v1.3.1
+              with:
+                  dotnet: false
+
             - uses: actions/checkout@v5
               with:
                   fetch-depth: 0
@@ -29,194 +29,10 @@ jobs:
             - name: Run tests
               run: dotnet test
 
-            - name: Publish Avalonia builds
-              run: |
-                  mkdir -p artifacts publish
-                  version="v$(dotnet msbuild MPF.Avalonia/MPF.Avalonia.csproj -getProperty:VersionPrefix)"
-
-                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/win-x64
-                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r win-arm64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/win-arm64
-                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r osx-arm64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/osx-arm64
-
-                  mkdir -p publish/osx-arm64-app/MPF.app/Contents/MacOS publish/osx-arm64-app/MPF.app/Contents/Resources
-                  cp -R publish/osx-arm64/. publish/osx-arm64-app/MPF.app/Contents/MacOS/
-                  chmod +x publish/osx-arm64-app/MPF.app/Contents/MacOS/MPF.Avalonia
-                  python3 - <<'PY'
-                  import struct
-                  from pathlib import Path
-
-                  ico = Path("MPF.Avalonia/Assets/Icon.ico").read_bytes()
-                  count = struct.unpack_from("<H", ico, 4)[0]
-                  for index in range(count):
-                      entry_offset = 6 + index * 16
-                      width = ico[entry_offset] or 256
-                      height = ico[entry_offset + 1] or 256
-                      size, offset = struct.unpack_from("<II", ico, entry_offset + 8)
-                      image = ico[offset:offset + size]
-                      if width == 256 and height == 256 and image.startswith(b"\x89PNG\r\n\x1a\n"):
-                          Path("publish/osx-arm64-app/icon-source.png").write_bytes(image)
-                          break
-                  else:
-                      raise SystemExit("Could not find a 256x256 PNG image in Icon.ico")
-                  PY
-                  mkdir -p publish/osx-arm64-app/MPF.iconset
-                  sips -z 16 16 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_16x16.png
-                  sips -z 32 32 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_16x16@2x.png
-                  sips -z 32 32 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_32x32.png
-                  sips -z 64 64 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_32x32@2x.png
-                  sips -z 128 128 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_128x128.png
-                  sips -z 256 256 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_128x128@2x.png
-                  sips -z 256 256 publish/osx-arm64-app/icon-source.png --out publish/osx-arm64-app/MPF.iconset/icon_256x256.png
-                  cp publish/osx-arm64-app/icon-source.png publish/osx-arm64-app/MPF.iconset/icon_256x256@2x.png
-                  iconutil -c icns publish/osx-arm64-app/MPF.iconset -o publish/osx-arm64-app/MPF.app/Contents/Resources/MPF.icns
-                  cat > publish/osx-arm64-app/MPF.app/Contents/Info.plist <<'EOF'
-                  <?xml version="1.0" encoding="UTF-8"?>
-                  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-                  <plist version="1.0">
-                  <dict>
-                    <key>CFBundleExecutable</key>
-                    <string>MPF.Avalonia</string>
-                    <key>CFBundleIdentifier</key>
-                    <string>org.sabretools.mpf.avalonia</string>
-                    <key>CFBundleName</key>
-                    <string>Media Preservation Frontend</string>
-                    <key>CFBundleDisplayName</key>
-                    <string>Media Preservation Frontend</string>
-                    <key>CFBundleIconFile</key>
-                    <string>MPF.icns</string>
-                    <key>CFBundlePackageType</key>
-                    <string>APPL</string>
-                    <key>CFBundleShortVersionString</key>
-                    <string>0.1.6</string>
-                    <key>CFBundleVersion</key>
-                    <string>3</string>
-                    <key>LSMinimumSystemVersion</key>
-                    <string>11.0</string>
-                    <key>NSHighResolutionCapable</key>
-                    <true/>
-                  </dict>
-                  </plist>
-                  EOF
-
-                  codesign --force --deep --sign - publish/osx-arm64-app/MPF.app
-
-                  (cd publish/win-x64 && zip -r ../../artifacts/MPF.UI_Windows_x64_${version}.zip .)
-                  (cd publish/win-arm64 && zip -r ../../artifacts/MPF.UI_Windows_ARM_${version}.zip .)
-                  ditto -c -k --keepParent publish/osx-arm64-app/MPF.app artifacts/MPF.UI_macOS_ARM_${version}.zip
-
-            - name: Upload packaged builds
-              uses: actions/upload-artifact@v4
-              with:
-                  name: packaged-builds
-                  path: artifacts/*
-
-    linux-build:
-        strategy:
-            fail-fast: false
-            matrix:
-                include:
-                    - runtime: linux-x64
-                      runner: ubuntu-latest
-                      appimage_arch: x86_64
-                      appimagetool: appimagetool-x86_64.AppImage
-                      artifact_arch: x64
-                    - runtime: linux-arm64
-                      runner: ubuntu-24.04-arm
-                      appimage_arch: aarch64
-                      appimagetool: appimagetool-aarch64.AppImage
-                      artifact_arch: Arm64
-
-        runs-on: ${{ matrix.runner }}
-
-        steps:
-            - uses: actions/checkout@v5
-
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v5
-              with:
-                  dotnet-version: |
-                      10.0.x
-
-            - name: Publish Linux builds
-              run: |
-                  mkdir -p artifacts publish/${{ matrix.runtime }} publish/appimage/AppDir/usr/bin publish/appimage/AppDir/usr/share/applications publish/appimage/AppDir/usr/share/icons/hicolor/256x256/apps
-                  version="v$(dotnet msbuild MPF.Avalonia/MPF.Avalonia.csproj -getProperty:VersionPrefix)"
-
-                  dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -c Release -r ${{ matrix.runtime }} --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish/${{ matrix.runtime }}
-
-                  (cd publish/${{ matrix.runtime }} && zip -r ../../artifacts/MPF.UI_Linux_${{ matrix.artifact_arch }}_${version}.zip .)
-                  cp -R publish/${{ matrix.runtime }}/. publish/appimage/AppDir/usr/bin/
-
-                  python3 - <<'PY'
-                  import struct
-                  from pathlib import Path
-
-                  ico = Path("MPF.Avalonia/Assets/Icon.ico").read_bytes()
-                  count = struct.unpack_from("<H", ico, 4)[0]
-                  for index in range(count):
-                      entry_offset = 6 + index * 16
-                      width = ico[entry_offset] or 256
-                      height = ico[entry_offset + 1] or 256
-                      size, offset = struct.unpack_from("<II", ico, entry_offset + 8)
-                      image = ico[offset:offset + size]
-                      if width == 256 and height == 256 and image.startswith(b"\x89PNG\r\n\x1a\n"):
-                          Path("publish/appimage/AppDir/usr/share/icons/hicolor/256x256/apps/mpf.png").write_bytes(image)
-                          Path("publish/appimage/AppDir/mpf.png").write_bytes(image)
-                          Path("publish/appimage/AppDir/.DirIcon").write_bytes(image)
-                          break
-                  else:
-                      raise SystemExit("Could not find a 256x256 PNG image in Icon.ico")
-                  PY
-
-                  cat > publish/appimage/AppDir/AppRun <<'EOF'
-                  #!/bin/sh
-                  HERE="$(dirname "$(readlink -f "$0")")"
-                  exec "$HERE/usr/bin/MPF.Avalonia" "$@"
-                  EOF
-                  chmod +x publish/appimage/AppDir/AppRun
-
-                  cat > publish/appimage/AppDir/mpf.desktop <<'EOF'
-                  [Desktop Entry]
-                  Type=Application
-                  Name=Media Preservation Frontend
-                  Exec=MPF.Avalonia
-                  Icon=mpf
-                  Categories=Utility;
-                  Terminal=false
-                  EOF
-                  cp publish/appimage/AppDir/mpf.desktop publish/appimage/AppDir/usr/share/applications/mpf.desktop
-
-                  curl -L -o ${{ matrix.appimagetool }} https://github.com/AppImage/appimagetool/releases/download/continuous/${{ matrix.appimagetool }}
-                  chmod +x ${{ matrix.appimagetool }}
-                  ./${{ matrix.appimagetool }} --appimage-extract
-                  ARCH=${{ matrix.appimage_arch }} ./squashfs-root/AppRun publish/appimage/AppDir artifacts/MPF.UI_Linux_${{ matrix.artifact_arch }}_${version}.AppImage
-
-                  strings artifacts/MPF.UI_Linux_${{ matrix.artifact_arch }}_${version}.AppImage | grep -q "squashfuse"
-
-            - name: Upload Linux build
-              uses: actions/upload-artifact@v4
-              with:
-                  name: ${{ matrix.runtime }}-build
-                  path: artifacts/*
-
-    release:
-        if: github.event_name == 'push'
-        runs-on: ubuntu-latest
-        needs: [build, linux-build]
-
-        steps:
-            - uses: actions/checkout@v5
-              with:
-                  fetch-depth: 0
-
-            - name: Download packaged builds
-              uses: actions/download-artifact@v4
-              with:
-                  path: artifacts
-                  merge-multiple: true
+            - name: Run publish script
+              run: ./publish-nix.sh -dp
 
             - name: Update rolling tag
-              if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -224,59 +40,20 @@ jobs:
                   git push origin :refs/tags/rolling || true
                   git push origin rolling --force
 
-            - name: Remove stale renamed assets
-              env:
-                  GITHUB_TOKEN: ${{ github.token }}
-              run: |
-                  release_tag="${GITHUB_REF_NAME}"
-                  if [[ "${GITHUB_REF}" == refs/heads/* ]]; then
-                      release_tag="rolling"
-                  fi
-
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-x64_release.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-arm64_release.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-x64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_linux-arm64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_osx-arm64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_win-arm64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_win-x64_release.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Windows_x64_${GITHUB_REF_NAME}.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Windows_ARM_${GITHUB_REF_NAME}.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_macOS_ARM_${GITHUB_REF_NAME}.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Linux_x64_${GITHUB_REF_NAME}.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Linux_x64_${GITHUB_REF_NAME}.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Linux_Arm64_${GITHUB_REF_NAME}.zip --repo "${GITHUB_REPOSITORY}" -y || true
-                  gh release delete-asset "${release_tag}" MPF-UI_Avalonia_Linux_Arm64_${GITHUB_REF_NAME}.AppImage --repo "${GITHUB_REPOSITORY}" -y || true
-
             - name: Upload to rolling
-              if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
               uses: ncipollo/release-action@v1.20.0
               with:
                   allowUpdates: True
-                  artifacts: "artifacts/*"
+                  artifacts: "*.nupkg,*.snupkg,*.zip"
                   body: "Last built commit: ${{ github.sha }}
 
-                      ## Avalonia Builds
+                      ## UI Builds
 
-                      This rolling release contains Avalonia UI build artifacts only."
+                      [Windows x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
+
+                      [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)"
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True
                   tag: "rolling"
                   updateOnlyUnreleased: True
-
-            - name: Upload to versioned release
-              if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-              uses: ncipollo/release-action@v1.20.0
-              with:
-                  allowUpdates: True
-                  artifacts: "artifacts/*"
-                  body: "Built commit: ${{ github.sha }}
-
-                      ## Avalonia Builds
-
-                      This versioned release preserves Avalonia UI build artifacts."
-                  name: "${{ github.ref_name }}"
-                  prerelease: False
-                  replacesArtifacts: True
-                  tag: "${{ github.ref_name }}"

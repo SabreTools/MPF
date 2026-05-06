@@ -214,7 +214,7 @@ namespace MPF.Frontend.Tools
                 }
                 else
                 {
-                    resultProgress?.Report(ResultEventArgs.Success("Successfully logged into Redump!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into Redump!"));
                 }
             }
 
@@ -358,7 +358,7 @@ namespace MPF.Frontend.Tools
             info.PartiallyMatchedIDs = [.. partiallyMatchedIds];
             info.PartiallyMatchedIDs.Sort();
 
-            resultProgress?.Report(ResultEventArgs.Success("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
+            resultProgress?.Report(ResultEventArgs.Neutral("Match finding complete! " + (fullyMatchedIdsList is not null && fullyMatchedIdsList.Count > 0
                 ? "Fully Matched IDs: " + string.Join(",", [.. fullyMatchedIdsList.ConvertAll(i => i.ToString())])
                 : "No matches found")));
 
@@ -834,13 +834,22 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category ??= DiscCategory.Video;
-                    bool bee = PhysicalTool.GetBusEncryptionEnabled(drive);
-                    if (bee && string.IsNullOrEmpty(info.CopyProtection.Protection))
-                        info.CopyProtection.Protection = "Bus encryption enabled flag set";
-                    else if (bee)
-                        info.CopyProtection.Protection += "\nBus encryption enabled flag set";
+
+                    // General protection info
+                    string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
+                    if (bdProtection is not null && string.IsNullOrEmpty(info.CopyProtection.Protection))
+                        info.CopyProtection.Protection = bdProtection;
+                    else if (bdProtection is not null)
+                        info.CopyProtection.Protection += $"\n{bdProtection}";
                     else
                         info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
+                    // Determine if BEE is set
+                    bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
+                    if (busEncryptionEnabled && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
+                    else if (busEncryptionEnabled && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.CopyProtection.Protection += $"\nBus Encryption Enabled";
 
                     break;
 
@@ -942,17 +951,20 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.MicrosoftXbox:
                 case RedumpSystem.MicrosoftXbox360:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
@@ -981,7 +993,9 @@ namespace MPF.Frontend.Tools
 
                 case RedumpSystem.NintendoGameCube:
                 case RedumpSystem.NintendoWii:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.CoverID] ??= addPlaceholders ? RequiredValue : string.Empty;
+                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+
                     break;
 
                 case RedumpSystem.SegaChihiro:

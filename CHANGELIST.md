@@ -12,6 +12,12 @@
 - Update RedumpLib to 1.10.2
 - Fix name conflict
 - Sync with Redump wiki
+- Add BD protection info, fix Cover ID setting
+- Separate BEE
+- Convert type of reports from success to neutral for essential steps (shfil119)
+- Subtract fixed SCSI errors
+- Fix trailing newline trimming for cue import (fuzz6001)
+- Add Redump-specific PS5 post-processing
 
 ### 3.7.1 (2026-03-30)
 

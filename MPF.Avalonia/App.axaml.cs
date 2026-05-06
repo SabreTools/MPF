@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using MPF.Frontend;
 using MPF.Frontend.Tools;
 using MPF.Avalonia.Services;
 using MPF.Avalonia.Windows;
@@ -13,7 +14,7 @@ namespace MPF.Avalonia
         {
             Name = "MPF";
             AvaloniaXamlLoader.Load(this);
-            StringResourceLoader.LoadEnglish(Resources);
+            StringResourceLoader.Load(Resources, InterfaceLanguage.English);
         }
 
         public override void OnFrameworkInitializationCompleted()

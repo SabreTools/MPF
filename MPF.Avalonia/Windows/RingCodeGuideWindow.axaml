@@ -14,7 +14,7 @@
     <TabItem Header="1-Layer Ringcode">
       <ScrollViewer>
         <StackPanel Margin="6,6,6,18" Spacing="8">
-          <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-1-layer.png"
+          <Image Source="avares://MPF/Assets/ring-code-guide-1-layer.png"
                  HorizontalAlignment="Center"
                  Stretch="Uniform" />
 
@@ -44,7 +44,7 @@
     <TabItem Header="2-Layer Ringcode">
       <ScrollViewer>
         <StackPanel Margin="6,6,6,18" Spacing="8">
-          <Image Source="avares://MPF.Avalonia/Assets/ring-code-guide-2-layer.png"
+          <Image Source="avares://MPF/Assets/ring-code-guide-2-layer.png"
                  HorizontalAlignment="Center"
                  Stretch="Uniform" />
 
