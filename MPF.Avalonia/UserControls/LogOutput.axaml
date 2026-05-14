@@ -2,15 +2,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:MPF.Avalonia.UserControls"
              x:Class="MPF.Avalonia.UserControls.LogOutput">
-  <Grid RowDefinitions="*,Auto" RowSpacing="4" Margin="0">
+  <Grid RowDefinitions="*,Auto" RowSpacing="4" Margin="0" Background="{DynamicResource PanelBackgroundBrush}">
     <Border x:Name="LogSurface"
             Grid.Row="0"
             Height="180"
+            MaxHeight="180"
             Margin="0,0,0,2"
             Background="{DynamicResource LogBackgroundBrush}"
             CornerRadius="0,0,0,0">
       <ScrollViewer x:Name="Scroller"
-                    HorizontalScrollBarVisibility="Visible">
+                    HorizontalScrollBarVisibility="Visible"
+                    VerticalScrollBarVisibility="Auto">
         <ItemsControl x:Name="ItemsHost"
                       Margin="0,6,0,0"
                       ItemsSource="{Binding Entries, RelativeSource={RelativeSource AncestorType=local:LogOutput}}">
@@ -27,7 +29,7 @@
         </ItemsControl>
       </ScrollViewer>
     </Border>
-    <Border Grid.Row="1" Padding="0,0,0,4">
+    <Border Grid.Row="1" Padding="0,0,0,4" Background="{DynamicResource PanelBackgroundBrush}">
       <StackPanel Margin="0,-2,0,0"
                   Orientation="Horizontal"
                   HorizontalAlignment="Center"

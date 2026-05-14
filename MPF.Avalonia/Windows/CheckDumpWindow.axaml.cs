@@ -84,9 +84,17 @@ namespace MPF.Avalonia.Windows
         {
             var result = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
             if (result == true)
-                DisplayUserMessage("Check Complete", "The dump has been processed successfully.", 1, false);
+            {
+                bool? checkAgain = await DisplayUserMessageAsync("Check Complete", "The dump has been processed successfully! Would you like to check another dump?", 2, false);
+                if (checkAgain == false)
+                    Close();
+                else
+                    CheckDumpViewModel.Status = string.Empty;
+            }
             else
-                DisplayUserMessage("Check Failed", string.IsNullOrEmpty(result.Message) ? "Please check all files exist and try again!" : result.Message, 1, false);
+            {
+                await DisplayUserMessageAsync("Check Failed", string.IsNullOrEmpty(result.Message) ? "Please check all files exist and try again!" : result.Message, 1, false);
+            }
         }
 
         private void OnCancelClick(object? sender, RoutedEventArgs e)

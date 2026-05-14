@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -34,16 +35,23 @@ namespace MPF.Avalonia.Windows
         protected string StringResource(string key, string fallback)
             => global::Avalonia.Application.Current?.TryFindResource(key, out object? value) == true ? value?.ToString() ?? fallback : fallback;
 
+        protected async Task<bool?> DisplayUserMessageAsync(string title, string message, int optionCount, bool flag)
+        {
+            if (Dispatcher.UIThread.CheckAccess())
+                return await MessageBoxWindow.ShowAsyncResult(this, title, message, optionCount, flag);
+
+            return await Dispatcher.UIThread.InvokeAsync(() => MessageBoxWindow.ShowAsyncResult(this, title, message, optionCount, flag));
+        }
+
         protected bool? DisplayUserMessage(string title, string message, int optionCount, bool flag)
         {
             if (Dispatcher.UIThread.CheckAccess())
             {
-                _ = MessageBoxWindow.ShowAsync(this, title, message, optionCount, flag);
-
-                if (optionCount <= 1)
-                    return true;
-
-                return null;
+                Task<bool?> dialogTask = MessageBoxWindow.ShowAsyncResult(this, title, message, optionCount, flag);
+                var frame = new DispatcherFrame();
+                dialogTask.ContinueWith(_ => Dispatcher.UIThread.Post(() => frame.Continue = false));
+                Dispatcher.UIThread.PushFrame(frame);
+                return dialogTask.GetAwaiter().GetResult();
             }
 
             return Dispatcher.UIThread

@@ -70,9 +70,17 @@ namespace MPF.Avalonia.Windows
 
             string? result = CreateIRDViewModel.CreateIRD(outputPath);
             if (string.IsNullOrWhiteSpace(result))
-                DisplayUserMessage("IRD Create", "An IRD has been created successfully.", 1, false);
+            {
+                bool? createAgain = await DisplayUserMessageAsync("IRD Create", "An IRD has been created successfully! Would you like to create another IRD?", 2, false);
+                if (createAgain == false)
+                    Close();
+                else
+                    CreateIRDViewModel.ResetFields();
+            }
             else
-                DisplayUserMessage("Failed to create IRD", result, 1, false);
+            {
+                await DisplayUserMessageAsync("Failed to create IRD", result, 1, false);
+            }
         }
 
         private void OnCancelClick(object? sender, RoutedEventArgs e)

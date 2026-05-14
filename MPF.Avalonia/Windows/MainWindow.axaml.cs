@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using MPF.Avalonia.Services;
 using MPF.Avalonia.UserControls;
@@ -28,6 +31,7 @@ namespace MPF.Avalonia.Windows
         private double _expandedWindowHeight;
         private double _collapsedWindowHeight;
         private bool _logPanelResizeInitialized;
+        private bool _normalizingOutputPath;
         private NativeMenuItem? _nativeFileMenuGroup;
         private NativeMenuItem? _nativeToolsMenuGroup;
         private NativeMenuItem? _nativeHelpMenuGroup;
@@ -47,6 +51,7 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
             ConfigurePlatformChrome();
             DataContext = new MainViewModel();
+            MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
             ThemeService.SyncWithSystemTheme(MainViewModel.Options);
             Opened += OnOpened;
             Closing += MainWindowClosing;
@@ -358,16 +363,35 @@ namespace MPF.Avalonia.Windows
                 return;
             }
 
-            double expandedBaseHeight = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
-            double extraHeight = Math.Max(0, Height - expandedBaseHeight);
-            logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight + extraHeight);
+            logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
         }
 
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             var dialogOptions = options ?? MainViewModel.Options;
             SubmissionInfo? updatedSubmissionInfo = submissionInfo;
-            var dialogTask = Dispatcher.UIThread.InvokeAsync(async () =>
+
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                var window = new MediaInformationWindow(dialogOptions, updatedSubmissionInfo)
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                };
+
+                Task<bool?> dialogTask = window.ShowDialog<bool?>(this);
+                var frame = new DispatcherFrame();
+                dialogTask.ContinueWith(_ => Dispatcher.UIThread.Post(() => frame.Continue = false));
+                Dispatcher.UIThread.PushFrame(frame);
+
+                bool? dialogResult = dialogTask.GetAwaiter().GetResult();
+                if (dialogResult == true)
+                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo;
+
+                submissionInfo = updatedSubmissionInfo;
+                return dialogResult;
+            }
+
+            var dispatcherTask = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 var window = new MediaInformationWindow(dialogOptions, updatedSubmissionInfo)
                 {
@@ -381,13 +405,77 @@ namespace MPF.Avalonia.Windows
                 return result;
             });
 
-            bool? result = dialogTask.GetAwaiter().GetResult();
+            bool? result = dispatcherTask.GetAwaiter().GetResult();
             submissionInfo = updatedSubmissionInfo;
             return result;
         }
 
-        private async Task<string?> BrowseFolderAsync()
-            => await DialogService.OpenFolderAsync(this, StringResource("OutputPathLabelString", "Output Path"));
+        private async Task<string?> BrowseOutputFileAsync()
+        {
+            string currentPath = MainViewModel.OutputPath;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = Path.Combine(MainViewModel.Options.Dumping.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            else if (string.IsNullOrEmpty(currentPath))
+                currentPath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+            if (string.IsNullOrEmpty(currentPath))
+                currentPath = Path.Combine(AppContext.BaseDirectory, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+
+            currentPath = Path.GetFullPath(currentPath);
+            string filename = Path.GetFileName(currentPath);
+            if (string.IsNullOrEmpty(filename))
+                filename = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+
+            return await DialogService.SaveFileAsync(
+                this,
+                StringResource("OutputPathLabelString", "Output Path"),
+                filename,
+                new List<FilePickerFileType>
+                {
+                    new("All Files") { Patterns = new[] { "*" } },
+                });
+        }
+
+        private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MPF.Frontend.ViewModels.MainViewModel.OutputPath))
+                NormalizeMacOutputPath();
+        }
+
+        private void NormalizeMacOutputPath()
+        {
+            if (_normalizingOutputPath || !OperatingSystem.IsMacOS())
+                return;
+
+            string normalized = RemoveMacVolumesPrefix(MainViewModel.OutputPath);
+            if (normalized == MainViewModel.OutputPath)
+                return;
+
+            try
+            {
+                _normalizingOutputPath = true;
+                MainViewModel.OutputPath = normalized;
+            }
+            finally
+            {
+                _normalizingOutputPath = false;
+            }
+        }
+
+        private static string RemoveMacVolumesPrefix(string outputPath)
+        {
+            const string generatedVolumesPrefix = "_Volumes_";
+
+            if (string.IsNullOrEmpty(outputPath))
+                return outputPath;
+
+            string normalized = outputPath;
+            if (normalized.StartsWith(generatedVolumesPrefix, StringComparison.Ordinal))
+                normalized = normalized[generatedVolumesPrefix.Length..];
+
+            return normalized
+                .Replace($"/{generatedVolumesPrefix}", "/", StringComparison.Ordinal)
+                .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
+        }
 
         public void MainWindowClosing(object? sender, WindowClosingEventArgs e)
         {
@@ -594,9 +682,12 @@ namespace MPF.Avalonia.Windows
 
         public async void OutputPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
-            string? selectedPath = await BrowseFolderAsync();
+            string? selectedPath = await BrowseOutputFileAsync();
             if (!string.IsNullOrWhiteSpace(selectedPath))
+            {
                 MainViewModel.OutputPath = selectedPath;
+                MainViewModel.EnsureMediaInformation();
+            }
         }
 
         public void OutputPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
@@ -606,7 +697,53 @@ namespace MPF.Avalonia.Windows
         }
 
         public void StartStopButtonClick(object? sender, RoutedEventArgs e)
-            => MainViewModel.ToggleStartStop();
+        {
+            EnsureOutputPathIsFilePath();
+            PrepareMacRedumperParameters();
+            MainViewModel.ToggleStartStop();
+        }
+
+        private void EnsureOutputPathIsFilePath()
+        {
+            string outputPath = MainViewModel.OutputPath;
+            if (string.IsNullOrWhiteSpace(outputPath))
+                return;
+
+            string fullPath;
+            try
+            {
+                fullPath = Path.GetFullPath(outputPath);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (!Directory.Exists(fullPath))
+                return;
+
+            MainViewModel.OutputPath = Path.Combine(outputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            MainViewModel.EnsureMediaInformation();
+        }
+
+        private void PrepareMacRedumperParameters()
+        {
+            if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
+                return;
+
+            string? driveName = MainViewModel.CurrentDrive?.Name?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (string.IsNullOrWhiteSpace(driveName) || !driveName.StartsWith("/Volumes/", StringComparison.Ordinal))
+                return;
+
+            string parameters = MainViewModel.Parameters;
+            if (string.IsNullOrWhiteSpace(parameters))
+                return;
+
+            string escapedDrive = Regex.Escape(driveName);
+            parameters = Regex.Replace(parameters, $@"(^|\s)--drive=(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
+            parameters = Regex.Replace(parameters, $@"(^|\s)--drive\s+(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
+            MainViewModel.Parameters = parameters.Trim();
+        }
 
         public void SystemTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {

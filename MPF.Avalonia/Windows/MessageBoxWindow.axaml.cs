@@ -22,11 +22,11 @@ namespace MPF.Avalonia.Windows
 
             buttonPanel.HorizontalAlignment = HorizontalAlignment.Center;
 
-            Button button = CreateButton("OK", true);
+            Button button = CreateButton(optionCount > 1 ? "Yes" : "OK", true);
             buttonPanel.Children.Add(button);
 
             if (optionCount > 1)
-                buttonPanel.Children.Add(CreateButton("Cancel", false));
+                buttonPanel.Children.Add(CreateButton("No", false));
         }
 
         public static Task ShowAsync(Window owner, string title, string message, int optionCount, bool flag)

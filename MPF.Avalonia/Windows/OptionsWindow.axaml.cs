@@ -44,9 +44,18 @@ namespace MPF.Avalonia.Windows
 
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
+            if (!System.OperatingSystem.IsWindows())
+            {
+                return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
+                {
+                    new("All files") { Patterns = new[] { "*", "*.*" } },
+                });
+            }
+
             return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
             {
-                new("Executables") { Patterns = new[] { "*.exe", "*" } },
+                new("Executables") { Patterns = new[] { "*.exe" } },
+                new("All files") { Patterns = new[] { "*", "*.*" } },
             });
         }
 
