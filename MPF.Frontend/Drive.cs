@@ -125,7 +125,10 @@ namespace MPF.Frontend
             {
                 DriveFormat = driveInfo.DriveFormat;
                 TotalSize = driveInfo.TotalSize;
-                VolumeLabel = driveInfo.VolumeLabel;
+                if (Environment.OSVersion.Platform != PlatformID.Unix)
+                    VolumeLabel = driveInfo.VolumeLabel;
+                else
+                    VolumeLabel = string.Empty;
             }
             else
             {
@@ -257,9 +260,6 @@ namespace MPF.Frontend
             // Deal with non-Windows drive names
             if (Environment.OSVersion.Platform == PlatformID.Unix)
             {
-                if (!string.IsNullOrEmpty(VolumeLabel))
-                    return VolumeLabel!;
-
                 string volumePath = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 string volumeName = Path.GetFileName(volumePath);
                 if (!string.IsNullOrEmpty(volumeName))

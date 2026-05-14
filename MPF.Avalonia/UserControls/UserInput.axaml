@@ -15,7 +15,7 @@
              AcceptsTab="{Binding Tab, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
              AcceptsReturn="{Binding Enter, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
              TextWrapping="{Binding TextWrapping, RelativeSource={RelativeSource AncestorType=local:UserInput}}"
-             HorizontalContentAlignment="Left"
+             HorizontalContentAlignment="Stretch"
              IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource AncestorType=local:UserInput}}" />
   </Grid>
 </UserControl>
