@@ -19,6 +19,7 @@
 - Fix trailing newline trimming for cue import (fuzz6001)
 - Add Redump-specific PS5 post-processing
 - Update gitignore for new VSCode feature
+- Add CONTRIBUTING document
 
 ### 3.7.1 (2026-03-30)
 
