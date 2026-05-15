@@ -20,6 +20,7 @@
 - Add Redump-specific PS5 post-processing
 - Update gitignore for new VSCode feature
 - Add CONTRIBUTING document
+- Update CONTRIBUTING to be more accurate
 
 ### 3.7.1 (2026-03-30)
 
