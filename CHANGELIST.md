@@ -21,6 +21,7 @@
 - Update gitignore for new VSCode feature
 - Add CONTRIBUTING document
 - Update CONTRIBUTING to be more accurate
+- Remove CONTRIBUTING due to org-level version
 
 ### 3.7.1 (2026-03-30)
 
