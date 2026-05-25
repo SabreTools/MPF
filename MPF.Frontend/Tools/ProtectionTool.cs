@@ -51,6 +51,7 @@ namespace MPF.Frontend.Tools
             "PEtite",
             "Setup Factory",
             "Shrinker",
+            "Spoon Installer",
             "UPX",
             "WinRAR SFX",
             "WinZip SFX",
