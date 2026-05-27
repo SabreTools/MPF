@@ -69,11 +69,22 @@ namespace MPF.UI.Avalonia
                 // Remove the download quarantine flag from the whole tree (best effort).
                 RunQuiet("/usr/bin/xattr", "-dr", "com.apple.quarantine", programsDir);
 
-                // Ad-hoc sign every Mach-O file so it can run locally on a signed-only OS.
                 foreach (string file in Directory.EnumerateFiles(programsDir, "*", SearchOption.AllDirectories))
                 {
-                    if (IsMachO(file))
-                        RunQuiet("/usr/bin/codesign", "--force", "--sign", "-", file);
+                    if (!IsMachO(file))
+                        continue;
+
+                    // Some tools (e.g. redumper) bundle their dylibs in a sibling "lib" folder but
+                    // only carry an rpath pointing elsewhere, so dyld can't find them. Add an
+                    // @executable_path/lib rpath for executables that have such a folder.
+                    string? dir = Path.GetDirectoryName(file);
+                    bool isDylib = file.EndsWith(".dylib", StringComparison.OrdinalIgnoreCase);
+                    if (!isDylib && dir != null && Directory.Exists(Path.Combine(dir, "lib")))
+                        RunQuiet("/usr/bin/install_name_tool", "-add_rpath", "@executable_path/lib", file);
+
+                    // (Re-)apply an ad-hoc signature LAST: install_name_tool invalidates it, and a
+                    // signed-only OS (Apple Silicon) refuses to run unsigned Mach-O binaries.
+                    RunQuiet("/usr/bin/codesign", "--force", "--sign", "-", file);
                 }
             }
             catch
