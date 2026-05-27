@@ -59,7 +59,18 @@ Run the included packaging script from the repo root:
 
 The self-contained `.app` bundle is written to `MPF.UI.Avalonia/bin/MPF.app`. It embeds the .NET runtime, so no system .NET installation is required on the target machine. The default `universal` build fuses the arm64 and x64 outputs with `lipo` so a single bundle runs natively on both Apple Silicon and Intel Macs.
 
-On launch (macOS), the app strips the download quarantine flag from, and ad-hoc code-signs, the bundled dumping tools under a sibling `Programs/` folder so they can run without manual Gatekeeper steps (required on Apple Silicon, which refuses unsigned binaries). Note that the external tools have their own architecture and library requirements — `redumper` ships a native arm64 build, while `DiscImageCreator` is x86_64 (runs via Rosetta) and depends on a system `libarchive`.
+### Automatic signing of the dumping tools (macOS)
+
+Just drop the dumping tools next to the `.app` in a `Programs/` folder (`Programs/Redumper/redumper`, `Programs/Creator/DiscImageCreator`, `Programs/Aaru/aaru`). **You do not need to run any `xattr`/`codesign` commands yourself** — on every launch the app automatically:
+
+- removes the download **quarantine** flag from everything under `Programs/`,
+- **ad-hoc code-signs** every bundled binary (required on Apple Silicon, which refuses to run unsigned binaries), and
+- adds the `@executable_path/lib` **rpath** to tools that ship their libraries in a sibling `lib/` folder (e.g. `redumper`), so their dylibs are found.
+
+This is best-effort and only touches `Programs/` next to the app. Notes:
+
+- The automatic `rpath` fix uses `install_name_tool`, which ships with the **Xcode Command Line Tools** (`xcode-select --install`); `codesign`/`xattr` are part of macOS itself. If the Command Line Tools are missing, signing still works but the `rpath` fix is skipped.
+- The external tools have their own architecture/library requirements: `redumper` ships a native arm64 build, while `DiscImageCreator` is x86_64 (runs via Rosetta) and additionally needs a system `libarchive`.
 
 ## Media Preservation Frontend CLI (MPF.CLI)
 
