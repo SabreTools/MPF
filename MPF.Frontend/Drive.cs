@@ -121,6 +121,17 @@ namespace MPF.Frontend
                 DriveFormat = driveInfo.DriveFormat;
                 TotalSize = driveInfo.TotalSize;
                 VolumeLabel = driveInfo.VolumeLabel;
+
+                // On Unix/macOS DriveInfo.VolumeLabel is the mount path (e.g. "/Volumes/DVD_ROM"),
+                // which would turn into output names like "_Volumes_DVD_ROM". Use just the final
+                // path component as the human-friendly volume name. (No-op for plain Windows labels.)
+                if (!string.IsNullOrEmpty(VolumeLabel) && (VolumeLabel!.IndexOf('/') >= 0 || VolumeLabel.IndexOf('\\') >= 0))
+                {
+                    string trimmed = VolumeLabel.TrimEnd('/', '\\');
+                    int sep = trimmed.LastIndexOfAny(new char[] { '/', '\\' });
+                    if (sep >= 0 && sep < trimmed.Length - 1)
+                        VolumeLabel = trimmed.Substring(sep + 1);
+                }
             }
             else
             {
