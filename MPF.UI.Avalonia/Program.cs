@@ -149,7 +149,7 @@ namespace MPF.UI.Avalonia
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .WithInterFont()
+                // No bundled font: use the OS system font (San Francisco on macOS) for a native look.
                 .LogToTrace();
     }
 }

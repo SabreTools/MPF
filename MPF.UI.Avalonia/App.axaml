@@ -3,7 +3,13 @@
              x:Class="MPF.UI.Avalonia.App"
              RequestedThemeVariant="Light">
     <Application.Styles>
-        <FluentTheme />
+        <!-- Use macOS-style system accent blue instead of the Windows/Fluent default -->
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#FF007AFF" />
+                <ColorPaletteResources x:Key="Dark" Accent="#FF0A84FF" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
         <StyleInclude Source="avares://MPF.Avalonia/Styles/Controls.axaml"/>
     </Application.Styles>
     <Application.Resources>

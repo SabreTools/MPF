@@ -5,10 +5,10 @@
     <Style Selector="HeaderedContentControl.groupbox">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderBrush="#FF707070" BorderThickness="1" CornerRadius="3" Padding="6" Margin="2">
+                <Border BorderBrush="#33888888" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="2">
                     <DockPanel>
                         <TextBlock DockPanel.Dock="Top" Text="{TemplateBinding Header}"
-                                   FontWeight="Bold" Margin="0,0,0,4"/>
+                                   FontWeight="SemiBold" Opacity="0.85" Margin="0,0,0,8"/>
                         <ContentPresenter Content="{TemplateBinding Content}"/>
                     </DockPanel>
                 </Border>
@@ -21,8 +21,8 @@
         <Setter Property="Foreground" Value="{DynamicResource ControlTextBrush}"/>
         <Setter Property="Template">
             <ControlTemplate>
-                <Border x:Name="border" Background="{DynamicResource Button.Static.Background}" BorderBrush="#FF707070"
-                        BorderThickness="1" CornerRadius="2" Padding="6,2">
+                <Border x:Name="border" Background="{DynamicResource Button.Static.Background}" BorderBrush="#33888888"
+                        BorderThickness="1" CornerRadius="6" Padding="10,3">
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
                                       Content="{TemplateBinding Content}"
                                       Foreground="{TemplateBinding Foreground}"/>
