@@ -19,10 +19,10 @@
                     <Panel />
                     <Button x:Name="ClearButton" Height="25" Width="80"
                             Content="{DynamicResource ClearButtonString}"
-                            Classes="CustomButton" />
+                            Classes="custom" />
                     <Button x:Name="SaveButton" Height="25" Width="80"
                             Content="{DynamicResource SaveButtonString}"
-                            Classes="CustomButton" />
+                            Classes="custom" />
                     <Panel />
                 </UniformGrid>
             </Border>

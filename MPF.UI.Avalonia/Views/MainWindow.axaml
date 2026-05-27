@@ -6,18 +6,18 @@
                   xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.UI.Avalonia.Views.MainWindow"
                   x:DataType="viewModels:MainViewModel"
-                  Title="{DynamicResource AppTitleString}" Width="600"
-                  CanResize="False"
-                  WindowStartupLocation="CenterScreen" SizeToContent="Height"
+                  Title="{DynamicResource AppTitleString}" Width="600" Height="800"
+                  CanResize="True" MinWidth="600" MinHeight="480"
+                  WindowStartupLocation="CenterScreen"
                   Background="{DynamicResource WindowBrush}">
 
     <views:WindowBase.Resources>
         <converters:ElementConverter x:Key="ElementConverter" />
     </views:WindowBase.Resources>
 
-    <StackPanel Orientation="Vertical">
+    <DockPanel>
             <!-- Menu bar -->
-            <Menu x:Name="TopLeftMenuBar"
+            <Menu x:Name="TopLeftMenuBar" DockPanel.Dock="Top"
                   Background="{DynamicResource WindowBrush}"
                   Foreground="{DynamicResource WindowTextBrush}">
                 <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
@@ -57,6 +57,8 @@
                 </MenuItem>
             </Menu>
 
+            <ScrollViewer>
+            <StackPanel Orientation="Vertical">
             <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
                 <Grid Margin="5,5,5,5" ColumnDefinitions="1*,2.5*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
@@ -151,5 +153,7 @@
                       IsExpanded="{Binding LogPanelExpanded}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>
-    </StackPanel>
+            </StackPanel>
+            </ScrollViewer>
+    </DockPanel>
 </views:WindowBase>

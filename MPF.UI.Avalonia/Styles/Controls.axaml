@@ -46,11 +46,16 @@
         <Setter Property="Background" Value="{DynamicResource Button.Disabled.Background}"/>
     </Style>
 
+    <!-- Slightly smaller base font app-wide (inherits to text in the window). -->
+    <Style Selector="Window">
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
     <!-- Tab headers: FluentTheme's default tab font is very large; bring it down to a
          readable size that matches the rest of the UI. -->
     <Style Selector="TabItem">
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="MinHeight" Value="36"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="MinHeight" Value="34"/>
     </Style>
 
 </Styles>

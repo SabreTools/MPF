@@ -1,5 +1,9 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Slightly smaller base font for FluentTheme controls (default is 14) -->
+    <sys:Double x:Key="ControlContentThemeFontSize">12</sys:Double>
 
     <!-- Application-wide system-colour defaults (no explicit value in WPF App.xaml; sensible light-theme fallbacks) -->
     <SolidColorBrush x:Key="ActiveBorderBrush"     Color="#FFB4B4B4"/>

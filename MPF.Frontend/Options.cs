@@ -213,6 +213,18 @@ namespace MPF.Frontend
         {
             get
             {
+                // On modern .NET, Environment.OSVersion.Platform returns PlatformID.Unix on macOS
+                // as well as Linux, so detect macOS explicitly to choose the right binary name:
+                // the macOS build is "DiscImageCreator", the Linux build is "DiscImageCreator.out".
+#if NETCOREAPP || NET471_OR_GREATER
+                string executableName;
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                    executableName = "DiscImageCreator.exe";
+                else if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+                    executableName = "DiscImageCreator";
+                else
+                    executableName = "DiscImageCreator.out";
+#else
 #pragma warning disable IDE0072
                 string executableName = Environment.OSVersion.Platform switch
                 {
@@ -221,6 +233,7 @@ namespace MPF.Frontend
                     _ => "DiscImageCreator.exe"
                 };
 #pragma warning restore IDE0072
+#endif
 
 #if NET20 || NET35
                 return Path.Combine("Programs", Path.Combine("Creator", executableName));
