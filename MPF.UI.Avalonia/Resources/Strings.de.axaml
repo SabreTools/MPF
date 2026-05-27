@@ -34,7 +34,7 @@
     <sys:String x:Key="SystemMediaTypeLabelString">System/Medientyp</sys:String>
     <sys:String x:Key="NoSystemSelectedString">Kein System ausgewählt</sys:String>
     <sys:String x:Key="OutputPathLabelString">Ausgabepfad</sys:String>
-    <sys:String x:Key="DriveLetterLabelString">Laufwerksbuchstabe</sys:String>
+    <sys:String x:Key="DriveLetterLabelString">Laufwerk</sys:String>
     <sys:String x:Key="DriveSpeedLabelString">Laufwerksgeschwindigkeit</sys:String>
     <sys:String x:Key="DumpingProgramLabelString">Dump Programm</sys:String>
     <sys:String x:Key="ParametersLabelString">Parameter</sys:String>

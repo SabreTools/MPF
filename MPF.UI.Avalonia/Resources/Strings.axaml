@@ -35,7 +35,7 @@
     <sys:String x:Key="SystemMediaTypeLabelString">System/Media Type</sys:String>
     <sys:String x:Key="NoSystemSelectedString">No system selected</sys:String>
     <sys:String x:Key="OutputPathLabelString">Output Path</sys:String>
-    <sys:String x:Key="DriveLetterLabelString">Drive Letter</sys:String>
+    <sys:String x:Key="DriveLetterLabelString">Drive</sys:String>
     <sys:String x:Key="DriveSpeedLabelString">Drive Speed</sys:String>
     <sys:String x:Key="DumpingProgramLabelString">Dumping Program</sys:String>
     <sys:String x:Key="ParametersLabelString">Parameters</sys:String>

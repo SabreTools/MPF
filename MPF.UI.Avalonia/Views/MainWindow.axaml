@@ -84,13 +84,13 @@
                             Click="OutputPathBrowseButtonClick" />
 
                     <TextBlock x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource DriveLetterLabelString}"/>
-                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
                               ItemsSource="{Binding Drives}" SelectedItem="{Binding CurrentDrive, Mode=TwoWay}"
                               IsEnabled="{Binding DriveLetterComboBoxEnabled}"
                               SelectionChanged="DriveLetterComboBoxSelectionChanged">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Letter}" />
+                                <TextBlock Text="{Binding Name}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

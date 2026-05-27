@@ -18,12 +18,14 @@
 
     <!-- Custom Button: base state -->
     <Style Selector="Button.custom">
+        <Setter Property="Foreground" Value="{DynamicResource ControlTextBrush}"/>
         <Setter Property="Template">
             <ControlTemplate>
-                <Border x:Name="border" Background="#FFDDDDDD" BorderBrush="#FF707070"
+                <Border x:Name="border" Background="{DynamicResource Button.Static.Background}" BorderBrush="#FF707070"
                         BorderThickness="1" CornerRadius="2" Padding="6,2">
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
-                                      Content="{TemplateBinding Content}"/>
+                                      Content="{TemplateBinding Content}"
+                                      Foreground="{TemplateBinding Foreground}"/>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -31,20 +33,24 @@
 
     <!-- Custom Button: pointer-over state -->
     <Style Selector="Button.custom:pointerover /template/ Border#border">
-        <Setter Property="Background" Value="#FFBEE6FD"/>
-        <Setter Property="BorderBrush" Value="#FF3C7FB1"/>
+        <Setter Property="Background" Value="{DynamicResource Button.MouseOver.Background}"/>
     </Style>
 
     <!-- Custom Button: pressed state -->
     <Style Selector="Button.custom:pressed /template/ Border#border">
-        <Setter Property="Background" Value="#FFC4E5F6"/>
-        <Setter Property="BorderBrush" Value="#FF2C628B"/>
+        <Setter Property="Background" Value="{DynamicResource Button.Pressed.Background}"/>
     </Style>
 
     <!-- Custom Button: disabled state -->
     <Style Selector="Button.custom:disabled /template/ Border#border">
-        <Setter Property="Background" Value="#FFF4F4F4"/>
-        <Setter Property="BorderBrush" Value="#FFADB2B5"/>
+        <Setter Property="Background" Value="{DynamicResource Button.Disabled.Background}"/>
+    </Style>
+
+    <!-- Tab headers: FluentTheme's default tab font is very large; bring it down to a
+         readable size that matches the rest of the UI. -->
+    <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="MinHeight" Value="36"/>
     </Style>
 
 </Styles>
