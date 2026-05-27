@@ -1,3 +1,4 @@
+// MPF cross-platform (Avalonia) UI — contributed by Knutwurst (https://github.com/knutwurst)
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MPF.Frontend;

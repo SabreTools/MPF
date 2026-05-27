@@ -1,3 +1,4 @@
+// MPF cross-platform (Avalonia) UI — contributed by Knutwurst (https://github.com/knutwurst)
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -569,7 +570,7 @@ namespace MPF.UI.Avalonia.Views
                 + $"{Environment.NewLine}{FindResourceString("AboutLine3String")}"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{FindResourceString("AboutThanksString")}"
-                + $"{Environment.NewLine}macOS UI: Oliver Köster"
+                + $"{Environment.NewLine}macOS / cross-platform UI: Knutwurst (https://github.com/knutwurst)"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{FindResourceString("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
             MainViewModel.LogAboutText(aboutText);

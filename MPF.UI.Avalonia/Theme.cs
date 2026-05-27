@@ -1,3 +1,4 @@
+// MPF cross-platform (Avalonia) UI — contributed by Knutwurst (https://github.com/knutwurst)
 using Avalonia;
 using Avalonia.Media;
 

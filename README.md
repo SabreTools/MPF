@@ -30,7 +30,7 @@ The main UI has some known limitations that are documented in code and in some p
 
 ## Media Preservation Frontend Avalonia UI (MPF.UI.Avalonia)
 
-`MPF.UI.Avalonia` is a cross-platform (macOS, Linux, Windows) graphical frontend built with [Avalonia UI](https://avaloniaui.net/). It reuses the same `MPF.Frontend` view-models and business logic as the existing `MPF.UI`, complementing it with a native look and feel on non-Windows platforms. The macOS UI was contributed by **Oliver Köster**.
+`MPF.UI.Avalonia` is a cross-platform (macOS, Linux, Windows) graphical frontend built with [Avalonia UI](https://avaloniaui.net/). It reuses the same `MPF.Frontend` view-models and business logic as the existing `MPF.UI`, complementing it with a native look and feel on non-Windows platforms. The cross-platform UI was contributed by **Knutwurst** (https://github.com/knutwurst).
 
 ### Support Limitations
 

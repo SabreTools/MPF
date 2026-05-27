@@ -8,7 +8,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <AssemblyName>MPF.Avalonia</AssemblyName>
-    <Authors>Matt Nadareski;ReignStumble;Jakz;Oliver Köster</Authors>
+    <Authors>Matt Nadareski;ReignStumble;Jakz;Knutwurst</Authors>
     <Description>Cross-platform (macOS/Linux/Windows) frontend for various dumping programs</Description>
     <VersionPrefix>3.7.1</VersionPrefix>
     <NoWarn>NU1902;NU1903</NoWarn>

@@ -1,3 +1,4 @@
+// MPF cross-platform (Avalonia) UI — contributed by Knutwurst (https://github.com/knutwurst)
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
