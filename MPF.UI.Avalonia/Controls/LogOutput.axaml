@@ -1,31 +1,31 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="MPF.UI.Avalonia.Controls.LogOutput">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-                <ScrollViewer x:Name="OutputViewer">
-                    <SelectableTextBlock x:Name="Output"
-                                         FontFamily="Consolas,Menlo,monospace"
-                                         Background="#FF202020"
-                                         Foreground="White"
-                                         TextWrapping="Wrap"
-                                         Padding="4" />
-                </ScrollViewer>
-            </Border>
+    <DockPanel>
+        <!-- Clear/Save buttons are pinned to the bottom so they stay visible -->
+        <Border DockPanel.Dock="Bottom" BorderThickness="1" BorderBrush="Gainsboro" CornerRadius="5" Margin="5">
+            <UniformGrid Columns="4" Margin="5" Height="27">
+                <Panel />
+                <Button x:Name="ClearButton" Height="25" Width="80"
+                        Content="{DynamicResource ClearButtonString}"
+                        Classes="custom" />
+                <Button x:Name="SaveButton" Height="25" Width="80"
+                        Content="{DynamicResource SaveButtonString}"
+                        Classes="custom" />
+                <Panel />
+            </UniformGrid>
+        </Border>
 
-            <Border BorderThickness="1" BorderBrush="Gainsboro" CornerRadius="5" Margin="5">
-                <UniformGrid Columns="4" Margin="5" Height="27">
-                    <Panel />
-                    <Button x:Name="ClearButton" Height="25" Width="80"
-                            Content="{DynamicResource ClearButtonString}"
-                            Classes="custom" />
-                    <Button x:Name="SaveButton" Height="25" Width="80"
-                            Content="{DynamicResource SaveButtonString}"
-                            Classes="custom" />
-                    <Panel />
-                </UniformGrid>
-            </Border>
-        </StackPanel>
-    </Grid>
+        <!-- Log fills the remaining space -->
+        <Border Background="#FF202020" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+            <ScrollViewer x:Name="OutputViewer">
+                <SelectableTextBlock x:Name="Output"
+                                     FontFamily="Consolas,Menlo,monospace"
+                                     Background="#FF202020"
+                                     Foreground="White"
+                                     TextWrapping="Wrap"
+                                     Padding="4" />
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
 </UserControl>

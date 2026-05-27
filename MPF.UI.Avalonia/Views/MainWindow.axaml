@@ -57,9 +57,7 @@
                 </MenuItem>
             </Menu>
 
-            <ScrollViewer>
-            <StackPanel Orientation="Vertical">
-            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
+            <HeaderedContentControl Classes="groupbox" DockPanel.Dock="Top" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
                 <Grid Margin="5,5,5,5" ColumnDefinitions="1*,2.5*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 
                     <TextBlock x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource SystemLabelString}"/>
@@ -121,7 +119,7 @@
                 </Grid>
             </HeaderedContentControl>
 
-            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource ControlsGroupBoxString}">
+            <HeaderedContentControl Classes="groupbox" DockPanel.Dock="Top" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource ControlsGroupBoxString}">
                 <UniformGrid Columns="4" Margin="5,5,5,5">
                     <Button x:Name="StartStopButton" Classes="custom" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
                             Content="{Binding StartStopButtonText, Mode=OneWay}"
@@ -142,18 +140,17 @@
                 </UniformGrid>
             </HeaderedContentControl>
 
-            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
+            <HeaderedContentControl Classes="groupbox" DockPanel.Dock="Top" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
                 <UniformGrid Margin="5,5,5,5">
                     <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
                                Text="{Binding Status, Mode=OneWay}" />
                 </UniformGrid>
             </HeaderedContentControl>
 
-            <Expander Margin="5,5,5,5" MaxHeight="300" HorizontalAlignment="Stretch" Header="{DynamicResource LogOutputExpanderString}" x:Name="LogPanel"
+            <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      VerticalContentAlignment="Stretch" Header="{DynamicResource LogOutputExpanderString}" x:Name="LogPanel"
                       IsExpanded="{Binding LogPanelExpanded}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>
-            </StackPanel>
-            </ScrollViewer>
     </DockPanel>
 </views:WindowBase>
