@@ -2245,7 +2245,6 @@ namespace MPF.Frontend.ViewModels
                 // Output to the label and log
                 Status = "Starting dumping process... please wait!";
                 LogLn("Starting dumping process... please wait!");
-                LogLn("Look for the separate command window for more details");
 
                 // Get progress indicators
                 var resultProgress = new Progress<ResultEventArgs>();
