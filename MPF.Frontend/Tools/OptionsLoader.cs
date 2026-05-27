@@ -281,6 +281,21 @@ namespace MPF.Frontend.Tools
             if (File.Exists(Path.Combine(runtimeDir, ConfigurationFileName)))
                 return Path.Combine(runtimeDir, ConfigurationFileName);
 
+            // On macOS the executable lives inside a rebuild-volatile .app bundle, so a "portable"
+            // config created next to it would be lost on every rebuild. Prefer the stable user dir.
+#if NETCOREAPP || NET471_OR_GREATER
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+            {
+                try
+                {
+                    Directory.CreateDirectory(homeDir);
+                    File.Create(Path.Combine(homeDir, ConfigurationFileName)).Dispose();
+                    return Path.Combine(homeDir, ConfigurationFileName);
+                }
+                catch { }
+            }
+#endif
+
             // Attempt portable configuration
             try
             {
