@@ -60,12 +60,10 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 </dict></plist>
 PLIST
 
-# lipo strips signatures; ad-hoc re-sign every Mach-O (including the apphost) so the app
-# runs on a signed-only OS. Per-file signing is enough for local use; signing the bundle
-# as a whole would require a CodeResources seal we don't need here.
-while IFS= read -r -d '' f; do
-    if is_macho "$f"; then codesign --force --sign - "$f" 2>/dev/null || true; fi
-done < <(find "$APP/Contents/MacOS" -type f -print0)
+# lipo strips signatures; ad-hoc re-sign the whole bundle (--deep signs the apphost and every
+# nested Mach-O and writes the CodeResources seal) so the app runs on a signed-only OS and
+# verifies cleanly.
+codesign --force --deep --sign - "$APP" 2>/dev/null || true
 
 echo "Built $APP ($MODE)"
 file "$APP/Contents/MacOS/MPF.Avalonia"
