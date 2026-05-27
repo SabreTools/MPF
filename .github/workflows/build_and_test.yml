@@ -56,6 +56,8 @@ jobs:
 
                       ## Cross-platform UI Builds (Avalonia)
 
+                      [macOS universal .app (signed bundle)](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_macos_universal_release.zip)
+
                       [macOS arm64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_osx-arm64_release.zip)
 
                       [macOS x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_osx-x64_release.zip)
@@ -68,3 +70,39 @@ jobs:
                   replacesArtifacts: True
                   tag: "rolling"
                   updateOnlyUnreleased: True
+
+    # Builds the signed, universal (arm64 + x64) macOS .app on a macOS runner (needs lipo +
+    # codesign, which only exist on macOS) and appends it to the same rolling release.
+    build-macos-app:
+        needs: build
+        runs-on: macos-latest
+
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  fetch-depth: 0
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v5
+              with:
+                  dotnet-version: "10.0.x"
+
+            - name: Build universal macOS .app
+              run: ./MPF.UI.Avalonia/build-macos-app.sh universal
+
+            - name: Zip the .app bundle
+              run: |
+                  cd MPF.UI.Avalonia/bin
+                  zip -ry "$GITHUB_WORKSPACE/MPF.UI.Avalonia_macos_universal_release.zip" MPF.app
+
+            - name: Upload .app to rolling
+              uses: ncipollo/release-action@v1.20.0
+              with:
+                  allowUpdates: True
+                  artifacts: "MPF.UI.Avalonia_macos_universal_release.zip"
+                  name: "Rolling Release"
+                  omitBodyDuringUpdate: True
+                  prerelease: True
+                  replacesArtifacts: False
+                  tag: "rolling"
+                  updateOnlyUnreleased: False

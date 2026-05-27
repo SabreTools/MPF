@@ -8,7 +8,11 @@ set -euo pipefail
 
 MODE="${1:-universal}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-export DOTNET_ROOT="$ROOT/.dotnet"; export PATH="$ROOT/.dotnet:$PATH"
+# Use the repo-local SDK if present (developer machines); otherwise fall back to the
+# dotnet already on PATH (e.g. CI runners that installed it via actions/setup-dotnet).
+if [ -d "$ROOT/.dotnet" ]; then
+    export DOTNET_ROOT="$ROOT/.dotnet"; export PATH="$ROOT/.dotnet:$PATH"
+fi
 PROJ="$ROOT/MPF.UI.Avalonia/MPF.UI.Avalonia.csproj"
 PUBROOT="$ROOT/MPF.UI.Avalonia/bin/publish"
 APP="$ROOT/MPF.UI.Avalonia/bin/MPF.app"
