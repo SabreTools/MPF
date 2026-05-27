@@ -3,6 +3,7 @@ name: Build and Test
 on:
     push:
         branches: ["master"]
+    workflow_dispatch:
 
 jobs:
     build:
@@ -51,7 +52,17 @@ jobs:
 
                       [Windows x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_release.zip)
 
-                      [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)"
+                      [Windows x64 UI Debug](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI_net10.0-windows_win-x64_debug.zip)
+
+                      ## Cross-platform UI Builds (Avalonia)
+
+                      [macOS arm64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_osx-arm64_release.zip)
+
+                      [macOS x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_osx-x64_release.zip)
+
+                      [Linux x64 UI Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_linux-x64_release.zip)
+
+                      [Windows x64 UI (Avalonia) Release](https://github.com/SabreTools/MPF/releases/download/rolling/MPF.UI.Avalonia_net10.0_win-x64_release.zip)"
                   name: "Rolling Release"
                   prerelease: True
                   replacesArtifacts: True

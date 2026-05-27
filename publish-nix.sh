@@ -59,6 +59,8 @@ echo " "
 # Create the build matrix arrays
 UI_FRAMEWORKS=("net10.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
+AVUI_FRAMEWORKS=("net10.0")
+AVUI_RUNTIMES=("win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 CHECK_FRAMEWORKS=("net10.0")
 CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 
@@ -191,6 +193,26 @@ function download_programs() {
         done
     done
 
+    # Create Avalonia UI directories and copy data
+    for FRAMEWORK in "${AVUI_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVUI_RUNTIMES[@]}"; do
+            for PREFIX in "${DL_PREFIXES[@]}"; do
+                OUTDIR=$PREFIX"_"$RUNTIME-dir
+                if [ ! -d "$OUTDIR" ]; then
+                    continue
+                fi
+
+                if [ $INCLUDE_DEBUG = true ]; then
+                    mkdir -p MPF.UI.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
+                    cp -rfp $OUTDIR/* MPF.UI.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                fi
+
+                mkdir -p MPF.UI.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
+                cp -rfp $OUTDIR/* MPF.UI.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+            done
+        done
+    done
+
     # Clean up the downloaded files and directories
     for PREFIX in "${DL_PREFIXES[@]}"; do
         for RUNTIME in "${CHECK_RUNTIMES[@]}"; do
@@ -295,6 +317,20 @@ if [ $NO_BUILD = false ]; then
                 fi
                 dotnet publish MPF.CLI/MPF.CLI.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
             fi
+        done
+    done
+
+    # Build Avalonia UI (cross-platform). Not single-file: Avalonia's native assets
+    # are more reliable as loose files (matches build-macos-app.sh).
+    for FRAMEWORK in "${AVUI_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVUI_RUNTIMES[@]}"; do
+            echo "===== Build Avalonia UI - $FRAMEWORK, $RUNTIME ====="
+
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                dotnet publish MPF.UI.Avalonia/MPF.UI.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+            fi
+            dotnet publish MPF.UI.Avalonia/MPF.UI.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
         done
     done
 
@@ -421,6 +457,29 @@ if [ $NO_ARCHIVE = false ]; then
                 zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip .
             else
                 zip -r $BUILD_FOLDER/MPF.CLI_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+            fi
+        done
+    done
+
+    # Create Avalonia UI archives
+    for FRAMEWORK in "${AVUI_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVUI_RUNTIMES[@]}"; do
+            echo "===== Archive Avalonia UI - $FRAMEWORK, $RUNTIME ====="
+
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                cd $BUILD_FOLDER/MPF.UI.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                if [ $INCLUDE_PROGRAMS = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.UI.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.UI.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                fi
+            fi
+            cd $BUILD_FOLDER/MPF.UI.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+            if [ $INCLUDE_PROGRAMS = true ]; then
+                zip -r $BUILD_FOLDER/MPF.UI.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip .
+            else
+                zip -r $BUILD_FOLDER/MPF.UI.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
             fi
         done
     done
