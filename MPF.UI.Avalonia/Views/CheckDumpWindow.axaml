@@ -1,0 +1,147 @@
+<views:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:converters="clr-namespace:MPF.UI.Avalonia.Converters"
+                  xmlns:views="clr-namespace:MPF.UI.Avalonia.Views"
+                  x:Class="MPF.UI.Avalonia.Views.CheckDumpWindow"
+                  x:CompileBindings="False"
+                  Title="{DynamicResource CheckDumpTitleString}" Width="600"
+                  SystemDecorations="None" CanResize="False"
+                  WindowStartupLocation="CenterOwner" SizeToContent="Height"
+                  TransparencyLevelHint="Transparent" Background="Transparent">
+
+    <views:WindowBase.Resources>
+        <converters:ElementConverter x:Key="ElementConverter" />
+    </views:WindowBase.Resources>
+
+    <Border CornerRadius="8" Background="{DynamicResource WindowBrush}" BorderBrush="Gray" BorderThickness="2">
+        <StackPanel Orientation="Vertical">
+
+            <!-- Title bar -->
+            <Grid Margin="0,2,0,0" ColumnDefinitions="25,*,*,*,*,50,5">
+                <Image Grid.Column="0" Height="20" Width="20" Margin="1" PointerPressed="TitleMouseDown" />
+                <TextBlock Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" Text="{DynamicResource CheckDumpTitleString}"
+                           PointerPressed="TitleMouseDown">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu Background="{DynamicResource WindowBrush}"
+                                     Foreground="{DynamicResource WindowTextBrush}">
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick"/>
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+                <Grid Grid.Column="5" ColumnDefinitions="*,*">
+                    <Button x:Name="MinimizeButton" Grid.Column="0" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="1" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <!-- Settings group -->
+            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5"
+                                    HorizontalAlignment="Stretch"
+                                    Header="{DynamicResource SettingsGroupBoxString}">
+                <Grid Margin="5,5,5,5"
+                      ColumnDefinitions="1*,2.5*"
+                      RowDefinitions="Auto,Auto,Auto">
+
+                    <!-- Input Path row -->
+                    <TextBlock x:Name="InputPathLabel" Grid.Row="0" Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="{DynamicResource InputPathLabelString}" />
+                    <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,Auto">
+                        <TextBox x:Name="InputPathTextBox" Grid.Column="0"
+                                 Height="22" VerticalContentAlignment="Center"
+                                 Text="{Binding InputPath, Mode=TwoWay}"
+                                 IsEnabled="{Binding InputPathTextBoxEnabled}"
+                                 TextChanged="InputPathTextBoxTextChanged" />
+                        <Button x:Name="InputPathBrowseButton" Grid.Column="1"
+                                Height="22" Width="53"
+                                Content="{DynamicResource BrowseButtonString}"
+                                Classes="custom"
+                                IsEnabled="{Binding InputPathBrowseButtonEnabled}"
+                                Click="InputPathBrowseButtonClick" />
+                    </Grid>
+
+                    <!-- System row -->
+                    <TextBlock x:Name="SystemTypeLabel" Grid.Row="1" Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="{DynamicResource SystemLabelString}" />
+                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="1" Grid.Column="1"
+                              Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Systems}"
+                              SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding SystemTypeComboBoxEnabled}"
+                              SelectionChanged="SystemTypeComboBoxSelectionChanged">
+                        <ComboBox.Styles>
+                            <Style Selector="ComboBoxItem">
+                                <Setter Property="IsEnabled" Value="{Binding !IsHeader}" />
+                            </Style>
+                        </ComboBox.Styles>
+                    </ComboBox>
+
+                    <!-- Dumping Program row -->
+                    <TextBlock x:Name="DumpingProgramLabel" Grid.Row="2" Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="{DynamicResource DumpingProgramLabelString}" />
+                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="2" Grid.Column="1"
+                              Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding InternalPrograms}"
+                              SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
+                              SelectionChanged="DumpingProgramComboBoxSelectionChanged" />
+                </Grid>
+            </HeaderedContentControl>
+
+            <!-- Status group -->
+            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5"
+                                    HorizontalAlignment="Stretch"
+                                    Header="{DynamicResource StatusGroupBoxString}">
+                <UniformGrid Margin="5,5,5,5" Columns="1">
+                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               ToolTip.Tip="{Binding Status}"
+                               Text="{Binding StatusFirstLine}" />
+                </UniformGrid>
+            </HeaderedContentControl>
+
+            <!-- Warning label -->
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="5,5,5,5"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                    <TextBlock FontWeight="Bold" Foreground="Red"
+                               Text="{DynamicResource WarningLabelString}" />
+                    <TextBlock TextWrapping="Wrap"
+                               Text="{DynamicResource CheckDumpWarningString}"
+                               Margin="4,0,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Check Dump / Cancel buttons -->
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="5,5,5,5"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <UniformGrid Columns="4" Margin="5,5,5,5" Height="27">
+                    <!-- Empty cell for padding -->
+                    <Panel />
+                    <Button x:Name="CheckDumpButton" Classes="custom" Height="25" Width="100"
+                            IsDefault="True"
+                            Content="{DynamicResource CheckDumpButtonString}"
+                            IsEnabled="{Binding CheckDumpButtonEnabled}"
+                            Click="OnCheckDumpClick" />
+                    <Button x:Name="CancelButton" Classes="custom" Height="25" Width="100"
+                            IsCancel="True"
+                            Content="{DynamicResource CancelButtonString}"
+                            IsEnabled="{Binding CancelButtonEnabled}"
+                            Click="OnCancelClick" />
+                    <!-- Empty cell for padding -->
+                    <Panel />
+                </UniformGrid>
+            </Border>
+
+        </StackPanel>
+    </Border>
+</views:WindowBase>

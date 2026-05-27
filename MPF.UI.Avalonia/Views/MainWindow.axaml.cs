@@ -317,13 +317,19 @@ namespace MPF.UI.Avalonia.Views
         }
 
         /// <summary>
-        /// Show the Check Dump window
+        /// Show the Check Dump window.
+        /// Mirrors WPF behavior: hide MainWindow while CheckDump is open, re-show when it closes.
         /// </summary>
-        public async void ShowCheckDumpWindow()
+        public void ShowCheckDumpWindow()
         {
-            // TODO(Task 11): construct and show the real CheckDumpWindow.
-            await MessageBoxWindow.ShowAsync(this, FindResourceString("CheckDumpMenuItemString"),
-                "This window is not yet available in the macOS UI.", MessageBoxButtons.Ok);
+            Hide();
+            var win = new CheckDumpWindow(this);
+            win.Closed += (_, _) =>
+            {
+                Show();
+                Activate();
+            };
+            win.Show();
         }
 
         /// <summary>
