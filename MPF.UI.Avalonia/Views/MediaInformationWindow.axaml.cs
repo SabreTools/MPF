@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
+using MPF.UI.Avalonia.Controls;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.UI.Avalonia.Views
@@ -17,6 +18,36 @@ namespace MPF.UI.Avalonia.Views
         public MediaInformationViewModel MediaInformationViewModel => (MediaInformationViewModel)DataContext!;
 
         /// <summary>
+        /// String-keyed adapter for CommentsSpecialFields so Avalonia bindings can use
+        /// [EnumMemberName] indexer keys instead of WPF's unsupported (ns:Type)Member syntax.
+        /// </summary>
+        public SiteCodeStringDictionary CommentsFields { get; }
+
+        /// <summary>
+        /// String-keyed adapter for ContentsSpecialFields so Avalonia bindings can use
+        /// [EnumMemberName] indexer keys instead of WPF's unsupported (ns:Type)Member syntax.
+        /// </summary>
+        public SiteCodeStringDictionary ContentsFields { get; }
+
+        /// <summary>
+        /// Bool adapter for the PCMacHybrid boolean SiteCode stored in CommentsSpecialFields.
+        /// Reads "true"/"false" string values and writes back the bool as a string.
+        /// </summary>
+        public bool? PCMacHybridChecked
+        {
+            get
+            {
+                var v = CommentsFields[nameof(SiteCode.PCMacHybrid)];
+                if (string.IsNullOrEmpty(v)) return null;
+                return bool.TryParse(v, out var b) ? b : (bool?)null;
+            }
+            set
+            {
+                CommentsFields[nameof(SiteCode.PCMacHybrid)] = value?.ToString().ToLowerInvariant() ?? string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Designer / XAML-compiler constructor — not for runtime use.
         /// </summary>
         public MediaInformationWindow() : this(new Options(), new SubmissionInfo()) { }
@@ -26,6 +57,14 @@ namespace MPF.UI.Avalonia.Views
         /// </summary>
         public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo)
         {
+            // Initialize adapters BEFORE InitializeComponent so bindings in AXAML resolve correctly.
+            // The accessors are lambdas that re-fetch the live dictionary on every call, so they remain
+            // valid even if the VM replaces the dictionary instance during Load().
+            CommentsFields = new SiteCodeStringDictionary(
+                () => MediaInformationViewModel.SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields);
+            ContentsFields = new SiteCodeStringDictionary(
+                () => MediaInformationViewModel.SubmissionInfo?.CommonDiscInfo?.ContentsSpecialFields);
+
             InitializeComponent();
 
             DataContext = new MediaInformationViewModel(options, submissionInfo);
