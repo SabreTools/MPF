@@ -1,0 +1,228 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Language Name: SV / SWE / Swedish / Svenska -->
+    <sys:String x:Key="LanguageMenuString">SWE</sys:String>
+
+    <!-- Common Elements -->
+    <sys:String x:Key="AcceptButtonString">Acceptera</sys:String>
+    <sys:String x:Key="BrowseButtonString">Bläddra</sys:String>
+    <sys:String x:Key="CancelButtonString">Avbryt</sys:String>
+    <sys:String x:Key="MinimizeMenuItemString">Minimera</sys:String>
+    <sys:String x:Key="CloseMenuItemString">Stäng</sys:String>
+    <sys:String x:Key="SettingsGroupBoxString">Inställningar</sys:String>
+    <sys:String x:Key="StatusGroupBoxString">Status</sys:String>
+    <sys:String x:Key="WarningLabelString">VARNING:</sys:String>
+    <sys:String x:Key="WarningMessageString">Varning</sys:String>
+    <sys:String x:Key="ErrorMessageString">Fel</sys:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <sys:String x:Key="FileMenuString">_Arkiv</sys:String>
+    <sys:String x:Key="ExitMenuItemString">A_vsluta</sys:String>
+    <sys:String x:Key="ToolsMenuString">_Verktyg</sys:String>
+    <sys:String x:Key="CheckDumpMenuItemString">_Kontrollera Dump</sys:String>
+    <sys:String x:Key="CreatePS3IRDDumpMenuItemString">_Skapa PS3 IRD</sys:String>
+    <sys:String x:Key="OptionsDumpMenuItemString">_Alternativ</sys:String>
+    <sys:String x:Key="DebugInfoWindowMenuItemString">_Felsökningsfönster</sys:String>
+    <sys:String x:Key="HelpMenuString">_Hjälp</sys:String>
+    <sys:String x:Key="AboutMenuItemString">_Om</sys:String>
+    <sys:String x:Key="CheckForUpdateMenuItemString">_Sök efter uppdateringar</sys:String>
+    <!-- Settings Group Box -->
+    <sys:String x:Key="SystemLabelString">Systemtyp</sys:String>
+    <sys:String x:Key="SystemMediaTypeLabelString">System/Medietyp</sys:String>
+    <sys:String x:Key="NoSystemSelectedString">Inget system valt</sys:String>
+    <sys:String x:Key="OutputPathLabelString">Utdatamapp</sys:String>
+    <sys:String x:Key="DriveLetterLabelString">Enhetsbeteckning</sys:String>
+    <sys:String x:Key="DriveSpeedLabelString">Enhetshastighet</sys:String>
+    <sys:String x:Key="DumpingProgramLabelString">Dumpningsprogram</sys:String>
+    <sys:String x:Key="ParametersLabelString">Parametrar</sys:String>
+    <!-- Controls Group Box -->
+    <sys:String x:Key="ControlsGroupBoxString">Kontroller</sys:String>
+    <sys:String x:Key="StartDumpingButtonString">Starta Dumpning</sys:String>
+    <sys:String x:Key="StopDumpingButtonString">Stoppa Dumpning</sys:String>
+    <sys:String x:Key="ScanButtonString">Skanna efter skivor</sys:String>
+    <sys:String x:Key="UpdateLabelButtonString">Uppdatera etikett</sys:String>
+    <sys:String x:Key="ProtectionScanButtonString">Skanna efter skydd</sys:String>
+    <!-- Log Output -->
+    <sys:String x:Key="LogOutputExpanderString">Logg</sys:String>
+    <sys:String x:Key="ClearButtonString">Rensa Logg</sys:String>
+    <sys:String x:Key="SaveButtonString">Spara Logg</sys:String>
+
+    <!-- Options Window -->
+    <sys:String x:Key="OptionsTitleString">Alternativ</sys:String>
+    <sys:String x:Key="OptionsFirstRunTitleString">Välkommen till MPF, Utforska Alternativen</sys:String>
+    <sys:String x:Key="OptionsRetrievalWarningString">Om du väljer att aktivera validering och informationshämtning är du ansvarig för att all data som fylls i matchar det media som du dumpar. Viss information kan markeras som påminnelse, men all bör granskas till samma grad.</sys:String>
+    <!-- General Tab -->
+    <sys:String x:Key="GeneralTabString">Allmänt</sys:String>
+    <sys:String x:Key="UserInterfaceGroupBoxString">Användargränssnitt</sys:String>
+    <sys:String x:Key="EnableDarkModeCheckBoxString">Aktivera mörkt läge</sys:String>
+    <sys:String x:Key="CheckForUpdatesCheckBoxString">Sök efter uppdateringar vid start</sys:String>
+    <sys:String x:Key="CopyURLToClipboardCheckBoxString">Kopiera uppdaterings-URL till Urklipp</sys:String>
+    <sys:String x:Key="FastUpdateLabelCheckBoxString">Snabb uppdatering av etikett</sys:String>
+    <sys:String x:Key="DefaultUILanguageLabelString">Standard språk för gränssnitt:</sys:String>
+    <sys:String x:Key="DetectionGroupBoxString">Upptäcka</sys:String>
+    <sys:String x:Key="SkipSystemDetectCheckBoxString">Hoppa över systemupptäckt</sys:String>
+    <sys:String x:Key="NoFixedDrivesCheckBoxString">Inga fasta enheter</sys:String>
+    <sys:String x:Key="DefaultSystemLabelString">Standard system:</sys:String>
+    <sys:String x:Key="LoggingGroupBoxString">Loggning</sys:String>
+    <sys:String x:Key="VerboseLoggingCheckBoxString">Detaljerad loggning</sys:String>
+    <sys:String x:Key="AutoOpenLogCheckBoxString">Öppna loggar automatiskt</sys:String>
+    <!-- Paths Tab -->
+    <sys:String x:Key="PathsTabString">Sökvägar</sys:String>
+    <sys:String x:Key="AaruPathLabelString">Aaru-sökväg</sys:String>
+    <sys:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-sökväg</sys:String>
+    <sys:String x:Key="RedumperPathLabelString">Redumper-sökväg</sys:String>
+    <sys:String x:Key="DefaultDumpingProgramLabelString">Standard dumpningsprogram</sys:String>
+    <sys:String x:Key="DefaultOutputPathLabelString">Standard utdatamapp</sys:String>
+    <!-- Dumping Tab -->
+    <sys:String x:Key="DumpingTabString">Dumpning</sys:String>
+    <sys:String x:Key="DumpingGroupBoxString">Dumpning</sys:String>
+    <sys:String x:Key="ShowDiscInfoCheckBoxString">Visa skivinformation</sys:String>
+    <sys:String x:Key="PullAllInformationCheckBoxString">Hämta all information</sys:String>
+    <sys:String x:Key="EnableTabInputCheckBoxString">Aktivera Tab-inmatning</sys:String>
+    <sys:String x:Key="EnableRedumpCompatibilityCheckBoxString">Aktivera Redump-kompatibilitet</sys:String>
+    <sys:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</sys:String>
+    <sys:String x:Key="AddPlaceholdersCheckBoxString">Lägg till platshållare</sys:String>
+    <sys:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</sys:String>
+    <sys:String x:Key="OutputSubmissionJSONCheckBoxString">Generera JSON för Submission</sys:String>
+    <sys:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inkludera artefakter</sys:String>
+    <sys:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</sys:String>
+    <sys:String x:Key="LogCompressionLabelString">Loggkomprimering:</sys:String>
+    <sys:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</sys:String>
+    <sys:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter dumpning</sys:String>
+    <sys:String x:Key="ProtectionGroupBoxString">Kopieringsskydd</sys:String>
+    <sys:String x:Key="EnableProtectionScanCheckBoxString">Aktivera skyddsskanning</sys:String>
+    <sys:String x:Key="ScanArchiveContentsCheckBoxString">Skanna arkivinnehåll</sys:String>
+    <sys:String x:Key="IncludeDebugInformationCheckBoxString">Inkludera felsökningsinformation</sys:String>
+    <sys:String x:Key="HideDriveLettersCheckBoxString">Dölj enhetsbeteckning</sys:String>
+    <sys:String x:Key="DefaultSpeedsGroupBoxString">Standardhastigheter</sys:String>
+    <!-- Programs Tab -->
+    <sys:String x:Key="ProgramsTabString">Program</sys:String>
+    <sys:String x:Key="AaruGroupBoxString">Aaru</sys:String>
+    <sys:String x:Key="EnableDebugOutputCheckBoxString">Aktivera felsökningsdata</sys:String>
+    <sys:String x:Key="AaruEnableVerboseOutputCheckBoxString">Aktivera detaljerad utdata</sys:String>
+    <sys:String x:Key="ForceDumpingCheckBoxString">Tvinga dumpning</sys:String>
+    <sys:String x:Key="StripPersonalDataCheckBoxString">Ta bort personuppgifter</sys:String>
+    <sys:String x:Key="AaruRereadTriesLabelString">Omläsningsförsök:</sys:String>
+    <sys:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</sys:String>
+    <sys:String x:Key="QuietModeCheckBoxString">Tyst läge</sys:String>
+    <sys:String x:Key="ParanoidModeCheckBoxString">Paranoidt Läge</sys:String>
+    <sys:String x:Key="UseCMIFlagCheckBoxString">Aktivera CMI-Flagga</sys:String>
+    <sys:String x:Key="MultiSectorReadCheckBoxString">Multi-sektor läsning</sys:String>
+    <sys:String x:Key="MultiSectorReadValueLabelString">Multi-sektor läsvärde:</sys:String>
+    <sys:String x:Key="DICCDRereadTriesLabelString">Omläsningsförsök för:</sys:String>
+    <sys:String x:Key="DICDVDRereadTriesLabelString">Omläsningsförsök för DVD/HD-DVD/BD:</sys:String>
+    <sys:String x:Key="RedumperGroupBoxString">Redumper</sys:String>
+    <sys:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Aktivera detaljerad utdata</sys:String>
+    <sys:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode flagga</sys:String>
+    <sys:String x:Key="RedumperRereadTriesLabelString">Omläsningsförsök:</sys:String>
+    <sys:String x:Key="PlextorLeadinRetriesLabelString">Plextor Lead-in läsningsförsök:</sys:String>
+    <sys:String x:Key="NonRedumpOptionsCheckBoxString">Alternativ utanför Redump</sys:String>
+    <sys:String x:Key="DefaultReadMethodLabelString">Standard läsmetod:</sys:String>
+    <sys:String x:Key="DefaultSectorOrderLabelString">Standard sektorordning:</sys:String>
+    <sys:String x:Key="DefaultDriveTypeLabelString">Standard enhetstyp:</sys:String>
+    <sys:String x:Key="DefaultDrivePregapStartLabelString">Standard pregap start:</sys:String>
+    <!-- Login Info Tab -->
+    <sys:String x:Key="LoginInfoTabString">Inloggningsinfo</sys:String>
+    <sys:String x:Key="RetrievalGroupBoxString">Hämtning</sys:String>
+    <sys:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</sys:String>
+    <sys:String x:Key="RedumpGroupBoxString">Redump</sys:String>
+    <sys:String x:Key="UsernameLabelString">Användarnamn</sys:String>
+    <sys:String x:Key="PasswordLabelString">Lösenord</sys:String>
+    <sys:String x:Key="TestLoginButtonString">Testa</sys:String>
+
+    <!-- Check Dump Window -->
+    <sys:String x:Key="CheckDumpTitleString">Kontrollera befintlig Dump</sys:String>
+    <sys:String x:Key="InputPathLabelString">Indatamapp</sys:String>
+    <sys:String x:Key="CheckDumpButtonString">Kontrollera Dump</sys:String>
+    <sys:String x:Key="CheckDumpWarningString">Kontrollen kommer skriva över befintliga filer. Säkerhetskopiera dessa innan du kör kontrollen.</sys:String>
+
+    <!-- Create PS3 IRD Window -->
+    <sys:String x:Key="CreatePS3IRDTitleString">Skapa PS3 IRD</sys:String>
+    <sys:String x:Key="InputGroupBoxString">Indata</sys:String>
+    <sys:String x:Key="PS3ISOPathLabelString">PS3 ISO-sökväg</sys:String>
+    <sys:String x:Key="GetKeyPathLabelString">*.getkey.log Fil-sökväg</sys:String>
+    <sys:String x:Key="KeyExpanderString">Definiera PS3-skivnyckel manuellt</sys:String>
+    <sys:String x:Key="HexadecimalKeyLabelString">Hexadecimal nyckel</sys:String>
+    <sys:String x:Key="KeyFilePathLabelString">Nyckelfilssökväg</sys:String>
+    <sys:String x:Key="KeyStatusLabelString">Nyckelstatus</sys:String>
+    <sys:String x:Key="DiscIDExpanderString">Definiera PS3-skiv-ID manuellt</sys:String>
+    <sys:String x:Key="DiscIDLabelString">Skiv-ID</sys:String>
+    <sys:String x:Key="DiscIDStatusLabelString">Skiv-ID Status</sys:String>
+    <sys:String x:Key="PICExpanderString">Definiera Permanent Information &amp; Control (PIC) manuellt</sys:String>
+    <sys:String x:Key="LayerbreakLabelString">Layerbreak (sektorer)</sys:String>
+    <sys:String x:Key="PICLabelString">PIC</sys:String>
+    <sys:String x:Key="PICFilePathLabelString">PIC Fil-sökväg</sys:String>
+    <sys:String x:Key="PICStatusLabelString">PIC Status</sys:String>
+    <sys:String x:Key="CreateIRDButtonString">Skapa IRD</sys:String>
+
+    <!-- Media Information Guide Window -->
+    <sys:String x:Key="MediaInformationTitleString">Medieinformation</sys:String>
+    <sys:String x:Key="RingCodeGuideButtonString">Ringkods guide</sys:String>
+    <!-- Common Info Tab -->
+    <sys:String x:Key="CommonInfoTabString">Allmän Info</sys:String>
+    <sys:String x:Key="CommonMediaInfoGroupBoxString">Allmän Medieinformation</sys:String>
+    <sys:String x:Key="TitleInputString">Titel</sys:String>
+    <sys:String x:Key="AlternativeTitleInputString">Alternativ titel</sys:String>
+    <sys:String x:Key="ForeignTitleNonLatinInputString">Utländsk titel (icke-latin)</sys:String>
+    <sys:String x:Key="AlternativeForeignTitleInputString">Alternativ utländsk titel</sys:String>
+    <sys:String x:Key="DiscNumberLetterInputString">Skivnummer / Bokstav</sys:String>
+    <sys:String x:Key="DiscTitleInputString">Skivtitel</sys:String>
+    <sys:String x:Key="DiscTitleNonLatinInputString">Skivtitel (icke-latin)</sys:String>
+    <sys:String x:Key="CategoryLabelString">Kategori</sys:String>
+    <sys:String x:Key="RegionLabelString">Region</sys:String>
+    <sys:String x:Key="LanguagesLabelString">Språk</sys:String>
+    <sys:String x:Key="LanguageSelectionViaLabelString">Språkväljning via</sys:String>
+    <sys:String x:Key="SerialInputString">Serienummer</sys:String>
+    <sys:String x:Key="BarcodeInputString">Streckkod</sys:String>
+    <sys:String x:Key="VersionsAndEditionGroupBoxString">Version och Utgåvor</sys:String>
+    <sys:String x:Key="VersionInputString">Version</sys:String>
+    <sys:String x:Key="EditionInputString">Utgåva</sys:String>
+    <sys:String x:Key="EditionNonLatinInputString">Utgåva (icke-latin)</sys:String>
+    <!-- Additional Info Tab -->
+    <sys:String x:Key="AdditionalInfoTabString">Ytterligare info</sys:String>
+    <sys:String x:Key="CommentsInputString">Kommentarer</sys:String>
+    <sys:String x:Key="CompatibleOSInputString">OS Kompatibeltitet</sys:String>
+    <sys:String x:Key="ProtectionInputString">Kopieringsskydd</sys:String>
+    <sys:String x:Key="ExtrasGroupBoxString">Extra</sys:String>
+    <sys:String x:Key="PhysicalIdentifiersGroupBoxString">Fysiska Identifierare</sys:String>
+    <sys:String x:Key="PublisherIdentifiersGroupBoxString">Utgivaridentifierare</sys:String>
+    <!-- Contents Tab -->
+    <sys:String x:Key="ContentsTabString">Innehåll</sys:String>
+    <!-- Ringcodes Tab -->
+    <sys:String x:Key="RingcodesTabString">Ringkoder</sys:String>
+    <sys:String x:Key="L0InfoGroupBoxString">Data/L0 Info</sys:String>
+    <sys:String x:Key="L1InfoGroupBoxString">Etikett/L1 Info</sys:String>
+    <sys:String x:Key="L2InfoGroupBoxString">L2 Info</sys:String>
+    <sys:String x:Key="L3InfoGroupBoxString">L3 Info</sys:String>
+    <!-- Read-Only Info Tab -->
+    <sys:String x:Key="ReadOnlyInfoTabString">Skrivskyddad Info</sys:String>
+
+    <!-- Ring Code Guide Window -->
+    <sys:String x:Key="RingCodeGuideTitleString">Ringkods guide</sys:String>
+
+    <!-- About Window -->
+    <sys:String x:Key="AboutTitleString">Om</sys:String>
+    <sys:String x:Key="VersionLabelString">Version</sys:String>
+
+    <!-- Check for Updates Window -->
+    <sys:String x:Key="CheckForUpdatesTitleString">Sök efter uppdatering</sys:String>
+
+    <!-- Eject Window -->
+    <sys:String x:Key="EjectTitleString">Mata ut</sys:String>
+    <sys:String x:Key="EjectMessageString">Det är nu säkert att mata ut skivan</sys:String>
+
+    <!-- Ask Before Quit Window -->
+    <sys:String x:Key="QuitTitleString">Avsluta</sys:String>
+    <sys:String x:Key="QuitMessageString">En dumpning pågår fortfarande, är du säker på att du vill avsluta?</sys:String>
+
+    <!-- Protection Error Window -->
+    <sys:String x:Key="ProtectionErrorTitleString">Fel!</sys:String>
+    <sys:String x:Key="ProtectionErrorMessageString">Ett undantag uppstod, se loggen för detaljer</sys:String>
+
+    <!-- Protection Detected Window -->
+    <sys:String x:Key="ProtectionDetectedTitleString">Upptäckta Skydd</sys:String>
+
+</ResourceDictionary>

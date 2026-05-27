@@ -33,6 +33,16 @@ namespace MPF.UI.Avalonia.Views
         private bool _initialized;
 
         /// <summary>
+        /// The English baseline ResourceDictionary last added by SetInterfaceLanguage (non-English only)
+        /// </summary>
+        private global::Avalonia.Controls.ResourceDictionary? _baselineLangDict;
+
+        /// <summary>
+        /// The active language ResourceDictionary last added by SetInterfaceLanguage
+        /// </summary>
+        private global::Avalonia.Controls.ResourceDictionary? _activeLangDict;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainWindow()
@@ -108,13 +118,6 @@ namespace MPF.UI.Avalonia.Views
         /// <summary>
         /// Set the current interface language to a provided InterfaceLanguage
         /// </summary>
-        /// <remarks>
-        /// TODO(Task 3 followup): only the English string dictionary (Strings.axaml) has been ported
-        /// to the Avalonia project so far. Non-English dictionaries (Strings.de.axaml, etc.) do not yet
-        /// exist as Avalonia resources, so this method currently only keeps the ViewModel translation
-        /// strings in sync. When the localized dictionaries are ported, merge the chosen one into
-        /// Application.Current.Resources here (mirroring the WPF MergedDictionaries logic).
-        /// </remarks>
         private void SetInterfaceLanguage(InterfaceLanguage lang)
         {
             // Auto detect language
@@ -124,7 +127,49 @@ namespace MPF.UI.Avalonia.Views
                 return;
             }
 
-            // Update the labels in MainViewModel from whatever resources are currently loaded
+            // Remove previously added language dictionaries to avoid unbounded accumulation
+            var mergedDicts = global::Avalonia.Application.Current!.Resources.MergedDictionaries;
+            if (_activeLangDict is not null)
+            {
+                mergedDicts.Remove(_activeLangDict);
+                _activeLangDict = null;
+            }
+            if (_baselineLangDict is not null)
+            {
+                mergedDicts.Remove(_baselineLangDict);
+                _baselineLangDict = null;
+            }
+
+            // For non-English languages, add the English baseline first so untranslated keys fall back
+            if (lang != InterfaceLanguage.English)
+            {
+                var baselineUri = new Uri("avares://MPF.Avalonia/Resources/Strings.axaml");
+                _baselineLangDict = (global::Avalonia.Controls.ResourceDictionary)AvaloniaXamlLoader.Load(baselineUri);
+                mergedDicts.Add(_baselineLangDict);
+            }
+
+            // Resolve the file name for the chosen language
+            string fileName = lang switch
+            {
+                InterfaceLanguage.French    => "Strings.fr.axaml",
+                InterfaceLanguage.German    => "Strings.de.axaml",
+                InterfaceLanguage.Italian   => "Strings.it.axaml",
+                InterfaceLanguage.Japanese  => "Strings.ja.axaml",
+                InterfaceLanguage.Korean    => "Strings.ko.axaml",
+                InterfaceLanguage.Polish    => "Strings.pl.axaml",
+                InterfaceLanguage.Portuguese => "Strings.pt.axaml",
+                InterfaceLanguage.Russian   => "Strings.ru.axaml",
+                InterfaceLanguage.Spanish   => "Strings.es.axaml",
+                InterfaceLanguage.Swedish   => "Strings.sv.axaml",
+                InterfaceLanguage.Ukrainian => "Strings.uk.axaml",
+                _                           => "Strings.axaml",
+            };
+
+            var langUri = new Uri($"avares://MPF.Avalonia/Resources/{fileName}");
+            _activeLangDict = (global::Avalonia.Controls.ResourceDictionary)AvaloniaXamlLoader.Load(langUri);
+            mergedDicts.Add(_activeLangDict);
+
+            // Update the labels in MainViewModel from the newly loaded resources
             var translationStrings = new Dictionary<string, string>
             {
                 ["StartDumpingButtonString"] = FindResourceString("StartDumpingButtonString"),

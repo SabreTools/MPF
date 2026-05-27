@@ -1,0 +1,238 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Language Name: UK / UKR / Ukrainian / Українська -->
+    <sys:String x:Key="LanguageMenuString">UKR</sys:String>
+
+    <!-- Common Elements -->
+    <sys:String x:Key="AcceptButtonString">Прийняти</sys:String>
+    <sys:String x:Key="BrowseButtonString">Вибрати</sys:String>
+    <sys:String x:Key="CancelButtonString">Відхилити</sys:String>
+    <sys:String x:Key="MinimizeMenuItemString">Згорнути</sys:String>
+    <sys:String x:Key="CloseMenuItemString">Закрити</sys:String>
+    <sys:String x:Key="SettingsGroupBoxString">Налаштування</sys:String>
+    <sys:String x:Key="StatusGroupBoxString">Статус</sys:String>
+    <sys:String x:Key="WarningLabelString">УВАГА:</sys:String>
+    <sys:String x:Key="WarningMessageString">Увага</sys:String>
+    <sys:String x:Key="ErrorMessageString">Помилка</sys:String>
+
+    <!-- Main Window -->
+    <sys:String x:Key="AppTitleString">Media Preservation Frontend</sys:String>
+    <!-- Top Menu Bar -->
+    <sys:String x:Key="FileMenuString">_Файл</sys:String>
+    <sys:String x:Key="ExitMenuItemString">_Вийти</sys:String>
+    <sys:String x:Key="ToolsMenuString">_Утиліти</sys:String>
+    <sys:String x:Key="CheckDumpMenuItemString">_Перевірити дамп</sys:String>
+    <sys:String x:Key="CreatePS3IRDDumpMenuItemString">Створити _PS3 IRD</sys:String>
+    <sys:String x:Key="OptionsDumpMenuItemString">П_араметри</sys:String>
+    <sys:String x:Key="DebugInfoWindowMenuItemString">В_ікно дебагу</sys:String>
+    <sys:String x:Key="HelpMenuString">_Допомога</sys:String>
+    <sys:String x:Key="AboutMenuItemString">П_ро програму</sys:String>
+    <sys:String x:Key="CheckForUpdateMenuItemString">П_еревірити оновлення</sys:String>
+    <!-- Settings Group Box-->
+    <sys:String x:Key="SystemLabelString">Тип системи</sys:String>
+    <sys:String x:Key="SystemMediaTypeLabelString">Система/Тип диску</sys:String>
+    <sys:String x:Key="NoSystemSelectedString">Система не вибрана</sys:String>
+    <sys:String x:Key="OutputPathLabelString">Вихідна тека</sys:String>
+    <sys:String x:Key="DriveLetterLabelString">Буква диску</sys:String>
+    <sys:String x:Key="DriveSpeedLabelString">Швидкість приводу</sys:String>
+    <sys:String x:Key="DumpingProgramLabelString">Програма для дампу</sys:String>
+    <sys:String x:Key="ParametersLabelString">Параметри</sys:String>
+    <!-- Controls Group Box-->
+    <sys:String x:Key="ControlsGroupBoxString">Команди</sys:String>
+    <sys:String x:Key="StartDumpingButtonString">Почати дамп</sys:String>
+    <sys:String x:Key="StopDumpingButtonString">Зупинити дамп</sys:String>
+    <sys:String x:Key="ScanButtonString">Сканувати диск</sys:String>
+    <sys:String x:Key="UpdateLabelButtonString">Зчитати мітку</sys:String>
+    <sys:String x:Key="ProtectionScanButtonString">Сканувати захист</sys:String>
+    <!-- Log Output -->
+    <sys:String x:Key="LogOutputExpanderString">Вивід звіту</sys:String>
+    <sys:String x:Key="ClearButtonString">Очистити звіт</sys:String>
+    <sys:String x:Key="SaveButtonString">Зберегти звіт</sys:String>
+
+    <!-- Options Window -->
+    <sys:String x:Key="OptionsTitleString">Параметри</sys:String>
+    <sys:String x:Key="OptionsFirstRunTitleString">Ласкаво просимо до MPF, переглянути параметри</sys:String>
+    <sys:String x:Key="OptionsRetrievalWarningString">Якщо ви увімкнете валідацію та завантаження онлайн інформації, автозаповнені дані повинні відповідати даним з вашого диску. Програма підказує які поля варто перевірити але загалом вся відповідальність на вас, будьте пильні!</sys:String>
+    <!-- General Tab -->
+    <sys:String x:Key="GeneralTabString">Загальні</sys:String>
+    <sys:String x:Key="UserInterfaceGroupBoxString">Графічний інтерфейс</sys:String>
+    <sys:String x:Key="EnableDarkModeCheckBoxString">Увімкнути темний режим</sys:String>
+    <sys:String x:Key="CheckForUpdatesCheckBoxString">Перевіряти оновлення при запуску</sys:String>
+    <sys:String x:Key="CopyURLToClipboardCheckBoxString">Скопіювати URL оновлення</sys:String>
+    <sys:String x:Key="FastUpdateLabelCheckBoxString">Швидке оновлення міток</sys:String>
+    <sys:String x:Key="DefaultUILanguageLabelString">Мова інтерфейсу за замовчуванням:</sys:String>
+    <sys:String x:Key="DetectionGroupBoxString">Пошук</sys:String>
+    <sys:String x:Key="SkipSystemDetectCheckBoxString">Вимкнути автопошук системи</sys:String>
+    <sys:String x:Key="NoFixedDrivesCheckBoxString">Вимкнути стаціонарні приводи</sys:String>
+    <sys:String x:Key="DefaultSystemLabelString">Система за замовчуванням:</sys:String>
+    <sys:String x:Key="LoggingGroupBoxString">Звіт</sys:String>
+    <sys:String x:Key="VerboseLoggingCheckBoxString">Детальний звіт</sys:String>
+    <sys:String x:Key="AutoOpenLogCheckBoxString">Відкривати звіт автоматично</sys:String>
+    <!-- Paths Tab -->
+    <sys:String x:Key="PathsTabString">Теки</sys:String>
+    <sys:String x:Key="AaruPathLabelString">Шлях до Aaru</sys:String>
+    <sys:String x:Key="DiscImageCreatorPathLabelString">Шлях до DiscImageCreator</sys:String>
+    <sys:String x:Key="RedumperPathLabelString">Шлях до Redumper</sys:String>
+    <sys:String x:Key="DefaultDumpingProgramLabelString">Програма за замовчуванням</sys:String>
+    <sys:String x:Key="DefaultOutputPathLabelString">Вихідна тека за замовчуванням</sys:String>
+    <!-- Dumping Tab -->
+    <sys:String x:Key="DumpingTabString">Дамп</sys:String>
+    <sys:String x:Key="DumpingGroupBoxString">Дамп</sys:String>
+    <sys:String x:Key="ShowDiscInfoCheckBoxString">Показати інформацію по диску</sys:String>
+    <sys:String x:Key="PullAllInformationCheckBoxString">Завантажити всю інформацію</sys:String>
+    <sys:String x:Key="EnableTabInputCheckBoxString">Увімкнути закладки</sys:String>
+    <sys:String x:Key="EnableRedumpCompatibilityCheckBoxString">Увімкнути сумісність з Redump</sys:String>
+    <sys:String x:Key="ShowEjectReminderCheckBoxString">Нагадувати витягнути диск</sys:String>
+    <sys:String x:Key="AddPlaceholdersCheckBoxString">Заповняти поля за замовчуванням</sys:String>
+    <sys:String x:Key="AddFilenameSuffixCheckBoxString">Додавати суфікс файлу</sys:String>
+    <sys:String x:Key="OutputSubmissionJSONCheckBoxString">Створити JSON для подання в систему</sys:String>
+    <sys:String x:Key="IncludeArtifactsCheckBoxString">[ДЕБАГ] Увімкнути артефакти</sys:String>
+    <sys:String x:Key="CompressLogFilesCheckBoxString">Стискати звіти</sys:String>
+    <sys:String x:Key="LogCompressionLabelString">Компресія звітів:</sys:String>
+    <sys:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Видалити непотрібні файли</sys:String>
+    <sys:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Створити PS3 IRD після дампу</sys:String>
+    <sys:String x:Key="ProtectionGroupBoxString">Protection</sys:String>
+    <sys:String x:Key="EnableProtectionScanCheckBoxString">Увімкнути сканування захисту</sys:String>
+    <sys:String x:Key="ScanArchiveContentsCheckBoxString">Сканувати архіви</sys:String>
+    <sys:String x:Key="IncludeDebugInformationCheckBoxString">Додавати інформацію для дебагу</sys:String>
+    <sys:String x:Key="HideDriveLettersCheckBoxString">Приховати букви дисків</sys:String>
+    <sys:String x:Key="DefaultSpeedsGroupBoxString">Швидкість за замовчуванням</sys:String>
+    <sys:String x:Key="CDLabelString">CD</sys:String>
+    <sys:String x:Key="DVDLabelString">DVD</sys:String>
+    <sys:String x:Key="HDDVDLabelString">HD-DVD</sys:String>
+    <sys:String x:Key="BDLabelString">BD</sys:String>
+    <!-- Programs Tab -->
+    <sys:String x:Key="ProgramsTabString">Програми</sys:String>
+    <sys:String x:Key="AaruGroupBoxString">Aaru</sys:String>
+    <sys:String x:Key="EnableDebugOutputCheckBoxString">Увімкнути вивід інформації для дебагу</sys:String>
+    <sys:String x:Key="AaruEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</sys:String>
+    <sys:String x:Key="ForceDumpingCheckBoxString">Форсувати дамп</sys:String>
+    <sys:String x:Key="StripPersonalDataCheckBoxString">Видалити персональні дані</sys:String>
+    <sys:String x:Key="AaruRereadTriesLabelString">Кількість спроб читання:</sys:String>
+    <sys:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</sys:String>
+    <sys:String x:Key="QuietModeCheckBoxString">Тихий режим</sys:String>
+    <sys:String x:Key="ParanoidModeCheckBoxString">Параноїдальний режим</sys:String>
+    <sys:String x:Key="UseCMIFlagCheckBoxString">Використовувати мітку CMI</sys:String>
+    <sys:String x:Key="MultiSectorReadCheckBoxString">Пакетне читання секторів</sys:String>
+    <sys:String x:Key="MultiSectorReadValueLabelString">Кількість секторів в одному пакеті:</sys:String>
+    <sys:String x:Key="DICCDRereadTriesLabelString">Кількість спроб читання для CD:</sys:String>
+    <sys:String x:Key="DICDVDRereadTriesLabelString">Спроб читання для DVD/HD-DVD/BD:</sys:String>
+    <sys:String x:Key="RedumperGroupBoxString">Redumper</sys:String>
+    <sys:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Увімкнути детальний вивід інформації</sys:String>
+    <sys:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Увімкнути секторне покращення</sys:String>
+    <sys:String x:Key="RedumperRereadTriesLabelString">Кількість спроб читання:</sys:String>
+    <sys:String x:Key="PlextorLeadinRetriesLabelString">Кількість спроб читання Plextor Lead-in:</sys:String>
+    <sys:String x:Key="NonRedumpOptionsCheckBoxString">Розширені параметри</sys:String>
+    <sys:String x:Key="DefaultReadMethodLabelString">Режим читання за замовчуванням:</sys:String>
+    <sys:String x:Key="DefaultSectorOrderLabelString">Структура сектору за замовчуванням:</sys:String>
+    <sys:String x:Key="DefaultDriveTypeLabelString">Тип приводу за замовчуванням:</sys:String>
+    <sys:String x:Key="DefaultDrivePregapStartLabelString">Pregap start приводу за замовчуванням:</sys:String>
+    <!-- Login Info Tab -->
+    <sys:String x:Key="LoginInfoTabString">Інформація для входу</sys:String>
+    <sys:String x:Key="RetrievalGroupBoxString">Завантаження</sys:String>
+    <sys:String x:Key="RetrieveMatchInformationCheckBoxString">Завантажити онлайн інформацію</sys:String>
+    <sys:String x:Key="RedumpGroupBoxString">Redump</sys:String>
+    <sys:String x:Key="UsernameLabelString">Ім'я</sys:String>
+    <sys:String x:Key="PasswordLabelString">Пароль</sys:String>
+    <sys:String x:Key="TestLoginButtonString">Протестувати вхід</sys:String>
+
+    <!-- Check Dump Window -->
+    <sys:String x:Key="CheckDumpTitleString">Перевірити існуючий дамп</sys:String>
+    <sys:String x:Key="InputPathLabelString">Вхіда тека</sys:String>
+    <sys:String x:Key="CheckDumpButtonString">Перевірити дамп</sys:String>
+    <sys:String x:Key="CheckDumpWarningString">Перевірка перепише існуючі інформаційні файли для додавання в систему. Будь-ласка зробіть резервні копії перед запукском перевірки якщо це необхідно.</sys:String>
+
+    <!-- Create PS3 IRD Window -->
+    <sys:String x:Key="CreatePS3IRDTitleString">Створити PS3 IRD</sys:String>
+    <sys:String x:Key="InputGroupBoxString">Ввід</sys:String>
+    <sys:String x:Key="PS3ISOPathLabelString">PS3 ISO вихідний файл</sys:String>
+    <sys:String x:Key="GetKeyPathLabelString">*.getkey.log вихідний файл</sys:String>
+    <sys:String x:Key="KeyExpanderString">Описати кдюч шифрування PS3 диску вручну</sys:String>
+    <sys:String x:Key="HexadecimalKeyLabelString">Шістнадцятковий ключ</sys:String>
+    <sys:String x:Key="KeyFilePathLabelString">Key вихідний файл</sys:String>
+    <sys:String x:Key="KeyStatusLabelString">Key статус</sys:String>
+    <sys:String x:Key="DiscIDExpanderString">Описати PS3 Disc ID вручну</sys:String>
+    <sys:String x:Key="DiscIDLabelString">Disc ID</sys:String>
+    <sys:String x:Key="DiscIDStatusLabelString">Disc ID статус</sys:String>
+    <sys:String x:Key="PICExpanderString">Описати Permanent Information &amp; Control (PIC) вручну</sys:String>
+    <sys:String x:Key="LayerbreakLabelString">Layerbreak (сектори)</sys:String>
+    <sys:String x:Key="PICLabelString">PIC</sys:String>
+    <sys:String x:Key="PICFilePathLabelString">PIC вихідний файл</sys:String>
+    <sys:String x:Key="PICStatusLabelString">PIC статус</sys:String>
+    <sys:String x:Key="CreateIRDButtonString">Створити IRD</sys:String>
+
+    <!-- Media Information Guide Window -->
+    <sys:String x:Key="MediaInformationTitleString">Інформація по диску</sys:String>
+    <sys:String x:Key="RingCodeGuideButtonString">Інструкція по рінгкодах</sys:String>
+    <!-- Common Info Tab -->
+    <sys:String x:Key="CommonInfoTabString">Загальна інформація</sys:String>
+    <sys:String x:Key="CommonMediaInfoGroupBoxString">Загальна інформація по диску</sys:String>
+    <sys:String x:Key="TitleInputString">Назва</sys:String>
+    <sys:String x:Key="AlternativeTitleInputString">Альтернативна назва</sys:String>
+    <sys:String x:Key="ForeignTitleNonLatinInputString">Оригінальна назва</sys:String>
+    <sys:String x:Key="AlternativeForeignTitleInputString">Альт. оригінальна назва</sys:String>
+    <sys:String x:Key="DiscNumberLetterInputString">Номер / Буква диску</sys:String>
+    <sys:String x:Key="DiscTitleInputString">Назва диску</sys:String>
+    <sys:String x:Key="DiscTitleNonLatinInputString">Назва диску (не латиниця)</sys:String>
+    <sys:String x:Key="CategoryLabelString">Категорія</sys:String>
+    <sys:String x:Key="RegionLabelString">Регіон</sys:String>
+    <sys:String x:Key="LanguagesLabelString">Мови</sys:String>
+    <sys:String x:Key="LanguageSelectionViaLabelString">Спосіб вибору мови</sys:String>
+    <sys:String x:Key="SerialInputString">Серійний код</sys:String>
+    <sys:String x:Key="BarcodeInputString">Штрихкод</sys:String>
+    <sys:String x:Key="VersionsAndEditionGroupBoxString">Версія і видання</sys:String>
+    <sys:String x:Key="VersionInputString">Версія</sys:String>
+    <sys:String x:Key="EditionInputString">Видання</sys:String>
+    <sys:String x:Key="EditionNonLatinInputString">Видання (не латиниця)</sys:String>
+    <!-- Additional Info Tab -->
+    <sys:String x:Key="AdditionalInfoTabString">Додаткова інформація</sys:String>
+    <sys:String x:Key="CommentsInputString">Коментарі</sys:String>
+    <sys:String x:Key="CompatibleOSInputString">Сумісна ОС</sys:String>
+    <sys:String x:Key="ProtectionInputString">Захист</sys:String>
+    <sys:String x:Key="ExtrasGroupBoxString">Додатково</sys:String>
+    <sys:String x:Key="PhysicalIdentifiersGroupBoxString">Фізичні ідентифікатори</sys:String>
+    <sys:String x:Key="PublisherIdentifiersGroupBoxString">Ідентифікатори видавця</sys:String>
+    <!-- Contents Tab -->
+    <sys:String x:Key="ContentsTabString">Вміст</sys:String>
+    <!-- Ringcodes Tab -->
+    <sys:String x:Key="RingcodesTabString">Рінгкоди</sys:String>
+    <sys:String x:Key="L0InfoGroupBoxString">Інформація Дані/L0</sys:String>
+    <sys:String x:Key="L1InfoGroupBoxString">Інформація Графіка/L1</sys:String>
+    <sys:String x:Key="L2InfoGroupBoxString">Інформація L2</sys:String>
+    <sys:String x:Key="L3InfoGroupBoxString">Інформація L3</sys:String>
+    <!-- Read-Only Info Tab -->
+    <sys:String x:Key="ReadOnlyInfoTabString">Інформація тільки для читання</sys:String>
+
+    <!-- Ring Code Guide Window -->
+    <sys:String x:Key="RingCodeGuideTitleString">Інструкція по рінгкодах</sys:String>
+
+    <!-- About Window -->
+    <sys:String x:Key="AboutTitleString">Про програму</sys:String>
+    <sys:String x:Key="AppTitleFullString">Media Preservation Frontend (MPF)</sys:String>
+    <sys:String x:Key="AboutLine1String">Відкритий фронтенд для презервації розроблений на C#.</sys:String>
+    <sys:String x:Key="AboutLine2String">Підтримує Redumper, Aaru та DiscImageCreator.</sys:String>
+    <sys:String x:Key="AboutLine3String">Створений для допомоги проекту Redump.</sys:String>
+    <sys:String x:Key="AboutThanksString">Дякую всім за підтримку цього проекту!</sys:String>
+    <sys:String x:Key="VersionLabelString">Версія</sys:String>
+
+    <!-- Check for Updates Window -->
+    <sys:String x:Key="CheckForUpdatesTitleString">Перевірка оновлення версії</sys:String>
+
+    <!-- Eject Window -->
+    <sys:String x:Key="EjectTitleString">Витягнути диск</sys:String>
+    <sys:String x:Key="EjectMessageString">Зараз безпечно витягнути диск</sys:String>
+
+    <!-- Ask Before Quit Window -->
+    <sys:String x:Key="QuitTitleString">Вийти</sys:String>
+    <sys:String x:Key="QuitMessageString">Дамп все ще обробляється, ви впевнені що хочете вийти?</sys:String>
+
+    <!-- Protection Error Window -->
+    <sys:String x:Key="ProtectionErrorTitleString">Помилка!</sys:String>
+    <sys:String x:Key="ProtectionErrorMessageString">Виникла помилка, перегляньте звіт для детальної інформації</sys:String>
+
+    <!-- Protection Detected Window -->
+    <sys:String x:Key="ProtectionDetectedTitleString">Знайдений захист</sys:String>
+
+</ResourceDictionary>

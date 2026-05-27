@@ -1,0 +1,228 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Language Name: ES / SPA / Spanish / Español -->
+    <sys:String x:Key="LanguageMenuString">SPA</sys:String>
+
+    <!-- Common Elements -->
+    <sys:String x:Key="AcceptButtonString">Aceptar</sys:String>
+    <sys:String x:Key="BrowseButtonString">Examinar</sys:String>
+    <sys:String x:Key="CancelButtonString">Cancelar</sys:String>
+    <sys:String x:Key="MinimizeMenuItemString">Minimizar</sys:String>
+    <sys:String x:Key="CloseMenuItemString">Cerrar</sys:String>
+    <sys:String x:Key="SettingsGroupBoxString">Configuración</sys:String>
+    <sys:String x:Key="StatusGroupBoxString">Estado</sys:String>
+    <sys:String x:Key="WarningLabelString">ADVERTENCIA:</sys:String>
+    <sys:String x:Key="WarningMessageString">Advertencia</sys:String>
+    <sys:String x:Key="ErrorMessageString">Error</sys:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <sys:String x:Key="FileMenuString">_Archivo</sys:String>
+    <sys:String x:Key="ExitMenuItemString">_Salir</sys:String>
+    <sys:String x:Key="ToolsMenuString">_Utilidades</sys:String>
+    <sys:String x:Key="CheckDumpMenuItemString">_Comprobar volcado</sys:String>
+    <sys:String x:Key="CreatePS3IRDDumpMenuItemString">Crear _PS3 IRD</sys:String>
+    <sys:String x:Key="OptionsDumpMenuItemString">_Opciones</sys:String>
+    <sys:String x:Key="DebugInfoWindowMenuItemString">_Ventana de depuración</sys:String>
+    <sys:String x:Key="HelpMenuString">_Ayuda</sys:String>
+    <sys:String x:Key="AboutMenuItemString">_Acerca de</sys:String>
+    <sys:String x:Key="CheckForUpdateMenuItemString">_Buscar actualizaciones</sys:String>
+    <!-- Settings Group Box-->
+    <sys:String x:Key="SystemLabelString">Sistema</sys:String>
+    <sys:String x:Key="SystemMediaTypeLabelString">Sistema/Tipo de medio</sys:String>
+    <sys:String x:Key="NoSystemSelectedString">Ningún sistema seleccionado</sys:String>
+    <sys:String x:Key="OutputPathLabelString">Ruta de salida</sys:String>
+    <sys:String x:Key="DriveLetterLabelString">Letra de unidad</sys:String>
+    <sys:String x:Key="DriveSpeedLabelString">Velocidad de unidad</sys:String>
+    <sys:String x:Key="DumpingProgramLabelString">Programa de volcado</sys:String>
+    <sys:String x:Key="ParametersLabelString">Parámetros</sys:String>
+    <!-- Controls Group Box-->
+    <sys:String x:Key="ControlsGroupBoxString">Controles</sys:String>
+    <sys:String x:Key="StartDumpingButtonString">Iniciar volcado</sys:String>
+    <sys:String x:Key="StopDumpingButtonString">Detener volcado</sys:String>
+    <sys:String x:Key="ScanButtonString">Buscar discos</sys:String>
+    <sys:String x:Key="UpdateLabelButtonString">Actualizar etiqueta</sys:String>
+    <sys:String x:Key="ProtectionScanButtonString">Buscar protección</sys:String>
+    <!-- Log Output -->
+    <sys:String x:Key="LogOutputExpanderString">Registro de salida</sys:String>
+    <sys:String x:Key="ClearButtonString">Borrar</sys:String>
+    <sys:String x:Key="SaveButtonString">Guardar</sys:String>
+
+    <!-- Options Window -->
+    <sys:String x:Key="OptionsTitleString">Opciones</sys:String>
+    <sys:String x:Key="OptionsFirstRunTitleString">Bienvenido a MPF, Explora las Opciones</sys:String>
+    <sys:String x:Key="OptionsRetrievalWarningString">Si eliges habilitar la validación y la recuperación de información, eres responsable de asegurar que todos los datos rellenados coincidan con tu medio real. Parte de la información puede estar marcada para verificar su validez como recordatorio, pero toda la información debe someterse al mismo escrutinio.</sys:String>
+    <!-- General Tab -->
+    <sys:String x:Key="GeneralTabString">General</sys:String>
+    <sys:String x:Key="UserInterfaceGroupBoxString">Interfaz de Usuario</sys:String>
+    <sys:String x:Key="EnableDarkModeCheckBoxString">Habilitar modo oscuro</sys:String>
+    <sys:String x:Key="CheckForUpdatesCheckBoxString">Buscar actualizaciones al iniciar</sys:String>
+    <sys:String x:Key="CopyURLToClipboardCheckBoxString">Copiar URL de actualización</sys:String>
+    <sys:String x:Key="FastUpdateLabelCheckBoxString">Etiqueta de actualización rápida</sys:String>
+    <sys:String x:Key="DefaultUILanguageLabelString">Idioma predeterminado de la interfaz:</sys:String>
+    <sys:String x:Key="DetectionGroupBoxString">Detección</sys:String>
+    <sys:String x:Key="SkipSystemDetectCheckBoxString">Omitir detección de sistema</sys:String>
+    <sys:String x:Key="NoFixedDrivesCheckBoxString">Sin unidades fijas</sys:String>
+    <sys:String x:Key="DefaultSystemLabelString">Sistema predeterminado:</sys:String>
+    <sys:String x:Key="LoggingGroupBoxString">Registro</sys:String>
+    <sys:String x:Key="VerboseLoggingCheckBoxString">Registro detallado</sys:String>
+    <sys:String x:Key="AutoOpenLogCheckBoxString">Abrir registros automáticamente</sys:String>
+    <!-- Paths Tab -->
+    <sys:String x:Key="PathsTabString">Rutas</sys:String>
+    <sys:String x:Key="AaruPathLabelString">Ruta de Aaru</sys:String>
+    <sys:String x:Key="DiscImageCreatorPathLabelString">Ruta de DiscImageCreator</sys:String>
+    <sys:String x:Key="RedumperPathLabelString">Ruta de Redumper</sys:String>
+    <sys:String x:Key="DefaultDumpingProgramLabelString">Programa predeterminado</sys:String>
+    <sys:String x:Key="DefaultOutputPathLabelString">Ruta de salida predeterminada</sys:String>
+    <!-- Dumping Tab -->
+    <sys:String x:Key="DumpingTabString">Volcado</sys:String>
+    <sys:String x:Key="DumpingGroupBoxString">Volcado</sys:String>
+    <sys:String x:Key="ShowDiscInfoCheckBoxString">Mostrar información del disco</sys:String>
+    <sys:String x:Key="PullAllInformationCheckBoxString">Obtener toda la información</sys:String>
+    <sys:String x:Key="EnableTabInputCheckBoxString">Habilitar entrada con Tab</sys:String>
+    <sys:String x:Key="EnableRedumpCompatibilityCheckBoxString">Habilitar compatibilidad con Redump</sys:String>
+    <sys:String x:Key="ShowEjectReminderCheckBoxString">Mostrar recordatorio de expulsión</sys:String>
+    <sys:String x:Key="AddPlaceholdersCheckBoxString">Añadir marcadores de posición</sys:String>
+    <sys:String x:Key="AddFilenameSuffixCheckBoxString">Añadir sufijo al nombre de archivo</sys:String>
+    <sys:String x:Key="OutputSubmissionJSONCheckBoxString">Generar JSON de envío</sys:String>
+    <sys:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Incluir artefactos</sys:String>
+    <sys:String x:Key="CompressLogFilesCheckBoxString">Comprimir archivos de registro</sys:String>
+    <sys:String x:Key="LogCompressionLabelString">Compresión de registro:</sys:String>
+    <sys:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Eliminar archivos innecesarios</sys:String>
+    <sys:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Crear PS3 IRD tras volcado</sys:String>
+    <sys:String x:Key="ProtectionGroupBoxString">Protección</sys:String>
+    <sys:String x:Key="EnableProtectionScanCheckBoxString">Habilitar escaneo de protección</sys:String>
+    <sys:String x:Key="ScanArchiveContentsCheckBoxString">Escanear contenido de archivos</sys:String>
+    <sys:String x:Key="IncludeDebugInformationCheckBoxString">Incluir información de depuración</sys:String>
+    <sys:String x:Key="HideDriveLettersCheckBoxString">Ocultar letras de unidad</sys:String>
+    <sys:String x:Key="DefaultSpeedsGroupBoxString">Velocidades predeterminadas</sys:String>
+    <!-- Programs Tab -->
+    <sys:String x:Key="ProgramsTabString">Programas</sys:String>
+    <sys:String x:Key="AaruGroupBoxString">Aaru</sys:String>
+    <sys:String x:Key="EnableDebugOutputCheckBoxString">Habilitar salida de depuración</sys:String>
+    <sys:String x:Key="AaruEnableVerboseOutputCheckBoxString">Habilitar salida detallada</sys:String>
+    <sys:String x:Key="ForceDumpingCheckBoxString">Forzar volcado</sys:String>
+    <sys:String x:Key="StripPersonalDataCheckBoxString">Eliminar datos personales</sys:String>
+    <sys:String x:Key="AaruRereadTriesLabelString">Intentos de relectura:</sys:String>
+    <sys:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</sys:String>
+    <sys:String x:Key="QuietModeCheckBoxString">Modo silencioso</sys:String>
+    <sys:String x:Key="ParanoidModeCheckBoxString">Modo paranoico</sys:String>
+    <sys:String x:Key="UseCMIFlagCheckBoxString">Usar opción CMI</sys:String>
+    <sys:String x:Key="MultiSectorReadCheckBoxString">Lectura multi-sector</sys:String>
+    <sys:String x:Key="MultiSectorReadValueLabelString">Valor de lectura multi-sector:</sys:String>
+    <sys:String x:Key="DICCDRereadTriesLabelString">Intentos de relectura de CD:</sys:String>
+    <sys:String x:Key="DICDVDRereadTriesLabelString">Intentos de relectura de DVD/HD-DVD/BD:</sys:String>
+    <sys:String x:Key="RedumperGroupBoxString">Redumper</sys:String>
+    <sys:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Habilitar salida detallada</sys:String>
+    <sys:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Habilitar refinamiento de sectores</sys:String>
+    <sys:String x:Key="RedumperRereadTriesLabelString">Intentos de relectura:</sys:String>
+    <sys:String x:Key="PlextorLeadinRetriesLabelString">Reintentos de lead-in de Plextor:</sys:String>
+    <sys:String x:Key="NonRedumpOptionsCheckBoxString">Opciones fuera de Redump</sys:String>
+    <sys:String x:Key="DefaultReadMethodLabelString">Método de lectura predeterminado:</sys:String>
+    <sys:String x:Key="DefaultSectorOrderLabelString">Orden de sectores predeterminado:</sys:String>
+    <sys:String x:Key="DefaultDriveTypeLabelString">Tipo de unidad predeterminado:</sys:String>
+    <sys:String x:Key="DefaultDrivePregapStartLabelString">Pregap Start de unidad predeterminada:</sys:String>
+    <!-- Login Info Tab -->
+    <sys:String x:Key="LoginInfoTabString">Información de acceso</sys:String>
+    <sys:String x:Key="RetrievalGroupBoxString">Recuperación</sys:String>
+    <sys:String x:Key="RetrieveMatchInformationCheckBoxString">Recuperar información de coincidencias</sys:String>
+    <sys:String x:Key="RedumpGroupBoxString">Redump</sys:String>
+    <sys:String x:Key="UsernameLabelString">Usuario</sys:String>
+    <sys:String x:Key="PasswordLabelString">Contraseña</sys:String>
+    <sys:String x:Key="TestLoginButtonString">Probar acceso</sys:String>
+
+    <!-- Check Dump Window -->
+    <sys:String x:Key="CheckDumpTitleString">Comprobar volcado existente</sys:String>
+    <sys:String x:Key="InputPathLabelString">Ruta de entrada</sys:String>
+    <sys:String x:Key="CheckDumpButtonString">Comprobar</sys:String>
+    <sys:String x:Key="CheckDumpWarningString">La comprobación sobrescribirá cualquier archivo de información de envío existente. Por favor, realiza copias de seguridad de esos archivos si las necesitas antes de ejecutar la comprobación.</sys:String>
+
+    <!-- Create PS3 IRD Window -->
+    <sys:String x:Key="CreatePS3IRDTitleString">Crear PS3 IRD</sys:String>
+    <sys:String x:Key="InputGroupBoxString">Entrada</sys:String>
+    <sys:String x:Key="PS3ISOPathLabelString">Ruta del ISO de PS3</sys:String>
+    <sys:String x:Key="GetKeyPathLabelString">Ruta del archivo *.getkey.log</sys:String>
+    <sys:String x:Key="KeyExpanderString">Definir manualmente la clave de cifrado del disco PS3</sys:String>
+    <sys:String x:Key="HexadecimalKeyLabelString">Clave hexadecimal</sys:String>
+    <sys:String x:Key="KeyFilePathLabelString">Ruta del archivo de clave</sys:String>
+    <sys:String x:Key="KeyStatusLabelString">Estado de la clave</sys:String>
+    <sys:String x:Key="DiscIDExpanderString">Definir manualmente el ID del disco PS3</sys:String>
+    <sys:String x:Key="DiscIDLabelString">ID del disco</sys:String>
+    <sys:String x:Key="DiscIDStatusLabelString">Estado del ID del disco</sys:String>
+    <sys:String x:Key="PICExpanderString">Definir manualmente Permanent Information &amp; Control (PIC)</sys:String>
+    <sys:String x:Key="LayerbreakLabelString">Layerbreak (sectores)</sys:String>
+    <sys:String x:Key="PICLabelString">PIC</sys:String>
+    <sys:String x:Key="PICFilePathLabelString">Ruta del archivo PIC</sys:String>
+    <sys:String x:Key="PICStatusLabelString">Estado del PIC</sys:String>
+    <sys:String x:Key="CreateIRDButtonString">Crear IRD</sys:String>
+
+    <!-- Media Information Guide Window -->
+    <sys:String x:Key="MediaInformationTitleString">Información del medio</sys:String>
+    <sys:String x:Key="RingCodeGuideButtonString">Guía de Ring Code</sys:String>
+    <!-- Common Info Tab -->
+    <sys:String x:Key="CommonInfoTabString">Información común</sys:String>
+    <sys:String x:Key="CommonMediaInfoGroupBoxString">Información común del medio</sys:String>
+    <sys:String x:Key="TitleInputString">Título</sys:String>
+    <sys:String x:Key="AlternativeTitleInputString">Título alternativo</sys:String>
+    <sys:String x:Key="ForeignTitleNonLatinInputString">Título extranjero (no latino)</sys:String>
+    <sys:String x:Key="AlternativeForeignTitleInputString">Título extranjero alternativo</sys:String>
+    <sys:String x:Key="DiscNumberLetterInputString">Número / letra del disco</sys:String>
+    <sys:String x:Key="DiscTitleInputString">Título del disco</sys:String>
+    <sys:String x:Key="DiscTitleNonLatinInputString">Título del disco (no latino)</sys:String>
+    <sys:String x:Key="CategoryLabelString">Categoría</sys:String>
+    <sys:String x:Key="RegionLabelString">Región</sys:String>
+    <sys:String x:Key="LanguagesLabelString">Idiomas</sys:String>
+    <sys:String x:Key="LanguageSelectionViaLabelString">Selección de idioma mediante</sys:String>
+    <sys:String x:Key="SerialInputString">Número de serie</sys:String>
+    <sys:String x:Key="BarcodeInputString">Código de barras</sys:String>
+    <sys:String x:Key="VersionsAndEditionGroupBoxString">Versiones y ediciones</sys:String>
+    <sys:String x:Key="VersionInputString">Versión</sys:String>
+    <sys:String x:Key="EditionInputString">Edición</sys:String>
+    <sys:String x:Key="EditionNonLatinInputString">Edición (no latina)</sys:String>
+    <!-- Additional Info Tab -->
+    <sys:String x:Key="AdditionalInfoTabString">Información adicional</sys:String>
+    <sys:String x:Key="CommentsInputString">Comentarios</sys:String>
+    <sys:String x:Key="CompatibleOSInputString">Sistemas compatibles</sys:String>
+    <sys:String x:Key="ProtectionInputString">Protección</sys:String>
+    <sys:String x:Key="ExtrasGroupBoxString">Extras</sys:String>
+    <sys:String x:Key="PhysicalIdentifiersGroupBoxString">Identificadores físicos</sys:String>
+    <sys:String x:Key="PublisherIdentifiersGroupBoxString">Identificadores del editor</sys:String>
+    <!-- Contents Tab -->
+    <sys:String x:Key="ContentsTabString">Contenido</sys:String>
+    <!-- Ringcodes Tab -->
+    <sys:String x:Key="RingcodesTabString">Ringcodes</sys:String>
+    <sys:String x:Key="L0InfoGroupBoxString">Datos/Info L0</sys:String>
+    <sys:String x:Key="L1InfoGroupBoxString">Etiqueta/Info L1</sys:String>
+    <sys:String x:Key="L2InfoGroupBoxString">Info L2</sys:String>
+    <sys:String x:Key="L3InfoGroupBoxString">Info L3</sys:String>
+    <!-- Read-Only Info Tab -->
+    <sys:String x:Key="ReadOnlyInfoTabString">Info de solo lectura</sys:String>
+
+    <!-- Ring Code Guide Window -->
+    <sys:String x:Key="RingCodeGuideTitleString">Guía de Ring Code</sys:String>
+
+    <!-- About Window -->
+    <sys:String x:Key="AboutTitleString">Acerca de</sys:String>
+    <sys:String x:Key="VersionLabelString">Versión</sys:String>
+
+    <!-- Check for Updates Window -->
+    <sys:String x:Key="CheckForUpdatesTitleString">Comprobación de actualización de versión</sys:String>
+
+    <!-- Eject Window -->
+    <sys:String x:Key="EjectTitleString">Expulsar</sys:String>
+    <sys:String x:Key="EjectMessageString">Ahora es seguro expulsar el disco</sys:String>
+
+    <!-- Ask Before Quit Window -->
+    <sys:String x:Key="QuitTitleString">Salir</sys:String>
+    <sys:String x:Key="QuitMessageString">Aún se está procesando un volcado, ¿estás seguro de que quieres salir?</sys:String>
+
+    <!-- Protection Error Window -->
+    <sys:String x:Key="ProtectionErrorTitleString">¡Error!</sys:String>
+    <sys:String x:Key="ProtectionErrorMessageString">Ocurrió una excepción, consulta el registro para más detalles</sys:String>
+
+    <!-- Protection Detected Window -->
+    <sys:String x:Key="ProtectionDetectedTitleString">Protección(es) detectada(s)</sys:String>
+
+</ResourceDictionary>
