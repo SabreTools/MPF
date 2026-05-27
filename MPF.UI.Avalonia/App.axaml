@@ -4,11 +4,13 @@
              RequestedThemeVariant="Default">
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://MPF.Avalonia/Styles/Controls.axaml"/>
     </Application.Styles>
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://MPF.Avalonia/Resources/Strings.axaml"/>
+                <ResourceInclude Source="avares://MPF.Avalonia/Resources/Brushes.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

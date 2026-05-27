@@ -1,0 +1,50 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- GroupBox equivalent: HeaderedContentControl with class "groupbox" -->
+    <Style Selector="HeaderedContentControl.groupbox">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border BorderBrush="#FF707070" BorderThickness="1" CornerRadius="3" Padding="6" Margin="2">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" Text="{TemplateBinding Header}"
+                                   FontWeight="Bold" Margin="0,0,0,4"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Custom Button: base state -->
+    <Style Selector="Button.custom">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="border" Background="#FFDDDDDD" BorderBrush="#FF707070"
+                        BorderThickness="1" CornerRadius="2" Padding="6,2">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"/>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!-- Custom Button: pointer-over state -->
+    <Style Selector="Button.custom:pointerover /template/ Border#border">
+        <Setter Property="Background" Value="#FFBEE6FD"/>
+        <Setter Property="BorderBrush" Value="#FF3C7FB1"/>
+    </Style>
+
+    <!-- Custom Button: pressed state -->
+    <Style Selector="Button.custom:pressed /template/ Border#border">
+        <Setter Property="Background" Value="#FFC4E5F6"/>
+        <Setter Property="BorderBrush" Value="#FF2C628B"/>
+    </Style>
+
+    <!-- Custom Button: disabled state -->
+    <Style Selector="Button.custom:disabled /template/ Border#border">
+        <Setter Property="Background" Value="#FFF4F4F4"/>
+        <Setter Property="BorderBrush" Value="#FFADB2B5"/>
+    </Style>
+
+</Styles>

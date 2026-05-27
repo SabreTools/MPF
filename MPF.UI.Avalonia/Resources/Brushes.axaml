@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Application-wide system-colour defaults (no explicit value in WPF App.xaml; sensible light-theme fallbacks) -->
+    <SolidColorBrush x:Key="ActiveBorderBrush"     Color="#FFB4B4B4"/>
+    <SolidColorBrush x:Key="ControlBrush"          Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="ControlTextBrush"      Color="#FF000000"/>
+    <SolidColorBrush x:Key="GrayTextBrush"         Color="#FF6D6D6D"/>
+    <SolidColorBrush x:Key="WindowBrush"           Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="WindowTextBrush"       Color="#FF000000"/>
+
+    <!-- Button (values from MPF.UI/App.xaml) -->
+    <SolidColorBrush x:Key="Button.Static.Background"   Color="#FFDDDDDD"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background"  Color="#FFC4E5F6"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+
+    <!-- ComboBox — WPF used LinearGradientBrush for several; flattened to SolidColorBrush start-colour -->
+    <!-- Static (gradient #FFF0F0F0 → #FFE5E5E5 in App.xaml; start colour used) -->
+    <SolidColorBrush x:Key="ComboBox.Static.Background"                    Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background"           Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background"    Color="Transparent"/>
+    <!-- MouseOver (gradient #FFECF4FC → #FFDCECFC; start colour used) -->
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Background"                 Color="#FFECF4FC"/>
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background"        Color="#FFFFFFFF"/>
+    <!-- MouseOver.Editable.Button gradient #FFEBF4FC → #FFDCECFC; start colour used -->
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" Color="#FFEBF4FC"/>
+    <!-- Pressed (gradient #FFDAECFC → #FFC4E0FC; start colour used) -->
+    <SolidColorBrush x:Key="ComboBox.Pressed.Background"                   Color="#FFDAECFC"/>
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background"          Color="#FFFFFFFF"/>
+    <!-- Pressed.Editable.Button gradient #FFDAEBFC → #FFC4E0FC; start colour used -->
+    <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Background"   Color="#FFDAEBFC"/>
+    <!-- Disabled (solid values from App.xaml) -->
+    <SolidColorBrush x:Key="ComboBox.Disabled.Background"                  Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background"         Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background"  Color="Transparent"/>
+
+    <!-- CustomMessageBox (value from App.xaml) -->
+    <SolidColorBrush x:Key="CustomMessageBox.Static.Background" Color="#FFE5E5E5"/>
+
+    <!-- MenuItem (values from App.xaml) -->
+    <SolidColorBrush x:Key="MenuItem.SubMenu.Background" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="MenuItem.SubMenu.Border"     Color="#FF999999"/>
+
+    <!-- ScrollViewer ("LightGray" in App.xaml → #FFD3D3D3) -->
+    <SolidColorBrush x:Key="ScrollViewer.ScrollBar.Background" Color="#FFD3D3D3"/>
+
+    <!-- TabItem (selected solid from App.xaml; static was LinearGradient → start colour used) -->
+    <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="TabItem.Static.Background"   Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="TabItem.Static.Border"       Color="#FFACACAC"/>
+
+    <!-- TextBox (value from App.xaml) -->
+    <SolidColorBrush x:Key="TextBox.Static.Background" Color="#FFFFFFFF"/>
+
+</ResourceDictionary>
