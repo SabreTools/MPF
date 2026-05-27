@@ -1,6 +1,186 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="MPF.UI.Avalonia.Views.MainWindow"
-        Title="MPF" Width="800" Height="600">
-    <TextBlock Text="MPF Avalonia — skeleton" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-</Window>
+<views:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:controls="clr-namespace:MPF.UI.Avalonia.Controls"
+                  xmlns:converters="clr-namespace:MPF.UI.Avalonia.Converters"
+                  xmlns:views="clr-namespace:MPF.UI.Avalonia.Views"
+                  xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
+                  x:Class="MPF.UI.Avalonia.Views.MainWindow"
+                  x:DataType="viewModels:MainViewModel"
+                  Title="{DynamicResource AppTitleString}" Width="600"
+                  SystemDecorations="None" CanResize="False"
+                  WindowStartupLocation="CenterScreen" SizeToContent="Height"
+                  TransparencyLevelHint="Transparent" Background="Transparent">
+
+    <views:WindowBase.Resources>
+        <converters:ElementConverter x:Key="ElementConverter" />
+    </views:WindowBase.Resources>
+
+    <Border CornerRadius="8" Background="{DynamicResource WindowBrush}" BorderBrush="Gray" BorderThickness="2">
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="0,2,0,0" ColumnDefinitions="25,*,*,*,*,100,5">
+
+                <Image Grid.Column="0" Height="20" Width="20" Margin="1" PointerPressed="TitleMouseDown" />
+                <StackPanel ZIndex="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,-50,0"
+                            Background="{DynamicResource WindowBrush}">
+                    <Menu x:Name="TopLeftMenuBar" Height="20"
+                          Background="{DynamicResource WindowBrush}"
+                          Foreground="{DynamicResource WindowTextBrush}">
+                        <MenuItem x:Name="FileMenuItem" Header="{DynamicResource FileMenuString}">
+                            <MenuItem x:Name="AppExitMenuItem" Header="{DynamicResource ExitMenuItemString}" Click="AppExitClick" />
+                        </MenuItem>
+                        <MenuItem x:Name="ToolsMenuItem" Header="{DynamicResource ToolsMenuString}">
+                            <MenuItem x:Name="CheckDumpMenuItem" Header="{DynamicResource CheckDumpMenuItemString}"
+                                      Click="CheckDumpMenuItemClick" IsEnabled="{Binding CheckDumpMenuItemEnabled}"/>
+                            <MenuItem x:Name="CreateIRDMenuItem" Header="{DynamicResource CreatePS3IRDDumpMenuItemString}"
+                                      Click="CreateIRDMenuItemClick" IsEnabled="{Binding CreateIRDMenuItemEnabled}"/>
+                            <MenuItem x:Name="OptionsMenuItem" Header="{DynamicResource OptionsDumpMenuItemString}"
+                                      Click="OptionsMenuItemClick" IsEnabled="{Binding OptionsMenuItemEnabled}"/>
+                            <MenuItem x:Name="DebugViewMenuItem" Header="{DynamicResource DebugInfoWindowMenuItemString}"
+                                      Click="DebugViewClick" IsVisible="False" />
+                        </MenuItem>
+                        <MenuItem x:Name="HelpMenuItem" Header="{DynamicResource HelpMenuString}">
+                            <MenuItem x:Name="AboutMenuItem" Header="{DynamicResource AboutMenuItemString}" Click="AboutClick" />
+                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="{DynamicResource CheckForUpdateMenuItemString}" Click="CheckForUpdatesClick" />
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+                <TextBlock ZIndex="0" Grid.Column="1" Grid.ColumnSpan="5" HorizontalAlignment="Stretch"
+                           TextAlignment="Center" VerticalAlignment="Center" Padding="0,0,20,0"
+                           FontWeight="Bold" Text="{DynamicResource AppTitleString}" PointerPressed="TitleMouseDown">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu Background="{DynamicResource WindowBrush}"
+                                     Foreground="{DynamicResource WindowTextBrush}">
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick"/>
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+                <Grid Grid.Column="5" ColumnDefinitions="50,25,25">
+
+                    <Menu x:Name="TopRightMenuBar" Grid.Column="0" Height="20"
+                          Background="{DynamicResource WindowBrush}"
+                          Foreground="{DynamicResource WindowTextBrush}">
+                        <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}">
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="SpanishMenuItem" Header="Español" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="FrenchMenuItem" Header="Français" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="PolishMenuItem" Header="Polski" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="PortugueseMenuItem" Header="Português" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="RussianMenuItem" Header="Русский" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" Width="120" Click="LanguageMenuItemClick" />
+                        </MenuItem>
+                    </Menu>
+
+                    <Button x:Name="MinimizeButton" Grid.Column="1" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="2" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource SettingsGroupBoxString}">
+                <Grid Margin="5,5,5,5" ColumnDefinitions="1*,2.5*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+
+                    <TextBlock x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource SystemLabelString}"/>
+                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Systems}"
+                              SelectedItem="{Binding CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding SystemTypeComboBoxEnabled}"
+                              SelectionChanged="SystemTypeComboBoxSelectionChanged" />
+                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
+                              ItemsSource="{Binding MediaTypes}"
+                              SelectedItem="{Binding CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding MediaTypeComboBoxEnabled}"
+                              SelectionChanged="MediaTypeComboBoxSelectionChanged"
+                              IsVisible="False" />
+
+                    <TextBlock x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource OutputPathLabelString}"/>
+                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="342" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                             Text="{Binding OutputPath, Mode=TwoWay}"
+                             IsEnabled="{Binding OutputPathTextBoxEnabled}"
+                             TextChanged="OutputPathTextBoxTextChanged" />
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Classes="custom" Height="22" Width="53" HorizontalAlignment="Right"
+                            Content="{DynamicResource BrowseButtonString}"
+                            IsEnabled="{Binding OutputPathBrowseButtonEnabled}"
+                            Click="OutputPathBrowseButtonClick" />
+
+                    <TextBlock x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource DriveLetterLabelString}"/>
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Drives}" SelectedItem="{Binding CurrentDrive, Mode=TwoWay}"
+                              IsEnabled="{Binding DriveLetterComboBoxEnabled}"
+                              SelectionChanged="DriveLetterComboBoxSelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Letter}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource DriveSpeedLabelString}"/>
+                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                              ItemsSource="{Binding DriveSpeeds}" SelectedItem="{Binding DriveSpeed, Mode=TwoWay}"
+                              IsEnabled="{Binding DriveSpeedComboBoxEnabled}"
+                              SelectionChanged="DriveSpeedComboBoxSelectionChanged" />
+
+                    <TextBlock x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource DumpingProgramLabelString}"/>
+                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding InternalPrograms}"
+                              SelectedItem="{Binding CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding DumpingProgramComboBoxEnabled}"
+                              SelectionChanged="DumpingProgramComboBoxSelectionChanged" />
+
+                    <TextBlock x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Text="{DynamicResource ParametersLabelString}"/>
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                             Text="{Binding Parameters, Mode=TwoWay}"
+                             IsEnabled="{Binding ParametersTextBoxEnabled}"/>
+                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right"
+                              IsChecked="{Binding ParametersCheckBoxEnabled, Mode=TwoWay}"
+                              IsEnabled="{Binding EnableParametersCheckBoxEnabled}"
+                              Click="EnableParametersCheckBoxClick"/>
+                </Grid>
+            </HeaderedContentControl>
+
+            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource ControlsGroupBoxString}">
+                <UniformGrid Columns="4" Margin="5,5,5,5">
+                    <Button x:Name="StartStopButton" Classes="custom" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True"
+                            Content="{Binding StartStopButtonText, Mode=OneWay}"
+                            IsEnabled="{Binding StartStopButtonEnabled}"
+                            Click="StartStopButtonClick" />
+                    <Button x:Name="MediaScanButton" Classes="custom" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Content="{DynamicResource ScanButtonString}"
+                            IsEnabled="{Binding MediaScanButtonEnabled}"
+                            Click="MediaScanButtonClick" />
+                    <Button x:Name="UpdateVolumeLabel" Classes="custom" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Content="{DynamicResource UpdateLabelButtonString}"
+                            IsEnabled="{Binding UpdateVolumeLabelEnabled}"
+                            Click="UpdateVolumeLabelClick" />
+                    <Button x:Name="CopyProtectScanButton" Classes="custom" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Content="{DynamicResource ProtectionScanButtonString}"
+                            IsEnabled="{Binding CopyProtectScanButtonEnabled}"
+                            Click="CopyProtectScanButtonClick" />
+                </UniformGrid>
+            </HeaderedContentControl>
+
+            <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="{DynamicResource StatusGroupBoxString}">
+                <UniformGrid Margin="5,5,5,5">
+                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Text="{Binding Status, Mode=OneWay}" />
+                </UniformGrid>
+            </HeaderedContentControl>
+
+            <Expander Margin="5,5,5,5" MaxHeight="300" HorizontalAlignment="Stretch" Header="{DynamicResource LogOutputExpanderString}" x:Name="LogPanel"
+                      IsExpanded="{Binding LogPanelExpanded}">
+                <controls:LogOutput x:Name="LogOutput"/>
+            </Expander>
+        </StackPanel>
+    </Border>
+</views:WindowBase>

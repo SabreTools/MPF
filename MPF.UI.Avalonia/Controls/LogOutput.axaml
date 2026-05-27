@@ -4,8 +4,8 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-                <ScrollViewer Name="OutputViewer">
-                    <SelectableTextBlock Name="Output"
+                <ScrollViewer x:Name="OutputViewer">
+                    <SelectableTextBlock x:Name="Output"
                                          FontFamily="Consolas,Menlo,monospace"
                                          Background="#FF202020"
                                          Foreground="White"
@@ -17,10 +17,10 @@
             <Border BorderThickness="1" BorderBrush="Gainsboro" CornerRadius="5" Margin="5">
                 <UniformGrid Columns="4" Margin="5" Height="27">
                     <Panel />
-                    <Button Name="ClearButton" Height="25" Width="80"
+                    <Button x:Name="ClearButton" Height="25" Width="80"
                             Content="{DynamicResource ClearButtonString}"
                             Classes="CustomButton" />
-                    <Button Name="SaveButton" Height="25" Width="80"
+                    <Button x:Name="SaveButton" Height="25" Width="80"
                             Content="{DynamicResource SaveButtonString}"
                             Classes="CustomButton" />
                     <Panel />
