@@ -24,9 +24,39 @@ The main UI has some known limitations that are documented in code and in some p
 
 - Windows-only due to reliance on WPF and Winforms
   - MAUI is not a viable alternative due to lack of out-of-box support for Linux
-  - Avalonia is being heavily considered as an alternative
+  - For a cross-platform alternative, see **MPF.UI.Avalonia** below
 - For those who need .NET Framework 4.8, there is an official fork: [MPF Legacy](https://github.com/Deterous/MPF-Legacy)
 - Some archive types may not be supported for protection scanning, see [Compatibility Notes](https://github.com/SabreTools/BinaryObjectScanner?tab=readme-ov-file#compatibility-notes) for more details
+
+## Media Preservation Frontend Avalonia UI (MPF.UI.Avalonia)
+
+`MPF.UI.Avalonia` is a cross-platform (macOS, Linux, Windows) graphical frontend built with [Avalonia UI](https://avaloniaui.net/). It reuses the same `MPF.Frontend` view-models and business logic as the existing `MPF.UI`, complementing it with a native look and feel on non-Windows platforms. The macOS UI was contributed by **Oliver Köster**.
+
+### Support Limitations
+
+- Optical-drive detection relies on the shared `MPF.Frontend` `DriveInfo` enumeration. WMI-based drive metadata is Windows-only; on macOS and Linux, drive metadata (volume labels, media type hints) may be more limited than on Windows.
+
+### Building and Running from Source
+
+Requires the [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) (or the local SDK at `.dotnet/` in the repo root).
+
+```bash
+dotnet run --project MPF.UI.Avalonia/MPF.UI.Avalonia.csproj -f net10.0
+```
+
+### Producing a macOS .app Bundle
+
+Run the included packaging script from the repo root:
+
+```bash
+# Apple Silicon
+./MPF.UI.Avalonia/build-macos-app.sh osx-arm64
+
+# Intel Mac
+./MPF.UI.Avalonia/build-macos-app.sh osx-x64
+```
+
+The self-contained `.app` bundle is written to `MPF.UI.Avalonia/bin/MPF.app`. It embeds the .NET runtime, so no system .NET installation is required on the target machine.
 
 ## Media Preservation Frontend CLI (MPF.CLI)
 
