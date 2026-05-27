@@ -5,42 +5,15 @@
                   x:Class="MPF.UI.Avalonia.Views.CheckDumpWindow"
                   x:CompileBindings="False"
                   Title="{DynamicResource CheckDumpTitleString}" Width="600"
-                  SystemDecorations="None" CanResize="False"
+                  CanResize="False"
                   WindowStartupLocation="CenterOwner" SizeToContent="Height"
-                  TransparencyLevelHint="Transparent" Background="Transparent">
+                  Background="{DynamicResource WindowBrush}">
 
     <views:WindowBase.Resources>
         <converters:ElementConverter x:Key="ElementConverter" />
     </views:WindowBase.Resources>
 
-    <Border CornerRadius="8" Background="{DynamicResource WindowBrush}" BorderBrush="Gray" BorderThickness="2">
-        <StackPanel Orientation="Vertical">
-
-            <!-- Title bar -->
-            <Grid Margin="0,2,0,0" ColumnDefinitions="25,*,*,*,*,50,5">
-                <Image Grid.Column="0" Height="20" Width="20" Margin="1" PointerPressed="TitleMouseDown" />
-                <TextBlock Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"
-                           FontWeight="Bold" Text="{DynamicResource CheckDumpTitleString}"
-                           PointerPressed="TitleMouseDown">
-                    <TextBlock.ContextMenu>
-                        <ContextMenu Background="{DynamicResource WindowBrush}"
-                                     Foreground="{DynamicResource WindowTextBrush}">
-                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick"/>
-                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick"/>
-                        </ContextMenu>
-                    </TextBlock.ContextMenu>
-                </TextBlock>
-                <Grid Grid.Column="5" ColumnDefinitions="*,*">
-                    <Button x:Name="MinimizeButton" Grid.Column="0" Classes="custom" BorderThickness="0"
-                            Background="Transparent" Click="MinimizeButtonClick">
-                        <Path Data="M 0,0 L 10,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
-                    </Button>
-                    <Button x:Name="CloseButton" Grid.Column="1" Classes="custom" BorderThickness="0"
-                            Background="Transparent" Click="CloseButtonClick">
-                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
-                    </Button>
-                </Grid>
-            </Grid>
+    <StackPanel Orientation="Vertical">
 
             <!-- Settings group -->
             <HeaderedContentControl Classes="groupbox" Margin="5,5,5,5"
@@ -142,6 +115,5 @@
                 </UniformGrid>
             </Border>
 
-        </StackPanel>
-    </Border>
+    </StackPanel>
 </views:WindowBase>
