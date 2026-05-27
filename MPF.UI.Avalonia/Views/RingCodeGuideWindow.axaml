@@ -1,0 +1,100 @@
+<views:WindowBase xmlns="https://github.com/avaloniaui"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:views="clr-namespace:MPF.UI.Avalonia.Views"
+                  x:Class="MPF.UI.Avalonia.Views.RingCodeGuideWindow"
+                  x:CompileBindings="False"
+                  Title="{DynamicResource RingCodeGuideTitleString}" Width="500"
+                  SystemDecorations="None" CanResize="False"
+                  WindowStartupLocation="CenterOwner" SizeToContent="Height"
+                  TransparencyLevelHint="Transparent" Background="Transparent">
+
+    <Border CornerRadius="8" Background="{DynamicResource WindowBrush}" BorderBrush="Gray" BorderThickness="1">
+        <StackPanel Orientation="Vertical">
+
+            <!-- Custom title bar -->
+            <Grid Margin="0,2,0,0" ColumnDefinitions="25,115,*,*,*,50,5">
+                <Image Grid.Column="0" Source="avares://MPF.Avalonia/Images/Icon.ico"
+                       Height="20" Width="20" Margin="1" PointerPressed="TitleMouseDown" />
+                <TextBlock Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" Text="{DynamicResource RingCodeGuideTitleString}"
+                           PointerPressed="TitleMouseDown">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu Background="{DynamicResource WindowBrush}"
+                                     Foreground="{DynamicResource WindowTextBrush}">
+                            <MenuItem Header="{DynamicResource MinimizeMenuItemString}" Click="MinimizeButtonClick"/>
+                            <MenuItem Header="{DynamicResource CloseMenuItemString}" Click="CloseButtonClick"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+                <Grid Grid.Column="5" ColumnDefinitions="*,*">
+                    <Button x:Name="MinimizeButton" Grid.Column="0" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="1" Classes="custom" BorderThickness="0"
+                            Background="Transparent" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{DynamicResource WindowTextBrush}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <!-- Tab control -->
+            <TabControl Background="{DynamicResource WindowBrush}"
+                        Foreground="{DynamicResource WindowTextBrush}">
+
+                <!-- 1-Layer tab -->
+                <TabItem Header="1-Layer Ringcode">
+                    <Grid Margin="5,5,5,5" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                        <Image Grid.Row="0" Source="avares://MPF.Avalonia/Images/ring-code-guide-1-layer.png"
+                               HorizontalAlignment="Center" Stretch="Fill" Width="490" Height="490" />
+                        <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
+                            <Run Text=" Sony DADC&#9;A0100368905-0101&#9;13" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Green" Text="2. Mastering SID:" />
+                            <Run Text=" IFPI L553" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="3" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
+                            <Run Text=" A2" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
+                            <Run Text=" IFPI 94V1" />
+                        </TextBlock>
+                    </Grid>
+                </TabItem>
+
+                <!-- 2-Layer tab -->
+                <TabItem Header="2-Layer Ringcode">
+                    <Grid Margin="5,5,5,5" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                        <Image Grid.Row="0" Source="avares://MPF.Avalonia/Images/ring-code-guide-2-layer.png"
+                               HorizontalAlignment="Center" Stretch="Fill" Width="475" Height="490" />
+                        <TextBlock Grid.Row="1" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
+                            <Run Text=" IM01501A-L1&#9;03 +&#9;+" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="2" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
+                            <Run Text=" IM01501A-L0&#9;01 +&#9;+" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="3" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="Purple" Text="3. Outer Mastering SID:" />
+                            <Run Text=" IFPI LB48" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="4" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Inner Mastering SID:" />
+                            <Run Text=" IFPI LB48" />
+                        </TextBlock>
+                        <TextBlock Grid.Row="5" TextWrapping="Wrap">
+                            <Run FontWeight="Bold" Text="Note:" />
+                            <Run Text=" See the 1-Layer guide for more details on additional fields" />
+                        </TextBlock>
+                    </Grid>
+                </TabItem>
+
+            </TabControl>
+        </StackPanel>
+    </Border>
+</views:WindowBase>

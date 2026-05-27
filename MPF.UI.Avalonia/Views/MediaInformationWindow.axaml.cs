@@ -461,13 +461,10 @@ namespace MPF.UI.Avalonia.Views
         /// <summary>
         /// Handler for RingCodeGuideButton Click event
         /// </summary>
-        private async void OnRingCodeGuideClick(object? sender, RoutedEventArgs e)
+        private void OnRingCodeGuideClick(object? sender, RoutedEventArgs e)
         {
-            // TODO(Task 13): open RingCodeGuideWindow once it has been ported.
-            await MessageBoxWindow.ShowAsync(this,
-                FindResourceString("RingCodeGuideTitleString"),
-                "This window is not yet available in the macOS UI.",
-                MessageBoxButtons.Ok);
+            var win = new RingCodeGuideWindow();
+            win.Show(this);
         }
 
         #endregion

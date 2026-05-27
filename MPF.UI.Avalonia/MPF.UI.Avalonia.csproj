@@ -24,4 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Images\**" />
+  </ItemGroup>
 </Project>
