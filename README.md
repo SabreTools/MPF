@@ -49,14 +49,17 @@ dotnet run --project MPF.UI.Avalonia/MPF.UI.Avalonia.csproj -f net10.0
 Run the included packaging script from the repo root:
 
 ```bash
-# Apple Silicon
-./MPF.UI.Avalonia/build-macos-app.sh osx-arm64
+# Universal (Apple Silicon + Intel) — default, runs natively on both
+./MPF.UI.Avalonia/build-macos-app.sh
 
-# Intel Mac
-./MPF.UI.Avalonia/build-macos-app.sh osx-x64
+# Or build a single architecture
+./MPF.UI.Avalonia/build-macos-app.sh osx-arm64   # Apple Silicon only
+./MPF.UI.Avalonia/build-macos-app.sh osx-x64     # Intel only
 ```
 
-The self-contained `.app` bundle is written to `MPF.UI.Avalonia/bin/MPF.app`. It embeds the .NET runtime, so no system .NET installation is required on the target machine.
+The self-contained `.app` bundle is written to `MPF.UI.Avalonia/bin/MPF.app`. It embeds the .NET runtime, so no system .NET installation is required on the target machine. The default `universal` build fuses the arm64 and x64 outputs with `lipo` so a single bundle runs natively on both Apple Silicon and Intel Macs.
+
+On launch (macOS), the app strips the download quarantine flag from, and ad-hoc code-signs, the bundled dumping tools under a sibling `Programs/` folder so they can run without manual Gatekeeper steps (required on Apple Silicon, which refuses unsigned binaries). Note that the external tools have their own architecture and library requirements — `redumper` ships a native arm64 build, while `DiscImageCreator` is x86_64 (runs via Rosetta) and depends on a system `libarchive`.
 
 ## Media Preservation Frontend CLI (MPF.CLI)
 
