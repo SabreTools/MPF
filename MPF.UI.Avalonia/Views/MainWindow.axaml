@@ -6,6 +6,7 @@
                   xmlns:viewModels="clr-namespace:MPF.Frontend.ViewModels;assembly=MPF.Frontend"
                   x:Class="MPF.UI.Avalonia.Views.MainWindow"
                   x:DataType="viewModels:MainViewModel"
+                  Icon="avares://MPF.Avalonia/Images/Icon.ico"
                   Title="{DynamicResource AppTitleString}" Width="600" Height="800"
                   CanResize="True" MinWidth="600" MinHeight="480"
                   WindowStartupLocation="CenterScreen"
