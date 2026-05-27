@@ -482,16 +482,27 @@ namespace MPF.UI.Avalonia.Views
         /// <summary>
         /// Set the UI color scheme according to the options
         /// </summary>
-        /// <remarks>
-        /// TODO(Task 8 followup): the WPF code instantiated DarkModeTheme/LightModeTheme/CustomTheme
-        /// (concrete Theme subclasses that do not yet exist in the Avalonia project). The ported
-        /// <see cref="Theme"/> base class is abstract and the brush keys have safe light-theme defaults,
-        /// so theme application is currently a no-op. Port the concrete themes in a later task and
-        /// replicate the option-based selection (EnableDarkMode / EnablePurpMode / custom hex colors).
-        /// </remarks>
         private void ApplyTheme()
         {
-            // No concrete Theme subclasses ported yet; defaults from Brushes.axaml apply.
+            Theme theme;
+            if (MainViewModel.Options.GUI.Theming.EnableDarkMode)
+                theme = new DarkModeTheme();
+            else if (MainViewModel.Options.GUI.Theming.EnablePurpMode)
+                theme = new CustomTheme("111111", "9A5EC0");
+            else if (IsHexColor(MainViewModel.Options.GUI.Theming.CustomBackgroundColor) && IsHexColor(MainViewModel.Options.GUI.Theming.CustomTextColor))
+                theme = new CustomTheme(MainViewModel.Options.GUI.Theming.CustomBackgroundColor, MainViewModel.Options.GUI.Theming.CustomTextColor);
+            else
+                theme = new LightModeTheme();
+
+            // Set the Avalonia ThemeVariant so built-in FluentTheme controls (combo boxes,
+            // scrollbars, text boxes, etc.) follow dark or light styling. For custom/purp
+            // themes we keep it simple: Dark only when EnableDarkMode is set, Light otherwise.
+            global::Avalonia.Application.Current!.RequestedThemeVariant =
+                MainViewModel.Options.GUI.Theming.EnableDarkMode
+                    ? global::Avalonia.Styling.ThemeVariant.Dark
+                    : global::Avalonia.Styling.ThemeVariant.Light;
+
+            theme.Apply();
         }
 
         /// <summary>
