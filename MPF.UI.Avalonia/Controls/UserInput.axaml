@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:MPF.UI.Avalonia.Converters"
+             x:Class="MPF.UI.Avalonia.Controls.UserInput"
+             x:CompileBindings="False"
+             x:Name="userInput">
+    <UserControl.Resources>
+        <converters:StringToDoubleConverter x:Key="StringToDoubleConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.75*" />
+            <ColumnDefinition Width="1.75*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   Text="{Binding ElementName=userInput, Path=Label}" />
+
+        <TextBox Grid.Row="0" Grid.Column="1"
+                 Height="{Binding ElementName=userInput, Path=TextHeight, Converter={StaticResource StringToDoubleConverter}}"
+                 HorizontalAlignment="Stretch"
+                 Text="{Binding ElementName=userInput, Path=Text, Mode=TwoWay}"
+                 AcceptsTab="{Binding ElementName=userInput, Path=Tab}"
+                 AcceptsReturn="{Binding ElementName=userInput, Path=Enter}"
+                 TextWrapping="{Binding ElementName=userInput, Path=TextWrapping}"
+                 IsReadOnly="{Binding ElementName=userInput, Path=IsReadOnly}"
+                 VerticalContentAlignment="{Binding ElementName=userInput, Path=VerticalContentAlignmentValue}"
+                 ScrollViewer.HorizontalScrollBarVisibility="{Binding ElementName=userInput, Path=HorizontalScrollBarVisibility}"
+                 ScrollViewer.VerticalScrollBarVisibility="{Binding ElementName=userInput, Path=VerticalScrollBarVisibility}" />
+    </Grid>
+</UserControl>
