@@ -83,10 +83,11 @@ namespace MPF.UI.Avalonia.Views
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem.IsVisible = true;
 
-            MainViewModel.Init(LogOutput.EnqueueLog, _dialogService.DisplayUserMessage, ShowMediaInformationWindow);
-
-            // Stream the dumping program's live output (incl. carriage-return progress) into the log
+            // Stream the dumping program's live output (incl. carriage-return progress) into the log.
+            // Set before Init so any environment built during initialization already has the sink.
             MainViewModel.ProgramOutputSink = LogOutput.AppendProgramOutput;
+
+            MainViewModel.Init(LogOutput.EnqueueLog, _dialogService.DisplayUserMessage, ShowMediaInformationWindow);
 
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>

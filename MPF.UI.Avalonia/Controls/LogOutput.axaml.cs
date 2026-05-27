@@ -162,7 +162,7 @@ namespace MPF.UI.Avalonia.Controls
             if (inlines is null)
                 return;
 
-            using var sw = new StreamWriter(File.OpenWrite("console.log"));
+            using var sw = new StreamWriter(File.Create("console.log"));
             foreach (var inline in inlines)
             {
                 if (inline is Run run)

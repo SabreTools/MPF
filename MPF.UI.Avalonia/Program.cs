@@ -53,8 +53,12 @@ namespace MPF.UI.Avalonia
         /// macOS blocks unsigned, downloaded helper binaries (e.g. redumper, DiscImageCreator):
         /// Gatekeeper shows "cannot be opened" and on Apple Silicon the kernel kills unsigned
         /// Mach-O binaries outright. To make the bundled tools usable without the user running
-        /// terminal commands, on first launch we strip the quarantine flag and apply an ad-hoc
-        /// code signature to every Mach-O file under the sibling "Programs" folder.
+        /// terminal commands, on every launch we strip the quarantine flag from, and ad-hoc
+        /// code-sign, every Mach-O file under the sibling "Programs" folder (and add the
+        /// @executable_path/lib rpath for tools that ship their dylibs in a sibling "lib"). Work
+        /// is skipped when a binary is already signed / already has the rpath, so re-launches are
+        /// cheap. Best effort: it degrades gracefully if codesign/xattr/install_name_tool/otool
+        /// are unavailable (e.g. no Xcode Command Line Tools).
         /// </summary>
         private static void PrepareExternalTools()
         {
@@ -68,37 +72,66 @@ namespace MPF.UI.Avalonia
                     return;
 
                 // Remove the download quarantine flag from the whole tree (best effort).
-                RunQuiet("/usr/bin/xattr", "-dr", "com.apple.quarantine", programsDir);
+                Run("/usr/bin/xattr", out _, "-dr", "com.apple.quarantine", programsDir);
 
                 foreach (string file in Directory.EnumerateFiles(programsDir, "*", SearchOption.AllDirectories))
                 {
-                    if (!IsMachO(file))
-                        continue;
+                    // Isolate per-file failures so one bad file doesn't abort the rest.
+                    try
+                    {
+                        if (!IsMachO(file))
+                            continue;
 
-                    // Some tools (e.g. redumper) bundle their dylibs in a sibling "lib" folder but
-                    // only carry an rpath pointing elsewhere, so dyld can't find them. Add an
-                    // @executable_path/lib rpath for executables that have such a folder.
-                    string? dir = Path.GetDirectoryName(file);
-                    bool isDylib = file.EndsWith(".dylib", StringComparison.OrdinalIgnoreCase);
-                    if (!isDylib && dir != null && Directory.Exists(Path.Combine(dir, "lib")))
-                        RunQuiet("/usr/bin/install_name_tool", "-add_rpath", "@executable_path/lib", file);
+                        bool modified = false;
 
-                    // (Re-)apply an ad-hoc signature LAST: install_name_tool invalidates it, and a
-                    // signed-only OS (Apple Silicon) refuses to run unsigned Mach-O binaries.
-                    RunQuiet("/usr/bin/codesign", "--force", "--sign", "-", file);
+                        // Some tools (e.g. redumper) bundle their dylibs in a sibling "lib" folder
+                        // but only carry an rpath pointing elsewhere, so dyld can't find them. Add
+                        // an @executable_path/lib rpath for executables that have such a folder and
+                        // don't already have it (avoids a duplicate-rpath error on re-launch).
+                        string? dir = Path.GetDirectoryName(file);
+                        bool isDylib = file.EndsWith(".dylib", StringComparison.OrdinalIgnoreCase);
+                        if (!isDylib && dir != null && Directory.Exists(Path.Combine(dir, "lib")) && !HasExecutablePathLibRpath(file))
+                        {
+                            Run("/usr/bin/install_name_tool", out _, "-add_rpath", "@executable_path/lib", file);
+                            modified = true;
+                        }
+
+                        // Ad-hoc sign if we changed the binary (install_name_tool invalidates the
+                        // signature) or if it isn't validly signed yet. Skipping already-signed,
+                        // unchanged binaries avoids rewriting them on every launch.
+                        if (modified || !IsValidlySigned(file))
+                            Run("/usr/bin/codesign", out _, "--force", "--sign", "-", file);
+                    }
+                    catch
+                    {
+                        // Ignore this file and continue with the rest.
+                    }
                 }
             }
             catch
             {
-                // Best effort: if codesign/xattr are unavailable, fall back to the OS prompt.
+                // Best effort: if the directory can't be enumerated, fall back to OS behavior.
             }
         }
+
+        /// <summary>True if the Mach-O already has an @executable_path/lib LC_RPATH.</summary>
+        private static bool HasExecutablePathLibRpath(string file)
+            => Run("/usr/bin/otool", out string output, "-l", file) == 0
+               && output.Contains("@executable_path/lib");
+
+        /// <summary>True if the file carries a valid (incl. ad-hoc) code signature.</summary>
+        private static bool IsValidlySigned(string file)
+            => Run("/usr/bin/codesign", out _, "--verify", file) == 0;
 
         /// <summary>
         /// Returns true if the file begins with a Mach-O / universal-binary magic number.
         /// </summary>
         private static bool IsMachO(string path)
         {
+            // Java .class files share the 0xCAFEBABE magic with fat Mach-O binaries; skip them.
+            if (path.EndsWith(".class", StringComparison.OrdinalIgnoreCase))
+                return false;
+
             try
             {
                 using var fs = File.OpenRead(path);
@@ -121,10 +154,13 @@ namespace MPF.UI.Avalonia
         }
 
         /// <summary>
-        /// Runs a process, discarding output and ignoring failures.
+        /// Runs a process, capturing stdout, and returns its exit code (-1 on failure).
+        /// Only stdout is redirected (and fully drained before waiting) to avoid a pipe-buffer
+        /// deadlock; stderr is left to the (absent) console.
         /// </summary>
-        private static void RunQuiet(string fileName, params string[] arguments)
+        private static int Run(string fileName, out string output, params string[] arguments)
         {
+            output = string.Empty;
             try
             {
                 var psi = new ProcessStartInfo
@@ -132,18 +168,24 @@ namespace MPF.UI.Avalonia
                     FileName = fileName,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
-                    RedirectStandardError = true,
+                    RedirectStandardError = false,
                     CreateNoWindow = true,
                 };
                 foreach (string arg in arguments)
                     psi.ArgumentList.Add(arg);
 
                 using var proc = Process.Start(psi);
-                proc?.WaitForExit(15000);
+                if (proc is null)
+                    return -1;
+
+                output = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit(15000);
+                return proc.HasExited ? proc.ExitCode : -1;
             }
             catch
             {
-                // Ignore: tool missing or not permitted.
+                // Tool missing or not permitted.
+                return -1;
             }
         }
 
