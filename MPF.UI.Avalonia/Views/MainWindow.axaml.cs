@@ -287,8 +287,33 @@ namespace MPF.UI.Avalonia.Views
         /// <remarks>This implements <see cref="ProcessUserInfoDelegate"/> (synchronous, ref param).</remarks>
         public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
-            // TODO(Task 10): show the real MediaInformationWindow modally and populate submissionInfo.
-            return null;
+            // ProcessUserInfoDelegate is synchronous and uses a ref param, but it is invoked from
+            // a background (dumping) thread. Bridge to the UI thread and block the caller. A ref
+            // cannot be captured in a lambda, so copy the value in and out.
+            var opts = options ?? new Options();
+            var info = submissionInfo;
+            var (result, updated) = global::Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                if (opts.Processing?.ShowDiscEjectReminder == true)
+                {
+                    await MessageBoxWindow.ShowAsync(this,
+                        FindResourceString("EjectTitleString"),
+                        FindResourceString("EjectMessageString"),
+                        MessageBoxButtons.Ok);
+                }
+
+                var win = new MediaInformationWindow(opts, info);
+                bool? r = await win.ShowDialog<bool?>(this);
+
+                SubmissionInfo? outInfo = info;
+                if (r == true)
+                    outInfo = win.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+
+                return (r, outInfo);
+            }).GetAwaiter().GetResult();
+
+            submissionInfo = updated;
+            return result;
         }
 
         /// <summary>
