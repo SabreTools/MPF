@@ -570,7 +570,8 @@ namespace MPF.UI.Avalonia.Views
                 + $"{Environment.NewLine}{FindResourceString("AboutLine3String")}"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{FindResourceString("AboutThanksString")}"
-                + $"{Environment.NewLine}macOS / cross-platform UI: Knutwurst (https://github.com/knutwurst)"
+                + $"{Environment.NewLine}macOS / cross-platform UI by Knutwurst"
+                + $"{Environment.NewLine}https://github.com/knutwurst/MPF"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}{FindResourceString("VersionLabelString")} {FrontendTool.GetCurrentVersion()}";
             MainViewModel.LogAboutText(aboutText);
