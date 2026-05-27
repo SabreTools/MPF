@@ -16,6 +16,12 @@ namespace MPF.UI.Avalonia.Controls
         /// </summary>
         private const int MaxInlineCount = 5000;
 
+        /// <summary>
+        /// The run currently holding an in-progress (carriage-return) output line, so it can be
+        /// overwritten in place instead of appending a new line for every progress update.
+        /// </summary>
+        private Run? _currentProgramRun;
+
         public LogOutput()
         {
             InitializeComponent();
@@ -51,6 +57,45 @@ namespace MPF.UI.Avalonia.Controls
 
                 var run = logLine.GenerateRun();
                 inlines.Add(run);
+
+                while (inlines.Count > MaxInlineCount)
+                    inlines.RemoveAt(0);
+
+                ScrollToBottom();
+            });
+        }
+
+        /// <summary>
+        /// Append output from an internal dumping program. Carriage-return progress updates
+        /// (<paramref name="transient"/> = true) overwrite the current line in place; committed
+        /// lines start a fresh line. Safe to call from any thread.
+        /// </summary>
+        /// <param name="text">Line text (without terminator)</param>
+        /// <param name="transient">True for an in-place progress update, false for a committed line</param>
+        public void AppendProgramOutput(string text, bool transient)
+        {
+            if (text is null)
+                return;
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                var inlines = Output.Inlines;
+                if (inlines is null)
+                    return;
+
+                if (_currentProgramRun is not null && inlines.Contains(_currentProgramRun))
+                {
+                    // Overwrite the line currently being built
+                    _currentProgramRun.Text = transient ? text : text + "\n";
+                    if (!transient)
+                        _currentProgramRun = null;
+                }
+                else
+                {
+                    var run = new Run { Text = transient ? text : text + "\n", Foreground = Brushes.White };
+                    inlines.Add(run);
+                    _currentProgramRun = transient ? run : null;
+                }
 
                 while (inlines.Count > MaxInlineCount)
                     inlines.RemoveAt(0);

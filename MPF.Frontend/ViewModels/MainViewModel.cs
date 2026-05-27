@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
+using MPF.ExecutionContexts;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.IO;
@@ -43,6 +44,13 @@ namespace MPF.Frontend.ViewModels
         /// Action to process logging statements
         /// </summary>
         private Action<LogLevel, string>? _logger;
+
+        /// <summary>
+        /// Optional sink for the dumping program's live output. When a frontend sets this, the
+        /// internal tool's stdout/stderr is captured and forwarded here (with a flag marking
+        /// carriage-return progress updates) instead of opening a separate console window.
+        /// </summary>
+        public ProgramOutputHandler? ProgramOutputSink { get; set; }
 
         /// <summary>
         /// Display a message to a user
@@ -1254,8 +1262,10 @@ namespace MPF.Frontend.ViewModels
                 CurrentSystem,
                 CurrentProgram);
 
-            // Surface the dumping program's live stdout/stderr in the UI log
-            env.ProgramOutputReceived = line => _logger?.Invoke(LogLevel.USER_GENERIC, line);
+            // Surface the dumping program's live stdout/stderr in the UI log. Opt-in per frontend:
+            // a frontend that wants in-app output sets ProgramOutputSink; otherwise the tool keeps
+            // its legacy behavior (e.g. a console window on Windows).
+            env.ProgramOutputReceived = ProgramOutputSink;
 
             env.SetExecutionContext(CurrentMediaType, Parameters);
             env.SetProcessor();

@@ -2,11 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.ExecutionContexts
 {
+    /// <summary>
+    /// Handler for a single chunk of internal-program output.
+    /// </summary>
+    /// <param name="line">The text of the current output line (without its terminator)</param>
+    /// <param name="transient">
+    /// True if the chunk was terminated by a carriage return (an in-place progress update that the
+    /// next chunk should overwrite); false if terminated by a newline (a committed line).
+    /// </param>
+    public delegate void ProgramOutputHandler(string line, bool transient);
+
     public abstract class BaseExecutionContext
     {
         #region Generic Dumping Information
@@ -191,11 +203,11 @@ namespace MPF.ExecutionContexts
         #region Execution
 
         /// <summary>
-        /// Optional handler invoked with each line the internal program writes to stdout/stderr.
+        /// Optional handler invoked with each chunk the internal program writes to stdout/stderr.
         /// When set, the program's output is captured and forwarded here (and it runs without its
         /// own console window); when null, the program runs with its normal console window (default).
         /// </summary>
-        public Action<string>? OutputReceived { get; set; }
+        public ProgramOutputHandler? OutputReceived { get; set; }
 
         /// <summary>
         /// Run internal program
@@ -220,22 +232,72 @@ namespace MPF.ExecutionContexts
             // Create the new process
             process = new Process() { StartInfo = startInfo };
 
-            // Forward captured output line-by-line to the handler
-            if (capture)
-            {
-                process.OutputDataReceived += (_, e) => { if (e.Data is not null) OutputReceived!(e.Data); };
-                process.ErrorDataReceived += (_, e) => { if (e.Data is not null) OutputReceived!(e.Data); };
-            }
-
             // Start the process
             process.Start();
+
             if (capture)
             {
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                // Read both streams raw (char-by-char) on their own threads so carriage-return
+                // progress updates are forwarded live; reading both avoids a full-buffer deadlock.
+                var outThread = new Thread(() => PumpStream(process.StandardOutput)) { IsBackground = true };
+                var errThread = new Thread(() => PumpStream(process.StandardError)) { IsBackground = true };
+                outThread.Start();
+                errThread.Start();
+                process.WaitForExit();
+                outThread.Join();
+                errThread.Join();
             }
-            process.WaitForExit();
+            else
+            {
+                process.WaitForExit();
+            }
+
             process.Close();
+        }
+
+        /// <summary>
+        /// Read a redirected stream and forward it line-by-line to <see cref="OutputReceived"/>,
+        /// distinguishing carriage-return progress updates ('\r') from committed lines ('\n').
+        /// </summary>
+        private void PumpStream(System.IO.TextReader reader)
+        {
+            var handler = OutputReceived;
+            if (handler is null)
+                return;
+
+            var sb = new StringBuilder();
+            int ci;
+            while ((ci = reader.Read()) != -1)
+            {
+                char c = (char)ci;
+                if (c == '\n')
+                {
+                    handler(sb.ToString(), false);
+                    sb.Length = 0;
+                }
+                else if (c == '\r')
+                {
+                    // Treat "\r\n" as a single committed line; a bare "\r" is a progress update.
+                    if (reader.Peek() == '\n')
+                    {
+                        reader.Read();
+                        handler(sb.ToString(), false);
+                    }
+                    else
+                    {
+                        handler(sb.ToString(), true);
+                    }
+                    sb.Length = 0;
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+
+            // Flush any trailing text without a terminator
+            if (sb.Length > 0)
+                handler(sb.ToString(), false);
         }
 
         /// <summary>

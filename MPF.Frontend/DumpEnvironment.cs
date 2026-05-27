@@ -47,7 +47,7 @@ namespace MPF.Frontend
         /// When set, it is applied to the execution context so callers (e.g. the GUI log) can
         /// display the program's output instead of relying on a separate console window.
         /// </summary>
-        public Action<string>? ProgramOutputReceived { get; set; }
+        public ProgramOutputHandler? ProgramOutputReceived { get; set; }
 
         /// <summary>
         /// Currently selected dumping program

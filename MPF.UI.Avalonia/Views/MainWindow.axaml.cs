@@ -84,6 +84,9 @@ namespace MPF.UI.Avalonia.Views
 
             MainViewModel.Init(LogOutput.EnqueueLog, _dialogService.DisplayUserMessage, ShowMediaInformationWindow);
 
+            // Stream the dumping program's live output (incl. carriage-return progress) into the log
+            MainViewModel.ProgramOutputSink = LogOutput.AppendProgramOutput;
+
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>
             {
