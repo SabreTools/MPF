@@ -1,0 +1,6 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="MPF.UI.Avalonia.Views.MainWindow"
+        Title="MPF" Width="800" Height="600">
+    <TextBlock Text="MPF Avalonia — skeleton" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+</Window>
