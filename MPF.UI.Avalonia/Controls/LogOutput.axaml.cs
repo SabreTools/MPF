@@ -18,15 +18,7 @@ namespace MPF.UI.Avalonia.Controls
 
         public LogOutput()
         {
-            AvaloniaXamlLoader.Load(this);
-
-            // NOTE: AvaloniaXamlLoader.Load(this) does not populate the compiler-generated
-            // typed name fields for a UserControl loaded this way (unlike the generated
-            // InitializeComponent path), so resolve the named controls explicitly here.
-            ClearButton = this.GetControl<Button>("ClearButton");
-            SaveButton = this.GetControl<Button>("SaveButton");
-            Output = this.GetControl<SelectableTextBlock>("Output");
-            OutputViewer = this.GetControl<ScrollViewer>("OutputViewer");
+            InitializeComponent();
 
             ClearButton.Click += OnClearButton;
             SaveButton.Click += OnSaveButton;

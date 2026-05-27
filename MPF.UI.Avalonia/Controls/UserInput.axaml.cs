@@ -119,7 +119,7 @@ namespace MPF.UI.Avalonia.Controls
 
         public UserInput()
         {
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
         }
     }
 }

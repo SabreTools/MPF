@@ -37,14 +37,7 @@ namespace MPF.UI.Avalonia.Views
         /// </summary>
         public MainWindow()
         {
-            AvaloniaXamlLoader.Load(this);
-
-            // NOTE: AvaloniaXamlLoader.Load(this) does not populate the compiler-generated
-            // typed name fields, so resolve the named controls referenced from code-behind here.
-            DebugViewMenuItem = this.GetControl<MenuItem>("DebugViewMenuItem");
-            SystemMediaTypeLabel = this.GetControl<TextBlock>("SystemMediaTypeLabel");
-            MediaTypeComboBox = this.GetControl<ComboBox>("MediaTypeComboBox");
-            LogOutput = this.GetControl<Controls.LogOutput>("LogOutput");
+            InitializeComponent();
 
             MainViewModel = new MainViewModel();
             DataContext = MainViewModel;

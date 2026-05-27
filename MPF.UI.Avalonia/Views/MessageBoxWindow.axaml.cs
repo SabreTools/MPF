@@ -28,7 +28,7 @@ namespace MPF.UI.Avalonia.Views
 
         public MessageBoxWindow()
         {
-            AvaloniaXamlLoader.Load(this);
+            InitializeComponent();
         }
 
         /// <summary>
