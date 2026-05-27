@@ -61,18 +61,18 @@
                           Background="{DynamicResource WindowBrush}"
                           Foreground="{DynamicResource WindowTextBrush}">
                         <MenuItem x:Name="LanguagesMenuItem" Header="{DynamicResource LanguageMenuString}">
-                            <MenuItem x:Name="EnglishMenuItem" Header="English" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="SpanishMenuItem" Header="Español" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="FrenchMenuItem" Header="Français" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="PolishMenuItem" Header="Polski" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="PortugueseMenuItem" Header="Português" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="RussianMenuItem" Header="Русский" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" Width="120" Click="LanguageMenuItemClick" />
-                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" Width="120" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="EnglishMenuItem" Header="English" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="GermanMenuItem" Header="Deutsch" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="SpanishMenuItem" Header="Español" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="FrenchMenuItem" Header="Français" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="ItalianMenuItem" Header="Italiano" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="JapaneseMenuItem" Header="日本語" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="KoreanMenuItem" Header="한국어" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="PolishMenuItem" Header="Polski" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="PortugueseMenuItem" Header="Português" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="RussianMenuItem" Header="Русский" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="SwedishMenuItem" Header="Svenska" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
+                            <MenuItem x:Name="UkrainianMenuItem" Header="Українська" Width="120" IsCheckable="True" Click="LanguageMenuItemClick" />
                         </MenuItem>
                     </Menu>
 

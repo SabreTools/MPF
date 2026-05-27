@@ -20,8 +20,9 @@ namespace MPF.UI.Avalonia.Services
     /// KNOWN CAVEAT: if <c>DisplayUserMessage</c> is ever called from the UI thread itself,
     /// <c>.GetAwaiter().GetResult()</c> will deadlock because the UI thread is blocked waiting
     /// for a task that must itself run on the UI thread. This scenario does not arise in the
-    /// current call path (all invocations from MainViewModel happen during a dump, i.e. from
-    /// a background thread). This should be revisited when MainWindow is wired up (Task 8).
+    /// current call path: all invocations from MainViewModel happen during a dump, i.e. from
+    /// a background thread (verified when MainWindow was wired up). Any future caller that
+    /// invokes this on the UI thread must use an async path instead.
     /// </para>
     /// </remarks>
     public sealed class DialogService(Func<Window?> ownerProvider)
