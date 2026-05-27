@@ -333,13 +333,19 @@ namespace MPF.UI.Avalonia.Views
         }
 
         /// <summary>
-        /// Show the Create IRD window
+        /// Show the Create IRD window.
+        /// Mirrors WPF behavior: hide MainWindow while CreateIRD is open, re-show when it closes.
         /// </summary>
-        public async void ShowCreateIRDWindow()
+        public void ShowCreateIRDWindow()
         {
-            // TODO(Task 12): construct and show the real CreateIRDWindow.
-            await MessageBoxWindow.ShowAsync(this, FindResourceString("CreatePS3IRDDumpMenuItemString"),
-                "This window is not yet available in the macOS UI.", MessageBoxButtons.Ok);
+            Hide();
+            var win = new CreateIRDWindow(this);
+            win.Closed += (_, _) =>
+            {
+                Show();
+                Activate();
+            };
+            win.Show();
         }
 
         /// <summary>
