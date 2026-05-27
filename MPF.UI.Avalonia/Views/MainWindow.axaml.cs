@@ -312,13 +312,60 @@ namespace MPF.UI.Avalonia.Views
         }
 
         /// <summary>
-        /// Show the Options window
+        /// Show the Options window modally and apply any saved changes.
+        /// Replaces WPF's non-modal Show() + Closed event approach with modal ShowDialog.
         /// </summary>
         public async void ShowOptionsWindow(string? title = null)
         {
-            // TODO(Task 9): construct and show the real OptionsWindow, then call OnOptionsUpdated.
-            await MessageBoxWindow.ShowAsync(this, title ?? FindResourceString("OptionsTitleString"),
-                "This window is not yet available in the macOS UI.", MessageBoxButtons.Ok);
+            var optionsWindow = new OptionsWindow(MainViewModel.Options)
+            {
+                Title = title ?? FindResourceString("OptionsTitleString"),
+            };
+
+            await optionsWindow.ShowDialog(this);
+
+            OnOptionsUpdated(optionsWindow);
+        }
+
+        /// <summary>
+        /// Apply changes from a closed OptionsWindow to the MainViewModel.
+        /// Ported from WPF MainWindow.OnOptionsUpdated (formerly wired as a Closed event handler).
+        /// </summary>
+        private void OnOptionsUpdated(OptionsWindow optionsWindow)
+        {
+            var ovm = optionsWindow.OptionsViewModel;
+
+            bool savedSettings = ovm.SavedSettings;
+            var options = ovm.Options;
+
+            // Force a refresh of the output path if the default changed
+            if (MainViewModel.Options.Dumping.DefaultOutputPath != options.Dumping.DefaultOutputPath)
+                MainViewModel.OutputPath = string.Empty;
+
+            // Apply language change when settings were saved
+            if (savedSettings)
+            {
+                var oldDefaultLang = MainViewModel.Options.GUI.DefaultInterfaceLanguage;
+                var newDefaultLang = options.GUI.DefaultInterfaceLanguage;
+                if (oldDefaultLang != newDefaultLang)
+                {
+                    SetInterfaceLanguage(newDefaultLang);
+
+                    // Uncheck all language menu items (no language is "active" from the options)
+                    foreach (var item in LanguagesMenuItem.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                            menuItem.IsChecked = false;
+                    }
+                }
+            }
+
+            // Update and save options, if necessary
+            MainViewModel.UpdateOptions(savedSettings, options);
+
+            // Re-apply theme and media-type visibility
+            ApplyTheme();
+            SetMediaTypeVisibility();
         }
 
         /// <summary>
