@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- populated in later tasks: Resources/Strings.axaml, Styles/Controls.axaml -->
+                <ResourceInclude Source="avares://MPF.Avalonia/Resources/Strings.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
