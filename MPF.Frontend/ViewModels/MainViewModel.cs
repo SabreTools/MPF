@@ -1253,6 +1253,10 @@ namespace MPF.Frontend.ViewModels
                 CurrentDrive,
                 CurrentSystem,
                 CurrentProgram);
+
+            // Surface the dumping program's live stdout/stderr in the UI log
+            env.ProgramOutputReceived = line => _logger?.Invoke(LogLevel.USER_GENERIC, line);
+
             env.SetExecutionContext(CurrentMediaType, Parameters);
             env.SetProcessor();
             return env;

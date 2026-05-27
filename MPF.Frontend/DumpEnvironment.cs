@@ -43,6 +43,13 @@ namespace MPF.Frontend
         private BaseExecutionContext? _executionContext;
 
         /// <summary>
+        /// Optional handler for live stdout/stderr output from the internal dumping program.
+        /// When set, it is applied to the execution context so callers (e.g. the GUI log) can
+        /// display the program's output instead of relying on a separate console window.
+        /// </summary>
+        public Action<string>? ProgramOutputReceived { get; set; }
+
+        /// <summary>
         /// Currently selected dumping program
         /// </summary>
         private readonly InternalProgram _internalProgram;
@@ -233,6 +240,7 @@ namespace MPF.Frontend
             {
                 _executionContext.RedumpSystem = _system;
                 _executionContext.MediaType = mediaType;
+                _executionContext.OutputReceived = ProgramOutputReceived;
 
                 // Set some parameters, if not already set
                 OutputPath ??= _executionContext.OutputPath!;

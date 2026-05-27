@@ -191,26 +191,49 @@ namespace MPF.ExecutionContexts
         #region Execution
 
         /// <summary>
+        /// Optional handler invoked with each line the internal program writes to stdout/stderr.
+        /// When set, the program's output is captured and forwarded here (and it runs without its
+        /// own console window); when null, the program runs with its normal console window (default).
+        /// </summary>
+        public Action<string>? OutputReceived { get; set; }
+
+        /// <summary>
         /// Run internal program
         /// </summary>
         public void ExecuteInternalProgram()
         {
+            // Capture output only when a handler is attached; otherwise keep the legacy behavior
+            // (a visible console window on Windows). Redirection requires UseShellExecute = false.
+            bool capture = OutputReceived is not null;
+
             // Create the start info
             var startInfo = new ProcessStartInfo()
             {
                 FileName = ExecutablePath!,
                 Arguments = GenerateParameters() ?? "",
-                CreateNoWindow = false,
-                UseShellExecute = true,
-                RedirectStandardOutput = false,
-                RedirectStandardError = false,
+                CreateNoWindow = capture,
+                UseShellExecute = !capture,
+                RedirectStandardOutput = capture,
+                RedirectStandardError = capture,
             };
 
             // Create the new process
             process = new Process() { StartInfo = startInfo };
 
+            // Forward captured output line-by-line to the handler
+            if (capture)
+            {
+                process.OutputDataReceived += (_, e) => { if (e.Data is not null) OutputReceived!(e.Data); };
+                process.ErrorDataReceived += (_, e) => { if (e.Data is not null) OutputReceived!(e.Data); };
+            }
+
             // Start the process
             process.Start();
+            if (capture)
+            {
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+            }
             process.WaitForExit();
             process.Close();
         }
