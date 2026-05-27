@@ -105,7 +105,13 @@
                                            Text="{DynamicResource DefaultSystemLabelString}" />
                                 <ComboBox Height="22" Width="200" HorizontalAlignment="Left"
                                           ItemsSource="{Binding Systems}"
-                                          SelectedItem="{Binding Options.Dumping.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                                          SelectedItem="{Binding Options.Dumping.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}">
+                                    <ComboBox.Styles>
+                                        <Style Selector="ComboBoxItem">
+                                            <Setter Property="IsEnabled" Value="{Binding !IsHeader}" />
+                                        </Style>
+                                    </ComboBox.Styles>
+                                </ComboBox>
                             </UniformGrid>
                         </HeaderedContentControl>
 
@@ -563,10 +569,12 @@
                     <Panel />
                     <Button x:Name="AcceptButton" Classes="custom" Height="25" Width="80"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                            IsDefault="True"
                             Content="{DynamicResource AcceptButtonString}"
                             Click="OnAcceptClick" />
                     <Button x:Name="CancelButton" Classes="custom" Height="25" Width="80"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                            IsCancel="True"
                             Content="{DynamicResource CancelButtonString}"
                             Click="OnCancelClick" />
                     <!-- Empty cell for padding -->
