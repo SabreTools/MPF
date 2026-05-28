@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+#if NETCOREAPP
+using System.Runtime.InteropServices;
+#endif
 #if NET462_OR_GREATER || NETCOREAPP
 using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
@@ -33,6 +37,14 @@ namespace MPF.Frontend
         /// Windows drive path
         /// </summary>
         public string? Name { get; private set; } = null;
+
+        /// <summary>
+        /// Platform-native device path to hand to dumping tools.
+        /// On macOS this is the BSD device node (e.g. <c>/dev/disk2</c>) which redumper /
+        /// DiscImageCreator read raw blocks from. On Windows / Linux this is just
+        /// <see cref="Name"/> (drive letter / mount path), which is what the tools accept there.
+        /// </summary>
+        public string? DevicePath { get; private set; } = null;
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
@@ -115,6 +127,7 @@ namespace MPF.Frontend
 
             // Populate the data fields
             Name = driveInfo.Name;
+            DevicePath = driveInfo.Name;
             MarkedActive = driveInfo.IsReady;
             if (MarkedActive)
             {
@@ -132,6 +145,20 @@ namespace MPF.Frontend
                     if (sep >= 0 && sep < trimmed.Length - 1)
                         VolumeLabel = trimmed.Substring(sep + 1);
                 }
+
+#if NETCOREAPP
+                // Dumping tools (redumper, DiscImageCreator) read raw blocks from the BSD device
+                // node (e.g. /dev/disk2), not from the mount path (/Volumes/DVD_ROM). Translate
+                // the mount path via diskutil; if it fails, DevicePath stays the mount path so
+                // callers degrade gracefully. Name is left as the mount path so filesystem-level
+                // detection (Directory.Exists / Path.Combine on disc contents) keeps working.
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && !string.IsNullOrEmpty(Name))
+                {
+                    string? bsdNode = ResolveMacOSBsdDeviceNode(Name!);
+                    if (!string.IsNullOrEmpty(bsdNode))
+                        DevicePath = bsdNode;
+                }
+#endif
             }
             else
             {
@@ -140,6 +167,50 @@ namespace MPF.Frontend
                 VolumeLabel = string.Empty;
             }
         }
+
+#if NETCOREAPP
+        /// <summary>
+        /// On macOS, ask <c>diskutil</c> for the BSD device node backing a mount path.
+        /// Returns the parsed "Device Node:" value (e.g. "/dev/disk2") or null on any failure.
+        /// </summary>
+        private static string? ResolveMacOSBsdDeviceNode(string mountPath)
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "/usr/sbin/diskutil",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true,
+                };
+                psi.ArgumentList.Add("info");
+                psi.ArgumentList.Add(mountPath);
+
+                using var proc = Process.Start(psi);
+                if (proc is null)
+                    return null;
+
+                string output = proc.StandardOutput.ReadToEnd();
+                if (!proc.WaitForExit(5000) || proc.ExitCode != 0)
+                    return null;
+
+                foreach (string line in output.Split('\n'))
+                {
+                    int colon = line.IndexOf(':');
+                    if (colon <= 0) continue;
+                    if (line.Substring(0, colon).Trim() == "Device Node")
+                        return line.Substring(colon + 1).Trim();
+                }
+            }
+            catch
+            {
+                // diskutil missing or not permitted — caller falls back to the mount path.
+            }
+            return null;
+        }
+#endif
 
         #region Public Functionality
 
