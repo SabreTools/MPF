@@ -76,5 +76,13 @@ PLIST
 # verifies cleanly.
 codesign --force --deep --sign - "$APP" 2>/dev/null || true
 
+# Zip the bundle next to the .app so the release-upload step on CI just consumes this artifact.
+# Naming matches the cross-platform zips emitted by publish-nix.sh.
+ZIP_NAME="MPF.UI.Avalonia_macos_${MODE}_release.zip"
+ZIP_PATH="$ROOT/$ZIP_NAME"
+rm -f "$ZIP_PATH"
+( cd "$(dirname "$APP")" && zip -ry "$ZIP_PATH" "$(basename "$APP")" >/dev/null )
+
 echo "Built $APP ($MODE)"
+echo "Zipped $ZIP_PATH"
 file "$APP/Contents/MacOS/MPF.Avalonia"

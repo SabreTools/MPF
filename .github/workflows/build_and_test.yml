@@ -90,11 +90,6 @@ jobs:
             - name: Build universal macOS .app
               run: ./MPF.UI.Avalonia/build-macos-app.sh universal
 
-            - name: Zip the .app bundle
-              run: |
-                  cd MPF.UI.Avalonia/bin
-                  zip -ry "$GITHUB_WORKSPACE/MPF.UI.Avalonia_macos_universal_release.zip" MPF.app
-
             - name: Upload .app to rolling
               uses: ncipollo/release-action@v1.20.0
               with:
