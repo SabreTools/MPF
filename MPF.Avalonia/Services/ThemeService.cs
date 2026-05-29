@@ -10,17 +10,31 @@ using MPF.Frontend;
 
 namespace MPF.Avalonia.Services
 {
+    /// <summary>
+    /// Resolves and applies the active light/dark theme, including custom color overrides
+    /// and platform-specific title bar theming
+    /// </summary>
     internal static class ThemeService
     {
+        /// <summary>
+        /// Update the options' dark mode flag to match the detected system theme
+        /// </summary>
         public static void SyncWithSystemTheme(Options options)
             => options.GUI.Theming.EnableDarkMode = IsSystemDarkMode();
 
+        /// <summary>
+        /// Sync the dark mode flag with the system theme, then apply the resolved theme
+        /// </summary>
         public static void ApplySystemTheme(IResourceDictionary resources, Options options)
         {
             SyncWithSystemTheme(options);
             Apply(resources, options);
         }
 
+        /// <summary>
+        /// Populate the resource dictionary with the brushes for the current theme, honoring any
+        /// custom background and text color overrides, and apply the matching window theme variant
+        /// </summary>
         public static void Apply(IResourceDictionary resources, Options options)
         {
             bool darkMode = options.GUI.Theming.EnableDarkMode;
@@ -81,6 +95,11 @@ namespace MPF.Avalonia.Services
             }
         }
 
+        #region Windows Title Bar
+
+        /// <summary>
+        /// Apply the current application theme variant to the given window's title bar
+        /// </summary>
         public static void ApplyWindowTitleBarTheme(Window window)
         {
             if (global::Avalonia.Application.Current is null)
@@ -89,6 +108,9 @@ namespace MPF.Avalonia.Services
             ApplyWindowTitleBarTheme(window, global::Avalonia.Application.Current.RequestedThemeVariant == ThemeVariant.Dark);
         }
 
+        /// <summary>
+        /// Apply the given dark/light mode to the title bar of every open desktop window
+        /// </summary>
         private static void ApplyWindowsTitleBarTheme(bool darkMode)
         {
             if (!OperatingSystem.IsWindows())
@@ -98,9 +120,15 @@ namespace MPF.Avalonia.Services
                 return;
 
             foreach (Window window in desktop.Windows)
+            {
                 ApplyWindowTitleBarTheme(window, darkMode);
+            }
         }
 
+        /// <summary>
+        /// Toggle the immersive dark mode DWM attribute on the given window's native handle,
+        /// falling back to the pre-20H1 attribute identifier when the newer one is not supported
+        /// </summary>
         private static void ApplyWindowTitleBarTheme(Window window, bool darkMode)
         {
             if (!OperatingSystem.IsWindows())
@@ -115,6 +143,13 @@ namespace MPF.Avalonia.Services
                 _ = DwmSetWindowAttribute(hwnd, DwmWindowAttributeUseImmersiveDarkModeBefore20H1, ref enabled, sizeof(int));
         }
 
+        #endregion
+
+        #region System Theme Detection
+
+        /// <summary>
+        /// Determine whether the system is currently using a dark theme
+        /// </summary>
         private static bool IsSystemDarkMode()
         {
             PlatformThemeVariant? themeVariant = global::Avalonia.Application.Current?
@@ -131,6 +166,10 @@ namespace MPF.Avalonia.Services
             return IsLinuxDarkMode();
         }
 
+        /// <summary>
+        /// Detect a dark theme on Linux by inspecting common GTK/Qt environment variables,
+        /// GNOME color-scheme settings, and the KDE color scheme
+        /// </summary>
         private static bool IsLinuxDarkMode()
             => IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
                 || IsDarkThemeName(Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE"))
@@ -138,6 +177,9 @@ namespace MPF.Avalonia.Services
                 || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme"))
                 || IsKdeColorSchemeDark();
 
+        /// <summary>
+        /// Read the active KDE color scheme (Plasma 6, then Plasma 5) and test it for a dark name
+        /// </summary>
         private static bool IsKdeColorSchemeDark()
         {
             string? colorScheme = RunCommand("kreadconfig6", "--group General --key ColorScheme")
@@ -146,10 +188,16 @@ namespace MPF.Avalonia.Services
             return IsDarkThemeName(colorScheme);
         }
 
+        /// <summary>
+        /// Test whether a theme or color scheme name indicates a dark variant
+        /// </summary>
         private static bool IsDarkThemeName(string? value)
             => value?.IndexOf("dark", StringComparison.OrdinalIgnoreCase) >= 0
                 || value?.IndexOf("prefer-dark", StringComparison.OrdinalIgnoreCase) >= 0;
 
+        /// <summary>
+        /// Run a command line tool and return its trimmed standard output, or null on failure or timeout
+        /// </summary>
         private static string? RunCommand(string fileName, string arguments)
         {
             try
@@ -178,10 +226,16 @@ namespace MPF.Avalonia.Services
             }
         }
 
+        #endregion
+
+        #region Native Interop
+
         private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
         private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
 
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int attributeValue, int attributeSize);
+
+        #endregion
     }
 }

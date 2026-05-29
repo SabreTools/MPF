@@ -12,10 +12,19 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Interaction logic for CheckDumpWindow.axaml
+    /// </summary>
     public partial class CheckDumpWindow : WindowBase
     {
+        /// <summary>
+        /// Parent window used as the dialog owner, if any
+        /// </summary>
         private MainWindow? _parent;
 
+        /// <summary>
+        /// Read-only access to the current check dump view model
+        /// </summary>
         public CheckDumpViewModel CheckDumpViewModel => DataContext as CheckDumpViewModel ?? new CheckDumpViewModel();
 
         public CheckDumpWindow()
@@ -23,11 +32,17 @@ namespace MPF.Avalonia.Windows
             InitializeWindow(null);
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CheckDumpWindow(MainWindow parent)
         {
             InitializeWindow(parent);
         }
 
+        /// <summary>
+        /// Shared initialization for both constructors; sets the view model and wires events once opened
+        /// </summary>
         private void InitializeWindow(MainWindow? parent)
         {
             InitializeComponent();
@@ -36,6 +51,11 @@ namespace MPF.Avalonia.Windows
             Opened += (_, _) => WireEvents();
         }
 
+        #region UI Functionality
+
+        /// <summary>
+        /// Add all event handlers
+        /// </summary>
         private void WireEvents()
         {
             this.FindControl<Button>("CheckDumpButton")!.Click += OnCheckDumpClick;
@@ -46,6 +66,12 @@ namespace MPF.Avalonia.Windows
             this.FindControl<TextBox>("InputPathTextBox")!.TextChanged += InputPathTextBoxTextChanged;
         }
 
+        /// <summary>
+        /// Show the media information window
+        /// </summary>
+        /// <param name="options">Options set to pass to the information window</param>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             var dialogOptions = options ?? CheckDumpViewModel.Options;
@@ -70,6 +96,9 @@ namespace MPF.Avalonia.Windows
             return result;
         }
 
+        /// <summary>
+        /// Browse for an input file path
+        /// </summary>
         private async Task<string?> BrowseFileAsync()
         {
             return await DialogService.OpenFileAsync(this, StringResource("InputPathLabelString", "Input Path"), new List<FilePickerFileType>
@@ -80,6 +109,13 @@ namespace MPF.Avalonia.Windows
             });
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for CheckDumpButton Click event
+        /// </summary>
         private async void OnCheckDumpClick(object? sender, RoutedEventArgs e)
         {
             var result = await CheckDumpViewModel.CheckDump(ShowMediaInformationWindow);
@@ -97,15 +133,24 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
         private void OnCancelClick(object? sender, RoutedEventArgs e)
             => Close(false);
 
+        /// <summary>
+        /// Handler for DumpingProgramComboBox SelectionChanged event
+        /// </summary>
         public void DumpingProgramComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
                 CheckDumpViewModel.ChangeDumpingProgram();
         }
 
+        /// <summary>
+        /// Handler for InputPathBrowseButton Click event
+        /// </summary>
         public async void InputPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? selectedPath = await BrowseFileAsync();
@@ -117,16 +162,24 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for InputPathTextBox TextChanged event
+        /// </summary>
         public void InputPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
         {
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
                 CheckDumpViewModel.ChangeInputPath();
         }
 
+        /// <summary>
+        /// Handler for SystemTypeComboBox SelectionChanged event
+        /// </summary>
         public void SystemTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (CheckDumpViewModel.CanExecuteSelectionChanged)
                 CheckDumpViewModel.ChangeSystem();
         }
+
+        #endregion
     }
 }

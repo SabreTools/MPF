@@ -6,8 +6,14 @@ using Avalonia.Platform.Storage;
 
 namespace MPF.Avalonia.Services
 {
+    /// <summary>
+    /// Wraps the Avalonia storage provider to present open, save, and folder picker dialogs
+    /// </summary>
     internal static class DialogService
     {
+        /// <summary>
+        /// Show an open-file dialog and return the selected file path, if any
+        /// </summary>
         public static async Task<string?> OpenFileAsync(Window owner, string title, IReadOnlyList<FilePickerFileType> fileTypes)
         {
             if (owner.StorageProvider is null)
@@ -23,6 +29,9 @@ namespace MPF.Avalonia.Services
             return files.FirstOrDefault()?.TryGetLocalPath();
         }
 
+        /// <summary>
+        /// Show a folder picker dialog and return the selected folder path, if any
+        /// </summary>
         public static async Task<string?> OpenFolderAsync(Window owner, string title)
         {
             if (owner.StorageProvider is null)
@@ -37,6 +46,9 @@ namespace MPF.Avalonia.Services
             return folders.FirstOrDefault()?.TryGetLocalPath();
         }
 
+        /// <summary>
+        /// Show a save-file dialog and return the chosen file path, if any
+        /// </summary>
         public static async Task<string?> SaveFileAsync(Window owner, string title, string suggestedName, IReadOnlyList<FilePickerFileType> fileTypes)
         {
             if (owner.StorageProvider is null)

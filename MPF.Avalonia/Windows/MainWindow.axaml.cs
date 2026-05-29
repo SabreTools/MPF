@@ -22,16 +22,54 @@ using AvaloniaWindowState = Avalonia.Controls.WindowState;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Interaction logic for MainWindow.axaml
+    /// </summary>
     public partial class MainWindow : WindowBase
     {
+        #region Fields
+
+        /// <summary>
+        /// Extra window height added when the log panel is expanded
+        /// </summary>
         private const double ExpandedLogPanelExtraHeight = 40;
+
+        /// <summary>
+        /// Whether the window may close without prompting the user
+        /// </summary>
         private bool _allowCloseWithoutPrompt;
+
+        /// <summary>
+        /// Whether a close confirmation dialog is currently pending
+        /// </summary>
         private bool _closeConfirmationPending;
+
+        /// <summary>
+        /// Last recorded height of the log panel, used to compute window resizing
+        /// </summary>
         private double _lastLogPanelHeight;
+
+        /// <summary>
+        /// Window height while the log panel is expanded
+        /// </summary>
         private double _expandedWindowHeight;
+
+        /// <summary>
+        /// Window height while the log panel is collapsed
+        /// </summary>
         private double _collapsedWindowHeight;
+
+        /// <summary>
+        /// Whether the log panel resize logic has been initialized
+        /// </summary>
         private bool _logPanelResizeInitialized;
+
+        /// <summary>
+        /// Guard against re-entrancy while normalizing the output path
+        /// </summary>
         private bool _normalizingOutputPath;
+
+        // macOS native menu items, retained so their headers can be updated on language change
         private NativeMenuItem? _nativeFileMenuGroup;
         private NativeMenuItem? _nativeToolsMenuGroup;
         private NativeMenuItem? _nativeHelpMenuGroup;
@@ -44,8 +82,16 @@ namespace MPF.Avalonia.Windows
         private NativeMenuItem? _nativeAboutMenuItem;
         private NativeMenuItem? _nativeCheckForUpdatesMenuItem;
 
+        #endregion
+
+        /// <summary>
+        /// Read-only access to the current main view model
+        /// </summary>
         public MainViewModel MainViewModel => DataContext as MainViewModel ?? new MainViewModel();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -58,6 +104,9 @@ namespace MPF.Avalonia.Windows
             SizeChanged += OnMainWindowSizeChanged;
         }
 
+        /// <summary>
+        /// Handler for the window Opened event; wires up events and performs first-load setup
+        /// </summary>
         private void OnOpened(object? sender, EventArgs e)
         {
             WireEvents();
@@ -80,6 +129,11 @@ namespace MPF.Avalonia.Windows
                 ShowOptionsWindow(StringResource("OptionsFirstRunTitleString", "Welcome to MPF, Explore the Options"));
         }
 
+        #region Platform Chrome and Menus
+
+        /// <summary>
+        /// Configure window decorations and title bar layout for the current operating system
+        /// </summary>
         private void ConfigurePlatformChrome()
         {
             if (OperatingSystem.IsWindows())
@@ -101,6 +155,9 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Border>("RootBorder")!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
         }
 
+        /// <summary>
+        /// Build and assign the macOS native application menu
+        /// </summary>
         private void ConfigurePlatformMenus()
         {
             if (!OperatingSystem.IsMacOS())
@@ -150,17 +207,25 @@ namespace MPF.Avalonia.Windows
             NativeMenu.SetMenu(this, nativeMenu);
         }
 
+        /// <summary>
+        /// Create a native menu group with the given header containing the provided items
+        /// </summary>
         private NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
         {
             var group = new NativeMenuItem { Header = CleanMenuHeader(header) };
             var menu = new NativeMenu();
             foreach (NativeMenuItem item in items)
+            {
                 menu.Add(item);
+            }
 
             group.Menu = menu;
             return group;
         }
 
+        /// <summary>
+        /// Create a native menu item that invokes the given action when clicked
+        /// </summary>
         private static NativeMenuItem CreateNativeMenuItem(string header, Action action)
         {
             var item = new NativeMenuItem { Header = CleanMenuHeader(header) };
@@ -168,18 +233,30 @@ namespace MPF.Avalonia.Windows
             return item;
         }
 
+        /// <summary>
+        /// Strip access-key underscores from a menu header for native display
+        /// </summary>
         private static string CleanMenuHeader(string header)
             => header.Replace("_", string.Empty);
 
+        /// <summary>
+        /// Get the localized header for the native language menu group
+        /// </summary>
         private string NativeLanguageMenuHeader()
             => StringResource("LanguageMenuString", "ENG");
 
+        /// <summary>
+        /// Refresh the native language menu group header
+        /// </summary>
         private void UpdateNativeLanguageMenuHeader()
         {
             if (_nativeLanguageMenuGroup is not null)
                 _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
         }
 
+        /// <summary>
+        /// Refresh all native menu headers to the current interface language
+        /// </summary>
         private void UpdateNativeMenuHeaders()
         {
             if (!OperatingSystem.IsMacOS())
@@ -209,6 +286,9 @@ namespace MPF.Avalonia.Windows
             UpdateNativeLanguageMenuHeader();
         }
 
+        /// <summary>
+        /// Set the current interface language and refresh all localized menu headers
+        /// </summary>
         private void ApplyLanguage(InterfaceLanguage language, bool rebuildNativeMenus)
         {
             StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, language);
@@ -218,6 +298,9 @@ namespace MPF.Avalonia.Windows
             UpdateNativeMenuHeaders();
         }
 
+        /// <summary>
+        /// Refresh the in-window title bar menu headers to the current interface language
+        /// </summary>
         private void UpdateTitleBarMenuHeaders()
         {
             this.FindControl<MenuItem>("FileMenuItem")!.Header = StringResource("FileMenuString", "File");
@@ -226,6 +309,13 @@ namespace MPF.Avalonia.Windows
             this.FindControl<MenuItem>("LanguagesMenuItem")!.Header = StringResource("LanguageMenuString", "ENG");
         }
 
+        #endregion
+
+        #region Title Bar
+
+        /// <summary>
+        /// Handler for the custom title bar pointer press; drags or toggles the window
+        /// </summary>
         private void TitleBarPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             PointerPoint point = e.GetCurrentPoint(this);
@@ -241,17 +331,33 @@ namespace MPF.Avalonia.Windows
             BeginMoveDrag(e);
         }
 
+        /// <summary>
+        /// Handler for the title bar minimize button
+        /// </summary>
         private void MinimizeButtonClick(object? sender, RoutedEventArgs e)
             => WindowState = AvaloniaWindowState.Minimized;
 
+        /// <summary>
+        /// Handler for the title bar close button
+        /// </summary>
         private void CloseButtonClick(object? sender, RoutedEventArgs e)
             => Close();
 
+        /// <summary>
+        /// Toggle the window between maximized and normal states
+        /// </summary>
         private void ToggleWindowState()
             => WindowState = WindowState == AvaloniaWindowState.Maximized
                 ? AvaloniaWindowState.Normal
                 : AvaloniaWindowState.Maximized;
 
+        #endregion
+
+        #region UI Functionality
+
+        /// <summary>
+        /// Add all event handlers
+        /// </summary>
         private void WireEvents()
         {
             this.FindControl<MenuItem>("AboutMenuItem")!.Click += AboutClick;
@@ -286,6 +392,9 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Button>("UpdateVolumeLabel")!.Click += UpdateVolumeLabelClick;
         }
 
+        /// <summary>
+        /// Wire up the log panel so the window resizes when it is expanded or collapsed
+        /// </summary>
         private void WireLogPanelResizing()
         {
             if (_logPanelResizeInitialized)
@@ -342,6 +451,9 @@ namespace MPF.Avalonia.Windows
             };
         }
 
+        /// <summary>
+        /// Handler for the window SizeChanged event; keeps the log console height in sync
+        /// </summary>
         private void OnMainWindowSizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if (!_logPanelResizeInitialized)
@@ -350,6 +462,9 @@ namespace MPF.Avalonia.Windows
             UpdateLogConsoleHeight();
         }
 
+        /// <summary>
+        /// Update the log console height based on the current log panel state
+        /// </summary>
         private void UpdateLogConsoleHeight()
         {
             Expander? logPanel = this.FindControl<Expander>("LogPanel");
@@ -366,6 +481,12 @@ namespace MPF.Avalonia.Windows
             logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
         }
 
+        /// <summary>
+        /// Show the media information window
+        /// </summary>
+        /// <param name="options">Options set to pass to the information window</param>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
         private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             var dialogOptions = options ?? MainViewModel.Options;
@@ -410,6 +531,9 @@ namespace MPF.Avalonia.Windows
             return result;
         }
 
+        /// <summary>
+        /// Browse for an output file path
+        /// </summary>
         private async Task<string?> BrowseOutputFileAsync()
         {
             string currentPath = MainViewModel.OutputPath;
@@ -435,12 +559,18 @@ namespace MPF.Avalonia.Windows
                 });
         }
 
+        /// <summary>
+        /// Handler for MainViewModel property changes; normalizes the output path on macOS
+        /// </summary>
         private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MPF.Frontend.ViewModels.MainViewModel.OutputPath))
                 NormalizeMacOutputPath();
         }
 
+        /// <summary>
+        /// Remove the generated /Volumes/ prefix from the output path on macOS
+        /// </summary>
         private void NormalizeMacOutputPath()
         {
             if (_normalizingOutputPath || !OperatingSystem.IsMacOS())
@@ -461,6 +591,9 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Strip the sanitized "_Volumes_" prefix that can leak into generated output paths
+        /// </summary>
         private static string RemoveMacVolumesPrefix(string outputPath)
         {
             const string generatedVolumesPrefix = "_Volumes_";
@@ -477,6 +610,9 @@ namespace MPF.Avalonia.Windows
                 .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Ask to confirm quitting, when an operation is running
+        /// </summary>
         public void MainWindowClosing(object? sender, WindowClosingEventArgs e)
         {
             if (_allowCloseWithoutPrompt)
@@ -490,6 +626,9 @@ namespace MPF.Avalonia.Windows
                 _ = ConfirmCloseAsync();
         }
 
+        /// <summary>
+        /// Prompt the user to confirm closing while a dump may still be running
+        /// </summary>
         private async Task ConfirmCloseAsync()
         {
             _closeConfirmationPending = true;
@@ -510,18 +649,27 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Show the Check Dump window
+        /// </summary>
         public void ShowCheckDumpWindow()
         {
             var window = new CheckDumpWindow(this) { WindowStartupLocation = WindowStartupLocation.CenterOwner };
             _ = window.ShowDialog(this);
         }
 
+        /// <summary>
+        /// Show the Create IRD window
+        /// </summary>
         public void ShowCreateIRDWindow()
         {
             var window = new CreateIRDWindow(this) { WindowStartupLocation = WindowStartupLocation.CenterOwner };
             _ = window.ShowDialog(this);
         }
 
+        /// <summary>
+        /// Show the Options window
+        /// </summary>
         public async void ShowOptionsWindow(string? title = null)
         {
             var window = new OptionsWindow(MainViewModel.Options)
@@ -542,11 +690,17 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Set media type combo box visibility based on current program
+        /// </summary>
         public void SetMediaTypeVisibility()
         {
             this.FindControl<ComboBox>("MediaTypeComboBox")!.IsVisible = MainViewModel.CurrentProgram == InternalProgram.DiscImageCreator;
         }
 
+        /// <summary>
+        /// Build the about text
+        /// </summary>
         private string CreateAboutText()
         {
             string version = typeof(MainWindow).Assembly.GetName().Version?.ToString() ?? "Unknown";
@@ -557,30 +711,55 @@ namespace MPF.Avalonia.Windows
                 + $"{StringResource("VersionLabelString", "Version")}: {version}";
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for AboutMenuItem Click event
+        /// </summary>
         public void AboutClick(object? sender, RoutedEventArgs e)
             => _ = MessageBoxWindow.ShowAsync(this, StringResource("AboutTitleString", "About"), CreateAboutText(), 1, false);
 
+        /// <summary>
+        /// Handler for AppExitMenuItem Click event
+        /// </summary>
         public void AppExitClick(object? sender, RoutedEventArgs e)
             => Close();
 
+        /// <summary>
+        /// Handler for CheckDumpMenuItem Click event
+        /// </summary>
         public void CheckDumpMenuItemClick(object? sender, RoutedEventArgs e)
             => ShowCheckDumpWindow();
 
+        /// <summary>
+        /// Handler for CreateIRDMenuItem Click event
+        /// </summary>
         public void CreateIRDMenuItemClick(object? sender, RoutedEventArgs e)
             => ShowCreateIRDWindow();
 
+        /// <summary>
+        /// Handler for CheckForUpdatesMenuItem Click event
+        /// </summary>
         public void CheckForUpdatesClick(object? sender, RoutedEventArgs e)
         {
             MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
             _ = MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
         }
 
+        /// <summary>
+        /// Build a dummy SubmissionInfo and display it for testing
+        /// </summary>
         public void ShowDebugDiscInfoWindow()
         {
             SubmissionInfo? submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
             _ = ShowDebugDiscInfoWindowAsync(submissionInfo);
         }
 
+        /// <summary>
+        /// Show the debug submission info in the media information window and process the result
+        /// </summary>
         private async Task ShowDebugDiscInfoWindowAsync(SubmissionInfo submissionInfo)
         {
             var window = new MediaInformationWindow(MainViewModel.Options, submissionInfo, showPcMacHybridAlways: true)
@@ -595,12 +774,21 @@ namespace MPF.Avalonia.Windows
             Formatter.ProcessSpecialFields(submissionInfo);
         }
 
+        /// <summary>
+        /// Handler for DebugViewMenuItem Click event
+        /// </summary>
         public void DebugViewClick(object? sender, RoutedEventArgs e)
             => ShowDebugDiscInfoWindow();
 
+        /// <summary>
+        /// Handler for OptionsMenuItem Click event
+        /// </summary>
         public void OptionsMenuItemClick(object? sender, RoutedEventArgs e)
             => ShowOptionsWindow();
 
+        /// <summary>
+        /// Change UI language
+        /// </summary>
         private void LanguageMenuItemClick(object? sender, RoutedEventArgs e)
         {
             if (sender is not MenuItem menuItem)
@@ -627,6 +815,9 @@ namespace MPF.Avalonia.Windows
             ApplyLanguage(language, rebuildNativeMenus: true);
         }
 
+        /// <summary>
+        /// Handler for CopyProtectScanButton Click event
+        /// </summary>
         public async void CopyProtectScanButtonClick(object? sender, RoutedEventArgs e)
         {
             string? output = await MainViewModel.ScanAndShowProtection();
@@ -638,6 +829,9 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for DriveLetterComboBox SelectionChanged event
+        /// </summary>
         public void DriveLetterComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
@@ -647,12 +841,18 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for DriveSpeedComboBox SelectionChanged event
+        /// </summary>
         public void DriveSpeedComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
                 MainViewModel.EnsureMediaInformation();
         }
 
+        /// <summary>
+        /// Handler for DumpingProgramComboBox SelectionChanged event
+        /// </summary>
         public void DumpingProgramComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
@@ -662,24 +862,36 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for EnableParametersCheckBox Click event
+        /// </summary>
         public void EnableParametersCheckBoxClick(object? sender, RoutedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
                 MainViewModel.ToggleParameters();
         }
 
+        /// <summary>
+        /// Handler for MediaScanButton Click event
+        /// </summary>
         public void MediaScanButtonClick(object? sender, RoutedEventArgs e)
         {
             MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
             SetMediaTypeVisibility();
         }
 
+        /// <summary>
+        /// Handler for MediaTypeComboBox SelectionChanged event
+        /// </summary>
         public void MediaTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
                 MainViewModel.ChangeMediaType(e.RemovedItems, e.AddedItems);
         }
 
+        /// <summary>
+        /// Handler for OutputPathBrowseButton Click event
+        /// </summary>
         public async void OutputPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? selectedPath = await BrowseOutputFileAsync();
@@ -690,12 +902,18 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for OutputPathTextBox TextChanged event
+        /// </summary>
         public void OutputPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
                 MainViewModel.EnsureMediaInformation();
         }
 
+        /// <summary>
+        /// Handler for StartStopButton Click event
+        /// </summary>
         public void StartStopButtonClick(object? sender, RoutedEventArgs e)
         {
             EnsureOutputPathIsFilePath();
@@ -703,6 +921,9 @@ namespace MPF.Avalonia.Windows
             MainViewModel.ToggleStartStop();
         }
 
+        /// <summary>
+        /// Ensure the output path points to a file rather than a directory
+        /// </summary>
         private void EnsureOutputPathIsFilePath()
         {
             string outputPath = MainViewModel.OutputPath;
@@ -726,6 +947,9 @@ namespace MPF.Avalonia.Windows
             MainViewModel.EnsureMediaInformation();
         }
 
+        /// <summary>
+        /// Strip the macOS drive argument from Redumper parameters, which are not used on macOS
+        /// </summary>
         private void PrepareMacRedumperParameters()
         {
             if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
@@ -745,6 +969,9 @@ namespace MPF.Avalonia.Windows
             MainViewModel.Parameters = parameters.Trim();
         }
 
+        /// <summary>
+        /// Handler for SystemTypeComboBox SelectionChanged event
+        /// </summary>
         public void SystemTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
@@ -754,6 +981,9 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for UpdateVolumeLabel Click event
+        /// </summary>
         public void UpdateVolumeLabelClick(object? sender, RoutedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
@@ -764,5 +994,7 @@ namespace MPF.Avalonia.Windows
                     MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
             }
         }
+
+        #endregion
     }
 }

@@ -9,6 +9,9 @@ using MPF.Avalonia.Services;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Base window that applies shared chrome and platform layout and exposes user message helpers
+    /// </summary>
     public class WindowBase : Window
     {
         public WindowBase()
@@ -20,6 +23,9 @@ namespace MPF.Avalonia.Windows
             };
         }
 
+        /// <summary>
+        /// Apply non-Windows layout tweaks, nudging tab controls down to clear the title bar
+        /// </summary>
         private void ApplyPlatformLayout()
         {
             if (OperatingSystem.IsWindows())
@@ -32,9 +38,20 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Look up a localized string resource by key, falling back to the given default
+        /// </summary>
         protected string StringResource(string key, string fallback)
             => global::Avalonia.Application.Current?.TryFindResource(key, out object? value) == true ? value?.ToString() ?? fallback : fallback;
 
+        /// <summary>
+        /// Display a user message using a MessageBoxWindow
+        /// </summary>
+        /// <param name="title">Title to display to the user</param>
+        /// <param name="message">Message to display to the user</param>
+        /// <param name="optionCount">Number of options to display</param>
+        /// <param name="flag">true for inquiry, false otherwise</param>
+        /// <returns>true for positive, false for negative, null for neutral</returns>
         protected async Task<bool?> DisplayUserMessageAsync(string title, string message, int optionCount, bool flag)
         {
             if (Dispatcher.UIThread.CheckAccess())
@@ -43,6 +60,14 @@ namespace MPF.Avalonia.Windows
             return await Dispatcher.UIThread.InvokeAsync(() => MessageBoxWindow.ShowAsyncResult(this, title, message, optionCount, flag));
         }
 
+        /// <summary>
+        /// Display a user message using a MessageBoxWindow, blocking until the dialog is dismissed
+        /// </summary>
+        /// <param name="title">Title to display to the user</param>
+        /// <param name="message">Message to display to the user</param>
+        /// <param name="optionCount">Number of options to display</param>
+        /// <param name="flag">true for inquiry, false otherwise</param>
+        /// <returns>true for positive, false for negative, null for neutral</returns>
         protected bool? DisplayUserMessage(string title, string message, int optionCount, bool flag)
         {
             if (Dispatcher.UIThread.CheckAccess())

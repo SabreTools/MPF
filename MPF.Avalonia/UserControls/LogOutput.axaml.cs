@@ -13,9 +13,19 @@ namespace MPF.Avalonia.UserControls
 {
     public partial class LogOutput : UserControl
     {
+        /// <summary>
+        /// Default height of the console surface
+        /// </summary>
         public const double DefaultConsoleHeight = 180;
+
+        /// <summary>
+        /// Maximum number of entries before trimming
+        /// </summary>
         private const int MaxEntryCount = 5000;
 
+        /// <summary>
+        /// Collection of log entries bound to the output list
+        /// </summary>
         public ObservableCollection<LogEntry> Entries { get; } = [];
 
         public LogOutput()
@@ -23,10 +33,18 @@ namespace MPF.Avalonia.UserControls
             InitializeComponent();
             DataContext = this;
 
+            // Add handlers
             this.FindControl<Button>("ClearButton")!.Click += OnClearButton;
             this.FindControl<Button>("SaveButton")!.Click += OnSaveButton;
         }
 
+        #region Logging
+
+        /// <summary>
+        /// Enqueue text to the log with formatting
+        /// </summary>
+        /// <param name="logLevel">LogLevel for the log</param>
+        /// <param name="text">Text to write to the log</param>
         public void EnqueueLog(LogLevel logLevel, string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -46,6 +64,9 @@ namespace MPF.Avalonia.UserControls
             });
         }
 
+        /// <summary>
+        /// Add a single line to the log, trimming the oldest entry past the maximum count
+        /// </summary>
         private void AddLine(string line, IBrush brush)
         {
             Entries.Add(new LogEntry(line, brush));
@@ -53,6 +74,13 @@ namespace MPF.Avalonia.UserControls
                 Entries.RemoveAt(0);
         }
 
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Set the height of the console surface
+        /// </summary>
         public void SetConsoleHeight(double height)
         {
             Border? logSurface = this.FindControl<Border>("LogSurface");
@@ -60,6 +88,10 @@ namespace MPF.Avalonia.UserControls
                 logSurface.Height = DefaultConsoleHeight;
         }
 
+        /// <summary>
+        /// Get the foreground Brush for the current LogLevel
+        /// </summary>
+        /// <returns>Brush representing the color</returns>
         private static IBrush GetBrush(LogLevel logLevel)
         {
             bool darkMode = global::Avalonia.Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
@@ -73,6 +105,10 @@ namespace MPF.Avalonia.UserControls
                 _ => Brushes.White,
             };
         }
+
+        #endregion
+
+        #region EventHandlers
 
         private void OnClearButton(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
             => Entries.Clear();
@@ -91,9 +127,16 @@ namespace MPF.Avalonia.UserControls
 
             using var writer = new StreamWriter(File.Open(logPath, FileMode.Create, FileAccess.Write, FileShare.Read));
             foreach (LogEntry entry in Entries)
+            {
                 writer.WriteLine(entry.Text);
+            }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Log line wrapper
+        /// </summary>
         public sealed record LogEntry(string Text, IBrush Foreground);
     }
 }

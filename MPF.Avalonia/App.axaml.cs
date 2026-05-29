@@ -8,8 +8,14 @@ using MPF.Avalonia.Windows;
 
 namespace MPF.Avalonia
 {
+    /// <summary>
+    /// Interaction logic for App.axaml
+    /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Load the XAML, string resources, and set the application name
+        /// </summary>
         public override void Initialize()
         {
             Name = "MPF";
@@ -17,6 +23,9 @@ namespace MPF.Avalonia
             StringResourceLoader.Load(Resources, InterfaceLanguage.English);
         }
 
+        /// <summary>
+        /// Apply the configured theme and create the main window once the framework is ready
+        /// </summary>
         public override void OnFrameworkInitializationCompleted()
         {
             ThemeService.ApplySystemTheme(Resources, OptionsLoader.LoadFromConfig());

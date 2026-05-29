@@ -5,8 +5,13 @@ using Avalonia.Media;
 
 namespace MPF.Avalonia.UserControls
 {
+    /// <summary>
+    /// Interaction logic for UserInput.axaml
+    /// </summary>
     public partial class UserInput : UserControl
     {
+        #region Styled Properties
+
         public static readonly StyledProperty<string?> LabelProperty =
             AvaloniaProperty.Register<UserInput, string?>(nameof(Label));
 
@@ -27,6 +32,10 @@ namespace MPF.Avalonia.UserControls
 
         public static readonly StyledProperty<bool> IsReadOnlyProperty =
             AvaloniaProperty.Register<UserInput, bool>(nameof(IsReadOnly));
+
+        #endregion
+
+        #region Properties
 
         public string? Label
         {
@@ -70,12 +79,17 @@ namespace MPF.Avalonia.UserControls
             set => SetValue(IsReadOnlyProperty, value);
         }
 
+        #endregion
+
         public UserInput()
         {
             InitializeComponent();
             UpdateTextAlignment();
         }
 
+        /// <summary>
+        /// Re-evaluate the text alignment whenever the Enter property changes
+        /// </summary>
         protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
         {
             base.OnPropertyChanged(change);
@@ -84,6 +98,9 @@ namespace MPF.Avalonia.UserControls
                 UpdateTextAlignment();
         }
 
+        /// <summary>
+        /// Align the input text to the top for multi-line (Enter) inputs, otherwise center it
+        /// </summary>
         private void UpdateTextAlignment()
             => InputTextBox.VerticalContentAlignment = Enter ? VerticalAlignment.Top : VerticalAlignment.Center;
     }

@@ -10,10 +10,21 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Interaction logic for MediaInformationWindow.axaml
+    /// </summary>
     public partial class MediaInformationWindow : WindowBase
     {
+        /// <summary>
+        /// Whether the PC/Mac hybrid grid should always be shown regardless of media type
+        /// </summary>
         private readonly bool _showPcMacHybridAlways;
 
+        #region Field Mappings
+
+        /// <summary>
+        /// Mapping of comment input control names to their associated site codes
+        /// </summary>
         private static readonly (string Name, SiteCode Code)[] CommentFields =
         [
             ("AlternativeTitleTextBox", SiteCode.AlternativeTitle),
@@ -76,6 +87,9 @@ namespace MPF.Avalonia.Windows
             ("XMID", SiteCode.XMID),
         ];
 
+        /// <summary>
+        /// Mapping of content input control names to their associated site codes
+        /// </summary>
         private static readonly (string Name, SiteCode Code)[] ContentFields =
         [
             ("ApplicationsTextBox", SiteCode.Applications),
@@ -91,6 +105,11 @@ namespace MPF.Avalonia.Windows
             ("ExtrasTextBox", SiteCode.Extras),
         ];
 
+        #endregion
+
+        /// <summary>
+        /// Read-only access to the current media information view model
+        /// </summary>
         public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         public MediaInformationWindow()
@@ -98,6 +117,9 @@ namespace MPF.Avalonia.Windows
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MediaInformationWindow(Options options, SubmissionInfo? submissionInfo, bool showPcMacHybridAlways = false)
         {
             _showPcMacHybridAlways = showPcMacHybridAlways;
@@ -119,6 +141,11 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Button>("RingCodeGuideButton")!.Click += OnRingCodeGuideClick;
         }
 
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for AcceptButton Click event
+        /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
         {
             SaveMappedFields();
@@ -126,12 +153,25 @@ namespace MPF.Avalonia.Windows
             Close(true);
         }
 
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
         private void OnCancelClick(object? sender, RoutedEventArgs e)
             => Close(false);
 
+        /// <summary>
+        /// Handler for RingCodeGuideButton Click event
+        /// </summary>
         private void OnRingCodeGuideClick(object? sender, RoutedEventArgs e)
             => _ = new RingCodeGuideWindow().ShowDialog(this);
 
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Assign the view model collections as the data sources for the dropdown controls
+        /// </summary>
         private void PopulateCollections()
         {
             this.FindControl<ComboBox>("CategoryComboBox")!.ItemsSource = MediaInformationViewModel.Categories;
@@ -140,13 +180,20 @@ namespace MPF.Avalonia.Windows
             this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.ItemsSource = MediaInformationViewModel.LanguageSelections;
         }
 
+        /// <summary>
+        /// Populate the input controls from the current submission info values
+        /// </summary>
         private void LoadMappedFields()
         {
             foreach (var (name, code) in CommentFields)
+            {
                 SetControlText(name, GetComment(code));
+            }
 
             foreach (var (name, code) in ContentFields)
+            {
                 SetControlText(name, GetContent(code));
+            }
 
             SetControlText("DiscKeyTextBox", MediaInformationViewModel.SubmissionInfo.Extras?.DiscKey);
             SetControlText("DiscIDTextBox", MediaInformationViewModel.SubmissionInfo.Extras?.DiscID);
@@ -157,15 +204,22 @@ namespace MPF.Avalonia.Windows
             this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsChecked = ParseBooleanComment(GetComment(SiteCode.PCMacHybrid));
         }
 
+        /// <summary>
+        /// Save the input control values back into the current submission info
+        /// </summary>
         private void SaveMappedFields()
         {
             EnsureSpecialFields();
 
             foreach (var (name, code) in CommentFields)
+            {
                 SetComment(code, GetControlText(name));
+            }
 
             foreach (var (name, code) in ContentFields)
+            {
                 SetContent(code, GetControlText(name));
+            }
 
             if (MediaInformationViewModel.SubmissionInfo.Extras is not null)
             {
@@ -176,16 +230,28 @@ namespace MPF.Avalonia.Windows
             SetComment(SiteCode.PCMacHybrid, this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsChecked == true ? "true" : string.Empty);
         }
 
+        /// <summary>
+        /// Manipulate fields based on the current disc
+        /// </summary>
         private void ManipulateFields(Options options, SubmissionInfo? submissionInfo)
         {
+            // Enable tabs in all fields, if required
             if (options.Processing.MediaInformation.EnableTabsInInputFields)
                 EnableTabsInInputFields();
 
+            // Hide read-only fields that don't have values set
             HideReadOnlyFields(submissionInfo);
+
+            // Different media types mean different fields available
             UpdateFromDiscType(submissionInfo);
+
+            // Different systems mean different fields available
             UpdateFromSystemType(submissionInfo);
         }
 
+        /// <summary>
+        /// Enable tab entry on ringcode fields
+        /// </summary>
         private void EnableTabsInInputFields()
         {
             foreach (string name in new[]
@@ -200,8 +266,12 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Hide any optional, read-only fields if they don't have a value
+        /// </summary>
         private void HideReadOnlyFields(SubmissionInfo? submissionInfo)
         {
+            // If there's no submission information
             if (submissionInfo is null)
                 return;
 
@@ -243,8 +313,12 @@ namespace MPF.Avalonia.Windows
             CollapseWhen("XMID", ShouldCollapseComment(submissionInfo, SiteCode.XMID));
         }
 
+        /// <summary>
+        /// Update visible fields and sections based on the media type
+        /// </summary>
         private void UpdateFromDiscType(SubmissionInfo? submissionInfo)
         {
+            // Sony-printed discs have layers in the opposite order
             var system = submissionInfo?.CommonDiscInfo?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
@@ -293,6 +367,9 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Set the layer panel headers and ring field labels based on the disc's layer count
+        /// </summary>
         private void SetLayerLabels(string? singleLayerDataHeader, string? singleLayerLabelHeader, bool supportExtraLayers, bool supportQuadLayers, bool reverseOrder, SubmissionInfo? submissionInfo)
         {
             if (!supportExtraLayers)
@@ -344,6 +421,9 @@ namespace MPF.Avalonia.Windows
             SetRingFieldLabels(false);
         }
 
+        /// <summary>
+        /// Set the labels on all ring code input fields, varying mould labels by layer state
+        /// </summary>
         private void SetRingFieldLabels(bool layered)
         {
             this.FindControl<UserInput>("L0MasteringRing")!.Label = "Mastering Ring";
@@ -367,6 +447,9 @@ namespace MPF.Avalonia.Windows
             this.FindControl<UserInput>("L3Toolstamp")!.Label = "Toolstamp/Mastering Code";
         }
 
+        /// <summary>
+        /// Update visible fields and sections based on the system type
+        /// </summary>
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
@@ -403,15 +486,27 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Set the text of a layer header text block
+        /// </summary>
         private void SetLayerHeader(string name, string value)
             => this.FindControl<TextBlock>(name)!.Text = value;
 
+        /// <summary>
+        /// Show or collapse a named input field based on the given condition
+        /// </summary>
         private void CollapseWhen(string name, bool collapse)
             => this.FindControl<UserInput>(name)!.IsVisible = !collapse;
 
+        /// <summary>
+        /// Get the current text of a named input control
+        /// </summary>
         private string GetControlText(string name)
             => this.FindControl<UserInput>(name)?.Text ?? string.Empty;
 
+        /// <summary>
+        /// Set the text of a named input control, if it exists
+        /// </summary>
         private void SetControlText(string name, string? value)
         {
             var control = this.FindControl<UserInput>(name);
@@ -419,6 +514,9 @@ namespace MPF.Avalonia.Windows
                 control.Text = value ?? string.Empty;
         }
 
+        /// <summary>
+        /// Get the comment special field value for the given site code
+        /// </summary>
         private string GetComment(SiteCode code)
         {
             if (MediaInformationViewModel.SubmissionInfo.CommonDiscInfo?.CommentsSpecialFields?.TryGetValue(code, out string? value) == true)
@@ -427,9 +525,15 @@ namespace MPF.Avalonia.Windows
             return string.Empty;
         }
 
+        /// <summary>
+        /// Set the comment special field value for the given site code
+        /// </summary>
         private void SetComment(SiteCode code, string? value)
             => MediaInformationViewModel.SubmissionInfo.CommonDiscInfo!.CommentsSpecialFields![code] = value ?? string.Empty;
 
+        /// <summary>
+        /// Get the content special field value for the given site code
+        /// </summary>
         private string GetContent(SiteCode code)
         {
             if (MediaInformationViewModel.SubmissionInfo.CommonDiscInfo?.ContentsSpecialFields?.TryGetValue(code, out string? value) == true)
@@ -438,9 +542,15 @@ namespace MPF.Avalonia.Windows
             return string.Empty;
         }
 
+        /// <summary>
+        /// Set the content special field value for the given site code
+        /// </summary>
         private void SetContent(SiteCode code, string? value)
             => MediaInformationViewModel.SubmissionInfo.CommonDiscInfo!.ContentsSpecialFields![code] = value ?? string.Empty;
 
+        /// <summary>
+        /// Ensure the special fields dictionaries and extras section exist before use
+        /// </summary>
         private void EnsureSpecialFields()
         {
             MediaInformationViewModel.SubmissionInfo.CommonDiscInfo ??= new SabreTools.RedumpLib.Data.Sections.CommonDiscInfoSection();
@@ -449,20 +559,31 @@ namespace MPF.Avalonia.Windows
             MediaInformationViewModel.SubmissionInfo.Extras ??= new SabreTools.RedumpLib.Data.Sections.ExtrasSection();
         }
 
+        /// <summary>
+        /// Parse a comment string into a boolean, treating "true", "yes", and "1" as true
+        /// </summary>
         private static bool ParseBooleanComment(string? value)
             => value?.Equals("true", StringComparison.OrdinalIgnoreCase) == true
             || value?.Equals("yes", StringComparison.OrdinalIgnoreCase) == true
             || value == "1";
 
+        /// <summary>
+        /// Determine if a comment field should be collapsed in read-only view
+        /// </summary>
         private static bool ShouldCollapseComment(SubmissionInfo? submissionInfo, SiteCode siteCode)
         {
+            // If the special fields don't exist
             if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields is null)
                 return true;
 
+            // If the key doesn't exist
             if (!submissionInfo.CommonDiscInfo.CommentsSpecialFields.TryGetValue(siteCode, out string? value))
                 return true;
 
+            // Collapse if the value doesn't exist
             return string.IsNullOrEmpty(value);
         }
+
+        #endregion
     }
 }

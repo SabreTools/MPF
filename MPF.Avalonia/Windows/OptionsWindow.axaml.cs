@@ -10,8 +10,14 @@ using SabreTools.RedumpLib.Web;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Interaction logic for OptionsWindow.axaml
+    /// </summary>
     public partial class OptionsWindow : WindowBase
     {
+        /// <summary>
+        /// Read-only access to the current options view model
+        /// </summary>
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
 
         public OptionsWindow()
@@ -19,6 +25,9 @@ namespace MPF.Avalonia.Windows
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OptionsWindow(Options options)
         {
             InitializeComponent();
@@ -30,6 +39,11 @@ namespace MPF.Avalonia.Windows
             };
         }
 
+        #region UI Functionality
+
+        /// <summary>
+        /// Add all event handlers
+        /// </summary>
         private void WireEvents()
         {
             this.FindControl<Button>("AaruPathButton")!.Click += BrowseForAaruPathClick;
@@ -42,6 +56,9 @@ namespace MPF.Avalonia.Windows
             this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.Click += NonRedumpModeClicked;
         }
 
+        /// <summary>
+        /// Browse for an executable file, filtering to *.exe on Windows
+        /// </summary>
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
             if (!System.OperatingSystem.IsWindows())
@@ -59,9 +76,19 @@ namespace MPF.Avalonia.Windows
             });
         }
 
+        /// <summary>
+        /// Browse for a folder path
+        /// </summary>
         private async Task<string?> BrowseForFolderAsync(string title)
             => await DialogService.OpenFolderAsync(this, title);
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private async void BrowseForAaruPathClick(object? sender, RoutedEventArgs e)
         {
             string? result = await BrowseForExecutableAsync("Aaru");
@@ -69,6 +96,9 @@ namespace MPF.Avalonia.Windows
                 OptionsViewModel.Options.Dumping.AaruPath = result;
         }
 
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private async void BrowseForDiscImageCreatorPathClick(object? sender, RoutedEventArgs e)
         {
             string? result = await BrowseForExecutableAsync("DiscImageCreator");
@@ -76,6 +106,9 @@ namespace MPF.Avalonia.Windows
                 OptionsViewModel.Options.Dumping.DiscImageCreatorPath = result;
         }
 
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private async void BrowseForRedumperPathClick(object? sender, RoutedEventArgs e)
         {
             string? result = await BrowseForExecutableAsync("Redumper");
@@ -83,6 +116,9 @@ namespace MPF.Avalonia.Windows
                 OptionsViewModel.Options.Dumping.RedumperPath = result;
         }
 
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private async void BrowseForDefaultOutputPathClick(object? sender, RoutedEventArgs e)
         {
             string? result = await BrowseForFolderAsync("Default Output Path");
@@ -90,15 +126,24 @@ namespace MPF.Avalonia.Windows
                 OptionsViewModel.Options.Dumping.DefaultOutputPath = result;
         }
 
+        /// <summary>
+        /// Handler for AcceptButton Click event
+        /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
         {
             OptionsViewModel.SavedSettings = true;
             Close(true);
         }
 
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
         private void OnCancelClick(object? sender, RoutedEventArgs e)
             => Close(false);
 
+        /// <summary>
+        /// Test Redump credentials for validity
+        /// </summary>
         private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
         {
             bool? success = await RedumpClient.ValidateCredentials(
@@ -108,10 +153,15 @@ namespace MPF.Avalonia.Windows
             _ = MessageBoxWindow.ShowAsync(this, "Redump", OptionsViewModel.GetRedumpLoginResult(success), 1, success == true);
         }
 
+        /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
         private void NonRedumpModeClicked(object? sender, RoutedEventArgs e)
         {
             if (this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.IsChecked != true)
                 OptionsViewModel.NonRedumpModeUnChecked();
         }
+
+        #endregion
     }
 }

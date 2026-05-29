@@ -9,8 +9,14 @@ using MPF.Frontend.ViewModels;
 
 namespace MPF.Avalonia.Windows
 {
+    /// <summary>
+    /// Interaction logic for CreateIRDWindow.axaml
+    /// </summary>
     public partial class CreateIRDWindow : WindowBase
     {
+        /// <summary>
+        /// Read-only access to the current create IRD view model
+        /// </summary>
         public CreateIRDViewModel CreateIRDViewModel => DataContext as CreateIRDViewModel ?? new CreateIRDViewModel();
 
         public CreateIRDWindow()
@@ -18,11 +24,17 @@ namespace MPF.Avalonia.Windows
             InitializeWindow();
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CreateIRDWindow(MainWindow parent)
         {
             InitializeWindow();
         }
 
+        /// <summary>
+        /// Shared initialization for both constructors; sets the view model and wires events once opened
+        /// </summary>
         private void InitializeWindow()
         {
             InitializeComponent();
@@ -30,6 +42,11 @@ namespace MPF.Avalonia.Windows
             Opened += (_, _) => WireEvents();
         }
 
+        #region UI Functionality
+
+        /// <summary>
+        /// Add all event handlers
+        /// </summary>
         private void WireEvents()
         {
             this.FindControl<Button>("CreateIRDButton")!.Click += OnCreateIRDClick;
@@ -49,6 +66,9 @@ namespace MPF.Avalonia.Windows
             this.FindControl<TextBox>("LayerbreakTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeLayerbreak();
         }
 
+        /// <summary>
+        /// Browse for a single input file matching the given patterns
+        /// </summary>
         private async Task<string?> OpenFileAsync(string title, params string[] patterns)
         {
             return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
@@ -58,6 +78,13 @@ namespace MPF.Avalonia.Windows
             });
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for CreateIRDButton Click event
+        /// </summary>
         private async void OnCreateIRDClick(object? sender, RoutedEventArgs e)
         {
             string? outputPath = await DialogService.SaveFileAsync(this, "Save IRD", "game.ird", new List<FilePickerFileType>
@@ -83,9 +110,15 @@ namespace MPF.Avalonia.Windows
             }
         }
 
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
         private void OnCancelClick(object? sender, RoutedEventArgs e)
             => Close(false);
 
+        /// <summary>
+        /// Handler for InputPathBrowseButton Click event
+        /// </summary>
         public async void InputPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? path = await OpenFileAsync("ISO", "*.iso");
@@ -93,6 +126,9 @@ namespace MPF.Avalonia.Windows
                 CreateIRDViewModel.InputPath = path;
         }
 
+        /// <summary>
+        /// Handler for LogPathBrowseButton Click event
+        /// </summary>
         public async void LogPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? path = await OpenFileAsync("GetKey Log", "*.getkey.log");
@@ -100,6 +136,9 @@ namespace MPF.Avalonia.Windows
                 CreateIRDViewModel.LogPath = path;
         }
 
+        /// <summary>
+        /// Handler for KeyPathBrowseButton Click event
+        /// </summary>
         public async void KeyPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? path = await OpenFileAsync("Key", "*.key");
@@ -107,11 +146,16 @@ namespace MPF.Avalonia.Windows
                 CreateIRDViewModel.KeyPath = path;
         }
 
+        /// <summary>
+        /// Handler for PICPathBrowseButton Click event
+        /// </summary>
         public async void PICPathBrowseButtonClick(object? sender, RoutedEventArgs e)
         {
             string? path = await OpenFileAsync("PIC", "*.physical", "*_PIC.bin", "*.PIC");
             if (!string.IsNullOrWhiteSpace(path))
                 CreateIRDViewModel.PICPath = path;
         }
+
+        #endregion
     }
 }

@@ -6,8 +6,14 @@ using MPF.Frontend;
 
 namespace MPF.Avalonia.Services
 {
+    /// <summary>
+    /// Loads localized string resource dictionaries into the application based on interface language
+    /// </summary>
     internal static class StringResourceLoader
     {
+        /// <summary>
+        /// Maps each supported interface language to its resource dictionary file name
+        /// </summary>
         private static readonly Dictionary<InterfaceLanguage, string> LanguageFiles = new()
         {
             [InterfaceLanguage.English] = "Strings.xaml",
@@ -25,6 +31,10 @@ namespace MPF.Avalonia.Services
             [InterfaceLanguage.L337] = "Strings.37.xaml",
         };
 
+        /// <summary>
+        /// Reset the merged dictionaries to the default English strings, then overlay the
+        /// requested language (auto-detecting from the current culture when set to AutoDetect)
+        /// </summary>
         public static void Load(IResourceDictionary resources, InterfaceLanguage language)
         {
             resources.MergedDictionaries.Clear();
@@ -38,6 +48,9 @@ namespace MPF.Avalonia.Services
                 AddResource(resources, fileName);
         }
 
+        /// <summary>
+        /// Build the embedded resource URI for the given file and merge it into the dictionary
+        /// </summary>
         private static void AddResource(IResourceDictionary resources, string fileName)
         {
             string assemblyName = typeof(StringResourceLoader).Assembly.GetName().Name ?? "MPF";
@@ -51,7 +64,10 @@ namespace MPF.Avalonia.Services
             resources.MergedDictionaries.Add(resourceInclude);
         }
 
-        private static InterfaceLanguage FromCurrentCulture() 
+        /// <summary>
+        /// Map the current UI culture's two-letter ISO language name to a supported interface language
+        /// </summary>
+        private static InterfaceLanguage FromCurrentCulture()
         {
             return System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
             {

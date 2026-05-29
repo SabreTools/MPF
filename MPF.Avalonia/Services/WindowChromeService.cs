@@ -5,8 +5,16 @@ using Avalonia.Threading;
 
 namespace MPF.Avalonia.Services
 {
+    /// <summary>
+    /// Applies platform-specific window chrome adjustments, such as hiding unavailable
+    /// macOS title bar buttons and theming the title bar
+    /// </summary>
     internal static class WindowChromeService
     {
+        /// <summary>
+        /// Apply window chrome to the given window, both immediately and once again after the
+        /// window has loaded (since the native handle may not be ready on the first pass)
+        /// </summary>
         public static void Apply(Window window, bool hideMinimizeButton = false)
         {
             HideMacOSUnavailableWindowButtons(window, hideMinimizeButton);
@@ -14,6 +22,12 @@ namespace MPF.Avalonia.Services
             ThemeService.ApplyWindowTitleBarTheme(window);
         }
 
+        #region macOS Window Buttons
+
+        /// <summary>
+        /// Adjust the native macOS window style mask to remove the minimize and/or resize
+        /// affordances, then hide the corresponding traffic-light buttons
+        /// </summary>
         private static void HideMacOSUnavailableWindowButtons(Window window, bool hideMinimizeButton)
         {
             if (!OperatingSystem.IsMacOS())
@@ -39,6 +53,9 @@ namespace MPF.Avalonia.Services
                 HideMacOSWindowButton(nsWindow, NSWindowZoomButton);
         }
 
+        /// <summary>
+        /// Hide and disable a single standard macOS window button (traffic-light control)
+        /// </summary>
         private static void HideMacOSWindowButton(IntPtr nsWindow, long button)
         {
             IntPtr windowButton = objc_msgSend_IntPtr_Int64(nsWindow, sel_registerName("standardWindowButton:"), button);
@@ -49,6 +66,10 @@ namespace MPF.Avalonia.Services
             objc_msgSend_bool(windowButton, sel_registerName("setHidden:"), true);
             objc_msgSend_bool(windowButton, sel_registerName("setEnabled:"), false);
         }
+
+        #endregion
+
+        #region Native Interop
 
         private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
         private const ulong NSWindowStyleMaskResizable = 1UL << 3;
@@ -72,5 +93,7 @@ namespace MPF.Avalonia.Services
 
         [DllImport("/usr/lib/libobjc.A.dylib", EntryPoint = "objc_msgSend")]
         private static extern void objc_msgSend_ulong(IntPtr receiver, IntPtr selector, ulong argument);
+
+        #endregion
     }
 }

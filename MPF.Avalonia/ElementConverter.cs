@@ -27,12 +27,15 @@ namespace MPF.Avalonia
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
                 RedumpSystem redumpSystem => new RedumpSystemComboBoxItem(redumpSystem),
                 Region region => new Element<Region>(region),
+
+                // Null values are treated as a system value
                 _ => new RedumpSystemComboBoxItem((RedumpSystem?)null),
             };
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
+            // If it's an IElement but ends up null
             if (value is not IElement element)
                 return null;
 
