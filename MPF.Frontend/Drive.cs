@@ -125,6 +125,11 @@ namespace MPF.Frontend
             {
                 DriveFormat = driveInfo.DriveFormat;
                 TotalSize = driveInfo.TotalSize;
+
+                // DriveInfo.VolumeLabel is only available on Windows. Modern .NET reports both
+                // Linux and macOS as PlatformID.Unix, so this "non-Unix" check effectively means
+                // "Windows only" (OperatingSystem.IsWindows() is avoided here because this project
+                // also targets net20-net48, where that helper does not exist).
                 if (Environment.OSVersion.Platform != PlatformID.Unix)
                     VolumeLabel = driveInfo.VolumeLabel;
                 else

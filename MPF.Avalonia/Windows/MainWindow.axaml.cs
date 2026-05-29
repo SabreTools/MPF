@@ -968,7 +968,13 @@ namespace MPF.Avalonia.Windows
             if (string.IsNullOrWhiteSpace(parameters))
                 return;
 
+            // Mounted volume names live under /Volumes/ and can contain spaces or regex
+            // metacharacters, so escape the name to match it literally in the patterns below
             string escapedDrive = Regex.Escape(driveName);
+
+            // Remove the mounted drive's "--drive=<name>" and "--drive <name>" arguments
+            // (quoted or unquoted, with an optional trailing slash) from the parameter string,
+            // since Redumper on macOS does not take the drive argument the way it does on Windows
             parameters = Regex.Replace(parameters, $@"(^|\s)--drive=(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
             parameters = Regex.Replace(parameters, $@"(^|\s)--drive\s+(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
             MainViewModel.Parameters = parameters.Trim();
