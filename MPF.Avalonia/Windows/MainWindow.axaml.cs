@@ -35,6 +35,16 @@ namespace MPF.Avalonia.Windows
         private const double ExpandedLogPanelExtraHeight = 40;
 
         /// <summary>
+        /// Menu item control names for the selectable interface languages
+        /// </summary>
+        private static readonly string[] LanguageMenuItemNames =
+        [
+            "EnglishMenuItem", "GermanMenuItem", "SpanishMenuItem", "FrenchMenuItem", "ItalianMenuItem",
+            "JapaneseMenuItem", "KoreanMenuItem", "PolishMenuItem", "PortugueseMenuItem",
+            "RussianMenuItem", "SwedishMenuItem", "UkrainianMenuItem",
+        ];
+
+        /// <summary>
         /// Whether the window may close without prompting the user
         /// </summary>
         private bool _allowCloseWithoutPrompt;
@@ -368,12 +378,7 @@ namespace MPF.Avalonia.Windows
             this.FindControl<MenuItem>("DebugViewMenuItem")!.Click += DebugViewClick;
             this.FindControl<MenuItem>("OptionsMenuItem")!.Click += OptionsMenuItemClick;
 
-            foreach (string name in new[]
-            {
-                "EnglishMenuItem", "GermanMenuItem", "SpanishMenuItem", "FrenchMenuItem", "ItalianMenuItem",
-                "JapaneseMenuItem", "KoreanMenuItem", "PolishMenuItem", "PortugueseMenuItem",
-                "RussianMenuItem", "SwedishMenuItem", "UkrainianMenuItem"
-            })
+            foreach (string name in LanguageMenuItemNames)
             {
                 this.FindControl<MenuItem>(name)!.Click += LanguageMenuItemClick;
             }

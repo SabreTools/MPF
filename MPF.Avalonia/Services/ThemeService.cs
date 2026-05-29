@@ -16,6 +16,9 @@ namespace MPF.Avalonia.Services
     /// </summary>
     internal static class ThemeService
     {
+        private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
+        private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
+
         /// <summary>
         /// Update the options' dark mode flag to match the detected system theme
         /// </summary>
@@ -229,9 +232,6 @@ namespace MPF.Avalonia.Services
         #endregion
 
         #region Native Interop
-
-        private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
-        private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
 
         [DllImport("dwmapi.dll")]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int attributeValue, int attributeSize);

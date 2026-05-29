@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -39,15 +40,15 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new CreateIRDViewModel();
-            Opened += (_, _) => WireEvents();
+            Opened += WireEvents;
         }
 
         #region UI Functionality
 
         /// <summary>
-        /// Add all event handlers
+        /// Add all event handlers once the window has opened
         /// </summary>
-        private void WireEvents()
+        private void WireEvents(object? sender, EventArgs e)
         {
             this.FindControl<Button>("CreateIRDButton")!.Click += OnCreateIRDClick;
             this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;

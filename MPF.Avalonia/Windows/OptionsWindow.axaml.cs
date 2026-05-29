@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -32,20 +33,17 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new OptionsViewModel(options);
-            Opened += (_, _) =>
-            {
-                OptionsViewModel.Title = Title;
-                WireEvents();
-            };
+            Opened += WireEvents;
         }
 
         #region UI Functionality
 
         /// <summary>
-        /// Add all event handlers
+        /// Add all event handlers once the window has opened
         /// </summary>
-        private void WireEvents()
+        private void WireEvents(object? sender, EventArgs e)
         {
+            OptionsViewModel.Title = Title;
             this.FindControl<Button>("AaruPathButton")!.Click += BrowseForAaruPathClick;
             this.FindControl<Button>("DiscImageCreatorPathButton")!.Click += BrowseForDiscImageCreatorPathClick;
             this.FindControl<Button>("RedumperPathButton")!.Click += BrowseForRedumperPathClick;

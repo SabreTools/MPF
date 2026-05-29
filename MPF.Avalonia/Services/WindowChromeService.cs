@@ -11,6 +11,11 @@ namespace MPF.Avalonia.Services
     /// </summary>
     internal static class WindowChromeService
     {
+        private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
+        private const ulong NSWindowStyleMaskResizable = 1UL << 3;
+        private const long NSWindowMiniaturizeButton = 1;
+        private const long NSWindowZoomButton = 2;
+
         /// <summary>
         /// Apply window chrome to the given window, both immediately and once again after the
         /// window has loaded (since the native handle may not be ready on the first pass)
@@ -70,11 +75,6 @@ namespace MPF.Avalonia.Services
         #endregion
 
         #region Native Interop
-
-        private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
-        private const ulong NSWindowStyleMaskResizable = 1UL << 3;
-        private const long NSWindowMiniaturizeButton = 1;
-        private const long NSWindowZoomButton = 2;
 
         [DllImport("/usr/lib/libobjc.A.dylib")]
         private static extern IntPtr sel_registerName(string name);
