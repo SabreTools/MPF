@@ -24,6 +24,7 @@
 - Remove CONTRIBUTING due to org-level version
 - Filter out Spoon Installer
 - Tweak wording on no protections found
+- Fix typo in Check help text
 
 ### 3.7.1 (2026-03-30)
 

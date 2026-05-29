@@ -117,7 +117,7 @@ namespace MPF.Check
         private static CommandSet CreateCommands(MainFeature mainFeature)
         {
             List<string> header = [
-                "MPF.CLI [standalone|system] [options] <path> ...",
+                "MPF.Check [standalone|system] [options] <path> ...",
                 string.Empty,
             ];
 
