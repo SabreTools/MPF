@@ -87,8 +87,8 @@ namespace MPF.Check.Features
             Console.WriteLine("MPF.Check Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
+            Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");

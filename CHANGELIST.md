@@ -25,6 +25,7 @@
 - Filter out Spoon Installer
 - Tweak wording on no protections found
 - Fix typo in Check help text
+- Use human-readable names in interactive modes
 
 ### 3.7.1 (2026-03-30)
 
