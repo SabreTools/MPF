@@ -301,7 +301,9 @@ namespace MPF.Processors.Test
             string outputFilename = "test.cue";
             var processor = new Redumper(RedumpSystem.IBMPCcompatible);
             var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
-            Assert.Single(actual);
+            Assert.Equal(2, actual.Count);
+            Assert.Contains(Path.Combine(outputDirectory, "test.cue"), actual);
+            Assert.Contains(Path.Combine(outputDirectory, "test.log"), actual);
         }
 
         #endregion

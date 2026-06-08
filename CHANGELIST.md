@@ -26,6 +26,7 @@
 - Tweak wording on no protections found
 - Fix typo in Check help text
 - Use human-readable names in interactive modes
+- Preserve redumper log file
 
 ### 3.7.1 (2026-03-30)
 
