@@ -45,7 +45,7 @@ namespace MPF.Processors
             info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the size to adjust the layerbreak
-            if (ProcessingTool.GetISOHashValues(datafile, out long size, out _, out _, out _))
+            if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out _, out _, out _))
             {
                 // Dual-layer discs have the same size and layerbreak
                 if (size == 8511160320)
