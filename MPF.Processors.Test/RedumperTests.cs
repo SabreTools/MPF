@@ -1556,10 +1556,18 @@ namespace MPF.Processors.Test
             bool actual = Redumper.GetVolumeLabels(log, out Dictionary<string, List<string>> volLabels);
 
             Assert.True(actual);
-            KeyValuePair<string, List<string>> labelPair = Assert.Single(volLabels);
-            Assert.Equal("label", labelPair.Key);
-            string filesystem = Assert.Single(labelPair.Value);
-            Assert.Equal("ISO", filesystem);
+
+            bool hasIso = volLabels.TryGetValue("label1", out List<string>? isoLabels);
+            Assert.True(hasIso);
+            Assert.NotNull(isoLabels);
+            string isoLabel = Assert.Single(isoLabels);
+            Assert.Equal("ISO", isoLabel);
+
+            bool hasHfs = volLabels.TryGetValue("Label2", out List<string>? hfsLabels);
+            Assert.True(hasHfs);
+            Assert.NotNull(hfsLabels);
+            string hfsLabel = Assert.Single(hfsLabels);
+            Assert.Equal("HFS", hfsLabel);
         }
 
         #endregion

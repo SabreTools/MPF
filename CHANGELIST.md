@@ -30,6 +30,7 @@
 - Remove split hash information except for IRD
 - Move CRC-32 extraction to IRD path
 - Remove now-unused helper method
+- Support Redumper HFS label
 
 ### 3.7.1 (2026-03-30)
 
