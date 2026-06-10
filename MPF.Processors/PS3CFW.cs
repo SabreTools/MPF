@@ -37,10 +37,6 @@ namespace MPF.Processors
             Datafile? datafile = GenerateDatafile(isoPath);
             info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
-            // Get the CRC-32 for possible IRD processing
-            if (ProcessingTool.GetISOHashValues(datafile, out _, out var crc32, out _, out _))
-                info.SizeAndChecksums.CRC32 = crc32;
-
             // Get the PVD from the ISO
             if (GetPVD(isoPath, out string? pvd))
                 info.Extras.PVD = pvd;

@@ -491,10 +491,6 @@ namespace MPF.Processors
                         info.VersionAndEditions.Version = ps3Version ?? string.Empty;
                     }
 
-                    // Get the CRC-32 for possible IRD processing
-                    if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out _, out var crc32, out _, out _))
-                        info.SizeAndChecksums.CRC32 = crc32;
-
                     break;
 
                 case RedumpSystem.SonyPlayStation4:

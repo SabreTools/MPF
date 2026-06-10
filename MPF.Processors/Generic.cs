@@ -46,19 +46,6 @@ namespace MPF.Processors
                     break;
             }
 #pragma warning restore IDE0010
-
-#pragma warning disable IDE0010
-            switch (System)
-            {
-                case RedumpSystem.SonyPlayStation3:
-
-                    // Get the CRC-32 for possible IRD processing
-                    if (ProcessingTool.GetISOHashValues(datafile, out _, out var crc32, out _, out _))
-                        info.SizeAndChecksums.CRC32 = crc32;
-
-                    break;
-            }
-#pragma warning restore IDE0010
         }
 
         /// <inheritdoc/>

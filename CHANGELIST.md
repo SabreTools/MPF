@@ -28,6 +28,7 @@
 - Use human-readable names in interactive modes
 - Preserve redumper log file
 - Remove split hash information except for IRD
+- Move CRC-32 extraction to IRD path
 
 ### 3.7.1 (2026-03-30)
 

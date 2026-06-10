@@ -672,7 +672,17 @@ namespace MPF.Frontend
             if (_options.Processing.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
             {
                 resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
-                bool irdCreateSuccess = await IRDTool.WriteIRD(OutputPath, submissionInfo?.Extras?.DiscKey, submissionInfo?.Extras?.DiscID, submissionInfo?.Extras?.PIC, submissionInfo?.SizeAndChecksums.Layerbreak, submissionInfo?.SizeAndChecksums.CRC32);
+
+                // Try to extract the CRC-32
+                _ = ProcessingTool.GetISOHashValues(submissionInfo?.TracksAndWriteOffsets?.ClrMameProData, out _, out var crc32, out _, out _);
+
+                bool irdCreateSuccess = await IRDTool.WriteIRD(OutputPath,
+                    submissionInfo?.Extras?.DiscKey,
+                    submissionInfo?.Extras?.DiscID,
+                    submissionInfo?.Extras?.PIC,
+                    submissionInfo?.SizeAndChecksums.Layerbreak,
+                    crc32);
+
                 if (irdCreateSuccess)
                     resultProgress.Report(ResultEventArgs.Success("IRD created!"));
                 else
