@@ -63,10 +63,6 @@ namespace MPF.UI.Windows
         private UserInput? FullyMatchedID => ItemHelper.FindChild<UserInput>(this, "FullyMatchedID");
         private UserInput? PartiallyMatchedIDs => ItemHelper.FindChild<UserInput>(this, "PartiallyMatchedIDs");
         private UserInput? HashData => ItemHelper.FindChild<UserInput>(this, "HashData");
-        private UserInput? HashDataSize => ItemHelper.FindChild<UserInput>(this, "HashDataSize");
-        private UserInput? HashDataCRC => ItemHelper.FindChild<UserInput>(this, "HashDataCRC");
-        private UserInput? HashDataMD5 => ItemHelper.FindChild<UserInput>(this, "HashDataMD5");
-        private UserInput? HashDataSHA1 => ItemHelper.FindChild<UserInput>(this, "HashDataSHA1");
         private UserInput? HashDataLayerbreak1 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak1");
         private UserInput? HashDataLayerbreak2 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak2");
         private UserInput? HashDataLayerbreak3 => ItemHelper.FindChild<UserInput>(this, "HashDataLayerbreak3");
@@ -222,14 +218,6 @@ namespace MPF.UI.Windows
                 PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData))
                 HashData!.Visibility = Visibility.Collapsed;
-            if (submissionInfo.SizeAndChecksums.Size == 0)
-                HashDataSize!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.CRC32))
-                HashDataCRC!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.MD5))
-                HashDataMD5!.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.SHA1))
-                HashDataSHA1!.Visibility = Visibility.Collapsed;
             if (submissionInfo.SizeAndChecksums.Layerbreak == 0)
                 HashDataLayerbreak1!.Visibility = Visibility.Collapsed;
             if (submissionInfo.SizeAndChecksums.Layerbreak2 == 0)

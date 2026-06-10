@@ -44,22 +44,17 @@ namespace MPF.Processors
                 case MediaType.GDROM:
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     break;
+            }
+#pragma warning restore IDE0010
 
-                case MediaType.DVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.NintendoWiiUOpticalDisc:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.UMD:
-                    var firstRom = datafile?.Game?[0]?.Rom?[0];
-                    if (firstRom is not null)
-                    {
-                        info.SizeAndChecksums.Size = long.Parse(firstRom.Size ?? "0");
-                        info.SizeAndChecksums.CRC32 = firstRom.CRC;
-                        info.SizeAndChecksums.MD5 = firstRom.MD5;
-                        info.SizeAndChecksums.SHA1 = firstRom.SHA1;
-                    }
+#pragma warning disable IDE0010
+            switch (System)
+            {
+                case RedumpSystem.SonyPlayStation3:
+
+                    // Get the CRC-32 for possible IRD processing
+                    if (ProcessingTool.GetISOHashValues(datafile, out _, out var crc32, out _, out _))
+                        info.SizeAndChecksums.CRC32 = crc32;
 
                     break;
             }

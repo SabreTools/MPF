@@ -27,6 +27,7 @@
 - Fix typo in Check help text
 - Use human-readable names in interactive modes
 - Preserve redumper log file
+- Remove split hash information except for IRD
 
 ### 3.7.1 (2026-03-30)
 

@@ -245,15 +245,6 @@ namespace MPF.Processors
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
 
-                    // Get the individual hash data, as per internal
-                    if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
-                    {
-                        info.SizeAndChecksums.Size = size;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
                     // Deal with the layerbreaks
                     if (mediaType == MediaType.DVD)
                     {
@@ -625,6 +616,10 @@ namespace MPF.Processors
                         if (ps3FirmwareVersion is not null)
                             info.CommonDiscInfo.ContentsSpecialFields![SiteCode.Patches] = $"PS3 Firmware {ps3FirmwareVersion}";
                     }
+
+                    // Get the CRC-32 for possible IRD processing
+                    if (ProcessingTool.GetISOHashValues(datafile, out _, out var crc32, out _, out _))
+                        info.SizeAndChecksums.CRC32 = crc32;
 
                     break;
             }

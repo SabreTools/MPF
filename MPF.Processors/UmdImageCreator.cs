@@ -42,11 +42,6 @@ namespace MPF.Processors
 
                 // Fill in the hash data
                 info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
-
-                info.SizeAndChecksums.Size = filesize;
-                info.SizeAndChecksums.CRC32 = crc32;
-                info.SizeAndChecksums.MD5 = md5;
-                info.SizeAndChecksums.SHA1 = sha1;
             }
 
             // Get internal information

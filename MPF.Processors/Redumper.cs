@@ -195,15 +195,6 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                 case MediaType.NintendoWiiUOpticalDisc:
-                    // Get the individual hash data, as per internal
-                    if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
-                    {
-                        info.SizeAndChecksums.Size = size;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
                     // Deal with the layerbreaks
                     if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
                     {
@@ -499,6 +490,10 @@ namespace MPF.Processors
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
                         info.VersionAndEditions.Version = ps3Version ?? string.Empty;
                     }
+
+                    // Get the CRC-32 for possible IRD processing
+                    if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out _, out var crc32, out _, out _))
+                        info.SizeAndChecksums.CRC32 = crc32;
 
                     break;
 

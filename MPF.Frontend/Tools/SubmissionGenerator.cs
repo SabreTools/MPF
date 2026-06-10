@@ -104,10 +104,6 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
             }
 
-            // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrEmpty(info.SizeAndChecksums.CRC32))
-                info.TracksAndWriteOffsets.ClrMameProData = null;
-
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels is not null)
@@ -795,11 +791,6 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-
-                    info.SizeAndChecksums.CRC32 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
 #pragma warning restore IDE0010

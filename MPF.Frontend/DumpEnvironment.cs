@@ -689,6 +689,12 @@ namespace MPF.Frontend
                 resultProgress.Report(ResultEventArgs.Neutral("PS5 PIC copied to comments!"));
             }
 
+            // Ensure that all split size and checksums are removed
+            submissionInfo?.SizeAndChecksums?.Size = default;
+            submissionInfo?.SizeAndChecksums?.CRC32 = null;
+            submissionInfo?.SizeAndChecksums?.MD5 = null;
+            submissionInfo?.SizeAndChecksums?.SHA1 = null;
+
             resultProgress.Report(ResultEventArgs.Success("Submission information process complete!"));
             return ResultEventArgs.Success();
         }
