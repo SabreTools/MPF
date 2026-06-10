@@ -82,10 +82,10 @@ namespace MPF.CLI.Features
             Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
             Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-            // Redump Login Information
+            // Web Login Information
             Options.Processing.Login.PullAllInformation = false;
-            Options.Processing.Login.RedumpUsername = null;
-            Options.Processing.Login.RedumpPassword = null;
+            Options.Processing.Login.RedumpOrgUsername = null;
+            Options.Processing.Login.RedumpOrgPassword = null;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
             // Media Information
@@ -124,19 +124,21 @@ namespace MPF.CLI.Features
             }
 
             // Validate the supplied credentials
-            if (Options.Processing.Login.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)
-                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpPassword))
+            if (Options.Processing.Login.RetrieveMatchInformation)
             {
-                bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpUsername!, Options.Processing.Login.RedumpPassword!).GetAwaiter().GetResult();
-                string message = validated switch
+                if (!string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgUsername)
+                    && !string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgPassword))
                 {
-                    true => "Redump username and password accepted!",
-                    false => "Redump username and password denied!",
-                    null => "An error occurred validating your credentials!",
-                };
+                    bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpOrgUsername!, Options.Processing.Login.RedumpOrgPassword!).GetAwaiter().GetResult();
+                    string message = validated switch
+                    {
+                        true => "redump.org username and password accepted!",
+                        false => "redump.org username and password denied!",
+                        null => "An error occurred validating your redump.org credentials!",
+                    };
 
-                Console.WriteLine(message);
+                    Console.WriteLine(message);
+                }
             }
 
             // Validate the internal program

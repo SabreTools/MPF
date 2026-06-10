@@ -122,14 +122,14 @@ namespace MPF.Frontend.Features
             Console.WriteLine($"  Include Debug Protection Information = {options.Processing.ProtectionScanning.IncludeDebugProtectionInformation}");
             Console.WriteLine();
 
-            // Redump Login Information
-            Console.WriteLine("Redump Login Information:");
+            // Web Login Information
+            Console.WriteLine("Web Login Information:");
             Console.WriteLine($"  Pull All Information = {options.Processing.Login.PullAllInformation}");
-            Console.WriteLine($"  Redump Username = {options.Processing.Login.RedumpUsername}");
-            Console.WriteLine($"  Redump Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpPassword) ? "[UNSET]" : "[SET]")}");
+            Console.WriteLine($"  redump.org Username = {options.Processing.Login.RedumpOrgUsername}");
+            Console.WriteLine($"  redump.org Password = {(string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword) ? "[UNSET]" : "[SET]")}");
             Console.WriteLine($"  Retrieve Match Information = {options.Processing.Login.RetrieveMatchInformation}");
-            Console.WriteLine($"  Redump client attempt count = {options.Processing.Login.AttemptCount}");
-            Console.WriteLine($"  Redump client timeout in seconds = {options.Processing.Login.TimeoutSeconds}");
+            Console.WriteLine($"  Web client attempt count = {options.Processing.Login.AttemptCount}");
+            Console.WriteLine($"  Web client timeout in seconds = {options.Processing.Login.TimeoutSeconds}");
             Console.WriteLine();
 
             // Media Information

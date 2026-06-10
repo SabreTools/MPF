@@ -31,6 +31,7 @@
 - Move CRC-32 extraction to IRD path
 - Remove now-unused helper method
 - Support Redumper HFS label
+- Redump.org is Org
 
 ### 3.7.1 (2026-03-30)
 

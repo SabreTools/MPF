@@ -121,15 +121,15 @@ namespace MPF.Frontend.ViewModels
         #region UI Commands
 
         /// <summary>
-        /// Get the human-readable result for a Redump login result
+        /// Get the human-readable result for a redump.org login result
         /// </summary>
-        public static string GetRedumpLoginResult(bool? success)
+        public static string GetRedumpOrgLoginResult(bool? success)
         {
             return success switch
             {
-                true => "Redump username and password accepted!",
-                false => "Redump username and password denied!",
-                null => "An error occurred validating your credentials!",
+                true => "redump.org username and password accepted!",
+                false => "redump.org username and password denied!",
+                null => "An error occurred validating your redump.org credentials!",
             };
         }
 

@@ -147,8 +147,8 @@ namespace MPF.Frontend
             Processing.ProtectionScanning.IncludeDebugProtectionInformation = source.Processing.ProtectionScanning.IncludeDebugProtectionInformation;
 
             Processing.Login.PullAllInformation = source.Processing.Login.PullAllInformation;
-            Processing.Login.RedumpUsername = source.Processing.Login.RedumpUsername;
-            Processing.Login.RedumpPassword = source.Processing.Login.RedumpPassword;
+            Processing.Login.RedumpOrgUsername = source.Processing.Login.RedumpOrgUsername;
+            Processing.Login.RedumpOrgPassword = source.Processing.Login.RedumpOrgPassword;
             Processing.Login.RetrieveMatchInformation = source.Processing.Login.RetrieveMatchInformation;
             Processing.Login.AttemptCount = source.Processing.Login.AttemptCount;
             Processing.Login.TimeoutSeconds = source.Processing.Login.TimeoutSeconds;
@@ -645,23 +645,23 @@ namespace MPF.Frontend
     public class SiteLoginSettings
     {
         /// <summary>
-        /// Pull all information from Redump if signed in
+        /// Pull all information from online sources if signed in
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         public bool PullAllInformation { get; set; } = false;
 
         /// <summary>
-        /// Username for Redump, requires <see cref="RedumpPassword"/>
+        /// Username for redump.org, requires <see cref="RedumpOrgPassword"/>
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public string? RedumpUsername { get; set; } = string.Empty;
+        public string? RedumpOrgUsername { get; set; } = string.Empty;
 
         /// <summary>
-        /// Password for Redump, requires <see cref="RedumpUsername"/>
+        /// Password for redump.org, requires <see cref="RedumpOrgUsername"/>
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string? RedumpPassword { get; set; } = string.Empty;
+        public string? RedumpOrgPassword { get; set; } = string.Empty;
 
         /// <summary>
         /// Enable retrieving match information from Redump

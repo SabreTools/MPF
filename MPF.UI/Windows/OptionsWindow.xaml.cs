@@ -29,8 +29,8 @@ namespace MPF.UI.Windows
         private System.Windows.Controls.Button? DiscImageCreatorPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "DiscImageCreatorPathButton");
         private System.Windows.Controls.Button? RedumperPathButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumperPathButton");
         private System.Windows.Controls.Button? RedumpLoginTestButton => ItemHelper.FindChild<System.Windows.Controls.Button>(this, "RedumpLoginTestButton");
-        private PasswordBox? RedumpPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpPasswordBox");
-        private System.Windows.Controls.TextBox? RedumpUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpUsernameTextBox");
+        private PasswordBox? RedumpOrgPasswordBox => ItemHelper.FindChild<PasswordBox>(this, "RedumpOrgPasswordBox");
+        private System.Windows.Controls.TextBox? RedumpOrgUsernameTextBox => ItemHelper.FindChild<System.Windows.Controls.TextBox>(this, "RedumpOrgUsernameTextBox");
 
 #endif
 
@@ -61,7 +61,7 @@ namespace MPF.UI.Windows
             DataContext = new OptionsViewModel(options);
 
             // Set initial value for binding
-            RedumpPasswordBox!.Password = options.Processing.Login.RedumpPassword;
+            RedumpOrgPasswordBox!.Password = options.Processing.Login.RedumpOrgPassword;
 
             // Add handlers
             AaruPathButton!.Click += BrowseForAaruPathClick;
@@ -71,8 +71,8 @@ namespace MPF.UI.Windows
 
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
-            RedumpPasswordBox!.PasswordChanged += OnPasswordChanged;
-            RedumpLoginTestButton!.Click += OnRedumpTestClick;
+            RedumpOrgPasswordBox!.PasswordChanged += OnPasswordChanged;
+            RedumpLoginTestButton!.Click += OnRedumpOrgTestClick;
         }
 
         /// <summary>
@@ -182,12 +182,12 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Test Redump credentials for validity
+        /// Test redump.org credentials for validity
         /// </summary>
-        private async Task<bool?> ValidateRedumpCredentials()
+        private async Task<bool?> ValidateRedumpOrgCredentials()
         {
-            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Password);
-            string message = OptionsViewModel.GetRedumpLoginResult(success);
+            bool? success = await RedumpClient.ValidateCredentials(RedumpOrgUsernameTextBox!.Text, RedumpOrgPasswordBox!.Password);
+            string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
 
             if (success == true)
                 CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -274,18 +274,18 @@ namespace MPF.UI.Windows
         }
 
         /// <summary>
-        /// Handler for RedumpPasswordBox PasswordChanged event
+        /// Handler for RedumpOrgPasswordBox PasswordChanged event
         /// </summary>
         private void OnPasswordChanged(object sender, EventArgs e)
         {
-            OptionsViewModel.Options.Processing.Login.RedumpPassword = RedumpPasswordBox!.Password;
+            OptionsViewModel.Options.Processing.Login.RedumpOrgPassword = RedumpOrgPasswordBox!.Password;
         }
 
         /// <summary>
-        /// Test Redump credentials for validity
+        /// Test redump.org credentials for validity
         /// </summary>
-        private async void OnRedumpTestClick(object sender, EventArgs e)
-            => await ValidateRedumpCredentials();
+        private async void OnRedumpOrgTestClick(object sender, EventArgs e)
+            => await ValidateRedumpOrgCredentials();
 
         #endregion
     }

@@ -49,10 +49,10 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Redump Login Information
+                // Web Login Information
                 Options.Processing.Login.PullAllInformation = false;
-                Options.Processing.Login.RedumpUsername = null;
-                Options.Processing.Login.RedumpPassword = null;
+                Options.Processing.Login.RedumpOrgUsername = null;
+                Options.Processing.Login.RedumpOrgPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
@@ -92,10 +92,10 @@ namespace MPF.Check.Features
             Console.WriteLine($"3) Set seed path (Currently '{Seed}')");
             Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
-            Console.WriteLine($"6) Attempt Redump matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
-            Console.WriteLine($"7) Redump credentials (Currently '{Options.Processing.Login.RedumpUsername}')");
-            Console.WriteLine($"8) Redump client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
-            Console.WriteLine($"9) Redump client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
+            Console.WriteLine($"6) Attempt online matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
+            Console.WriteLine($"7) redump.org credentials (Currently '{Options.Processing.Login.RedumpOrgUsername}')");
+            Console.WriteLine($"8) Web client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
+            Console.WriteLine($"9) Web client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
             Console.WriteLine($"A) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
             Console.WriteLine($"B) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"C) Scan for protection (Currently '{scan}')");
@@ -243,20 +243,20 @@ namespace MPF.Check.Features
 
         redumpCredentials:
             Console.WriteLine();
-            Console.WriteLine("Enter your Redump username and press Enter:");
+            Console.WriteLine("Enter your redump.org username and press Enter:");
             Console.Write("> ");
-            Options.Processing.Login.RedumpUsername = Console.ReadLine();
+            Options.Processing.Login.RedumpOrgUsername = Console.ReadLine();
 
-            Console.WriteLine("Enter your Redump password (hidden) and press Enter:");
+            Console.WriteLine("Enter your redump.org password (hidden) and press Enter:");
             Console.Write("> ");
-            Options.Processing.Login.RedumpPassword = string.Empty;
+            Options.Processing.Login.RedumpOrgPassword = string.Empty;
             while (true)
             {
                 var key = Console.ReadKey(true);
                 if (key.Key == ConsoleKey.Enter)
                     break;
 
-                Options.Processing.Login.RedumpPassword += key.KeyChar;
+                Options.Processing.Login.RedumpOrgPassword += key.KeyChar;
             }
 
             goto root;
