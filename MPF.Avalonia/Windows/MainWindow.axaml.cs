@@ -54,6 +54,14 @@ namespace MPF.Avalonia.Windows
         ];
 
         /// <summary>
+        /// File picker types for browsing output files
+        /// </summary>
+        private static readonly List<FilePickerFileType> OutputFileTypes =
+        [
+            new("All Files") { Patterns = new[] { "*" } },
+        ];
+
+        /// <summary>
         /// Whether the window may close without prompting the user
         /// </summary>
         private bool _allowCloseWithoutPrompt;
@@ -82,24 +90,6 @@ namespace MPF.Avalonia.Windows
         /// Whether the log panel resize logic has been initialized
         /// </summary>
         private bool _logPanelResizeInitialized;
-
-        /// <summary>
-        /// Guard against re-entrancy while normalizing the output path
-        /// </summary>
-        private bool _normalizingOutputPath;
-
-        // macOS native menu items, retained so their headers can be updated on language change
-        private NativeMenuItem? _nativeFileMenuGroup;
-        private NativeMenuItem? _nativeToolsMenuGroup;
-        private NativeMenuItem? _nativeHelpMenuGroup;
-        private NativeMenuItem? _nativeLanguageMenuGroup;
-        private NativeMenuItem? _nativeExitMenuItem;
-        private NativeMenuItem? _nativeCheckDumpMenuItem;
-        private NativeMenuItem? _nativeCreateIrdMenuItem;
-        private NativeMenuItem? _nativeOptionsMenuItem;
-        private NativeMenuItem? _nativeDebugViewMenuItem;
-        private NativeMenuItem? _nativeAboutMenuItem;
-        private NativeMenuItem? _nativeCheckForUpdatesMenuItem;
 
         #endregion
 
@@ -172,137 +162,6 @@ namespace MPF.Avalonia.Windows
             }
 
             this.FindControl<Border>("RootBorder")!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
-        }
-
-        /// <summary>
-        /// Build and assign the macOS native application menu
-        /// </summary>
-        private void ConfigurePlatformMenus()
-        {
-            if (!OperatingSystem.IsMacOS())
-                return;
-
-            var nativeMenu = new NativeMenu();
-            _nativeExitMenuItem = CreateNativeMenuItem(StringResource("ExitMenuItemString", "Exit"), () => AppExitClick(this, new RoutedEventArgs()));
-            _nativeFileMenuGroup = CreateNativeMenuGroup(StringResource("FileMenuString", "File"), _nativeExitMenuItem);
-            nativeMenu.Add(_nativeFileMenuGroup);
-
-            _nativeCheckDumpMenuItem = CreateNativeMenuItem(StringResource("CheckDumpMenuItemString", "Check Dump"), () => CheckDumpMenuItemClick(this, new RoutedEventArgs()));
-            _nativeCreateIrdMenuItem = CreateNativeMenuItem(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"), () => CreateIRDMenuItemClick(this, new RoutedEventArgs()));
-            _nativeOptionsMenuItem = CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), () => OptionsMenuItemClick(this, new RoutedEventArgs()));
-            _nativeDebugViewMenuItem = CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), () => DebugViewClick(this, new RoutedEventArgs()));
-            _nativeToolsMenuGroup = CreateNativeMenuGroup(
-                StringResource("ToolsMenuString", "Tools"),
-                _nativeCheckDumpMenuItem,
-                _nativeCreateIrdMenuItem,
-                _nativeOptionsMenuItem,
-                _nativeDebugViewMenuItem);
-            nativeMenu.Add(_nativeToolsMenuGroup);
-
-            _nativeAboutMenuItem = CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), () => AboutClick(this, new RoutedEventArgs()));
-            _nativeCheckForUpdatesMenuItem = CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), () => CheckForUpdatesClick(this, new RoutedEventArgs()));
-            _nativeHelpMenuGroup = CreateNativeMenuGroup(
-                StringResource("HelpMenuString", "Help"),
-                _nativeAboutMenuItem,
-                _nativeCheckForUpdatesMenuItem);
-            nativeMenu.Add(_nativeHelpMenuGroup);
-
-            _nativeLanguageMenuGroup = CreateNativeMenuGroup(
-                NativeLanguageMenuHeader(),
-                CreateNativeMenuItem("English", () => LanguageMenuItemClick(this.FindControl<MenuItem>("EnglishMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Deutsch", () => LanguageMenuItemClick(this.FindControl<MenuItem>("GermanMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Español", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SpanishMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Français", () => LanguageMenuItemClick(this.FindControl<MenuItem>("FrenchMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Italiano", () => LanguageMenuItemClick(this.FindControl<MenuItem>("ItalianMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("日本語", () => LanguageMenuItemClick(this.FindControl<MenuItem>("JapaneseMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("한국어", () => LanguageMenuItemClick(this.FindControl<MenuItem>("KoreanMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Polski", () => LanguageMenuItemClick(this.FindControl<MenuItem>("PolishMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Português", () => LanguageMenuItemClick(this.FindControl<MenuItem>("PortugueseMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Русский", () => LanguageMenuItemClick(this.FindControl<MenuItem>("RussianMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Svenska", () => LanguageMenuItemClick(this.FindControl<MenuItem>("SwedishMenuItem"), new RoutedEventArgs())),
-                CreateNativeMenuItem("Українська", () => LanguageMenuItemClick(this.FindControl<MenuItem>("UkrainianMenuItem"), new RoutedEventArgs())));
-            nativeMenu.Add(_nativeLanguageMenuGroup);
-
-            NativeMenu.SetMenu(this, nativeMenu);
-        }
-
-        /// <summary>
-        /// Create a native menu group with the given header containing the provided items
-        /// </summary>
-        private NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
-        {
-            var group = new NativeMenuItem { Header = CleanMenuHeader(header) };
-            var menu = new NativeMenu();
-            foreach (NativeMenuItem item in items)
-            {
-                menu.Add(item);
-            }
-
-            group.Menu = menu;
-            return group;
-        }
-
-        /// <summary>
-        /// Create a native menu item that invokes the given action when clicked
-        /// </summary>
-        private static NativeMenuItem CreateNativeMenuItem(string header, Action action)
-        {
-            var item = new NativeMenuItem { Header = CleanMenuHeader(header) };
-            item.Click += (_, _) => action();
-            return item;
-        }
-
-        /// <summary>
-        /// Strip access-key underscores from a menu header for native display
-        /// </summary>
-        private static string CleanMenuHeader(string header)
-            => header.Replace("_", string.Empty);
-
-        /// <summary>
-        /// Get the localized header for the native language menu group
-        /// </summary>
-        private string NativeLanguageMenuHeader()
-            => StringResource("LanguageMenuString", "ENG");
-
-        /// <summary>
-        /// Refresh the native language menu group header
-        /// </summary>
-        private void UpdateNativeLanguageMenuHeader()
-        {
-            if (_nativeLanguageMenuGroup is not null)
-                _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
-        }
-
-        /// <summary>
-        /// Refresh all native menu headers to the current interface language
-        /// </summary>
-        private void UpdateNativeMenuHeaders()
-        {
-            if (!OperatingSystem.IsMacOS())
-                return;
-
-            if (_nativeFileMenuGroup is not null)
-                _nativeFileMenuGroup.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
-            if (_nativeToolsMenuGroup is not null)
-                _nativeToolsMenuGroup.Header = CleanMenuHeader(StringResource("ToolsMenuString", "Tools"));
-            if (_nativeHelpMenuGroup is not null)
-                _nativeHelpMenuGroup.Header = CleanMenuHeader(StringResource("HelpMenuString", "Help"));
-            if (_nativeExitMenuItem is not null)
-                _nativeExitMenuItem.Header = CleanMenuHeader(StringResource("ExitMenuItemString", "Exit"));
-            if (_nativeCheckDumpMenuItem is not null)
-                _nativeCheckDumpMenuItem.Header = CleanMenuHeader(StringResource("CheckDumpMenuItemString", "Check Dump"));
-            if (_nativeCreateIrdMenuItem is not null)
-                _nativeCreateIrdMenuItem.Header = CleanMenuHeader(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"));
-            if (_nativeOptionsMenuItem is not null)
-                _nativeOptionsMenuItem.Header = CleanMenuHeader(StringResource("OptionsDumpMenuItemString", "Options"));
-            if (_nativeDebugViewMenuItem is not null)
-                _nativeDebugViewMenuItem.Header = CleanMenuHeader(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"));
-            if (_nativeAboutMenuItem is not null)
-                _nativeAboutMenuItem.Header = CleanMenuHeader(StringResource("AboutMenuItemString", "About"));
-            if (_nativeCheckForUpdatesMenuItem is not null)
-                _nativeCheckForUpdatesMenuItem.Header = CleanMenuHeader(StringResource("CheckForUpdateMenuItemString", "Check for Updates"));
-
-            UpdateNativeLanguageMenuHeader();
         }
 
         /// <summary>
@@ -567,10 +426,7 @@ namespace MPF.Avalonia.Windows
                 this,
                 StringResource("OutputPathLabelString", "Output Path"),
                 filename,
-                new List<FilePickerFileType>
-                {
-                    new("All Files") { Patterns = new[] { "*" } },
-                });
+                OutputFileTypes);
         }
 
         /// <summary>
@@ -580,48 +436,6 @@ namespace MPF.Avalonia.Windows
         {
             if (e.PropertyName == nameof(MPF.Frontend.ViewModels.MainViewModel.OutputPath))
                 NormalizeMacOutputPath();
-        }
-
-        /// <summary>
-        /// Remove the generated /Volumes/ prefix from the output path on macOS
-        /// </summary>
-        private void NormalizeMacOutputPath()
-        {
-            if (_normalizingOutputPath || !OperatingSystem.IsMacOS())
-                return;
-
-            string normalized = RemoveMacVolumesPrefix(MainViewModel.OutputPath);
-            if (normalized == MainViewModel.OutputPath)
-                return;
-
-            try
-            {
-                _normalizingOutputPath = true;
-                MainViewModel.OutputPath = normalized;
-            }
-            finally
-            {
-                _normalizingOutputPath = false;
-            }
-        }
-
-        /// <summary>
-        /// Strip the sanitized "_Volumes_" prefix that can leak into generated output paths
-        /// </summary>
-        private static string RemoveMacVolumesPrefix(string outputPath)
-        {
-            const string generatedVolumesPrefix = "_Volumes_";
-
-            if (string.IsNullOrEmpty(outputPath))
-                return outputPath;
-
-            string normalized = outputPath;
-            if (normalized.StartsWith(generatedVolumesPrefix, StringComparison.Ordinal))
-                normalized = normalized[generatedVolumesPrefix.Length..];
-
-            return normalized
-                .Replace($"/{generatedVolumesPrefix}", "/", StringComparison.Ordinal)
-                .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -959,34 +773,6 @@ namespace MPF.Avalonia.Windows
 
             MainViewModel.OutputPath = Path.Combine(outputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
             MainViewModel.EnsureMediaInformation();
-        }
-
-        /// <summary>
-        /// Strip the macOS drive argument from Redumper parameters, which are not used on macOS
-        /// </summary>
-        private void PrepareMacRedumperParameters()
-        {
-            if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
-                return;
-
-            string? driveName = MainViewModel.CurrentDrive?.Name?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            if (string.IsNullOrWhiteSpace(driveName) || !driveName.StartsWith("/Volumes/", StringComparison.Ordinal))
-                return;
-
-            string parameters = MainViewModel.Parameters;
-            if (string.IsNullOrWhiteSpace(parameters))
-                return;
-
-            // Mounted volume names live under /Volumes/ and can contain spaces or regex
-            // metacharacters, so escape the name to match it literally in the patterns below
-            string escapedDrive = Regex.Escape(driveName);
-
-            // Remove the mounted drive's "--drive=<name>" and "--drive <name>" arguments
-            // (quoted or unquoted, with an optional trailing slash) from the parameter string,
-            // since Redumper on macOS does not take the drive argument the way it does on Windows
-            parameters = Regex.Replace(parameters, $@"(^|\s)--drive=(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
-            parameters = Regex.Replace(parameters, $@"(^|\s)--drive\s+(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
-            MainViewModel.Parameters = parameters.Trim();
         }
 
         /// <summary>

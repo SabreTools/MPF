@@ -18,6 +18,16 @@ namespace MPF.Avalonia.Windows
     public partial class CheckDumpWindow : WindowBase
     {
         /// <summary>
+        /// File picker types for browsing dump input files
+        /// </summary>
+        private static readonly List<FilePickerFileType> InputFileTypes =
+        [
+            new("Disc Images") { Patterns = new[] { "*.iso", "*.cue", "*.aaruf", "*.bca" } },
+            new("Log Archives") { Patterns = new[] { "*_logs.zip" } },
+            FilePickerFileTypes.All,
+        ];
+
+        /// <summary>
         /// Parent window used as the dialog owner, if any
         /// </summary>
         private MainWindow? _parent;
@@ -101,12 +111,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseFileAsync()
         {
-            return await DialogService.OpenFileAsync(this, StringResource("InputPathLabelString", "Input Path"), new List<FilePickerFileType>
-            {
-                new("Disc Images") { Patterns = new[] { "*.iso", "*.cue", "*.aaruf", "*.bca" } },
-                new("Log Archives") { Patterns = new[] { "*_logs.zip" } },
-                FilePickerFileTypes.All,
-            });
+            return await DialogService.OpenFileAsync(this, StringResource("InputPathLabelString", "Input Path"), InputFileTypes);
         }
 
         #endregion

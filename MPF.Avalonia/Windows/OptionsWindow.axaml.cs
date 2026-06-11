@@ -17,6 +17,23 @@ namespace MPF.Avalonia.Windows
     public partial class OptionsWindow : WindowBase
     {
         /// <summary>
+        /// File picker types for browsing executables on Windows
+        /// </summary>
+        private static readonly List<FilePickerFileType> WindowsExecutableFileTypes =
+        [
+            new("Executables") { Patterns = new[] { "*.exe" } },
+            new("All files") { Patterns = new[] { "*", "*.*" } },
+        ];
+
+        /// <summary>
+        /// File picker types for browsing executables on non-Windows platforms
+        /// </summary>
+        private static readonly List<FilePickerFileType> AllFilesFileTypes =
+        [
+            new("All files") { Patterns = new[] { "*", "*.*" } },
+        ];
+
+        /// <summary>
         /// Read-only access to the current options view model
         /// </summary>
         public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel ?? new OptionsViewModel();
@@ -59,19 +76,11 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
-            if (!System.OperatingSystem.IsWindows())
-            {
-                return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
-                {
-                    new("All files") { Patterns = new[] { "*", "*.*" } },
-                });
-            }
+            List<FilePickerFileType> fileTypes = System.OperatingSystem.IsWindows()
+                ? WindowsExecutableFileTypes
+                : AllFilesFileTypes;
 
-            return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
-            {
-                new("Executables") { Patterns = new[] { "*.exe" } },
-                new("All files") { Patterns = new[] { "*", "*.*" } },
-            });
+            return await DialogService.OpenFileAsync(this, title, fileTypes);
         }
 
         /// <summary>

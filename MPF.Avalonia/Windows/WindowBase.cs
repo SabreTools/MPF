@@ -43,7 +43,17 @@ namespace MPF.Avalonia.Windows
         /// Look up a localized string resource by key, falling back to the given default
         /// </summary>
         protected string StringResource(string key, string fallback)
-            => global::Avalonia.Application.Current?.TryFindResource(key, out object? value) == true ? value?.ToString() ?? fallback : fallback;
+        {
+            // If there is no current application, the resource cannot be resolved
+            if (global::Avalonia.Application.Current is not { } application)
+                return fallback;
+
+            // If the key cannot be found in the application resources
+            if (!application.TryFindResource(key, out object? value))
+                return fallback;
+
+            return value?.ToString() ?? fallback;
+        }
 
         /// <summary>
         /// Display a user message using a MessageBoxWindow

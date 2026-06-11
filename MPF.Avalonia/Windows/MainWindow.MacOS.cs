@@ -1,0 +1,242 @@
+using System;
+using System.IO;
+using System.Text.RegularExpressions;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using MPF.Frontend;
+
+namespace MPF.Avalonia.Windows
+{
+    /// <summary>
+    /// macOS-specific functionality for the main window: the native application menu,
+    /// output path normalization, and Redumper parameter handling
+    /// </summary>
+    public partial class MainWindow
+    {
+        #region Fields
+
+        /// <summary>
+        /// Guard against re-entrancy while normalizing the output path
+        /// </summary>
+        private bool _normalizingOutputPath;
+
+        // macOS native menu items, retained so their headers can be updated on language change
+        private NativeMenuItem? _nativeFileMenuGroup;
+        private NativeMenuItem? _nativeToolsMenuGroup;
+        private NativeMenuItem? _nativeHelpMenuGroup;
+        private NativeMenuItem? _nativeLanguageMenuGroup;
+        private NativeMenuItem? _nativeExitMenuItem;
+        private NativeMenuItem? _nativeCheckDumpMenuItem;
+        private NativeMenuItem? _nativeCreateIrdMenuItem;
+        private NativeMenuItem? _nativeOptionsMenuItem;
+        private NativeMenuItem? _nativeDebugViewMenuItem;
+        private NativeMenuItem? _nativeAboutMenuItem;
+        private NativeMenuItem? _nativeCheckForUpdatesMenuItem;
+
+        #endregion
+
+        /// <summary>
+        /// Build and assign the macOS native application menu
+        /// </summary>
+        private void ConfigurePlatformMenus()
+        {
+            if (!OperatingSystem.IsMacOS())
+                return;
+
+            var nativeMenu = new NativeMenu();
+            _nativeExitMenuItem = CreateNativeMenuItem(StringResource("ExitMenuItemString", "Exit"), AppExitClick, this);
+            _nativeFileMenuGroup = CreateNativeMenuGroup(StringResource("FileMenuString", "File"), _nativeExitMenuItem);
+            nativeMenu.Add(_nativeFileMenuGroup);
+
+            _nativeCheckDumpMenuItem = CreateNativeMenuItem(StringResource("CheckDumpMenuItemString", "Check Dump"), CheckDumpMenuItemClick, this);
+            _nativeCreateIrdMenuItem = CreateNativeMenuItem(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"), CreateIRDMenuItemClick, this);
+            _nativeOptionsMenuItem = CreateNativeMenuItem(StringResource("OptionsDumpMenuItemString", "Options"), OptionsMenuItemClick, this);
+            _nativeDebugViewMenuItem = CreateNativeMenuItem(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"), DebugViewClick, this);
+            _nativeToolsMenuGroup = CreateNativeMenuGroup(
+                StringResource("ToolsMenuString", "Tools"),
+                _nativeCheckDumpMenuItem,
+                _nativeCreateIrdMenuItem,
+                _nativeOptionsMenuItem,
+                _nativeDebugViewMenuItem);
+            nativeMenu.Add(_nativeToolsMenuGroup);
+
+            _nativeAboutMenuItem = CreateNativeMenuItem(StringResource("AboutMenuItemString", "About"), AboutClick, this);
+            _nativeCheckForUpdatesMenuItem = CreateNativeMenuItem(StringResource("CheckForUpdateMenuItemString", "Check for Updates"), CheckForUpdatesClick, this);
+            _nativeHelpMenuGroup = CreateNativeMenuGroup(
+                StringResource("HelpMenuString", "Help"),
+                _nativeAboutMenuItem,
+                _nativeCheckForUpdatesMenuItem);
+            nativeMenu.Add(_nativeHelpMenuGroup);
+
+            _nativeLanguageMenuGroup = CreateNativeMenuGroup(
+                NativeLanguageMenuHeader(),
+                CreateNativeMenuItem("English", LanguageMenuItemClick, this.FindControl<MenuItem>("EnglishMenuItem")),
+                CreateNativeMenuItem("Deutsch", LanguageMenuItemClick, this.FindControl<MenuItem>("GermanMenuItem")),
+                CreateNativeMenuItem("Español", LanguageMenuItemClick, this.FindControl<MenuItem>("SpanishMenuItem")),
+                CreateNativeMenuItem("Français", LanguageMenuItemClick, this.FindControl<MenuItem>("FrenchMenuItem")),
+                CreateNativeMenuItem("Italiano", LanguageMenuItemClick, this.FindControl<MenuItem>("ItalianMenuItem")),
+                CreateNativeMenuItem("日本語", LanguageMenuItemClick, this.FindControl<MenuItem>("JapaneseMenuItem")),
+                CreateNativeMenuItem("한국어", LanguageMenuItemClick, this.FindControl<MenuItem>("KoreanMenuItem")),
+                CreateNativeMenuItem("Polski", LanguageMenuItemClick, this.FindControl<MenuItem>("PolishMenuItem")),
+                CreateNativeMenuItem("Português", LanguageMenuItemClick, this.FindControl<MenuItem>("PortugueseMenuItem")),
+                CreateNativeMenuItem("Русский", LanguageMenuItemClick, this.FindControl<MenuItem>("RussianMenuItem")),
+                CreateNativeMenuItem("Svenska", LanguageMenuItemClick, this.FindControl<MenuItem>("SwedishMenuItem")),
+                CreateNativeMenuItem("Українська", LanguageMenuItemClick, this.FindControl<MenuItem>("UkrainianMenuItem")));
+            nativeMenu.Add(_nativeLanguageMenuGroup);
+
+            NativeMenu.SetMenu(this, nativeMenu);
+        }
+
+        /// <summary>
+        /// Create a native menu group with the given header containing the provided items
+        /// </summary>
+        private NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
+        {
+            var group = new NativeMenuItem { Header = CleanMenuHeader(header) };
+            var menu = new NativeMenu();
+            foreach (NativeMenuItem item in items)
+            {
+                menu.Add(item);
+            }
+
+            group.Menu = menu;
+            return group;
+        }
+
+        /// <summary>
+        /// Create a native menu item that invokes the given click handler when clicked
+        /// </summary>
+        /// <param name="header">Header text for the menu item</param>
+        /// <param name="onClick">Click event handler to invoke</param>
+        /// <param name="sender">Sender to pass to the click handler</param>
+        private static NativeMenuItem CreateNativeMenuItem(string header, EventHandler<RoutedEventArgs> onClick, object? sender)
+        {
+            var item = new NativeMenuItem { Header = CleanMenuHeader(header) };
+            item.Click += (_, _) => onClick(sender, new RoutedEventArgs());
+            return item;
+        }
+
+        /// <summary>
+        /// Strip access-key underscores from a menu header for native display
+        /// </summary>
+        private static string CleanMenuHeader(string header)
+            => header.Replace("_", string.Empty);
+
+        /// <summary>
+        /// Get the localized header for the native language menu group
+        /// </summary>
+        private string NativeLanguageMenuHeader()
+            => StringResource("LanguageMenuString", "ENG");
+
+        /// <summary>
+        /// Refresh the native language menu group header
+        /// </summary>
+        private void UpdateNativeLanguageMenuHeader()
+        {
+            if (_nativeLanguageMenuGroup is not null)
+                _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
+        }
+
+        /// <summary>
+        /// Refresh all native menu headers to the current interface language
+        /// </summary>
+        private void UpdateNativeMenuHeaders()
+        {
+            if (!OperatingSystem.IsMacOS())
+                return;
+
+            if (_nativeFileMenuGroup is not null)
+                _nativeFileMenuGroup.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
+            if (_nativeToolsMenuGroup is not null)
+                _nativeToolsMenuGroup.Header = CleanMenuHeader(StringResource("ToolsMenuString", "Tools"));
+            if (_nativeHelpMenuGroup is not null)
+                _nativeHelpMenuGroup.Header = CleanMenuHeader(StringResource("HelpMenuString", "Help"));
+            if (_nativeExitMenuItem is not null)
+                _nativeExitMenuItem.Header = CleanMenuHeader(StringResource("ExitMenuItemString", "Exit"));
+            if (_nativeCheckDumpMenuItem is not null)
+                _nativeCheckDumpMenuItem.Header = CleanMenuHeader(StringResource("CheckDumpMenuItemString", "Check Dump"));
+            if (_nativeCreateIrdMenuItem is not null)
+                _nativeCreateIrdMenuItem.Header = CleanMenuHeader(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"));
+            if (_nativeOptionsMenuItem is not null)
+                _nativeOptionsMenuItem.Header = CleanMenuHeader(StringResource("OptionsDumpMenuItemString", "Options"));
+            if (_nativeDebugViewMenuItem is not null)
+                _nativeDebugViewMenuItem.Header = CleanMenuHeader(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"));
+            if (_nativeAboutMenuItem is not null)
+                _nativeAboutMenuItem.Header = CleanMenuHeader(StringResource("AboutMenuItemString", "About"));
+            if (_nativeCheckForUpdatesMenuItem is not null)
+                _nativeCheckForUpdatesMenuItem.Header = CleanMenuHeader(StringResource("CheckForUpdateMenuItemString", "Check for Updates"));
+
+            UpdateNativeLanguageMenuHeader();
+        }
+
+        /// <summary>
+        /// Remove the generated /Volumes/ prefix from the output path on macOS
+        /// </summary>
+        private void NormalizeMacOutputPath()
+        {
+            if (_normalizingOutputPath || !OperatingSystem.IsMacOS())
+                return;
+
+            string normalized = RemoveMacVolumesPrefix(MainViewModel.OutputPath);
+            if (normalized == MainViewModel.OutputPath)
+                return;
+
+            try
+            {
+                _normalizingOutputPath = true;
+                MainViewModel.OutputPath = normalized;
+            }
+            finally
+            {
+                _normalizingOutputPath = false;
+            }
+        }
+
+        /// <summary>
+        /// Strip the sanitized "_Volumes_" prefix that can leak into generated output paths
+        /// </summary>
+        private static string RemoveMacVolumesPrefix(string outputPath)
+        {
+            const string generatedVolumesPrefix = "_Volumes_";
+
+            if (string.IsNullOrEmpty(outputPath))
+                return outputPath;
+
+            string normalized = outputPath;
+            if (normalized.StartsWith(generatedVolumesPrefix, StringComparison.Ordinal))
+                normalized = normalized[generatedVolumesPrefix.Length..];
+
+            return normalized
+                .Replace($"/{generatedVolumesPrefix}", "/", StringComparison.Ordinal)
+                .Replace($"\\{generatedVolumesPrefix}", "\\", StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Strip the macOS drive argument from Redumper parameters, which are not used on macOS
+        /// </summary>
+        private void PrepareMacRedumperParameters()
+        {
+            if (!OperatingSystem.IsMacOS() || MainViewModel.CurrentProgram != InternalProgram.Redumper)
+                return;
+
+            string? driveName = MainViewModel.CurrentDrive?.Name?.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (string.IsNullOrWhiteSpace(driveName) || !driveName.StartsWith("/Volumes/", StringComparison.Ordinal))
+                return;
+
+            string parameters = MainViewModel.Parameters;
+            if (string.IsNullOrWhiteSpace(parameters))
+                return;
+
+            // Mounted volume names live under /Volumes/ and can contain spaces or regex
+            // metacharacters, so escape the name to match it literally in the patterns below
+            string escapedDrive = Regex.Escape(driveName);
+
+            // Remove the mounted drive's "--drive=<name>" and "--drive <name>" arguments
+            // (quoted or unquoted, with an optional trailing slash) from the parameter string,
+            // since Redumper on macOS does not take the drive argument the way it does on Windows
+            parameters = Regex.Replace(parameters, $@"(^|\s)--drive=(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
+            parameters = Regex.Replace(parameters, $@"(^|\s)--drive\s+(?:""{escapedDrive}/?""|{escapedDrive}/?)(?=\s|$)", "$1");
+            MainViewModel.Parameters = parameters.Trim();
+        }
+    }
+}

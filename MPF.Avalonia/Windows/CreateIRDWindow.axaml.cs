@@ -16,6 +16,14 @@ namespace MPF.Avalonia.Windows
     public partial class CreateIRDWindow : WindowBase
     {
         /// <summary>
+        /// File picker types for saving an IRD file
+        /// </summary>
+        private static readonly List<FilePickerFileType> IrdFileTypes =
+        [
+            new("IRD File") { Patterns = new[] { "*.ird" } },
+        ];
+
+        /// <summary>
         /// Read-only access to the current create IRD view model
         /// </summary>
         public CreateIRDViewModel CreateIRDViewModel => DataContext as CreateIRDViewModel ?? new CreateIRDViewModel();
@@ -88,10 +96,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async void OnCreateIRDClick(object? sender, RoutedEventArgs e)
         {
-            string? outputPath = await DialogService.SaveFileAsync(this, "Save IRD", "game.ird", new List<FilePickerFileType>
-            {
-                new("IRD File") { Patterns = new[] { "*.ird" } },
-            });
+            string? outputPath = await DialogService.SaveFileAsync(this, "Save IRD", "game.ird", IrdFileTypes);
 
             if (string.IsNullOrWhiteSpace(outputPath))
                 return;
