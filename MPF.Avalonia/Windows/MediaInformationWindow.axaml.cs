@@ -23,89 +23,6 @@ namespace MPF.Avalonia.Windows
         #region Field Mappings
 
         /// <summary>
-        /// Mapping of comment input control names to their associated site codes
-        /// </summary>
-        private static readonly (string Name, SiteCode Code)[] CommentFields =
-        [
-            ("AlternativeTitleTextBox", SiteCode.AlternativeTitle),
-            ("AlternativeForeignTitleTextBox", SiteCode.AlternativeForeignTitle),
-            ("DiscTitleNonLatinTextBox", SiteCode.DiscTitleNonLatin),
-            ("EditionNonLatinTextBox", SiteCode.EditionNonLatin),
-            ("CompatibleOSTextBox", SiteCode.CompatibleOS),
-            ("BBFCRegistrationNumberTextBox", SiteCode.BBFCRegistrationNumber),
-            ("DiscHologramIDTextBox", SiteCode.DiscHologramID),
-            ("DNASDiscIDTextBox", SiteCode.DNASDiscID),
-            ("CommentDiscIDTextBox", SiteCode.DiscID),
-            ("CoverIDTextBox", SiteCode.CoverID),
-            ("ISBNTextBox", SiteCode.ISBN),
-            ("ISSNTextBox", SiteCode.ISSN),
-            ("PPNTextBox", SiteCode.PPN),
-            ("VFCCodeTextBox", SiteCode.VFCCode),
-            ("TwoKGamesIDTextBox", SiteCode.TwoKGamesID),
-            ("AcclaimIDTextBox", SiteCode.AcclaimID),
-            ("AccoladeIDTextBox", SiteCode.AccoladeID),
-            ("ActivisionIDTextBox", SiteCode.ActivisionID),
-            ("BandaiIDTextBox", SiteCode.BandaiID),
-            ("BethesdaIDTextBox", SiteCode.BethesdaID),
-            ("CDProjektIDTextBox", SiteCode.CDProjektID),
-            ("DisneyInteractiveIDTextBox", SiteCode.DisneyInteractiveID),
-            ("EidosIDTextBox", SiteCode.EidosID),
-            ("ElectronicArtsIDTextBox", SiteCode.ElectronicArtsID),
-            ("FoxInteractiveIDTextBox", SiteCode.FoxInteractiveID),
-            ("GTInteractiveIDTextBox", SiteCode.GTInteractiveID),
-            ("InterplayIDTextBox", SiteCode.InterplayID),
-            ("JASRACIDTextBox", SiteCode.JASRACID),
-            ("KingRecordsIDTextBox", SiteCode.KingRecordsID),
-            ("KoeiIDTextBox", SiteCode.KoeiID),
-            ("KonamiIDTextBox", SiteCode.KonamiID),
-            ("LucasArtsIDTextBox", SiteCode.LucasArtsID),
-            ("MicrosoftIDTextBox", SiteCode.MicrosoftID),
-            ("NaganoIDTextBox", SiteCode.NaganoID),
-            ("NamcoIDTextBox", SiteCode.NamcoID),
-            ("NipponIchiSoftwareIDTextBox", SiteCode.NipponIchiSoftwareID),
-            ("OriginIDTextBox", SiteCode.OriginID),
-            ("PonyCanyonIDTextBox", SiteCode.PonyCanyonID),
-            ("SegaIDTextBox", SiteCode.SegaID),
-            ("SelenIDTextBox", SiteCode.SelenID),
-            ("SierraIDTextBox", SiteCode.SierraID),
-            ("TaitoIDTextBox", SiteCode.TaitoID),
-            ("UbisoftIDTextBox", SiteCode.UbisoftID),
-            ("ValveIDTextBox", SiteCode.ValveID),
-            ("DMIHash", SiteCode.DMIHash),
-            ("Filename", SiteCode.Filename),
-            ("InternalName", SiteCode.InternalName),
-            ("InternalSerialName", SiteCode.InternalSerialName),
-            ("Multisession", SiteCode.Multisession),
-            ("PFIHash", SiteCode.PFIHash),
-            ("RingNonZeroDataStart", SiteCode.RingNonZeroDataStart),
-            ("RingPerfectAudioOffset", SiteCode.RingPerfectAudioOffset),
-            ("SSHash", SiteCode.SSHash),
-            ("SSVersion", SiteCode.SSVersion),
-            ("UniversalHash", SiteCode.UniversalHash),
-            ("VolumeLabel", SiteCode.VolumeLabel),
-            ("XeMID", SiteCode.XeMID),
-            ("XMID", SiteCode.XMID),
-        ];
-
-        /// <summary>
-        /// Mapping of content input control names to their associated site codes
-        /// </summary>
-        private static readonly (string Name, SiteCode Code)[] ContentFields =
-        [
-            ("ApplicationsTextBox", SiteCode.Applications),
-            ("GamesTextBox", SiteCode.Games),
-            ("NetYarozeGamesTextBox", SiteCode.NetYarozeGames),
-            ("PlayableDemosTextBox", SiteCode.PlayableDemos),
-            ("RollingDemosTextBox", SiteCode.RollingDemos),
-            ("TechDemosTextBox", SiteCode.TechDemos),
-            ("GameFootageTextBox", SiteCode.GameFootage),
-            ("VideosTextBox", SiteCode.Videos),
-            ("PatchesTextBox", SiteCode.Patches),
-            ("SavegamesTextBox", SiteCode.Savegames),
-            ("ExtrasTextBox", SiteCode.Extras),
-        ];
-
-        /// <summary>
         /// Ringcode input control names that should allow tab entry
         /// </summary>
         private static readonly string[] TabEnabledFieldNames =
@@ -147,7 +64,12 @@ namespace MPF.Avalonia.Windows
         {
             _showPcMacHybridAlways = showPcMacHybridAlways;
             InitializeComponent();
-            DataContext = new MediaInformationViewModel(options, submissionInfo);
+
+            // Ensure the bound sections and dictionaries exist before the DataContext is
+            // assigned, so the two-way special-field bindings always have a write target
+            var viewModel = new MediaInformationViewModel(options, submissionInfo);
+            EnsureSpecialFields(viewModel.SubmissionInfo);
+            DataContext = viewModel;
             if (options.Processing.MediaInformation.EnableRedumpCompatibility)
             {
                 MediaInformationViewModel.SetRedumpRegions();
@@ -156,7 +78,7 @@ namespace MPF.Avalonia.Windows
 
             MediaInformationViewModel.Load();
             PopulateCollections();
-            LoadMappedFields();
+            LoadUnmappedFields();
             ManipulateFields(options, MediaInformationViewModel.SubmissionInfo);
 
             this.FindControl<Button>("AcceptButton")!.Click += OnAcceptClick;
@@ -171,7 +93,6 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
         {
-            SaveMappedFields();
             MediaInformationViewModel.Save();
             Close(true);
         }
@@ -204,53 +125,12 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Populate the input controls from the current submission info values
+        /// Populate the input fields that are not directly bound to the submission info
         /// </summary>
-        private void LoadMappedFields()
+        private void LoadUnmappedFields()
         {
-            foreach (var (name, code) in CommentFields)
-            {
-                SetControlText(name, GetComment(code));
-            }
-
-            foreach (var (name, code) in ContentFields)
-            {
-                SetControlText(name, GetContent(code));
-            }
-
-            SetControlText("DiscKeyTextBox", MediaInformationViewModel.SubmissionInfo.Extras?.DiscKey);
-            SetControlText("DiscIDTextBox", MediaInformationViewModel.SubmissionInfo.Extras?.DiscID);
-
             if (MediaInformationViewModel.SubmissionInfo.PartiallyMatchedIDs?.Count > 0)
-                SetControlText("PartiallyMatchedIDs", string.Join(", ", MediaInformationViewModel.SubmissionInfo.PartiallyMatchedIDs));
-
-            this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsChecked = ParseBooleanComment(GetComment(SiteCode.PCMacHybrid));
-        }
-
-        /// <summary>
-        /// Save the input control values back into the current submission info
-        /// </summary>
-        private void SaveMappedFields()
-        {
-            EnsureSpecialFields();
-
-            foreach (var (name, code) in CommentFields)
-            {
-                SetComment(code, GetControlText(name));
-            }
-
-            foreach (var (name, code) in ContentFields)
-            {
-                SetContent(code, GetControlText(name));
-            }
-
-            if (MediaInformationViewModel.SubmissionInfo.Extras is not null)
-            {
-                MediaInformationViewModel.SubmissionInfo.Extras.DiscKey = GetControlText("DiscKeyTextBox");
-                MediaInformationViewModel.SubmissionInfo.Extras.DiscID = GetControlText("DiscIDTextBox");
-            }
-
-            SetComment(SiteCode.PCMacHybrid, this.FindControl<CheckBox>("PCMacHybridCheckBox")!.IsChecked == true ? "true" : string.Empty);
+                this.FindControl<UserInput>("PartiallyMatchedIDs")!.Text = string.Join(", ", MediaInformationViewModel.SubmissionInfo.PartiallyMatchedIDs);
         }
 
         /// <summary>
@@ -516,73 +396,16 @@ namespace MPF.Avalonia.Windows
             => this.FindControl<UserInput>(name)!.IsVisible = !collapse;
 
         /// <summary>
-        /// Get the current text of a named input control
+        /// Ensure the bound sections and special field dictionaries exist, so the two-way
+        /// bindings in the markup always have a valid target to read from and write into
         /// </summary>
-        private string GetControlText(string name)
-            => this.FindControl<UserInput>(name)?.Text ?? string.Empty;
-
-        /// <summary>
-        /// Set the text of a named input control, if it exists
-        /// </summary>
-        private void SetControlText(string name, string? value)
+        private static void EnsureSpecialFields(SubmissionInfo submissionInfo)
         {
-            var control = this.FindControl<UserInput>(name);
-            if (control is not null)
-                control.Text = value ?? string.Empty;
+            submissionInfo.CommonDiscInfo ??= new SabreTools.RedumpLib.Data.Sections.CommonDiscInfoSection();
+            submissionInfo.CommonDiscInfo.CommentsSpecialFields ??= [];
+            submissionInfo.CommonDiscInfo.ContentsSpecialFields ??= [];
+            submissionInfo.Extras ??= new SabreTools.RedumpLib.Data.Sections.ExtrasSection();
         }
-
-        /// <summary>
-        /// Get the comment special field value for the given site code
-        /// </summary>
-        private string GetComment(SiteCode code)
-        {
-            if (MediaInformationViewModel.SubmissionInfo.CommonDiscInfo?.CommentsSpecialFields?.TryGetValue(code, out string? value) == true)
-                return value ?? string.Empty;
-
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Set the comment special field value for the given site code
-        /// </summary>
-        private void SetComment(SiteCode code, string? value)
-            => MediaInformationViewModel.SubmissionInfo.CommonDiscInfo!.CommentsSpecialFields![code] = value ?? string.Empty;
-
-        /// <summary>
-        /// Get the content special field value for the given site code
-        /// </summary>
-        private string GetContent(SiteCode code)
-        {
-            if (MediaInformationViewModel.SubmissionInfo.CommonDiscInfo?.ContentsSpecialFields?.TryGetValue(code, out string? value) == true)
-                return value ?? string.Empty;
-
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Set the content special field value for the given site code
-        /// </summary>
-        private void SetContent(SiteCode code, string? value)
-            => MediaInformationViewModel.SubmissionInfo.CommonDiscInfo!.ContentsSpecialFields![code] = value ?? string.Empty;
-
-        /// <summary>
-        /// Ensure the special fields dictionaries and extras section exist before use
-        /// </summary>
-        private void EnsureSpecialFields()
-        {
-            MediaInformationViewModel.SubmissionInfo.CommonDiscInfo ??= new SabreTools.RedumpLib.Data.Sections.CommonDiscInfoSection();
-            MediaInformationViewModel.SubmissionInfo.CommonDiscInfo.CommentsSpecialFields ??= [];
-            MediaInformationViewModel.SubmissionInfo.CommonDiscInfo.ContentsSpecialFields ??= [];
-            MediaInformationViewModel.SubmissionInfo.Extras ??= new SabreTools.RedumpLib.Data.Sections.ExtrasSection();
-        }
-
-        /// <summary>
-        /// Parse a comment string into a boolean, treating "true", "yes", and "1" as true
-        /// </summary>
-        private static bool ParseBooleanComment(string? value)
-            => value?.Equals("true", StringComparison.OrdinalIgnoreCase) == true
-            || value?.Equals("yes", StringComparison.OrdinalIgnoreCase) == true
-            || value == "1";
 
         /// <summary>
         /// Determine if a comment field should be collapsed in read-only view
