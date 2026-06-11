@@ -172,7 +172,10 @@ MCD [
 Universal Hash (SHA-1): da39a3ee5e6b4b0d3255bfef95601890afd80709
 
 << GetVolumeLabels >>
-volume identifier: label
+ISO9660 []:
+    volume identifier: label1
+HFS []:
+    volume identifier: Label2
 
 << GetWriteOffset >>
 disc write offset: +0

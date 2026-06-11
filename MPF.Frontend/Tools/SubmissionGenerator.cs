@@ -97,16 +97,12 @@ namespace MPF.Frontend.Tools
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData))
             {
-                bool filledInfo = await FillFromRedump(options, info, resultProgress);
+                bool filledInfo = await FillFromRedumpOrg(options, info, resultProgress);
 
                 // Add a placeholder for the logs link if not a verification
                 if (!filledInfo)
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
             }
-
-            // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrEmpty(info.SizeAndChecksums.CRC32))
-                info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
@@ -173,12 +169,12 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Fill in a SubmissionInfo object from Redump, if possible
+        /// Fill in a SubmissionInfo object from redump.org, if possible
         /// </summary>
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public static async Task<bool> FillFromRedump(Options options,
+        public static async Task<bool> FillFromRedumpOrg(Options options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {
@@ -187,10 +183,10 @@ namespace MPF.Frontend.Tools
                 return false;
 
             // Set the current dumper based on username
-            info.DumpersAndStatus.Dumpers = [options.Processing.Login.RedumpUsername ?? "Anonymous User"];
+            info.DumpersAndStatus.Dumpers = [options.Processing.Login.RedumpOrgUsername ?? "Anonymous User"];
             info.PartiallyMatchedIDs = [];
 
-            // Login to Redump, if possible
+            // Login to redump.org, if possible
             int attemptCount = options.Processing.Login.AttemptCount;
             int timeoutSeconds = options.Processing.Login.TimeoutSeconds;
             var wc = new RedumpClient
@@ -199,22 +195,22 @@ namespace MPF.Frontend.Tools
                 Timeout = TimeSpan.FromSeconds(timeoutSeconds > 0 ? timeoutSeconds : 30),
             };
 
-            if (!string.IsNullOrEmpty(options.Processing.Login.RedumpUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpPassword))
+            if (!string.IsNullOrEmpty(options.Processing.Login.RedumpOrgUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword))
             {
-                resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to Redump, this might take a while..."));
-                bool? loggedIn = await wc.Login(options.Processing.Login.RedumpUsername!, options.Processing.Login.RedumpPassword!);
+                resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to redump.org, this might take a while..."));
+                bool? loggedIn = await wc.Login(options.Processing.Login.RedumpOrgUsername!, options.Processing.Login.RedumpOrgPassword!);
                 if (loggedIn is null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to Redump, skipping..."));
+                    resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to redump.org, skipping..."));
                     return false;
                 }
                 else if (loggedIn == false)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("Provided Redump credentials were invalid, not using..."));
+                    resultProgress?.Report(ResultEventArgs.Failure("Provided redump.org credentials were invalid, not using..."));
                 }
                 else
                 {
-                    resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into Redump!"));
+                    resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into redump.org!"));
                 }
             }
 
@@ -223,7 +219,7 @@ namespace MPF.Frontend.Tools
             List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on Redump, this might take a while..."));
+            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on redump.org, this might take a while..."));
             var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
@@ -795,11 +791,6 @@ namespace MPF.Frontend.Tools
                     info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-
-                    info.SizeAndChecksums.CRC32 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.MD5 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.SizeAndChecksums.SHA1 ??= (addPlaceholders ? RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
-                    info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
 #pragma warning restore IDE0010

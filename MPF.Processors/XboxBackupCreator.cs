@@ -43,15 +43,6 @@ namespace MPF.Processors
             Datafile? datafile = GenerateDatafile($"{basePath}.iso");
             info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
-            // Get the individual hash data, as per internal
-            if (ProcessingTool.GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
-            {
-                info.SizeAndChecksums.Size = size;
-                info.SizeAndChecksums.CRC32 = crc32;
-                info.SizeAndChecksums.MD5 = md5;
-                info.SizeAndChecksums.SHA1 = sha1;
-            }
-
             // Get Layerbreak from .dvd file if possible
             if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
                 info.SizeAndChecksums.Layerbreak = layerbreak;

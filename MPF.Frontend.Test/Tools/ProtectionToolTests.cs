@@ -468,6 +468,19 @@ namespace MPF.Frontend.Test.Tools
         }
 
         [Fact]
+        public void SanitizeFoundProtections_SpoonInstaller()
+        {
+            List<string> protections =
+            [
+                "Spoon Installer",
+                "Spoon Installer ANYTHING",
+            ];
+
+            string sanitized = ProtectionTool.SanitizeFoundProtections(protections);
+            Assert.Empty(sanitized);
+        }
+
+        [Fact]
         public void SanitizeFoundProtections_UPX()
         {
             List<string> protections =

@@ -25,7 +25,7 @@ namespace MPF.Check.Features
         #region Inputs
 
         private const string _attemptCountName = "attempt-count";
-        internal readonly Int32Input AttemptCountInput = new(_attemptCountName, "--attempt-count", "Set Redump client attempt count (must be greater than 0)");
+        internal readonly Int32Input AttemptCountInput = new(_attemptCountName, "--attempt-count", "Set web client attempt count (must be greater than 0)");
 
         private const string _createIrdName = "create-ird";
         internal readonly FlagInput CreateIrdInput = new(_createIrdName, "--create-ird", "Create IRD from output files (PS3 only)");
@@ -58,16 +58,16 @@ namespace MPF.Check.Features
         internal readonly FlagInput NoPlaceholdersInput = new(_noPlaceholdersName, "--no-placeholders", "Disable placeholder values in submission info");
 
         private const string _noRetrieveName = "no-retrieve";
-        internal readonly FlagInput NoRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from Redump");
+        internal readonly FlagInput NoRetrieveInput = new(_noRetrieveName, "--no-retrieve", "Disable retrieving match information from online sources");
 
         private const string _passwordName = "password";
-        internal readonly StringInput PasswordInput = new(_passwordName, ["-P", "--password"], "Redump password (incompatible with --no-retrieve)");
+        internal readonly StringInput PasswordInput = new(_passwordName, ["-P", "--password"], "redump.org password (incompatible with --no-retrieve)");
 
         private const string _pathName = "path";
         internal readonly StringInput PathInput = new(_pathName, ["-p", "--path"], "Physical drive path for additional checks");
 
         private const string _pullAllName = "pull-all";
-        internal readonly FlagInput PullAllInput = new(_pullAllName, "--pull-all", "Pull all information from Redump (requires --username and --password)");
+        internal readonly FlagInput PullAllInput = new(_pullAllName, "--pull-all", "Pull all information from online sources (requires --username and --password)");
 
         private const string _scanName = "scan";
         internal readonly FlagInput ScanInput = new(_scanName, ["-s", "--scan"], "Enable copy protection scan (requires --path)");
@@ -76,13 +76,13 @@ namespace MPF.Check.Features
         internal readonly FlagInput SuffixInput = new(_suffixName, ["-x", "--suffix"], "Enable adding filename suffix");
 
         private const string _timeoutSecondsName = "timeout-secondss";
-        internal readonly Int32Input TimeoutSecondsInput = new(_timeoutSecondsName, "--timeout-seconds", "Set Redump client timeout in seconds (must be greater than 0)");
+        internal readonly Int32Input TimeoutSecondsInput = new(_timeoutSecondsName, "--timeout-seconds", "Set web client timeout in seconds (must be greater than 0)");
 
         private const string _useName = "use";
         internal readonly StringInput UseInput = new(_useName, ["-u", "--use"], "Override configured dumping program name");
 
         private const string _usernameName = "username";
-        internal readonly StringInput UsernameInput = new(_usernameName, ["-U", "--username"], "Redump username (incompatible with --no-retrieve)");
+        internal readonly StringInput UsernameInput = new(_usernameName, ["-U", "--username"], "redump.org username (incompatible with --no-retrieve)");
 
         private const string _zipName = "zip";
         internal readonly FlagInput ZipInput = new(_zipName, ["-z", "--zip"], "Enable log file compression");
@@ -143,10 +143,10 @@ namespace MPF.Check.Features
                 Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
                 Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-                // Redump Login Information
+                // Web Login Information
                 Options.Processing.Login.PullAllInformation = false;
-                Options.Processing.Login.RedumpUsername = null;
-                Options.Processing.Login.RedumpPassword = null;
+                Options.Processing.Login.RedumpOrgUsername = null;
+                Options.Processing.Login.RedumpOrgPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
@@ -194,17 +194,17 @@ namespace MPF.Check.Features
                 else if (LogCompressionInput.ProcessInput(args, ref index))
                     Options.Processing.LogCompression = LogCompressionInput.Value.ToLogCompression();
 
-                // Retrieve Redump match information
+                // Retrieve online match information
                 else if (NoRetrieveInput.ProcessInput(args, ref index))
                     Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
 
-                // Redump username
+                // redump.org username
                 else if (UsernameInput.ProcessInput(args, ref index))
-                    Options.Processing.Login.RedumpUsername = UsernameInput.Value;
+                    Options.Processing.Login.RedumpOrgUsername = UsernameInput.Value;
 
-                // Redump password
+                // redump.org password
                 else if (PasswordInput.ProcessInput(args, ref index))
-                    Options.Processing.Login.RedumpPassword = PasswordInput.Value;
+                    Options.Processing.Login.RedumpOrgPassword = PasswordInput.Value;
 
                 // Attempt count
                 else if (AttemptCountInput.ProcessInput(args, ref index) && AttemptCountInput.Value > 0)
@@ -214,7 +214,7 @@ namespace MPF.Check.Features
                 else if (TimeoutSecondsInput.ProcessInput(args, ref index) && TimeoutSecondsInput.Value > 0)
                     Options.Processing.Login.TimeoutSeconds = TimeoutSecondsInput.Value ?? 30;
 
-                // Pull all information (requires Redump login)
+                // Pull all information (requires redump.org login)
                 else if (PullAllInput.ProcessInput(args, ref index))
                     Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
 

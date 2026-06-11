@@ -51,6 +51,7 @@ namespace MPF.Frontend.Tools
             "PEtite",
             "Setup Factory",
             "Shrinker",
+            "Spoon Installer",
             "UPX",
             "WinRAR SFX",
             "WinZip SFX",
@@ -220,7 +221,7 @@ namespace MPF.Frontend.Tools
             else if (protections.Count == 0 && drive?.Name is null)
                 return "Mounted disc path missing [EXTERNAL SCAN NEEDED]";
             else if (protections.Count == 0 && drive?.Name is not null)
-                return "None found [OMIT FROM SUBMISSION]";
+                return "No protections found [OMIT LINE FROM SUBMISSION]";
 
             // Sanitize context-sensitive protections
             protections = SanitizeContextSensitiveProtections(protections);
@@ -249,7 +250,7 @@ namespace MPF.Frontend.Tools
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(protectionValues);
             if (string.IsNullOrEmpty(protectionString))
-                return "None found [OMIT FROM SUBMISSION]";
+                return "No protections found [OMIT LINE FROM SUBMISSION]";
 
             return protectionString;
         }

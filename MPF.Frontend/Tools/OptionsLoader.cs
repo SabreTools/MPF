@@ -418,8 +418,8 @@ namespace MPF.Frontend.Tools
             options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = GetBooleanSetting(source, "IncludeDebugProtectionInformation", false);
 
             options.Processing.Login.PullAllInformation = GetBooleanSetting(source, "PullAllInformation", false);
-            options.Processing.Login.RedumpUsername = GetStringSetting(source, "RedumpUsername", string.Empty);
-            options.Processing.Login.RedumpPassword = GetStringSetting(source, "RedumpPassword", string.Empty);
+            options.Processing.Login.RedumpOrgUsername = GetStringSetting(source, "RedumpOrgUsername", GetStringSetting(source, "RedumpUsername", string.Empty));
+            options.Processing.Login.RedumpOrgPassword = GetStringSetting(source, "RedumpOrgPassword", GetStringSetting(source, "RedumpPassword", string.Empty));
             options.Processing.Login.RetrieveMatchInformation = GetBooleanSetting(source, "RetrieveMatchInformation", true);
             options.Processing.Login.AttemptCount = GetInt32Setting(source, "AttemptCount", 3);
             options.Processing.Login.TimeoutSeconds = GetInt32Setting(source, "TimeoutSeconds", 30);
@@ -529,8 +529,8 @@ namespace MPF.Frontend.Tools
                 { "OpenLogWindowAtStartup", options.GUI.OpenLogWindowAtStartup.ToString() },
 
                 { "RetrieveMatchInformation", options.Processing.Login.RetrieveMatchInformation.ToString() },
-                { "RedumpUsername", options.Processing.Login.RedumpUsername },
-                { "RedumpPassword", options.Processing.Login.RedumpPassword },
+                { "RedumpOrgUsername", options.Processing.Login.RedumpOrgUsername },
+                { "RedumpOrgPassword", options.Processing.Login.RedumpOrgPassword },
                 { "AttemptCount", options.Processing.Login.AttemptCount.ToString() },
                 { "TimeoutSeconds", options.Processing.Login.TimeoutSeconds.ToString() },
             };

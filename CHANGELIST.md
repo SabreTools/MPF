@@ -18,6 +18,20 @@
 - Subtract fixed SCSI errors
 - Fix trailing newline trimming for cue import (fuzz6001)
 - Add Redump-specific PS5 post-processing
+- Update gitignore for new VSCode feature
+- Add CONTRIBUTING document
+- Update CONTRIBUTING to be more accurate
+- Remove CONTRIBUTING due to org-level version
+- Filter out Spoon Installer
+- Tweak wording on no protections found
+- Fix typo in Check help text
+- Use human-readable names in interactive modes
+- Preserve redumper log file
+- Remove split hash information except for IRD
+- Move CRC-32 extraction to IRD path
+- Remove now-unused helper method
+- Support Redumper HFS label
+- Redump.org is Org
 
 ### 3.7.1 (2026-03-30)
 

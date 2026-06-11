@@ -47,7 +47,7 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true });
                     string logName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
                     var logEntry = logArchive.Entries.FirstOrDefault(e => e.Key == logName && !e.IsDirectory);
                     logEntry?.WriteToFile(logPath);
@@ -195,15 +195,6 @@ namespace MPF.Processors
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                 case MediaType.NintendoWiiUOpticalDisc:
-                    // Get the individual hash data, as per internal
-                    if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out var crc32, out var md5, out var sha1))
-                    {
-                        info.SizeAndChecksums.Size = size;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
                     // Deal with the layerbreaks
                     if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
                     {
@@ -564,7 +555,8 @@ namespace MPF.Processors
                             "fulltoc"),
                         new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
+                            | OutputFileFlags.Zippable
+                            | OutputFileFlags.Preserve,
                             "log"),
                         new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
@@ -2946,14 +2938,25 @@ namespace MPF.Processors
             {
                 using var sr = File.OpenText(log);
                 var line = sr.ReadLine();
+                string currentFilesystem = "UNKNOWN";
 
                 while (line is not null)
                 {
                     // Trim the line for later use
                     line = line.Trim();
 
-                    // ISO9660 Volume Identifier
-                    if (line.StartsWith("volume identifier: "))
+                    // Determine the filesystem
+                    if (line.StartsWith("ISO9660 ["))
+                    {
+                        currentFilesystem = "ISO";
+                    }
+                    else if (line.StartsWith("HFS ["))
+                    {
+                        currentFilesystem = "HFS";
+                    }
+
+                    // ISO9660 and HFS Volume Identifier
+                    else if (line.StartsWith("volume identifier: "))
                     {
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
                         string label = line["volume identifier: ".Length..];
@@ -2966,12 +2969,9 @@ namespace MPF.Processors
                             break;
 
                         if (volLabels.TryGetValue(label, out List<string>? value))
-                            value.Add("ISO");
+                            value.Add(currentFilesystem);
                         else
-                            volLabels[label] = ["ISO"];
-
-                        // Redumper log currently only outputs ISO9660 label, end here
-                        break;
+                            volLabels[label] = [currentFilesystem];
                     }
 
                     line = sr.ReadLine();

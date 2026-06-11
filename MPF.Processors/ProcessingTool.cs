@@ -184,32 +184,6 @@ namespace MPF.Processors
         /// <summary>
         /// Get the split values for ISO-based media
         /// </summary>
-        /// <param name="datafile">Datafile represenging the hash data</param>
-        /// <returns>True if extraction was successful, false otherwise</returns>
-        public static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
-        {
-            size = -1; crc32 = null; md5 = null; sha1 = null;
-
-            if (datafile?.Game is null || datafile.Game.Length == 0)
-                return false;
-
-            var roms = datafile.Game[0].Rom;
-            if (roms is null || roms.Length == 0)
-                return false;
-
-            var rom = roms[0];
-
-            _ = long.TryParse(rom.Size, out size);
-            crc32 = rom.CRC;
-            md5 = rom.MD5;
-            sha1 = rom.SHA1;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Get the split values for ISO-based media
-        /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
         public static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)

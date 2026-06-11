@@ -51,10 +51,10 @@ namespace MPF.Check.Features
             Options.Processing.ProtectionScanning.IncludeDebugProtectionInformation = false;
             Options.Processing.ProtectionScanning.HideDriveLetters = false;
 
-            // Redump Login Information
+            // Web Login Information
             Options.Processing.Login.PullAllInformation = false;
-            Options.Processing.Login.RedumpUsername = null;
-            Options.Processing.Login.RedumpPassword = null;
+            Options.Processing.Login.RedumpOrgUsername = null;
+            Options.Processing.Login.RedumpOrgPassword = null;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
             // Media Information
@@ -91,19 +91,22 @@ namespace MPF.Check.Features
             }
 
             // Validate the supplied credentials
-            if (Options.Processing.Login.RetrieveMatchInformation
-                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpUsername)
-                && !string.IsNullOrEmpty(Options.Processing.Login.RedumpPassword))
+            if (Options.Processing.Login.RetrieveMatchInformation)
             {
-                bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpUsername!, Options.Processing.Login.RedumpPassword!).GetAwaiter().GetResult();
-                string message = validated switch
+                // redump.org
+                if (!string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgUsername)
+                    && !string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgPassword))
                 {
-                    true => "Redump username and password accepted!",
-                    false => "Redump username and password denied!",
-                    null => "An error occurred validating your credentials!",
-                };
+                    bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpOrgUsername!, Options.Processing.Login.RedumpOrgPassword!).GetAwaiter().GetResult();
+                    string message = validated switch
+                    {
+                        true => "redump.org username and password accepted!",
+                        false => "redump.org username and password denied!",
+                        null => "An error occurred validating your redump.org credentials!",
+                    };
 
-                Console.WriteLine(message);
+                    Console.WriteLine(message);
+                }
             }
 
             // Loop through all the rest of the args
@@ -159,10 +162,10 @@ namespace MPF.Check.Features
             Console.WriteLine("    --load-seed <path>         Load a seed submission JSON for user information");
             Console.WriteLine("    --no-placeholders          Disable placeholder values in submission info");
             Console.WriteLine("    --create-ird               Create IRD from output files (PS3 only)");
-            Console.WriteLine("    --no-retrieve              Disable retrieving match information from Redump");
-            Console.WriteLine("-U, --username <user>          Redump username (incompatible with --no-retrieve)");
-            Console.WriteLine("-P, --password <pw>            Redump password (incompatible with --no-retrieve)");
-            Console.WriteLine("    --pull-all                 Pull all information from Redump (requires --username and --password)");
+            Console.WriteLine("    --no-retrieve              Disable retrieving match information from online sources");
+            Console.WriteLine("-U, --username <user>          redump.org username (incompatible with --no-retrieve)");
+            Console.WriteLine("-P, --password <pw>            redump.org password (incompatible with --no-retrieve)");
+            Console.WriteLine("    --pull-all                 Pull all information from online sources (requires --username and --password)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
             Console.WriteLine("    --disable-archives         Disable scanning archives (requires --scan)");

@@ -54,9 +54,9 @@ namespace MPF.CLI.Features
             Console.WriteLine("MPF.CLI Interactive Mode - Main Menu");
             Console.WriteLine("-------------------------");
             Console.WriteLine();
-            Console.WriteLine($"1) Set system (Currently '{System}')");
-            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram}')");
-            Console.WriteLine($"3) Set media type (Currently '{MediaType}')");
+            Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
+            Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
+            Console.WriteLine($"3) Set media type (Currently '{MediaType.LongName()}')");
             Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
             Console.WriteLine($"6) Set file path (Currently '{FilePath}')");
