@@ -39,9 +39,18 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly string[] LanguageMenuItemNames =
         [
-            "EnglishMenuItem", "GermanMenuItem", "SpanishMenuItem", "FrenchMenuItem", "ItalianMenuItem",
-            "JapaneseMenuItem", "KoreanMenuItem", "PolishMenuItem", "PortugueseMenuItem",
-            "RussianMenuItem", "SwedishMenuItem", "UkrainianMenuItem",
+            "EnglishMenuItem",
+            "GermanMenuItem",
+            "SpanishMenuItem",
+            "FrenchMenuItem",
+            "ItalianMenuItem",
+            "JapaneseMenuItem",
+            "KoreanMenuItem",
+            "PolishMenuItem",
+            "PortugueseMenuItem",
+            "RussianMenuItem",
+            "SwedishMenuItem",
+            "UkrainianMenuItem",
         ];
 
         /// <summary>

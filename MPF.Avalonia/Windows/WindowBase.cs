@@ -18,7 +18,8 @@ namespace MPF.Avalonia.Windows
         {
             Opened += (_, _) =>
             {
-                WindowChromeService.Apply(this);
+                MacOSWindowChromeService.Apply(this);
+                ThemeService.ApplyWindowTitleBarTheme(this);
                 ApplyPlatformLayout();
             };
         }

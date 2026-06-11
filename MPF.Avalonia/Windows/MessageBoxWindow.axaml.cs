@@ -13,7 +13,11 @@ namespace MPF.Avalonia.Windows
         public MessageBoxWindow()
         {
             InitializeComponent();
-            Opened += (_, _) => WindowChromeService.Apply(this, hideMinimizeButton: true);
+            Opened += (_, _) =>
+            {
+                MacOSWindowChromeService.Apply(this, hideMinimizeButton: true);
+                ThemeService.ApplyWindowTitleBarTheme(this);
+            };
         }
 
         /// <summary>

@@ -1,24 +1,19 @@
 using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using MPF.Avalonia.Themes;
 using MPF.Frontend;
 
 namespace MPF.Avalonia.Services
 {
     /// <summary>
     /// Resolves and applies the active light/dark theme, including custom color overrides
-    /// and platform-specific title bar theming
+    /// and platform-specific title bar theming. OS-specific functionality lives in the
+    /// matching partial class files.
     /// </summary>
-    internal static class ThemeService
+    internal static partial class ThemeService
     {
-        private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
-        private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
-
         /// <summary>
         /// Update the options' dark mode flag to match the detected system theme
         /// </summary>
@@ -35,61 +30,16 @@ namespace MPF.Avalonia.Services
         }
 
         /// <summary>
-        /// Populate the resource dictionary with the brushes for the current theme, honoring any
+        /// Apply the mapped theme for the current options to the resource dictionary, honoring any
         /// custom background and text color overrides, and apply the matching window theme variant
         /// </summary>
         public static void Apply(IResourceDictionary resources, Options options)
         {
             bool darkMode = options.GUI.Theming.EnableDarkMode;
-            Color darkWindowBackground = Color.Parse("#FF131314");
-            Color darkPanelBackground = Color.Parse("#FF19191C");
-            Color darkPanelBorder = Color.Parse("#FF303036");
-            Color darkInteractiveBackground = Color.Parse("#FF2A2A31");
-            Color darkInteractiveHoverBackground = Color.Parse("#FF34343C");
-            Color darkInteractivePressedBackground = Color.Parse("#FF151517");
-            Color darkInteractiveBorder = Color.Parse("#FF383840");
 
-            Color background = darkMode ? darkWindowBackground : Color.Parse("#FFF5F5F5");
-            Color foreground = darkMode ? Color.Parse("#FFD8D8D8") : Color.Parse("#FF111111");
-
-            if (!string.IsNullOrWhiteSpace(options.GUI.Theming.CustomBackgroundColor)
-                && Color.TryParse(options.GUI.Theming.CustomBackgroundColor, out Color customBackground))
-            {
-                background = customBackground;
-            }
-
-            if (!string.IsNullOrWhiteSpace(options.GUI.Theming.CustomTextColor)
-                && Color.TryParse(options.GUI.Theming.CustomTextColor, out Color customForeground))
-            {
-                foreground = customForeground;
-            }
-
-            resources["AppBackgroundBrush"] = new SolidColorBrush(background);
-            resources["AppForegroundBrush"] = new SolidColorBrush(foreground);
-            resources["HeadingForegroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FFCFCFCF") : Color.Parse("#FF111111"));
-            resources["PanelBackgroundBrush"] = new SolidColorBrush(darkMode ? darkPanelBackground : Colors.White);
-            resources["PanelBorderBrush"] = new SolidColorBrush(darkMode ? darkPanelBorder : Color.Parse("#FFD0D0D0"));
-            resources["InputBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBackground : Colors.White);
-            resources["DisabledInputBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF1D1D21") : Color.Parse("#FFE2E2E2"));
-            resources["DisabledInputForegroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF8F8F96") : Color.Parse("#FF8A8A8A"));
-            resources["ButtonBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBackground : Color.Parse("#FFEDEDED"));
-            resources["ButtonHoverBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractiveHoverBackground : Color.Parse("#FFF5F5F5"));
-            resources["ButtonPressedBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractivePressedBackground : Color.Parse("#FFD8D8D8"));
-            resources["ButtonDisabledBackgroundBrush"] = new SolidColorBrush(darkMode ? darkWindowBackground : Color.Parse("#FFE2E2E2"));
-            resources["ButtonBorderBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBorder : Color.Parse("#FFB8B8B8"));
-            resources["ButtonHoverBorderBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF464650") : Color.Parse("#FF9F9F9F"));
-            resources["ButtonPressedBorderBrush"] = new SolidColorBrush(darkMode ? darkPanelBorder : Color.Parse("#FF8E8E8E"));
-            resources["ButtonDisabledBorderBrush"] = new SolidColorBrush(darkMode ? darkPanelBorder : Color.Parse("#FFD2D2D2"));
-            resources["DisabledForegroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF5C5C5C") : Color.Parse("#FF8A8A8A"));
-            resources["MenuBackgroundBrush"] = new SolidColorBrush(Colors.Transparent);
-            resources["MenuSubMenuBackgroundBrush"] = new SolidColorBrush(darkMode ? darkPanelBackground : Colors.White);
-            resources["MenuSubMenuBorderBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBorder : Color.Parse("#FFD0D0D0"));
-            resources["MenuItemHoverBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractiveHoverBackground : Color.Parse("#FFEDEDED"));
-            resources["MenuItemPressedBackgroundBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBackground : Color.Parse("#FFD8D8D8"));
-            resources["TitleBarButtonHoverBrush"] = new SolidColorBrush(darkMode ? darkInteractiveBackground : Color.Parse("#FFE5E5E5"));
-            resources["TitleBarButtonPressedBrush"] = new SolidColorBrush(darkMode ? darkInteractivePressedBackground : Color.Parse("#FFD0D0D0"));
-            resources["LogBackgroundBrush"] = new SolidColorBrush(darkMode ? Color.Parse("#FF151515") : Color.Parse("#FF202020"));
-            resources["LogForegroundBrush"] = new SolidColorBrush(Color.Parse("#FFF0F0F0"));
+            Theme theme = darkMode ? new DarkModeTheme() : new LightModeTheme();
+            theme.ApplyCustomColors(options.GUI.Theming.CustomBackgroundColor, options.GUI.Theming.CustomTextColor);
+            theme.Apply(resources);
 
             if (global::Avalonia.Application.Current is { } application)
             {
@@ -97,58 +47,6 @@ namespace MPF.Avalonia.Services
                 ApplyWindowsTitleBarTheme(darkMode);
             }
         }
-
-        #region Windows Title Bar
-
-        /// <summary>
-        /// Apply the current application theme variant to the given window's title bar
-        /// </summary>
-        public static void ApplyWindowTitleBarTheme(Window window)
-        {
-            if (global::Avalonia.Application.Current is null)
-                return;
-
-            ApplyWindowTitleBarTheme(window, global::Avalonia.Application.Current.RequestedThemeVariant == ThemeVariant.Dark);
-        }
-
-        /// <summary>
-        /// Apply the given dark/light mode to the title bar of every open desktop window
-        /// </summary>
-        private static void ApplyWindowsTitleBarTheme(bool darkMode)
-        {
-            if (!OperatingSystem.IsWindows())
-                return;
-
-            if (global::Avalonia.Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
-                return;
-
-            foreach (Window window in desktop.Windows)
-            {
-                ApplyWindowTitleBarTheme(window, darkMode);
-            }
-        }
-
-        /// <summary>
-        /// Toggle the immersive dark mode DWM attribute on the given window's native handle,
-        /// falling back to the pre-20H1 attribute identifier when the newer one is not supported
-        /// </summary>
-        private static void ApplyWindowTitleBarTheme(Window window, bool darkMode)
-        {
-            if (!OperatingSystem.IsWindows())
-                return;
-
-            IntPtr hwnd = window.TryGetPlatformHandle()?.Handle ?? IntPtr.Zero;
-            if (hwnd == IntPtr.Zero)
-                return;
-
-            int enabled = darkMode ? 1 : 0;
-            if (DwmSetWindowAttribute(hwnd, DwmWindowAttributeUseImmersiveDarkMode, ref enabled, sizeof(int)) != 0)
-                _ = DwmSetWindowAttribute(hwnd, DwmWindowAttributeUseImmersiveDarkModeBefore20H1, ref enabled, sizeof(int));
-        }
-
-        #endregion
-
-        #region System Theme Detection
 
         /// <summary>
         /// Determine whether the system is currently using a dark theme
@@ -168,74 +66,5 @@ namespace MPF.Avalonia.Services
 
             return IsLinuxDarkMode();
         }
-
-        /// <summary>
-        /// Detect a dark theme on Linux by inspecting common GTK/Qt environment variables,
-        /// GNOME color-scheme settings, and the KDE color scheme
-        /// </summary>
-        private static bool IsLinuxDarkMode()
-            => IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
-                || IsDarkThemeName(Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE"))
-                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface color-scheme"))
-                || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme"))
-                || IsKdeColorSchemeDark();
-
-        /// <summary>
-        /// Read the active KDE color scheme (Plasma 6, then Plasma 5) and test it for a dark name
-        /// </summary>
-        private static bool IsKdeColorSchemeDark()
-        {
-            string? colorScheme = RunCommand("kreadconfig6", "--group General --key ColorScheme")
-                ?? RunCommand("kreadconfig5", "--group General --key ColorScheme");
-
-            return IsDarkThemeName(colorScheme);
-        }
-
-        /// <summary>
-        /// Test whether a theme or color scheme name indicates a dark variant
-        /// </summary>
-        private static bool IsDarkThemeName(string? value)
-            => value?.IndexOf("dark", StringComparison.OrdinalIgnoreCase) >= 0
-                || value?.IndexOf("prefer-dark", StringComparison.OrdinalIgnoreCase) >= 0;
-
-        /// <summary>
-        /// Run a command line tool and return its trimmed standard output, or null on failure or timeout
-        /// </summary>
-        private static string? RunCommand(string fileName, string arguments)
-        {
-            try
-            {
-                using Process process = Process.Start(new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Arguments = arguments,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                })!;
-
-                if (!process.WaitForExit(1000))
-                {
-                    process.Kill(true);
-                    return null;
-                }
-
-                return process.ExitCode == 0 ? process.StandardOutput.ReadToEnd().Trim() : null;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region Native Interop
-
-        [DllImport("dwmapi.dll")]
-        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attribute, ref int attributeValue, int attributeSize);
-
-        #endregion
     }
 }

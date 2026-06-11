@@ -105,6 +105,29 @@ namespace MPF.Avalonia.Windows
             ("ExtrasTextBox", SiteCode.Extras),
         ];
 
+        /// <summary>
+        /// Ringcode input control names that should allow tab entry
+        /// </summary>
+        private static readonly string[] TabEnabledFieldNames =
+        [
+            "L0MasteringRing",
+            "L0MasteringSID",
+            "L0Toolstamp",
+            "L0MouldSID",
+            "L0AdditionalMould",
+            "L1MasteringRing",
+            "L1MasteringSID",
+            "L1Toolstamp",
+            "L1MouldSID",
+            "L1AdditionalMould",
+            "L2MasteringRing",
+            "L2MasteringSID",
+            "L2Toolstamp",
+            "L3MasteringRing",
+            "L3MasteringSID",
+            "L3Toolstamp",
+        ];
+
         #endregion
 
         /// <summary>
@@ -248,17 +271,6 @@ namespace MPF.Avalonia.Windows
             // Different systems mean different fields available
             UpdateFromSystemType(submissionInfo);
         }
-
-        /// <summary>
-        /// Ringcode input control names that should allow tab entry
-        /// </summary>
-        private static readonly string[] TabEnabledFieldNames =
-        [
-            "L0MasteringRing", "L0MasteringSID", "L0Toolstamp", "L0MouldSID", "L0AdditionalMould",
-            "L1MasteringRing", "L1MasteringSID", "L1Toolstamp", "L1MouldSID", "L1AdditionalMould",
-            "L2MasteringRing", "L2MasteringSID", "L2Toolstamp",
-            "L3MasteringRing", "L3MasteringSID", "L3Toolstamp",
-        ];
 
         /// <summary>
         /// Enable tab entry on ringcode fields

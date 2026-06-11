@@ -6,10 +6,10 @@ using Avalonia.Threading;
 namespace MPF.Avalonia.Services
 {
     /// <summary>
-    /// Applies platform-specific window chrome adjustments, such as hiding unavailable
-    /// macOS title bar buttons and theming the title bar
+    /// Applies macOS-specific window chrome adjustments, hiding the title bar buttons
+    /// that are unavailable for the given window
     /// </summary>
-    internal static class WindowChromeService
+    internal static class MacOSWindowChromeService
     {
         private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
         private const ulong NSWindowStyleMaskResizable = 1UL << 3;
@@ -24,7 +24,6 @@ namespace MPF.Avalonia.Services
         {
             HideMacOSUnavailableWindowButtons(window, hideMinimizeButton);
             Dispatcher.UIThread.Post(() => HideMacOSUnavailableWindowButtons(window, hideMinimizeButton), DispatcherPriority.Loaded);
-            ThemeService.ApplyWindowTitleBarTheme(window);
         }
 
         #region macOS Window Buttons
