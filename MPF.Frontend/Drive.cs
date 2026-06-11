@@ -61,9 +61,32 @@ namespace MPF.Frontend
         public char? Letter => Name?[0] ?? '\0';
 
         /// <summary>
-        /// UI-friendly display name for the drive
+        /// UI-friendly display name for the drive, cached after the first access
         /// </summary>
-        public string DisplayName => GetDisplayName();
+        public string DisplayName
+        {
+            get
+            {
+                if (field is not null)
+                    return field;
+
+                if (string.IsNullOrEmpty(Name))
+                    return field = string.Empty;
+
+                // Deal with non-Windows drive names
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
+                    string volumePath = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    string volumeName = Path.GetFileName(volumePath);
+                    if (!string.IsNullOrEmpty(volumeName))
+                        return field = volumeName;
+                }
+
+                // Trim any trailing separators, falling back to the raw name if nothing remains
+                string displayName = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                return field = string.IsNullOrEmpty(displayName) ? Name! : displayName;
+            }
+        }
 
         #endregion
 
@@ -250,30 +273,6 @@ namespace MPF.Frontend
 
         /// <inheritdoc/>
         public override string ToString() => DisplayName;
-
-        /// <summary>
-        /// Get a human-readable string for the Drive's name
-        /// </summary>
-        private string GetDisplayName()
-        {
-            if (string.IsNullOrEmpty(Name))
-                return string.Empty;
-
-            // Deal with non-Windows drive names
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                string volumePath = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                string volumeName = Path.GetFileName(volumePath);
-                if (!string.IsNullOrEmpty(volumeName))
-                    return volumeName;
-            }
-
-            string displayName = Name!;
-            if (displayName.Length > 1)
-                displayName = displayName.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-
-            return string.IsNullOrEmpty(displayName) ? Name! : displayName;
-        }
 
         #endregion
 
