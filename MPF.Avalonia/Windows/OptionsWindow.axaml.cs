@@ -154,10 +154,10 @@ namespace MPF.Avalonia.Windows
         private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
         {
             bool? success = await RedumpClient.ValidateCredentials(
-                OptionsViewModel.Options.Processing.Login.RedumpUsername,
-                OptionsViewModel.Options.Processing.Login.RedumpPassword);
+                OptionsViewModel.Options.Processing.Login.RedumpOrgUsername,
+                OptionsViewModel.Options.Processing.Login.RedumpOrgPassword);
 
-            _ = MessageBoxWindow.ShowAsync(this, "Redump", OptionsViewModel.GetRedumpLoginResult(success), 1, success == true);
+            _ = MessageBoxWindow.ShowAsync(this, "Redump", OptionsViewModel.GetRedumpOrgLoginResult(success), 1, success == true);
         }
 
         /// <summary>
