@@ -6,6 +6,11 @@ namespace MPF.Processors
     public enum LogCompression
     {
         /// <summary>
+        /// PKZIP using Store (No compression)
+        /// </summary>
+        Store,
+
+        /// <summary>
         /// PKZIP using DEFLATE level 5
         /// </summary>
         DeflateDefault,
@@ -18,7 +23,7 @@ namespace MPF.Processors
         /// <summary>
         /// PKZIP using Zstd level 19
         /// </summary>
-        Zstd19,
+        // Zstd19,
     }
 
     /// <summary>

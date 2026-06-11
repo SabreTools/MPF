@@ -32,6 +32,7 @@
 - Remove now-unused helper method
 - Support Redumper HFS label
 - Redump.org is Org
+- Disable Zstd again and enable Store
 
 ### 3.7.1 (2026-03-30)
 
