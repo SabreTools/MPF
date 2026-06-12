@@ -175,10 +175,6 @@ namespace MPF.Avalonia.Windows
             CollapseWhen("FullyMatchedID", submissionInfo.FullyMatchedID is null);
             CollapseWhen("PartiallyMatchedIDs", submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0);
             CollapseWhen("HashData", string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData));
-            CollapseWhen("HashDataSize", submissionInfo.SizeAndChecksums.Size == 0);
-            CollapseWhen("HashDataCRC", string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.CRC32));
-            CollapseWhen("HashDataMD5", string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.MD5));
-            CollapseWhen("HashDataSHA1", string.IsNullOrEmpty(submissionInfo.SizeAndChecksums.SHA1));
             CollapseWhen("HashDataLayerbreak1", submissionInfo.SizeAndChecksums.Layerbreak == 0);
             CollapseWhen("HashDataLayerbreak2", submissionInfo.SizeAndChecksums.Layerbreak2 == 0);
             CollapseWhen("HashDataLayerbreak3", submissionInfo.SizeAndChecksums.Layerbreak3 == 0);
