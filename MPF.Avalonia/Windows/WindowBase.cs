@@ -45,7 +45,7 @@ namespace MPF.Avalonia.Windows
         protected string StringResource(string key, string fallback)
         {
             // If there is no current application, the resource cannot be resolved
-            if (global::Avalonia.Application.Current is not { } application)
+            if (Application.Current is not { } application)
                 return fallback;
 
             // If the key cannot be found in the application resources

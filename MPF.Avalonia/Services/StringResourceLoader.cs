@@ -55,7 +55,7 @@ namespace MPF.Avalonia.Services
         {
             string assemblyName = typeof(StringResourceLoader).Assembly.GetName().Name ?? "MPF";
             var uri = new Uri($"avares://{assemblyName}/Assets/{fileName}");
-            
+
             var resourceInclude = new ResourceInclude(uri)
             {
                 Source = uri

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -20,7 +19,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly List<FilePickerFileType> IrdFileTypes =
         [
-            new("IRD File") { Patterns = new[] { "*.ird" } },
+            new("IRD File") { Patterns = ["*.ird"] },
         ];
 
         /// <summary>

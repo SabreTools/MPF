@@ -133,8 +133,8 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void UpdateNativeLanguageMenuHeader()
         {
-            if (_nativeLanguageMenuGroup is not null)
-                _nativeLanguageMenuGroup.Header = CleanMenuHeader(NativeLanguageMenuHeader());
+            var nativeLanguageMenuHeader = NativeLanguageMenuHeader();
+            _nativeLanguageMenuGroup?.Header = CleanMenuHeader(nativeLanguageMenuHeader);
         }
 
         /// <summary>
@@ -145,26 +145,16 @@ namespace MPF.Avalonia.Windows
             if (!OperatingSystem.IsMacOS())
                 return;
 
-            if (_nativeFileMenuGroup is not null)
-                _nativeFileMenuGroup.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
-            if (_nativeToolsMenuGroup is not null)
-                _nativeToolsMenuGroup.Header = CleanMenuHeader(StringResource("ToolsMenuString", "Tools"));
-            if (_nativeHelpMenuGroup is not null)
-                _nativeHelpMenuGroup.Header = CleanMenuHeader(StringResource("HelpMenuString", "Help"));
-            if (_nativeExitMenuItem is not null)
-                _nativeExitMenuItem.Header = CleanMenuHeader(StringResource("ExitMenuItemString", "Exit"));
-            if (_nativeCheckDumpMenuItem is not null)
-                _nativeCheckDumpMenuItem.Header = CleanMenuHeader(StringResource("CheckDumpMenuItemString", "Check Dump"));
-            if (_nativeCreateIrdMenuItem is not null)
-                _nativeCreateIrdMenuItem.Header = CleanMenuHeader(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"));
-            if (_nativeOptionsMenuItem is not null)
-                _nativeOptionsMenuItem.Header = CleanMenuHeader(StringResource("OptionsDumpMenuItemString", "Options"));
-            if (_nativeDebugViewMenuItem is not null)
-                _nativeDebugViewMenuItem.Header = CleanMenuHeader(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"));
-            if (_nativeAboutMenuItem is not null)
-                _nativeAboutMenuItem.Header = CleanMenuHeader(StringResource("AboutMenuItemString", "About"));
-            if (_nativeCheckForUpdatesMenuItem is not null)
-                _nativeCheckForUpdatesMenuItem.Header = CleanMenuHeader(StringResource("CheckForUpdateMenuItemString", "Check for Updates"));
+            _nativeFileMenuGroup?.Header = CleanMenuHeader(StringResource("FileMenuString", "File"));
+            _nativeToolsMenuGroup?.Header = CleanMenuHeader(StringResource("ToolsMenuString", "Tools"));
+            _nativeHelpMenuGroup?.Header = CleanMenuHeader(StringResource("HelpMenuString", "Help"));
+            _nativeExitMenuItem?.Header = CleanMenuHeader(StringResource("ExitMenuItemString", "Exit"));
+            _nativeCheckDumpMenuItem?.Header = CleanMenuHeader(StringResource("CheckDumpMenuItemString", "Check Dump"));
+            _nativeCreateIrdMenuItem?.Header = CleanMenuHeader(StringResource("CreatePS3IRDDumpMenuItemString", "Create PS3 IRD"));
+            _nativeOptionsMenuItem?.Header = CleanMenuHeader(StringResource("OptionsDumpMenuItemString", "Options"));
+            _nativeDebugViewMenuItem?.Header = CleanMenuHeader(StringResource("DebugInfoWindowMenuItemString", "Debug Info Window"));
+            _nativeAboutMenuItem?.Header = CleanMenuHeader(StringResource("AboutMenuItemString", "About"));
+            _nativeCheckForUpdatesMenuItem?.Header = CleanMenuHeader(StringResource("CheckForUpdateMenuItemString", "Check for Updates"));
 
             UpdateNativeLanguageMenuHeader();
         }

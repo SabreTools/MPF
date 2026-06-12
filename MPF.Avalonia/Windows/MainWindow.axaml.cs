@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -58,7 +55,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly List<FilePickerFileType> OutputFileTypes =
         [
-            new("All Files") { Patterns = new[] { "*" } },
+            new("All Files") { Patterns = ["*"] },
         ];
 
         /// <summary>
@@ -120,7 +117,7 @@ namespace MPF.Avalonia.Windows
         {
             WireEvents();
             ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: false);
-            ThemeService.Apply(global::Avalonia.Application.Current!.Resources, MainViewModel.Options);
+            ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
             ConfigurePlatformMenus();
 
             MainViewModel.Init(
@@ -169,11 +166,12 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void ApplyLanguage(InterfaceLanguage language, bool rebuildNativeMenus)
         {
-            StringResourceLoader.Load(global::Avalonia.Application.Current!.Resources, language);
+            StringResourceLoader.Load(Application.Current!.Resources, language);
             StringResourceLoader.Load(Resources, language);
-            UpdateTitleBarMenuHeaders();
 
-            UpdateNativeMenuHeaders();
+            UpdateTitleBarMenuHeaders();
+            if (rebuildNativeMenus)
+                UpdateNativeMenuHeaders();
         }
 
         /// <summary>
@@ -434,7 +432,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MPF.Frontend.ViewModels.MainViewModel.OutputPath))
+            if (e.PropertyName == nameof(Frontend.ViewModels.MainViewModel.OutputPath))
                 NormalizeMacOutputPath();
         }
 
@@ -513,7 +511,7 @@ namespace MPF.Avalonia.Windows
             if (savedSettings)
             {
                 ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: true);
-                ThemeService.Apply(global::Avalonia.Application.Current!.Resources, MainViewModel.Options);
+                ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
                 SetMediaTypeVisibility();
             }
         }
@@ -572,7 +570,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         public void CheckForUpdatesClick(object? sender, RoutedEventArgs e)
         {
-            MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
+            MainViewModel.CheckForUpdates(out bool different, out string message, out _);
             _ = MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
         }
 

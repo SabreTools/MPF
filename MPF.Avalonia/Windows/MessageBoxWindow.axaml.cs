@@ -70,8 +70,8 @@ namespace MPF.Avalonia.Windows
                 Content = content,
                 MinWidth = 96,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                HorizontalContentAlignment = global::Avalonia.Layout.HorizontalAlignment.Center,
-                VerticalContentAlignment = global::Avalonia.Layout.VerticalAlignment.Center,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
             };
             button.Click += (_, _) => Close(result);
             return button;

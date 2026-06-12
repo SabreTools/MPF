@@ -34,6 +34,7 @@
 - Redump.org is Org
 - Disable Zstd again and enable Store
 - Avalonia UI (whatever-industries)
+- Initial cleanup of Avalonia
 
 ### 3.7.1 (2026-03-30)
 

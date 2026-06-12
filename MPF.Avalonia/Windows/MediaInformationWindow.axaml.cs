@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using MPF.Avalonia.UserControls;
 using MPF.Frontend;
-using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Data;
 
@@ -222,6 +219,7 @@ namespace MPF.Avalonia.Windows
             this.FindControl<Border>("L2InfoPanel")!.IsVisible = false;
             this.FindControl<Border>("L3InfoPanel")!.IsVisible = false;
 
+#pragma warning disable IDE0010
             switch (submissionInfo?.CommonDiscInfo?.Media)
             {
                 case DiscType.CD:
@@ -258,6 +256,7 @@ namespace MPF.Avalonia.Windows
                     this.FindControl<Border>("L3InfoPanel")!.IsVisible = false;
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <summary>
@@ -353,6 +352,7 @@ namespace MPF.Avalonia.Windows
             this.FindControl<UserInput>("NetYarozeGamesTextBox")!.IsVisible = false;
             this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.IsVisible = false;
 
+#pragma warning disable IDE0010
             switch (system)
             {
                 case RedumpSystem.AppleMacintosh:
@@ -377,6 +377,7 @@ namespace MPF.Avalonia.Windows
                     this.FindControl<UserInput>("DiscIDTextBox")!.IsVisible = true;
                     break;
             }
+#pragma warning restore IDE0010
         }
 
         /// <summary>

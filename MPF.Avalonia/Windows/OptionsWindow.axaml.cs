@@ -21,8 +21,8 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly List<FilePickerFileType> WindowsExecutableFileTypes =
         [
-            new("Executables") { Patterns = new[] { "*.exe" } },
-            new("All files") { Patterns = new[] { "*", "*.*" } },
+            new("Executables") { Patterns = ["*.exe"] },
+            new("All files") { Patterns = ["*", "*.*"] },
         ];
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly List<FilePickerFileType> AllFilesFileTypes =
         [
-            new("All files") { Patterns = new[] { "*", "*.*" } },
+            new("All files") { Patterns = ["*", "*.*"] },
         ];
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseForExecutableAsync(string title)
         {
-            List<FilePickerFileType> fileTypes = System.OperatingSystem.IsWindows()
+            List<FilePickerFileType> fileTypes = OperatingSystem.IsWindows()
                 ? WindowsExecutableFileTypes
                 : AllFilesFileTypes;
 

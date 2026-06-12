@@ -64,16 +64,6 @@ namespace MPF.Avalonia.UserControls
             });
         }
 
-        /// <summary>
-        /// Add a single line to the log, trimming the oldest entry past the maximum count
-        /// </summary>
-        private void AddLine(string line, IBrush brush)
-        {
-            Entries.Add(new LogEntry(line, brush));
-            if (Entries.Count > MaxEntryCount)
-                Entries.RemoveAt(0);
-        }
-
         #endregion
 
         #region Helpers
@@ -84,8 +74,7 @@ namespace MPF.Avalonia.UserControls
         public void SetConsoleHeight(double height)
         {
             Border? logSurface = this.FindControl<Border>("LogSurface");
-            if (logSurface is not null)
-                logSurface.Height = DefaultConsoleHeight;
+            logSurface?.Height = height;
         }
 
         /// <summary>
@@ -102,7 +91,10 @@ namespace MPF.Avalonia.UserControls
                 LogLevel.ERROR => Brushes.IndianRed,
                 LogLevel.VERBOSE => darkMode ? new SolidColorBrush(Color.Parse("#FFCBBF00")) : Brushes.Yellow,
                 LogLevel.USER_SUCCESS => Brushes.ForestGreen,
-                _ => Brushes.White,
+                LogLevel.USER_GENERIC => Brushes.White,
+
+                // Make unmatched log levels obvious
+                _ => Brushes.Pink,
             };
         }
 

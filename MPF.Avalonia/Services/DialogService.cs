@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -26,7 +25,7 @@ namespace MPF.Avalonia.Services
                 FileTypeFilter = fileTypes,
             });
 
-            return files.FirstOrDefault()?.TryGetLocalPath();
+            return files.Count > 0 ? files[0].TryGetLocalPath() : null;
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace MPF.Avalonia.Services
                 AllowMultiple = false,
             });
 
-            return folders.FirstOrDefault()?.TryGetLocalPath();
+            return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
         }
 
         /// <summary>
