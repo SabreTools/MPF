@@ -131,7 +131,7 @@
     <x:String x:Key="LoginInfoTabString">1091n 1nf0</x:String>
     <x:String x:Key="RetrievalGroupBoxString">R37r13v41</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">R37r13v3 M47ch 1nf0rm4710n</x:String>
-    <x:String x:Key="RedumpGroupBoxString">R3dump</x:String>
+    <x:String x:Key="RedumpGroupBoxString">r3dump.0rg</x:String>
     <x:String x:Key="UsernameLabelString">Uz3rn4m3</x:String>
     <x:String x:Key="PasswordLabelString">P4zzw0rd</x:String>
     <x:String x:Key="TestLoginButtonString">73z7 1091n</x:String>

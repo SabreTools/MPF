@@ -127,7 +127,7 @@
     <x:String x:Key="LoginInfoTabString">ログイン情報</x:String>
     <x:String x:Key="RetrievalGroupBoxString">情報取得</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">一致情報を取得</x:String>
-    <x:String x:Key="RedumpGroupBoxString">Redump</x:String>
+    <x:String x:Key="RedumpGroupBoxString">redump.org</x:String>
     <x:String x:Key="UsernameLabelString">ユーザー名</x:String>
     <x:String x:Key="PasswordLabelString">パスワード</x:String>
     <x:String x:Key="TestLoginButtonString">ログインをテスト</x:String>

@@ -36,6 +36,7 @@
 - Avalonia UI (whatever-industries)
 - Initial cleanup of Avalonia
 - Additional cleanup and consolidation
+- Update resources to use "redump.org"
 
 ### 3.7.1 (2026-03-30)
 

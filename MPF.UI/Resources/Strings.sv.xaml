@@ -128,7 +128,7 @@
     <system:String x:Key="LoginInfoTabString">Inloggningsinfo</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Hämtning</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</system:String>
-    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="RedumpGroupBoxString">redump.org</system:String>
     <system:String x:Key="UsernameLabelString">Användarnamn</system:String>
     <system:String x:Key="PasswordLabelString">Lösenord</system:String>
     <system:String x:Key="TestLoginButtonString">Testa</system:String>

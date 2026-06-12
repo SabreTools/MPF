@@ -132,7 +132,7 @@
     <x:String x:Key="LoginInfoTabString">Login Info</x:String>
     <x:String x:Key="RetrievalGroupBoxString">Retrieval</x:String>
     <x:String x:Key="RetrieveMatchInformationCheckBoxString">Retrieve Match Information</x:String>
-    <x:String x:Key="RedumpGroupBoxString">Redump</x:String>
+    <x:String x:Key="RedumpGroupBoxString">redump.org</x:String>
     <x:String x:Key="UsernameLabelString">Username</x:String>
     <x:String x:Key="PasswordLabelString">Password</x:String>
     <x:String x:Key="TestLoginButtonString">Test Login</x:String>

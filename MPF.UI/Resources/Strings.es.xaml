@@ -128,7 +128,7 @@
     <system:String x:Key="LoginInfoTabString">Información de acceso</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Recuperación</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Recuperar información de coincidencias</system:String>
-    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="RedumpGroupBoxString">redump.org</system:String>
     <system:String x:Key="UsernameLabelString">Usuario</system:String>
     <system:String x:Key="PasswordLabelString">Contraseña</system:String>
     <system:String x:Key="TestLoginButtonString">Probar acceso</system:String>

@@ -128,7 +128,7 @@
     <system:String x:Key="LoginInfoTabString">Данные входа</system:String>
     <system:String x:Key="RetrievalGroupBoxString">Получение</system:String>
     <system:String x:Key="RetrieveMatchInformationCheckBoxString">Получать совпадающую информацию</system:String>
-    <system:String x:Key="RedumpGroupBoxString">Redump</system:String>
+    <system:String x:Key="RedumpGroupBoxString">redump.org</system:String>
     <system:String x:Key="UsernameLabelString">Имя пользователя</system:String>
     <system:String x:Key="PasswordLabelString">Пароль</system:String>
     <system:String x:Key="TestLoginButtonString">Проверить</system:String>
