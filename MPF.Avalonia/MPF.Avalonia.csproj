@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- Assembly Properties -->
+        <TargetFrameworks>net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <OutputType>WinExe</OutputType>
+        <ApplicationIcon>..\MPF.UI\Images\Icon.ico</ApplicationIcon>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>NU1902;NU1903</NoWarn>
+        <Nullable>enable</Nullable>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <VersionPrefix>3.7.1</VersionPrefix>
+
+        <!-- Package Properties -->
+        <AssemblyName>MPF</AssemblyName>
+        <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+        <Description>Frontend for various dumping programs</Description>
+        <Copyright>Copyright (c) Matt Nadareski 2019-2026</Copyright>
+        <PackageProjectUrl>https://github.com/SabreTools/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <!-- Support All Frameworks -->
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`net2`)) OR $(TargetFramework.StartsWith(`net3`)) OR $(TargetFramework.StartsWith(`net4`))">
+        <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`netcoreapp`)) OR $(TargetFramework.StartsWith(`net5`))">
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64</RuntimeIdentifiers>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith(`net6`)) OR $(TargetFramework.StartsWith(`net7`)) OR $(TargetFramework.StartsWith(`net8`)) OR $(TargetFramework.StartsWith(`net9`)) OR $(TargetFramework.StartsWith(`net10`))">
+        <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith(`osx-arm`))">
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MPF.Frontend\MPF.Frontend.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.3.12" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="..\MPF.UI\Images\**\*">
+            <Link>Assets\%(Filename)%(Extension)</Link>
+        </AvaloniaResource>
+        <AvaloniaResource Include="Resources\**\*">
+            <Link>Assets\%(Filename)%(Extension)</Link>
+        </AvaloniaResource>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,227 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Language Name: SV / SWE / Swedish / Svenska -->
+    <x:String x:Key="LanguageMenuString">SWE</x:String>
+
+    <!-- Common Elements -->
+    <x:String x:Key="AcceptButtonString">Acceptera</x:String>
+    <x:String x:Key="BrowseButtonString">Bläddra</x:String>
+    <x:String x:Key="CancelButtonString">Avbryt</x:String>
+    <x:String x:Key="MinimizeMenuItemString">Minimera</x:String>
+    <x:String x:Key="CloseMenuItemString">Stäng</x:String>
+    <x:String x:Key="SettingsGroupBoxString">Inställningar</x:String>
+    <x:String x:Key="StatusGroupBoxString">Status</x:String>
+    <x:String x:Key="WarningLabelString">VARNING:</x:String>
+    <x:String x:Key="WarningMessageString">Varning</x:String>
+    <x:String x:Key="ErrorMessageString">Fel</x:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <x:String x:Key="FileMenuString">_Arkiv</x:String>
+    <x:String x:Key="ExitMenuItemString">A_vsluta</x:String>
+    <x:String x:Key="ToolsMenuString">_Verktyg</x:String>
+    <x:String x:Key="CheckDumpMenuItemString">_Kontrollera Dump</x:String>
+    <x:String x:Key="CreatePS3IRDDumpMenuItemString">_Skapa PS3 IRD</x:String>
+    <x:String x:Key="OptionsDumpMenuItemString">_Alternativ</x:String>
+    <x:String x:Key="DebugInfoWindowMenuItemString">_Felsökningsfönster</x:String>
+    <x:String x:Key="HelpMenuString">_Hjälp</x:String>
+    <x:String x:Key="AboutMenuItemString">_Om</x:String>
+    <x:String x:Key="CheckForUpdateMenuItemString">_Sök efter uppdateringar</x:String>
+    <!-- Settings Group Box -->
+    <x:String x:Key="SystemLabelString">Systemtyp</x:String>
+    <x:String x:Key="SystemMediaTypeLabelString">System/Medietyp</x:String>
+    <x:String x:Key="NoSystemSelectedString">Inget system valt</x:String>
+    <x:String x:Key="OutputPathLabelString">Utdatamapp</x:String>
+    <x:String x:Key="DriveLetterLabelString">Enhetsbeteckning</x:String>
+    <x:String x:Key="DriveSpeedLabelString">Enhetshastighet</x:String>
+    <x:String x:Key="DumpingProgramLabelString">Dumpningsprogram</x:String>
+    <x:String x:Key="ParametersLabelString">Parametrar</x:String>
+    <!-- Controls Group Box -->
+    <x:String x:Key="ControlsGroupBoxString">Kontroller</x:String>
+    <x:String x:Key="StartDumpingButtonString">Starta Dumpning</x:String>
+    <x:String x:Key="StopDumpingButtonString">Stoppa Dumpning</x:String>
+    <x:String x:Key="ScanButtonString">Skanna efter skivor</x:String>
+    <x:String x:Key="UpdateLabelButtonString">Uppdatera etikett</x:String>
+    <x:String x:Key="ProtectionScanButtonString">Skanna efter skydd</x:String>
+    <!-- Log Output -->
+    <x:String x:Key="LogOutputExpanderString">Logg</x:String>
+    <x:String x:Key="ClearButtonString">Rensa Logg</x:String>
+    <x:String x:Key="SaveButtonString">Spara Logg</x:String>
+
+    <!-- Options Window -->
+    <x:String x:Key="OptionsTitleString">Alternativ</x:String>
+    <x:String x:Key="OptionsFirstRunTitleString">Välkommen till MPF, Utforska Alternativen</x:String>
+    <x:String x:Key="OptionsRetrievalWarningString">Om du väljer att aktivera validering och informationshämtning är du ansvarig för att all data som fylls i matchar det media som du dumpar. Viss information kan markeras som påminnelse, men all bör granskas till samma grad.</x:String>
+    <!-- General Tab -->
+    <x:String x:Key="GeneralTabString">Allmänt</x:String>
+    <x:String x:Key="UserInterfaceGroupBoxString">Användargränssnitt</x:String>
+    <x:String x:Key="EnableDarkModeCheckBoxString">Aktivera mörkt läge</x:String>
+    <x:String x:Key="CheckForUpdatesCheckBoxString">Sök efter uppdateringar vid start</x:String>
+    <x:String x:Key="CopyURLToClipboardCheckBoxString">Kopiera uppdaterings-URL till Urklipp</x:String>
+    <x:String x:Key="FastUpdateLabelCheckBoxString">Snabb uppdatering av etikett</x:String>
+    <x:String x:Key="DefaultUILanguageLabelString">Standard språk för gränssnitt:</x:String>
+    <x:String x:Key="DetectionGroupBoxString">Upptäcka</x:String>
+    <x:String x:Key="SkipSystemDetectCheckBoxString">Hoppa över systemupptäckt</x:String>
+    <x:String x:Key="NoFixedDrivesCheckBoxString">Inga fasta enheter</x:String>
+    <x:String x:Key="DefaultSystemLabelString">Standard x:</x:String>
+    <x:String x:Key="LoggingGroupBoxString">Loggning</x:String>
+    <x:String x:Key="VerboseLoggingCheckBoxString">Detaljerad loggning</x:String>
+    <x:String x:Key="AutoOpenLogCheckBoxString">Öppna loggar automatiskt</x:String>
+    <!-- Paths Tab -->
+    <x:String x:Key="PathsTabString">Sökvägar</x:String>
+    <x:String x:Key="AaruPathLabelString">Aaru-sökväg</x:String>
+    <x:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator-sökväg</x:String>
+    <x:String x:Key="RedumperPathLabelString">Redumper-sökväg</x:String>
+    <x:String x:Key="DefaultDumpingProgramLabelString">Standard dumpningsprogram</x:String>
+    <x:String x:Key="DefaultOutputPathLabelString">Standard utdatamapp</x:String>
+    <!-- Dumping Tab -->
+    <x:String x:Key="DumpingTabString">Dumpning</x:String>
+    <x:String x:Key="DumpingGroupBoxString">Dumpning</x:String>
+    <x:String x:Key="ShowDiscInfoCheckBoxString">Visa skivinformation</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">Hämta all information</x:String>
+    <x:String x:Key="EnableTabInputCheckBoxString">Aktivera Tab-inmatning</x:String>
+    <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Aktivera Redump-kompatibilitet</x:String>
+    <x:String x:Key="ShowEjectReminderCheckBoxString">Visa påminnelse om urtagning</x:String>
+    <x:String x:Key="AddPlaceholdersCheckBoxString">Lägg till platshållare</x:String>
+    <x:String x:Key="AddFilenameSuffixCheckBoxString">Lägg till filnamnstillägg</x:String>
+    <x:String x:Key="OutputSubmissionJSONCheckBoxString">Generera JSON för Submission</x:String>
+    <x:String x:Key="IncludeArtifactsCheckBoxString">[DEBUG] Inkludera artefakter</x:String>
+    <x:String x:Key="CompressLogFilesCheckBoxString">Komprimera loggfiler</x:String>
+    <x:String x:Key="LogCompressionLabelString">Loggkomprimering:</x:String>
+    <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">Ta bort onödiga filer</x:String>
+    <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">Skapa PS3 IRD efter dumpning</x:String>
+    <x:String x:Key="ProtectionGroupBoxString">Kopieringsskydd</x:String>
+    <x:String x:Key="EnableProtectionScanCheckBoxString">Aktivera skyddsskanning</x:String>
+    <x:String x:Key="ScanArchiveContentsCheckBoxString">Skanna arkivinnehåll</x:String>
+    <x:String x:Key="IncludeDebugInformationCheckBoxString">Inkludera felsökningsinformation</x:String>
+    <x:String x:Key="HideDriveLettersCheckBoxString">Dölj enhetsbeteckning</x:String>
+    <x:String x:Key="DefaultSpeedsGroupBoxString">Standardhastigheter</x:String>
+    <!-- Programs Tab -->
+    <x:String x:Key="ProgramsTabString">Program</x:String>
+    <x:String x:Key="AaruGroupBoxString">Aaru</x:String>
+    <x:String x:Key="EnableDebugOutputCheckBoxString">Aktivera felsökningsdata</x:String>
+    <x:String x:Key="AaruEnableVerboseOutputCheckBoxString">Aktivera detaljerad utdata</x:String>
+    <x:String x:Key="ForceDumpingCheckBoxString">Tvinga dumpning</x:String>
+    <x:String x:Key="StripPersonalDataCheckBoxString">Ta bort personuppgifter</x:String>
+    <x:String x:Key="AaruRereadTriesLabelString">Omläsningsförsök:</x:String>
+    <x:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</x:String>
+    <x:String x:Key="QuietModeCheckBoxString">Tyst läge</x:String>
+    <x:String x:Key="ParanoidModeCheckBoxString">Paranoidt Läge</x:String>
+    <x:String x:Key="UseCMIFlagCheckBoxString">Aktivera CMI-Flagga</x:String>
+    <x:String x:Key="MultiSectorReadCheckBoxString">Multi-sektor läsning</x:String>
+    <x:String x:Key="MultiSectorReadValueLabelString">Multi-sektor läsvärde:</x:String>
+    <x:String x:Key="DICCDRereadTriesLabelString">Omläsningsförsök för:</x:String>
+    <x:String x:Key="DICDVDRereadTriesLabelString">Omläsningsförsök för DVD/HD-DVD/BD:</x:String>
+    <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
+    <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">Aktivera detaljerad utdata</x:String>
+    <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Aktivera Refine Sector Mode flagga</x:String>
+    <x:String x:Key="RedumperRereadTriesLabelString">Omläsningsförsök:</x:String>
+    <x:String x:Key="PlextorLeadinRetriesLabelString">Plextor Lead-in läsningsförsök:</x:String>
+    <x:String x:Key="NonRedumpOptionsCheckBoxString">Alternativ utanför Redump</x:String>
+    <x:String x:Key="DefaultReadMethodLabelString">Standard läsmetod:</x:String>
+    <x:String x:Key="DefaultSectorOrderLabelString">Standard sektorordning:</x:String>
+    <x:String x:Key="DefaultDriveTypeLabelString">Standard enhetstyp:</x:String>
+    <x:String x:Key="DefaultDrivePregapStartLabelString">Standard pregap start:</x:String>
+    <!-- Login Info Tab -->
+    <x:String x:Key="LoginInfoTabString">Inloggningsinfo</x:String>
+    <x:String x:Key="RetrievalGroupBoxString">Hämtning</x:String>
+    <x:String x:Key="RetrieveMatchInformationCheckBoxString">Hämta matchningsinformation från Redump.org</x:String>
+    <x:String x:Key="RedumpGroupBoxString">Redump</x:String>
+    <x:String x:Key="UsernameLabelString">Användarnamn</x:String>
+    <x:String x:Key="PasswordLabelString">Lösenord</x:String>
+    <x:String x:Key="TestLoginButtonString">Testa</x:String>
+
+    <!-- Check Dump Window -->
+    <x:String x:Key="CheckDumpTitleString">Kontrollera befintlig Dump</x:String>
+    <x:String x:Key="InputPathLabelString">Indatamapp</x:String>
+    <x:String x:Key="CheckDumpButtonString">Kontrollera Dump</x:String>
+    <x:String x:Key="CheckDumpWarningString">Kontrollen kommer skriva över befintliga filer. Säkerhetskopiera dessa innan du kör kontrollen.</x:String>
+
+    <!-- Create PS3 IRD Window -->
+    <x:String x:Key="CreatePS3IRDTitleString">Skapa PS3 IRD</x:String>
+    <x:String x:Key="InputGroupBoxString">Indata</x:String>
+    <x:String x:Key="PS3ISOPathLabelString">PS3 ISO-sökväg</x:String>
+    <x:String x:Key="GetKeyPathLabelString">*.getkey.log Fil-sökväg</x:String>
+    <x:String x:Key="KeyExpanderString">Definiera PS3-skivnyckel manuellt</x:String>
+    <x:String x:Key="HexadecimalKeyLabelString">Hexadecimal nyckel</x:String>
+    <x:String x:Key="KeyFilePathLabelString">Nyckelfilssökväg</x:String>
+    <x:String x:Key="KeyStatusLabelString">Nyckelstatus</x:String>
+    <x:String x:Key="DiscIDExpanderString">Definiera PS3-skiv-ID manuellt</x:String>
+    <x:String x:Key="DiscIDLabelString">Skiv-ID</x:String>
+    <x:String x:Key="DiscIDStatusLabelString">Skiv-ID Status</x:String>
+    <x:String x:Key="PICExpanderString">Definiera Permanent Information &#x26; Control (PIC) manuellt</x:String>
+    <x:String x:Key="LayerbreakLabelString">Layerbreak (sektorer)</x:String>
+    <x:String x:Key="PICLabelString">PIC</x:String>
+    <x:String x:Key="PICFilePathLabelString">PIC Fil-sökväg</x:String>
+    <x:String x:Key="PICStatusLabelString">PIC Status</x:String>
+    <x:String x:Key="CreateIRDButtonString">Skapa IRD</x:String>
+
+    <!-- Media Information Guide Window -->
+    <x:String x:Key="MediaInformationTitleString">Medieinformation</x:String>
+    <x:String x:Key="RingCodeGuideButtonString">Ringkods guide</x:String>
+    <!-- Common Info Tab -->
+    <x:String x:Key="CommonInfoTabString">Allmän Info</x:String>
+    <x:String x:Key="CommonMediaInfoGroupBoxString">Allmän Medieinformation</x:String>
+    <x:String x:Key="TitleInputString">Titel</x:String>
+    <x:String x:Key="AlternativeTitleInputString">Alternativ titel</x:String>
+    <x:String x:Key="ForeignTitleNonLatinInputString">Utländsk titel (icke-latin)</x:String>
+    <x:String x:Key="AlternativeForeignTitleInputString">Alternativ utländsk titel</x:String>
+    <x:String x:Key="DiscNumberLetterInputString">Skivnummer / Bokstav</x:String>
+    <x:String x:Key="DiscTitleInputString">Skivtitel</x:String>
+    <x:String x:Key="DiscTitleNonLatinInputString">Skivtitel (icke-latin)</x:String>
+    <x:String x:Key="CategoryLabelString">Kategori</x:String>
+    <x:String x:Key="RegionLabelString">Region</x:String>
+    <x:String x:Key="LanguagesLabelString">Språk</x:String>
+    <x:String x:Key="LanguageSelectionViaLabelString">Språkväljning via</x:String>
+    <x:String x:Key="SerialInputString">Serienummer</x:String>
+    <x:String x:Key="BarcodeInputString">Streckkod</x:String>
+    <x:String x:Key="VersionsAndEditionGroupBoxString">Version och Utgåvor</x:String>
+    <x:String x:Key="VersionInputString">Version</x:String>
+    <x:String x:Key="EditionInputString">Utgåva</x:String>
+    <x:String x:Key="EditionNonLatinInputString">Utgåva (icke-latin)</x:String>
+    <!-- Additional Info Tab -->
+    <x:String x:Key="AdditionalInfoTabString">Ytterligare info</x:String>
+    <x:String x:Key="CommentsInputString">Kommentarer</x:String>
+    <x:String x:Key="CompatibleOSInputString">OS Kompatibeltitet</x:String>
+    <x:String x:Key="ProtectionInputString">Kopieringsskydd</x:String>
+    <x:String x:Key="ExtrasGroupBoxString">Extra</x:String>
+    <x:String x:Key="PhysicalIdentifiersGroupBoxString">Fysiska Identifierare</x:String>
+    <x:String x:Key="PublisherIdentifiersGroupBoxString">Utgivaridentifierare</x:String>
+    <!-- Contents Tab -->
+    <x:String x:Key="ContentsTabString">Innehåll</x:String>
+    <!-- Ringcodes Tab -->
+    <x:String x:Key="RingcodesTabString">Ringkoder</x:String>
+    <x:String x:Key="L0InfoGroupBoxString">Data/L0 Info</x:String>
+    <x:String x:Key="L1InfoGroupBoxString">Etikett/L1 Info</x:String>
+    <x:String x:Key="L2InfoGroupBoxString">L2 Info</x:String>
+    <x:String x:Key="L3InfoGroupBoxString">L3 Info</x:String>
+    <!-- Read-Only Info Tab -->
+    <x:String x:Key="ReadOnlyInfoTabString">Skrivskyddad Info</x:String>
+
+    <!-- Ring Code Guide Window -->
+    <x:String x:Key="RingCodeGuideTitleString">Ringkods guide</x:String>
+
+    <!-- About Window -->
+    <x:String x:Key="AboutTitleString">Om</x:String>
+    <x:String x:Key="VersionLabelString">Version</x:String>
+
+    <!-- Check for Updates Window -->
+    <x:String x:Key="CheckForUpdatesTitleString">Sök efter uppdatering</x:String>
+
+    <!-- Eject Window -->
+    <x:String x:Key="EjectTitleString">Mata ut</x:String>
+    <x:String x:Key="EjectMessageString">Det är nu säkert att mata ut skivan</x:String>
+
+    <!-- Ask Before Quit Window -->
+    <x:String x:Key="QuitTitleString">Avsluta</x:String>
+    <x:String x:Key="QuitMessageString">En dumpning pågår fortfarande, är du säker på att du vill avsluta?</x:String>
+
+    <!-- Protection Error Window -->
+    <x:String x:Key="ProtectionErrorTitleString">Fel!</x:String>
+    <x:String x:Key="ProtectionErrorMessageString">Ett undantag uppstod, se loggen för detaljer</x:String>
+
+    <!-- Protection Detected Window -->
+    <x:String x:Key="ProtectionDetectedTitleString">Upptäckta Skydd</x:String>
+
+</ResourceDictionary>

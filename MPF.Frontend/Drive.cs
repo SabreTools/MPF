@@ -60,6 +60,34 @@ namespace MPF.Frontend
         /// <remarks>Should only be used in UI applications</remarks>
         public char? Letter => Name?[0] ?? '\0';
 
+        /// <summary>
+        /// UI-friendly display name for the drive, cached after the first access
+        /// </summary>
+        public string DisplayName
+        {
+            get
+            {
+                if (field is not null)
+                    return field;
+
+                if (string.IsNullOrEmpty(Name))
+                    return field = string.Empty;
+
+                // Deal with non-Windows drive names
+                if (Environment.OSVersion.Platform == PlatformID.Unix)
+                {
+                    string volumePath = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    string volumeName = Path.GetFileName(volumePath);
+                    if (!string.IsNullOrEmpty(volumeName))
+                        return field = volumeName;
+                }
+
+                // Trim any trailing separators, falling back to the raw name if nothing remains
+                string displayName = Name!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                return field = string.IsNullOrEmpty(displayName) ? Name! : displayName;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -120,7 +148,12 @@ namespace MPF.Frontend
             {
                 DriveFormat = driveInfo.DriveFormat;
                 TotalSize = driveInfo.TotalSize;
-                VolumeLabel = driveInfo.VolumeLabel;
+
+                // DriveInfo.VolumeLabel is only available on Windows
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    VolumeLabel = driveInfo.VolumeLabel;
+                else
+                    VolumeLabel = string.Empty;
             }
             else
             {
@@ -237,6 +270,9 @@ namespace MPF.Frontend
             var driveInfo = Array.Find(DriveInfo.GetDrives(), d => d?.Name == Name);
             PopulateFromDriveInfo(driveInfo);
         }
+
+        /// <inheritdoc/>
+        public override string ToString() => DisplayName;
 
         #endregion
 

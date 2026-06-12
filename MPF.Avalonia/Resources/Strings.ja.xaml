@@ -1,0 +1,227 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Language Name: JA / JPN / Japanese / 日本語 -->
+    <x:String x:Key="LanguageMenuString">日本語</x:String>
+
+    <!-- Common Elements -->
+    <x:String x:Key="AcceptButtonString">OK</x:String>
+    <x:String x:Key="BrowseButtonString">参照...</x:String>
+    <x:String x:Key="CancelButtonString">キャンセル</x:String>
+    <x:String x:Key="MinimizeMenuItemString">最小化</x:String>
+    <x:String x:Key="CloseMenuItemString">閉じる</x:String>
+    <x:String x:Key="SettingsGroupBoxString">設定</x:String>
+    <x:String x:Key="StatusGroupBoxString">ステータス</x:String>
+    <x:String x:Key="WarningLabelString">警告:</x:String>
+    <x:String x:Key="WarningMessageString">警告</x:String>
+    <x:String x:Key="ErrorMessageString">エラー</x:String>
+
+    <!-- Main Window -->
+    <!-- Top Menu Bar -->
+    <x:String x:Key="FileMenuString">ファイル</x:String>
+    <x:String x:Key="ExitMenuItemString">終了</x:String>
+    <x:String x:Key="ToolsMenuString">ツール</x:String>
+    <x:String x:Key="CheckDumpMenuItemString">ダンプを確認</x:String>
+    <x:String x:Key="CreatePS3IRDDumpMenuItemString">PS3 IRD を作成</x:String>
+    <x:String x:Key="OptionsDumpMenuItemString">オプション</x:String>
+    <x:String x:Key="DebugInfoWindowMenuItemString">デバッグ情報ウィンドウ</x:String>
+    <x:String x:Key="HelpMenuString">ヘルプ</x:String>
+    <x:String x:Key="AboutMenuItemString">バージョン情報</x:String>
+    <x:String x:Key="CheckForUpdateMenuItemString">更新の確認</x:String>
+    <!-- Settings Group Box -->
+    <x:String x:Key="SystemLabelString">システム種別</x:String>
+    <x:String x:Key="SystemMediaTypeLabelString">システム／メディア種別</x:String>
+    <x:String x:Key="NoSystemSelectedString">システムが選択されていません</x:String>
+    <x:String x:Key="OutputPathLabelString">出力先</x:String>
+    <x:String x:Key="DriveLetterLabelString">ドライブレター</x:String>
+    <x:String x:Key="DriveSpeedLabelString">ドライブ速度</x:String>
+    <x:String x:Key="DumpingProgramLabelString">ダンプログラム</x:String>
+    <x:String x:Key="ParametersLabelString">パラメーター</x:String>
+    <!-- Controls Group Box -->
+    <x:String x:Key="ControlsGroupBoxString">操作</x:String>
+    <x:String x:Key="StartDumpingButtonString">ダンプ開始</x:String>
+    <x:String x:Key="StopDumpingButtonString">ダンプ停止</x:String>
+    <x:String x:Key="ScanButtonString">ディスクをスキャン</x:String>
+    <x:String x:Key="UpdateLabelButtonString">ラベルを更新</x:String>
+    <x:String x:Key="ProtectionScanButtonString">プロテクトをスキャン</x:String>
+    <!-- Log Output -->
+    <x:String x:Key="LogOutputExpanderString">ログ出力</x:String>
+    <x:String x:Key="ClearButtonString">ログをクリア</x:String>
+    <x:String x:Key="SaveButtonString">ログを保存</x:String>
+
+    <!-- Options Window -->
+    <x:String x:Key="OptionsTitleString">オプション</x:String>
+    <x:String x:Key="OptionsFirstRunTitleString">MPF へようこそ — オプションを設定しましょう</x:String>
+    <x:String x:Key="OptionsRetrievalWarningString">検証および情報取得を有効にする場合、取得したデータが実際のメディア内容と一致していることを確認する責任はユーザーにあります。一部の情報には確認が必要な項目が表示される場合がありますが、すべての情報を慎重に確認してください。</x:String>
+    <!-- General Tab -->
+    <x:String x:Key="GeneralTabString">全般</x:String>
+    <x:String x:Key="UserInterfaceGroupBoxString">ユーザーインターフェース</x:String>
+    <x:String x:Key="EnableDarkModeCheckBoxString">ダークモードを有効にする</x:String>
+    <x:String x:Key="CheckForUpdatesCheckBoxString">起動時に更新を確認する</x:String>
+    <x:String x:Key="CopyURLToClipboardCheckBoxString">更新URLをクリップボードにコピー</x:String>
+    <x:String x:Key="FastUpdateLabelCheckBoxString">高速ラベル更新</x:String>
+    <x:String x:Key="DefaultUILanguageLabelString">既定のUI言語:</x:String>
+    <x:String x:Key="DetectionGroupBoxString">検出</x:String>
+    <x:String x:Key="SkipSystemDetectCheckBoxString">システム検出をスキップ</x:String>
+    <x:String x:Key="NoFixedDrivesCheckBoxString">固定ドライブを除外</x:String>
+    <x:String x:Key="DefaultSystemLabelString">既定のシステム:</x:String>
+    <x:String x:Key="LoggingGroupBoxString">ログ</x:String>
+    <x:String x:Key="VerboseLoggingCheckBoxString">詳細ログ</x:String>
+    <x:String x:Key="AutoOpenLogCheckBoxString">ログを自動で開く</x:String>
+    <!-- Paths Tab -->
+    <x:String x:Key="PathsTabString">パス</x:String>
+    <x:String x:Key="AaruPathLabelString">Aaru のパス</x:String>
+    <x:String x:Key="DiscImageCreatorPathLabelString">DiscImageCreator のパス</x:String>
+    <x:String x:Key="RedumperPathLabelString">Redumper のパス</x:String>
+    <x:String x:Key="DefaultDumpingProgramLabelString">既定のダンプログラム</x:String>
+    <x:String x:Key="DefaultOutputPathLabelString">既定の出力先</x:String>
+    <!-- Dumping Tab -->
+    <x:String x:Key="DumpingTabString">ダンプ</x:String>
+    <x:String x:Key="DumpingGroupBoxString">ダンプ設定</x:String>
+    <x:String x:Key="ShowDiscInfoCheckBoxString">ディスク情報を表示</x:String>
+    <x:String x:Key="PullAllInformationCheckBoxString">すべての情報を取得</x:String>
+    <x:String x:Key="EnableTabInputCheckBoxString">タブ入力を有効にする</x:String>
+    <x:String x:Key="EnableRedumpCompatibilityCheckBoxString">Redump 互換を有効にする</x:String>
+    <x:String x:Key="ShowEjectReminderCheckBoxString">排出リマインダーを表示</x:String>
+    <x:String x:Key="AddPlaceholdersCheckBoxString">プレースホルダーを追加</x:String>
+    <x:String x:Key="AddFilenameSuffixCheckBoxString">ファイル名にサフィックスを追加</x:String>
+    <x:String x:Key="OutputSubmissionJSONCheckBoxString">送信用 JSON を出力</x:String>
+    <x:String x:Key="IncludeArtifactsCheckBoxString">【デバッグ】成果物を含める</x:String>
+    <x:String x:Key="CompressLogFilesCheckBoxString">ログファイルを圧縮</x:String>
+    <x:String x:Key="LogCompressionLabelString">ログ圧縮:</x:String>
+    <x:String x:Key="DeleteUnnecessaryFilesCheckBoxString">不要ファイルを削除</x:String>
+    <x:String x:Key="CreatePS3IRDAfterDumpingCheckBoxString">ダンプ後に PS3 IRD を作成</x:String>
+    <x:String x:Key="ProtectionGroupBoxString">プロテクト</x:String>
+    <x:String x:Key="EnableProtectionScanCheckBoxString">プロテクトスキャンを有効にする</x:String>
+    <x:String x:Key="ScanArchiveContentsCheckBoxString">アーカイブ内容をスキャン</x:String>
+    <x:String x:Key="IncludeDebugInformationCheckBoxString">デバッグ情報を含める</x:String>
+    <x:String x:Key="HideDriveLettersCheckBoxString">ドライブレターを非表示</x:String>
+    <x:String x:Key="DefaultSpeedsGroupBoxString">既定の速度</x:String>
+    <!-- Programs Tab -->
+    <x:String x:Key="ProgramsTabString">プログラム</x:String>
+    <x:String x:Key="AaruGroupBoxString">Aaru</x:String>
+    <x:String x:Key="EnableDebugOutputCheckBoxString">デバッグ出力を有効にする</x:String>
+    <x:String x:Key="AaruEnableVerboseOutputCheckBoxString">詳細出力を有効にする</x:String>
+    <x:String x:Key="ForceDumpingCheckBoxString">強制的にダンプを実行</x:String>
+    <x:String x:Key="StripPersonalDataCheckBoxString">個人情報を除去</x:String>
+    <x:String x:Key="AaruRereadTriesLabelString">再読み込み回数:</x:String>
+    <x:String x:Key="DiscImageCreatorGroupBoxString">DiscImageCreator</x:String>
+    <x:String x:Key="QuietModeCheckBoxString">サイレントモード</x:String>
+    <x:String x:Key="ParanoidModeCheckBoxString">パラノイドモード</x:String>
+    <x:String x:Key="UseCMIFlagCheckBoxString">CMI フラグを使用</x:String>
+    <x:String x:Key="MultiSectorReadCheckBoxString">マルチセクターリード</x:String>
+    <x:String x:Key="MultiSectorReadValueLabelString">マルチセクターリード値:</x:String>
+    <x:String x:Key="DICCDRereadTriesLabelString">CD 再読み込み回数:</x:String>
+    <x:String x:Key="DICDVDRereadTriesLabelString">DVD/HD-DVD/BD 再読み込み回数:</x:String>
+    <x:String x:Key="RedumperGroupBoxString">Redumper</x:String>
+    <x:String x:Key="RedumperEnableVerboseOutputCheckBoxString">詳細出力を有効にする</x:String>
+    <x:String x:Key="EnableRefineSectorModeFlagCheckBoxString">Refine Sector モードフラグを有効にする</x:String>
+    <x:String x:Key="RedumperRereadTriesLabelString">再読み込み回数:</x:String>
+    <x:String x:Key="PlextorLeadinRetriesLabelString">Plextor リードイン再試行回数:</x:String>
+    <x:String x:Key="NonRedumpOptionsCheckBoxString">非 Redump オプション</x:String>
+    <x:String x:Key="DefaultReadMethodLabelString">既定のリード方法:</x:String>
+    <x:String x:Key="DefaultSectorOrderLabelString">既定のセクター順序:</x:String>
+    <x:String x:Key="DefaultDriveTypeLabelString">既定のドライブ種別:</x:String>
+    <x:String x:Key="DefaultDrivePregapStartLabelString">既定のドライブ プリギャップ スタート:</x:String>
+    <!-- Login Info Tab -->
+    <x:String x:Key="LoginInfoTabString">ログイン情報</x:String>
+    <x:String x:Key="RetrievalGroupBoxString">情報取得</x:String>
+    <x:String x:Key="RetrieveMatchInformationCheckBoxString">一致情報を取得</x:String>
+    <x:String x:Key="RedumpGroupBoxString">Redump</x:String>
+    <x:String x:Key="UsernameLabelString">ユーザー名</x:String>
+    <x:String x:Key="PasswordLabelString">パスワード</x:String>
+    <x:String x:Key="TestLoginButtonString">ログインをテスト</x:String>
+
+    <!-- Check Dump Window -->
+    <x:String x:Key="CheckDumpTitleString">既存ダンプの確認</x:String>
+    <x:String x:Key="InputPathLabelString">入力パス</x:String>
+    <x:String x:Key="CheckDumpButtonString">ダンプを確認</x:String>
+    <x:String x:Key="CheckDumpWarningString">確認を実行すると、既存の送信情報ファイルは上書きされます。必要に応じてバックアップを作成してから実行してください。</x:String>
+
+    <!-- Create PS3 IRD Window -->
+    <x:String x:Key="CreatePS3IRDTitleString">PS3 IRD の作成</x:String>
+    <x:String x:Key="InputGroupBoxString">入力</x:String>
+    <x:String x:Key="PS3ISOPathLabelString">PS3 ISO パス</x:String>
+    <x:String x:Key="GetKeyPathLabelString">*.getkey.log ファイルパス</x:String>
+    <x:String x:Key="KeyExpanderString">PS3 ディスク暗号化キーを手動で指定</x:String>
+    <x:String x:Key="HexadecimalKeyLabelString">16進キー</x:String>
+    <x:String x:Key="KeyFilePathLabelString">キー ファイル パス</x:String>
+    <x:String x:Key="KeyStatusLabelString">キーの状態</x:String>
+    <x:String x:Key="DiscIDExpanderString">PS3 ディスク ID を手動で指定</x:String>
+    <x:String x:Key="DiscIDLabelString">ディスク ID</x:String>
+    <x:String x:Key="DiscIDStatusLabelString">ディスク ID 状態</x:String>
+    <x:String x:Key="PICExpanderString">Permanent Information &#x26; Control (PIC) を手動で指定</x:String>
+    <x:String x:Key="LayerbreakLabelString">レイヤーブレイク (セクター数)</x:String>
+    <x:String x:Key="PICLabelString">PIC</x:String>
+    <x:String x:Key="PICFilePathLabelString">PIC ファイル パス</x:String>
+    <x:String x:Key="PICStatusLabelString">PIC 状態</x:String>
+    <x:String x:Key="CreateIRDButtonString">IRD を作成</x:String>
+
+    <!-- Media Information Guide Window -->
+    <x:String x:Key="MediaInformationTitleString">メディア情報</x:String>
+    <x:String x:Key="RingCodeGuideButtonString">リングコードガイド</x:String>
+    <!-- Common Info Tab -->
+    <x:String x:Key="CommonInfoTabString">共通情報</x:String>
+    <x:String x:Key="CommonMediaInfoGroupBoxString">共通メディア情報</x:String>
+    <x:String x:Key="TitleInputString">タイトル</x:String>
+    <x:String x:Key="AlternativeTitleInputString">別タイトル</x:String>
+    <x:String x:Key="ForeignTitleNonLatinInputString">外国語タイトル（非ラテン文字）</x:String>
+    <x:String x:Key="AlternativeForeignTitleInputString">代替外国語タイトル</x:String>
+    <x:String x:Key="DiscNumberLetterInputString">ディスク番号／記号</x:String>
+    <x:String x:Key="DiscTitleInputString">ディスクタイトル</x:String>
+    <x:String x:Key="DiscTitleNonLatinInputString">ディスクタイトル（非ラテン文字）</x:String>
+    <x:String x:Key="CategoryLabelString">カテゴリ</x:String>
+    <x:String x:Key="RegionLabelString">リージョン</x:String>
+    <x:String x:Key="LanguagesLabelString">言語</x:String>
+    <x:String x:Key="LanguageSelectionViaLabelString">言語選択方法</x:String>
+    <x:String x:Key="SerialInputString">シリアル</x:String>
+    <x:String x:Key="BarcodeInputString">バーコード</x:String>
+    <x:String x:Key="VersionsAndEditionGroupBoxString">バージョン／エディション</x:String>
+    <x:String x:Key="VersionInputString">バージョン</x:String>
+    <x:String x:Key="EditionInputString">エディション</x:String>
+    <x:String x:Key="EditionNonLatinInputString">エディション（非ラテン文字）</x:String>
+    <!-- Additional Info Tab -->
+    <x:String x:Key="AdditionalInfoTabString">追加情報</x:String>
+    <x:String x:Key="CommentsInputString">コメント</x:String>
+    <x:String x:Key="CompatibleOSInputString">対応 OS</x:String>
+    <x:String x:Key="ProtectionInputString">プロテクト</x:String>
+    <x:String x:Key="ExtrasGroupBoxString">その他</x:String>
+    <x:String x:Key="PhysicalIdentifiersGroupBoxString">物理識別情報</x:String>
+    <x:String x:Key="PublisherIdentifiersGroupBoxString">出版社識別情報</x:String>
+    <!-- Contents Tab -->
+    <x:String x:Key="ContentsTabString">内容</x:String>
+    <!-- Ringcodes Tab -->
+    <x:String x:Key="RingcodesTabString">リングコード</x:String>
+    <x:String x:Key="L0InfoGroupBoxString">データ／L0 情報</x:String>
+    <x:String x:Key="L1InfoGroupBoxString">ラベル／L1 情報</x:String>
+    <x:String x:Key="L2InfoGroupBoxString">L2 情報</x:String>
+    <x:String x:Key="L3InfoGroupBoxString">L3 情報</x:String>
+    <!-- Read-Only Info Tab -->
+    <x:String x:Key="ReadOnlyInfoTabString">読み取り専用情報</x:String>
+
+    <!-- Ring Code Guide Window -->
+    <x:String x:Key="RingCodeGuideTitleString">リングコードガイド</x:String>
+
+    <!-- About Window -->
+    <x:String x:Key="AboutTitleString">バージョン情報</x:String>
+    <x:String x:Key="VersionLabelString">バージョン</x:String>
+
+    <!-- Check for Updates Window -->
+    <x:String x:Key="CheckForUpdatesTitleString">バージョン更新の確認</x:String>
+
+    <!-- Eject Window -->
+    <x:String x:Key="EjectTitleString">取り出し</x:String>
+    <x:String x:Key="EjectMessageString">ディスクを安全に取り出せます</x:String>
+
+    <!-- Ask Before Quit Window -->
+    <x:String x:Key="QuitTitleString">終了</x:String>
+    <x:String x:Key="QuitMessageString">ダンプ処理がまだ進行中です。終了してもよろしいですか？</x:String>
+
+    <!-- Protection Error Window -->
+    <x:String x:Key="ProtectionErrorTitleString">エラー!</x:String>
+    <x:String x:Key="ProtectionErrorMessageString">例外が発生しました。詳細はログを確認してください。</x:String>
+
+    <!-- Protection Detected Window -->
+    <x:String x:Key="ProtectionDetectedTitleString">検出されたプロテクト</x:String>
+
+</ResourceDictionary>

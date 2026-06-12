@@ -57,6 +57,8 @@ echo "  No archive (-a)                       $NO_ARCHIVE"
 echo " "
 
 # Create the build matrix arrays
+AVALONIA_FRAMEWORKS=("net10.0")
+AVALONIA_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x64" "osx-arm64")
 UI_FRAMEWORKS=("net10.0-windows")
 UI_RUNTIMES=("win-x86" "win-x64")
 CHECK_FRAMEWORKS=("net10.0")
@@ -64,6 +66,7 @@ CHECK_RUNTIMES=("win-x86" "win-x64" "win-arm64" "linux-x64" "linux-arm64" "osx-x
 
 # Use expanded framework lists, if requested
 if [ $USE_ALL = true ]; then
+    AVALONIA_FRAMEWORKS=("net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
     UI_FRAMEWORKS=("net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0-windows" "net6.0-windows" "net7.0-windows" "net8.0-windows" "net9.0-windows" "net10.0-windows")
     CHECK_FRAMEWORKS=("net20" "net35" "net40" "net452" "net462" "net472" "net48" "netcoreapp3.1" "net5.0" "net6.0" "net7.0" "net8.0" "net9.0" "net10.0")
 fi
@@ -151,6 +154,26 @@ function download_programs() {
         done
     done
 
+    # Create Avalonia directories and copy data
+    for FRAMEWORK in "${AVALONIA_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVALONIA_RUNTIMES[@]}"; do
+            for PREFIX in "${DL_PREFIXES[@]}"; do
+                OUTDIR=$PREFIX"_"$RUNTIME-dir
+                if [ ! -d "$OUTDIR" ]; then
+                    continue
+                fi
+
+                if [ $INCLUDE_DEBUG = true ]; then
+                    mkdir -p MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
+                    cp -rfp $OUTDIR/* MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+                fi
+
+                mkdir -p MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}
+                cp -rfp $OUTDIR/* MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/Programs/${PREFIX}/
+            done
+        done
+    done
+
     # Create UI directories and copy data
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
         for RUNTIME in "${UI_RUNTIMES[@]}"; do
@@ -219,6 +242,45 @@ if [ $NO_BUILD = false ]; then
     # Create Nuget Packages
     dotnet pack MPF.ExecutionContexts/MPF.ExecutionContexts.csproj --output $BUILD_FOLDER
     dotnet pack MPF.Processors/MPF.Processors.csproj --output $BUILD_FOLDER
+
+    # Build Avalonia
+    for FRAMEWORK in "${AVALONIA_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVALONIA_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Build Avaloniia - $FRAMEWORK, $RUNTIME ====="
+
+            # If we have an invalid combination of framework and runtime
+            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
+                    continue
+                fi
+            fi
+
+            # Only .NET 5 and above can publish to a single file
+            if [[ $(echo ${SINGLE_FILE_CAPABLE[@]} | fgrep -w $FRAMEWORK) ]]; then
+                # Only include Debug if set
+                if [ $INCLUDE_DEBUG = true ]; then
+                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true
+                fi
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+            else
+                # Only include Debug if set
+                if [ $INCLUDE_DEBUG = true ]; then
+                    dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Debug --self-contained true --version-suffix $COMMIT
+                fi
+                dotnet publish MPF.Avalonia/MPF.Avalonia.csproj -f $FRAMEWORK -r $RUNTIME -c Release --self-contained true --version-suffix $COMMIT -p:DebugType=None -p:DebugSymbols=false
+            fi
+        done
+    done
 
     # Build UI
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
@@ -344,6 +406,46 @@ if [ $NO_ARCHIVE = false ]; then
     if [ $INCLUDE_PROGRAMS = true ]; then
         download_programs
     fi
+
+    # Create Avalonia archives
+    for FRAMEWORK in "${AVALONIA_FRAMEWORKS[@]}"; do
+        for RUNTIME in "${AVALONIA_RUNTIMES[@]}"; do
+            # Output the current build
+            echo "===== Archive Avalonia - $FRAMEWORK, $RUNTIME ====="
+
+            # If we have an invalid combination of framework and runtime
+            if [[ ! $(echo ${VALID_CROSS_PLATFORM_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [[ $(echo ${VALID_CROSS_PLATFORM_RUNTIMES[@]} | fgrep -w $RUNTIME) ]]; then
+                    echo "Skipped due to invalid combination"
+                    continue
+                fi
+            fi
+
+            # If we have Apple silicon but an unsupported framework
+            if [[ ! $(echo ${VALID_APPLE_FRAMEWORKS[@]} | fgrep -w $FRAMEWORK) ]]; then
+                if [ $RUNTIME = "osx-arm64" ]; then
+                    echo "Skipped due to no Apple Silicon support"
+                    continue
+                fi
+            fi
+
+            # Only include Debug if set
+            if [ $INCLUDE_DEBUG = true ]; then
+                cd $BUILD_FOLDER/MPF.Avalonia/bin/Debug/${FRAMEWORK}/${RUNTIME}/publish/
+                if [ $INCLUDE_PROGRAMS = true ]; then
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip .
+                else
+                    zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_debug.zip . -x 'Programs/*'
+                fi
+            fi
+            cd $BUILD_FOLDER/MPF.Avalonia/bin/Release/${FRAMEWORK}/${RUNTIME}/publish/
+            if [ $INCLUDE_PROGRAMS = true ]; then
+                zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip .
+            else
+                zip -r $BUILD_FOLDER/MPF.Avalonia_${FRAMEWORK}_${RUNTIME}_release.zip . -x 'Programs/*'
+            fi
+        done
+    done
 
     # Create UI archives
     for FRAMEWORK in "${UI_FRAMEWORKS[@]}"; do
