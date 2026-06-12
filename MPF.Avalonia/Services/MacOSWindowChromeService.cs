@@ -12,8 +12,11 @@ namespace MPF.Avalonia.Services
     internal static class MacOSWindowChromeService
     {
         private const ulong NSWindowStyleMaskMiniaturizable = 1UL << 2;
+
         private const ulong NSWindowStyleMaskResizable = 1UL << 3;
+
         private const long NSWindowMiniaturizeButton = 1;
+
         private const long NSWindowZoomButton = 2;
 
         /// <summary>

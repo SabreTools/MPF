@@ -14,11 +14,13 @@ namespace MPF.Avalonia.Services
         /// GNOME color-scheme settings, and the KDE color scheme
         /// </summary>
         private static bool IsLinuxDarkMode()
-            => IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
+        {
+            return IsDarkThemeName(Environment.GetEnvironmentVariable("GTK_THEME"))
                 || IsDarkThemeName(Environment.GetEnvironmentVariable("QT_STYLE_OVERRIDE"))
                 || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface color-scheme"))
                 || IsDarkThemeName(RunCommand("gsettings", "get org.gnome.desktop.interface gtk-theme"))
                 || IsKdeColorSchemeDark();
+        }
 
         /// <summary>
         /// Read the active KDE color scheme (Plasma 6, then Plasma 5) and test it for a dark name
@@ -35,12 +37,19 @@ namespace MPF.Avalonia.Services
         /// Test whether a theme or color scheme name indicates a dark variant
         /// </summary>
         private static bool IsDarkThemeName(string? value)
-            => value?.IndexOf("dark", StringComparison.OrdinalIgnoreCase) >= 0
-                || value?.IndexOf("prefer-dark", StringComparison.OrdinalIgnoreCase) >= 0;
+        {
+            // Invalid values are ignored
+            if (value is null)
+                return false;
+
+            // Search for "dark" or "prefer-dark"
+            return value.Contains("dark", StringComparison.OrdinalIgnoreCase);
+        }
 
         /// <summary>
         /// Run a command line tool and return its trimmed standard output, or null on failure or timeout
         /// </summary>
+        /// TODO: Figure out a way to centralize this and ensure safety
         private static string? RunCommand(string fileName, string arguments)
         {
             try

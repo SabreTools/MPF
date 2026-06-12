@@ -42,7 +42,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Look up a localized string resource by key, falling back to the given default
         /// </summary>
-        protected string StringResource(string key, string fallback)
+        protected static string StringResource(string key, string fallback)
         {
             // If there is no current application, the resource cannot be resolved
             if (Application.Current is not { } application)

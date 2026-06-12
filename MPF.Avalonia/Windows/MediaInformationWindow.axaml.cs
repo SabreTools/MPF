@@ -47,7 +47,8 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Read-only access to the current media information view model
         /// </summary>
-        public MediaInformationViewModel MediaInformationViewModel => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
+        public MediaInformationViewModel MediaInformationViewModel
+            => DataContext as MediaInformationViewModel ?? new MediaInformationViewModel(new Options(), new SubmissionInfo());
 
         public MediaInformationWindow()
             : this(new Options(), new SubmissionInfo(), showPcMacHybridAlways: true)

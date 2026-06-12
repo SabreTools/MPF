@@ -35,6 +35,7 @@
 - Disable Zstd again and enable Store
 - Avalonia UI (whatever-industries)
 - Initial cleanup of Avalonia
+- Additional cleanup and consolidation
 
 ### 3.7.1 (2026-03-30)
 

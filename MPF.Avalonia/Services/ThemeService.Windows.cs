@@ -13,6 +13,7 @@ namespace MPF.Avalonia.Services
     internal static partial class ThemeService
     {
         private const int DwmWindowAttributeUseImmersiveDarkModeBefore20H1 = 19;
+
         private const int DwmWindowAttributeUseImmersiveDarkMode = 20;
 
         /// <summary>

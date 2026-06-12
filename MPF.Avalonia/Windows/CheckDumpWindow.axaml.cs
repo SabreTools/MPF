@@ -22,8 +22,8 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private static readonly List<FilePickerFileType> InputFileTypes =
         [
-            new("Disc Images") { Patterns = new[] { "*.iso", "*.cue", "*.aaruf", "*.bca" } },
-            new("Log Archives") { Patterns = new[] { "*_logs.zip" } },
+            new("Disc Images") { Patterns = ["*.iso", "*.cue", "*.aaruf", "*.bca"] },
+            new("Log Archives") { Patterns = ["*_logs.zip"] },
             FilePickerFileTypes.All,
         ];
 

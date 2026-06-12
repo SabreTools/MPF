@@ -90,7 +90,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Create a native menu group with the given header containing the provided items
         /// </summary>
-        private NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
+        private static NativeMenuItem CreateNativeMenuGroup(string header, params NativeMenuItem[] items)
         {
             var group = new NativeMenuItem { Header = CleanMenuHeader(header) };
             var menu = new NativeMenu();
@@ -125,7 +125,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Get the localized header for the native language menu group
         /// </summary>
-        private string NativeLanguageMenuHeader()
+        private static string NativeLanguageMenuHeader()
             => StringResource("LanguageMenuString", "ENG");
 
         /// <summary>

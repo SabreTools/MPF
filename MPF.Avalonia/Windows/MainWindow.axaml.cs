@@ -527,7 +527,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Build the about text
         /// </summary>
-        private string CreateAboutText()
+        private static string CreateAboutText()
         {
             string version = typeof(MainWindow).Assembly.GetName().Version?.ToString() ?? "Unknown";
             return $"{StringResource("AppTitleFullString", "Media Preservation Frontend (MPF)")}\n\n"

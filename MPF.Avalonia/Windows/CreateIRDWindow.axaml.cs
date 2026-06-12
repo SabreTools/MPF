@@ -79,11 +79,12 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> OpenFileAsync(string title, params string[] patterns)
         {
-            return await DialogService.OpenFileAsync(this, title, new List<FilePickerFileType>
-            {
+            List<FilePickerFileType> fileTypes = [
                 new(title) { Patterns = patterns },
                 FilePickerFileTypes.All,
-            });
+            ];
+
+            return await DialogService.OpenFileAsync(this, title, fileTypes);
         }
 
         #endregion
