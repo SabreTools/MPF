@@ -341,7 +341,93 @@ namespace MPF.Frontend
             }
 #endif
 
+            // On Linux, DriveInfo.GetDrives() returns mount points and typically
+            // does not surface unmounted optical block devices (/dev/sr*). Enumerate
+            // them directly so users can dump discs without first mounting them.
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                var existingNames = new HashSet<string>();
+                foreach (var d in drives)
+                {
+                    if (d?.Name is not null)
+                        existingNames.Add(d.Name);
+                }
+
+                var extra = new List<Drive>();
+                foreach (var devicePath in EnumerateUnixOpticalDevicePaths("/dev"))
+                {
+                    if (existingNames.Contains(devicePath))
+                        continue;
+
+                    Drive? d;
+                    try
+                    {
+                        d = Create(Frontend.InternalDriveType.Optical, devicePath);
+                    }
+                    catch
+                    {
+                        d = null;
+                    }
+
+                    if (d != null)
+                        extra.Add(d);
+                }
+
+                if (extra.Count > 0)
+                {
+                    var combined = new Drive[drives.Length + extra.Count];
+                    Array.Copy(drives, combined, drives.Length);
+                    extra.CopyTo(combined, drives.Length);
+                    drives = combined;
+                }
+            }
+
             return [.. drives];
+        }
+
+        /// <summary>
+        /// Enumerate Linux optical block devices under a directory by matching
+        /// the kernel convention "sr" followed by one or more digits (sr0, sr1, ...).
+        /// </summary>
+        /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
+        /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
+        internal static List<string> EnumerateUnixOpticalDevicePaths(string devRoot)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
+                return result;
+
+            string[] candidates;
+            try
+            {
+                candidates = Directory.GetFiles(devRoot, "sr*");
+            }
+            catch
+            {
+                return result;
+            }
+
+            foreach (var path in candidates)
+            {
+                string name = Path.GetFileName(path);
+                if (name.Length < 3)
+                    continue;
+
+                bool allDigits = true;
+                for (int i = 2; i < name.Length; i++)
+                {
+                    if (!char.IsDigit(name[i]))
+                    {
+                        allDigits = false;
+                        break;
+                    }
+                }
+
+                if (allDigits)
+                    result.Add(path);
+            }
+
+            return result;
         }
 
         /// <summary>
