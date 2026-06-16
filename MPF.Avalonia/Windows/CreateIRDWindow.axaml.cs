@@ -47,7 +47,7 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new CreateIRDViewModel();
-            Opened += WireEvents;
+            Opened += AddEventHandlers;
         }
 
         #region UI Functionality
@@ -55,23 +55,27 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Add all event handlers once the window has opened
         /// </summary>
-        private void WireEvents(object? sender, EventArgs e)
+        private void AddEventHandlers(object? sender, EventArgs e)
         {
-            this.FindControl<Button>("CreateIRDButton")!.Click += OnCreateIRDClick;
-            this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;
-            this.FindControl<Button>("InputPathBrowseButton")!.Click += InputPathBrowseButtonClick;
-            this.FindControl<Button>("LogPathBrowseButton")!.Click += LogPathBrowseButtonClick;
-            this.FindControl<Button>("KeyPathBrowseButton")!.Click += KeyPathBrowseButtonClick;
-            this.FindControl<Button>("PICPathBrowseButton")!.Click += PICPathBrowseButtonClick;
+            // Main buttons
+            CreateIRDButton!.Click += OnCreateIRDClick;
+            CancelButton!.Click += OnCancelClick;
 
-            this.FindControl<TextBox>("InputPathTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeInputPath();
-            this.FindControl<TextBox>("LogPathTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeLogPath();
-            this.FindControl<TextBox>("KeyPathTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeKeyPath();
-            this.FindControl<TextBox>("KeyTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeKey();
-            this.FindControl<TextBox>("DiscIDTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeDiscID();
-            this.FindControl<TextBox>("PICPathTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangePICPath();
-            this.FindControl<TextBox>("PICTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangePIC();
-            this.FindControl<TextBox>("LayerbreakTextBox")!.TextChanged += (_, _) => CreateIRDViewModel.ChangeLayerbreak();
+            // User Area Click
+            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
+            LogPathBrowseButton!.Click += LogPathBrowseButtonClick;
+            KeyPathBrowseButton!.Click += KeyPathBrowseButtonClick;
+            PICPathBrowseButton!.Click += PICPathBrowseButtonClick;
+
+            // User Area TextChanged
+            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
+            LogPathTextBox!.TextChanged += LogPathTextBoxTextChanged;
+            KeyPathTextBox!.TextChanged += KeyPathTextBoxTextChanged;
+            KeyTextBox!.TextChanged += KeyTextBoxTextChanged;
+            DiscIDTextBox!.TextChanged += DiscIDTextBoxTextChanged;
+            PICPathTextBox!.TextChanged += PICPathTextBoxTextChanged;
+            PICTextBox!.TextChanged += PICTextBoxTextChanged;
+            LayerbreakTextBox!.TextChanged += LayerbreakTextBoxTextChanged;
         }
 
         /// <summary>
@@ -123,6 +127,15 @@ namespace MPF.Avalonia.Windows
             => Close(false);
 
         /// <summary>
+        /// Handler for DiscIDTextBox TextChanged event
+        /// </summary>
+        public void DiscIDTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeDiscID();
+        }
+
+        /// <summary>
         /// Handler for InputPathBrowseButton Click event
         /// </summary>
         public async void InputPathBrowseButtonClick(object? sender, RoutedEventArgs e)
@@ -130,6 +143,18 @@ namespace MPF.Avalonia.Windows
             string? path = await OpenFileAsync("ISO", "*.iso");
             if (!string.IsNullOrWhiteSpace(path))
                 CreateIRDViewModel.InputPath = path;
+
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeInputPath();
+        }
+
+        /// <summary>
+        /// Handler for InputPathTextBox TextChanged event
+        /// </summary>
+        public void InputPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeInputPath();
         }
 
         /// <summary>
@@ -140,6 +165,18 @@ namespace MPF.Avalonia.Windows
             string? path = await OpenFileAsync("GetKey Log", "*.getkey.log");
             if (!string.IsNullOrWhiteSpace(path))
                 CreateIRDViewModel.LogPath = path;
+
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeLogPath();
+        }
+
+        /// <summary>
+        /// Handler for LogPathTextBox TextChanged event
+        /// </summary>
+        public void LogPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeLogPath();
         }
 
         /// <summary>
@@ -150,6 +187,27 @@ namespace MPF.Avalonia.Windows
             string? path = await OpenFileAsync("Key", "*.key");
             if (!string.IsNullOrWhiteSpace(path))
                 CreateIRDViewModel.KeyPath = path;
+
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeKeyPath();
+        }
+
+        /// <summary>
+        /// Handler for KeyPathTextBox TextChanged event
+        /// </summary>
+        public void KeyPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeKeyPath();
+        }
+
+        /// <summary>
+        /// Handler for KeyTextBox TextChanged event
+        /// </summary>
+        public void KeyTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeKey();
         }
 
         /// <summary>
@@ -160,6 +218,36 @@ namespace MPF.Avalonia.Windows
             string? path = await OpenFileAsync("PIC", "*.physical", "*_PIC.bin", "*.PIC");
             if (!string.IsNullOrWhiteSpace(path))
                 CreateIRDViewModel.PICPath = path;
+
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePICPath();
+        }
+
+        /// <summary>
+        /// Handler for PICPathTextBox TextChanged event
+        /// </summary>
+        public void PICPathTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePICPath();
+        }
+
+        /// <summary>
+        /// Handler for PICTextBox TextChanged event
+        /// </summary>
+        public void PICTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangePIC();
+        }
+
+        /// <summary>
+        /// Handler for LayerbreakTextBox TextChanged event
+        /// </summary>
+        public void LayerbreakTextBoxTextChanged(object? sender, TextChangedEventArgs e)
+        {
+            if (CreateIRDViewModel.CanExecuteSelectionChanged)
+                CreateIRDViewModel.ChangeLayerbreak();
         }
 
         #endregion

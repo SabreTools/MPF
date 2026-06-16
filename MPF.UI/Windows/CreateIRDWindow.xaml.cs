@@ -304,9 +304,7 @@ namespace MPF.UI.Windows
         /// Handler for CancelButtom Click event
         /// </summary>
         private void OnCancelClick(object sender, EventArgs e)
-        {
-            Close();
-        }
+            => Close();
 
         /// <summary>
         /// Handler for DiscIDTextBox TextChanged event

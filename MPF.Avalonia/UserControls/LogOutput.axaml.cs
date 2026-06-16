@@ -34,8 +34,8 @@ namespace MPF.Avalonia.UserControls
             DataContext = this;
 
             // Add handlers
-            this.FindControl<Button>("ClearButton")!.Click += OnClearButton;
-            this.FindControl<Button>("SaveButton")!.Click += OnSaveButton;
+            ClearButton!.Click += OnClearButton;
+            SaveButton!.Click += OnSaveButton;
         }
 
         #region Logging
@@ -60,7 +60,7 @@ namespace MPF.Avalonia.UserControls
                         Entries.RemoveAt(0);
                 }
 
-                this.FindControl<ScrollViewer>("Scroller")?.ScrollToEnd();
+                Scroller?.ScrollToEnd();
             });
         }
 
@@ -73,7 +73,7 @@ namespace MPF.Avalonia.UserControls
         /// </summary>
         public void SetConsoleHeight(double height)
         {
-            Border? logSurface = this.FindControl<Border>("LogSurface");
+            Border? logSurface = LogSurface;
             logSurface?.Height = height;
         }
 

@@ -1,6 +1,4 @@
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using MPF.Avalonia.UserControls;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib.Data;
@@ -16,33 +14,6 @@ namespace MPF.Avalonia.Windows
         /// Whether the PC/Mac hybrid grid should always be shown regardless of media type
         /// </summary>
         private readonly bool _showPcMacHybridAlways;
-
-        #region Field Mappings
-
-        /// <summary>
-        /// Ringcode input control names that should allow tab entry
-        /// </summary>
-        private static readonly string[] TabEnabledFieldNames =
-        [
-            "L0MasteringRing",
-            "L0MasteringSID",
-            "L0Toolstamp",
-            "L0MouldSID",
-            "L0AdditionalMould",
-            "L1MasteringRing",
-            "L1MasteringSID",
-            "L1Toolstamp",
-            "L1MouldSID",
-            "L1AdditionalMould",
-            "L2MasteringRing",
-            "L2MasteringSID",
-            "L2Toolstamp",
-            "L3MasteringRing",
-            "L3MasteringSID",
-            "L3Toolstamp",
-        ];
-
-        #endregion
 
         /// <summary>
         /// Read-only access to the current media information view model
@@ -63,72 +34,39 @@ namespace MPF.Avalonia.Windows
             _showPcMacHybridAlways = showPcMacHybridAlways;
             InitializeComponent();
 
-            // Ensure the bound sections and dictionaries exist before the DataContext is
-            // assigned, so the two-way special-field bindings always have a write target
-            var viewModel = new MediaInformationViewModel(options, submissionInfo);
-            EnsureSpecialFields(viewModel.SubmissionInfo);
-            DataContext = viewModel;
+            DataContext = new MediaInformationViewModel(options, submissionInfo);
+            MediaInformationViewModel.Load();
+
             if (options.Processing.MediaInformation.EnableRedumpCompatibility)
             {
                 MediaInformationViewModel.SetRedumpRegions();
                 MediaInformationViewModel.SetRedumpLanguages();
             }
 
-            MediaInformationViewModel.Load();
+            // TODO: Determine why these need to be here
             PopulateCollections();
-            LoadUnmappedFields();
+
+            // Add handlers
+            AcceptButton!.Click += OnAcceptClick;
+            CancelButton!.Click += OnCancelClick;
+            RingCodeGuideButton!.Click += OnRingCodeGuideClick;
+
+            // Update UI with new values
             ManipulateFields(options, MediaInformationViewModel.SubmissionInfo);
-
-            this.FindControl<Button>("AcceptButton")!.Click += OnAcceptClick;
-            this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;
-            this.FindControl<Button>("RingCodeGuideButton")!.Click += OnRingCodeGuideClick;
         }
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Handler for AcceptButton Click event
-        /// </summary>
-        private void OnAcceptClick(object? sender, RoutedEventArgs e)
-        {
-            MediaInformationViewModel.Save();
-            Close(true);
-        }
-
-        /// <summary>
-        /// Handler for CancelButton Click event
-        /// </summary>
-        private void OnCancelClick(object? sender, RoutedEventArgs e)
-            => Close(false);
-
-        /// <summary>
-        /// Handler for RingCodeGuideButton Click event
-        /// </summary>
-        private void OnRingCodeGuideClick(object? sender, RoutedEventArgs e)
-            => _ = new RingCodeGuideWindow().ShowDialog(this);
-
-        #endregion
 
         #region Helpers
 
         /// <summary>
         /// Assign the view model collections as the data sources for the dropdown controls
         /// </summary>
+        /// TODO: Can this be avoided by binding?
         private void PopulateCollections()
         {
-            this.FindControl<ComboBox>("CategoryComboBox")!.ItemsSource = MediaInformationViewModel.Categories;
-            this.FindControl<ComboBox>("RegionComboBox")!.ItemsSource = MediaInformationViewModel.Regions;
-            this.FindControl<MultiSelectDropDown>("LanguagesDropDown")!.ItemsSource = MediaInformationViewModel.Languages;
-            this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.ItemsSource = MediaInformationViewModel.LanguageSelections;
-        }
-
-        /// <summary>
-        /// Populate the input fields that are not directly bound to the submission info
-        /// </summary>
-        private void LoadUnmappedFields()
-        {
-            if (MediaInformationViewModel.SubmissionInfo.PartiallyMatchedIDs?.Count > 0)
-                this.FindControl<UserInput>("PartiallyMatchedIDs")!.Text = string.Join(", ", MediaInformationViewModel.SubmissionInfo.PartiallyMatchedIDs);
+            CategoryComboBox!.ItemsSource = MediaInformationViewModel.Categories;
+            RegionComboBox!.ItemsSource = MediaInformationViewModel.Regions;
+            LanguagesDropDown!.ItemsSource = MediaInformationViewModel.Languages;
+            LanguageSelectionsDropDown!.ItemsSource = MediaInformationViewModel.LanguageSelections;
         }
 
         /// <summary>
@@ -153,55 +91,111 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Enable tab entry on ringcode fields
         /// </summary>
+        /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
-            foreach (string name in TabEnabledFieldNames)
-            {
-                this.FindControl<UserInput>(name)!.Tab = true;
-            }
+            // L0
+            L0MasteringRing!.Tab = true;
+            L0MasteringSID!.Tab = true;
+            L0Toolstamp!.Tab = true;
+            L0MouldSID!.Tab = true;
+            L0AdditionalMould!.Tab = true;
+
+            // L1
+            L1MasteringRing!.Tab = true;
+            L1MasteringSID!.Tab = true;
+            L1Toolstamp!.Tab = true;
+            L1MouldSID!.Tab = true;
+            L1AdditionalMould!.Tab = true;
+
+            // L2
+            L2MasteringRing!.Tab = true;
+            L2MasteringSID!.Tab = true;
+            L2Toolstamp!.Tab = true;
+
+            // L3
+            L3MasteringRing!.Tab = true;
+            L3MasteringSID!.Tab = true;
+            L3Toolstamp!.Tab = true;
         }
 
         /// <summary>
         /// Hide any optional, read-only fields if they don't have a value
         /// </summary>
+        /// TODO: Figure out how to bind the PartiallyMatchedIDs array to a text box
+        /// TODO: Convert visibility to a binding
         private void HideReadOnlyFields(SubmissionInfo? submissionInfo)
         {
             // If there's no submission information
             if (submissionInfo is null)
                 return;
 
-            CollapseWhen("FullyMatchedID", submissionInfo.FullyMatchedID is null);
-            CollapseWhen("PartiallyMatchedIDs", submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0);
-            CollapseWhen("HashData", string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData));
-            CollapseWhen("HashDataLayerbreak1", submissionInfo.SizeAndChecksums.Layerbreak == 0);
-            CollapseWhen("HashDataLayerbreak2", submissionInfo.SizeAndChecksums.Layerbreak2 == 0);
-            CollapseWhen("HashDataLayerbreak3", submissionInfo.SizeAndChecksums.Layerbreak3 == 0);
-            CollapseWhen("AntiModchip", submissionInfo.CopyProtection?.AntiModchip is null);
-            CollapseWhen("DiscOffset", submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets is null);
-            CollapseWhen("DMIHash", ShouldCollapseComment(submissionInfo, SiteCode.DMIHash));
-            CollapseWhen("EDC", submissionInfo.EDC?.EDC is null);
-            CollapseWhen("ErrorsCount", string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.ErrorsCount));
-            CollapseWhen("EXEDateBuildDate", string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.EXEDateBuildDate));
-            CollapseWhen("Filename", ShouldCollapseComment(submissionInfo, SiteCode.Filename));
-            CollapseWhen("Header", string.IsNullOrEmpty(submissionInfo.Extras?.Header));
-            CollapseWhen("InternalName", ShouldCollapseComment(submissionInfo, SiteCode.InternalName));
-            CollapseWhen("InternalSerialName", ShouldCollapseComment(submissionInfo, SiteCode.InternalSerialName));
-            CollapseWhen("Multisession", ShouldCollapseComment(submissionInfo, SiteCode.Multisession));
-            CollapseWhen("LibCrypt", submissionInfo.CopyProtection?.LibCrypt is null);
-            CollapseWhen("LibCryptData", string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData));
-            CollapseWhen("PFIHash", ShouldCollapseComment(submissionInfo, SiteCode.PFIHash));
-            CollapseWhen("PIC", string.IsNullOrEmpty(submissionInfo.Extras?.PIC));
-            CollapseWhen("PVD", string.IsNullOrEmpty(submissionInfo.Extras?.PVD));
-            CollapseWhen("RingNonZeroDataStart", ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart));
-            CollapseWhen("RingPerfectAudioOffset", ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset));
-            CollapseWhen("SecuROMData", string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData));
-            CollapseWhen("SSHash", ShouldCollapseComment(submissionInfo, SiteCode.SSHash));
-            CollapseWhen("SecuritySectorRanges", string.IsNullOrEmpty(submissionInfo.Extras?.SecuritySectorRanges));
-            CollapseWhen("SSVersion", ShouldCollapseComment(submissionInfo, SiteCode.SSVersion));
-            CollapseWhen("UniversalHash", ShouldCollapseComment(submissionInfo, SiteCode.UniversalHash));
-            CollapseWhen("VolumeLabel", ShouldCollapseComment(submissionInfo, SiteCode.VolumeLabel));
-            CollapseWhen("XeMID", ShouldCollapseComment(submissionInfo, SiteCode.XeMID));
-            CollapseWhen("XMID", ShouldCollapseComment(submissionInfo, SiteCode.XMID));
+            if (submissionInfo.FullyMatchedID is null)
+                FullyMatchedID!.IsVisible = false;
+            if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
+                PartiallyMatchedIDs!.IsVisible = false;
+            else
+                PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
+            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData))
+                HashData!.IsVisible = false;
+            if (submissionInfo.SizeAndChecksums.Layerbreak == 0)
+                HashDataLayerbreak1!.IsVisible = false;
+            if (submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
+                HashDataLayerbreak2!.IsVisible = false;
+            if (submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
+                HashDataLayerbreak3!.IsVisible = false;
+            if (submissionInfo.CopyProtection?.AntiModchip is null)
+                AntiModchip!.IsVisible = false;
+            if (submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets is null)
+                DiscOffset!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.DMIHash))
+                DMIHash!.IsVisible = false;
+            if (submissionInfo.EDC?.EDC is null)
+                EDC!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.ErrorsCount))
+                ErrorsCount!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
+                EXEDateBuildDate!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.Filename))
+                Filename!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.Header))
+                Header!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.InternalName))
+                InternalName!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.InternalSerialName))
+                InternalSerialName!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.Multisession))
+                Multisession!.IsVisible = false;
+            if (submissionInfo.CopyProtection?.LibCrypt is null)
+                LibCrypt!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData))
+                LibCryptData!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.PFIHash))
+                PFIHash!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.PIC))
+                PIC!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.PVD))
+                PVD!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart))
+                RingNonZeroDataStart!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
+                RingPerfectAudioOffset!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData))
+                SecuROMData!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.SSHash))
+                SSHash!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.Extras?.SecuritySectorRanges))
+                SecuritySectorRanges!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.SSVersion))
+                SSVersion!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.UniversalHash))
+                UniversalHash!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.VolumeLabel))
+                VolumeLabel!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.XeMID))
+                XeMID!.IsVisible = false;
+            if (ShouldCollapseComment(submissionInfo, SiteCode.XMID))
+                XMID!.IsVisible = false;
         }
 
         /// <summary>
@@ -213,19 +207,32 @@ namespace MPF.Avalonia.Windows
             var system = submissionInfo?.CommonDiscInfo?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
-            this.FindControl<Grid>("PCMacHybridGrid")!.IsVisible = _showPcMacHybridAlways
+            // TODO: Do these need to be explicitly set if they're in the AXAML?
+            PCMacHybridGrid!.IsVisible = _showPcMacHybridAlways
                 || submissionInfo?.CommonDiscInfo?.Media == DiscType.CD;
-            this.FindControl<Border>("L0InfoPanel")!.IsVisible = true;
-            this.FindControl<Border>("L1InfoPanel")!.IsVisible = true;
-            this.FindControl<Border>("L2InfoPanel")!.IsVisible = false;
-            this.FindControl<Border>("L3InfoPanel")!.IsVisible = false;
+            L0InfoPanel!.IsVisible = true;
+            L1InfoPanel!.IsVisible = true;
+            L2InfoPanel!.IsVisible = false;
+            L3InfoPanel!.IsVisible = false;
 
 #pragma warning disable IDE0010
             switch (submissionInfo?.CommonDiscInfo?.Media)
             {
                 case DiscType.CD:
                 case DiscType.GDROM:
-                    SetLayerLabels("Data Side", "Label Side", false, false, reverseOrder, submissionInfo);
+                    L0HeaderText!.Text = "Data Side";
+                    L0MasteringRing!.Label = "Mastering Ring";
+                    L0MasteringSID!.Label = "Mastering SID";
+                    L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L0MouldSID!.Label = "Mould SID";
+                    L0AdditionalMould!.Label = "Additional Mould";
+
+                    L1HeaderText!.Text = "Label Side";
+                    L1MasteringRing!.Label = "Mastering Ring";
+                    L1MasteringSID!.Label = "Mastering SID";
+                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L1MouldSID!.Label = "Mould SID";
+                    L1AdditionalMould!.Label = "Additional Mould";
                     break;
 
                 case DiscType.DVD5:
@@ -242,102 +249,125 @@ namespace MPF.Avalonia.Windows
                 case DiscType.NintendoWiiOpticalDiscSL:
                 case DiscType.NintendoWiiOpticalDiscDL:
                 case DiscType.NintendoWiiUOpticalDiscSL:
-                    SetLayerLabels(null, null, true, true, reverseOrder, submissionInfo);
+                    // Quad-layer discs
+                    if (submissionInfo?.SizeAndChecksums.Layerbreak3 != default(long))
+                    {
+                        L2InfoPanel!.IsVisible = true;
+                        L3InfoPanel!.IsVisible = true;
+
+                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringSID!.Label = "Mastering SID";
+                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L0MouldSID!.Label = "Data Side Mould SID";
+                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+
+                        L1HeaderText!.Text = "Layer 1";
+                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringSID!.Label = "Mastering SID";
+                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L1MouldSID!.Label = "Label Side Mould SID";
+                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+
+                        L2HeaderText!.Text = "Layer 2";
+                        L2MasteringRing!.Label = "Mastering Ring";
+                        L2MasteringSID!.Label = "Mastering SID";
+                        L2Toolstamp!.Label = "Toolstamp/Mastering Code";
+
+                        L3HeaderText!.Text = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
+                        L3MasteringRing!.Label = "Mastering Ring";
+                        L3MasteringSID!.Label = "Mastering SID";
+                        L3Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    }
+
+                    // Triple-layer discs
+                    else if (submissionInfo?.SizeAndChecksums.Layerbreak2 != default(long))
+                    {
+                        L2InfoPanel!.IsVisible = true;
+
+                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringSID!.Label = "Mastering SID";
+                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L0MouldSID!.Label = "Data Side Mould SID";
+                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+
+                        L1HeaderText!.Text = "Layer 1";
+                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringSID!.Label = "Mastering SID";
+                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L1MouldSID!.Label = "Label Side Mould SID";
+                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+
+                        L2HeaderText!.Text = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
+                        L2MasteringRing!.Label = "Mastering Ring";
+                        L2MasteringSID!.Label = "Mastering SID";
+                        L2Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    }
+
+                    // Double-layer discs
+                    else if (submissionInfo?.SizeAndChecksums.Layerbreak != default(long))
+                    {
+                        L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringSID!.Label = "Mastering SID";
+                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L0MouldSID!.Label = "Data Side Mould SID";
+                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+
+                        L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringSID!.Label = "Mastering SID";
+                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L1MouldSID!.Label = "Label Side Mould SID";
+                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+                    }
+
+                    // Single-layer discs
+                    else
+                    {
+                        L0HeaderText!.Text = "Data Side";
+                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringSID!.Label = "Mastering SID";
+                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L0MouldSID!.Label = "Mould SID";
+                        L0AdditionalMould!.Label = "Additional Mould";
+
+                        L1HeaderText!.Text = "Label Side";
+                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringSID!.Label = "Mastering SID";
+                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L1MouldSID!.Label = "Mould SID";
+                        L1AdditionalMould!.Label = "Additional Mould";
+                    }
+
                     break;
 
                 case DiscType.UMDSL:
                 case DiscType.UMDDL:
-                    SetLayerLabels(null, null, true, false, reverseOrder, submissionInfo);
+                    L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                    L0MasteringRing!.Label = "Mastering Ring";
+                    L0MasteringSID!.Label = "Mastering SID";
+                    L0Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L0MouldSID!.Label = "Data Side Mould SID";
+                    L0AdditionalMould!.Label = "Data Side Additional Mould";
+
+                    L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                    L1MasteringRing!.Label = "Mastering Ring";
+                    L1MasteringSID!.Label = "Mastering SID";
+                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
+                    L1MouldSID!.Label = "Label Side Mould SID";
+                    L1AdditionalMould!.Label = "Label Side Additional Mould";
                     break;
 
                 default:
-                    this.FindControl<Border>("L0InfoPanel")!.IsVisible = false;
-                    this.FindControl<Border>("L1InfoPanel")!.IsVisible = false;
-                    this.FindControl<Border>("L2InfoPanel")!.IsVisible = false;
-                    this.FindControl<Border>("L3InfoPanel")!.IsVisible = false;
+                    L0InfoPanel!.IsVisible = false;
+                    L1InfoPanel!.IsVisible = false;
+                    L2InfoPanel!.IsVisible = false;
+                    L3InfoPanel!.IsVisible = false;
                     break;
             }
 #pragma warning restore IDE0010
-        }
-
-        /// <summary>
-        /// Set the layer panel headers and ring field labels based on the disc's layer count
-        /// </summary>
-        private void SetLayerLabels(string? singleLayerDataHeader, string? singleLayerLabelHeader, bool supportExtraLayers, bool supportQuadLayers, bool reverseOrder, SubmissionInfo? submissionInfo)
-        {
-            if (!supportExtraLayers)
-            {
-                SetLayerHeader("L0HeaderText", singleLayerDataHeader ?? "Data Side");
-                SetLayerHeader("L1HeaderText", singleLayerLabelHeader ?? "Label Side");
-                SetRingFieldLabels(false);
-                return;
-            }
-
-            long layerbreak = submissionInfo?.SizeAndChecksums.Layerbreak ?? 0;
-            long layerbreak2 = submissionInfo?.SizeAndChecksums.Layerbreak2 ?? 0;
-            long layerbreak3 = submissionInfo?.SizeAndChecksums.Layerbreak3 ?? 0;
-
-            if (supportQuadLayers && layerbreak3 != 0)
-            {
-                this.FindControl<Border>("L2InfoPanel")!.IsVisible = true;
-                this.FindControl<Border>("L3InfoPanel")!.IsVisible = true;
-
-                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
-                SetLayerHeader("L1HeaderText", "Layer 1");
-                SetLayerHeader("L2HeaderText", "Layer 2");
-                SetLayerHeader("L3HeaderText", reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)");
-                SetRingFieldLabels(true);
-                return;
-            }
-
-            if (layerbreak2 != 0)
-            {
-                this.FindControl<Border>("L2InfoPanel")!.IsVisible = true;
-
-                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
-                SetLayerHeader("L1HeaderText", "Layer 1");
-                SetLayerHeader("L2HeaderText", reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)");
-                SetRingFieldLabels(true);
-                return;
-            }
-
-            if (layerbreak != 0)
-            {
-                SetLayerHeader("L0HeaderText", reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)");
-                SetLayerHeader("L1HeaderText", reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)");
-                SetRingFieldLabels(true);
-                return;
-            }
-
-            SetLayerHeader("L0HeaderText", "Data Side");
-            SetLayerHeader("L1HeaderText", "Label Side");
-            SetRingFieldLabels(false);
-        }
-
-        /// <summary>
-        /// Set the labels on all ring code input fields, varying mould labels by layer state
-        /// </summary>
-        private void SetRingFieldLabels(bool layered)
-        {
-            this.FindControl<UserInput>("L0MasteringRing")!.Label = "Mastering Ring";
-            this.FindControl<UserInput>("L0MasteringSID")!.Label = "Mastering SID";
-            this.FindControl<UserInput>("L0Toolstamp")!.Label = "Toolstamp/Mastering Code";
-            this.FindControl<UserInput>("L0MouldSID")!.Label = layered ? "Data Side Mould SID" : "Mould SID";
-            this.FindControl<UserInput>("L0AdditionalMould")!.Label = layered ? "Data Side Additional Mould" : "Additional Mould";
-
-            this.FindControl<UserInput>("L1MasteringRing")!.Label = "Mastering Ring";
-            this.FindControl<UserInput>("L1MasteringSID")!.Label = "Mastering SID";
-            this.FindControl<UserInput>("L1Toolstamp")!.Label = "Toolstamp/Mastering Code";
-            this.FindControl<UserInput>("L1MouldSID")!.Label = layered ? "Label Side Mould SID" : "Mould SID";
-            this.FindControl<UserInput>("L1AdditionalMould")!.Label = layered ? "Label Side Additional Mould" : "Additional Mould";
-
-            this.FindControl<UserInput>("L2MasteringRing")!.Label = "Mastering Ring";
-            this.FindControl<UserInput>("L2MasteringSID")!.Label = "Mastering SID";
-            this.FindControl<UserInput>("L2Toolstamp")!.Label = "Toolstamp/Mastering Code";
-
-            this.FindControl<UserInput>("L3MasteringRing")!.Label = "Mastering Ring";
-            this.FindControl<UserInput>("L3MasteringSID")!.Label = "Mastering SID";
-            this.FindControl<UserInput>("L3Toolstamp")!.Label = "Toolstamp/Mastering Code";
         }
 
         /// <summary>
@@ -347,62 +377,44 @@ namespace MPF.Avalonia.Windows
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
 
-            this.FindControl<UserInput>("CompatibleOSTextBox")!.IsVisible = false;
-            this.FindControl<UserInput>("DiscKeyTextBox")!.IsVisible = false;
-            this.FindControl<UserInput>("DiscIDTextBox")!.IsVisible = false;
-            this.FindControl<UserInput>("NetYarozeGamesTextBox")!.IsVisible = false;
-            this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.IsVisible = false;
+            // TODO: Do these need to be explicitly set if they're in the AXAML?
+            CompatibleOSTextBox!.IsVisible = false;
+            DiscKeyTextBox!.IsVisible = false;
+            DiscIDTextBox!.IsVisible = false;
+            NetYarozeGamesTextBox!.IsVisible = false;
+            LanguageSelectionsDropDown!.IsVisible = false;
 
 #pragma warning disable IDE0010
             switch (system)
             {
                 case RedumpSystem.AppleMacintosh:
+                    PCMacHybridGrid!.IsVisible = true;
+                    CompatibleOSTextBox!.IsVisible = true;
+                    break;
+
                 case RedumpSystem.IBMPCcompatible:
-                    this.FindControl<UserInput>("CompatibleOSTextBox")!.IsVisible = true;
+                    PCMacHybridGrid!.IsVisible = true;
+                    CompatibleOSTextBox!.IsVisible = true;
                     break;
 
                 case RedumpSystem.NintendoWiiU:
-                    this.FindControl<UserInput>("DiscKeyTextBox")!.IsVisible = true;
+                    DiscKeyTextBox!.IsVisible = true;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    this.FindControl<UserInput>("NetYarozeGamesTextBox")!.IsVisible = true;
+                    NetYarozeGamesTextBox!.IsVisible = true;
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    this.FindControl<MultiSelectDropDown>("LanguageSelectionsDropDown")!.IsVisible = true;
+                    LanguageSelectionsDropDown!.IsVisible = true;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    this.FindControl<UserInput>("DiscKeyTextBox")!.IsVisible = true;
-                    this.FindControl<UserInput>("DiscIDTextBox")!.IsVisible = true;
+                    DiscKeyTextBox!.IsVisible = true;
+                    DiscIDTextBox!.IsVisible = true;
                     break;
             }
 #pragma warning restore IDE0010
-        }
-
-        /// <summary>
-        /// Set the text of a layer header text block
-        /// </summary>
-        private void SetLayerHeader(string name, string value)
-            => this.FindControl<TextBlock>(name)!.Text = value;
-
-        /// <summary>
-        /// Show or collapse a named input field based on the given condition
-        /// </summary>
-        private void CollapseWhen(string name, bool collapse)
-            => this.FindControl<UserInput>(name)!.IsVisible = !collapse;
-
-        /// <summary>
-        /// Ensure the bound sections and special field dictionaries exist, so the two-way
-        /// bindings in the markup always have a valid target to read from and write into
-        /// </summary>
-        private static void EnsureSpecialFields(SubmissionInfo submissionInfo)
-        {
-            submissionInfo.CommonDiscInfo ??= new SabreTools.RedumpLib.Data.Sections.CommonDiscInfoSection();
-            submissionInfo.CommonDiscInfo.CommentsSpecialFields ??= [];
-            submissionInfo.CommonDiscInfo.ContentsSpecialFields ??= [];
-            submissionInfo.Extras ??= new SabreTools.RedumpLib.Data.Sections.ExtrasSection();
         }
 
         /// <summary>
@@ -420,6 +432,34 @@ namespace MPF.Avalonia.Windows
 
             // Collapse if the value doesn't exist
             return string.IsNullOrEmpty(value);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for AcceptButton Click event
+        /// </summary>
+        private void OnAcceptClick(object? sender, RoutedEventArgs e)
+        {
+            MediaInformationViewModel.Save();
+            Close(true);
+        }
+
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
+        private void OnCancelClick(object? sender, RoutedEventArgs e)
+            => Close(false);
+
+        /// <summary>
+        /// Handler for RingCodeGuideButton Click event
+        /// </summary>
+        private void OnRingCodeGuideClick(object? sender, RoutedEventArgs e)
+        {
+            var ringCodeGuideWindow = new RingCodeGuideWindow();
+            _ = ringCodeGuideWindow.ShowDialog(this);
         }
 
         #endregion

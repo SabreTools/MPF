@@ -129,7 +129,9 @@ namespace MPF.UI.Windows
             if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
                 DebugViewMenuItem!.Visibility = Visibility.Visible;
 
-            MainViewModel.Init(LogOutput!.EnqueueLog, DisplayUserMessage, ShowMediaInformationWindow);
+            MainViewModel.Init(LogOutput!.EnqueueLog,
+                DisplayUserMessage,
+                ShowMediaInformationWindow);
 
             // Pass translation strings to MainViewModel
             var translationStrings = new Dictionary<string, string>
@@ -286,6 +288,7 @@ namespace MPF.UI.Windows
             CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
             OptionsMenuItem!.Click += OptionsMenuItemClick;
 
+            // Languages dropdown
             EnglishMenuItem!.Click += LanguageMenuItemClick;
             FrenchMenuItem!.Click += LanguageMenuItemClick;
             GermanMenuItem!.Click += LanguageMenuItemClick;
@@ -413,10 +416,15 @@ namespace MPF.UI.Windows
         public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
         {
             if (options?.Processing?.ShowDiscEjectReminder == true)
-                CustomMessageBox.Show(this, (string)Application.Current.FindResource("EjectMessageString"),
-                    (string)Application.Current.FindResource("EjectTitleString"), MessageBoxButton.OK, MessageBoxImage.Information);
+            {
+                CustomMessageBox.Show(this,
+                    (string)Application.Current.FindResource("EjectMessageString"),
+                    (string)Application.Current.FindResource("EjectTitleString"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
 
-            var mediaInformationWindow = new MediaInformationWindow(options ?? new Options(), submissionInfo)
+            var window = new MediaInformationWindow(options ?? new Options(), submissionInfo)
             {
                 Focusable = true,
                 Owner = this,
@@ -425,12 +433,12 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            mediaInformationWindow.Closed += delegate { Activate(); };
-            bool? result = mediaInformationWindow.ShowDialog();
+            window.Closed += delegate { Activate(); };
+            bool? result = window.ShowDialog();
 
             // Copy back the submission info changes, if necessary
             if (result == true)
-                submissionInfo = (mediaInformationWindow.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+                submissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
 
             return result;
         }
@@ -443,7 +451,7 @@ namespace MPF.UI.Windows
             // Hide MainWindow while Check GUI is open
             Hide();
 
-            var checkDumpWindow = new CheckDumpWindow(this)
+            var window = new CheckDumpWindow(this)
             {
                 Focusable = true,
                 Owner = this,
@@ -452,13 +460,13 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            checkDumpWindow.Closed += delegate
+            window.Closed += delegate
             {
                 // Unhide Main window after Check window has been closed
                 Show();
                 Activate();
             };
-            checkDumpWindow.Show();
+            window.Show();
         }
 
         /// <summary>
@@ -469,7 +477,7 @@ namespace MPF.UI.Windows
             // Hide MainWindow while Create IRD UI is open
             Hide();
 
-            var createIRDWindow = new CreateIRDWindow(this)
+            var window = new CreateIRDWindow(this)
             {
                 Focusable = true,
                 Owner = this,
@@ -478,13 +486,13 @@ namespace MPF.UI.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
 
-            createIRDWindow.Closed += delegate
+            window.Closed += delegate
             {
                 // Unhide Main window after Create IRD window has been closed
                 Show();
                 Activate();
             };
-            createIRDWindow.Show();
+            window.Show();
         }
 
         /// <summary>
@@ -768,11 +776,21 @@ namespace MPF.UI.Windows
             if (!MainViewModel.LogPanelExpanded)
             {
                 if (!string.IsNullOrEmpty(output))
-                    CustomMessageBox.Show(this, output, (string)Application.Current.FindResource("ProtectionDetectedTitleString"),
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                {
+                    CustomMessageBox.Show(this,
+                        output,
+                        (string)Application.Current.FindResource("ProtectionDetectedTitleString"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
                 else
-                    CustomMessageBox.Show(this, (string)Application.Current.FindResource("ProtectionErrorMessageString"),
-                        (string)Application.Current.FindResource("ProtectionErrorTitleString"), MessageBoxButton.OK, MessageBoxImage.Error);
+                {
+                    CustomMessageBox.Show(this,
+                        (string)Application.Current.FindResource("ProtectionErrorMessageString"),
+                        (string)Application.Current.FindResource("ProtectionErrorTitleString"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             }
         }
 

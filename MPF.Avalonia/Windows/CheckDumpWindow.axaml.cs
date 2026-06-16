@@ -58,7 +58,7 @@ namespace MPF.Avalonia.Windows
             InitializeComponent();
             _parent = parent;
             DataContext = new CheckDumpViewModel();
-            Opened += WireEvents;
+            Opened += AddEventHandlers;
         }
 
         #region UI Functionality
@@ -66,14 +66,21 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Add all event handlers once the window has opened
         /// </summary>
-        private void WireEvents(object? sender, EventArgs e)
+        private void AddEventHandlers(object? sender, EventArgs e)
         {
-            this.FindControl<Button>("CheckDumpButton")!.Click += OnCheckDumpClick;
-            this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;
-            this.FindControl<Button>("InputPathBrowseButton")!.Click += InputPathBrowseButtonClick;
-            this.FindControl<ComboBox>("SystemTypeComboBox")!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            this.FindControl<ComboBox>("DumpingProgramComboBox")!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-            this.FindControl<TextBox>("InputPathTextBox")!.TextChanged += InputPathTextBoxTextChanged;
+            // Main buttons
+            CheckDumpButton!.Click += OnCheckDumpClick;
+            CancelButton!.Click += OnCancelClick;
+
+            // User Area Click
+            InputPathBrowseButton!.Click += InputPathBrowseButtonClick;
+
+            // User Area SelectionChanged
+            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
+
+            // User Area TextChanged
+            InputPathTextBox!.TextChanged += InputPathTextBoxTextChanged;
         }
 
         /// <summary>
@@ -160,11 +167,10 @@ namespace MPF.Avalonia.Windows
         {
             string? selectedPath = await BrowseFileAsync();
             if (!string.IsNullOrWhiteSpace(selectedPath))
-            {
                 CheckDumpViewModel.InputPath = selectedPath;
-                if (CheckDumpViewModel.CanExecuteSelectionChanged)
-                    CheckDumpViewModel.ChangeInputPath();
-            }
+
+            if (CheckDumpViewModel.CanExecuteSelectionChanged)
+                CheckDumpViewModel.ChangeInputPath();
         }
 
         /// <summary>

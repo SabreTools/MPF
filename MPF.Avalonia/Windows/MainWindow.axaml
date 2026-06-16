@@ -107,7 +107,7 @@
                 RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                 RowSpacing="4"
                 ColumnSpacing="18">
-          <TextBlock Grid.Row="0" Text="{DynamicResource SystemLabelString}" VerticalAlignment="Center" />
+          <TextBlock x:Name="SystemMediaTypeLabel" Grid.Row="0" Text="System Type" VerticalAlignment="Center" />
           <Grid Grid.Row="0" Grid.Column="1" ColumnDefinitions="*,160" ColumnSpacing="8">
             <ComboBox x:Name="SystemTypeComboBox"
                                     HorizontalAlignment="Stretch"

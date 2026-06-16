@@ -49,7 +49,7 @@ namespace MPF.Avalonia.Windows
         {
             InitializeComponent();
             DataContext = new OptionsViewModel(options);
-            Opened += WireEvents;
+            Opened += AddEventHandlers;
         }
 
         #region UI Functionality
@@ -57,7 +57,7 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Add all event handlers once the window has opened
         /// </summary>
-        private void WireEvents(object? sender, EventArgs e)
+        private void AddEventHandlers(object? sender, EventArgs e)
         {
             // Set the window title
             OptionsViewModel.Title = Title;

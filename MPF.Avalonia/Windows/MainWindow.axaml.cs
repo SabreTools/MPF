@@ -12,6 +12,7 @@ using Avalonia.Threading;
 using MPF.Avalonia.Services;
 using MPF.Avalonia.UserControls;
 using MPF.Frontend;
+using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
@@ -30,25 +31,6 @@ namespace MPF.Avalonia.Windows
         /// Extra window height added when the log panel is expanded
         /// </summary>
         private const double ExpandedLogPanelExtraHeight = 40;
-
-        /// <summary>
-        /// Menu item control names for the selectable interface languages
-        /// </summary>
-        private static readonly string[] LanguageMenuItemNames =
-        [
-            "EnglishMenuItem",
-            "GermanMenuItem",
-            "SpanishMenuItem",
-            "FrenchMenuItem",
-            "ItalianMenuItem",
-            "JapaneseMenuItem",
-            "KoreanMenuItem",
-            "PolishMenuItem",
-            "PortugueseMenuItem",
-            "RussianMenuItem",
-            "SwedishMenuItem",
-            "UkrainianMenuItem",
-        ];
 
         /// <summary>
         /// File picker types for browsing output files
@@ -101,10 +83,16 @@ namespace MPF.Avalonia.Windows
         public MainWindow()
         {
             InitializeComponent();
+
             ConfigurePlatformChrome();
+
             DataContext = new MainViewModel();
             MainViewModel.PropertyChanged += OnMainViewModelPropertyChanged;
             ThemeService.SyncWithSystemTheme(MainViewModel.Options);
+
+            // Set all resources before window loads (Must set English here)
+            SetInterfaceLanguage(InterfaceLanguage.English, rebuildNativeMenus: false);
+
             Opened += OnOpened;
             Closing += MainWindowClosing;
             SizeChanged += OnMainWindowSizeChanged;
@@ -115,24 +103,53 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void OnOpened(object? sender, EventArgs e)
         {
-            WireEvents();
-            ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: false);
-            ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
-            ConfigurePlatformMenus();
+            // Disable buttons until we load fully
+            MainViewModel.StartStopButtonEnabled = false;
+            MainViewModel.MediaScanButtonEnabled = false;
+            MainViewModel.UpdateVolumeLabelEnabled = false;
+            MainViewModel.CopyProtectScanButtonEnabled = false;
+
+            // Add the click handlers to the UI
+            AddEventHandlers();
+
+            // Display the debug option in the menu, if necessary
+            if (MainViewModel.Options.GUI.ShowDebugViewMenuItem)
+                DebugViewMenuItem!.IsVisible = true;
 
             MainViewModel.Init(
-                this.FindControl<LogOutput>("LogOutput")!.EnqueueLog,
+                LogOutput!.EnqueueLog,
                 DisplayUserMessage,
                 ShowMediaInformationWindow);
 
+            // Pass translation strings to MainViewModel
+            var translationStrings = new Dictionary<string, string>
+            {
+                ["StartDumpingButtonString"] = StringResource("StartDumpingButtonString", "Start Dumping"),
+                ["StopDumpingButtonString"] = StringResource("StopDumpingButtonString", "Stop Dumping")
+            };
+            MainViewModel.TranslateStrings(translationStrings);
+
+            // Set interface language according to the options
+            SetInterfaceLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: false);
+            ConfigurePlatformMenus();
+
+            // Set the UI color scheme according to the options
+            ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
+
+            // Hide or show the media type box based on program
             SetMediaTypeVisibility();
             WireLogPanelResizing();
 
+            // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
                 CheckForUpdatesClick(this, new RoutedEventArgs());
 
+            // Handle first-run, if necessary
             if (MainViewModel.Options.FirstRun)
+            {
+                // Show the options window
                 ShowOptionsWindow(StringResource("OptionsFirstRunTitleString", "Welcome to MPF, Explore the Options"));
+            }
         }
 
         #region Platform Chrome and Menus
@@ -148,41 +165,55 @@ namespace MPF.Avalonia.Windows
             SystemDecorations = SystemDecorations.Full;
             if (OperatingSystem.IsMacOS())
             {
-                this.FindControl<Control>("TopMenuBar")!.IsVisible = false;
-                this.FindControl<Grid>("RootGrid")!.RowDefinitions[0].Height = new GridLength(0);
+                TopMenuBar!.IsVisible = false;
+                RootGrid!.RowDefinitions[0].Height = new GridLength(0);
             }
             else
             {
-                this.FindControl<TextBlock>("AppTitleLabel")!.IsVisible = false;
-                this.FindControl<Control>("TitleDragArea")!.IsVisible = false;
-                this.FindControl<Button>("CloseButton")!.IsVisible = false;
+                AppTitleLabel!.IsVisible = false;
+                TitleDragArea!.IsVisible = false;
+                CloseButton!.IsVisible = false;
             }
 
-            this.FindControl<Border>("RootBorder")!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
-        }
-
-        /// <summary>
-        /// Set the current interface language and refresh all localized menu headers
-        /// </summary>
-        private void ApplyLanguage(InterfaceLanguage language, bool rebuildNativeMenus)
-        {
-            StringResourceLoader.Load(Application.Current!.Resources, language);
-            StringResourceLoader.Load(Resources, language);
-
-            UpdateTitleBarMenuHeaders();
-            if (rebuildNativeMenus)
-                UpdateNativeMenuHeaders();
+            RootBorder!.Padding = new Thickness(2, OperatingSystem.IsMacOS() ? 4 : 2, 2, 8);
         }
 
         /// <summary>
         /// Refresh the in-window title bar menu headers to the current interface language
         /// </summary>
+        /// TODO: Can this be handled by binding?
         private void UpdateTitleBarMenuHeaders()
         {
-            this.FindControl<MenuItem>("FileMenuItem")!.Header = StringResource("FileMenuString", "File");
-            this.FindControl<MenuItem>("ToolsMenuItem")!.Header = StringResource("ToolsMenuString", "Tools");
-            this.FindControl<MenuItem>("HelpMenuItem")!.Header = StringResource("HelpMenuString", "Help");
-            this.FindControl<MenuItem>("LanguagesMenuItem")!.Header = StringResource("LanguageMenuString", "ENG");
+            FileMenuItem!.Header = StringResource("FileMenuString", "File");
+            ToolsMenuItem!.Header = StringResource("ToolsMenuString", "Tools");
+            HelpMenuItem!.Header = StringResource("HelpMenuString", "Help");
+            LanguagesMenuItem!.Header = StringResource("LanguageMenuString", "ENG");
+        }
+
+        #endregion
+
+        #region Interface Language
+
+        /// <summary>
+        /// Set the current interface language and refresh all localized menu headers
+        /// </summary>
+        private void SetInterfaceLanguage(InterfaceLanguage lang, bool rebuildNativeMenus)
+        {
+            StringResourceLoader.Load(Application.Current!.Resources, lang);
+            StringResourceLoader.Load(Resources, lang);
+
+            // Update the labels in MainViewModel
+            var translationStrings = new Dictionary<string, string>
+            {
+                ["StartDumpingButtonString"] = StringResource("StartDumpingButtonString", "Start Dumping"),
+                ["StopDumpingButtonString"] = StringResource("StopDumpingButtonString", "Stop Dumping"),
+                ["NoSystemSelectedString"] = StringResource("NoSystemSelectedString", "No System Selected")
+            };
+            MainViewModel.TranslateStrings(translationStrings);
+
+            UpdateTitleBarMenuHeaders();
+            if (rebuildNativeMenus)
+                UpdateNativeMenuHeaders();
         }
 
         #endregion
@@ -208,18 +239,6 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Handler for the title bar minimize button
-        /// </summary>
-        private void MinimizeButtonClick(object? sender, RoutedEventArgs e)
-            => WindowState = AvaloniaWindowState.Minimized;
-
-        /// <summary>
-        /// Handler for the title bar close button
-        /// </summary>
-        private void CloseButtonClick(object? sender, RoutedEventArgs e)
-            => Close();
-
-        /// <summary>
         /// Toggle the window between maximized and normal states
         /// </summary>
         private void ToggleWindowState()
@@ -234,57 +253,356 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Add all event handlers
         /// </summary>
-        private void WireEvents()
+        private void AddEventHandlers()
         {
-            this.FindControl<MenuItem>("AboutMenuItem")!.Click += AboutClick;
-            this.FindControl<MenuItem>("AppExitMenuItem")!.Click += AppExitClick;
-            this.FindControl<MenuItem>("CheckForUpdatesMenuItem")!.Click += CheckForUpdatesClick;
-            this.FindControl<MenuItem>("CheckDumpMenuItem")!.Click += CheckDumpMenuItemClick;
-            this.FindControl<MenuItem>("CreateIRDMenuItem")!.Click += CreateIRDMenuItemClick;
-            this.FindControl<MenuItem>("DebugViewMenuItem")!.Click += DebugViewClick;
-            this.FindControl<MenuItem>("OptionsMenuItem")!.Click += OptionsMenuItemClick;
+            // Menu Bar Click
+            AboutMenuItem!.Click += AboutClick;
+            AppExitMenuItem!.Click += AppExitClick;
+            CheckForUpdatesMenuItem!.Click += CheckForUpdatesClick;
+            DebugViewMenuItem!.Click += DebugViewClick;
+            CheckDumpMenuItem!.Click += CheckDumpMenuItemClick;
+            CreateIRDMenuItem!.Click += CreateIRDMenuItemClick;
+            OptionsMenuItem!.Click += OptionsMenuItemClick;
 
-            foreach (string name in LanguageMenuItemNames)
+            // Languages dropdown
+            EnglishMenuItem!.Click += LanguageMenuItemClick;
+            FrenchMenuItem!.Click += LanguageMenuItemClick;
+            GermanMenuItem!.Click += LanguageMenuItemClick;
+            ItalianMenuItem!.Click += LanguageMenuItemClick;
+            JapaneseMenuItem!.Click += LanguageMenuItemClick;
+            KoreanMenuItem!.Click += LanguageMenuItemClick;
+            PolishMenuItem!.Click += LanguageMenuItemClick;
+            PortugueseMenuItem!.Click += LanguageMenuItemClick;
+            RussianMenuItem!.Click += LanguageMenuItemClick;
+            SpanishMenuItem!.Click += LanguageMenuItemClick;
+            SwedishMenuItem!.Click += LanguageMenuItemClick;
+            UkrainianMenuItem!.Click += LanguageMenuItemClick;
+
+            // User Area Click
+            CopyProtectScanButton!.Click += CopyProtectScanButtonClick;
+            EnableParametersCheckBox!.Click += EnableParametersCheckBoxClick;
+            MediaScanButton!.Click += MediaScanButtonClick;
+            UpdateVolumeLabel!.Click += UpdateVolumeLabelClick;
+            OutputPathBrowseButton!.Click += OutputPathBrowseButtonClick;
+            StartStopButton!.Click += StartStopButtonClick;
+
+            // User Area SelectionChanged
+            SystemTypeComboBox!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            DriveLetterComboBox!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            DumpingProgramComboBox!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
+
+            // User Area TextChanged
+            OutputPathTextBox!.TextChanged += OutputPathTextBoxTextChanged;
+        }
+
+        /// <summary>
+        /// Browse for an output file path
+        /// </summary>
+        private async Task<string?> BrowseOutputFileAsync()
+        {
+            // Get the current path, if possible
+            string currentPath = MainViewModel.OutputPath;
+            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.Dumping.DefaultOutputPath))
+                currentPath = Path.Combine(MainViewModel.Options.Dumping.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            else if (string.IsNullOrEmpty(currentPath))
+                currentPath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+            if (string.IsNullOrEmpty(currentPath))
+                currentPath = Path.Combine(AppContext.BaseDirectory, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+
+            // Get the full path
+            currentPath = Path.GetFullPath(currentPath);
+
+            // Get the filename
+            string filename = Path.GetFileName(currentPath);
+            if (string.IsNullOrEmpty(filename))
+                filename = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
+
+            return await DialogService.SaveFileAsync(
+                this,
+                StringResource("OutputPathLabelString", "Output Path"),
+                filename,
+                OutputFileTypes);
+        }
+
+        /// <summary>
+        /// Check for available updates
+        /// </summary>
+        /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
+        public void CheckForUpdates(bool showIfSame)
+        {
+            MainViewModel.CheckForUpdates(out bool different, out string message, out var url);
+            if (different)
+                message += $"{Environment.NewLine}The update URL has been added copied to your clipboard";
+            else
+                message += $"{Environment.NewLine}You have the newest version!";
+
+            // If we have a new version, put it in the clipboard
+            if (MainViewModel.Options.GUI.CopyUpdateUrlToClipboard && different && !string.IsNullOrEmpty(url))
             {
-                this.FindControl<MenuItem>(name)!.Click += LanguageMenuItemClick;
+                try
+                {
+                    Clipboard?.SetTextAsync(url)
+                        .ConfigureAwait(false)
+                        .GetAwaiter()
+                        .GetResult();
+                }
+                catch { }
             }
 
-            this.FindControl<Button>("CopyProtectScanButton")!.Click += CopyProtectScanButtonClick;
-            this.FindControl<ComboBox>("DriveLetterComboBox")!.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            this.FindControl<ComboBox>("DriveSpeedComboBox")!.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            this.FindControl<ComboBox>("DumpingProgramComboBox")!.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
-            this.FindControl<CheckBox>("EnableParametersCheckBox")!.Click += EnableParametersCheckBoxClick;
-            this.FindControl<Button>("MediaScanButton")!.Click += MediaScanButtonClick;
-            this.FindControl<ComboBox>("MediaTypeComboBox")!.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            this.FindControl<Button>("OutputPathBrowseButton")!.Click += OutputPathBrowseButtonClick;
-            this.FindControl<TextBox>("OutputPathTextBox")!.TextChanged += OutputPathTextBoxTextChanged;
-            this.FindControl<Button>("StartStopButton")!.Click += StartStopButtonClick;
-            this.FindControl<ComboBox>("SystemTypeComboBox")!.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            this.FindControl<Button>("UpdateVolumeLabel")!.Click += UpdateVolumeLabelClick;
+            if (showIfSame || different)
+            {
+                MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different)
+                        .ConfigureAwait(false)
+                        .GetAwaiter()
+                        .GetResult();
+            }
+        }
+
+        /// <summary>
+        /// Ask to confirm quitting, when an operation is running
+        /// </summary>
+        public void MainWindowClosing(object? sender, WindowClosingEventArgs e)
+        {
+            if (_allowCloseWithoutPrompt)
+                return;
+
+            if (!MainViewModel.AskBeforeQuit)
+                return;
+
+            e.Cancel = true;
+            if (!_closeConfirmationPending)
+                _ = ConfirmCloseAsync();
+        }
+
+        /// <summary>
+        /// Handler for the window SizeChanged event; keeps the log console height in sync
+        /// </summary>
+        public void OnMainWindowSizeChanged(object? sender, SizeChangedEventArgs e)
+        {
+            if (!_logPanelResizeInitialized)
+                return;
+
+            UpdateLogConsoleHeight();
+        }
+
+        /// <summary>
+        /// Build a dummy SubmissionInfo and display it for testing
+        /// </summary>
+        public void ShowDebugDiscInfoWindow()
+        {
+            var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
+            _ = ShowMediaInformationWindow(MainViewModel.Options, ref submissionInfo);
+            Formatter.ProcessSpecialFields(submissionInfo!);
+        }
+
+        /// <summary>
+        /// Show the media information window
+        /// </summary>
+        /// <param name="options">Options set to pass to the information window</param>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
+        public bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
+        {
+            if (options?.Processing?.ShowDiscEjectReminder == true)
+            {
+                MessageBoxWindow.ShowAsync(this,
+                    StringResource("EjectTitleString", "Eject"),
+                    StringResource("EjectMessageString", "It is now safe to eject the disc"),
+                    1,
+                    true);
+            }
+
+            // TODO: Determine the real difference between these paths
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                var window = new MediaInformationWindow(options ?? MainViewModel.Options, submissionInfo)
+                {
+                    Focusable = true,
+                    ShowActivated = true,
+                    ShowInTaskbar = true,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                };
+
+                window.Closed += delegate { Activate(); };
+
+                Task<bool?> dialogTask = window.ShowDialog<bool?>(this);
+                var frame = new DispatcherFrame();
+                dialogTask.ContinueWith(_ => Dispatcher.UIThread.Post(() => frame.Continue = false));
+                Dispatcher.UIThread.PushFrame(frame);
+
+                bool? result = dialogTask.GetAwaiter().GetResult();
+                if (result == true)
+                    submissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+
+                return result;
+            }
+            else
+            {
+                SubmissionInfo? updatedSubmissionInfo = submissionInfo;
+                var dispatcherTask = Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    var window = new MediaInformationWindow(options ?? MainViewModel.Options, updatedSubmissionInfo)
+                    {
+                        Focusable = true,
+                        ShowActivated = true,
+                        ShowInTaskbar = true,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    };
+
+                    window.Closed += delegate { Activate(); };
+
+                    bool? result = await window.ShowDialog<bool?>(this);
+                    if (result == true)
+                        updatedSubmissionInfo = (window.MediaInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo)!;
+
+                    return result;
+                });
+
+                bool? result = dispatcherTask.GetAwaiter().GetResult();
+                submissionInfo = updatedSubmissionInfo;
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Show the Check Dump window
+        /// </summary>
+        public void ShowCheckDumpWindow()
+        {
+            // Hide MainWindow while Check GUI is open
+            Hide();
+
+            var window = new CheckDumpWindow(this)
+            {
+                Focusable = true,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            window.Closed += delegate
+            {
+                // Unhide Main window after Check window has been closed
+                Show();
+                Activate();
+            };
+
+            _ = window.ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Show the Create IRD window
+        /// </summary>
+        public void ShowCreateIRDWindow()
+        {
+            // Hide MainWindow while Create IRD UI is open
+            Hide();
+
+            var window = new CreateIRDWindow(this)
+            {
+                Focusable = true,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            window.Closed += delegate
+            {
+                // Unhide Main window after Create IRD window has been closed
+                Show();
+                Activate();
+            };
+
+            _ = window.ShowDialog(this);
+        }
+
+        /// <summary>
+        /// Show the Options window
+        /// </summary>
+        public async void ShowOptionsWindow(string? title = null)
+        {
+            var window = new OptionsWindow(MainViewModel.Options)
+            {
+                Focusable = true,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                Title = title ?? StringResource("OptionsTitleString", "Options"),
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+
+            window.Closed += delegate { Activate(); };
+            window.Closed += OnOptionsUpdated;
+            _ = await window.ShowDialog<bool?>(this);
+        }
+
+        /// <summary>
+        /// Set media type combo box visibility based on current program
+        /// </summary>
+        public void SetMediaTypeVisibility()
+        {
+            // Only DiscImageCreator uses the media type box
+            if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
+            {
+                SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
+                MediaTypeComboBox!.IsVisible = false;
+                return;
+            }
+
+            // If there are no media types defined
+            if (MainViewModel.MediaTypes is null)
+            {
+                SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
+                MediaTypeComboBox!.IsVisible = false;
+                return;
+            }
+
+            // Only systems with more than one media type should show the box
+            bool visible = MainViewModel.MediaTypes.Count > 1;
+            SystemMediaTypeLabel!.Text = visible
+                ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
+                : StringResource("SystemLabelString", "System Type");
+            MediaTypeComboBox!.IsVisible = visible;
+        }
+
+        /// <summary>
+        /// Update the log console height based on the current log panel state
+        /// </summary>
+        public void UpdateLogConsoleHeight()
+        {
+            if (LogPanel is null || LogOutput is null)
+                return;
+
+            if (!LogPanel.IsExpanded)
+            {
+                LogOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
+                return;
+            }
+
+            LogOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
         }
 
         /// <summary>
         /// Wire up the log panel so the window resizes when it is expanded or collapsed
         /// </summary>
-        private void WireLogPanelResizing()
+        public void WireLogPanelResizing()
         {
             if (_logPanelResizeInitialized)
                 return;
 
-            Expander logPanel = this.FindControl<Expander>("LogPanel")!;
-
             Dispatcher.UIThread.Post(() =>
             {
                 _expandedWindowHeight = Height;
-                if (logPanel.IsExpanded)
+                if (LogPanel!.IsExpanded)
                     Height = _expandedWindowHeight + ExpandedLogPanelExtraHeight;
 
-                _lastLogPanelHeight = logPanel.Bounds.Height;
+                _lastLogPanelHeight = LogPanel.Bounds.Height;
                 _logPanelResizeInitialized = true;
                 UpdateLogConsoleHeight();
             }, DispatcherPriority.Background);
 
-            logPanel.PropertyChanged += (_, args) =>
+            LogPanel!.PropertyChanged += (_, args) =>
             {
                 if (args.Property != Expander.IsExpandedProperty)
                     return;
@@ -295,14 +613,14 @@ namespace MPF.Avalonia.Windows
                 double previousLogPanelHeight = _lastLogPanelHeight;
                 Dispatcher.UIThread.Post(() =>
                 {
-                    double currentLogPanelHeight = logPanel.Bounds.Height;
+                    double currentLogPanelHeight = LogPanel.Bounds.Height;
                     if (previousLogPanelHeight <= 0 || currentLogPanelHeight <= 0)
                     {
                         _lastLogPanelHeight = currentLogPanelHeight;
                         return;
                     }
 
-                    if (logPanel.IsExpanded)
+                    if (LogPanel.IsExpanded)
                     {
                         if (_expandedWindowHeight <= 0)
                             _expandedWindowHeight = Height;
@@ -323,139 +641,18 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Handler for the window SizeChanged event; keeps the log console height in sync
-        /// </summary>
-        private void OnMainWindowSizeChanged(object? sender, SizeChangedEventArgs e)
-        {
-            if (!_logPanelResizeInitialized)
-                return;
-
-            UpdateLogConsoleHeight();
-        }
-
-        /// <summary>
-        /// Update the log console height based on the current log panel state
-        /// </summary>
-        private void UpdateLogConsoleHeight()
-        {
-            Expander? logPanel = this.FindControl<Expander>("LogPanel");
-            LogOutput? logOutput = this.FindControl<LogOutput>("LogOutput");
-            if (logPanel is null || logOutput is null)
-                return;
-
-            if (!logPanel.IsExpanded)
-            {
-                logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
-                return;
-            }
-
-            logOutput.SetConsoleHeight(LogOutput.DefaultConsoleHeight);
-        }
-
-        /// <summary>
-        /// Show the media information window
-        /// </summary>
-        /// <param name="options">Options set to pass to the information window</param>
-        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
-        /// <returns>Dialog open result</returns>
-        private bool? ShowMediaInformationWindow(Options? options, ref SubmissionInfo? submissionInfo)
-        {
-            var dialogOptions = options ?? MainViewModel.Options;
-            SubmissionInfo? updatedSubmissionInfo = submissionInfo;
-
-            if (Dispatcher.UIThread.CheckAccess())
-            {
-                var window = new MediaInformationWindow(dialogOptions, updatedSubmissionInfo)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-
-                Task<bool?> dialogTask = window.ShowDialog<bool?>(this);
-                var frame = new DispatcherFrame();
-                dialogTask.ContinueWith(_ => Dispatcher.UIThread.Post(() => frame.Continue = false));
-                Dispatcher.UIThread.PushFrame(frame);
-
-                bool? dialogResult = dialogTask.GetAwaiter().GetResult();
-                if (dialogResult == true)
-                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo;
-
-                submissionInfo = updatedSubmissionInfo;
-                return dialogResult;
-            }
-
-            var dispatcherTask = Dispatcher.UIThread.InvokeAsync(async () =>
-            {
-                var window = new MediaInformationWindow(dialogOptions, updatedSubmissionInfo)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                };
-
-                bool? result = await window.ShowDialog<bool?>(this);
-                if (result == true)
-                    updatedSubmissionInfo = window.MediaInformationViewModel.SubmissionInfo;
-
-                return result;
-            });
-
-            bool? result = dispatcherTask.GetAwaiter().GetResult();
-            submissionInfo = updatedSubmissionInfo;
-            return result;
-        }
-
-        /// <summary>
-        /// Browse for an output file path
-        /// </summary>
-        private async Task<string?> BrowseOutputFileAsync()
-        {
-            string currentPath = MainViewModel.OutputPath;
-            if (string.IsNullOrEmpty(currentPath) && !string.IsNullOrEmpty(MainViewModel.Options.Dumping.DefaultOutputPath))
-                currentPath = Path.Combine(MainViewModel.Options.Dumping.DefaultOutputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
-            else if (string.IsNullOrEmpty(currentPath))
-                currentPath = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
-            if (string.IsNullOrEmpty(currentPath))
-                currentPath = Path.Combine(AppContext.BaseDirectory, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
-
-            currentPath = Path.GetFullPath(currentPath);
-            string filename = Path.GetFileName(currentPath);
-            if (string.IsNullOrEmpty(filename))
-                filename = $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin";
-
-            return await DialogService.SaveFileAsync(
-                this,
-                StringResource("OutputPathLabelString", "Output Path"),
-                filename,
-                OutputFileTypes);
-        }
-
-        /// <summary>
         /// Handler for MainViewModel property changes; normalizes the output path on macOS
         /// </summary>
-        private void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        public void OnMainViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Frontend.ViewModels.MainViewModel.OutputPath))
                 NormalizeMacOutputPath();
         }
 
         /// <summary>
-        /// Ask to confirm quitting, when an operation is running
-        /// </summary>
-        public void MainWindowClosing(object? sender, WindowClosingEventArgs e)
-        {
-            if (_allowCloseWithoutPrompt)
-                return;
-
-            if (!MainViewModel.AskBeforeQuit)
-                return;
-
-            e.Cancel = true;
-            if (!_closeConfirmationPending)
-                _ = ConfirmCloseAsync();
-        }
-
-        /// <summary>
         /// Prompt the user to confirm closing while a dump may still be running
         /// </summary>
-        private async Task ConfirmCloseAsync()
+        public async Task ConfirmCloseAsync()
         {
             _closeConfirmationPending = true;
 
@@ -476,65 +673,21 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Show the Check Dump window
-        /// </summary>
-        public void ShowCheckDumpWindow()
-        {
-            var window = new CheckDumpWindow(this) { WindowStartupLocation = WindowStartupLocation.CenterOwner };
-            _ = window.ShowDialog(this);
-        }
-
-        /// <summary>
-        /// Show the Create IRD window
-        /// </summary>
-        public void ShowCreateIRDWindow()
-        {
-            var window = new CreateIRDWindow(this) { WindowStartupLocation = WindowStartupLocation.CenterOwner };
-            _ = window.ShowDialog(this);
-        }
-
-        /// <summary>
-        /// Show the Options window
-        /// </summary>
-        public async void ShowOptionsWindow(string? title = null)
-        {
-            var window = new OptionsWindow(MainViewModel.Options)
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Title = title ?? StringResource("OptionsTitleString", "Options"),
-            };
-
-            bool? result = await window.ShowDialog<bool?>(this);
-            bool savedSettings = result == true && window.OptionsViewModel.SavedSettings;
-            MainViewModel.UpdateOptions(savedSettings, window.OptionsViewModel.Options);
-
-            if (savedSettings)
-            {
-                ApplyLanguage(MainViewModel.Options.GUI.DefaultInterfaceLanguage, rebuildNativeMenus: true);
-                ThemeService.Apply(Application.Current!.Resources, MainViewModel.Options);
-                SetMediaTypeVisibility();
-            }
-        }
-
-        /// <summary>
-        /// Set media type combo box visibility based on current program
-        /// </summary>
-        public void SetMediaTypeVisibility()
-        {
-            this.FindControl<ComboBox>("MediaTypeComboBox")!.IsVisible = MainViewModel.CurrentProgram == InternalProgram.DiscImageCreator;
-        }
-
-        /// <summary>
         /// Build the about text
         /// </summary>
-        private static string CreateAboutText()
+        public string CreateAboutText()
         {
-            string version = typeof(MainWindow).Assembly.GetName().Version?.ToString() ?? "Unknown";
-            return $"{StringResource("AppTitleFullString", "Media Preservation Frontend (MPF)")}\n\n"
-                + $"{StringResource("AboutLine1String", "A community preservation frontend developed in C#.")}\n"
-                + $"{StringResource("AboutLine2String", "Supports Redumper, Aaru, and DiscImageCreator.")}\n"
-                + $"{StringResource("AboutLine3String", "Originally created to help the Redump project.")}\n\n"
-                + $"{StringResource("VersionLabelString", "Version")}: {version}";
+            string aboutText = $"{StringResource("AppTitleFullString", "Media Preservation Frontend (MPF)")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{StringResource("AboutLine1String", "A community preservation frontend developed in C#.")}"
+                + $"{Environment.NewLine}{StringResource("AboutLine2String", "Supports Redumper, Aaru, and DiscImageCreator.")}"
+                + $"{Environment.NewLine}{StringResource("AboutLine3String", "Originally created to help the Redump project.")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{StringResource("AboutThanksString", "Thanks to everyone who has supported this project!")}"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}{StringResource("VersionLabelString", "Version")} {FrontendTool.GetCurrentVersion()}";
+            MainViewModel.LogAboutText(aboutText);
+            return aboutText;
         }
 
         #endregion
@@ -542,10 +695,61 @@ namespace MPF.Avalonia.Windows
         #region Event Handlers
 
         /// <summary>
+        /// Handler for OptionsWindow OnUpdated event
+        /// </summary>
+        public void OnOptionsUpdated(object? sender, EventArgs e)
+        {
+            // Get the options window
+            var optionsWindow = sender as OptionsWindow;
+            if (optionsWindow?.OptionsViewModel is null)
+                return;
+
+            // Get if the settings were saved
+            bool savedSettings = optionsWindow.OptionsViewModel.SavedSettings;
+            var options = optionsWindow.OptionsViewModel.Options;
+
+            // Force a refresh of the path, if necessary
+            if (MainViewModel.Options.Dumping.DefaultOutputPath != options.Dumping.DefaultOutputPath)
+                MainViewModel.OutputPath = string.Empty;
+
+            // Set the language according to the settings
+            if (savedSettings)
+            {
+                var oldDefaultLang = MainViewModel.Options.GUI.DefaultInterfaceLanguage;
+                var newDefaultLang = options.GUI.DefaultInterfaceLanguage;
+                if (oldDefaultLang != newDefaultLang)
+                {
+                    SetInterfaceLanguage(newDefaultLang, rebuildNativeMenus: true);
+
+                    // Uncheck all language menu items
+                    foreach (var item in LanguagesMenuItem.Items)
+                    {
+                        if (item is MenuItem menuItem)
+                            menuItem.IsChecked = false;
+                    }
+                }
+            }
+
+            // Update and save options, if necessary
+            MainViewModel.UpdateOptions(savedSettings, options);
+
+            // Set the UI color scheme according to the options
+            ThemeService.Apply(Resources, options);
+
+            // Hide or show the media type box based on program
+            SetMediaTypeVisibility();
+        }
+
+        #region Menu Bar
+
+        /// <summary>
         /// Handler for AboutMenuItem Click event
         /// </summary>
         public void AboutClick(object? sender, RoutedEventArgs e)
-            => _ = MessageBoxWindow.ShowAsync(this, StringResource("AboutTitleString", "About"), CreateAboutText(), 1, false);
+        {
+            string aboutText = CreateAboutText();
+            _ = MessageBoxWindow.ShowAsync(this, StringResource("AboutTitleString", "About"), aboutText, 1, false);
+        }
 
         /// <summary>
         /// Handler for AppExitMenuItem Click event
@@ -560,6 +764,12 @@ namespace MPF.Avalonia.Windows
             => ShowCheckDumpWindow();
 
         /// <summary>
+        /// Handler for the title bar close button
+        /// </summary>
+        private void CloseButtonClick(object? sender, RoutedEventArgs e)
+            => Close();
+
+        /// <summary>
         /// Handler for CreateIRDMenuItem Click event
         /// </summary>
         public void CreateIRDMenuItemClick(object? sender, RoutedEventArgs e)
@@ -569,42 +779,19 @@ namespace MPF.Avalonia.Windows
         /// Handler for CheckForUpdatesMenuItem Click event
         /// </summary>
         public void CheckForUpdatesClick(object? sender, RoutedEventArgs e)
-        {
-            MainViewModel.CheckForUpdates(out bool different, out string message, out _);
-            _ = MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
-        }
-
-        /// <summary>
-        /// Build a dummy SubmissionInfo and display it for testing
-        /// </summary>
-        public void ShowDebugDiscInfoWindow()
-        {
-            SubmissionInfo? submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
-            _ = ShowDebugDiscInfoWindowAsync(submissionInfo);
-        }
-
-        /// <summary>
-        /// Show the debug submission info in the media information window and process the result
-        /// </summary>
-        private async Task ShowDebugDiscInfoWindowAsync(SubmissionInfo submissionInfo)
-        {
-            var window = new MediaInformationWindow(MainViewModel.Options, submissionInfo, showPcMacHybridAlways: true)
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-
-            bool? result = await window.ShowDialog<bool?>(this);
-            if (result == true)
-                submissionInfo = window.MediaInformationViewModel.SubmissionInfo;
-
-            Formatter.ProcessSpecialFields(submissionInfo);
-        }
+            => CheckForUpdates(showIfSame: true);
 
         /// <summary>
         /// Handler for DebugViewMenuItem Click event
         /// </summary>
         public void DebugViewClick(object? sender, RoutedEventArgs e)
             => ShowDebugDiscInfoWindow();
+
+        /// <summary>
+        /// Handler for the title bar minimize button
+        /// </summary>
+        private void MinimizeButtonClick(object? sender, RoutedEventArgs e)
+            => WindowState = AvaloniaWindowState.Minimized;
 
         /// <summary>
         /// Handler for OptionsMenuItem Click event
@@ -617,29 +804,35 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void LanguageMenuItemClick(object? sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem menuItem)
+            if (sender is not MenuItem clickedItem)
                 return;
 
-            InterfaceLanguage language = menuItem.Name switch
+            // Don't do anything if language is already checked and being unchecked
+            if (!clickedItem.IsChecked)
             {
-                "GermanMenuItem" => InterfaceLanguage.German,
-                "SpanishMenuItem" => InterfaceLanguage.Spanish,
-                "FrenchMenuItem" => InterfaceLanguage.French,
-                "ItalianMenuItem" => InterfaceLanguage.Italian,
-                "JapaneseMenuItem" => InterfaceLanguage.Japanese,
-                "KoreanMenuItem" => InterfaceLanguage.Korean,
-                "PolishMenuItem" => InterfaceLanguage.Polish,
-                "PortugueseMenuItem" => InterfaceLanguage.Portuguese,
-                "RussianMenuItem" => InterfaceLanguage.Russian,
-                "SwedishMenuItem" => InterfaceLanguage.Swedish,
-                "UkrainianMenuItem" => InterfaceLanguage.Ukrainian,
-                _ => InterfaceLanguage.English,
-            };
+                clickedItem.IsChecked = true;
+                return;
+            }
 
-            MainViewModel.Options.GUI.DefaultInterfaceLanguage = language;
-            MainViewModel.Options = new Options(MainViewModel.Options);
-            ApplyLanguage(language, rebuildNativeMenus: true);
+            // Uncheck every item not checked
+            var languageMenu = (MenuItem)clickedItem.Parent!;
+            foreach (var item in languageMenu.Items)
+            {
+                if (item is MenuItem menuItem && menuItem != clickedItem)
+                    menuItem.IsChecked = false;
+            }
+
+            // Change UI language to selected item
+            string lang = clickedItem.Header?.ToString() ?? string.Empty;
+            SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang), rebuildNativeMenus: true);
+
+            // Update the labels that don't get updated automatically
+            SetMediaTypeVisibility();
         }
+
+        #endregion
+
+        #region User Area
 
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
@@ -647,11 +840,25 @@ namespace MPF.Avalonia.Windows
         public async void CopyProtectScanButtonClick(object? sender, RoutedEventArgs e)
         {
             string? output = await MainViewModel.ScanAndShowProtection();
+
             if (!MainViewModel.LogPanelExpanded)
             {
-                string title = StringResource("ProtectionDetectedTitleString", "Protection");
-                string fallback = StringResource("ProtectionErrorMessageString", "No protection information could be retrieved.");
-                _ = MessageBoxWindow.ShowAsync(this, title, string.IsNullOrWhiteSpace(output) ? fallback : output, 1, false);
+                if (!string.IsNullOrEmpty(output))
+                {
+                    await MessageBoxWindow.ShowAsync(this,
+                        StringResource("ProtectionDetectedTitleString", "Detected Protection(s)"),
+                        output,
+                        1,
+                        false);
+                }
+                else
+                {
+                    await MessageBoxWindow.ShowAsync(this,
+                        StringResource("ProtectionErrorTitleString", "Error!"),
+                        StringResource("ProtectionErrorMessageString", "An exception occurred, see the log for details"),
+                        1,
+                        true);
+                }
             }
         }
 
@@ -748,32 +955,6 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Ensure the output path points to a file rather than a directory
-        /// </summary>
-        private void EnsureOutputPathIsFilePath()
-        {
-            string outputPath = MainViewModel.OutputPath;
-            if (string.IsNullOrWhiteSpace(outputPath))
-                return;
-
-            string fullPath;
-            try
-            {
-                fullPath = Path.GetFullPath(outputPath);
-            }
-            catch
-            {
-                return;
-            }
-
-            if (!Directory.Exists(fullPath))
-                return;
-
-            MainViewModel.OutputPath = Path.Combine(outputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
-            MainViewModel.EnsureMediaInformation();
-        }
-
-        /// <summary>
         /// Handler for SystemTypeComboBox SelectionChanged event
         /// </summary>
         public void SystemTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -798,6 +979,35 @@ namespace MPF.Avalonia.Windows
                     MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: false);
             }
         }
+
+        /// <summary>
+        /// Ensure the output path points to a file rather than a directory
+        /// </summary>
+        /// TODO: Is this needed?
+        private void EnsureOutputPathIsFilePath()
+        {
+            string outputPath = MainViewModel.OutputPath;
+            if (string.IsNullOrWhiteSpace(outputPath))
+                return;
+
+            string fullPath;
+            try
+            {
+                fullPath = Path.GetFullPath(outputPath);
+            }
+            catch
+            {
+                return;
+            }
+
+            if (!Directory.Exists(fullPath))
+                return;
+
+            MainViewModel.OutputPath = Path.Combine(outputPath, $"track_{DateTime.Now:yyyyMMdd-HHmm}.bin");
+            MainViewModel.EnsureMediaInformation();
+        }
+
+        #endregion
 
         #endregion
     }

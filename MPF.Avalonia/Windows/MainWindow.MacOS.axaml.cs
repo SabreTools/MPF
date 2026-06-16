@@ -70,18 +70,18 @@ namespace MPF.Avalonia.Windows
 
             _nativeLanguageMenuGroup = CreateNativeMenuGroup(
                 NativeLanguageMenuHeader(),
-                CreateNativeMenuItem("English", LanguageMenuItemClick, this.FindControl<MenuItem>("EnglishMenuItem")),
-                CreateNativeMenuItem("Deutsch", LanguageMenuItemClick, this.FindControl<MenuItem>("GermanMenuItem")),
-                CreateNativeMenuItem("Español", LanguageMenuItemClick, this.FindControl<MenuItem>("SpanishMenuItem")),
-                CreateNativeMenuItem("Français", LanguageMenuItemClick, this.FindControl<MenuItem>("FrenchMenuItem")),
-                CreateNativeMenuItem("Italiano", LanguageMenuItemClick, this.FindControl<MenuItem>("ItalianMenuItem")),
-                CreateNativeMenuItem("日本語", LanguageMenuItemClick, this.FindControl<MenuItem>("JapaneseMenuItem")),
-                CreateNativeMenuItem("한국어", LanguageMenuItemClick, this.FindControl<MenuItem>("KoreanMenuItem")),
-                CreateNativeMenuItem("Polski", LanguageMenuItemClick, this.FindControl<MenuItem>("PolishMenuItem")),
-                CreateNativeMenuItem("Português", LanguageMenuItemClick, this.FindControl<MenuItem>("PortugueseMenuItem")),
-                CreateNativeMenuItem("Русский", LanguageMenuItemClick, this.FindControl<MenuItem>("RussianMenuItem")),
-                CreateNativeMenuItem("Svenska", LanguageMenuItemClick, this.FindControl<MenuItem>("SwedishMenuItem")),
-                CreateNativeMenuItem("Українська", LanguageMenuItemClick, this.FindControl<MenuItem>("UkrainianMenuItem")));
+                CreateNativeMenuItem("English", LanguageMenuItemClick, EnglishMenuItem),
+                CreateNativeMenuItem("Deutsch", LanguageMenuItemClick, GermanMenuItem),
+                CreateNativeMenuItem("Español", LanguageMenuItemClick, SpanishMenuItem),
+                CreateNativeMenuItem("Français", LanguageMenuItemClick, FrenchMenuItem),
+                CreateNativeMenuItem("Italiano", LanguageMenuItemClick, ItalianMenuItem),
+                CreateNativeMenuItem("日本語", LanguageMenuItemClick, JapaneseMenuItem),
+                CreateNativeMenuItem("한국어", LanguageMenuItemClick, KoreanMenuItem),
+                CreateNativeMenuItem("Polski", LanguageMenuItemClick, PolishMenuItem),
+                CreateNativeMenuItem("Português", LanguageMenuItemClick, PortugueseMenuItem),
+                CreateNativeMenuItem("Русский", LanguageMenuItemClick, RussianMenuItem),
+                CreateNativeMenuItem("Svenska", LanguageMenuItemClick, SwedishMenuItem),
+                CreateNativeMenuItem("Українська", LanguageMenuItemClick, UkrainianMenuItem));
             nativeMenu.Add(_nativeLanguageMenuGroup);
 
             NativeMenu.SetMenu(this, nativeMenu);

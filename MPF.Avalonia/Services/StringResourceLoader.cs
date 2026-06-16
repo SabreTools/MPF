@@ -9,6 +9,7 @@ namespace MPF.Avalonia.Services
     /// <summary>
     /// Loads localized string resource dictionaries into the application based on interface language
     /// </summary>
+    /// TODO: See if this can translate to WPF
     internal static class StringResourceLoader
     {
         /// <summary>
@@ -71,6 +72,7 @@ namespace MPF.Avalonia.Services
         {
             return System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName switch
             {
+                "en" => InterfaceLanguage.English,
                 "fr" => InterfaceLanguage.French,
                 "de" => InterfaceLanguage.German,
                 "it" => InterfaceLanguage.Italian,

@@ -26,17 +26,16 @@ namespace MPF.Avalonia.Windows
         private void Configure(string title, string message, int optionCount)
         {
             Title = title;
-            this.FindControl<TextBlock>("MessageTextBlock")!.Text = message;
-            StackPanel buttonPanel = this.FindControl<StackPanel>("ButtonPanel")!;
-            buttonPanel.Children.Clear();
+            MessageTextBlock!.Text = message;
+            ButtonPanel!.Children.Clear();
 
-            buttonPanel.HorizontalAlignment = HorizontalAlignment.Center;
+            ButtonPanel.HorizontalAlignment = HorizontalAlignment.Center;
 
             Button button = CreateButton(optionCount > 1 ? "Yes" : "OK", true);
-            buttonPanel.Children.Add(button);
+            ButtonPanel.Children.Add(button);
 
             if (optionCount > 1)
-                buttonPanel.Children.Add(CreateButton("No", false));
+                ButtonPanel.Children.Add(CreateButton("No", false));
         }
 
         /// <summary>
