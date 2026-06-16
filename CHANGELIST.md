@@ -38,6 +38,7 @@
 - Additional cleanup and consolidation
 - Update resources to use "redump.org"
 - Make Avalonia password text into a password box
+- Unify code layout for options windows
 
 ### 3.7.1 (2026-03-30)
 

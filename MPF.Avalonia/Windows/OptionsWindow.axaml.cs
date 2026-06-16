@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using MPF.Avalonia.Services;
@@ -60,15 +59,19 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void WireEvents(object? sender, EventArgs e)
         {
+            // Set the window title
             OptionsViewModel.Title = Title;
-            this.FindControl<Button>("AaruPathButton")!.Click += BrowseForAaruPathClick;
-            this.FindControl<Button>("DiscImageCreatorPathButton")!.Click += BrowseForDiscImageCreatorPathClick;
-            this.FindControl<Button>("RedumperPathButton")!.Click += BrowseForRedumperPathClick;
-            this.FindControl<Button>("DefaultOutputPathButton")!.Click += BrowseForDefaultOutputPathClick;
-            this.FindControl<Button>("AcceptButton")!.Click += OnAcceptClick;
-            this.FindControl<Button>("CancelButton")!.Click += OnCancelClick;
-            this.FindControl<Button>("RedumpLoginTestButton")!.Click += OnRedumpTestClick;
-            this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.Click += NonRedumpModeClicked;
+
+            // Add handlers
+            AaruPathButton!.Click += BrowseForAaruPathClick;
+            DiscImageCreatorPathButton!.Click += BrowseForDiscImageCreatorPathClick;
+            RedumperPathButton!.Click += BrowseForRedumperPathClick;
+            DefaultOutputPathButton!.Click += BrowseForDefaultOutputPathClick;
+
+            AcceptButton!.Click += OnAcceptClick;
+            CancelButton!.Click += OnCancelClick;
+            RedumpLoginTestButton!.Click += OnRedumpTestClick;
+            NonRedumpModeCheckBox!.Click += NonRedumpModeClicked;
         }
 
         /// <summary>
@@ -88,6 +91,24 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private async Task<string?> BrowseForFolderAsync(string title)
             => await DialogService.OpenFolderAsync(this, title);
+
+        /// <summary>
+        /// Test redump.org credentials for validity
+        /// </summary>
+        private async Task<bool?> ValidateRedumpOrgCredentials()
+        {
+            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Text);
+            string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
+
+            if (success == true)
+                _ = MessageBoxWindow.ShowAsync(this, "Success", message, 1, success == true);
+            else if (success == false)
+                _ = MessageBoxWindow.ShowAsync(this, StringResource("ErrorMessageString", "Error"), message, 1, success == true);
+            else
+                _ = MessageBoxWindow.ShowAsync(this, "Error", message, 1, success == true);
+
+            return success;
+        }
 
         #endregion
 
@@ -134,6 +155,18 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
+        /// Alert user of non-redump mode implications
+        /// </summary>
+        private void NonRedumpModeClicked(object? sender, RoutedEventArgs e)
+        {
+            if (NonRedumpModeCheckBox!.IsChecked == true)
+                _ = MessageBoxWindow.ShowAsync(this, StringResource("WarningMessageString", "Warning"),
+            "All logs generated with these options will not be acceptable for Redump submission", 1, true);
+            else
+                OptionsViewModel.NonRedumpModeUnChecked();
+        }
+
+        /// <summary>
         /// Handler for AcceptButton Click event
         /// </summary>
         private void OnAcceptClick(object? sender, RoutedEventArgs e)
@@ -146,28 +179,16 @@ namespace MPF.Avalonia.Windows
         /// Handler for CancelButton Click event
         /// </summary>
         private void OnCancelClick(object? sender, RoutedEventArgs e)
-            => Close(false);
+        {
+            OptionsViewModel.SavedSettings = false;
+            Close(false);
+        }
 
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
         private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
-        {
-            bool? success = await RedumpClient.ValidateCredentials(
-                OptionsViewModel.Options.Processing.Login.RedumpOrgUsername,
-                OptionsViewModel.Options.Processing.Login.RedumpOrgPassword);
-
-            _ = MessageBoxWindow.ShowAsync(this, "Redump", OptionsViewModel.GetRedumpOrgLoginResult(success), 1, success == true);
-        }
-
-        /// <summary>
-        /// Alert user of non-redump mode implications
-        /// </summary>
-        private void NonRedumpModeClicked(object? sender, RoutedEventArgs e)
-        {
-            if (this.FindControl<CheckBox>("NonRedumpModeCheckBox")!.IsChecked != true)
-                OptionsViewModel.NonRedumpModeUnChecked();
-        }
+            => await ValidateRedumpOrgCredentials();
 
         #endregion
     }
