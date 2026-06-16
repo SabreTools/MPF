@@ -1243,6 +1243,38 @@ namespace MPF.Frontend.ViewModels
         /// <returns>Filled DumpEnvironment Parent</returns>
         private DumpEnvironment DetermineEnvironment()
         {
+            // Mirror the CLI behavior: resolve the configured tool path through
+            // the runtime directory and PATH so that bare binary names work.
+            // Leave the configured value untouched when the path is not
+            // resolvable; ProcessStartInfo can still rely on its native PATH
+            // lookup for bare names.
+            switch (CurrentProgram)
+            {
+                case InternalProgram.Aaru:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                        if (resolved != null)
+                            Options.Dumping.AaruPath = resolved;
+                    }
+                    break;
+
+                case InternalProgram.DiscImageCreator:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                        if (resolved != null)
+                            Options.Dumping.DiscImageCreatorPath = resolved;
+                    }
+                    break;
+
+                case InternalProgram.Redumper:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                        if (resolved != null)
+                            Options.Dumping.RedumperPath = resolved;
+                    }
+                    break;
+            }
+
             var env = new DumpEnvironment(
                 Options,
                 EvaluateOutputPath(OutputPath),
