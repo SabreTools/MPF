@@ -2458,10 +2458,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => File.Exists(Options.Dumping.AaruPath),
-                    InternalProgram.DiscImageCreator => File.Exists(Options.Dumping.DiscImageCreatorPath),
-                    // InternalProgram.Dreamdump => File.Exists(Options.Dumping.DreamdumpPath),
-                    InternalProgram.Redumper => File.Exists(Options.Dumping.RedumperPath),
+                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) != null,
+                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) != null,
+                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) != null,
+                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) != null,
                     _ => false,
                 };
 #pragma warning restore IDE0072

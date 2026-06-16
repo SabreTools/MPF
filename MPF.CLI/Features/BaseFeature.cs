@@ -146,19 +146,29 @@ namespace MPF.CLI.Features
             switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    if (!File.Exists(Options.Dumping.AaruPath))
                     {
-                        Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
-                        return false;
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                        if (resolved == null)
+                        {
+                            Console.Error.WriteLine("A path needs to be supplied in config.json for Aaru, exiting...");
+                            return false;
+                        }
+
+                        Options.Dumping.AaruPath = resolved;
                     }
 
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    if (!File.Exists(Options.Dumping.DiscImageCreatorPath))
                     {
-                        Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
-                        return false;
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                        if (resolved == null)
+                        {
+                            Console.Error.WriteLine("A path needs to be supplied in config.json for DIC, exiting...");
+                            return false;
+                        }
+
+                        Options.Dumping.DiscImageCreatorPath = resolved;
                     }
 
                     break;
@@ -173,10 +183,15 @@ namespace MPF.CLI.Features
                 //     break;
 
                 case InternalProgram.Redumper:
-                    if (!File.Exists(Options.Dumping.RedumperPath))
                     {
-                        Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
-                        return false;
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                        if (resolved == null)
+                        {
+                            Console.Error.WriteLine("A path needs to be supplied in config.json for Redumper, exiting...");
+                            return false;
+                        }
+
+                        Options.Dumping.RedumperPath = resolved;
                     }
 
                     break;
