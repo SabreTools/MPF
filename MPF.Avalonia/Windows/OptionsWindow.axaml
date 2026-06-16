@@ -379,10 +379,17 @@
                   <TextBlock Text="{DynamicResource RedumpGroupBoxString}" FontWeight="Bold" />
                   <Grid ColumnDefinitions="Auto,122,Auto,122,Auto" ColumnSpacing="8">
                     <TextBlock Text="{DynamicResource UsernameLabelString}" VerticalAlignment="Center" />
-                    <TextBox x:Name="RedumpUsernameTextBox" Grid.Column="1" Text="{Binding Options.Processing.Login.RedumpOrgUsername, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
+                    <TextBox x:Name="RedumpUsernameTextBox" Grid.Column="1" VerticalAlignment="Center"
+                             Text="{Binding Options.Processing.Login.RedumpOrgUsername, Mode=TwoWay}"
+                             IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
+                    
                     <TextBlock Grid.Column="2" Text="{DynamicResource PasswordLabelString}" VerticalAlignment="Center" />
-                    <TextBox x:Name="RedumpPasswordBox" Grid.Column="3" Text="{Binding Options.Processing.Login.RedumpOrgPassword, Mode=TwoWay}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
-                    <Button x:Name="RedumpLoginTestButton" Grid.Column="4" MinHeight="23" Padding="10,2" Content="{DynamicResource TestLoginButtonString}" IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
+                    <TextBox x:Name="RedumpPasswordBox" Grid.Column="3" VerticalAlignment="Center" PasswordChar='*'
+                             Text="{Binding Options.Processing.Login.RedumpOrgPassword, Mode=TwoWay}"
+                             IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
+                    
+                    <Button x:Name="RedumpLoginTestButton" Grid.Column="4" MinHeight="23" Padding="10,2" Content="{DynamicResource TestLoginButtonString}"
+                            IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
                   </Grid>
                 </StackPanel>
               </Border>

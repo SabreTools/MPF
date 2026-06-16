@@ -37,6 +37,7 @@
 - Initial cleanup of Avalonia
 - Additional cleanup and consolidation
 - Update resources to use "redump.org"
+- Make Avalonia password text into a password box
 
 ### 3.7.1 (2026-03-30)
 
