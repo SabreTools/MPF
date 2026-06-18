@@ -343,10 +343,7 @@ namespace MPF.Avalonia.Windows
             {
                 try
                 {
-                    Clipboard?.SetTextAsync(url)
-                        .ConfigureAwait(false)
-                        .GetAwaiter()
-                        .GetResult();
+                    Clipboard?.SetTextAsync(url);
                 }
                 catch { }
             }
