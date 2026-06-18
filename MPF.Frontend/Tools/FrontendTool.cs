@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Frontend.Tools
@@ -112,41 +113,24 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Resolve a configured dumping-tool path to an absolute file path.
         /// </summary>
-        /// <param name="configuredPath">Raw value from the user's options (Aaru/DIC/Redumper path)</param>
+        /// <param name="configuredPath">Raw value from the user's options</param>
         /// <returns>
-        /// The absolute path of the located binary, or <c>null</c> when nothing exists.
-        /// <para>
-        /// Behavior:
-        /// <list type="bullet">
-        /// <item>null/empty input → null.</item>
-        /// <item>contains a path separator → treated as an explicit location; returned as-is if
-        ///       <see cref="File.Exists(string)"/> matches, otherwise null. Preserves the
-        ///       pre-existing behavior for users that configure absolute or relative paths.</item>
-        /// <item>bare executable name (no separator) → searched in the runtime directory first,
-        ///       then in each <c>$PATH</c> entry. The runtime-directory probe lets a frontend
-        ///       bundle ship its dumping tools alongside the binary; the <c>$PATH</c> probe lets
-        ///       distro-installed tools (e.g. <c>/usr/bin/redumper</c>) be picked up automatically.
-        ///       Returns the first existing match or null.</item>
-        /// </list>
-        /// </para>
+        /// The absolute path of the located binary, or null when nothing exists.
+        /// A value containing a path separator is treated as an explicit location and
+        /// returned as-is when it exists. A bare name (no separator) is searched in the
+        /// runtime directory first, then in each PATH entry.
         /// </returns>
-        /// <remarks>
-        /// Matches the design agreed on in
-        /// <see href="https://github.com/SabreTools/MPF/pull/856">#856</see>:
-        /// a path with separators is treated as the explicit location it always has been; a bare
-        /// name opts the user in to a runtime-dir / <c>$PATH</c> lookup.
-        /// </remarks>
         public static string? ResolveBinaryPath(string? configuredPath)
         {
             if (string.IsNullOrEmpty(configuredPath))
                 return null;
 
             // Explicit location (absolute or relative path) — keep historical behavior.
-            if (configuredPath!.IndexOf('/') >= 0 || configuredPath.IndexOf('\\') >= 0)
+            if (configuredPath!.Contains("/") || configuredPath.Contains("\\"))
                 return File.Exists(configuredPath) ? configuredPath : null;
 
             // Bare name — search runtime directory first, then $PATH.
-            string runtimeDir = GetRuntimeDirectory();
+            string runtimeDir = PathTool.GetRuntimeDirectory();
             if (!string.IsNullOrEmpty(runtimeDir))
             {
                 string candidate = Path.Combine(runtimeDir, configuredPath);
@@ -169,20 +153,6 @@ namespace MPF.Frontend.Tools
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Directory containing the running application; used as the first lookup root for
-        /// bare-name binaries (see <see cref="ResolveBinaryPath(string?)"/>). Matches the
-        /// multi-TFM pattern already used in <c>OptionsLoader.GetRuntimeConfigurationPath</c>.
-        /// </summary>
-        private static string GetRuntimeDirectory()
-        {
-#if NET20 || NET35 || NET40 || NET452
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
-#else
-            return AppContext.BaseDirectory;
-#endif
         }
 
         #endregion
