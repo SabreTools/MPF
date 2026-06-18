@@ -313,7 +313,21 @@ namespace MPF.Frontend
                 return [.. drives];
             }
 
-            // Find and update all floppy drives
+            // Apply OS-specific drive adjustments
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                MarkWindowsFloppyDrives(drives);
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+                drives = AppendUnixOpticalDrives(drives);
+
+            return [.. drives];
+        }
+
+        /// <summary>
+        /// Mark drives that Windows reports as floppy media via WMI.
+        /// </summary>
+        /// <param name="drives">Drives to update in place</param>
+        private static void MarkWindowsFloppyDrives(Drive[] drives)
+        {
 #if NET462_OR_GREATER || NETCOREAPP
             try
             {
@@ -340,49 +354,50 @@ namespace MPF.Frontend
                 // No-op
             }
 #endif
+        }
 
-            // On Linux, DriveInfo.GetDrives() returns mount points and typically
-            // does not surface unmounted optical block devices (/dev/sr*). Enumerate
-            // them directly so users can dump discs without first mounting them.
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
+        /// <summary>
+        /// Append Linux optical block devices (/dev/sr*) that DriveInfo did not surface.
+        /// DriveInfo.GetDrives() returns mount points and typically does not list unmounted
+        /// optical drives, so they are enumerated directly to let users dump discs without
+        /// mounting them first.
+        /// </summary>
+        /// <param name="drives">Drives already discovered via DriveInfo</param>
+        /// <returns>The drive array, extended with any optical devices not already present</returns>
+        private static Drive[] AppendUnixOpticalDrives(Drive[] drives)
+        {
+            var existingNames = new HashSet<string>();
+            foreach (var d in drives)
             {
-                var existingNames = new HashSet<string>();
-                foreach (var d in drives)
+                if (d?.Name is not null)
+                    existingNames.Add(d.Name);
+            }
+
+            var extra = new List<Drive>();
+            foreach (var devicePath in EnumerateUnixOpticalDevicePaths("/dev"))
+            {
+                if (existingNames.Contains(devicePath))
+                    continue;
+
+                try
                 {
-                    if (d?.Name is not null)
-                        existingNames.Add(d.Name);
-                }
-
-                var extra = new List<Drive>();
-                foreach (var devicePath in EnumerateUnixOpticalDevicePaths("/dev"))
-                {
-                    if (existingNames.Contains(devicePath))
-                        continue;
-
-                    Drive? d;
-                    try
-                    {
-                        d = Create(Frontend.InternalDriveType.Optical, devicePath);
-                    }
-                    catch
-                    {
-                        d = null;
-                    }
-
+                    var d = Create(Frontend.InternalDriveType.Optical, devicePath);
                     if (d != null)
                         extra.Add(d);
                 }
-
-                if (extra.Count > 0)
+                catch
                 {
-                    var combined = new Drive[drives.Length + extra.Count];
-                    Array.Copy(drives, combined, drives.Length);
-                    extra.CopyTo(combined, drives.Length);
-                    drives = combined;
+                    // Skip devices that can't be opened
                 }
             }
 
-            return [.. drives];
+            if (extra.Count == 0)
+                return drives;
+
+            var combined = new Drive[drives.Length + extra.Count];
+            Array.Copy(drives, combined, drives.Length);
+            extra.CopyTo(combined, drives.Length);
+            return combined;
         }
 
         /// <summary>

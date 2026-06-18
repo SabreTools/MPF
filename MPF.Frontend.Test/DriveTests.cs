@@ -92,7 +92,9 @@ namespace MPF.Frontend.Test
 
                 var actualNames = new List<string>();
                 foreach (var p in actual)
+                {
                     actualNames.Add(Path.GetFileName(p));
+                }
                 actualNames.Sort(StringComparer.Ordinal);
 
                 Assert.Equal(new[] { "sr0", "sr1", "sr15" }, actualNames);
