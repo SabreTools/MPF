@@ -357,10 +357,12 @@ namespace MPF.Frontend
         }
 
         /// <summary>
-        /// Append Linux optical block devices (/dev/sr*) that DriveInfo did not surface.
+        /// Append Linux optical devices that DriveInfo did not surface.
         /// DriveInfo.GetDrives() returns mount points and typically does not list unmounted
         /// optical drives, so they are enumerated directly to let users dump discs without
-        /// mounting them first.
+        /// mounting them first. Both the block nodes (/dev/sr*) and their generic SCSI
+        /// counterparts (/dev/sg*) are surfaced, block nodes first, because dumping back ends
+        /// differ in which node they expect (e.g. redumper opens the generic node).
         /// </summary>
         /// <param name="drives">Drives already discovered via DriveInfo</param>
         /// <returns>The drive array, extended with any optical devices not already present</returns>
@@ -373,10 +375,16 @@ namespace MPF.Frontend
                     existingNames.Add(d.Name);
             }
 
+            // Block nodes first, then their generic SCSI counterparts
+            var devicePaths = new List<string>();
+            devicePaths.AddRange(EnumerateUnixOpticalBlockPaths("/dev"));
+            devicePaths.AddRange(EnumerateUnixOpticalGenericPaths("/dev", "/sys/class/scsi_generic"));
+
             var extra = new List<Drive>();
-            foreach (var devicePath in EnumerateUnixOpticalDevicePaths("/dev"))
+            foreach (var devicePath in devicePaths)
             {
-                if (existingNames.Contains(devicePath))
+                // Skip paths already surfaced by DriveInfo or an earlier enumerator
+                if (!existingNames.Add(devicePath))
                     continue;
 
                 try
@@ -406,7 +414,7 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="devRoot">Root directory to scan (typically "/dev")</param>
         /// <returns>Device paths, or an empty list when the directory is unreadable</returns>
-        internal static List<string> EnumerateUnixOpticalDevicePaths(string devRoot)
+        internal static List<string> EnumerateUnixOpticalBlockPaths(string devRoot)
         {
             var result = new List<string>();
             if (string.IsNullOrEmpty(devRoot) || !Directory.Exists(devRoot))
@@ -424,25 +432,84 @@ namespace MPF.Frontend
 
             foreach (var path in candidates)
             {
-                string name = Path.GetFileName(path);
-                if (name.Length < 3)
-                    continue;
-
-                bool allDigits = true;
-                for (int i = 2; i < name.Length; i++)
-                {
-                    if (!char.IsDigit(name[i]))
-                    {
-                        allDigits = false;
-                        break;
-                    }
-                }
-
-                if (allDigits)
+                if (HasDeviceIndexSuffix(Path.GetFileName(path), "sr"))
                     result.Add(path);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Enumerate Linux optical drives via their generic SCSI nodes (/dev/sg*).
+        /// Unlike the block nodes, "sg" is not optical-specific, so each candidate is
+        /// confirmed against sysfs: an optical drive reports SCSI peripheral device type 5.
+        /// </summary>
+        /// <param name="devRoot">Root directory the nodes live under (typically "/dev")</param>
+        /// <param name="sysfsScsiGenericRoot">sysfs class directory (typically "/sys/class/scsi_generic")</param>
+        /// <returns>Device paths, or an empty list when the sysfs directory is unreadable</returns>
+        internal static List<string> EnumerateUnixOpticalGenericPaths(string devRoot, string sysfsScsiGenericRoot)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(devRoot) || string.IsNullOrEmpty(sysfsScsiGenericRoot))
+                return result;
+            if (!Directory.Exists(sysfsScsiGenericRoot))
+                return result;
+
+            string[] entries;
+            try
+            {
+                entries = Directory.GetFileSystemEntries(sysfsScsiGenericRoot, "sg*");
+            }
+            catch
+            {
+                return result;
+            }
+
+            foreach (var entry in entries)
+            {
+                string name = Path.GetFileName(entry);
+                if (!HasDeviceIndexSuffix(name, "sg"))
+                    continue;
+
+                // "sg" is generic SCSI; keep only optical drives (peripheral device type 5)
+                string typePath = Path.Combine(Path.Combine(entry, "device"), "type");
+                try
+                {
+                    if (!File.Exists(typePath))
+                        continue;
+                    if (!int.TryParse(File.ReadAllText(typePath).Trim(), out int scsiType) || scsiType != 5)
+                        continue;
+                }
+                catch
+                {
+                    continue;
+                }
+
+                result.Add(Path.Combine(devRoot, name));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Check that a device node name is the given prefix followed by one or more digits
+        /// (e.g. "sr0", "sg12"), rejecting names with trailing or embedded non-digit characters.
+        /// </summary>
+        /// <param name="name">Device node name to check</param>
+        /// <param name="prefix">Required leading text (e.g. "sr", "sg")</param>
+        /// <returns>True when the name is the prefix followed only by digits</returns>
+        private static bool HasDeviceIndexSuffix(string name, string prefix)
+        {
+            if (name.Length <= prefix.Length || !name.StartsWith(prefix, StringComparison.Ordinal))
+                return false;
+
+            for (int i = prefix.Length; i < name.Length; i++)
+            {
+                if (!char.IsDigit(name[i]))
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
