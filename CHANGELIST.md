@@ -43,6 +43,7 @@
 - Resolve bare dumping-tool names via runtime directory and PATH (gmipf)
 - Enumerate /dev/sr* optical drives on Linux (gmipf)
 - Add Avalonia to VSCode launch projects
+- Don't make update check sync
 
 ### 3.7.1 (2026-03-30)
 

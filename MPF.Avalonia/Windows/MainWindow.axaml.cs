@@ -352,12 +352,7 @@ namespace MPF.Avalonia.Windows
             }
 
             if (showIfSame || different)
-            {
-                MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different)
-                        .ConfigureAwait(false)
-                        .GetAwaiter()
-                        .GetResult();
-            }
+                MessageBoxWindow.ShowAsync(this, StringResource("CheckForUpdatesTitleString", "Check for Updates"), message, 1, different);
         }
 
         /// <summary>
