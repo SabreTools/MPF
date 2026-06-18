@@ -1243,6 +1243,38 @@ namespace MPF.Frontend.ViewModels
         /// <returns>Filled DumpEnvironment Parent</returns>
         private DumpEnvironment DetermineEnvironment()
         {
+            // Mirror the CLI behavior: resolve the configured tool path through
+            // the runtime directory and PATH so that bare binary names work.
+            // Leave the configured value untouched when the path is not
+            // resolvable; ProcessStartInfo can still rely on its native PATH
+            // lookup for bare names.
+            switch (CurrentProgram)
+            {
+                case InternalProgram.Aaru:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                        if (resolved != null)
+                            Options.Dumping.AaruPath = resolved;
+                    }
+                    break;
+
+                case InternalProgram.DiscImageCreator:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                        if (resolved != null)
+                            Options.Dumping.DiscImageCreatorPath = resolved;
+                    }
+                    break;
+
+                case InternalProgram.Redumper:
+                    {
+                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                        if (resolved != null)
+                            Options.Dumping.RedumperPath = resolved;
+                    }
+                    break;
+            }
+
             var env = new DumpEnvironment(
                 Options,
                 EvaluateOutputPath(OutputPath),
@@ -2458,10 +2490,10 @@ namespace MPF.Frontend.ViewModels
 #pragma warning disable IDE0072
                 return program switch
                 {
-                    InternalProgram.Aaru => File.Exists(Options.Dumping.AaruPath),
-                    InternalProgram.DiscImageCreator => File.Exists(Options.Dumping.DiscImageCreatorPath),
-                    // InternalProgram.Dreamdump => File.Exists(Options.Dumping.DreamdumpPath),
-                    InternalProgram.Redumper => File.Exists(Options.Dumping.RedumperPath),
+                    InternalProgram.Aaru => FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath) != null,
+                    InternalProgram.DiscImageCreator => FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath) != null,
+                    // InternalProgram.Dreamdump => FrontendTool.ResolveBinaryPath(Options.Dumping.DreamdumpPath) != null,
+                    InternalProgram.Redumper => FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath) != null,
                     _ => false,
                 };
 #pragma warning restore IDE0072
