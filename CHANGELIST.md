@@ -40,6 +40,8 @@
 - Make Avalonia password text into a password box
 - Unify code layout for options windows
 - Sync numerous bits of logic between UI code
+- Resolve bare dumping-tool names via runtime directory and PATH (gmipf)
+- Enumerate /dev/sr* optical drives on Linux (gmipf)
 
 ### 3.7.1 (2026-03-30)
 
