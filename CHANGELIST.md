@@ -50,6 +50,7 @@
 - Update RedumpLib to 1.11.0, move to redump.info
 - Fix supported region list
 - Fix some lingering naming issues
+- Remove PS5 hack
 
 ### 3.7.1 (2026-03-30)
 

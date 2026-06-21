@@ -690,16 +690,6 @@ namespace MPF.Frontend
                     resultProgress.Report(ResultEventArgs.Failure("Failed to create IRD"));
             }
 
-            // REDUMP SUBMISSION HACK SPECIFIC TO PS5
-            if (_system == PhysicalSystem.SonyPlayStation5
-                && submissionInfo?.Extras?.PIC is not null
-                && _options.Processing.MediaInformation.EnableRedumpCompatibility)
-            {
-                resultProgress.Report(ResultEventArgs.Neutral("Copying PIC to comments for PS5 disc..."));
-                submissionInfo.CommonDiscInfo.Comments += $"\n\n<b>PIC (Ignore PIC field):</b>\n\n{submissionInfo.Extras.PIC}";
-                resultProgress.Report(ResultEventArgs.Neutral("PS5 PIC copied to comments!"));
-            }
-
             resultProgress.Report(ResultEventArgs.Success("Submission information process complete!"));
             return ResultEventArgs.Success();
         }
