@@ -483,7 +483,7 @@ namespace MPF.Frontend.ViewModels
             _keyPath = string.Empty;
             _hexKey = string.Empty;
             _key = null;
-            //_keyStatus = "Will attempt to pull Encryption Key from redump.org";
+            //_keyStatus = "Will attempt to pull Encryption Key from redump.info";
             _keyStatus = "Cannot create an IRD without a key";
 
             _discID = null;
@@ -594,7 +594,7 @@ namespace MPF.Frontend.ViewModels
                 LogPathNotProvided = true;
 
                 Key = null;
-                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.info"; // Use this when redump key pulling is implemented
                 KeyStatus = "Cannot create an IRD without a key";
                 KeyPathTextBoxEnabled = true;
                 KeyPathBrowseButtonEnabled = true;
@@ -703,7 +703,7 @@ namespace MPF.Frontend.ViewModels
             if (string.IsNullOrEmpty(KeyPath))
             {
                 Key = null;
-                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.info"; // Use this when redump key pulling is implemented
                 KeyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = ShouldEnableLogPath();
                 LogPathBrowseButtonEnabled = ShouldEnableLogPath();
@@ -745,7 +745,7 @@ namespace MPF.Frontend.ViewModels
             if (string.IsNullOrEmpty(HexKey))
             {
                 Key = null;
-                //KeyStatus = "Will attempt to pull Encryption Key from redump.org"; // Use this when redump key pulling is implemented
+                //KeyStatus = "Will attempt to pull Encryption Key from redump.info"; // Use this when redump key pulling is implemented
                 KeyStatus = "Cannot create an IRD without a key";
                 LogPathTextBoxEnabled = ShouldEnableLogPath();
                 LogPathBrowseButtonEnabled = ShouldEnableLogPath();
@@ -930,7 +930,7 @@ namespace MPF.Frontend.ViewModels
             KeyPath = string.Empty;
             HexKey = string.Empty;
             Key = null;
-            //_keyStatus = "Will attempt to pull Encryption Key from redump.org";
+            //_keyStatus = "Will attempt to pull Encryption Key from redump.info";
             KeyStatus = "Cannot create an IRD without a key";
 
             DiscID = null;
@@ -1044,9 +1044,9 @@ namespace MPF.Frontend.ViewModels
             if (!File.Exists(InputPath!.Trim('"')))
                 return $"{InputPath!.Trim('"')} is not a valid ISO path.";
 
-            // TODO: Implement pulling key from redump.org
+            // TODO: Implement pulling key from redump.info
             if (Key is null)
-                return "Pulling key from redump.org is currently not implemented.";
+                return "Pulling key from redump.info is currently not implemented.";
 
             try
             {

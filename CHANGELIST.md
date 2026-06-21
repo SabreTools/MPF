@@ -49,6 +49,7 @@
 - Disable redump.org login credentials
 - Update RedumpLib to 1.11.0, move to redump.info
 - Fix supported region list
+- Fix some lingering naming issues
 
 ### 3.7.1 (2026-03-30)
 

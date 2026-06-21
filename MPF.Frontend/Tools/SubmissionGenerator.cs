@@ -97,7 +97,7 @@ namespace MPF.Frontend.Tools
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData))
             {
-                bool filledInfo = await FillFromRedumpOrg(options, info, resultProgress);
+                bool filledInfo = await FillFromRedump(options, info, resultProgress);
 
                 // Add a placeholder for the logs link if not a verification
                 if (!filledInfo)
@@ -169,12 +169,12 @@ namespace MPF.Frontend.Tools
         }
 
         /// <summary>
-        /// Fill in a SubmissionInfo object from redump.org, if possible
+        /// Fill in a SubmissionInfo object from redump.info, if possible
         /// </summary>
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public static async Task<bool> FillFromRedumpOrg(Options options,
+        public static async Task<bool> FillFromRedump(Options options,
             SubmissionInfo info,
             IProgress<ResultEventArgs>? resultProgress = null)
         {
@@ -219,7 +219,7 @@ namespace MPF.Frontend.Tools
             List<int[]> foundIdSets = [];
 
             // Loop through all of the hashdata to find matching IDs
-            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on redump.org, this might take a while..."));
+            resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on redump.info, this might take a while..."));
             var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
@@ -277,7 +277,7 @@ namespace MPF.Frontend.Tools
                 var foundIds = await Validator.ValidateSingleTrack(wc, info, sha1);
                 if (foundIds is null)
                 {
-                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
                     return false;
                 }
                 else if (foundIds.Count == 0)
@@ -327,7 +327,7 @@ namespace MPF.Frontend.Tools
                 string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
                 if (foundIds is null)
-                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.org"));
+                    resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
                 else if (foundIds.Count == 0)
                     resultProgress?.Report(ResultEventArgs.Failure($"No matches found for universal hash {sha1}"));
                 else if (foundIds.Count == 1)

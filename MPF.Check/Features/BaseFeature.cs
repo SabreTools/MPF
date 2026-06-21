@@ -162,8 +162,8 @@ namespace MPF.Check.Features
             Console.WriteLine("    --no-placeholders          Disable placeholder values in submission info");
             Console.WriteLine("    --create-ird               Create IRD from output files (PS3 only)");
             Console.WriteLine("    --no-retrieve              Disable retrieving match information from online sources");
-            Console.WriteLine("-U, --username <user>          redump.org username (incompatible with --no-retrieve)");
-            Console.WriteLine("-P, --password <pw>            redump.org password (incompatible with --no-retrieve)");
+            // Console.WriteLine("-U, --username <user>          redump.org username (incompatible with --no-retrieve)");
+            // Console.WriteLine("-P, --password <pw>            redump.org password (incompatible with --no-retrieve)");
             Console.WriteLine("    --pull-all                 Pull all information from online sources (requires --username and --password)");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
