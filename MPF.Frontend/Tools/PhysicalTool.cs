@@ -7,8 +7,8 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SabreTools.Hashing;
-using SabreTools.IO;
 using SabreTools.RedumpLib.Data;
+using SabreTools.Text.INI;
 
 namespace MPF.Frontend.Tools
 {

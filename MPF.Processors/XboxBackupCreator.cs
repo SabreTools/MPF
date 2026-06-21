@@ -3,8 +3,8 @@ using System.IO;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Hashing;
-using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
+using SabreTools.Text.Extensions;
 
 namespace MPF.Processors
 {
@@ -56,7 +56,7 @@ namespace MPF.Processors
             {
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
-                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                    var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                     if (xmid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
@@ -81,7 +81,7 @@ namespace MPF.Processors
 
                     // Parse DMI.bin
                     string xemidString = ProcessingTool.GetXeMID(Path.Combine(outputDirectory, "DMI.bin"));
-                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                    var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
                     if (xemid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;

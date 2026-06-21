@@ -726,7 +726,7 @@ namespace MPF.Processors
             var rom = new Rom
             {
                 Name = string.Empty,
-                Size = size.ToString(),
+                Size = size,
                 CRC = crc32,
                 MD5 = md5,
                 SHA1 = sha1,

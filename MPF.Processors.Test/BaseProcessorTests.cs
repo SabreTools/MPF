@@ -115,7 +115,7 @@ namespace MPF.Processors.Test
             var game = Assert.Single(actual.Game);
             Assert.NotNull(game.Rom);
             var rom = Assert.Single(game.Rom);
-            Assert.Equal("9", rom.Size);
+            Assert.Equal(9, rom.Size);
             Assert.Equal("560b9f59", rom.CRC);
             Assert.Equal("edbb6676247e65c2245dd4883ed9fc24", rom.MD5);
             Assert.Equal("1b33ad54d78085be5ecb1cf1b3e9da821e708075", rom.SHA1);

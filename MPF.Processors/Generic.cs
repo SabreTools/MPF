@@ -234,7 +234,7 @@ namespace MPF.Processors
                 return null;
 
             // Format the data into a rom object
-            return new Rom { Name = Path.GetFileName(file), Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 };
+            return new Rom { Name = Path.GetFileName(file), Size = filesize, CRC = crc32, MD5 = md5, SHA1 = sha1 };
         }
 
         #endregion

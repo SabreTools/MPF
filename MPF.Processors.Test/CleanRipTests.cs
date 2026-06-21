@@ -340,7 +340,7 @@ namespace MPF.Processors.Test
 
             Assert.NotNull(game.Rom);
             var rom = Assert.Single(game.Rom);
-            Assert.Equal("9", rom.Size);
+            Assert.Equal(9, rom.Size);
             Assert.Equal("560b9f59", rom.CRC);
             Assert.Equal("edbb6676247e65c2245dd4883ed9fc24", rom.MD5);
             Assert.Equal("1b33ad54d78085be5ecb1cf1b3e9da821e708075", rom.SHA1);
@@ -360,7 +360,7 @@ namespace MPF.Processors.Test
 
             Assert.NotNull(game.Rom);
             var rom = Assert.Single(game.Rom);
-            Assert.Equal("-1", rom.Size);
+            Assert.Equal(-1, rom.Size);
             Assert.Equal("00000000", rom.CRC);
             Assert.Equal("d41d8cd98f00b204e9800998ecf8427e", rom.MD5);
             Assert.Equal("da39a3ee5e6b4b0d3255bfef95601890afd80709", rom.SHA1);
@@ -380,7 +380,7 @@ namespace MPF.Processors.Test
 
             Assert.NotNull(game.Rom);
             var rom = Assert.Single(game.Rom);
-            Assert.Equal("9", rom.Size);
+            Assert.Equal(9, rom.Size);
             Assert.Equal("00000000", rom.CRC);
             Assert.Equal("d41d8cd98f00b204e9800998ecf8427e", rom.MD5);
             Assert.Equal("da39a3ee5e6b4b0d3255bfef95601890afd80709", rom.SHA1);

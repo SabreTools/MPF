@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
+using SabreTools.Collections.Extensions;
 using SabreTools.IO.Extensions;
 
 #pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'

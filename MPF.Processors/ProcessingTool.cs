@@ -4,14 +4,14 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
 using SabreTools.Hashing;
 using SabreTools.IO.Extensions;
 using SabreTools.Data.Models.Logiqx;
 using SabreTools.Data.Models.PIC;
 using SabreTools.RedumpLib.Data;
+using SabreTools.Text.Extensions;
+using SabreTools.Numerics.Extensions;
+using SabreTools.Matching;
 
 namespace MPF.Processors
 {
@@ -94,25 +94,8 @@ namespace MPF.Processors
 
             try
             {
-                // Open and read in the XML file
-                XmlReader xtr = XmlReader.Create(dat, new XmlReaderSettings
-                {
-                    CheckCharacters = false,
-#if NET40_OR_GREATER || NETCOREAPP
-                    DtdProcessing = DtdProcessing.Ignore,
-#endif
-                    IgnoreComments = true,
-                    IgnoreWhitespace = true,
-                    ValidationFlags = XmlSchemaValidationFlags.None,
-                    ValidationType = ValidationType.None,
-                });
-
-                // If the reader is null for some reason, we can't do anything
-                if (xtr is null)
-                    return null;
-
-                var serializer = new XmlSerializer(typeof(Datafile));
-                return serializer.Deserialize(xtr) as Datafile;
+                var serializer = new SabreTools.Serialization.Readers.Logiqx();
+                return serializer.Deserialize(dat);
             }
             catch
             {
@@ -175,7 +158,7 @@ namespace MPF.Processors
 
             // If we're reading as binary
             if (binary)
-                return BitConverter.ToString(bytes).Replace("-", string.Empty);
+                return bytes.ToHexString()?.ToUpperInvariant();
 
             // If we're reading as text
             return NormalizeShiftJIS(bytes);

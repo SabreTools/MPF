@@ -45,6 +45,7 @@
 - Add Avalonia to VSCode launch projects
 - Don't make update check sync
 - Don't make clipboard sync
+- Update packages
 
 ### 3.7.1 (2026-03-30)
 

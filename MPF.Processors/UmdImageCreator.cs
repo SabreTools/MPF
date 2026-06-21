@@ -37,7 +37,7 @@ namespace MPF.Processors
                 // Create a Datafile from the hashes
                 var datafile = new Datafile
                 {
-                    Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
+                    Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize, CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
                 };
 
                 // Fill in the hash data
@@ -287,8 +287,8 @@ namespace MPF.Processors
                             continue;
                         }
 
-                        if (volLabels.ContainsKey(label))
-                            volLabels[label].Add(volType);
+                        if (volLabels.TryGetValue(label, out List<string>? volTypes))
+                            volTypes.Add(volType);
                         else
                             volLabels.Add(label, [volType]);
 

@@ -16,7 +16,7 @@ using Schemas;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Readers;
+using SharpCompress.Common;
 #endif
 
 #pragma warning disable CS0618 // Ignore "Type or member is obsolete"
@@ -54,10 +54,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
                     string sidecarName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.cicm.xml";
                     var sidecarEntry = logArchive.Entries.FirstOrDefault(e => e.Key == sidecarName && !e.IsDirectory);
-                    sidecarEntry?.WriteToFile(sidecarPath);
+                    sidecarEntry?.WriteToFile(sidecarPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
 
@@ -566,7 +566,7 @@ namespace MPF.Processors
 
                         // Build the track datfile data and append
                         string trackName = GenerateTrackName(basePath, (int)totalTracks, (int)trackNumber, opticalDisc.DiscType);
-                        roms.Add(new Rom { Name = trackName, Size = size.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 });
+                        roms.Add(new Rom { Name = trackName, Size = (long)size, CRC = crc32, MD5 = md5, SHA1 = sha1 });
                     }
                 }
             }
@@ -607,7 +607,7 @@ namespace MPF.Processors
 
                     // Build the track datfile data and append
                     string trackName = $"{basePath}.bin";
-                    roms.Add(new Rom { Name = trackName, Size = size.ToString(), CRC = crc32, MD5 = md5, SHA1 = sha1 });
+                    roms.Add(new Rom { Name = trackName, Size = (long)size, CRC = crc32, MD5 = md5, SHA1 = sha1 });
                 }
             }
 

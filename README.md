@@ -143,4 +143,4 @@ These are the tireless individuals who have dedicated countless hours to help te
 Thanks to these communities for their use, testing, and feedback. I can't even hope to be able to thank everyone individually.
 
 - [**VGPC Discord**](https://discord.gg/AHTfxQV) - Fast feedback and a lot of testing
-- [**Redump Community**](http://redump.org/) - Near-daily use to assist with metadata gathering
+- [**Redump Community**](http://redump.info/) - Near-daily use to assist with metadata gathering

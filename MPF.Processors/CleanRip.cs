@@ -225,7 +225,7 @@ namespace MPF.Processors
 
                 return new Datafile
                 {
-                    Game = [new Game() { Rom = [new Rom { Name = Path.GetFileName(iso), Size = size.ToString(), CRC = crc, MD5 = md5, SHA1 = sha1 }] }]
+                    Game = [new Game() { Rom = [new Rom { Name = Path.GetFileName(iso), Size = size, CRC = crc, MD5 = md5, SHA1 = sha1 }] }]
                 };
             }
             catch

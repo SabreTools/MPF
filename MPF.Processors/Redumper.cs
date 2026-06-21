@@ -12,7 +12,7 @@ using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Readers;
+using SharpCompress.Common;
 #endif
 
 namespace MPF.Processors
@@ -47,10 +47,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true });
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
                     string logName = $"{Path.GetFileNameWithoutExtension(outputFilename)}.log";
                     var logEntry = logArchive.Entries.FirstOrDefault(e => e.Key == logName && !e.IsDirectory);
-                    logEntry?.WriteToFile(logPath);
+                    logEntry?.WriteToFile(logPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
 
@@ -291,7 +291,7 @@ namespace MPF.Processors
                     if (!string.IsNullOrEmpty(xmidString))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString;
-                        var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                        var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                         info.CommonDiscInfo.Serial = xmid?.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
@@ -304,7 +304,7 @@ namespace MPF.Processors
                     if (!string.IsNullOrEmpty(xemidString))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString;
-                        var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                        var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
                         info.CommonDiscInfo.Serial = xemid?.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {

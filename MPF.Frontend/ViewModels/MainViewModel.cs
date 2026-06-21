@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
-using SabreTools.IO;
 using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Data.Sections;
+using SabreTools.Text.INI;
 
 namespace MPF.Frontend.ViewModels
 {
@@ -1243,37 +1243,32 @@ namespace MPF.Frontend.ViewModels
         /// <returns>Filled DumpEnvironment Parent</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            // Mirror the CLI behavior: resolve the configured tool path through
-            // the runtime directory and PATH so that bare binary names work.
-            // Leave the configured value untouched when the path is not
-            // resolvable; ProcessStartInfo can still rely on its native PATH
-            // lookup for bare names.
+            // Resolve the program paths temporarily
+#pragma warning disable IDE0010 // Add missing cases
             switch (CurrentProgram)
             {
                 case InternalProgram.Aaru:
-                    {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
-                        if (resolved != null)
-                            Options.Dumping.AaruPath = resolved;
-                    }
+                    string? aaruPath = FrontendTool.ResolveBinaryPath(Options.Dumping.AaruPath);
+                    if (aaruPath != null)
+                        Options.Dumping.AaruPath = aaruPath;
+
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
-                        if (resolved != null)
-                            Options.Dumping.DiscImageCreatorPath = resolved;
-                    }
+                    string? dicPath = FrontendTool.ResolveBinaryPath(Options.Dumping.DiscImageCreatorPath);
+                    if (dicPath != null)
+                        Options.Dumping.DiscImageCreatorPath = dicPath;
+
                     break;
 
                 case InternalProgram.Redumper:
-                    {
-                        string? resolved = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
-                        if (resolved != null)
-                            Options.Dumping.RedumperPath = resolved;
-                    }
+                    string? redumperPath = FrontendTool.ResolveBinaryPath(Options.Dumping.RedumperPath);
+                    if (redumperPath != null)
+                        Options.Dumping.RedumperPath = redumperPath;
+
                     break;
             }
+#pragma warning restore IDE0010 // Add missing cases
 
             var env = new DumpEnvironment(
                 Options,
@@ -1491,7 +1486,7 @@ namespace MPF.Frontend.ViewModels
             }
 
             // For all other cases, separate the last path
-            string lastPath = PathTool.NormalizeFilePath(OutputPath, fullPath: false);
+            string lastPath = IOExtensions.NormalizeFilePath(OutputPath, fullPath: false);
             string lastDirectory = Path.GetDirectoryName(lastPath) ?? string.Empty;
             string lastFilename = Path.GetFileNameWithoutExtension(lastPath);
 
@@ -1946,7 +1941,7 @@ namespace MPF.Frontend.ViewModels
             // Disable change handling
             DisableEventHandlers();
 
-            OutputPath = PathTool.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
+            OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
             if (MediaTypes is not null)
             {

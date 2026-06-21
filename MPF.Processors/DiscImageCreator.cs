@@ -12,7 +12,7 @@ using SabreTools.RedumpLib.Data;
 #if NET462_OR_GREATER || NETCOREAPP
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
-using SharpCompress.Readers;
+using SharpCompress.Common;
 #endif
 
 /*
@@ -94,10 +94,10 @@ namespace MPF.Processors
                 ZipArchive? logArchive = null;
                 try
                 {
-                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip", new ReaderOptions { ExtractFullPath = false, Overwrite = true});
+                    logArchive = (ZipArchive)ZipArchive.OpenArchive($"{basePath}_logs.zip");
                     string discName = $"{Path.GetFileNameWithoutExtension(outputFilename)}_disc.txt";
                     var discEntry = logArchive.Entries.FirstOrDefault(e => e.Key == discName && !e.IsDirectory);
-                    discEntry?.WriteToFile(discPath);
+                    discEntry?.WriteToFile(discPath, new ExtractionOptions { ExtractFullPath = false, Overwrite = true });
                 }
                 catch { }
 
@@ -317,7 +317,7 @@ namespace MPF.Processors
 
                 case RedumpSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID($"{basePath}_DMI.bin");
-                    var xmid = SabreTools.Serialization.Wrappers.XMID.Create(xmidString);
+                    var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                     if (xmid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
@@ -383,7 +383,7 @@ namespace MPF.Processors
 
                 case RedumpSystem.MicrosoftXbox360:
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}_DMI.bin");
-                    var xemid = SabreTools.Serialization.Wrappers.XeMID.Create(xemidString);
+                    var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
                     if (xemid is not null)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
