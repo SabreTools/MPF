@@ -14,26 +14,26 @@ namespace MPF.Frontend.Tools
         /// <summary>
         /// Get the default speed for a given media type from the supplied options
         /// </summary>
-        public static int GetDefaultSpeedForMediaType(MediaType? mediaType, Options options)
+        public static int GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType? mediaType, Options options)
         {
 #pragma warning disable IDE0072
             return mediaType switch
             {
                 // CD dump speed
-                MediaType.CDROM => options.Dumping.DumpSpeeds.CD,
-                MediaType.GDROM => options.Dumping.DumpSpeeds.CD,
+                PhysicalMediaType.CDROM => options.Dumping.DumpSpeeds.CD,
+                PhysicalMediaType.GDROM => options.Dumping.DumpSpeeds.CD,
 
                 // DVD dump speed
-                MediaType.DVD => options.Dumping.DumpSpeeds.DVD,
-                MediaType.NintendoGameCubeGameDisc => options.Dumping.DumpSpeeds.DVD,
-                MediaType.NintendoWiiOpticalDisc => options.Dumping.DumpSpeeds.DVD,
+                PhysicalMediaType.DVD => options.Dumping.DumpSpeeds.DVD,
+                PhysicalMediaType.NintendoGameCubeGameDisc => options.Dumping.DumpSpeeds.DVD,
+                PhysicalMediaType.NintendoWiiOpticalDisc => options.Dumping.DumpSpeeds.DVD,
 
                 // HD-DVD dump speed
-                MediaType.HDDVD => options.Dumping.DumpSpeeds.HDDVD,
+                PhysicalMediaType.HDDVD => options.Dumping.DumpSpeeds.HDDVD,
 
                 // BD dump speed
-                MediaType.BluRay => options.Dumping.DumpSpeeds.Bluray,
-                MediaType.NintendoWiiUOpticalDisc => options.Dumping.DumpSpeeds.Bluray,
+                PhysicalMediaType.BluRay => options.Dumping.DumpSpeeds.Bluray,
+                PhysicalMediaType.NintendoWiiUOpticalDisc => options.Dumping.DumpSpeeds.Bluray,
 
                 // Default
                 _ => options.Dumping.DumpSpeeds.CD,
@@ -45,7 +45,7 @@ namespace MPF.Frontend.Tools
         /// Get the current system from the drive volume label
         /// </summary>
         /// <returns>The system based on volume label, null if none detected</returns>
-        public static RedumpSystem? GetRedumpSystemFromVolumeLabel(string? volumeLabel)
+        public static PhysicalSystem? GetPhysicalSystemFromVolumeLabel(string? volumeLabel)
         {
             // If the volume label is empty, we can't do anything
             if (string.IsNullOrEmpty(volumeLabel))
@@ -56,52 +56,52 @@ namespace MPF.Frontend.Tools
 
             // Audio CD
             if (volumeLabel!.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.AudioCD;
+                return PhysicalSystem.AudioCD;
 
             // Microsoft Xbox
             if (volumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.MicrosoftXbox;
+                return PhysicalSystem.MicrosoftXbox;
             else if (volumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.MicrosoftXbox;
+                return PhysicalSystem.MicrosoftXbox;
 
             // Microsoft Xbox 360
             if (volumeLabel.Equals("XBOX360"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("XGD2DVD_NTSC"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("XBOX_TINYTEST"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("13599"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("14719"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("15574"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("16197"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("16197"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             else if (volumeLabel.Equals("17349"))
-                return RedumpSystem.MicrosoftXbox360;
+                return PhysicalSystem.MicrosoftXbox360;
             // DVD_ROM and CD_ROM have too many false positives
             //else if (volumeLabel.Equals("DVD_ROM"))
-            //    return RedumpSystem.MicrosoftXbox360;
+            //    return PhysicalSystem.MicrosoftXbox360;
 
             // Sega Mega-CD / Sega-CD
             if (volumeLabel.Equals("Sega_CD", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.SegaMegaCDSegaCD;
+                return PhysicalSystem.SegaMegaCDSegaCD;
 
             // Sony PlayStation 3
             if (volumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.SonyPlayStation3;
+                return PhysicalSystem.SonyPlayStation3;
 
             // Sony PlayStation 4
             if (volumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.SonyPlayStation4;
+                return PhysicalSystem.SonyPlayStation4;
 
             // Sony PlayStation 5
             if (volumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
-                return RedumpSystem.SonyPlayStation5;
+                return PhysicalSystem.SonyPlayStation5;
 
             return null;
         }

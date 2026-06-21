@@ -187,77 +187,77 @@ namespace MPF.Frontend
         /// </summary>
         /// <param name="system">Currently selected system</param>
         /// <returns>The detected media type, if possible</returns>
-        public MediaType? GetMediaType(RedumpSystem? system)
+        public PhysicalMediaType? GetPhysicalMediaType(PhysicalSystem? system)
         {
 #pragma warning disable IDE0010
             // Take care of the non-optical stuff first
             switch (InternalDriveType)
             {
                 case Frontend.InternalDriveType.Floppy:
-                    return MediaType.FloppyDisk;
+                    return PhysicalMediaType.FloppyDisk;
                 case Frontend.InternalDriveType.HardDisk:
-                    return MediaType.HardDisk;
+                    return PhysicalMediaType.HardDisk;
                 case Frontend.InternalDriveType.Removable:
-                    return MediaType.FlashDrive;
+                    return PhysicalMediaType.FlashDrive;
             }
 
             // Some systems should default to certain media types
             switch (system)
             {
                 // CD
-                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
-                case RedumpSystem.PhilipsCDi:
-                case RedumpSystem.SegaDreamcast:
-                case RedumpSystem.SegaSaturn:
-                case RedumpSystem.SonyPlayStation:
-                case RedumpSystem.VideoCD:
-                    return MediaType.CDROM;
+                case PhysicalSystem.Panasonic3DOInteractiveMultiplayer:
+                case PhysicalSystem.PhilipsCDi:
+                case PhysicalSystem.SegaDreamcast:
+                case PhysicalSystem.SegaSaturn:
+                case PhysicalSystem.SonyPlayStation:
+                case PhysicalSystem.VideoCD:
+                    return PhysicalMediaType.CDROM;
 
                 // DVD
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.DVDVideo:
-                case RedumpSystem.MicrosoftXbox:
-                case RedumpSystem.MicrosoftXbox360:
-                    return MediaType.DVD;
+                case PhysicalSystem.DVDAudio:
+                case PhysicalSystem.DVDVideo:
+                case PhysicalSystem.MicrosoftXbox:
+                case PhysicalSystem.MicrosoftXbox360:
+                    return PhysicalMediaType.DVD;
 
                 // HD-DVD
-                case RedumpSystem.HDDVDVideo:
-                    return MediaType.HDDVD;
+                case PhysicalSystem.HDDVDVideo:
+                    return PhysicalMediaType.HDDVD;
 
                 // Blu-ray
-                case RedumpSystem.BDVideo:
-                case RedumpSystem.MicrosoftXboxOne:
-                case RedumpSystem.MicrosoftXboxSeriesXS:
-                case RedumpSystem.SonyPlayStation3:
-                case RedumpSystem.SonyPlayStation4:
-                case RedumpSystem.SonyPlayStation5:
-                    return MediaType.BluRay;
+                case PhysicalSystem.BDVideo:
+                case PhysicalSystem.MicrosoftXboxOne:
+                case PhysicalSystem.MicrosoftXboxSeriesXS:
+                case PhysicalSystem.SonyPlayStation3:
+                case PhysicalSystem.SonyPlayStation4:
+                case PhysicalSystem.SonyPlayStation5:
+                    return PhysicalMediaType.BluRay;
 
                 // GameCube
-                case RedumpSystem.NintendoGameCube:
-                    return MediaType.NintendoGameCubeGameDisc;
+                case PhysicalSystem.NintendoGameCube:
+                    return PhysicalMediaType.NintendoGameCubeGameDisc;
 
                 // Wii
-                case RedumpSystem.NintendoWii:
-                    return MediaType.NintendoWiiOpticalDisc;
+                case PhysicalSystem.NintendoWii:
+                    return PhysicalMediaType.NintendoWiiOpticalDisc;
 
                 // WiiU
-                case RedumpSystem.NintendoWiiU:
-                    return MediaType.NintendoWiiUOpticalDisc;
+                case PhysicalSystem.NintendoWiiU:
+                    return PhysicalMediaType.NintendoWiiUOpticalDisc;
 
                 // PSP
-                case RedumpSystem.SonyPlayStationPortable:
-                    return MediaType.UMD;
+                case PhysicalSystem.SonyPlayStationPortable:
+                    return PhysicalMediaType.UMD;
             }
 #pragma warning restore IDE0010
 
             // Handle optical media by size and filesystem
             if (TotalSize >= 0 && TotalSize <= 800_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))
-                return MediaType.CDROM;
+                return PhysicalMediaType.CDROM;
             else if (TotalSize > 800_000_000 && TotalSize <= 8_540_000_000 && (DriveFormat == "CDFS" || DriveFormat == "UDF"))
-                return MediaType.DVD;
+                return PhysicalMediaType.DVD;
             else if (TotalSize > 8_540_000_000)
-                return MediaType.BluRay;
+                return PhysicalMediaType.BluRay;
 
             return null;
         }
@@ -337,7 +337,7 @@ namespace MPF.Frontend
                 foreach (CimInstance instance in collection)
                 {
                     CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
-                    uint? mediaType = properties["MediaType"]?.Value as uint?;
+                    uint? mediaType = properties["PhysicalMediaType"]?.Value as uint?;
                     if (mediaType is not null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = (properties["Caption"].Value as string ?? string.Empty)[0];

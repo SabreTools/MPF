@@ -82,12 +82,12 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Currently represented system
         /// </summary>
-        public RedumpSystem? RedumpSystem { get; set; }
+        public PhysicalSystem? PhysicalSystem { get; set; }
 
         /// <summary>
         /// Currently represented media type
         /// </summary>
-        public MediaType? MediaType { get; set; }
+        public PhysicalMediaType? PhysicalMediaType { get; set; }
 
         #endregion
 
@@ -105,21 +105,21 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Generate parameters based on a set of known inputs
         /// </summary>
-        /// <param name="system">RedumpSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
+        /// <param name="system">PhysicalSystem value to use</param>
+        /// <param name="type">PhysicalMediaType value to use</param>
         /// <param name="drivePath">Drive path to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="baseDumpSettings">BaseDumpSettings object containing all settings that may be used for setting parameters</param>
-        public BaseExecutionContext(RedumpSystem? system,
-            MediaType? type,
+        public BaseExecutionContext(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,
             BaseDumpSettings baseDumpSettings)
         {
-            RedumpSystem = system;
-            MediaType = type;
+            PhysicalSystem = system;
+            PhysicalMediaType = type;
             SetDefaultParameters(drivePath, filename, driveSpeed, baseDumpSettings);
         }
 
@@ -140,15 +140,15 @@ namespace MPF.ExecutionContexts
         /// <summary>
         /// Get the default extension for a given media type
         /// </summary>
-        /// <param name="mediaType">MediaType value to check</param>
+        /// <param name="mediaType">PhysicalMediaType value to check</param>
         /// <returns>String representing the media type, null on error</returns>
-        public abstract string? GetDefaultExtension(MediaType? mediaType);
+        public abstract string? GetDefaultExtension(PhysicalMediaType? mediaType);
 
         /// <summary>
-        /// Get the MediaType from the current set of parameters
+        /// Get the PhysicalMediaType from the current set of parameters
         /// </summary>
-        /// <returns>MediaType value if successful, null on error</returns>
-        public abstract MediaType? GetMediaType();
+        /// <returns>PhysicalMediaType value if successful, null on error</returns>
+        public abstract PhysicalMediaType? GetPhysicalMediaType();
 
         /// <summary>
         /// Gets if the current command is considered a dumping command or not

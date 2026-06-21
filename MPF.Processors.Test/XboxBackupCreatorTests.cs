@@ -8,36 +8,36 @@ namespace MPF.Processors.Test
     // TODO: Add tests for RecreateSS
     public class XboxBackupCreatorTests
     {
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_Empty_DVD()
+        public void DeterminePhysicalMediaType_Empty_DVD()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.DVD, actual);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.DVD, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_DVD()
+        public void DeterminePhysicalMediaType_Invalid_DVD()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.DVD, actual);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.DVD, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Valid_DVD()
+        public void DeterminePhysicalMediaType_Valid_DVD()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.DVD, actual);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.DVD, actual);
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
@@ -60,9 +60,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
 
-            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -71,9 +71,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -86,8 +86,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.FoundAllFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(5, actual.Count);
         }
 
@@ -96,8 +96,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.FoundAllFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -106,8 +106,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD-zip");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.FoundAllFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -120,8 +120,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.FoundAnyFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -130,8 +130,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.FoundAnyFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -144,8 +144,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GenerateArtifacts(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -154,8 +154,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GenerateArtifacts(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(6, actual.Count);
         }
 
@@ -168,8 +168,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetDeleteableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -178,8 +178,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetDeleteableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -192,8 +192,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetZippableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -202,8 +202,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetZippableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(6, actual.Count);
         }
 
@@ -216,8 +216,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -226,8 +226,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD");
             string outputFilename = "test.iso";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
-            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -398,7 +398,7 @@ namespace MPF.Processors.Test
         {
             long expected = -1;
             string? log = null;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
             bool actual = processor.GetReadErrors(log, out long readErrors);
 
             Assert.False(actual);
@@ -410,7 +410,7 @@ namespace MPF.Processors.Test
         {
             long expected = -1;
             string? log = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
             bool actual = processor.GetReadErrors(log, out long readErrors);
 
             Assert.False(actual);
@@ -422,7 +422,7 @@ namespace MPF.Processors.Test
         {
             long expected = -1;
             string? log = "INVALID";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
             bool actual = processor.GetReadErrors(log, out long readErrors);
 
             Assert.False(actual);
@@ -434,7 +434,7 @@ namespace MPF.Processors.Test
         {
             long expected = 0;
             string? log = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD", "log.txt");
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox);
             bool actual = processor.GetReadErrors(log, out long readErrors);
 
             Assert.True(actual);
@@ -449,7 +449,7 @@ namespace MPF.Processors.Test
         public void GetMediaID_Null_Null()
         {
             string? log = null;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox360);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox360);
             string? actual = processor.GetMediaID(log);
             Assert.Null(actual);
         }
@@ -458,7 +458,7 @@ namespace MPF.Processors.Test
         public void GetMediaID_Empty_Null()
         {
             string? log = string.Empty;
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox360);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox360);
             string? actual = processor.GetMediaID(log);
             Assert.Null(actual);
         }
@@ -467,7 +467,7 @@ namespace MPF.Processors.Test
         public void GetMediaID_Invalid_Null()
         {
             string? log = "INVALID";
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox360);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox360);
             string? actual = processor.GetMediaID(log);
             Assert.Null(actual);
         }
@@ -477,7 +477,7 @@ namespace MPF.Processors.Test
         {
             string? expected = "8B62A812";
             string? log = Path.Combine(Environment.CurrentDirectory, "TestData", "XboxBackupCreator", "DVD", "log.txt");
-            var processor = new XboxBackupCreator(RedumpSystem.MicrosoftXbox360);
+            var processor = new XboxBackupCreator(PhysicalSystem.MicrosoftXbox360);
             string? actual = processor.GetMediaID(log);
             Assert.Equal(expected, actual);
         }

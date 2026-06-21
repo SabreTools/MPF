@@ -10,66 +10,66 @@ namespace MPF.Processors.Test
     // TODO: Add tests around remaining helper methods
     public class DiscImageCreatorTests
     {
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_Null()
+        public void DeterminePhysicalMediaType_Null_Null()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_Null()
+        public void DeterminePhysicalMediaType_Invalid_Null()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_BD_Filled()
+        public void DeterminePhysicalMediaType_BD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "BluRay");
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_CD_Filled()
+        public void DeterminePhysicalMediaType_CD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.CDROM, actual);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.CDROM, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_DVD_Filled()
+        public void DeterminePhysicalMediaType_DVD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "DVD");
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.DVD, actual);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.DVD, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_HDDVD_Filled()
+        public void DeterminePhysicalMediaType_HDDVD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "HDDVD");
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.HDDVD, actual);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.HDDVD, actual);
         }
 
         #endregion
@@ -81,7 +81,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Empty(actual);
@@ -92,9 +92,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(28, actual.Count);
         }
 
@@ -103,9 +103,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.GDROM, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.GDROM, outputDirectory, outputFilename);
             Assert.Equal(10, actual.Count);
         }
 
@@ -114,9 +114,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(17, actual.Count);
         }
 
@@ -125,9 +125,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.NintendoGameCubeGameDisc, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.NintendoGameCubeGameDisc, outputDirectory, outputFilename);
             Assert.Equal(17, actual.Count);
         }
 
@@ -136,9 +136,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.NintendoWiiOpticalDisc, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.NintendoWiiOpticalDisc, outputDirectory, outputFilename);
             Assert.Equal(17, actual.Count);
         }
 
@@ -147,9 +147,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.HDDVD, outputDirectory, outputFilename);
             Assert.Equal(15, actual.Count);
         }
 
@@ -158,9 +158,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(15, actual.Count);
         }
 
@@ -169,9 +169,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.FloppyDisk, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.FloppyDisk, outputDirectory, outputFilename);
             Assert.Equal(4, actual.Count);
         }
 
@@ -180,9 +180,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.HardDisk, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.HardDisk, outputDirectory, outputFilename);
             Assert.Equal(4, actual.Count);
         }
 
@@ -191,9 +191,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -206,8 +206,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(14, actual.Count);
         }
 
@@ -216,8 +216,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -230,8 +230,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -240,8 +240,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -250,8 +250,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM-zip");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -264,8 +264,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -274,8 +274,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(23, actual.Count);
         }
 
@@ -288,8 +288,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -298,8 +298,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
         }
 
@@ -312,8 +312,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -322,8 +322,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(26, actual.Count);
         }
 
@@ -334,8 +334,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -344,8 +344,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "DiscImageCreator", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new DiscImageCreator(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new DiscImageCreator(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Single(actual);
         }
 

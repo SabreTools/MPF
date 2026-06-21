@@ -10,14 +10,14 @@ namespace MPF.Frontend.ComboBoxItems
     /// <summary>
     /// Represents a single item in the System combo box
     /// </summary>
-    public class RedumpSystemComboBoxItem : IEquatable<RedumpSystemComboBoxItem>, IElement
+    public class PhysicalSystemComboBoxItem : IEquatable<PhysicalSystemComboBoxItem>, IElement
     {
         private readonly object? Data;
 
-        public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
-        public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
+        public PhysicalSystemComboBoxItem(PhysicalSystem? system) => Data = system;
+        public PhysicalSystemComboBoxItem(SystemCategory? category) => Data = category;
 
-        public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
+        public static implicit operator PhysicalSystem?(PhysicalSystemComboBoxItem item) => item.Data as PhysicalSystem?;
 
         /// <inheritdoc/>
         public string Name
@@ -27,7 +27,7 @@ namespace MPF.Frontend.ComboBoxItems
                 if (IsHeader)
                     return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return (Data as RedumpSystem?).LongName() ?? "No system selected";
+                    return (Data as PhysicalSystem?).LongName() ?? "No system selected";
             }
         }
 
@@ -36,7 +36,7 @@ namespace MPF.Frontend.ComboBoxItems
         /// <summary>
         /// Internal enum value
         /// </summary>
-        public RedumpSystem? Value => Data as RedumpSystem?;
+        public PhysicalSystem? Value => Data as PhysicalSystem?;
 
         /// <summary>
         /// Determines if the item is a header value
@@ -46,22 +46,22 @@ namespace MPF.Frontend.ComboBoxItems
         /// <summary>
         /// Determines if the item is a standard system value
         /// </summary>
-        public bool IsSystem => Data is RedumpSystem?;
+        public bool IsSystem => Data is PhysicalSystem?;
 
         /// <summary>
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static List<RedumpSystemComboBoxItem> GenerateElements()
+        public static List<PhysicalSystemComboBoxItem> GenerateElements()
         {
-            var enumArr = (RedumpSystem[])Enum.GetValues(typeof(RedumpSystem));
-            var nullableArr = Array.ConvertAll(enumArr, s => (RedumpSystem?)s);
+            var enumArr = (PhysicalSystem[])Enum.GetValues(typeof(PhysicalSystem));
+            var nullableArr = Array.ConvertAll(enumArr, s => (PhysicalSystem?)s);
             var knownSystems = Array.FindAll(nullableArr,
                 s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE);
 
 #if NET20
             // The resulting dictionary does not have ordered value lists
-            Dictionary<SystemCategory, List<RedumpSystem?>> mapping = [];
+            Dictionary<SystemCategory, List<PhysicalSystem?>> mapping = [];
             foreach (var knownSystem in knownSystems)
             {
                 var category = knownSystem.GetCategory();
@@ -72,7 +72,7 @@ namespace MPF.Frontend.ComboBoxItems
             }
 #else
             // The resulting dictionary has ordered value lists
-            Dictionary<SystemCategory, List<RedumpSystem?>> mapping = knownSystems
+            Dictionary<SystemCategory, List<PhysicalSystem?>> mapping = knownSystems
                 .GroupBy(s => s.GetCategory())
                 .ToDictionary(
                     k => k.Key,
@@ -82,15 +82,15 @@ namespace MPF.Frontend.ComboBoxItems
                 );
 #endif
 
-            var systemsValues = new List<RedumpSystemComboBoxItem>
+            var systemsValues = new List<PhysicalSystemComboBoxItem>
             {
-                new((RedumpSystem?)null),
+                new((PhysicalSystem?)null),
             };
 
             foreach (var group in mapping)
             {
-                systemsValues.Add(new RedumpSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => systemsValues.Add(new RedumpSystemComboBoxItem(system)));
+                systemsValues.Add(new PhysicalSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => systemsValues.Add(new PhysicalSystemComboBoxItem(system)));
             }
 
             return systemsValues;
@@ -99,11 +99,11 @@ namespace MPF.Frontend.ComboBoxItems
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            return Equals(obj as RedumpSystemComboBoxItem);
+            return Equals(obj as PhysicalSystemComboBoxItem);
         }
 
         /// <inheritdoc/>
-        public bool Equals(RedumpSystemComboBoxItem? other)
+        public bool Equals(PhysicalSystemComboBoxItem? other)
         {
             if (other is null)
                 return false;

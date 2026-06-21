@@ -8,19 +8,19 @@ namespace MPF.Frontend.Test.Tools
 {
     public class FrontendToolTests
     {
-        #region GetDefaultSpeedForMediaType
+        #region GetDefaultSpeedForPhysicalMediaType
 
         [Theory]
         [InlineData(null, 72)]
-        [InlineData(MediaType.CDROM, 72)]
-        [InlineData(MediaType.GDROM, 72)]
-        [InlineData(MediaType.DVD, 24)]
-        [InlineData(MediaType.NintendoGameCubeGameDisc, 24)]
-        [InlineData(MediaType.NintendoWiiOpticalDisc, 24)]
-        [InlineData(MediaType.HDDVD, 24)]
-        [InlineData(MediaType.BluRay, 16)]
-        [InlineData(MediaType.NintendoWiiUOpticalDisc, 16)]
-        public void GetDefaultSpeedForMediaTypeSegmentedTest(MediaType? mediaType, int expected)
+        [InlineData(PhysicalMediaType.CDROM, 72)]
+        [InlineData(PhysicalMediaType.GDROM, 72)]
+        [InlineData(PhysicalMediaType.DVD, 24)]
+        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, 24)]
+        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, 24)]
+        [InlineData(PhysicalMediaType.HDDVD, 24)]
+        [InlineData(PhysicalMediaType.BluRay, 16)]
+        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, 16)]
+        public void GetDefaultSpeedForPhysicalMediaTypeSegmentedTest(PhysicalMediaType? mediaType, int expected)
         {
             var options = new Options();
             options.Dumping.DumpSpeeds.CD = 72;
@@ -28,29 +28,29 @@ namespace MPF.Frontend.Test.Tools
             options.Dumping.DumpSpeeds.HDDVD = 24;
             options.Dumping.DumpSpeeds.Bluray = 16;
 
-            int actual = FrontendTool.GetDefaultSpeedForMediaType(mediaType, options);
+            int actual = FrontendTool.GetDefaultSpeedForPhysicalMediaType(mediaType, options);
             Assert.Equal(expected, actual);
         }
 
         #endregion
 
-        #region GetRedumpSystemFromVolumeLabel
+        #region GetPhysicalSystemFromVolumeLabel
 
         [Theory]
         [InlineData(null, null)]
         [InlineData("", null)]
-        [InlineData("Audio CD", RedumpSystem.AudioCD)]
-        [InlineData("SEP13011042", RedumpSystem.MicrosoftXbox)]
-        [InlineData("SEP13011042072", RedumpSystem.MicrosoftXbox)]
-        [InlineData("XBOX360", RedumpSystem.MicrosoftXbox360)]
-        [InlineData("XGD2DVD_NTSC", RedumpSystem.MicrosoftXbox360)]
-        [InlineData("Sega_CD", RedumpSystem.SegaMegaCDSegaCD)]
-        [InlineData("PS3VOLUME", RedumpSystem.SonyPlayStation3)]
-        [InlineData("PS4VOLUME", RedumpSystem.SonyPlayStation4)]
-        [InlineData("PS5VOLUME", RedumpSystem.SonyPlayStation5)]
-        public void GetRedumpSystemFromVolumeLabelTest(string? volumeLabel, RedumpSystem? expected)
+        [InlineData("Audio CD", PhysicalSystem.AudioCD)]
+        [InlineData("SEP13011042", PhysicalSystem.MicrosoftXbox)]
+        [InlineData("SEP13011042072", PhysicalSystem.MicrosoftXbox)]
+        [InlineData("XBOX360", PhysicalSystem.MicrosoftXbox360)]
+        [InlineData("XGD2DVD_NTSC", PhysicalSystem.MicrosoftXbox360)]
+        [InlineData("Sega_CD", PhysicalSystem.SegaMegaCDSegaCD)]
+        [InlineData("PS3VOLUME", PhysicalSystem.SonyPlayStation3)]
+        [InlineData("PS4VOLUME", PhysicalSystem.SonyPlayStation4)]
+        [InlineData("PS5VOLUME", PhysicalSystem.SonyPlayStation5)]
+        public void GetPhysicalSystemFromVolumeLabelTest(string? volumeLabel, PhysicalSystem? expected)
         {
-            RedumpSystem? actual = FrontendTool.GetRedumpSystemFromVolumeLabel(volumeLabel);
+            PhysicalSystem? actual = FrontendTool.GetPhysicalSystemFromVolumeLabel(volumeLabel);
             Assert.Equal(expected, actual);
         }
 

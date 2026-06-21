@@ -24,13 +24,13 @@ namespace MPF.CLI.Features
         /// <summary>
         /// Currently-selected system
         /// </summary>
-        public RedumpSystem? System { get; protected set; }
+        public PhysicalSystem? System { get; protected set; }
 
         /// <summary>
         /// Media type to dump
         /// </summary>
         /// <remarks>Required for DIC and if custom parameters not set</remarks>
-        public MediaType? MediaType { get; protected set; }
+        public PhysicalMediaType? PhysicalMediaType { get; protected set; }
 
         /// <summary>
         /// Path to the device to dump
@@ -210,22 +210,22 @@ namespace MPF.CLI.Features
 
             if (Options.InternalProgram == InternalProgram.DiscImageCreator
                 && CustomParams is null
-                && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
+                && (PhysicalMediaType is null || PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE))
             {
                 Console.Error.WriteLine("Media type is required for DiscImageCreator, exiting...");
                 return false;
             }
 
             // If no media type is provided, use a default
-            if (CustomParams is null && (MediaType is null || MediaType == SabreTools.RedumpLib.Data.MediaType.NONE))
+            if (CustomParams is null && (PhysicalMediaType is null || PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE))
             {
                 // Get reasonable default values based on the current system
                 var mediaTypes = System.MediaTypes();
-                MediaType = mediaTypes.Count > 0 ? mediaTypes[0] : SabreTools.RedumpLib.Data.MediaType.CDROM;
-                if (MediaType == SabreTools.RedumpLib.Data.MediaType.NONE)
-                    MediaType = SabreTools.RedumpLib.Data.MediaType.CDROM;
+                PhysicalMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
+                if (PhysicalMediaType == SabreTools.RedumpLib.Data.PhysicalMediaType.NONE)
+                    PhysicalMediaType = SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM;
 
-                Console.WriteLine($"No media type was provided, using {MediaType.LongName()} for default parameter creation");
+                Console.WriteLine($"No media type was provided, using {PhysicalMediaType.LongName()} for default parameter creation");
             }
 
             // Normalize the file path
@@ -241,7 +241,7 @@ namespace MPF.CLI.Features
                 FilePath = IOExtensions.NormalizeFilePath(FilePath, fullPath: true);
 
             // Get the speed from the options
-            int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForMediaType(MediaType, Options);
+            int speed = DriveSpeed ?? FrontendTool.GetDefaultSpeedForPhysicalMediaType(PhysicalMediaType, Options);
 
             // Get the retry count and override if needed
             if (Retries != null && Retries >= 0)
@@ -261,22 +261,22 @@ namespace MPF.CLI.Features
                 drive,
                 System,
                 Options.InternalProgram);
-            env.SetExecutionContext(MediaType, null);
+            env.SetExecutionContext(PhysicalMediaType, null);
             env.SetProcessor();
 
             // Process the parameters
-            string? paramStr = CustomParams ?? env.GetFullParameters(MediaType, speed);
+            string? paramStr = CustomParams ?? env.GetFullParameters(PhysicalMediaType, speed);
             if (string.IsNullOrEmpty(paramStr))
             {
                 Console.Error.WriteLine("No valid environment could be created, exiting...");
                 return false;
             }
 
-            env.SetExecutionContext(MediaType, paramStr);
+            env.SetExecutionContext(PhysicalMediaType, paramStr);
 
             // Invoke the dumping program
             Console.WriteLine($"Invoking {Options.InternalProgram} using '{paramStr}'");
-            var dumpResult = env.Run(MediaType).GetAwaiter().GetResult();
+            var dumpResult = env.Run(PhysicalMediaType).GetAwaiter().GetResult();
             Console.WriteLine(dumpResult.Message);
             if (dumpResult == false)
                 return false;
@@ -298,7 +298,7 @@ namespace MPF.CLI.Features
                     drive,
                     System,
                     internalProgram: null);
-                env.SetExecutionContext(MediaType, null);
+                env.SetExecutionContext(PhysicalMediaType, null);
                 env.SetProcessor();
             }
 

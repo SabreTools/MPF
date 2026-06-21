@@ -12,8 +12,8 @@ using MPF.Frontend;
 using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.RedumpInfo;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
@@ -61,10 +61,10 @@ namespace MPF.UI.Windows
         private ComboBox? DriveSpeedComboBox => ItemHelper.FindChild<ComboBox>(this, "DriveSpeedComboBox");
         private ComboBox? DumpingProgramComboBox => ItemHelper.FindChild<ComboBox>(this, "DumpingProgramComboBox");
         private CheckBox? EnableParametersCheckBox => ItemHelper.FindChild<CheckBox>(this, "EnableParametersCheckBox");
-        private ComboBox? MediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "MediaTypeComboBox");
+        private ComboBox? PhysicalMediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "PhysicalMediaTypeComboBox");
         private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
         private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
-        private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
+        private Label? SystemPhysicalMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemPhysicalMediaTypeLabel");
         private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
@@ -148,7 +148,7 @@ namespace MPF.UI.Windows
             ApplyTheme();
 
             // Hide or show the media type box based on program
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
 
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
@@ -518,7 +518,7 @@ namespace MPF.UI.Windows
         /// <summary>
         /// Set media type combo box visibility based on current program
         /// </summary>
-        public void SetMediaTypeVisibility()
+        public void SetPhysicalMediaTypeVisibility()
         {
             // Only DiscImageCreator uses the media type box
             if (MainViewModel.CurrentProgram != InternalProgram.DiscImageCreator)
@@ -529,7 +529,7 @@ namespace MPF.UI.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.MediaTypes is null)
+            if (MainViewModel.PhysicalMediaTypes is null)
             {
                 SystemMediaTypeLabel!.Content = (string)Application.Current.FindResource("SystemLabelString");
                 MediaTypeComboBox!.Visibility = Visibility.Hidden;
@@ -537,9 +537,9 @@ namespace MPF.UI.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.MediaTypes.Count > 1;
+            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
+                ? (string)Application.Current.FindResource("SystemPhysicalMediaTypeLabelString")
                 : (string)Application.Current.FindResource("SystemLabelString");
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
@@ -683,7 +683,7 @@ namespace MPF.UI.Windows
             ApplyTheme();
 
             // Hide or show the media type box based on program
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
         }
 
         #region Menu Bar
@@ -759,7 +759,7 @@ namespace MPF.UI.Windows
             SetInterfaceLanguage(EnumExtensions.ToInterfaceLanguage(lang));
 
             // Update the labels that don't get updated automatically
-            SetMediaTypeVisibility();
+            SetPhysicalMediaTypeVisibility();
         }
 
         #endregion
@@ -820,7 +820,7 @@ namespace MPF.UI.Windows
             if (MainViewModel.CanExecuteSelectionChanged)
             {
                 MainViewModel.ChangeDumpingProgram();
-                SetMediaTypeVisibility();
+                SetPhysicalMediaTypeVisibility();
             }
         }
 
@@ -840,12 +840,12 @@ namespace MPF.UI.Windows
             => MainViewModel.InitializeUIValues(removeEventHandlers: true, rebuildPrograms: false, rescanDrives: true);
 
         /// <summary>
-        /// Handler for MediaTypeComboBox SelectionChanged event
+        /// Handler for PhysicalMediaTypeComboBox SelectionChanged event
         /// </summary>
         public void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.ChangeMediaType(e.RemovedItems, e.AddedItems);
+                MainViewModel.ChangePhysicalMediaType(e.RemovedItems, e.AddedItems);
         }
 
         /// <summary>
@@ -880,7 +880,7 @@ namespace MPF.UI.Windows
             if (MainViewModel.CanExecuteSelectionChanged)
             {
                 MainViewModel.ChangeSystem();
-                SetMediaTypeVisibility();
+                SetPhysicalMediaTypeVisibility();
             }
         }
 

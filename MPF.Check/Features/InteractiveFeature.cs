@@ -208,7 +208,7 @@ namespace MPF.Check.Features
             Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            System = result.ToRedumpSystem();
+            System = result.ToPhysicalSystem();
             goto root;
 
         dumpingProgram:

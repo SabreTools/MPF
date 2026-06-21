@@ -163,8 +163,8 @@ namespace MPF.ExecutionContexts.Aaru
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system,
-            MediaType? type,
+        public ExecutionContext(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,
@@ -593,11 +593,11 @@ namespace MPF.ExecutionContexts.Aaru
         }
 
         /// <inheritdoc/>
-        public override string GetDefaultExtension(MediaType? mediaType)
+        public override string GetDefaultExtension(PhysicalMediaType? mediaType)
             => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
-        public override MediaType? GetMediaType() => null;
+        public override PhysicalMediaType? GetPhysicalMediaType() => null;
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()

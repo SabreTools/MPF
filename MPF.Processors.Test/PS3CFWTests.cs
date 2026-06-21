@@ -7,36 +7,36 @@ namespace MPF.Processors.Test
 {
     public class PS3CFWTests
     {
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_BluRay()
+        public void DeterminePhysicalMediaType_Null_BluRay()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_BluRay()
+        public void DeterminePhysicalMediaType_Invalid_BluRay()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Valid_BluRay()
+        public void DeterminePhysicalMediaType_Valid_BluRay()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         #endregion
@@ -48,7 +48,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Equal(4, actual.Count);
@@ -59,9 +59,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
 
-            var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(4, actual.Count);
         }
 
@@ -70,9 +70,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Equal(4, actual.Count);
         }
 
@@ -85,8 +85,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.FoundAllFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -95,8 +95,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.FoundAllFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -109,8 +109,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.FoundAnyFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -119,8 +119,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.FoundAnyFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -129,8 +129,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay-zip");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.FoundAnyFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -143,8 +143,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GenerateArtifacts(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -153,8 +153,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GenerateArtifacts(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
         }
 
@@ -167,8 +167,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetDeleteableFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -177,8 +177,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetDeleteableFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -191,8 +191,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetZippableFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -201,8 +201,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetZippableFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
         }
 
@@ -215,8 +215,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetPreservedFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -225,8 +225,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "PS3CFW", "BluRay");
             string outputFilename = "test.iso";
-            var processor = new PS3CFW(RedumpSystem.SonyPlayStation3);
-            var actual = processor.GetPreservedFilePaths(MediaType.BluRay, outputDirectory, outputFilename);
+            var processor = new PS3CFW(PhysicalSystem.SonyPlayStation3);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 

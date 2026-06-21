@@ -291,8 +291,8 @@ namespace MPF.UI.Windows
 #pragma warning disable IDE0010
             switch (submissionInfo?.CommonDiscInfo?.Media)
             {
-                case DiscType.CD:
-                case DiscType.GDROM:
+                case MediaType.CD:
+                case MediaType.GDROM:
                     L0Info!.Header = "Data Side";
                     L0MasteringRing!.Label = "Mastering Ring";
                     L0MasteringSID!.Label = "Mastering SID";
@@ -308,20 +308,20 @@ namespace MPF.UI.Windows
                     L1AdditionalMould!.Label = "Additional Mould";
                     break;
 
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.HDDVDSL:
-                case DiscType.HDDVDDL:
-                case DiscType.BD25:
-                case DiscType.BD33:
-                case DiscType.BD50:
-                case DiscType.BD66:
-                case DiscType.BD100:
-                case DiscType.BD128:
-                case DiscType.NintendoGameCubeGameDisc:
-                case DiscType.NintendoWiiOpticalDiscSL:
-                case DiscType.NintendoWiiOpticalDiscDL:
-                case DiscType.NintendoWiiUOpticalDiscSL:
+                case MediaType.DVD5:
+                case MediaType.DVD9:
+                case MediaType.HDDVDSL:
+                case MediaType.HDDVDDL:
+                case MediaType.BD25:
+                case MediaType.BD33:
+                case MediaType.BD50:
+                case MediaType.BD66:
+                case MediaType.BD100:
+                case MediaType.BD128:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDiscSL:
+                case MediaType.NintendoWiiOpticalDiscDL:
+                case MediaType.NintendoWiiUOpticalDiscSL:
                     // Quad-layer discs
                     if (submissionInfo?.SizeAndChecksums.Layerbreak3 != default(long))
                     {
@@ -416,8 +416,8 @@ namespace MPF.UI.Windows
 
                     break;
 
-                case DiscType.UMDSL:
-                case DiscType.UMDDL:
+                case MediaType.UMDSL:
+                case MediaType.UMDDL:
                     L0Info!.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
                     L0MasteringRing!.Label = "Mastering Ring";
                     L0MasteringSID!.Label = "Mastering SID";
@@ -454,29 +454,29 @@ namespace MPF.UI.Windows
 #pragma warning disable IDE0010
             switch (system)
             {
-                case RedumpSystem.AppleMacintosh:
+                case PhysicalSystem.AppleMacintosh:
                     PCMacHybridGrid!.Visibility = Visibility.Visible;
                     CompatibleOSTextBox!.Visibility = Visibility.Visible;
                     break;
 
-                case RedumpSystem.IBMPCcompatible:
+                case PhysicalSystem.IBMPCcompatible:
                     PCMacHybridGrid!.Visibility = Visibility.Visible;
                     CompatibleOSTextBox!.Visibility = Visibility.Visible;
                     break;
 
-                case RedumpSystem.NintendoWiiU:
+                case PhysicalSystem.NintendoWiiU:
                     DiscKeyTextBox!.Visibility = Visibility.Visible;
                     break;
 
-                case RedumpSystem.SonyPlayStation:
+                case PhysicalSystem.SonyPlayStation:
                     NetYarozeGamesTextBox!.Visibility = Visibility.Visible;
                     break;
 
-                case RedumpSystem.SonyPlayStation2:
+                case PhysicalSystem.SonyPlayStation2:
                     LanguageSelectionGrid!.Visibility = Visibility.Visible;
                     break;
 
-                case RedumpSystem.SonyPlayStation3:
+                case PhysicalSystem.SonyPlayStation3:
                     DiscKeyTextBox!.Visibility = Visibility.Visible;
                     DiscIDTextBox!.Visibility = Visibility.Visible;
                     break;

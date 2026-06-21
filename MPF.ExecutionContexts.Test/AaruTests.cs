@@ -10,15 +10,15 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData(null, ".aaruf")]
-        [InlineData(MediaType.CDROM, ".aaruf")]
-        [InlineData(MediaType.GDROM, ".aaruf")]
-        [InlineData(MediaType.DVD, ".aaruf")]
-        [InlineData(MediaType.HDDVD, ".aaruf")]
-        [InlineData(MediaType.BluRay, ".aaruf")]
-        [InlineData(MediaType.FloppyDisk, ".aaruf")]
-        [InlineData(MediaType.HardDisk, ".aaruf")]
-        [InlineData(MediaType.ApertureCard, ".aaruf")]
-        public void ExtensionTest(MediaType? type, string expected)
+        [InlineData(PhysicalMediaType.CDROM, ".aaruf")]
+        [InlineData(PhysicalMediaType.GDROM, ".aaruf")]
+        [InlineData(PhysicalMediaType.DVD, ".aaruf")]
+        [InlineData(PhysicalMediaType.HDDVD, ".aaruf")]
+        [InlineData(PhysicalMediaType.BluRay, ".aaruf")]
+        [InlineData(PhysicalMediaType.FloppyDisk, ".aaruf")]
+        [InlineData(PhysicalMediaType.HardDisk, ".aaruf")]
+        [InlineData(PhysicalMediaType.ApertureCard, ".aaruf")]
+        public void ExtensionTest(PhysicalMediaType? type, string expected)
         {
             string actual = Converters.Extension(type);
             Assert.Equal(expected, actual);
@@ -39,17 +39,17 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData(null, null, null, "filename.bin", null, null)]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
-        public void DefaultValueTest(RedumpSystem? system,
-            MediaType? type,
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.SegaDreamcast, PhysicalMediaType.GDROM, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.FloppyDisk, "/dev/sr0", "filename.bin", 2, "--debug True --verbose True media dump --force True --private True --store-encrypted True --title-keys False --trim True --speed 2 --retry-passes 1000 /dev/sr0 \"filename.bin\"")]
+        public void DefaultValueTest(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,

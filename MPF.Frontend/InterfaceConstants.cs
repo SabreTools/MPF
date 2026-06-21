@@ -34,23 +34,23 @@ namespace MPF.Frontend
         public static List<int> BD => _speedValues.FindAll(s => s <= 16);
 
         /// <summary>
-        /// Get list of all drive speeds for a given MediaType
+        /// Get list of all drive speeds for a given PhysicalMediaType
         /// </summary>
-        /// <param name="type">MediaType? that represents the current item</param>
+        /// <param name="type">PhysicalMediaType? that represents the current item</param>
         /// <returns>Read-only list of drive speeds</returns>
-        public static List<int> GetSpeedsForMediaType(MediaType? type)
+        public static List<int> GetSpeedsForPhysicalMediaType(PhysicalMediaType? type)
         {
 #pragma warning disable IDE0072
             return type switch
             {
-                MediaType.CDROM
-                    or MediaType.GDROM => CD,
-                MediaType.DVD
-                    or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc => DVD,
-                MediaType.HDDVD => HDDVD,
-                MediaType.BluRay
-                    or MediaType.NintendoWiiUOpticalDisc => BD,
+                PhysicalMediaType.CDROM
+                    or PhysicalMediaType.GDROM => CD,
+                PhysicalMediaType.DVD
+                    or PhysicalMediaType.NintendoGameCubeGameDisc
+                    or PhysicalMediaType.NintendoWiiOpticalDisc => DVD,
+                PhysicalMediaType.HDDVD => HDDVD,
+                PhysicalMediaType.BluRay
+                    or PhysicalMediaType.NintendoWiiUOpticalDisc => BD,
 
                 // Default to CD speed range
                 _ => CD,

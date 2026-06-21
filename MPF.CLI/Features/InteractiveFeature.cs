@@ -37,7 +37,7 @@ namespace MPF.CLI.Features
             Options = OptionsLoader.LoadFromConfig();
 
             // Create return values
-            MediaType = SabreTools.RedumpLib.Data.MediaType.NONE;
+            PhysicalMediaType = SabreTools.RedumpLib.Data.PhysicalMediaType.NONE;
             string defaultFileName = $"track_{DateTime.Now:yyyyMMdd-HHmm}";
 #if NET20 || NET35
             FilePath = Path.Combine(Options.Dumping.DefaultOutputPath ?? "ISO", Path.Combine(defaultFileName, $"{defaultFileName}.bin"));
@@ -56,7 +56,7 @@ namespace MPF.CLI.Features
             Console.WriteLine();
             Console.WriteLine($"1) Set system (Currently '{System.LongName()}')");
             Console.WriteLine($"2) Set dumping program (Currently '{Options.InternalProgram.LongName()}')");
-            Console.WriteLine($"3) Set media type (Currently '{MediaType.LongName()}')");
+            Console.WriteLine($"3) Set media type (Currently '{PhysicalMediaType.LongName()}')");
             Console.WriteLine($"4) Set device path (Currently '{DevicePath}')");
             Console.WriteLine($"5) Set mounted path (Currently '{MountedPath}')");
             Console.WriteLine($"6) Set file path (Currently '{FilePath}')");
@@ -117,7 +117,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the system and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            System = result.ToRedumpSystem();
+            System = result.ToPhysicalSystem();
             goto root;
 
         dumpingProgram:
@@ -141,7 +141,7 @@ namespace MPF.CLI.Features
             Console.WriteLine("Input the media type and press Enter:");
             Console.Write("> ");
             result = Console.ReadLine();
-            MediaType = OptionsLoader.ToMediaType(result);
+            PhysicalMediaType = OptionsLoader.ToPhysicalMediaType(result);
             goto root;
 
         devicePath:

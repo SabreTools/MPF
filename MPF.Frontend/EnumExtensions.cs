@@ -618,12 +618,12 @@ namespace MPF.Frontend
         /// <summary>
         /// Get if a system requires an anti-modchip scan
         /// </summary>
-        public static bool SupportsAntiModchipScans(this RedumpSystem? system)
+        public static bool SupportsAntiModchipScans(this PhysicalSystem? system)
         {
 #pragma warning disable IDE0072
             return system switch
             {
-                RedumpSystem.SonyPlayStation => true,
+                PhysicalSystem.SonyPlayStation => true,
                 _ => false,
             };
 #pragma warning restore IDE0072
@@ -632,19 +632,19 @@ namespace MPF.Frontend
         /// <summary>
         /// Get if a system requires a copy protection scan
         /// </summary>
-        public static bool SupportsCopyProtectionScans(this RedumpSystem? system)
+        public static bool SupportsCopyProtectionScans(this PhysicalSystem? system)
         {
 #pragma warning disable IDE0072
             return system switch
             {
-                RedumpSystem.AppleMacintosh => true,
-                RedumpSystem.DVDVideo => true,
-                RedumpSystem.EnhancedCD => true,
-                RedumpSystem.IBMPCcompatible => true,
-                RedumpSystem.PalmOS => true,
-                RedumpSystem.PocketPC => true,
-                RedumpSystem.RainbowDisc => true,
-                RedumpSystem.SonyElectronicBook => true,
+                PhysicalSystem.AppleMacintosh => true,
+                PhysicalSystem.DVDVideo => true,
+                PhysicalSystem.EnhancedCD => true,
+                PhysicalSystem.IBMPCcompatible => true,
+                PhysicalSystem.MicrosoftPocketPC => true,
+                PhysicalSystem.PalmOS => true,
+                PhysicalSystem.RainbowDisc => true,
+                PhysicalSystem.SonyElectronicBook => true,
                 _ => false,
             };
 #pragma warning restore IDE0072

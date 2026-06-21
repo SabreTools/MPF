@@ -23,12 +23,12 @@ namespace MPF.Processors
     public sealed class Redumper : BaseProcessor
     {
         /// <inheritdoc/>
-        public Redumper(RedumpSystem? system) : base(system) { }
+        public Redumper(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
             // If the filename is invalid
             if (string.IsNullOrEmpty(outputFilename))
@@ -59,11 +59,11 @@ namespace MPF.Processors
 #endif
 
             // Use the disc type, if possible
-            if (GetDiscType($"{basePath}.log", out MediaType? discType))
+            if (GetDiscType($"{basePath}.log", out PhysicalMediaType? discType))
                 return discType;
 
             // Use the book type, if possible
-            if (GetBookType($"{basePath}.log", out MediaType? bookType))
+            if (GetBookType($"{basePath}.log", out PhysicalMediaType? bookType))
                 return bookType;
 
             // Use the profile, if possible
@@ -75,7 +75,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             info.CommonDiscInfo.Comments = string.Empty;
 
@@ -117,7 +117,7 @@ namespace MPF.Processors
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = multiSessionInfo!;
 
             // Fill in the volume labels (ignore for Xbox/Xbox360)
-            if (System != RedumpSystem.MicrosoftXbox && System != RedumpSystem.MicrosoftXbox360)
+            if (System != PhysicalSystem.MicrosoftXbox && System != PhysicalSystem.MicrosoftXbox360)
             {
                 if (GetVolumeLabels($"{basePath}.log", out var volLabels))
                     VolumeLabels = volLabels;
@@ -156,12 +156,12 @@ namespace MPF.Processors
                 }
             }
 
-            // Extract info based generically on MediaType
+            // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
             switch (mediaType)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.GDROM:
                     // Read the cuesheet from the log, falling back to the external file
                     info.TracksAndWriteOffsets.Cuesheet = GetCuesheet($"{basePath}.log")
                         ?? ProcessingTool.GetFullFile($"{basePath}.cue")
@@ -189,12 +189,12 @@ namespace MPF.Processors
 
                     break;
 
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.NintendoWiiUOpticalDisc:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.HDDVD:
+                case PhysicalMediaType.BluRay:
+                case PhysicalMediaType.NintendoGameCubeGameDisc:
+                case PhysicalMediaType.NintendoWiiOpticalDisc:
+                case PhysicalMediaType.NintendoWiiUOpticalDisc:
                     // Deal with the layerbreaks
                     if (GetLayerbreaks($"{basePath}.log", out var layerbreak1, out var layerbreak2, out var layerbreak3))
                     {
@@ -208,21 +208,21 @@ namespace MPF.Processors
                     info.CommonDiscInfo.ErrorsCount = scsiErrors == -1 ? "Error retrieving error count" : scsiErrors.ToString();
 
                     // Get BCA information, if available, for Nintendo discs only
-                    if (mediaType == MediaType.NintendoGameCubeGameDisc || mediaType == MediaType.NintendoWiiOpticalDisc)
+                    if (mediaType == PhysicalMediaType.NintendoGameCubeGameDisc || mediaType == PhysicalMediaType.NintendoWiiOpticalDisc)
                         info.Extras.BCA = GetBCA($"{basePath}.bca");
 
                     // Bluray-specific options
-                    if (mediaType == MediaType.BluRay || mediaType == MediaType.NintendoWiiUOpticalDisc)
+                    if (mediaType == PhysicalMediaType.BluRay || mediaType == PhysicalMediaType.NintendoWiiUOpticalDisc)
                     {
                         int trimLength = -1;
                         switch (System)
                         {
-                            case RedumpSystem.MicrosoftXboxOne:
-                            case RedumpSystem.MicrosoftXboxSeriesXS:
-                            case RedumpSystem.NintendoWiiU:
-                            case RedumpSystem.SonyPlayStation3:
-                            case RedumpSystem.SonyPlayStation4:
-                            case RedumpSystem.SonyPlayStation5:
+                            case PhysicalSystem.MicrosoftXboxOne:
+                            case PhysicalSystem.MicrosoftXboxSeriesXS:
+                            case PhysicalSystem.NintendoWiiU:
+                            case PhysicalSystem.SonyPlayStation3:
+                            case PhysicalSystem.SonyPlayStation4:
+                            case PhysicalSystem.SonyPlayStation5:
                                 if (info.SizeAndChecksums.Layerbreak3 != default)
                                     trimLength = 520;
                                 else if (info.SizeAndChecksums.Layerbreak2 != default)
@@ -246,14 +246,14 @@ namespace MPF.Processors
                     break;
             }
 
-            // Extract info based specifically on RedumpSystem
+            // Extract info based specifically on PhysicalSystem
             switch (System)
             {
-                case RedumpSystem.AppleMacintosh:
-                case RedumpSystem.EnhancedCD:
-                case RedumpSystem.IBMPCcompatible:
-                case RedumpSystem.RainbowDisc:
-                case RedumpSystem.SonyElectronicBook:
+                case PhysicalSystem.AppleMacintosh:
+                case PhysicalSystem.EnhancedCD:
+                case PhysicalSystem.IBMPCcompatible:
+                case PhysicalSystem.RainbowDisc:
+                case PhysicalSystem.SonyElectronicBook:
                     info.CopyProtection.SecuROMData = GetSecuROMData($"{basePath}.log", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
                         info.CommonDiscInfo.Comments += $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
@@ -262,12 +262,12 @@ namespace MPF.Processors
                     info.CopyProtection.Protection += GetDVDProtection($"{basePath}.log", false) ?? string.Empty;
                     break;
 
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.DVDVideo:
+                case PhysicalSystem.DVDAudio:
+                case PhysicalSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection($"{basePath}.log", true) ?? string.Empty;
                     break;
 
-                case RedumpSystem.KonamiPython2:
+                case PhysicalSystem.KonamiPython2:
                     if (GetPlayStationInfo($"{basePath}.log", out string? kp2EXEDate, out string? kp2Serial, out string? kp2Version))
                     {
                         info.CommonDiscInfo.EXEDateBuildDate = kp2EXEDate;
@@ -277,8 +277,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.MicrosoftXbox:
-                case RedumpSystem.MicrosoftXbox360:
+                case PhysicalSystem.MicrosoftXbox:
+                case PhysicalSystem.MicrosoftXbox360:
                     // If .dmi / .pfi / .ss don't already exist, create them
                     if (!File.Exists($"{basePath}.dmi"))
                         RemoveHeaderAndTrim($"{basePath}.manufacturer", $"{basePath}.dmi");
@@ -341,8 +341,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.NamcoSegaNintendoTriforce:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.NamcoSegaNintendoTriforce:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -357,8 +357,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.NintendoGameCube:
-                case RedumpSystem.NintendoWii:
+                case PhysicalSystem.NintendoGameCube:
+                case PhysicalSystem.NintendoWii:
                     if (GetGameCubeWiiInfo($"{basePath}.log", out string? gcVersion, out string? gcSerial, out string? gcTitle, out string? _))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gcSerial ?? string.Empty;
@@ -374,15 +374,15 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaMegaCDSegaCD:
+                case PhysicalSystem.SegaMegaCDSegaCD:
                     info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out var scdBuildDate, out var scdSerial, out _) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
                     info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
                     break;
 
-                case RedumpSystem.SegaChihiro:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaChihiro:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -397,8 +397,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaDreamcast:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaDreamcast:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -413,8 +413,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaNaomi:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaNaomi:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -429,8 +429,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaNaomi2:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaNaomi2:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetGDROMHeader($"{basePath}.log",
                             out string? buildDate,
@@ -445,7 +445,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaSaturn:
+                case PhysicalSystem.SegaSaturn:
                     info.Extras.Header = GetSaturnHeader($"{basePath}.log",
                         out string? saturnBuildDate,
                         out string? saturnSerial,
@@ -457,7 +457,7 @@ namespace MPF.Processors
                     info.VersionAndEditions.Version = saturnVersion ?? string.Empty;
                     break;
 
-                case RedumpSystem.SonyPlayStation:
+                case PhysicalSystem.SonyPlayStation:
                     if (GetPlayStationInfo($"{basePath}.log", out string? psxEXEDate, out string? psxSerial, out var _))
                     {
                         info.CommonDiscInfo.EXEDateBuildDate = psxEXEDate;
@@ -470,7 +470,7 @@ namespace MPF.Processors
                     info.CopyProtection.LibCryptData = GetPlayStationLibCryptData($"{basePath}.log");
                     break;
 
-                case RedumpSystem.SonyPlayStation2:
+                case PhysicalSystem.SonyPlayStation2:
                     if (GetPlayStationInfo($"{basePath}.log", out string? ps2EXEDate, out string? ps2Serial, out var ps2Version))
                     {
                         info.CommonDiscInfo.EXEDateBuildDate = ps2EXEDate;
@@ -484,7 +484,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SonyPlayStation3:
+                case PhysicalSystem.SonyPlayStation3:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps3Serial, out var ps3Version))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
@@ -493,7 +493,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SonyPlayStation4:
+                case PhysicalSystem.SonyPlayStation4:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps4Serial, out var ps4Version))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps4Serial ?? string.Empty;
@@ -502,7 +502,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SonyPlayStation5:
+                case PhysicalSystem.SonyPlayStation5:
                     if (GetPlayStationInfo($"{basePath}.log", out var _, out string? ps5Serial, out var ps5Version))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps5Serial ?? string.Empty;
@@ -515,7 +515,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -528,8 +528,8 @@ namespace MPF.Processors
 #pragma warning disable IDE0010
             switch (mediaType)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.GDROM:
                     List<OutputFile> cdrom = [
                         // .asus is obsolete: newer redumper produces .cache instead
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
@@ -631,9 +631,9 @@ namespace MPF.Processors
 
                     return cdrom;
 
-                case MediaType.DVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.NintendoGameCubeGameDisc:
+                case PhysicalMediaType.NintendoWiiOpticalDisc:
                     return [
                         new($"{outputFilename}.bca", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -699,9 +699,9 @@ namespace MPF.Processors
                             "state_zst"),
                     ];
 
-                case MediaType.HDDVD: // TODO: Confirm that this information outputs
-                case MediaType.BluRay:
-                case MediaType.NintendoWiiUOpticalDisc:
+                case PhysicalMediaType.HDDVD: // TODO: Confirm that this information outputs
+                case PhysicalMediaType.BluRay:
+                case PhysicalMediaType.NintendoWiiUOpticalDisc:
                     return [
                         new($"{outputFilename}.asus", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -942,7 +942,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if book type was set, false otherwise</returns>
-        internal static bool GetBookType(string log, out MediaType? bookType)
+        internal static bool GetBookType(string log, out PhysicalMediaType? bookType)
         {
             // Set the default values
             bookType = null;
@@ -976,21 +976,21 @@ namespace MPF.Processors
                     // Set the media type based on the string
                     bookType = bookTypeStr switch
                     {
-                        "DVD-ROM" => MediaType.DVD,
-                        "DVD-RAM" => MediaType.DVD,
-                        "DVD-R" => MediaType.DVD,
-                        "DVD-RW" => MediaType.DVD,
-                        "DVD+RW" => MediaType.DVD,
-                        "DVD+R" => MediaType.DVD,
-                        "DVD+RW DL" => MediaType.DVD,
-                        "DVD+R DL" => MediaType.DVD,
+                        "DVD-ROM" => PhysicalMediaType.DVD,
+                        "DVD-RAM" => PhysicalMediaType.DVD,
+                        "DVD-R" => PhysicalMediaType.DVD,
+                        "DVD-RW" => PhysicalMediaType.DVD,
+                        "DVD+RW" => PhysicalMediaType.DVD,
+                        "DVD+R" => PhysicalMediaType.DVD,
+                        "DVD+RW DL" => PhysicalMediaType.DVD,
+                        "DVD+R DL" => PhysicalMediaType.DVD,
 
-                        "HD DVD-ROM" => MediaType.HDDVD,
-                        "HD DVD-RAM" => MediaType.HDDVD,
-                        "HD DVD-R" => MediaType.HDDVD,
+                        "HD DVD-ROM" => PhysicalMediaType.HDDVD,
+                        "HD DVD-RAM" => PhysicalMediaType.HDDVD,
+                        "HD DVD-R" => PhysicalMediaType.HDDVD,
 
-                        "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Also GC
-                        "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Also GC
+                        "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Also GC
+                        "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Also GC
 
                         "RESERVED1" => null,
                         "RESERVED2" => null,
@@ -1180,7 +1180,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>True if disc type was set, false otherwise</returns>
-        internal static bool GetDiscType(string log, out MediaType? discType)
+        internal static bool GetDiscType(string log, out PhysicalMediaType? discType)
         {
             // Set the default values
             discType = null;
@@ -1214,11 +1214,11 @@ namespace MPF.Processors
                     // Set the media type based on the string
                     discType = discTypeStr switch
                     {
-                        "CD" => MediaType.CDROM,
-                        "DVD" => MediaType.DVD,
-                        "BLURAY" => MediaType.BluRay,
-                        "BLURAY-R" => MediaType.BluRay,
-                        "HD-DVD" => MediaType.HDDVD,
+                        "CD" => PhysicalMediaType.CDROM,
+                        "DVD" => PhysicalMediaType.DVD,
+                        "BLURAY" => PhysicalMediaType.BluRay,
+                        "BLURAY-R" => PhysicalMediaType.BluRay,
+                        "HD-DVD" => PhysicalMediaType.HDDVD,
                         _ => null,
                     };
                     return discType is not null;
@@ -1239,7 +1239,7 @@ namespace MPF.Processors
         /// </summary>
         /// <param name="profile">Profile string to check</param>
         /// <returns>Media type on success, null otherwise</returns>
-        internal static MediaType? GetDiscTypeFromProfile(string? profile)
+        internal static PhysicalMediaType? GetDiscTypeFromProfile(string? profile)
         {
             return profile switch
             {
@@ -1250,41 +1250,41 @@ namespace MPF.Processors
                 "MO write once" => null,
                 "AS MO" => null,
 
-                "CD-ROM" => MediaType.CDROM,
-                "CD-R" => MediaType.CDROM,
-                "CD-RW" => MediaType.CDROM,
+                "CD-ROM" => PhysicalMediaType.CDROM,
+                "CD-R" => PhysicalMediaType.CDROM,
+                "CD-RW" => PhysicalMediaType.CDROM,
 
-                "DVD-ROM" => MediaType.DVD,
-                "DVD-R" => MediaType.DVD,
-                "DVD-RAM" => MediaType.DVD,
-                "DVD-RW RO" => MediaType.DVD,
-                "DVD-RW" => MediaType.DVD,
-                "DVD-R DL" => MediaType.DVD,
-                "DVD-R DL LJR" => MediaType.DVD,
-                "DVD+RW" => MediaType.DVD,
-                "DVD+R" => MediaType.DVD,
+                "DVD-ROM" => PhysicalMediaType.DVD,
+                "DVD-R" => PhysicalMediaType.DVD,
+                "DVD-RAM" => PhysicalMediaType.DVD,
+                "DVD-RW RO" => PhysicalMediaType.DVD,
+                "DVD-RW" => PhysicalMediaType.DVD,
+                "DVD-R DL" => PhysicalMediaType.DVD,
+                "DVD-R DL LJR" => PhysicalMediaType.DVD,
+                "DVD+RW" => PhysicalMediaType.DVD,
+                "DVD+R" => PhysicalMediaType.DVD,
 
-                "DDCD-ROM" => MediaType.CDROM,
-                "DDCD-R" => MediaType.CDROM,
-                "DDCD-RW" => MediaType.CDROM,
+                "DDCD-ROM" => PhysicalMediaType.CDROM,
+                "DDCD-R" => PhysicalMediaType.CDROM,
+                "DDCD-RW" => PhysicalMediaType.CDROM,
 
-                "DVD+RW DL" => MediaType.DVD,
-                "DVD+R DL" => MediaType.DVD,
+                "DVD+RW DL" => PhysicalMediaType.DVD,
+                "DVD+R DL" => PhysicalMediaType.DVD,
 
-                "BD-ROM" => MediaType.BluRay,
-                "BD-R" => MediaType.BluRay,
-                "BD-R RRM" => MediaType.BluRay,
-                "BD-RW" => MediaType.BluRay,
+                "BD-ROM" => PhysicalMediaType.BluRay,
+                "BD-R" => PhysicalMediaType.BluRay,
+                "BD-R RRM" => PhysicalMediaType.BluRay,
+                "BD-RW" => PhysicalMediaType.BluRay,
 
-                "HD DVD-ROM" => MediaType.HDDVD,
-                "HD DVD-R" => MediaType.HDDVD,
-                "HD DVD-RAM" => MediaType.HDDVD,
-                "HD DVD-RW" => MediaType.HDDVD,
-                "HD DVD-R DL" => MediaType.HDDVD,
-                "HD DVD-RW DL" => MediaType.HDDVD,
+                "HD DVD-ROM" => PhysicalMediaType.HDDVD,
+                "HD DVD-R" => PhysicalMediaType.HDDVD,
+                "HD DVD-RAM" => PhysicalMediaType.HDDVD,
+                "HD DVD-RW" => PhysicalMediaType.HDDVD,
+                "HD DVD-R DL" => PhysicalMediaType.HDDVD,
+                "HD DVD-RW DL" => PhysicalMediaType.HDDVD,
 
-                "NINTENDO" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
-                "RESERVED5" => MediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                "NINTENDO" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
+                "RESERVED5" => PhysicalMediaType.NintendoWiiOpticalDisc, // Maybe also GC?
 
                 "NON STANDARD" => null,
 

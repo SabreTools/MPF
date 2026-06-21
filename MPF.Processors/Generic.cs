@@ -14,18 +14,18 @@ namespace MPF.Processors
     public sealed class Generic : BaseProcessor
     {
         /// <inheritdoc/>
-        public Generic(RedumpSystem? system) : base(system) { }
+        public Generic(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Get the dumping program and version
             info.DumpingInfo.DumpingProgram = "UNKNOWN PROGRAM";
@@ -36,12 +36,12 @@ namespace MPF.Processors
             if (datafile is not null)
                 info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
 
-            // Extract info based generically on MediaType
+            // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
             switch (mediaType)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.GDROM:
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     break;
             }
@@ -49,7 +49,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             return [];
         }

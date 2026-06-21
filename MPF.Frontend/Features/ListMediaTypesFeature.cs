@@ -3,7 +3,7 @@ using SabreTools.CommandLine;
 
 namespace MPF.Frontend.Features
 {
-    public class ListMediaTypesFeature : Feature
+    public class ListPhysicalMediaTypesFeature : Feature
     {
         #region Feature Definition
 
@@ -15,7 +15,7 @@ namespace MPF.Frontend.Features
 
         #endregion
 
-        public ListMediaTypesFeature()
+        public ListPhysicalMediaTypesFeature()
             : base(DisplayName, _flags, _description)
         {
         }

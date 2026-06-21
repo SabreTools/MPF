@@ -22,7 +22,7 @@ namespace MPF.ExecutionContexts.Redumper
         public override string? OutputPath => Path.Combine(
                 (_inputs[FlagStrings.ImagePath] as StringInput)?.Value?.Trim('"') ?? string.Empty,
                 (_inputs[FlagStrings.ImageName] as StringInput)?.Value?.Trim('"') ?? string.Empty)
-            + GetDefaultExtension(MediaType);
+            + GetDefaultExtension(PhysicalMediaType);
 
         /// <inheritdoc/>
         public override int? Speed
@@ -138,8 +138,8 @@ namespace MPF.ExecutionContexts.Redumper
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system,
-            MediaType? type,
+        public ExecutionContext(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,
@@ -269,10 +269,10 @@ namespace MPF.ExecutionContexts.Redumper
         }
 
         /// <inheritdoc/>
-        public override string? GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+        public override string? GetDefaultExtension(PhysicalMediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
-        public override MediaType? GetMediaType() => null;
+        public override PhysicalMediaType? GetPhysicalMediaType() => null;
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
@@ -331,27 +331,27 @@ namespace MPF.ExecutionContexts.Redumper
             if (dumpSettings.EnableSkeleton)
             {
 #pragma warning disable IDE0010
-                switch (RedumpSystem)
+                switch (PhysicalSystem)
                 {
                     // Systems known to have significant data outside the ISO9660 filesystem
-                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox360:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.PlaymajiPolymega:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox360:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.PlaymajiPolymega:
                     // Skeletons from newer BD-based consoles unnecessary
-                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxOne:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXboxSeriesXS:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation3:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation4:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation5:
-                    case SabreTools.RedumpLib.Data.RedumpSystem.NintendoWiiU:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXboxOne:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXboxSeriesXS:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation3:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation4:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation5:
+                    case SabreTools.RedumpLib.Data.PhysicalSystem.NintendoWiiU:
                         break;
 
                     default:
                         // Enable skeleton for CD and DVD only, by default
-                        switch (MediaType)
+                        switch (PhysicalMediaType)
                         {
-                            case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                            case SabreTools.RedumpLib.Data.MediaType.DVD:
+                            case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
+                            case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
                             {
                                 this[FlagStrings.Skeleton] = true;
                                 (_inputs[FlagStrings.Skeleton] as FlagInput)?.SetValue(true);

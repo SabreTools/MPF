@@ -72,13 +72,13 @@ namespace Schemas {
 
         private AdvertisementType[] advertisementField;
 
-        private LinearMediaType[] linearMediaField;
+        private LinearPhysicalMediaType[] linearMediaField;
 
         private PCIType[] pCICardField;
 
-        private BlockMediaType[] blockMediaField;
+        private BlockPhysicalMediaType[] blockMediaField;
 
-        private AudioMediaType[] audioMediaField;
+        private AudioPhysicalMediaType[] audioMediaField;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Developer")]
@@ -352,7 +352,7 @@ namespace Schemas {
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("LinearMedia")]
-        public LinearMediaType[] LinearMedia {
+        public LinearPhysicalMediaType[] LinearMedia {
             get {
                 return this.linearMediaField;
             }
@@ -374,7 +374,7 @@ namespace Schemas {
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("BlockMedia")]
-        public BlockMediaType[] BlockMedia {
+        public BlockPhysicalMediaType[] BlockMedia {
             get {
                 return this.blockMediaField;
             }
@@ -385,7 +385,7 @@ namespace Schemas {
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("AudioMedia")]
-        public AudioMediaType[] AudioMedia {
+        public AudioPhysicalMediaType[] AudioMedia {
             get {
                 return this.audioMediaField;
             }
@@ -824,7 +824,7 @@ namespace Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class AudioMediaType {
+    public partial class AudioPhysicalMediaType {
 
         private ImageType imageField;
 
@@ -3980,7 +3980,7 @@ namespace Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class BlockMediaType {
+    public partial class BlockPhysicalMediaType {
 
         private ImageType imageField;
 
@@ -4474,7 +4474,7 @@ namespace Schemas {
 
         private DumpType configurationField;
 
-        private LinearMediaType expansionROMField;
+        private LinearPhysicalMediaType expansionROMField;
 
         /// <remarks/>
         public ushort VendorID {
@@ -4507,7 +4507,7 @@ namespace Schemas {
         }
 
         /// <remarks/>
-        public LinearMediaType ExpansionROM {
+        public LinearPhysicalMediaType ExpansionROM {
             get {
                 return this.expansionROMField;
             }
@@ -4522,7 +4522,7 @@ namespace Schemas {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class LinearMediaType {
+    public partial class LinearPhysicalMediaType {
 
         private ImageType imageField;
 

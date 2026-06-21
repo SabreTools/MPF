@@ -22,7 +22,7 @@ namespace MPF.Check.Features
         /// <summary>
         /// Currently-selected system
         /// </summary>
-        public RedumpSystem? System { get; protected set; }
+        public PhysicalSystem? System { get; protected set; }
 
         /// <summary>
         /// Seed submission info from an input file

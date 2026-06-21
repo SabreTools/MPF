@@ -7,95 +7,95 @@ namespace MPF.Processors.Test
 {
     public class CleanRipTests
     {
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_GC_Empty_GC()
+        public void DeterminePhysicalMediaType_GC_Empty_GC()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Wii_Null_Wii()
+        public void DeterminePhysicalMediaType_Wii_Null_Wii()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoWii);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Other_Null_Null()
+        public void DeterminePhysicalMediaType_Other_Null_Null()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_GC_Invalid_GC()
+        public void DeterminePhysicalMediaType_GC_Invalid_GC()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Wii_Invalid_Wii()
+        public void DeterminePhysicalMediaType_Wii_Invalid_Wii()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoWii);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Other_Invalid_Invalid()
+        public void DeterminePhysicalMediaType_Other_Invalid_Invalid()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_GC_Valid_GC()
+        public void DeterminePhysicalMediaType_GC_Valid_GC()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoGameCubeGameDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoGameCubeGameDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Wii_Valid_Wii()
+        public void DeterminePhysicalMediaType_Wii_Valid_Wii()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoWii);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.NintendoWiiOpticalDisc, actual);
+            var processor = new CleanRip(PhysicalSystem.NintendoWii);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.NintendoWiiOpticalDisc, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Other_Valid_Valid()
+        public void DeterminePhysicalMediaType_Other_Valid_Valid()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
@@ -108,7 +108,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
@@ -119,9 +119,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
 
-            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -130,9 +130,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
 
-            var actual = processor.GetOutputFiles(MediaType.NintendoGameCubeGameDisc, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.NintendoGameCubeGameDisc, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -141,9 +141,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoWii);
+            var processor = new CleanRip(PhysicalSystem.NintendoWii);
 
-            var actual = processor.GetOutputFiles(MediaType.NintendoWiiOpticalDisc, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.NintendoWiiOpticalDisc, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -152,9 +152,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -167,8 +167,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.FoundAllFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(3, actual.Count);
         }
 
@@ -177,8 +177,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.FoundAllFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -191,8 +191,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.FoundAnyFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -201,8 +201,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.FoundAnyFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -211,8 +211,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD-zip");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.FoundAnyFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -225,8 +225,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GenerateArtifacts(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -235,8 +235,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GenerateArtifacts(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
         }
 
@@ -249,8 +249,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetDeleteableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -259,8 +259,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetDeleteableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -273,8 +273,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetZippableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -283,8 +283,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetZippableFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
         }
 
@@ -297,8 +297,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -307,8 +307,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "CleanRip", "DVD");
             string outputFilename = "test.iso";
-            var processor = new CleanRip(RedumpSystem.NintendoGameCube);
-            var actual = processor.GetPreservedFilePaths(MediaType.DVD, outputDirectory, outputFilename);
+            var processor = new CleanRip(PhysicalSystem.NintendoGameCube);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 

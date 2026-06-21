@@ -70,12 +70,12 @@ namespace MPF.Processors
     public sealed class DiscImageCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public DiscImageCreator(RedumpSystem? system) : base(system) { }
+        public DiscImageCreator(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
             // If the filename is invalid
             if (string.IsNullOrEmpty(outputFilename))
@@ -110,62 +110,62 @@ namespace MPF.Processors
             {
                 // CD-ROM
                 if (discType.Contains("CD-DA or CD-ROM Disc"))
-                    return MediaType.CDROM;
+                    return PhysicalMediaType.CDROM;
                 else if (discType.Contains("CD-I Disc"))
-                    return MediaType.CDROM;
+                    return PhysicalMediaType.CDROM;
                 else if (discType.Contains("CD-ROM XA Disc"))
-                    return MediaType.CDROM;
+                    return PhysicalMediaType.CDROM;
 
                 // HD-DVD
                 if (discType.Contains("HD DVD-ROM"))
-                    return MediaType.HDDVD;
+                    return PhysicalMediaType.HDDVD;
                 else if (discType.Contains("HD DVD-RAM"))
-                    return MediaType.HDDVD;
+                    return PhysicalMediaType.HDDVD;
                 else if (discType.Contains("HD DVD-R"))
-                    return MediaType.HDDVD;
+                    return PhysicalMediaType.HDDVD;
 
                 // DVD
                 if (discType.Contains("DVD-ROM"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD-RAM"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD-R"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD-RW"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("Reserved1"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("Reserved2"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD+RW"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD+R"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("Reserved3"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("Reserved4"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD+RW DL"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("DVD+R DL"))
-                    return MediaType.DVD;
+                    return PhysicalMediaType.DVD;
                 else if (discType.Contains("Reserved5"))
-                    return MediaType.NintendoWiiOpticalDisc;
+                    return PhysicalMediaType.NintendoWiiOpticalDisc;
 
                 // Blu-ray
                 if (discType.Contains("BDO"))
-                    return MediaType.BluRay;
+                    return PhysicalMediaType.BluRay;
                 else if (discType.Contains("BDU"))
-                    return MediaType.BluRay;
+                    return PhysicalMediaType.BluRay;
                 else if (discType.Contains("BDW"))
-                    return MediaType.BluRay;
+                    return PhysicalMediaType.BluRay;
                 else if (discType.Contains("BDR"))
-                    return MediaType.BluRay;
+                    return PhysicalMediaType.BluRay;
                 else if (discType.Contains("XG4"))
-                    return MediaType.BluRay;
+                    return PhysicalMediaType.BluRay;
 
                 // Assume CD-ROM for everything else
-                return MediaType.CDROM;
+                return PhysicalMediaType.CDROM;
             }
 
             // The type could not be determined
@@ -173,7 +173,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Get the dumping program and version
             var dicVersion = GetCommandFilePathAndVersion(basePath, out var dicCmd);
@@ -215,12 +215,12 @@ namespace MPF.Processors
             if (GetVolumeLabels($"{basePath}_volDesc.txt", out var volLabels))
                 VolumeLabels = volLabels;
 
-            // Extract info based generically on MediaType
+            // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
             switch (mediaType)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
@@ -241,44 +241,46 @@ namespace MPF.Processors
 
                     break;
 
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.HDDVD:
+                case PhysicalMediaType.BluRay:
 
                     // Deal with the layerbreaks
-                    if (mediaType == MediaType.DVD)
+                    if (mediaType == PhysicalMediaType.DVD)
                     {
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? long.Parse(layerbreak) : default;
                     }
-                    else if (mediaType == MediaType.BluRay)
+                    else if (mediaType == PhysicalMediaType.BluRay)
                     {
                         var di = ProcessingTool.GetDiscInformation($"{basePath}_PIC.bin");
                         info.SizeAndChecksums.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
                         if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
-                            if (layerbreak1 is not null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                            long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
+
+                            if (layerbreak1 is not null && layerbreak1 * 2048 < size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                            if (layerbreak2 is not null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                            if (layerbreak2 is not null && layerbreak2 * 2048 < size)
                                 info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                            if (layerbreak3 is not null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                            if (layerbreak3 is not null && layerbreak3 * 2048 < size)
                                 info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
                         }
                     }
 
                     // Bluray-specific options
-                    if (mediaType == MediaType.BluRay)
+                    if (mediaType == PhysicalMediaType.BluRay)
                     {
                         int trimLength = -1;
                         switch (System)
                         {
-                            case RedumpSystem.MicrosoftXboxOne:
-                            case RedumpSystem.MicrosoftXboxSeriesXS:
-                            case RedumpSystem.SonyPlayStation3:
-                            case RedumpSystem.SonyPlayStation4:
-                            case RedumpSystem.SonyPlayStation5:
+                            case PhysicalSystem.MicrosoftXboxOne:
+                            case PhysicalSystem.MicrosoftXboxSeriesXS:
+                            case PhysicalSystem.SonyPlayStation3:
+                            case PhysicalSystem.SonyPlayStation4:
+                            case PhysicalSystem.SonyPlayStation5:
                                 if (info.SizeAndChecksums.Layerbreak3 != default)
                                     trimLength = 520;
                                 else if (info.SizeAndChecksums.Layerbreak2 != default)
@@ -294,14 +296,14 @@ namespace MPF.Processors
                     break;
             }
 
-            // Extract info based specifically on RedumpSystem
+            // Extract info based specifically on PhysicalSystem
             switch (System)
             {
-                case RedumpSystem.AppleMacintosh:
-                case RedumpSystem.EnhancedCD:
-                case RedumpSystem.IBMPCcompatible:
-                case RedumpSystem.RainbowDisc:
-                case RedumpSystem.SonyElectronicBook:
+                case PhysicalSystem.AppleMacintosh:
+                case PhysicalSystem.EnhancedCD:
+                case PhysicalSystem.IBMPCcompatible:
+                case PhysicalSystem.RainbowDisc:
+                case PhysicalSystem.SonyElectronicBook:
                     info.CopyProtection.SecuROMData = GetSecuROMData($"{basePath}_subIntention.txt", out SecuROMScheme secuROMScheme) ?? string.Empty;
                     if (secuROMScheme == SecuROMScheme.Unknown)
                         info.CommonDiscInfo.Comments = $"Warning: Incorrect SecuROM sector count{Environment.NewLine}";
@@ -310,12 +312,12 @@ namespace MPF.Processors
                     info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", false) ?? string.Empty;
                     break;
 
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.DVDVideo:
+                case PhysicalSystem.DVDAudio:
+                case PhysicalSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt", true) ?? string.Empty;
                     break;
 
-                case RedumpSystem.MicrosoftXbox:
+                case PhysicalSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID($"{basePath}_DMI.bin");
                     var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                     if (xmid is not null)
@@ -381,7 +383,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.MicrosoftXbox360:
+                case PhysicalSystem.MicrosoftXbox360:
                     string xemidString = ProcessingTool.GetXeMID($"{basePath}_DMI.bin");
                     var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
                     if (xemid is not null)
@@ -446,8 +448,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.NamcoSegaNintendoTriforce:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.NamcoSegaNintendoTriforce:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -469,7 +471,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaMegaCDSegaCD:
+                case PhysicalSystem.SegaMegaCDSegaCD:
                     info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Take only the last 16 lines for Sega CD
@@ -485,8 +487,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaChihiro:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaChihiro:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -508,8 +510,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaDreamcast:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaDreamcast:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -531,8 +533,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaNaomi:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaNaomi:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -554,8 +556,8 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaNaomi2:
-                    if (mediaType == MediaType.CDROM)
+                case PhysicalSystem.SegaNaomi2:
+                    if (mediaType == PhysicalMediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
@@ -577,7 +579,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SegaSaturn:
+                case PhysicalSystem.SegaSaturn:
                     info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Take only the first 16 lines for Saturn
@@ -594,7 +596,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.SonyPlayStation:
+                case PhysicalSystem.SonyPlayStation:
                     bool? psEdcStatus = null;
                     if (File.Exists($"{basePath}.img_EdcEcc.txt"))
                         psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
@@ -608,7 +610,7 @@ namespace MPF.Processors
                     info.CopyProtection.LibCryptData = libCryptData;
                     break;
 
-                case RedumpSystem.SonyPlayStation3:
+                case PhysicalSystem.SonyPlayStation3:
                     if (GetPlayStation3Info($"{basePath}_disc.txt", out string? ps3Serial, out string? ps3Version, out string? ps3FirmwareVersion))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = ps3Serial ?? string.Empty;
@@ -622,14 +624,14 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             switch (mediaType)
             {
-                case MediaType.CDROM:
+                case PhysicalMediaType.CDROM:
                     return [
                         new($"{outputFilename}.c2", OutputFileFlags.Binary
                             | OutputFileFlags.Zippable,
@@ -726,7 +728,7 @@ namespace MPF.Processors
                     ];
 
                 // TODO: Confirm GD-ROM HD area outputs
-                case MediaType.GDROM:
+                case PhysicalMediaType.GDROM:
                     return [
                         new($"{outputFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
@@ -766,9 +768,9 @@ namespace MPF.Processors
                             "vol_desc"),
                     ];
 
-                case MediaType.DVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.NintendoGameCubeGameDisc:
+                case PhysicalMediaType.NintendoWiiOpticalDisc:
                     return [
                         new($"{outputFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
@@ -830,9 +832,9 @@ namespace MPF.Processors
                             "raw_ss"),
                     ];
 
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoWiiUOpticalDisc:
+                case PhysicalMediaType.HDDVD:
+                case PhysicalMediaType.BluRay:
+                case PhysicalMediaType.NintendoWiiUOpticalDisc:
                     return [
                             new($"{outputFilename}.dat", OutputFileFlags.Required
                             | OutputFileFlags.Zippable),
@@ -887,8 +889,8 @@ namespace MPF.Processors
                             "pic"),
                     ];
 
-                case MediaType.FloppyDisk:
-                case MediaType.HardDisk:
+                case PhysicalMediaType.FloppyDisk:
+                case PhysicalMediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
                     return [
                         new($"{outputFilename}.dat", OutputFileFlags.Required

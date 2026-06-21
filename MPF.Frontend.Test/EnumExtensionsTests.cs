@@ -235,26 +235,26 @@ namespace MPF.Frontend.Test
 
         #region Functionality Support
 
-        private static readonly RedumpSystem?[] _antiModchipSystems =
+        private static readonly PhysicalSystem?[] _antiModchipSystems =
         [
-            RedumpSystem.SonyPlayStation,
+            PhysicalSystem.SonyPlayStation,
         ];
 
-        private static readonly RedumpSystem?[] _copyProtectionSystems =
+        private static readonly PhysicalSystem?[] _copyProtectionSystems =
         [
-            RedumpSystem.AppleMacintosh,
-            RedumpSystem.DVDVideo,
-            RedumpSystem.EnhancedCD ,
-            RedumpSystem.IBMPCcompatible,
-            RedumpSystem.PalmOS,
-            RedumpSystem.PocketPC,
-            RedumpSystem.RainbowDisc,
-            RedumpSystem.SonyElectronicBook,
+            PhysicalSystem.AppleMacintosh,
+            PhysicalSystem.DVDVideo,
+            PhysicalSystem.EnhancedCD ,
+            PhysicalSystem.IBMPCcompatible,
+            PhysicalSystem.MicrosoftPocketPC,
+            PhysicalSystem.PalmOS,
+            PhysicalSystem.RainbowDisc,
+            PhysicalSystem.SonyElectronicBook,
         ];
 
         [Theory]
         [MemberData(nameof(GenerateSupportsAntiModchipScansData))]
-        public void SupportsAntiModchipScansTest(RedumpSystem? redumpSystem, bool expected)
+        public void SupportsAntiModchipScansTest(PhysicalSystem? redumpSystem, bool expected)
         {
             bool actual = redumpSystem.SupportsAntiModchipScans();
             Assert.Equal(expected, actual);
@@ -262,7 +262,7 @@ namespace MPF.Frontend.Test
 
         [Theory]
         [MemberData(nameof(GenerateSupportsCopyProtectionScansData))]
-        public void SupportsCopyProtectionScansTest(RedumpSystem? redumpSystem, bool expected)
+        public void SupportsCopyProtectionScansTest(PhysicalSystem? redumpSystem, bool expected)
         {
             bool actual = redumpSystem.SupportsCopyProtectionScans();
             Assert.Equal(expected, actual);
@@ -271,7 +271,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsAntiModchipScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (RedumpSystem redumpSystem in Enum.GetValues<RedumpSystem>())
+            foreach (PhysicalSystem redumpSystem in Enum.GetValues<PhysicalSystem>())
             {
                 if (_antiModchipSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);
@@ -285,7 +285,7 @@ namespace MPF.Frontend.Test
         public static List<object?[]> GenerateSupportsCopyProtectionScansData()
         {
             var testData = new List<object?[]>() { new object?[] { null, false } };
-            foreach (RedumpSystem redumpSystem in Enum.GetValues<RedumpSystem>())
+            foreach (PhysicalSystem redumpSystem in Enum.GetValues<PhysicalSystem>())
             {
                 if (_copyProtectionSystems.Contains(redumpSystem))
                     testData.Add([redumpSystem, true]);

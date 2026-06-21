@@ -6,18 +6,18 @@ namespace MPF.Frontend.Test
     public class InterfaceConstantsTests
     {
         [Theory]
-        [InlineData(MediaType.CDROM, 72)]
-        [InlineData(MediaType.DVD, 24)]
-        [InlineData(MediaType.NintendoGameCubeGameDisc, 24)]
-        [InlineData(MediaType.NintendoWiiOpticalDisc, 24)]
-        [InlineData(MediaType.HDDVD, 24)]
-        [InlineData(MediaType.BluRay, 16)]
-        [InlineData(MediaType.NintendoWiiUOpticalDisc, 16)]
-        [InlineData(MediaType.LaserDisc, 72)]
+        [InlineData(PhysicalMediaType.CDROM, 72)]
+        [InlineData(PhysicalMediaType.DVD, 24)]
+        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, 24)]
+        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, 24)]
+        [InlineData(PhysicalMediaType.HDDVD, 24)]
+        [InlineData(PhysicalMediaType.BluRay, 16)]
+        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, 16)]
+        [InlineData(PhysicalMediaType.LaserDisc, 72)]
         [InlineData(null, 72)]
-        public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
+        public void GetAllowedDriveSpeedForPhysicalMediaTypeTest(PhysicalMediaType? mediaType, int maxExpected)
         {
-            var actual = InterfaceConstants.GetSpeedsForMediaType(mediaType);
+            var actual = InterfaceConstants.GetSpeedsForPhysicalMediaType(mediaType);
             Assert.Equal(maxExpected, actual[^1]);
         }
     }

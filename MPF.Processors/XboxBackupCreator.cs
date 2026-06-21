@@ -14,16 +14,16 @@ namespace MPF.Processors
     public sealed class XboxBackupCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public XboxBackupCreator(RedumpSystem? system) : base(system) { }
+        public XboxBackupCreator(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
-            => MediaType.DVD;
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
+            => PhysicalMediaType.DVD;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Get output directory
             string outputDirectory = Path.GetDirectoryName(basePath) ?? string.Empty;
@@ -54,7 +54,7 @@ namespace MPF.Processors
 #pragma warning disable IDE0010
             switch (System)
             {
-                case RedumpSystem.MicrosoftXbox:
+                case PhysicalSystem.MicrosoftXbox:
                     string xmidString = ProcessingTool.GetXMID(Path.Combine(outputDirectory, "DMI.bin"));
                     var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                     if (xmid is not null)
@@ -70,7 +70,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.MicrosoftXbox360:
+                case PhysicalSystem.MicrosoftXbox360:
 
                     // Get PVD from ISO
                     if (GetPVD($"{basePath}.iso", out string? pvd))
@@ -131,7 +131,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -430,7 +430,7 @@ namespace MPF.Processors
                             bool success = long.TryParse(errorCount, out readErrors);
 
                             // Original Xbox should have 65536 read errors when dumping with XBC
-                            if (System == RedumpSystem.MicrosoftXbox)
+                            if (System == PhysicalSystem.MicrosoftXbox)
                             {
                                 if (readErrors == 65536)
                                     readErrors = 0;
@@ -465,7 +465,7 @@ namespace MPF.Processors
             if (!File.Exists(log))
                 return null;
 
-            if (System == RedumpSystem.MicrosoftXbox)
+            if (System == PhysicalSystem.MicrosoftXbox)
                 return null;
 
             // Example:

@@ -23,15 +23,15 @@ namespace MPF.Frontend
                 InterfaceLanguage interfaceLanguage => new Element<InterfaceLanguage>(interfaceLanguage),
                 InternalProgram internalProgram => new Element<InternalProgram>(internalProgram),
                 LogCompression logCompression => new Element<LogCompression>(logCompression),
-                MediaType mediaType => new Element<MediaType>(mediaType),
+                PhysicalMediaType mediaType => new Element<PhysicalMediaType>(mediaType),
                 RedumperReadMethod readMethod => new Element<RedumperReadMethod>(readMethod),
                 RedumperSectorOrder sectorOrder => new Element<RedumperSectorOrder>(sectorOrder),
                 RedumperDriveType driveType => new Element<RedumperDriveType>(driveType),
-                RedumpSystem redumpSystem => new RedumpSystemComboBoxItem(redumpSystem),
+                PhysicalSystem redumpSystem => new PhysicalSystemComboBoxItem(redumpSystem),
                 Region region => new Element<Region>(region),
 
                 // Null values are treated as a system value
-                _ => new RedumpSystemComboBoxItem((RedumpSystem?)null),
+                _ => new PhysicalSystemComboBoxItem((PhysicalSystem?)null),
             };
         }
 
@@ -52,11 +52,11 @@ namespace MPF.Frontend
                 Element<InterfaceLanguage> ilElement => ilElement.Value,
                 Element<InternalProgram> ipElement => ipElement.Value,
                 Element<LogCompression> lcElement => lcElement.Value,
-                Element<MediaType> mtElement => mtElement.Value,
+                Element<PhysicalMediaType> mtElement => mtElement.Value,
                 Element<RedumperReadMethod> rmElement => rmElement.Value,
                 Element<RedumperSectorOrder> soElement => soElement.Value,
                 Element<RedumperDriveType> dtElement => dtElement.Value,
-                RedumpSystemComboBoxItem rsElement => rsElement.Value,
+                PhysicalSystemComboBoxItem rsElement => rsElement.Value,
                 Element<Region> reValue => reValue.Value,
                 _ => null,
             };

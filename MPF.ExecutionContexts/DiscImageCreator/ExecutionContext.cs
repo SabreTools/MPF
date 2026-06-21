@@ -170,8 +170,8 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system,
-            MediaType? type,
+        public ExecutionContext(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,
@@ -977,10 +977,10 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        public override string? GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+        public override string? GetDefaultExtension(PhysicalMediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
-        public override MediaType? GetMediaType() => Converters.ToMediaType(BaseCommand);
+        public override PhysicalMediaType? GetPhysicalMediaType() => Converters.ToPhysicalMediaType(BaseCommand);
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
@@ -1043,15 +1043,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
             // Get the base settings, if possible
             var dumpSettings = baseDumpSettings as DumpSettings ?? new DumpSettings();
 
-            SetBaseCommand(RedumpSystem, MediaType);
+            SetBaseCommand(PhysicalSystem, PhysicalMediaType);
 
             DrivePath = drivePath;
             DriveSpeed = driveSpeed;
             Filename = filename;
 
-            // First check to see if the combination of system and MediaType is valid
-            var validTypes = RedumpSystem.MediaTypes();
-            if (!validTypes.Contains(MediaType))
+            // First check to see if the combination of system and PhysicalMediaType is valid
+            var validTypes = PhysicalSystem.MediaTypes();
+            if (!validTypes.Contains(PhysicalMediaType))
                 return;
 
             // Set disable beep flag, if needed
@@ -1076,18 +1076,18 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
             // Now sort based on disc type
 #pragma warning disable IDE0010
-            switch (MediaType)
+            switch (PhysicalMediaType)
             {
-                case SabreTools.RedumpLib.Data.MediaType.CDROM:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
                     this[FlagStrings.C2Opcode] = true;
                     this[FlagStrings.MultiSectorRead] = dumpSettings.MultiSectorRead;
                     if (dumpSettings.MultiSectorRead)
                         MultiSectorReadValue = dumpSettings.MultiSectorReadValue;
 
-                    switch (RedumpSystem)
+                    switch (PhysicalSystem)
                     {
-                        case SabreTools.RedumpLib.Data.RedumpSystem.AppleMacintosh:
-                        case SabreTools.RedumpLib.Data.RedumpSystem.IBMPCcompatible:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.AppleMacintosh:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.IBMPCcompatible:
                             this[FlagStrings.NoFixSubQSecuROM] = true;
                             this[FlagStrings.ScanFileProtect] = true;
                             this[FlagStrings.ScanSectorProtect] = dumpSettings.ParanoidMode;
@@ -1096,52 +1096,52 @@ namespace MPF.ExecutionContexts.DiscImageCreator
                                 SubchannelReadLevelValue = 2;
 
                             break;
-                        case SabreTools.RedumpLib.Data.RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.AtariJaguarCDInteractiveMultimediaSystem:
                             this[FlagStrings.AtariJaguar] = true;
                             break;
-                        case SabreTools.RedumpLib.Data.RedumpSystem.HasbroVideoNow:
-                        case SabreTools.RedumpLib.Data.RedumpSystem.HasbroVideoNowColor:
-                        case SabreTools.RedumpLib.Data.RedumpSystem.HasbroVideoNowJr:
-                        case SabreTools.RedumpLib.Data.RedumpSystem.HasbroVideoNowXP:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNow:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowColor:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowJr:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.HasbroVideoNowXP:
                             this[FlagStrings.AddOffset] = true;
                             AddOffsetValue = 0; // Value needed for first run and placeholder after
                             break;
-                        case SabreTools.RedumpLib.Data.RedumpSystem.SonyPlayStation:
+                        case SabreTools.RedumpLib.Data.PhysicalSystem.SonyPlayStation:
                             this[FlagStrings.ScanAntiMod] = true;
                             this[FlagStrings.NoFixSubQLibCrypt] = true;
                             break;
                     }
 
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.DVD:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
                     this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
                     this[FlagStrings.ScanFileProtect] = dumpSettings.ParanoidMode;
                     this[FlagStrings.DVDReread] = true;
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.GDROM:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM:
                     this[FlagStrings.C2Opcode] = true;
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.HDDVD:
                     this[FlagStrings.CopyrightManagementInformation] = dumpSettings.UseCMIFlag;
                     this[FlagStrings.DVDReread] = true;
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.BluRay:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.BluRay:
                     this[FlagStrings.DVDReread] = true;
                     break;
 
                 // Special Formats
-                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoGameCubeGameDisc:
                     this[FlagStrings.Raw] = true;
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiOpticalDisc:
                     this[FlagStrings.Raw] = true;
                     break;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiUOpticalDisc:
                     // Currently no defaults set
                     break;
 
                 // Non-optical
-                case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.FloppyDisk:
                     // Currently no defaults set
                     break;
             }
@@ -1863,9 +1863,9 @@ namespace MPF.ExecutionContexts.DiscImageCreator
         /// <summary>
         /// Set the DIC command to be used for a given system and media type
         /// </summary>
-        /// <param name="system">RedumpSystem value to check</param>
-        /// <param name="type">MediaType value to check</param>
-        private void SetBaseCommand(RedumpSystem? system, MediaType? type)
+        /// <param name="system">PhysicalSystem value to check</param>
+        /// <param name="type">PhysicalMediaType value to check</param>
+        private void SetBaseCommand(PhysicalSystem? system, PhysicalMediaType? type)
         {
             // If we have an invalid combination, we should BaseCommand = null
             if (!system.MediaTypes().Contains(type))
@@ -1877,15 +1877,15 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 #pragma warning disable IDE0010
             switch (type)
             {
-                case SabreTools.RedumpLib.Data.MediaType.CDROM:
-                    if (system == SabreTools.RedumpLib.Data.RedumpSystem.SuperAudioCD)
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.CDROM:
+                    if (system == SabreTools.RedumpLib.Data.PhysicalSystem.SuperAudioCD)
                         BaseCommand = CommandStrings.SACD;
                     else
                         BaseCommand = CommandStrings.CompactDisc;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.DVD:
-                    if (system == SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox
-                        || system == SabreTools.RedumpLib.Data.RedumpSystem.MicrosoftXbox360)
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.DVD:
+                    if (system == SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox
+                        || system == SabreTools.RedumpLib.Data.PhysicalSystem.MicrosoftXbox360)
                     {
                         BaseCommand = CommandStrings.XBOX;
                         return;
@@ -1893,31 +1893,31 @@ namespace MPF.ExecutionContexts.DiscImageCreator
 
                     BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.GDROM:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM:
                     BaseCommand = CommandStrings.GDROM;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.HDDVD:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.HDDVD:
                     BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.BluRay:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.BluRay:
                     BaseCommand = CommandStrings.BluRay;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoGameCubeGameDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoGameCubeGameDisc:
                     BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiOpticalDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiOpticalDisc:
                     BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.NintendoWiiUOpticalDisc:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.NintendoWiiUOpticalDisc:
                     BaseCommand = CommandStrings.BluRay;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.FloppyDisk:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.FloppyDisk:
                     BaseCommand = CommandStrings.Floppy;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.HardDisk:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.HardDisk:
                     BaseCommand = CommandStrings.Disk;
                     return;
-                case SabreTools.RedumpLib.Data.MediaType.DataCartridge:
+                case SabreTools.RedumpLib.Data.PhysicalMediaType.DataCartridge:
                     BaseCommand = CommandStrings.Tape;
                     return;
 

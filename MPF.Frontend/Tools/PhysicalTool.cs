@@ -1079,8 +1079,8 @@ namespace MPF.Frontend.Tools
         /// Detect the Sega system based on the CD ROM header
         /// </summary>
         /// <param name="drive">Drive to detect system from</param>
-        /// <returns>Detected RedumpSystem if detected, null otherwise</returns>
-        public static RedumpSystem? DetectSegaSystem(Drive? drive)
+        /// <returns>Detected PhysicalSystem if detected, null otherwise</returns>
+        public static PhysicalSystem? DetectSegaSystem(Drive? drive)
         {
             if (drive is null)
                 return null;
@@ -1092,15 +1092,15 @@ namespace MPF.Frontend.Tools
             string systemType = Encoding.ASCII.GetString(firstSector, 0x00, 0x10);
 
             if (systemType.Equals("SEGA SEGASATURN ", StringComparison.Ordinal))
-                return RedumpSystem.SegaSaturn;
+                return PhysicalSystem.SegaSaturn;
             else if (systemType.Equals("SEGA SEGAKATANA ", StringComparison.Ordinal))
-                return RedumpSystem.SegaDreamcast;
+                return PhysicalSystem.SegaDreamcast;
             else if (systemType.Equals("SEGADISCSYSTEM  ", StringComparison.Ordinal))
-                return RedumpSystem.SegaMegaCDSegaCD;
+                return PhysicalSystem.SegaMegaCDSegaCD;
             else if (systemType.Equals("SEGA MEGA DRIVE ", StringComparison.Ordinal))
-                return RedumpSystem.SegaMegaCDSegaCD;
+                return PhysicalSystem.SegaMegaCDSegaCD;
             else if (systemType.Equals("SEGA GENESIS    ", StringComparison.Ordinal))
-                return RedumpSystem.SegaMegaCDSegaCD;
+                return PhysicalSystem.SegaMegaCDSegaCD;
 
             return null;
         }
@@ -1113,8 +1113,8 @@ namespace MPF.Frontend.Tools
         /// Detect a 3DO disc based on the CD ROM header
         /// </summary>
         /// <param name="drive">Drive to detect 3DO disc from</param>
-        /// <returns>RedumpSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
-        public static RedumpSystem? Detect3DOSystem(Drive? drive)
+        /// <returns>PhysicalSystem.Panasonic3DOInteractiveMultiplayer if detected, null otherwise</returns>
+        public static PhysicalSystem? Detect3DOSystem(Drive? drive)
         {
             if (drive is null)
                 return null;
@@ -1126,7 +1126,7 @@ namespace MPF.Frontend.Tools
             string systemType = Encoding.ASCII.GetString(firstSector, 0xB0, 0x10);
 
             if (systemType.Equals("iamaduckiamaduck", StringComparison.Ordinal))
-                return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
+                return PhysicalSystem.Panasonic3DOInteractiveMultiplayer;
 
             return null;
         }

@@ -30,12 +30,12 @@ namespace MPF.Processors
     public sealed class Aaru : BaseProcessor
     {
         /// <inheritdoc/>
-        public Aaru(RedumpSystem? system) : base(system) { }
+        public Aaru(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
             // If the filename is invalid
             if (string.IsNullOrEmpty(outputFilename))
@@ -77,7 +77,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -127,26 +127,31 @@ namespace MPF.Processors
             info.CommonDiscInfo.RingWriteOffset = writeOffset;
             info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
 
-            // Extract info based generically on MediaType
+            // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
             switch (mediaType)
             {
                 // TODO: Can this do GD-ROM?
-                case MediaType.CDROM:
+                case PhysicalMediaType.CDROM:
                     info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
                     break;
 
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.HDDVD:
+                case PhysicalMediaType.BluRay:
 
                     // TODO: Sync layerbreak finding with other processors
                     // Deal with the layerbreak
                     string? layerbreak = null;
-                    if (mediaType == MediaType.DVD)
+                    if (mediaType == PhysicalMediaType.DVD)
+                    {
                         layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
-                    else if (mediaType == MediaType.BluRay)
-                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
+                    }
+                    else if (mediaType == PhysicalMediaType.BluRay)
+                    {
+                        long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
+                        layerbreak = size > 25_025_314_816 ? "25025314816" : null;
+                    }
 
                     // If we have a single-layer disc
                     if (string.IsNullOrEmpty(layerbreak))
@@ -174,12 +179,12 @@ namespace MPF.Processors
                 // TODO: Can we get PS1 EDC status?
                 // TODO: Can we get PS1 LibCrypt status?
 
-                case RedumpSystem.DVDAudio:
-                case RedumpSystem.DVDVideo:
+                case PhysicalSystem.DVDAudio:
+                case PhysicalSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? string.Empty;
                     break;
 
-                case RedumpSystem.MicrosoftXbox:
+                case PhysicalSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
@@ -198,7 +203,7 @@ namespace MPF.Processors
 
                     break;
 
-                case RedumpSystem.MicrosoftXbox360:
+                case PhysicalSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
@@ -221,7 +226,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -229,7 +234,7 @@ namespace MPF.Processors
 #pragma warning disable IDE0010
             switch (mediaType)
             {
-                case MediaType.CDROM:
+                case PhysicalMediaType.CDROM:
                     return [
                         new($"{outputFilename}.aaruf", OutputFileFlags.Required),
                         new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
@@ -261,9 +266,9 @@ namespace MPF.Processors
                             "sub_log"),
                     ];
 
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.HDDVD:
+                case PhysicalMediaType.BluRay:
                     return [
                         new($"{outputFilename}.aaruf", OutputFileFlags.Required),
                         new($"{outputFilename}.cicm.xml", OutputFileFlags.Required
@@ -575,7 +580,7 @@ namespace MPF.Processors
             if (cicmSidecar.BlockMedia is not null && cicmSidecar.BlockMedia.Length > 0)
             {
                 // Loop through each BlockMedia in the metadata
-                foreach (BlockMediaType blockMedia in cicmSidecar.BlockMedia)
+                foreach (BlockPhysicalMediaType blockMedia in cicmSidecar.BlockMedia)
                 {
                     ulong size = blockMedia.Size;
                     string crc32 = string.Empty;
@@ -939,44 +944,44 @@ namespace MPF.Processors
         /// <param name="discType">Disc type string to check</param>
         /// <param name="discSubType">Disc subtype string to check</param>
         /// <returns>Media type on success, null otherwise</returns>
-        internal static MediaType? GetDiscTypeFromStrings(string? discType, string? discSubType)
+        internal static PhysicalMediaType? GetDiscTypeFromStrings(string? discType, string? discSubType)
         {
             return discType switch
             {
-                "3\" floppy" => MediaType.FloppyDisk,
-                "3.5\" floppy" => MediaType.FloppyDisk,
-                "3.5\" magneto-optical" => MediaType.Floptical,
+                "3\" floppy" => PhysicalMediaType.FloppyDisk,
+                "3.5\" floppy" => PhysicalMediaType.FloppyDisk,
+                "3.5\" magneto-optical" => PhysicalMediaType.Floptical,
                 "3.5\" SyQuest cartridge" => null,
                 "3.9\" SyQuest cartridge" => null,
-                "5.25\" floppy" => MediaType.FloppyDisk,
-                "5.25\" magneto-optical" => MediaType.Floptical,
+                "5.25\" floppy" => PhysicalMediaType.FloppyDisk,
+                "5.25\" magneto-optical" => PhysicalMediaType.Floptical,
                 "5.25\" SyQuest cartridge" => null,
-                "8\" floppy" => MediaType.FloppyDisk,
-                "300mm magneto optical" => MediaType.Floptical,
-                "356mm magneto-optical" => MediaType.Floptical,
+                "8\" floppy" => PhysicalMediaType.FloppyDisk,
+                "300mm magneto optical" => PhysicalMediaType.Floptical,
+                "356mm magneto-optical" => PhysicalMediaType.Floptical,
                 "Advanced Digital Recording" => null,
                 "Advanced Intelligent Tape" => null,
                 "Archival Disc" => null,
                 "BeeCard" => null,
                 "Blu-ray" => discSubType switch
                 {
-                    "Wii U Optical Disc" => MediaType.NintendoWiiUOpticalDisc,
-                    _ => MediaType.BluRay,
+                    "Wii U Optical Disc" => PhysicalMediaType.NintendoWiiUOpticalDisc,
+                    _ => PhysicalMediaType.BluRay,
                 },
                 "Borsu" => null,
-                "Compact Cassette" => MediaType.Cassette,
-                "Compact Disc" => MediaType.CDROM,
-                "Compact Flash" => MediaType.CompactFlash,
+                "Compact Cassette" => PhysicalMediaType.Cassette,
+                "Compact Disc" => PhysicalMediaType.CDROM,
+                "Compact Flash" => PhysicalMediaType.CompactFlash,
                 "CompacTape" => null,
                 "CRVdisc" => null,
                 "Data8" => null,
                 "DataPlay" => null,
                 "DataStore" => null,
-                "DDCD" => MediaType.CDROM,
+                "DDCD" => PhysicalMediaType.CDROM,
                 "DECtape" => null,
                 "DemiDiskette" => null,
                 "Digital Audio Tape" => null,
-                "Digital Data Storage" => MediaType.DataCartridge,
+                "Digital Data Storage" => PhysicalMediaType.DataCartridge,
                 "Digital Linear Tape" => null,
                 "DIR" => null,
                 "DST" => null,
@@ -985,24 +990,24 @@ namespace MPF.Processors
                 "DV tape" => null,
                 "DVD" => discSubType switch
                 {
-                    "GameCube Game Disc" => MediaType.NintendoGameCubeGameDisc,
-                    "Wii Optical Disc" => MediaType.NintendoWiiOpticalDisc,
-                    _ => MediaType.DVD,
+                    "GameCube Game Disc" => PhysicalMediaType.NintendoGameCubeGameDisc,
+                    "Wii Optical Disc" => PhysicalMediaType.NintendoWiiOpticalDisc,
+                    _ => PhysicalMediaType.DVD,
                 },
                 "EVD" => null,
                 "Exatape" => null,
                 "Express Card" => null,
                 "FDDVD" => null,
                 "Flextra" => null,
-                "Floptical" => MediaType.Floptical,
+                "Floptical" => PhysicalMediaType.Floptical,
                 "FVD" => null,
-                "GD" => MediaType.GDROM,
-                "Hard Disk Drive" => MediaType.HardDisk,
-                "HD DVD" => MediaType.HDDVD,
+                "GD" => PhysicalMediaType.GDROM,
+                "Hard Disk Drive" => PhysicalMediaType.HardDisk,
+                "HD DVD" => PhysicalMediaType.HDDVD,
                 "HD VMD" => null,
-                "HiFD" => MediaType.FloppyDisk,
+                "HiFD" => PhysicalMediaType.FloppyDisk,
                 "HiTC" => null,
-                "HuCard" => MediaType.Cartridge,
+                "HuCard" => PhysicalMediaType.Cartridge,
                 "HVD" => null,
                 "HyperFlex" => null,
                 "IBM 3470" => null,
@@ -1010,46 +1015,46 @@ namespace MPF.Processors
                 "IBM 3490" => null,
                 "IBM 3490E" => null,
                 "IBM 3592" => null,
-                "Iomega Bernoulli Box" => MediaType.IomegaBernoulliDisk,
-                "Iomega Bernoulli Box II" => MediaType.IomegaBernoulliDisk,
+                "Iomega Bernoulli Box" => PhysicalMediaType.IomegaBernoulliDisk,
+                "Iomega Bernoulli Box II" => PhysicalMediaType.IomegaBernoulliDisk,
                 "Iomega Ditto" => null,
-                "Iomega Jaz" => MediaType.IomegaJaz,
-                "Iomega PocketZip" => MediaType.IomegaZip,
+                "Iomega Jaz" => PhysicalMediaType.IomegaJaz,
+                "Iomega PocketZip" => PhysicalMediaType.IomegaZip,
                 "Iomega REV" => null,
-                "Iomega ZIP" => MediaType.IomegaZip,
+                "Iomega ZIP" => PhysicalMediaType.IomegaZip,
                 "Kodak Verbatim" => null,
-                "LaserDisc" => MediaType.LaserDisc,
+                "LaserDisc" => PhysicalMediaType.LaserDisc,
                 "Linear Tape-Open" => null,
                 "LT1" => null,
-                "Magneto-optical" => MediaType.Floptical,
-                "Memory Stick" => MediaType.SDCard,
+                "Magneto-optical" => PhysicalMediaType.Floptical,
+                "Memory Stick" => PhysicalMediaType.SDCard,
                 "MiniCard" => null,
                 "MiniDisc" => null,
-                "MultiMediaCard" => MediaType.SDCard,
-                "Nintendo 3DS Game Card" => MediaType.Cartridge,
-                "Nintendo 64 Disk" => MediaType.Nintendo64DD,
-                "Nintendo 64 Game Pak" => MediaType.Cartridge,
-                "Nintendo Disk Card" => MediaType.NintendoFamicomDiskSystem,
-                "Nintendo DS Game Card" => MediaType.Cartridge,
-                "Nintendo DSi Game Card" => MediaType.Cartridge,
-                "Nintendo Entertainment System Game Pak" => MediaType.Cartridge,
-                "Nintendo Famicom Game Pak" => MediaType.Cartridge,
-                "Nintendo Game Boy Advance Game Pak" => MediaType.Cartridge,
-                "Nintendo Game Boy Game Pak" => MediaType.Cartridge,
-                "Nintendo Switch Game Card" => MediaType.Cartridge,
+                "MultiMediaCard" => PhysicalMediaType.SDCard,
+                "Nintendo 3DS Game Card" => PhysicalMediaType.Cartridge,
+                "Nintendo 64 Disk" => PhysicalMediaType.Nintendo64DD,
+                "Nintendo 64 Game Pak" => PhysicalMediaType.Cartridge,
+                "Nintendo Disk Card" => PhysicalMediaType.NintendoFamicomDiskSystem,
+                "Nintendo DS Game Card" => PhysicalMediaType.Cartridge,
+                "Nintendo DSi Game Card" => PhysicalMediaType.Cartridge,
+                "Nintendo Entertainment System Game Pak" => PhysicalMediaType.Cartridge,
+                "Nintendo Famicom Game Pak" => PhysicalMediaType.Cartridge,
+                "Nintendo Game Boy Advance Game Pak" => PhysicalMediaType.Cartridge,
+                "Nintendo Game Boy Game Pak" => PhysicalMediaType.Cartridge,
+                "Nintendo Switch Game Card" => PhysicalMediaType.Cartridge,
                 "Optical Disc Archive" => null,
                 "Orb" => null,
                 "PCMCIA Card" => null,
                 "PD650" => null,
                 "PlayStation Memory Card" => null,
-                "Quarter-inch cartridge" => MediaType.DataCartridge,
-                "Quarter-inch mini cartridge" => MediaType.DataCartridge,
+                "Quarter-inch cartridge" => PhysicalMediaType.DataCartridge,
+                "Quarter-inch mini cartridge" => PhysicalMediaType.DataCartridge,
                 "QuickDisk" => null,
                 "RDX" => null,
-                "SACD" => MediaType.DVD,
+                "SACD" => PhysicalMediaType.DVD,
                 "Scalable Linear Recording" => null,
-                "Secure Digital" => MediaType.SDCard,
-                "SmartMedia" => MediaType.SDCard,
+                "Secure Digital" => PhysicalMediaType.SDCard,
+                "SmartMedia" => PhysicalMediaType.SDCard,
                 "Sony Professional Disc" => null,
                 "Sony Professional Disc for DATA" => null,
                 "STK 4480" => null,
@@ -1060,24 +1065,24 @@ namespace MPF.Processors
                 "STK T-10000" => null,
                 "Super Advanced Intelligent Tape" => null,
                 "Super Digital Linear Tape" => null,
-                "Super Nintendo Game Pak" => MediaType.Cartridge,
-                "Super Nintendo Game Pak (US)" => MediaType.Cartridge,
-                "SuperDisk" => MediaType.FloppyDisk,
+                "Super Nintendo Game Pak" => PhysicalMediaType.Cartridge,
+                "Super Nintendo Game Pak (US)" => PhysicalMediaType.Cartridge,
+                "SuperDisk" => PhysicalMediaType.FloppyDisk,
                 "SVOD" => null,
                 "Travan" => null,
                 "UDO" => null,
                 "UHD144" => null,
-                "UMD" => MediaType.UMD,
+                "UMD" => PhysicalMediaType.UMD,
                 "Unknown" => null,
-                "USB flash drive" => MediaType.FlashDrive,
+                "USB flash drive" => PhysicalMediaType.FlashDrive,
                 "VCDHD" => null,
                 "VideoFloppy" => null,
-                "VideoNow" => MediaType.CDROM,
-                "VXA" => MediaType.FlashDrive,
+                "VideoNow" => PhysicalMediaType.CDROM,
+                "VXA" => PhysicalMediaType.FlashDrive,
                 "Wafer" => null,
                 "xD" => null,
                 "XQD" => null,
-                "Zoned Hard Disk Drive" => MediaType.HardDisk,
+                "Zoned Hard Disk Drive" => PhysicalMediaType.HardDisk,
                 "ZX Microdrive" => null,
                 _ => null,
             };

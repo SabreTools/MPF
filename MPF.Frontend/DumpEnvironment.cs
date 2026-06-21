@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using SabreTools.IO.Extensions;
 using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.RedumpInfo;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Frontend
@@ -60,7 +61,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Currently selected system
         /// </summary>
-        private readonly RedumpSystem? _system;
+        private readonly PhysicalSystem? _system;
 
         #endregion
 
@@ -85,7 +86,7 @@ namespace MPF.Frontend
             set => _executionContext?.Speed = value;
         }
 
-        /// <inheritdoc cref="Extensions.LongName(RedumpSystem?)/>
+        /// <inheritdoc cref="Extensions.LongName(PhysicalSystem?)/>
         public string? SystemName => _system.LongName();
 
         #endregion
@@ -110,7 +111,7 @@ namespace MPF.Frontend
         public DumpEnvironment(Options options,
             string? outputPath,
             Drive? drive,
-            RedumpSystem? system,
+            PhysicalSystem? system,
             InternalProgram? internalProgram)
         {
             // Set options object
@@ -130,7 +131,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Check output path for matching logs from all dumping programs
         /// </summary>
-        public InternalProgram? CheckForMatchingProgram(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        public InternalProgram? CheckForMatchingProgram(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
@@ -172,7 +173,7 @@ namespace MPF.Frontend
         /// <summary>
         /// Check output path for partial logs from all dumping programs
         /// </summary>
-        public InternalProgram? CheckForPartialProgram(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        public InternalProgram? CheckForPartialProgram(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // If a complete dump exists from a different program
             InternalProgram? programFound = null;
@@ -210,9 +211,9 @@ namespace MPF.Frontend
         /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
-        /// <param name="mediaType">MediaType for specialized dumping parameters</param>
+        /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
         /// <param name="parameters">String representation of the parameters</param>
-        public bool SetExecutionContext(MediaType? mediaType, string? parameters)
+        public bool SetExecutionContext(PhysicalMediaType? mediaType, string? parameters)
         {
 #pragma warning disable IDE0072
             _executionContext = _internalProgram switch
@@ -231,8 +232,8 @@ namespace MPF.Frontend
             // Set system, type, and drive
             if (_executionContext is not null)
             {
-                _executionContext.RedumpSystem = _system;
-                _executionContext.MediaType = mediaType;
+                _executionContext.PhysicalSystem = _system;
+                _executionContext.PhysicalMediaType = mediaType;
 
                 // Set some parameters, if not already set
                 OutputPath ??= _executionContext.OutputPath!;
@@ -269,13 +270,13 @@ namespace MPF.Frontend
         /// <summary>
         /// Get the full parameter string for either DiscImageCreator or Aaru
         /// </summary>
-        /// <param name="mediaType">MediaType for specialized dumping parameters</param>
+        /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
         /// <param name="driveSpeed">Nullable int representing the drive speed</param>
         /// <returns>String representing the params, null on error</returns>
-        public string? GetFullParameters(MediaType? mediaType, int? driveSpeed)
+        public string? GetFullParameters(PhysicalMediaType? mediaType, int? driveSpeed)
         {
             // Populate with the correct params for inputs (if we're not on the default option)
-            if (_system is not null && mediaType != MediaType.NONE)
+            if (_system is not null && mediaType != PhysicalMediaType.NONE)
             {
                 // If drive letter is invalid, skip this
                 if (_drive is null)
@@ -330,34 +331,34 @@ namespace MPF.Frontend
 
         #region Passthrough Functionality
 
-        /// <inheritdoc cref="Extensions.DetectedByWindows(RedumpSystem?)"/>
+        /// <inheritdoc cref="Extensions.DetectedByWindows(PhysicalSystem?)"/>
         public bool DetectedByWindows() => _system.DetectedByWindows();
 
         /// <summary>
         /// Determine if the media supports drive speeds
         /// </summary>
-        /// <param name="type">MediaType value to check</param>
+        /// <param name="type">PhysicalMediaType value to check</param>
         /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
-        public static bool DoesSupportDriveSpeed(MediaType? mediaType)
+        public static bool DoesSupportDriveSpeed(PhysicalMediaType? mediaType)
         {
 #pragma warning disable IDE0072
             return mediaType switch
             {
-                MediaType.CDROM
-                    or MediaType.DVD
-                    or MediaType.GDROM
-                    or MediaType.HDDVD
-                    or MediaType.BluRay
-                    or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc
-                    or MediaType.NintendoWiiUOpticalDisc => true,
+                PhysicalMediaType.CDROM
+                    or PhysicalMediaType.DVD
+                    or PhysicalMediaType.GDROM
+                    or PhysicalMediaType.HDDVD
+                    or PhysicalMediaType.BluRay
+                    or PhysicalMediaType.NintendoGameCubeGameDisc
+                    or PhysicalMediaType.NintendoWiiOpticalDisc
+                    or PhysicalMediaType.NintendoWiiUOpticalDisc => true,
                 _ => false,
             };
 #pragma warning restore IDE0072
         }
 
-        /// <inheritdoc cref="BaseProcessor.FoundAllFiles(MediaType?, string?, string)"/>
-        public bool FoundAllFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        /// <inheritdoc cref="BaseProcessor.FoundAllFiles(PhysicalMediaType?, string?, string)"/>
+        public bool FoundAllFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             if (_processor is null)
                 return false;
@@ -365,8 +366,8 @@ namespace MPF.Frontend
             return _processor.FoundAllFiles(mediaType, outputDirectory, outputFilename).Count == 0;
         }
 
-        /// <inheritdoc cref="BaseProcessor.FoundAnyFiles(MediaType?, string?, string)"/>
-        public bool FoundAnyFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        /// <inheritdoc cref="BaseProcessor.FoundAnyFiles(PhysicalMediaType?, string?, string)"/>
+        public bool FoundAnyFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             if (_processor is null)
                 return false;
@@ -374,8 +375,8 @@ namespace MPF.Frontend
             return _processor.FoundAnyFiles(mediaType, outputDirectory, outputFilename);
         }
 
-        /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(MediaType?)"/>
-        public string? GetDefaultExtension(MediaType? mediaType)
+        /// <inheritdoc cref="BaseExecutionContext.GetDefaultExtension(PhysicalMediaType?)"/>
+        public string? GetDefaultExtension(PhysicalMediaType? mediaType)
         {
             if (_executionContext is null)
                 return null;
@@ -383,19 +384,19 @@ namespace MPF.Frontend
             return _executionContext.GetDefaultExtension(mediaType);
         }
 
-        /// <inheritdoc cref="BaseExecutionContext.GetMediaType()"/>
-        public MediaType? GetMediaType()
+        /// <inheritdoc cref="BaseExecutionContext.GetPhysicalMediaType()"/>
+        public PhysicalMediaType? GetPhysicalMediaType()
         {
             if (_executionContext is null)
                 return null;
 
-            return _executionContext.GetMediaType();
+            return _executionContext.GetPhysicalMediaType();
         }
 
         /// <summary>
         /// Verify that, given a system and a media type, they are correct
         /// </summary>
-        public ResultEventArgs GetSupportStatus(MediaType? mediaType)
+        public ResultEventArgs GetSupportStatus(PhysicalMediaType? mediaType)
         {
             // No system chosen, update status
             if (_system is null)
@@ -409,27 +410,27 @@ namespace MPF.Frontend
                 null => ResultEventArgs.Success("Ready to dump"),
 
                 // Fully supported types
-                MediaType.BluRay
-                    or MediaType.CDROM
-                    or MediaType.DVD
-                    or MediaType.FloppyDisk
-                    or MediaType.HardDisk
-                    or MediaType.CompactFlash
-                    or MediaType.SDCard
-                    or MediaType.FlashDrive
-                    or MediaType.HDDVD => ResultEventArgs.Success($"{mediaType.LongName()} ready to dump"),
+                PhysicalMediaType.BluRay
+                    or PhysicalMediaType.CDROM
+                    or PhysicalMediaType.DVD
+                    or PhysicalMediaType.FloppyDisk
+                    or PhysicalMediaType.HardDisk
+                    or PhysicalMediaType.CompactFlash
+                    or PhysicalMediaType.SDCard
+                    or PhysicalMediaType.FlashDrive
+                    or PhysicalMediaType.HDDVD => ResultEventArgs.Success($"{mediaType.LongName()} ready to dump"),
 
                 // Partially supported types
-                MediaType.GDROM
-                    or MediaType.NintendoGameCubeGameDisc
-                    or MediaType.NintendoWiiOpticalDisc
-                    or MediaType.NintendoWiiUOpticalDisc => ResultEventArgs.Success($"{mediaType.LongName()} partially supported for dumping"),
+                PhysicalMediaType.GDROM
+                    or PhysicalMediaType.NintendoGameCubeGameDisc
+                    or PhysicalMediaType.NintendoWiiOpticalDisc
+                    or PhysicalMediaType.NintendoWiiUOpticalDisc => ResultEventArgs.Success($"{mediaType.LongName()} partially supported for dumping"),
 
                 // Special case for other supported tools
-                MediaType.UMD => ResultEventArgs.Failure($"{mediaType.LongName()} supported for submission info parsing"),
+                PhysicalMediaType.UMD => ResultEventArgs.Failure($"{mediaType.LongName()} supported for submission info parsing"),
 
                 // Specifically unknown type
-                MediaType.NONE => ResultEventArgs.Failure("Please select a valid media type"),
+                PhysicalMediaType.NONE => ResultEventArgs.Failure("Please select a valid media type"),
 
                 // Undumpable but recognized types
                 _ => ResultEventArgs.Failure($"{mediaType.LongName()} media are not supported for dumping"),
@@ -461,9 +462,9 @@ namespace MPF.Frontend
         /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
-        /// <param name="mediaType">MediaType for specialized dumping parameters</param>
+        /// <param name="mediaType">PhysicalMediaType for specialized dumping parameters</param>
         /// <param name="progress">Optional result progress callback</param>
-        public async Task<ResultEventArgs> Run(MediaType? mediaType, IProgress<ResultEventArgs>? progress = null)
+        public async Task<ResultEventArgs> Run(PhysicalMediaType? mediaType, IProgress<ResultEventArgs>? progress = null)
         {
             // If we don't have parameters
             if (_executionContext is null)
@@ -549,7 +550,7 @@ namespace MPF.Frontend
             }
 
             // Determine the media type from the processor
-            MediaType? mediaType = _processor.DetermineMediaType(outputDirectory, outputFilename);
+            PhysicalMediaType? mediaType = _processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             if (mediaType is null)
                 return ResultEventArgs.Failure("Could not determine the media type from output files...");
 
@@ -669,7 +670,7 @@ namespace MPF.Frontend
             }
 
             // Create PS3 IRD, if required
-            if (_options.Processing.CreateIRDAfterDumping && _system == RedumpSystem.SonyPlayStation3 && mediaType == MediaType.BluRay)
+            if (_options.Processing.CreateIRDAfterDumping && _system == PhysicalSystem.SonyPlayStation3 && mediaType == PhysicalMediaType.BluRay)
             {
                 resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
 
@@ -690,7 +691,7 @@ namespace MPF.Frontend
             }
 
             // REDUMP SUBMISSION HACK SPECIFIC TO PS5
-            if (_system == RedumpSystem.SonyPlayStation5
+            if (_system == PhysicalSystem.SonyPlayStation5
                 && submissionInfo?.Extras?.PIC is not null
                 && _options.Processing.MediaInformation.EnableRedumpCompatibility)
             {
@@ -698,12 +699,6 @@ namespace MPF.Frontend
                 submissionInfo.CommonDiscInfo.Comments += $"\n\n<b>PIC (Ignore PIC field):</b>\n\n{submissionInfo.Extras.PIC}";
                 resultProgress.Report(ResultEventArgs.Neutral("PS5 PIC copied to comments!"));
             }
-
-            // Ensure that all split size and checksums are removed
-            submissionInfo?.SizeAndChecksums?.Size = default;
-            submissionInfo?.SizeAndChecksums?.CRC32 = null;
-            submissionInfo?.SizeAndChecksums?.MD5 = null;
-            submissionInfo?.SizeAndChecksums?.SHA1 = null;
 
             resultProgress.Report(ResultEventArgs.Success("Submission information process complete!"));
             return ResultEventArgs.Success();
@@ -713,18 +708,18 @@ namespace MPF.Frontend
         /// Checks if the parameters are valid
         /// </summary>
         /// <returns>True if the configuration is valid, false otherwise</returns>
-        internal bool ParametersValid(MediaType? mediaType)
+        internal bool ParametersValid(PhysicalMediaType? mediaType)
         {
             // Missing drive means it can never be valid
             if (_drive is null)
                 return false;
 
             bool parametersValid = _executionContext?.IsValid() ?? false;
-            bool floppyValid = !(_drive.InternalDriveType == InternalDriveType.Floppy ^ mediaType == MediaType.FloppyDisk);
+            bool floppyValid = !(_drive.InternalDriveType == InternalDriveType.Floppy ^ mediaType == PhysicalMediaType.FloppyDisk);
 
             // TODO: HardDisk being in the Removable category is a hack, fix this later
             bool removableDiskValid = !((_drive.InternalDriveType == InternalDriveType.Removable || _drive.InternalDriveType == InternalDriveType.HardDisk)
-                ^ (mediaType == MediaType.CompactFlash || mediaType == MediaType.SDCard || mediaType == MediaType.FlashDrive || mediaType == MediaType.HardDisk));
+                ^ (mediaType == PhysicalMediaType.CompactFlash || mediaType == PhysicalMediaType.SDCard || mediaType == PhysicalMediaType.FlashDrive || mediaType == PhysicalMediaType.HardDisk));
 
             return parametersValid && floppyValid && removableDiskValid;
         }
@@ -733,7 +728,7 @@ namespace MPF.Frontend
         /// Validate the current environment is ready for a dump
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private ResultEventArgs IsValidForDump(MediaType? mediaType)
+        private ResultEventArgs IsValidForDump(PhysicalMediaType? mediaType)
         {
             // Validate that everything is good
             if (_executionContext is null || !ParametersValid(mediaType))

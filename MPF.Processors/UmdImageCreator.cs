@@ -14,16 +14,16 @@ namespace MPF.Processors
     public sealed class UmdImageCreator : BaseProcessor
     {
         /// <inheritdoc/>
-        public UmdImageCreator(RedumpSystem? system) : base(system) { }
+        public UmdImageCreator(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
-            => MediaType.UMD;
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
+            => PhysicalMediaType.UMD;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // TODO: Determine if there's a UMDImageCreator version anywhere
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
@@ -51,13 +51,12 @@ namespace MPF.Processors
                 out string? serial,
                 out var version,
                 out var layer,
-                out long size))
+                out _))
             {
                 info.CommonDiscInfo.Title = title ?? string.Empty;
                 info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
                 info.VersionAndEditions.Version = version ?? string.Empty;
-                info.SizeAndChecksums.Size = size;
 
                 if (!string.IsNullOrEmpty(layer))
                     info.SizeAndChecksums.Layerbreak = long.Parse(layer ?? "-1");
@@ -69,7 +68,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);

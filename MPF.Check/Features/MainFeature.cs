@@ -169,7 +169,7 @@ namespace MPF.Check.Features
             }
 
             // The first argument is the system type
-            System = args[0].Trim('"').ToRedumpSystem();
+            System = args[0].Trim('"').ToPhysicalSystem();
 
             // Loop through the arguments and parse out values
             for (index = 1; index < args.Length; index++)

@@ -43,7 +43,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Currently selected system value
         /// </summary>
-        public RedumpSystem? CurrentSystem
+        public PhysicalSystem? CurrentSystem
         {
             get => _currentSystem;
             set
@@ -52,7 +52,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(CurrentSystem));
             }
         }
-        private RedumpSystem? _currentSystem;
+        private PhysicalSystem? _currentSystem;
 
         /// <summary>
         /// Indicates the status of the system type combo box
@@ -206,7 +206,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<RedumpSystemComboBoxItem> Systems
+        public List<PhysicalSystemComboBoxItem> Systems
         {
             get => _systems;
             set
@@ -215,7 +215,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(Systems));
             }
         }
-        private List<RedumpSystemComboBoxItem> _systems;
+        private List<PhysicalSystemComboBoxItem> _systems;
 
         /// <summary>
         /// List of available internal programs
@@ -251,7 +251,7 @@ namespace MPF.Frontend.ViewModels
             CheckDumpButtonEnabled = false;
             CancelButtonEnabled = true;
 
-            Systems = RedumpSystemComboBoxItem.GenerateElements();
+            Systems = PhysicalSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
 
             PopulateInternalPrograms();

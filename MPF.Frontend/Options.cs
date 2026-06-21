@@ -357,7 +357,7 @@ namespace MPF.Frontend
         /// Default system if none can be detected
         /// </summary>
         /// <remarks>Version 1 and greater</remarks>
-        public RedumpSystem? DefaultSystem { get; set; } = RedumpSystem.IBMPCcompatible;
+        public PhysicalSystem? DefaultSystem { get; set; } = PhysicalSystem.IBMPCcompatible;
 
         /// <summary>
         /// Default preferred dumping speeds per media type

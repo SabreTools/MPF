@@ -59,7 +59,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Detected media type, distinct from the selected one
         /// </summary>
-        private MediaType? _detectedMediaType;
+        private PhysicalMediaType? _detectedPhysicalMediaType;
 
         /// <summary>
         /// Current dumping environment
@@ -134,7 +134,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Currently selected system value
         /// </summary>
-        public RedumpSystem? CurrentSystem
+        public PhysicalSystem? CurrentSystem
         {
             get => _currentSystem;
             set
@@ -143,7 +143,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(CurrentSystem));
             }
         }
-        private RedumpSystem? _currentSystem;
+        private PhysicalSystem? _currentSystem;
 
         /// <summary>
         /// Indicates the status of the system type combo box
@@ -162,27 +162,27 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Currently selected media type value
         /// </summary>
-        public MediaType? CurrentMediaType
+        public PhysicalMediaType? CurrentPhysicalMediaType
         {
-            get => _currentMediaType;
+            get => _currentPhysicalMediaType;
             set
             {
-                _currentMediaType = value;
-                TriggerPropertyChanged(nameof(CurrentMediaType));
+                _currentPhysicalMediaType = value;
+                TriggerPropertyChanged(nameof(CurrentPhysicalMediaType));
             }
         }
-        private MediaType? _currentMediaType;
+        private PhysicalMediaType? _currentPhysicalMediaType;
 
         /// <summary>
         /// Indicates the status of the media type combo box
         /// </summary>
-        public bool MediaTypeComboBoxEnabled
+        public bool PhysicalMediaTypeComboBoxEnabled
         {
             get => _mediaTypeComboBoxEnabled;
             set
             {
                 _mediaTypeComboBoxEnabled = value;
-                TriggerPropertyChanged(nameof(MediaTypeComboBoxEnabled));
+                TriggerPropertyChanged(nameof(PhysicalMediaTypeComboBoxEnabled));
             }
         }
         private bool _mediaTypeComboBoxEnabled;
@@ -503,21 +503,21 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-        public List<Element<MediaType>>? MediaTypes
+        public List<Element<PhysicalMediaType>>? PhysicalMediaTypes
         {
             get => _mediaTypes;
             set
             {
                 _mediaTypes = value;
-                TriggerPropertyChanged(nameof(MediaTypes));
+                TriggerPropertyChanged(nameof(PhysicalMediaTypes));
             }
         }
-        private List<Element<MediaType>>? _mediaTypes;
+        private List<Element<PhysicalMediaType>>? _mediaTypes;
 
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<RedumpSystemComboBoxItem> Systems
+        public List<PhysicalSystemComboBoxItem> Systems
         {
             get => _systems;
             set
@@ -526,7 +526,7 @@ namespace MPF.Frontend.ViewModels
                 TriggerPropertyChanged(nameof(Systems));
             }
         }
-        private List<RedumpSystemComboBoxItem> _systems;
+        private List<PhysicalSystemComboBoxItem> _systems;
 
         /// <summary>
         /// List of available internal programs
@@ -574,7 +574,7 @@ namespace MPF.Frontend.ViewModels
             CheckDumpMenuItemEnabled = true;
             CreateIRDMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
-            MediaTypeComboBoxEnabled = true;
+            PhysicalMediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
             OutputPathBrowseButtonEnabled = true;
             DriveLetterComboBoxEnabled = true;
@@ -586,8 +586,8 @@ namespace MPF.Frontend.ViewModels
             EnableParametersCheckBoxEnabled = true;
             LogPanelExpanded = _options.GUI.OpenLogWindowAtStartup;
 
-            MediaTypes = [];
-            Systems = RedumpSystemComboBoxItem.GenerateElements();
+            PhysicalMediaTypes = [];
+            Systems = PhysicalSystemComboBoxItem.GenerateElements();
             InternalPrograms = [];
         }
 
@@ -700,7 +700,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Populate media type according to system type
         /// </summary>
-        private void PopulateMediaType()
+        private void PopulatePhysicalMediaType()
         {
             // Disable other UI updates
             bool cachedCanExecuteSelectionChanged = CanExecuteSelectionChanged;
@@ -709,19 +709,19 @@ namespace MPF.Frontend.ViewModels
             if (CurrentSystem is not null)
             {
                 var mediaTypeValues = CurrentSystem.MediaTypes();
-                int index = mediaTypeValues.FindIndex(m => m == CurrentMediaType);
-                if (CurrentMediaType is not null && index == -1)
-                    VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
+                int index = mediaTypeValues.FindIndex(m => m == CurrentPhysicalMediaType);
+                if (CurrentPhysicalMediaType is not null && index == -1)
+                    VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-                MediaTypes = mediaTypeValues.ConvertAll(m => new Element<MediaType>(m ?? MediaType.NONE));
-                MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
-                CurrentMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
+                PhysicalMediaTypes = mediaTypeValues.ConvertAll(m => new Element<PhysicalMediaType>(m ?? PhysicalMediaType.NONE));
+                PhysicalMediaTypeComboBoxEnabled = PhysicalMediaTypes.Count > 1;
+                CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
             }
             else
             {
-                MediaTypeComboBoxEnabled = false;
-                MediaTypes = null;
-                CurrentMediaType = null;
+                PhysicalMediaTypeComboBoxEnabled = false;
+                PhysicalMediaTypes = null;
+                CurrentPhysicalMediaType = null;
             }
 
             // Reenable event handlers, if necessary
@@ -785,7 +785,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Change the currently selected media type
         /// </summary>
-        public void ChangeMediaType(System.Collections.IList removedItems, System.Collections.IList addedItems)
+        public void ChangePhysicalMediaType(System.Collections.IList removedItems, System.Collections.IList addedItems)
         {
             // Only change the media type if the selection and not the list has changed
             if ((removedItems is null || removedItems.Count == 1) && (addedItems is null || addedItems.Count == 1))
@@ -801,7 +801,7 @@ namespace MPF.Frontend.ViewModels
         public void ChangeSystem()
         {
             VerboseLogLn($"Changed system to: {CurrentSystem.LongName()}");
-            PopulateMediaType();
+            PopulatePhysicalMediaType();
             GetOutputNames(false);
             EnsureMediaInformation();
         }
@@ -833,8 +833,8 @@ namespace MPF.Frontend.ViewModels
 
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
-                    System = RedumpSystem.IBMPCcompatible,
-                    Media = DiscType.BD128,
+                    System = PhysicalSystem.IBMPCcompatible,
+                    Media = MediaType.BD128,
                     Title = "Game Title",
                     ForeignTitleNonLatin = "Foreign Game Title",
                     DiscNumberLetter = "1",
@@ -919,7 +919,7 @@ namespace MPF.Frontend.ViewModels
 
                 DumpersAndStatus = new DumpersAndStatusSection()
                 {
-                    Status = DumpStatus.TwoOrMoreGreen,
+                    Status = DumpStatus.VerifiedGreen,
                     Dumpers = ["Dumper1", "Dumper2"],
                     OtherDumpers = "Dumper3",
                 },
@@ -1033,9 +1033,9 @@ namespace MPF.Frontend.ViewModels
             }
 
             // Determine current media type, if possible
-            PopulateMediaType();
-            CacheCurrentDiscType();
-            SetCurrentDiscType();
+            PopulatePhysicalMediaType();
+            CacheCurrentMediaType();
+            SetCurrentMediaType();
 
             // Set the dumping program
             if (rebuildPrograms)
@@ -1198,7 +1198,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Cache the current disc type to internal variable
         /// </summary>
-        private void CacheCurrentDiscType()
+        private void CacheCurrentMediaType()
         {
             // If the selected item is invalid, we just skip
             if (CurrentDrive is null)
@@ -1206,34 +1206,34 @@ namespace MPF.Frontend.ViewModels
 
             // Get reasonable default values based on the current system
             var mediaTypes = CurrentSystem.MediaTypes();
-            MediaType? defaultMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : MediaType.CDROM;
-            if (defaultMediaType == MediaType.NONE)
-                defaultMediaType = MediaType.CDROM;
+            PhysicalMediaType? defaultPhysicalMediaType = mediaTypes.Count > 0 ? mediaTypes[0] : PhysicalMediaType.CDROM;
+            if (defaultPhysicalMediaType == PhysicalMediaType.NONE)
+                defaultPhysicalMediaType = PhysicalMediaType.CDROM;
 
             // If the drive is marked active, try to read from it
             if (CurrentDrive.MarkedActive)
             {
                 VerboseLog($"Trying to detect media type for drive {CurrentDrive.Name} [{CurrentDrive.DriveFormat}] using size and filesystem.. ");
-                MediaType? detectedMediaType = CurrentDrive.GetMediaType(CurrentSystem);
+                PhysicalMediaType? detectedPhysicalMediaType = CurrentDrive.GetPhysicalMediaType(CurrentSystem);
 
                 // If we got either an error or no media, default to the current System default
-                if (detectedMediaType is null)
+                if (detectedPhysicalMediaType is null)
                 {
-                    VerboseLogLn($"Could not detect media type, defaulting to {defaultMediaType.LongName()}.");
-                    CurrentMediaType = defaultMediaType;
+                    VerboseLogLn($"Could not detect media type, defaulting to {defaultPhysicalMediaType.LongName()}.");
+                    CurrentPhysicalMediaType = defaultPhysicalMediaType;
                 }
                 else
                 {
-                    VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
-                    _detectedMediaType = detectedMediaType;
-                    CurrentMediaType = detectedMediaType;
+                    VerboseLogLn($"Detected {detectedPhysicalMediaType.LongName()}.");
+                    _detectedPhysicalMediaType = detectedPhysicalMediaType;
+                    CurrentPhysicalMediaType = detectedPhysicalMediaType;
                 }
             }
             // Otherwise just use the default
             else
             {
-                VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
-                CurrentMediaType = defaultMediaType;
+                VerboseLogLn($"Drive marked as empty, defaulting to {defaultPhysicalMediaType.LongName()}.");
+                CurrentPhysicalMediaType = defaultPhysicalMediaType;
             }
         }
 
@@ -1276,7 +1276,7 @@ namespace MPF.Frontend.ViewModels
                 CurrentDrive,
                 CurrentSystem,
                 CurrentProgram);
-            env.SetExecutionContext(CurrentMediaType, Parameters);
+            env.SetExecutionContext(CurrentPhysicalMediaType, Parameters);
             env.SetProcessor();
             return env;
         }
@@ -1293,19 +1293,19 @@ namespace MPF.Frontend.ViewModels
             else if (!Options.GUI.SkipSystemDetection)
             {
                 VerboseLog($"Trying to detect system for drive {CurrentDrive.Name}.. ");
-                var currentSystem = GetRedumpSystem(CurrentDrive);
+                var currentSystem = GetPhysicalSystem(CurrentDrive);
                 if (currentSystem is not null)
                     VerboseLogLn($"detected {currentSystem.LongName()}.");
 
                 // If undetected system on inactive drive, and PC is the default system, check for potential Mac disc
-                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.Dumping.DefaultSystem == RedumpSystem.IBMPCcompatible)
+                if (currentSystem is null && !CurrentDrive.MarkedActive && Options.Dumping.DefaultSystem == PhysicalSystem.IBMPCcompatible)
                 {
                     try
                     {
                         // If disc is readable on inactive drive, assume it is a Mac disc
                         if (PhysicalTool.GetFirstBytes(CurrentDrive, 1) is not null)
                         {
-                            currentSystem = RedumpSystem.AppleMacintosh;
+                            currentSystem = PhysicalSystem.AppleMacintosh;
                             VerboseLogLn($"unable to detect, defaulting to {currentSystem.LongName()}.");
                         }
                     }
@@ -1343,7 +1343,7 @@ namespace MPF.Frontend.ViewModels
             CheckDumpMenuItemEnabled = false;
             CreateIRDMenuItemEnabled = false;
             SystemTypeComboBoxEnabled = false;
-            MediaTypeComboBoxEnabled = false;
+            PhysicalMediaTypeComboBoxEnabled = false;
             OutputPathTextBoxEnabled = false;
             OutputPathBrowseButtonEnabled = false;
             DriveLetterComboBoxEnabled = false;
@@ -1365,7 +1365,7 @@ namespace MPF.Frontend.ViewModels
             CheckDumpMenuItemEnabled = true;
             CreateIRDMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
-            MediaTypeComboBoxEnabled = true;
+            PhysicalMediaTypeComboBoxEnabled = true;
             OutputPathTextBoxEnabled = true;
             OutputPathBrowseButtonEnabled = true;
             DriveLetterComboBoxEnabled = true;
@@ -1391,7 +1391,7 @@ namespace MPF.Frontend.ViewModels
             _environment = DetermineEnvironment();
 
             // Get the status to write out
-            ResultEventArgs result = _environment.GetSupportStatus(CurrentMediaType);
+            ResultEventArgs result = _environment.GetSupportStatus(CurrentPhysicalMediaType);
             if (CurrentProgram == InternalProgram.NONE)
                 Status = "No dumping program found";
             else
@@ -1401,12 +1401,12 @@ namespace MPF.Frontend.ViewModels
             StartStopButtonEnabled = result == true && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            DriveSpeedComboBoxEnabled = DumpEnvironment.DoesSupportDriveSpeed(CurrentMediaType);
+            DriveSpeedComboBoxEnabled = DumpEnvironment.DoesSupportDriveSpeed(CurrentPhysicalMediaType);
 
             // If input params are enabled, generate the full parameters from the environment
             if (ParametersCheckBoxEnabled)
             {
-                var generated = _environment.GetFullParameters(CurrentMediaType, DriveSpeed);
+                var generated = _environment.GetFullParameters(CurrentPhysicalMediaType, DriveSpeed);
                 if (generated is not null)
                     Parameters = generated;
             }
@@ -1425,7 +1425,7 @@ namespace MPF.Frontend.ViewModels
             string systemShort = _currentSystem.ShortName() ?? "unknown";
             if (string.IsNullOrEmpty(systemShort))
                 systemShort = "unknown";
-            string mediaLong = _currentMediaType.LongName() ?? "Unknown Media";
+            string mediaLong = _currentPhysicalMediaType.LongName() ?? "Unknown Media";
             if (string.IsNullOrEmpty(mediaLong))
                 mediaLong = "Unknown Media";
             string program = _currentProgram.ToString() ?? "Unknown Program";
@@ -1470,7 +1470,7 @@ namespace MPF.Frontend.ViewModels
 
             // Get path pieces that are used in all branches
             string defaultOutputPath = Options.Dumping.DefaultOutputPath ?? "ISO";
-            string extension = _environment?.GetDefaultExtension(CurrentMediaType) ?? ".bin";
+            string extension = _environment?.GetDefaultExtension(CurrentPhysicalMediaType) ?? ".bin";
             string label = GetFormattedVolumeLabel(CurrentDrive) ?? CurrentSystem.LongName() ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
             string defaultFilename = $"{label}{extension}";
 
@@ -1519,7 +1519,7 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Get the current system from drive
         /// </summary>
-        private static RedumpSystem? GetRedumpSystem(Drive? drive)
+        private static PhysicalSystem? GetPhysicalSystem(Drive? drive)
         {
             // If the drive does not exist, we can't do anything
             if (drive is null || string.IsNullOrEmpty(drive.Name))
@@ -1531,14 +1531,14 @@ namespace MPF.Frontend.ViewModels
                 try
                 {
                     // Check for Panasonic 3DO - filesystem not readable on Windows
-                    RedumpSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
+                    PhysicalSystem? detected3DOSystem = PhysicalTool.Detect3DOSystem(drive);
                     if (detected3DOSystem is not null)
                     {
                         return detected3DOSystem;
                     }
 
                     // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
-                    RedumpSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
+                    PhysicalSystem? detectedSegaSystem = PhysicalTool.DetectSegaSystem(drive);
                     if (detectedSegaSystem is not null)
                     {
                         return detectedSegaSystem;
@@ -1552,32 +1552,38 @@ namespace MPF.Frontend.ViewModels
 
             // Floppies, HDDs, and removable drives are assumed
             if (drive.InternalDriveType != InternalDriveType.Optical)
-                return RedumpSystem.IBMPCcompatible;
+                return PhysicalSystem.IBMPCcompatible;
 
             // Check volume labels first
-            RedumpSystem? systemFromLabel = FrontendTool.GetRedumpSystemFromVolumeLabel(drive.VolumeLabel);
+            PhysicalSystem? systemFromLabel = FrontendTool.GetPhysicalSystemFromVolumeLabel(drive.VolumeLabel);
             if (systemFromLabel is not null)
                 return systemFromLabel;
 
             // Get a list of files for quicker checking
             #region Arcade
 
-            // funworld Photo Play
+            // Funworld Photo Play
             if (File.Exists(Path.Combine(drive.Name, "PP.INF"))
                 && Directory.Exists(Path.Combine(drive.Name, "PPINC")))
             {
-                return RedumpSystem.funworldPhotoPlay;
+                return PhysicalSystem.FunworldPhotoPlay;
             }
 
             // Konami Python 2
             if (Directory.Exists(Path.Combine(drive.Name, "PY2.D")))
             {
-                return RedumpSystem.KonamiPython2;
+                return PhysicalSystem.KonamiPython2;
             }
 
             #endregion
 
             #region Consoles
+
+            // Apple/Bandai Pippin
+            if (File.Exists(Path.Combine(drive.Name, "PippinAuthenticationFile")))
+            {
+                return PhysicalSystem.AppleBandaiPippin;
+            }
 
             // Bandai Playdia Quick Interactive System
             try
@@ -1587,16 +1593,10 @@ namespace MPF.Frontend.ViewModels
                 if (files.Exists(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
                     && files.Exists(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
                 {
-                    return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                    return PhysicalSystem.BandaiPlaydiaQuickInteractiveSystem;
                 }
             }
             catch { }
-
-            // Bandai Pippin
-            if (File.Exists(Path.Combine(drive.Name, "PippinAuthenticationFile")))
-            {
-                return RedumpSystem.BandaiPippin;
-            }
 
             // Commodore CDTV/CD32
 #if NET20 || NET35
@@ -1606,15 +1606,15 @@ namespace MPF.Frontend.ViewModels
 #endif
             {
                 if (File.Exists(Path.Combine(drive.Name, "CDTV.TM")))
-                    return RedumpSystem.CommodoreAmigaCDTV;
+                    return PhysicalSystem.CommodoreAmigaCDTV;
                 else
-                    return RedumpSystem.CommodoreAmigaCD32;
+                    return PhysicalSystem.CommodoreAmigaCD32;
             }
 
             // Mattel HyperScan -- TODO: May need case-insensitivity added
             if (File.Exists(Path.Combine(drive.Name, "hyper.exe")))
             {
-                return RedumpSystem.MattelHyperScan;
+                return PhysicalSystem.MattelHyperScan;
             }
 
             // Mattel Fisher-Price iXL
@@ -1624,13 +1624,13 @@ namespace MPF.Frontend.ViewModels
             if (File.Exists(Path.Combine(drive.Name, "iXL", "iXLUpdater.exe")))
 #endif
             {
-                return RedumpSystem.MattelFisherPriceiXL;
+                return PhysicalSystem.MattelFisherPriceiXL;
             }
 
             // Memorex - Visual Information System
             if (File.Exists(Path.Combine(drive.Name, "CONTROL.TAT")))
             {
-                return RedumpSystem.MemorexVisualInformationSystem;
+                return PhysicalSystem.MemorexVisualInformationSystem;
             }
 
             // Microsoft Xbox 360
@@ -1640,7 +1640,7 @@ namespace MPF.Frontend.ViewModels
                     && Path.Combine(drive.Name, "$SystemUpdate").SafeGetFiles().Length > 0
                     && drive.TotalSize <= 500_000_000)
                 {
-                    return RedumpSystem.MicrosoftXbox360;
+                    return PhysicalSystem.MicrosoftXbox360;
                 }
             }
             catch { }
@@ -1658,29 +1658,29 @@ namespace MPF.Frontend.ViewModels
                         string catalogjs = Path.Combine(drive.Name, "MSXC", "Metadata", "catalog.js");
 #endif
                         if (!File.Exists(catalogjs))
-                            return RedumpSystem.MicrosoftXboxOne;
+                            return PhysicalSystem.MicrosoftXboxOne;
 
                         var catalog = new SabreTools.Serialization.Readers.Catalog().Deserialize(catalogjs);
                         if (catalog is not null && catalog.Version is not null && catalog.Packages is not null)
                         {
                             if (!double.TryParse(catalog.Version, out double version))
-                                return RedumpSystem.MicrosoftXboxOne;
+                                return PhysicalSystem.MicrosoftXboxOne;
 
                             if (version < 4)
-                                return RedumpSystem.MicrosoftXboxOne;
+                                return PhysicalSystem.MicrosoftXboxOne;
 
                             foreach (var package in catalog.Packages)
                             {
                                 if (package.Generation != "9")
-                                    return RedumpSystem.MicrosoftXboxOne;
+                                    return PhysicalSystem.MicrosoftXboxOne;
                             }
 
-                            return RedumpSystem.MicrosoftXboxSeriesXS;
+                            return PhysicalSystem.MicrosoftXboxSeriesXS;
                         }
                     }
                     catch
                     {
-                        return RedumpSystem.MicrosoftXboxOne;
+                        return PhysicalSystem.MicrosoftXboxOne;
                     }
                 }
             }
@@ -1689,13 +1689,13 @@ namespace MPF.Frontend.ViewModels
             // Playmaji Polymega
             if (File.Exists(Path.Combine(drive.Name, "Get Polymega App.url")))
             {
-                return RedumpSystem.PlaymajiPolymega;
+                return PhysicalSystem.PlaymajiPolymega;
             }
 
             try
             {
                 // Sega Saturn / Sega Dreamcast / Sega Mega-CD / Sega-CD
-                RedumpSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
+                PhysicalSystem? segaSystem = PhysicalTool.DetectSegaSystem(drive);
                 if (segaSystem is not null)
                 {
                     return segaSystem;
@@ -1706,7 +1706,7 @@ namespace MPF.Frontend.ViewModels
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drive.Name, "IP.BIN")))
             {
-                return RedumpSystem.SegaDreamcast;
+                return PhysicalSystem.SegaDreamcast;
             }
 
             // Sega Mega-CD / Sega-CD
@@ -1722,7 +1722,7 @@ namespace MPF.Frontend.ViewModels
                 || File.Exists(Path.Combine(drive.Name, "FILESYSTEM.BIN")))
 #endif
             {
-                return RedumpSystem.SegaMegaCDSegaCD;
+                return PhysicalSystem.SegaMegaCDSegaCD;
             }
 
             // SNK Neo-Geo CD
@@ -1733,7 +1733,7 @@ namespace MPF.Frontend.ViewModels
                     || File.Exists(Path.Combine(drive.Name, "CPY.TXT"))
                     || File.Exists(Path.Combine(drive.Name, "IPL.TXT")))
                 {
-                    return RedumpSystem.SNKNeoGeoCD;
+                    return PhysicalSystem.SNKNeoGeoCD;
                 }
             }
             catch { }
@@ -1746,13 +1746,13 @@ namespace MPF.Frontend.ViewModels
                 // Check for either BOOT or BOOT2
                 var systemCnf = new IniFile(systemCnfPath);
                 if (systemCnf.ContainsKey("BOOT"))
-                    return RedumpSystem.SonyPlayStation;
+                    return PhysicalSystem.SonyPlayStation;
                 else if (systemCnf.ContainsKey("BOOT2"))
-                    return RedumpSystem.SonyPlayStation2;
+                    return PhysicalSystem.SonyPlayStation2;
             }
             else if (File.Exists(psxExePath))
             {
-                return RedumpSystem.SonyPlayStation;
+                return PhysicalSystem.SonyPlayStation;
             }
 
             // Sony PlayStation 3
@@ -1762,7 +1762,7 @@ namespace MPF.Frontend.ViewModels
                     || Directory.Exists(Path.Combine(drive.Name, "PS3_UPDATE"))
                     || File.Exists(Path.Combine(drive.Name, "PS3_DISC.SFB")))
                 {
-                    return RedumpSystem.SonyPlayStation3;
+                    return PhysicalSystem.SonyPlayStation3;
                 }
             }
             catch { }
@@ -1774,7 +1774,7 @@ namespace MPF.Frontend.ViewModels
             if (File.Exists(Path.Combine(drive.Name, "PS4", "UPDATE", "PS4UPDATE.PUP")))
 #endif
             {
-                return RedumpSystem.SonyPlayStation4;
+                return PhysicalSystem.SonyPlayStation4;
             }
 
             // Sony PlayStation 5
@@ -1784,13 +1784,13 @@ namespace MPF.Frontend.ViewModels
             if (File.Exists(Path.Combine(drive.Name, "PS5", "UPDATE", "PS5UPDATE.PUP")))
 #endif
             {
-                return RedumpSystem.SonyPlayStation5;
+                return PhysicalSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drive.Name, "0SYSTEM")))
             {
-                return RedumpSystem.VTechVFlashVSmilePro;
+                return PhysicalSystem.VTechVFlashVSmilePro;
             }
 
             // VM Labs NUON
@@ -1800,13 +1800,13 @@ namespace MPF.Frontend.ViewModels
             if (File.Exists(Path.Combine(drive.Name, "NUON", "nuon.run")))
 #endif
             {
-                return RedumpSystem.VMLabsNUON;
+                return PhysicalSystem.VMLabsNUON;
             }
 
             // ZAPit Games - GameWave
             if (File.Exists(Path.Combine(drive.Name, "gamewave.diz")))
             {
-                return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
+                return PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
             }
 
             #endregion
@@ -1816,7 +1816,7 @@ namespace MPF.Frontend.ViewModels
             // Amiga CD (Do this check AFTER CD32/CDTV)
             if (File.Exists(Path.Combine(drive.Name, "Disk.info")))
             {
-                return RedumpSystem.CommodoreAmigaCD;
+                return PhysicalSystem.CommodoreAmigaCD;
             }
 
             // Fujitsu FM Towns
@@ -1826,7 +1826,7 @@ namespace MPF.Frontend.ViewModels
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.SYS"))
                     || File.Exists(Path.Combine(drive.Name, "TBIOS.BIN")))
                 {
-                    return RedumpSystem.FujitsuFMTownsseries;
+                    return PhysicalSystem.FujitsuFMTownsseries;
                 }
             }
             catch { }
@@ -1834,7 +1834,7 @@ namespace MPF.Frontend.ViewModels
             // Sharp X68000
             if (File.Exists(Path.Combine(drive.Name, "COMMAND.X")))
             {
-                return RedumpSystem.SharpX68000;
+                return PhysicalSystem.SharpX68000;
             }
 
             #endregion
@@ -1845,7 +1845,7 @@ namespace MPF.Frontend.ViewModels
             if (Directory.Exists(Path.Combine(drive.Name, "BDMV")))
             {
                 // Technically BD-Audio has this as well, but it's hard to split that out right now
-                return RedumpSystem.BDVideo;
+                return PhysicalSystem.BDVideo;
             }
 
             // DVD-Audio and DVD-Video
@@ -1854,13 +1854,13 @@ namespace MPF.Frontend.ViewModels
                 if (Directory.Exists(Path.Combine(drive.Name, "AUDIO_TS"))
                     && Path.Combine(drive.Name, "AUDIO_TS").SafeGetFiles().Length > 0)
                 {
-                    return RedumpSystem.DVDAudio;
+                    return PhysicalSystem.DVDAudio;
                 }
 
                 else if (Directory.Exists(Path.Combine(drive.Name, "VIDEO_TS"))
                     && Path.Combine(drive.Name, "VIDEO_TS").SafeGetFiles().Length > 0)
                 {
-                    return RedumpSystem.DVDVideo;
+                    return PhysicalSystem.DVDVideo;
                 }
             }
             catch { }
@@ -1871,7 +1871,7 @@ namespace MPF.Frontend.ViewModels
                 if (Directory.Exists(Path.Combine(drive.Name, "HVDVD_TS"))
                     && Path.Combine(drive.Name, "HVDVD_TS").SafeGetFiles().Length > 0)
                 {
-                    return RedumpSystem.HDDVDVideo;
+                    return PhysicalSystem.HDDVDVideo;
                 }
             }
             catch { }
@@ -1882,7 +1882,7 @@ namespace MPF.Frontend.ViewModels
                 if (Directory.Exists(Path.Combine(drive.Name, "PHOTO_CD"))
                     && Path.Combine(drive.Name, "PHOTO_CD").SafeGetFiles().Length > 0)
                 {
-                    return RedumpSystem.PhotoCD;
+                    return PhysicalSystem.PhotoCD;
                 }
             }
             catch { }
@@ -1893,7 +1893,7 @@ namespace MPF.Frontend.ViewModels
                 if (Directory.Exists(Path.Combine(drive.Name, "VCD"))
                     && Path.Combine(drive.Name, "VCD").SafeGetFiles().Length > 0)
                 {
-                    return RedumpSystem.VideoCD;
+                    return PhysicalSystem.VideoCD;
                 }
             }
             catch { }
@@ -1918,7 +1918,7 @@ namespace MPF.Frontend.ViewModels
         public void ProcessCustomParameters()
         {
             // Set the execution context and processor
-            if (_environment?.SetExecutionContext(CurrentMediaType, Parameters) != true)
+            if (_environment?.SetExecutionContext(CurrentPhysicalMediaType, Parameters) != true)
                 return;
             if (_environment?.SetProcessor() != true)
                 return;
@@ -1943,13 +1943,13 @@ namespace MPF.Frontend.ViewModels
 
             OutputPath = IOExtensions.NormalizeFilePath(_environment.ContextOutputPath, fullPath: false);
 
-            if (MediaTypes is not null)
+            if (PhysicalMediaTypes is not null)
             {
-                MediaType? mediaType = _environment.GetMediaType();
+                PhysicalMediaType? mediaType = _environment.GetPhysicalMediaType();
                 if (mediaType is not null)
                 {
-                    int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
-                    CurrentMediaType = mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0];
+                    int mediaTypeIndex = PhysicalMediaTypes.FindIndex(m => m == mediaType);
+                    CurrentPhysicalMediaType = mediaTypeIndex > -1 ? PhysicalMediaTypes[mediaTypeIndex] : PhysicalMediaTypes[0];
                 }
             }
 
@@ -1981,7 +1981,7 @@ namespace MPF.Frontend.ViewModels
             OptionsMenuItemEnabled = false;
 
             SystemTypeComboBoxEnabled = false;
-            MediaTypeComboBoxEnabled = false;
+            PhysicalMediaTypeComboBoxEnabled = false;
 
             OutputPathTextBoxEnabled = false;
             OutputPathBrowseButtonEnabled = false;
@@ -2020,7 +2020,7 @@ namespace MPF.Frontend.ViewModels
                 OptionsMenuItemEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
-                MediaTypeComboBoxEnabled = true;
+                PhysicalMediaTypeComboBoxEnabled = true;
 
                 OutputPathTextBoxEnabled = true;
                 OutputPathBrowseButtonEnabled = true;
@@ -2054,15 +2054,15 @@ namespace MPF.Frontend.ViewModels
             // Use internal serials where appropriate
             string? volumeLabel = string.IsNullOrEmpty(drive.VolumeLabel) ? null : drive.VolumeLabel!.Trim();
 #pragma warning disable IDE0010
-            switch (GetRedumpSystem(drive))
+            switch (GetPhysicalSystem(drive))
             {
-                case RedumpSystem.SonyPlayStation:
-                case RedumpSystem.SonyPlayStation2:
+                case PhysicalSystem.SonyPlayStation:
+                case PhysicalSystem.SonyPlayStation2:
                     string? ps12Serial = PhysicalTool.GetPlayStationSerial(drive);
                     volumeLabel ??= ps12Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
-                case RedumpSystem.SonyPlayStation3:
+                case PhysicalSystem.SonyPlayStation3:
                     string? ps3Serial = PhysicalTool.GetPlayStation3Serial(drive);
                     if (volumeLabel == "PS3VOLUME")
                         volumeLabel = ps3Serial ?? volumeLabel;
@@ -2070,7 +2070,7 @@ namespace MPF.Frontend.ViewModels
                         volumeLabel ??= ps3Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
-                case RedumpSystem.SonyPlayStation4:
+                case PhysicalSystem.SonyPlayStation4:
                     string? ps4Serial = PhysicalTool.GetPlayStation4Serial(drive);
                     if (volumeLabel == "PS4VOLUME")
                         volumeLabel = ps4Serial ?? volumeLabel;
@@ -2078,7 +2078,7 @@ namespace MPF.Frontend.ViewModels
                         volumeLabel ??= ps4Serial ?? $"track_{DateTime.Now:yyyyMMdd-HHmm}";
                     break;
 
-                case RedumpSystem.SonyPlayStation5:
+                case PhysicalSystem.SonyPlayStation5:
                     string? ps5Serial = PhysicalTool.GetPlayStation5Serial(drive);
                     if (volumeLabel == "PS5VOLUME")
                         volumeLabel = ps5Serial ?? volumeLabel;
@@ -2103,33 +2103,33 @@ namespace MPF.Frontend.ViewModels
         /// <summary>
         /// Set the current disc type in the combo box
         /// </summary>
-        private void SetCurrentDiscType()
+        private void SetCurrentMediaType()
         {
             // If we don't have any selected media types, we don't care and return
-            if (MediaTypes is null)
+            if (PhysicalMediaTypes is null)
                 return;
 
             // If we have a detected media type, use that first
-            if (_detectedMediaType is not null)
+            if (_detectedPhysicalMediaType is not null)
             {
-                int detectedIndex = MediaTypes.FindIndex(kvp => kvp.Value == _detectedMediaType);
+                int detectedIndex = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == _detectedPhysicalMediaType);
                 if (detectedIndex > -1)
                 {
-                    CurrentMediaType = _detectedMediaType;
+                    CurrentPhysicalMediaType = _detectedPhysicalMediaType;
                     return;
                 }
             }
 
             // If we have an invalid current type, we don't care and return
-            if (CurrentMediaType is null || CurrentMediaType == MediaType.NONE)
+            if (CurrentPhysicalMediaType is null || CurrentPhysicalMediaType == PhysicalMediaType.NONE)
                 return;
 
             // Now set the selected item, if possible
-            int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentMediaType);
-            if (CurrentMediaType is not null && index == -1)
-                VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
+            int index = PhysicalMediaTypes.FindIndex(kvp => kvp.Value == CurrentPhysicalMediaType);
+            if (CurrentPhysicalMediaType is not null && index == -1)
+                VerboseLogLn($"Disc of type '{CurrentPhysicalMediaType.LongName()}' found, but the current system does not support it!");
 
-            CurrentMediaType = index > -1 ? MediaTypes[index] : MediaTypes[0];
+            CurrentPhysicalMediaType = index > -1 ? PhysicalMediaTypes[index] : PhysicalMediaTypes[0];
         }
 
         /// <summary>
@@ -2142,11 +2142,11 @@ namespace MPF.Frontend.ViewModels
                 return;
 
             // Set the drive speed list that's appropriate
-            DriveSpeeds = InterfaceConstants.GetSpeedsForMediaType(CurrentMediaType);
+            DriveSpeeds = InterfaceConstants.GetSpeedsForPhysicalMediaType(CurrentPhysicalMediaType);
             VerboseLogLn($"Supported media speeds: {string.Join(", ", [.. DriveSpeeds.ConvertAll(ds => ds.ToString())])}");
 
             // Set the selected speed
-            DriveSpeed = FrontendTool.GetDefaultSpeedForMediaType(CurrentMediaType, Options);
+            DriveSpeed = FrontendTool.GetDefaultSpeedForPhysicalMediaType(CurrentPhysicalMediaType, Options);
         }
 
         /// <summary>
@@ -2156,64 +2156,64 @@ namespace MPF.Frontend.ViewModels
         {
             return Drives.Count > 0
                 && CurrentSystem is not null
-                && CurrentMediaType is not null
+                && CurrentPhysicalMediaType is not null
                 && ProgramSupportsMedia();
         }
 
         /// <summary>
-        /// Returns false if a given InternalProgram does not support a given MediaType
+        /// Returns false if a given InternalProgram does not support a given PhysicalMediaType
         /// </summary>
         private bool ProgramSupportsMedia()
         {
             // If the media type is not set, return false
-            if (CurrentMediaType is null || CurrentMediaType == MediaType.NONE)
+            if (CurrentPhysicalMediaType is null || CurrentPhysicalMediaType == PhysicalMediaType.NONE)
                 return false;
 
 #pragma warning disable IDE0072
             return CurrentProgram switch
             {
                 // Aaru
-                InternalProgram.Aaru when CurrentMediaType == MediaType.BluRay => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.CDROM => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.CompactFlash => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.DVD => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.GDROM => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.FlashDrive => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.FloppyDisk => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.HardDisk => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.HDDVD => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
-                InternalProgram.Aaru when CurrentMediaType == MediaType.SDCard => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.BluRay => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.CDROM => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.CompactFlash => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.DVD => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.FlashDrive => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.FloppyDisk => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.HardDisk => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.HDDVD => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiUOpticalDisc => true,
+                InternalProgram.Aaru when CurrentPhysicalMediaType == PhysicalMediaType.SDCard => true,
 
                 // DiscImageCreator
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.BluRay => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.CDROM => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.CompactFlash => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.DVD => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.GDROM => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.FlashDrive => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.FloppyDisk => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.HardDisk => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.HDDVD => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
-                InternalProgram.DiscImageCreator when CurrentMediaType == MediaType.SDCard => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.BluRay => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.CDROM => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.CompactFlash => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.DVD => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.FlashDrive => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.FloppyDisk => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.HardDisk => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.HDDVD => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiUOpticalDisc => true,
+                InternalProgram.DiscImageCreator when CurrentPhysicalMediaType == PhysicalMediaType.SDCard => true,
 
                 // Dreamdump
-                // InternalProgram.Dreamdump when CurrentMediaType == MediaType.GDROM => true,
+                // InternalProgram.Dreamdump when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
 
                 // Redumper
-                InternalProgram.Redumper when CurrentMediaType == MediaType.BluRay => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.CDROM => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.DVD => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.GDROM => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.HDDVD => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoGameCubeGameDisc => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoWiiOpticalDisc => true,
-                InternalProgram.Redumper when CurrentMediaType == MediaType.NintendoWiiUOpticalDisc => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.BluRay => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.CDROM => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.DVD => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.GDROM => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.HDDVD => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.NintendoGameCubeGameDisc => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiOpticalDisc => true,
+                InternalProgram.Redumper when CurrentPhysicalMediaType == PhysicalMediaType.NintendoWiiUOpticalDisc => true,
 
                 // Default
                 _ => false,
@@ -2264,7 +2264,7 @@ namespace MPF.Frontend.ViewModels
                 _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-                ResultEventArgs result = await _environment.Run(CurrentMediaType, resultProgress);
+                ResultEventArgs result = await _environment.Run(CurrentPhysicalMediaType, resultProgress);
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_environment.IsDumpingCommand())
@@ -2322,7 +2322,7 @@ namespace MPF.Frontend.ViewModels
                 OptionsMenuItemEnabled = false;
 
                 SystemTypeComboBoxEnabled = false;
-                MediaTypeComboBoxEnabled = false;
+                PhysicalMediaTypeComboBoxEnabled = false;
 
                 OutputPathTextBoxEnabled = false;
                 OutputPathBrowseButtonEnabled = false;
@@ -2343,7 +2343,7 @@ namespace MPF.Frontend.ViewModels
                 OptionsMenuItemEnabled = true;
 
                 SystemTypeComboBoxEnabled = true;
-                MediaTypeComboBoxEnabled = true;
+                PhysicalMediaTypeComboBoxEnabled = true;
 
                 OutputPathTextBoxEnabled = true;
                 OutputPathBrowseButtonEnabled = true;
@@ -2397,7 +2397,7 @@ namespace MPF.Frontend.ViewModels
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete or partial dump already exists
-            bool foundAllFiles = _environment.FoundAllFiles(CurrentMediaType, outputDirectory, outputFilename);
+            bool foundAllFiles = _environment.FoundAllFiles(CurrentPhysicalMediaType, outputDirectory, outputFilename);
             if (foundAllFiles && _displayUserMessage is not null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
@@ -2410,7 +2410,7 @@ namespace MPF.Frontend.ViewModels
             else
             {
                 // If a partial dump exists
-                bool foundAnyFiles = _environment.FoundAnyFiles(CurrentMediaType, outputDirectory, outputFilename);
+                bool foundAnyFiles = _environment.FoundAnyFiles(CurrentPhysicalMediaType, outputDirectory, outputFilename);
                 if (foundAnyFiles && _displayUserMessage is not null)
                 {
                     bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
@@ -2423,7 +2423,7 @@ namespace MPF.Frontend.ViewModels
                 else
                 {
                     // If a complete dump exists from a different program
-                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(CurrentMediaType, outputDirectory, outputFilename);
+                    InternalProgram? completeProgramFound = _environment.CheckForMatchingProgram(CurrentPhysicalMediaType, outputDirectory, outputFilename);
                     if (completeProgramFound is not null && _displayUserMessage is not null)
                     {
                         bool? mbresult = _displayUserMessage("Overwrite?", $"A complete dump from {completeProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);
@@ -2436,7 +2436,7 @@ namespace MPF.Frontend.ViewModels
                     else
                     {
                         // If a partial dump exists from a different program
-                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(CurrentMediaType, outputDirectory, outputFilename);
+                        InternalProgram? partialProgramFound = _environment.CheckForPartialProgram(CurrentPhysicalMediaType, outputDirectory, outputFilename);
                         if (partialProgramFound is not null && _displayUserMessage is not null)
                         {
                             bool? mbresult = _displayUserMessage("Overwrite?", $"A partial dump from {partialProgramFound} already exists! Dumping here may cause issues. Are you sure you want to overwrite?", 2, true);

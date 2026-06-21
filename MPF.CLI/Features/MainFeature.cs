@@ -32,7 +32,7 @@ namespace MPF.CLI.Features
         internal readonly StringInput FileInput = new(_fileName, ["-f", "--file"], "Output file path (Required if no custom parameters set)");
 
         private const string _mediaTypeName = "media-type";
-        internal readonly StringInput MediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
+        internal readonly StringInput PhysicalMediaTypeInput = new(_mediaTypeName, ["-t", "--mediatype"], "Set media type for dumping (Required for DIC)");
 
         private const string _mountedName = "mounted";
         internal readonly StringInput MountedInput = new(_mountedName, ["-m", "--mounted"], "Mounted filesystem path for additional checks");
@@ -52,7 +52,7 @@ namespace MPF.CLI.Features
             : base(DisplayName, _flags, _description)
         {
             Add(UseInput);
-            Add(MediaTypeInput);
+            Add(PhysicalMediaTypeInput);
             Add(DeviceInput);
             Add(MountedInput);
             Add(FileInput);
@@ -72,7 +72,7 @@ namespace MPF.CLI.Features
             Options = OptionsLoader.LoadFromConfig();
 
             // The first argument is the system type
-            System = args[0].Trim('"').ToRedumpSystem();
+            System = args[0].Trim('"').ToPhysicalSystem();
 
             // Loop through the arguments and parse out values
             for (index = 1; index < args.Length; index++)
@@ -82,8 +82,8 @@ namespace MPF.CLI.Features
                     Options.InternalProgram = UseInput.Value.ToInternalProgram();
 
                 // Set a media type
-                else if (MediaTypeInput.ProcessInput(args, ref index))
-                    MediaType = OptionsLoader.ToMediaType(MediaTypeInput.Value?.Trim('"'));
+                else if (PhysicalMediaTypeInput.ProcessInput(args, ref index))
+                    PhysicalMediaType = OptionsLoader.ToPhysicalMediaType(PhysicalMediaTypeInput.Value?.Trim('"'));
 
                 // Use a device path
                 else if (DeviceInput.ProcessInput(args, ref index))

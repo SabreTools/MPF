@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Data.Sections;
+using SabreTools.RedumpLib.RedumpInfo;
 using Xunit;
 
 namespace MPF.Frontend.Test.Tools

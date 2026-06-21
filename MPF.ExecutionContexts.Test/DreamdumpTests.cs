@@ -17,15 +17,15 @@ namespace MPF.ExecutionContexts.Test
         // None of these scenarios are actually supported as all are treated like GD-ROM
         [Theory]
         [InlineData(null, null, null, "filename.bin", null, "--retries=50 --image-name=\"filename\" --sector-order=DATA_C2_SUB")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
-        public void DefaultValueTest(RedumpSystem? system,
-            MediaType? type,
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        [InlineData(PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "--retries=50 --image-name=\"filename\" --image-path=\"path\" --speed=2 --sector-order=DATA_C2_SUB --drive=/dev/sr0")]
+        public void DefaultValueTest(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,

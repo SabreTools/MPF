@@ -12,36 +12,36 @@ namespace MPF.Processors.Test
     public class AaruTests
     {
         // TODO: Create minimal sidecars for all other supported types
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_Empty_Null()
+        public void DeterminePhysicalMediaType_Empty_Null()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_Null()
+        public void DeterminePhysicalMediaType_Invalid_Null()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_CD_Valid_CD()
+        public void DeterminePhysicalMediaType_CD_Valid_CD()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.CDROM, actual);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.CDROM, actual);
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Empty(actual);
@@ -64,9 +64,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(8, actual.Count);
         }
 
@@ -75,9 +75,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -86,9 +86,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.HDDVD, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -97,9 +97,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -108,9 +108,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -123,8 +123,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -133,8 +133,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -147,8 +147,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -157,8 +157,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -167,8 +167,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM-zip");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -181,8 +181,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -191,8 +191,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -205,8 +205,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -215,8 +215,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -229,8 +229,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -239,8 +239,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(7, actual.Count);
         }
 
@@ -253,8 +253,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -263,8 +263,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Aaru", "CDROM");
             string outputFilename = "test.aaruf";
-            var processor = new Aaru(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Aaru(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -451,60 +451,60 @@ namespace MPF.Processors.Test
         [InlineData(null, "ANY", null)]
         [InlineData("", "ANY", null)]
         [InlineData("INVALID", "ANY", null)]
-        [InlineData("3\" floppy", "ANY", MediaType.FloppyDisk)]
-        [InlineData("3.5\" floppy", "ANY", MediaType.FloppyDisk)]
-        [InlineData("3.5\" magneto-optical", "ANY", MediaType.Floptical)]
+        [InlineData("3\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
+        [InlineData("3.5\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
+        [InlineData("3.5\" magneto-optical", "ANY", PhysicalMediaType.Floptical)]
         [InlineData("3.5\" SyQuest cartridge", "ANY", null)]
         [InlineData("3.9\" SyQuest cartridge", "ANY", null)]
-        [InlineData("5.25\" floppy", "ANY", MediaType.FloppyDisk)]
-        [InlineData("5.25\" magneto-optical", "ANY", MediaType.Floptical)]
+        [InlineData("5.25\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
+        [InlineData("5.25\" magneto-optical", "ANY", PhysicalMediaType.Floptical)]
         [InlineData("5.25\" SyQuest cartridge", "ANY", null)]
-        [InlineData("8\" floppy", "ANY", MediaType.FloppyDisk)]
-        [InlineData("300mm magneto optical", "ANY", MediaType.Floptical)]
-        [InlineData("356mm magneto-optical", "ANY", MediaType.Floptical)]
+        [InlineData("8\" floppy", "ANY", PhysicalMediaType.FloppyDisk)]
+        [InlineData("300mm magneto optical", "ANY", PhysicalMediaType.Floptical)]
+        [InlineData("356mm magneto-optical", "ANY", PhysicalMediaType.Floptical)]
         [InlineData("Advanced Digital Recording", "ANY", null)]
         [InlineData("Advanced Intelligent Tape", "ANY", null)]
         [InlineData("Archival Disc", "ANY", null)]
         [InlineData("BeeCard", "ANY", null)]
-        [InlineData("Blu-ray", "Wii U Optical Disc", MediaType.NintendoWiiUOpticalDisc)]
-        [InlineData("Blu-ray", "ANY", MediaType.BluRay)]
+        [InlineData("Blu-ray", "Wii U Optical Disc", PhysicalMediaType.NintendoWiiUOpticalDisc)]
+        [InlineData("Blu-ray", "ANY", PhysicalMediaType.BluRay)]
         [InlineData("Borsu", "ANY", null)]
-        [InlineData("Compact Cassette", "ANY", MediaType.Cassette)]
-        [InlineData("Compact Disc", "ANY", MediaType.CDROM)]
-        [InlineData("Compact Flash", "ANY", MediaType.CompactFlash)]
+        [InlineData("Compact Cassette", "ANY", PhysicalMediaType.Cassette)]
+        [InlineData("Compact Disc", "ANY", PhysicalMediaType.CDROM)]
+        [InlineData("Compact Flash", "ANY", PhysicalMediaType.CompactFlash)]
         [InlineData("CompacTape", "ANY", null)]
         [InlineData("CRVdisc", "ANY", null)]
         [InlineData("Data8", "ANY", null)]
         [InlineData("DataPlay", "ANY", null)]
         [InlineData("DataStore", "ANY", null)]
-        [InlineData("DDCD", "ANY", MediaType.CDROM)]
+        [InlineData("DDCD", "ANY", PhysicalMediaType.CDROM)]
         [InlineData("DECtape", "ANY", null)]
         [InlineData("DemiDiskette", "ANY", null)]
         [InlineData("Digital Audio Tape", "ANY", null)]
-        [InlineData("Digital Data Storage", "ANY", MediaType.DataCartridge)]
+        [InlineData("Digital Data Storage", "ANY", PhysicalMediaType.DataCartridge)]
         [InlineData("Digital Linear Tape", "ANY", null)]
         [InlineData("DIR", "ANY", null)]
         [InlineData("DST", "ANY", null)]
         [InlineData("DTF", "ANY", null)]
         [InlineData("DTF2", "ANY", null)]
         [InlineData("DV tape", "ANY", null)]
-        [InlineData("DVD", "GameCube Game Disc", MediaType.NintendoGameCubeGameDisc)]
-        [InlineData("DVD", "Wii Optical Disc", MediaType.NintendoWiiOpticalDisc)]
-        [InlineData("DVD", "ANY", MediaType.DVD)]
+        [InlineData("DVD", "GameCube Game Disc", PhysicalMediaType.NintendoGameCubeGameDisc)]
+        [InlineData("DVD", "Wii Optical Disc", PhysicalMediaType.NintendoWiiOpticalDisc)]
+        [InlineData("DVD", "ANY", PhysicalMediaType.DVD)]
         [InlineData("EVD", "ANY", null)]
         [InlineData("Exatape", "ANY", null)]
         [InlineData("Express Card", "ANY", null)]
         [InlineData("FDDVD", "ANY", null)]
         [InlineData("Flextra", "ANY", null)]
-        [InlineData("Floptical", "ANY", MediaType.Floptical)]
+        [InlineData("Floptical", "ANY", PhysicalMediaType.Floptical)]
         [InlineData("FVD", "ANY", null)]
-        [InlineData("GD", "ANY", MediaType.GDROM)]
-        [InlineData("Hard Disk Drive", "ANY", MediaType.HardDisk)]
-        [InlineData("HD DVD", "ANY", MediaType.HDDVD)]
+        [InlineData("GD", "ANY", PhysicalMediaType.GDROM)]
+        [InlineData("Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk)]
+        [InlineData("HD DVD", "ANY", PhysicalMediaType.HDDVD)]
         [InlineData("HD VMD", "ANY", null)]
-        [InlineData("HiFD", "ANY", MediaType.FloppyDisk)]
+        [InlineData("HiFD", "ANY", PhysicalMediaType.FloppyDisk)]
         [InlineData("HiTC", "ANY", null)]
-        [InlineData("HuCard", "ANY", MediaType.Cartridge)]
+        [InlineData("HuCard", "ANY", PhysicalMediaType.Cartridge)]
         [InlineData("HVD", "ANY", null)]
         [InlineData("HyperFlex", "ANY", null)]
         [InlineData("IBM 3470", "ANY", null)]
@@ -512,46 +512,46 @@ namespace MPF.Processors.Test
         [InlineData("IBM 3490", "ANY", null)]
         [InlineData("IBM 3490E", "ANY", null)]
         [InlineData("IBM 3592", "ANY", null)]
-        [InlineData("Iomega Bernoulli Box", "ANY", MediaType.IomegaBernoulliDisk)]
-        [InlineData("Iomega Bernoulli Box II", "ANY", MediaType.IomegaBernoulliDisk)]
+        [InlineData("Iomega Bernoulli Box", "ANY", PhysicalMediaType.IomegaBernoulliDisk)]
+        [InlineData("Iomega Bernoulli Box II", "ANY", PhysicalMediaType.IomegaBernoulliDisk)]
         [InlineData("Iomega Ditto", "ANY", null)]
-        [InlineData("Iomega Jaz", "ANY", MediaType.IomegaJaz)]
-        [InlineData("Iomega PocketZip", "ANY", MediaType.IomegaZip)]
+        [InlineData("Iomega Jaz", "ANY", PhysicalMediaType.IomegaJaz)]
+        [InlineData("Iomega PocketZip", "ANY", PhysicalMediaType.IomegaZip)]
         [InlineData("Iomega REV", "ANY", null)]
-        [InlineData("Iomega ZIP", "ANY", MediaType.IomegaZip)]
+        [InlineData("Iomega ZIP", "ANY", PhysicalMediaType.IomegaZip)]
         [InlineData("Kodak Verbatim", "ANY", null)]
-        [InlineData("LaserDisc", "ANY", MediaType.LaserDisc)]
+        [InlineData("LaserDisc", "ANY", PhysicalMediaType.LaserDisc)]
         [InlineData("Linear Tape-Open", "ANY", null)]
         [InlineData("LT1", "ANY", null)]
-        [InlineData("Magneto-optical", "ANY", MediaType.Floptical)]
-        [InlineData("Memory Stick", "ANY", MediaType.SDCard)]
+        [InlineData("Magneto-optical", "ANY", PhysicalMediaType.Floptical)]
+        [InlineData("Memory Stick", "ANY", PhysicalMediaType.SDCard)]
         [InlineData("MiniCard", "ANY", null)]
         [InlineData("MiniDisc", "ANY", null)]
-        [InlineData("MultiMediaCard", "ANY", MediaType.SDCard)]
-        [InlineData("Nintendo 3DS Game Card", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo 64 Disk", "ANY", MediaType.Nintendo64DD)]
-        [InlineData("Nintendo 64 Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Disk Card", "ANY", MediaType.NintendoFamicomDiskSystem)]
-        [InlineData("Nintendo DS Game Card", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo DSi Game Card", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Entertainment System Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Famicom Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Game Boy Advance Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Game Boy Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Nintendo Switch Game Card", "ANY", MediaType.Cartridge)]
+        [InlineData("MultiMediaCard", "ANY", PhysicalMediaType.SDCard)]
+        [InlineData("Nintendo 3DS Game Card", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo 64 Disk", "ANY", PhysicalMediaType.Nintendo64DD)]
+        [InlineData("Nintendo 64 Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Disk Card", "ANY", PhysicalMediaType.NintendoFamicomDiskSystem)]
+        [InlineData("Nintendo DS Game Card", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo DSi Game Card", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Entertainment System Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Famicom Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Game Boy Advance Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Game Boy Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Nintendo Switch Game Card", "ANY", PhysicalMediaType.Cartridge)]
         [InlineData("Optical Disc Archive", "ANY", null)]
         [InlineData("Orb", "ANY", null)]
         [InlineData("PCMCIA Card", "ANY", null)]
         [InlineData("PD650", "ANY", null)]
         [InlineData("PlayStation Memory Card", "ANY", null)]
-        [InlineData("Quarter-inch cartridge", "ANY", MediaType.DataCartridge)]
-        [InlineData("Quarter-inch mini cartridge", "ANY", MediaType.DataCartridge)]
+        [InlineData("Quarter-inch cartridge", "ANY", PhysicalMediaType.DataCartridge)]
+        [InlineData("Quarter-inch mini cartridge", "ANY", PhysicalMediaType.DataCartridge)]
         [InlineData("QuickDisk", "ANY", null)]
         [InlineData("RDX", "ANY", null)]
-        [InlineData("SACD", "ANY", MediaType.DVD)]
+        [InlineData("SACD", "ANY", PhysicalMediaType.DVD)]
         [InlineData("Scalable Linear Recording", "ANY", null)]
-        [InlineData("Secure Digital", "ANY", MediaType.SDCard)]
-        [InlineData("SmartMedia", "ANY", MediaType.SDCard)]
+        [InlineData("Secure Digital", "ANY", PhysicalMediaType.SDCard)]
+        [InlineData("SmartMedia", "ANY", PhysicalMediaType.SDCard)]
         [InlineData("Sony Professional Disc", "ANY", null)]
         [InlineData("Sony Professional Disc for DATA", "ANY", null)]
         [InlineData("STK 4480", "ANY", null)]
@@ -562,26 +562,26 @@ namespace MPF.Processors.Test
         [InlineData("STK T-10000", "ANY", null)]
         [InlineData("Super Advanced Intelligent Tape", "ANY", null)]
         [InlineData("Super Digital Linear Tape", "ANY", null)]
-        [InlineData("Super Nintendo Game Pak", "ANY", MediaType.Cartridge)]
-        [InlineData("Super Nintendo Game Pak (US)", "ANY", MediaType.Cartridge)]
-        [InlineData("SuperDisk", "ANY", MediaType.FloppyDisk)]
+        [InlineData("Super Nintendo Game Pak", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("Super Nintendo Game Pak (US)", "ANY", PhysicalMediaType.Cartridge)]
+        [InlineData("SuperDisk", "ANY", PhysicalMediaType.FloppyDisk)]
         [InlineData("SVOD", "ANY", null)]
         [InlineData("Travan", "ANY", null)]
         [InlineData("UDO", "ANY", null)]
         [InlineData("UHD144", "ANY", null)]
-        [InlineData("UMD", "ANY", MediaType.UMD)]
+        [InlineData("UMD", "ANY", PhysicalMediaType.UMD)]
         [InlineData("Unknown", "ANY", null)]
-        [InlineData("USB flash drive", "ANY", MediaType.FlashDrive)]
+        [InlineData("USB flash drive", "ANY", PhysicalMediaType.FlashDrive)]
         [InlineData("VCDHD", "ANY", null)]
         [InlineData("VideoFloppy", "ANY", null)]
-        [InlineData("VideoNow", "ANY", MediaType.CDROM)]
-        [InlineData("VXA", "ANY", MediaType.FlashDrive)]
+        [InlineData("VideoNow", "ANY", PhysicalMediaType.CDROM)]
+        [InlineData("VXA", "ANY", PhysicalMediaType.FlashDrive)]
         [InlineData("Wafer", "ANY", null)]
         [InlineData("xD", "ANY", null)]
         [InlineData("XQD", "ANY", null)]
-        [InlineData("Zoned Hard Disk Drive", "ANY", MediaType.HardDisk)]
+        [InlineData("Zoned Hard Disk Drive", "ANY", PhysicalMediaType.HardDisk)]
         [InlineData("ZX Microdrive", "ANY", null)]
-        public void GetDiscTypeFromStringsTest(string? discType, string? discSubType, MediaType? expected)
+        public void GetDiscTypeFromStringsTest(string? discType, string? discSubType, PhysicalMediaType? expected)
         {
             var actual = Aaru.GetDiscTypeFromStrings(discType, discSubType);
             Assert.Equal(expected, actual);

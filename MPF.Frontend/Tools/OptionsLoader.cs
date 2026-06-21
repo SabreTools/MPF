@@ -40,11 +40,11 @@ namespace MPF.Frontend.Tools
         #region Arguments
 
         /// <summary>
-        /// Get the MediaType enum value for a given string
+        /// Get the PhysicalMediaType enum value for a given string
         /// </summary>
         /// <param name="type">String value to convert</param>
-        /// <returns>MediaType represented by the string, if possible</returns>
-        public static MediaType ToMediaType(string? type)
+        /// <returns>PhysicalMediaType represented by the string, if possible</returns>
+        public static PhysicalMediaType ToPhysicalMediaType(string? type)
         {
             return (type?.ToLowerInvariant()) switch
             {
@@ -52,22 +52,22 @@ namespace MPF.Frontend.Tools
 
                 "aperture"
                     or "aperturecard"
-                    or "aperture card" => MediaType.ApertureCard,
+                    or "aperture card" => PhysicalMediaType.ApertureCard,
                 "jacquardloom"
                     or "jacquardloomcard"
-                    or "jacquard loom card" => MediaType.JacquardLoomCard,
+                    or "jacquard loom card" => PhysicalMediaType.JacquardLoomCard,
                 "magneticstripe"
                     or "magneticstripecard"
-                    or "magnetic stripe card" => MediaType.MagneticStripeCard,
+                    or "magnetic stripe card" => PhysicalMediaType.MagneticStripeCard,
                 "opticalphone"
                     or "opticalphonecard"
-                    or "optical phonecard" => MediaType.OpticalPhonecard,
+                    or "optical phonecard" => PhysicalMediaType.OpticalPhonecard,
                 "punchcard"
                     or "punchedcard"
-                    or "punched card" => MediaType.PunchedCard,
+                    or "punched card" => PhysicalMediaType.PunchedCard,
                 "punchtape"
                     or "punchedtape"
-                    or "punched tape" => MediaType.PunchedTape,
+                    or "punched tape" => PhysicalMediaType.PunchedTape,
 
                 #endregion
 
@@ -75,14 +75,14 @@ namespace MPF.Frontend.Tools
 
                 "openreel"
                     or "openreeltape"
-                    or "open reel tape" => MediaType.OpenReel,
+                    or "open reel tape" => PhysicalMediaType.OpenReel,
                 "datacart"
                     or "datacartridge"
                     or "datatapecartridge"
-                    or "data tape cartridge" => MediaType.DataCartridge,
+                    or "data tape cartridge" => PhysicalMediaType.DataCartridge,
                 "cassette"
                     or "cassettetape"
-                    or "cassette tape" => MediaType.Cassette,
+                    or "cassette tape" => PhysicalMediaType.Cassette,
 
                 #endregion
 
@@ -91,94 +91,94 @@ namespace MPF.Frontend.Tools
                 "bd"
                     or "bdrom"
                     or "bd-rom"
-                    or "bluray" => MediaType.BluRay,
+                    or "bluray" => PhysicalMediaType.BluRay,
                 "cd"
                     or "cdrom"
-                    or "cd-rom" => MediaType.CDROM,
+                    or "cd-rom" => PhysicalMediaType.CDROM,
                 "dvd"
                     or "dvd5"
                     or "dvd-5"
                     or "dvd9"
                     or "dvd-9"
                     or "dvdrom"
-                    or "dvd-rom" => MediaType.DVD,
+                    or "dvd-rom" => PhysicalMediaType.DVD,
                 "fd"
                     or "floppy"
                     or "floppydisk"
                     or "floppy disk"
-                    or "floppy diskette" => MediaType.FloppyDisk,
-                "floptical" => MediaType.Floptical,
+                    or "floppy diskette" => PhysicalMediaType.FloppyDisk,
+                "floptical" => PhysicalMediaType.Floptical,
                 "gd"
                     or "gdrom"
-                    or "gd-rom" => MediaType.GDROM,
+                    or "gd-rom" => PhysicalMediaType.GDROM,
                 "hddvd"
                     or "hd-dvd"
                     or "hddvdrom"
-                    or "hd-dvd-rom" => MediaType.HDDVD,
+                    or "hd-dvd-rom" => PhysicalMediaType.HDDVD,
                 "hdd"
                     or "harddisk"
-                    or "hard disk" => MediaType.HardDisk,
+                    or "hard disk" => PhysicalMediaType.HardDisk,
                 "bernoullidisk"
                     or "iomegabernoullidisk"
                     or "bernoulli disk"
-                    or "iomega bernoulli disk" => MediaType.IomegaBernoulliDisk,
+                    or "iomega bernoulli disk" => PhysicalMediaType.IomegaBernoulliDisk,
                 "jaz"
                     or "iomegajaz"
-                    or "iomega jaz" => MediaType.IomegaJaz,
+                    or "iomega jaz" => PhysicalMediaType.IomegaJaz,
                 "zip"
                     or "zipdisk"
                     or "iomegazip"
-                    or "iomega zip" => MediaType.IomegaZip,
+                    or "iomega zip" => PhysicalMediaType.IomegaZip,
                 "ldrom"
                     or "lvrom"
                     or "ld-rom"
                     or "lv-rom"
                     or "laserdisc"
                     or "laservision"
-                    or "ld-rom / lv-rom" => MediaType.LaserDisc,
+                    or "ld-rom / lv-rom" => PhysicalMediaType.LaserDisc,
                 "64dd"
                     or "n64dd"
                     or "64dddisk"
                     or "n64dddisk"
                     or "64dd disk"
-                    or "n64dd disk" => MediaType.Nintendo64DD,
+                    or "n64dd disk" => PhysicalMediaType.Nintendo64DD,
                 "fds"
                     or "famicom"
                     or "nfds"
                     or "nintendofamicom"
                     or "famicomdisksystem"
                     or "famicom disk system"
-                    or "famicom disk system disk" => MediaType.NintendoFamicomDiskSystem,
+                    or "famicom disk system disk" => PhysicalMediaType.NintendoFamicomDiskSystem,
                 "gc"
                     or "gamecube"
                     or "nintendogamecube"
                     or "nintendo gamecube"
                     or "gamecube disc"
-                    or "gamecube game disc" => MediaType.NintendoGameCubeGameDisc,
+                    or "gamecube game disc" => PhysicalMediaType.NintendoGameCubeGameDisc,
                 "wii"
                     or "nintendowii"
                     or "nintendo wii"
                     or "nintendo wii disc"
-                    or "wii optical disc" => MediaType.NintendoWiiOpticalDisc,
+                    or "wii optical disc" => PhysicalMediaType.NintendoWiiOpticalDisc,
                 "wiiu"
                     or "nintendowiiu"
                     or "nintendo wiiu"
                     or "nintendo wiiu disc"
                     or "wiiu optical disc"
-                    or "wii u optical disc" => MediaType.NintendoWiiUOpticalDisc,
-                "umd" => MediaType.UMD,
+                    or "wii u optical disc" => PhysicalMediaType.NintendoWiiUOpticalDisc,
+                "umd" => PhysicalMediaType.UMD,
 
                 #endregion
 
                 // Unsorted Formats
-                "cartridge" => MediaType.Cartridge,
+                "cartridge" => PhysicalMediaType.Cartridge,
                 "ced"
                     or "rcaced"
                     or "rca ced"
                     or "videodisc"
-                    or "rca videodisc" => MediaType.CED,
+                    or "rca videodisc" => PhysicalMediaType.CED,
 
-                _ => MediaType.NONE,
+                _ => PhysicalMediaType.NONE,
             };
         }
 
@@ -372,8 +372,8 @@ namespace MPF.Frontend.Tools
             options.Dumping.RedumperPath = GetStringSetting(source, "RedumperPath", DumpSettings.DefaultRedumperPath) ?? DumpSettings.DefaultRedumperPath;
 
             options.Dumping.DefaultOutputPath = GetStringSetting(source, "DefaultOutputPath", "ISO");
-            valueString = GetStringSetting(source, "DefaultSystem", RedumpSystem.IBMPCcompatible.ToString());
-            options.Dumping.DefaultSystem = (valueString ?? string.Empty).ToRedumpSystem();
+            valueString = GetStringSetting(source, "DefaultSystem", PhysicalSystem.IBMPCcompatible.ToString());
+            options.Dumping.DefaultSystem = (valueString ?? string.Empty).ToPhysicalSystem();
             options.Dumping.DumpSpeeds.CD = GetInt32Setting(source, "PreferredDumpSpeedCD", 24);
             options.Dumping.DumpSpeeds.DVD = GetInt32Setting(source, "PreferredDumpSpeedDVD", 16);
             options.Dumping.DumpSpeeds.HDDVD = GetInt32Setting(source, "PreferredDumpSpeedHDDVD", 8);

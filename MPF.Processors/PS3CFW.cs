@@ -12,16 +12,16 @@ namespace MPF.Processors
     public sealed class PS3CFW : BaseProcessor
     {
         /// <inheritdoc/>
-        public PS3CFW(RedumpSystem? system) : base(system) { }
+        public PS3CFW(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
-            => MediaType.BluRay;
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
+            => PhysicalMediaType.BluRay;
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // Try to determine the ISO file
             string isoPath = string.Empty;
@@ -87,13 +87,15 @@ namespace MPF.Processors
             info.SizeAndChecksums.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
             if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
             {
-                if (layerbreak1 is not null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
+
+                if (layerbreak1 is not null && layerbreak1 * 2048 < size)
                     info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                if (layerbreak2 is not null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                if (layerbreak2 is not null && layerbreak2 * 2048 < size)
                     info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                if (layerbreak3 is not null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                if (layerbreak3 is not null && layerbreak3 * 2048 < size)
                     info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
             }
 
@@ -126,7 +128,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);

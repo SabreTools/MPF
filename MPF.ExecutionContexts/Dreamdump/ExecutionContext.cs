@@ -22,7 +22,7 @@ namespace MPF.ExecutionContexts.Dreamdump
         public override string? OutputPath => Path.Combine(
                 (_inputs[FlagStrings.ImagePath] as StringInput)?.Value?.Trim('"') ?? string.Empty,
                 (_inputs[FlagStrings.ImageName] as StringInput)?.Value?.Trim('"') ?? string.Empty)
-            + GetDefaultExtension(MediaType);
+            + GetDefaultExtension(PhysicalMediaType);
 
         /// <inheritdoc/>
         public override int? Speed
@@ -78,8 +78,8 @@ namespace MPF.ExecutionContexts.Dreamdump
         public ExecutionContext(string? parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public ExecutionContext(RedumpSystem? system,
-            MediaType? type,
+        public ExecutionContext(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,
@@ -138,10 +138,10 @@ namespace MPF.ExecutionContexts.Dreamdump
         }
 
         /// <inheritdoc/>
-        public override string? GetDefaultExtension(MediaType? mediaType) => ".bin";
+        public override string? GetDefaultExtension(PhysicalMediaType? mediaType) => ".bin";
 
         /// <inheritdoc/>
-        public override MediaType? GetMediaType() => SabreTools.RedumpLib.Data.MediaType.GDROM;
+        public override PhysicalMediaType? GetPhysicalMediaType() => SabreTools.RedumpLib.Data.PhysicalMediaType.GDROM;
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand() => true;

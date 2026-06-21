@@ -10,16 +10,16 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData(null, null)]
-        [InlineData(MediaType.CDROM, ".bin")]
-        [InlineData(MediaType.GDROM, ".bin")]
-        [InlineData(MediaType.DVD, ".iso")]
-        [InlineData(MediaType.HDDVD, ".iso")]
-        [InlineData(MediaType.BluRay, ".iso")]
-        [InlineData(MediaType.NintendoWiiOpticalDisc, ".iso")]
-        [InlineData(MediaType.NintendoGameCubeGameDisc, ".raw")]
-        [InlineData(MediaType.NintendoWiiUOpticalDisc, ".wud")]
-        [InlineData(MediaType.ApertureCard, null)]
-        public void ExtensionTest(MediaType? type, string? expected)
+        [InlineData(PhysicalMediaType.CDROM, ".bin")]
+        [InlineData(PhysicalMediaType.GDROM, ".bin")]
+        [InlineData(PhysicalMediaType.DVD, ".iso")]
+        [InlineData(PhysicalMediaType.HDDVD, ".iso")]
+        [InlineData(PhysicalMediaType.BluRay, ".iso")]
+        [InlineData(PhysicalMediaType.NintendoWiiOpticalDisc, ".iso")]
+        [InlineData(PhysicalMediaType.NintendoGameCubeGameDisc, ".raw")]
+        [InlineData(PhysicalMediaType.NintendoWiiUOpticalDisc, ".wud")]
+        [InlineData(PhysicalMediaType.ApertureCard, null)]
+        public void ExtensionTest(PhysicalMediaType? type, string? expected)
         {
             string? actual = Converters.Extension(type);
             Assert.Equal(expected, actual);
@@ -41,15 +41,15 @@ namespace MPF.ExecutionContexts.Test
 
         [Theory]
         [InlineData(null, null, null, "filename.bin", null, "disc --verbose --skeleton --retries=1000 --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
-        public void DefaultValueTest(RedumpSystem? system,
-            MediaType? type,
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.CDROM, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.IBMPCcompatible, PhysicalMediaType.DVD, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --skeleton --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.NintendoGameCube, PhysicalMediaType.NintendoGameCubeGameDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.NintendoWii, PhysicalMediaType.NintendoWiiOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.HDDVDVideo, PhysicalMediaType.HDDVD, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.BDVideo, PhysicalMediaType.BluRay, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        [InlineData(PhysicalSystem.NintendoWiiU, PhysicalMediaType.NintendoWiiUOpticalDisc, "/dev/sr0", "path/filename.bin", 2, "disc --verbose --drive=/dev/sr0 --speed=2 --retries=1000 --image-path=\"path\" --image-name=\"filename\" --drive-type=GENERIC --drive-read-method=BE --drive-sector-order=DATA_C2_SUB --plextor-leadin-retries=1000")]
+        public void DefaultValueTest(PhysicalSystem? system,
+            PhysicalMediaType? type,
             string? drivePath,
             string filename,
             int? driveSpeed,

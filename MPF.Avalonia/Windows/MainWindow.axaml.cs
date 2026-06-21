@@ -14,8 +14,8 @@ using MPF.Avalonia.UserControls;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.RedumpInfo;
 using AvaloniaWindowState = Avalonia.Controls.WindowState;
 
 namespace MPF.Avalonia.Windows
@@ -543,7 +543,7 @@ namespace MPF.Avalonia.Windows
             }
 
             // If there are no media types defined
-            if (MainViewModel.MediaTypes is null)
+            if (MainViewModel.PhysicalMediaTypes is null)
             {
                 SystemMediaTypeLabel!.Text = StringResource("SystemLabelString", "System Type");
                 MediaTypeComboBox!.IsVisible = false;
@@ -551,9 +551,9 @@ namespace MPF.Avalonia.Windows
             }
 
             // Only systems with more than one media type should show the box
-            bool visible = MainViewModel.MediaTypes.Count > 1;
+            bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
             SystemMediaTypeLabel!.Text = visible
-                ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
+                ? StringResource("SystemPhysicalMediaTypeLabelString", "System/Media Type")
                 : StringResource("SystemLabelString", "System Type");
             MediaTypeComboBox!.IsVisible = visible;
         }
@@ -906,12 +906,12 @@ namespace MPF.Avalonia.Windows
         }
 
         /// <summary>
-        /// Handler for MediaTypeComboBox SelectionChanged event
+        /// Handler for PhysicalMediaTypeComboBox SelectionChanged event
         /// </summary>
         public void MediaTypeComboBoxSelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.ChangeMediaType(e.RemovedItems, e.AddedItems);
+                MainViewModel.ChangePhysicalMediaType(e.RemovedItems, e.AddedItems);
         }
 
         /// <summary>

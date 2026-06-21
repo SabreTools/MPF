@@ -8,76 +8,76 @@ namespace MPF.Processors.Test
 {
     public class RedumperTests
     {
-        #region DetermineMediaType
+        #region DeterminePhysicalMediaType
 
         [Fact]
-        public void DetermineMediaType_Null_Null()
+        public void DeterminePhysicalMediaType_Null_Null()
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_Invalid_Null()
+        public void DeterminePhysicalMediaType_Invalid_Null()
         {
             string? outputDirectory = null;
             string outputFilename = "INVALID";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
             Assert.Null(actual);
         }
 
         [Fact]
-        public void DetermineMediaType_BD_Filled()
+        public void DeterminePhysicalMediaType_BD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BluRay");
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_BDR_Filled()
+        public void DeterminePhysicalMediaType_BDR_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BDR");
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.BluRay, actual);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.BluRay, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_CD_Filled()
+        public void DeterminePhysicalMediaType_CD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.CDROM, actual);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.CDROM, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_DVD_Filled()
+        public void DeterminePhysicalMediaType_DVD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD");
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.DVD, actual);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.DVD, actual);
         }
 
         [Fact]
-        public void DetermineMediaType_HDDVD_Filled()
+        public void DeterminePhysicalMediaType_HDDVD_Filled()
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "HDDVD");
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.DetermineMediaType(outputDirectory, outputFilename);
-            Assert.Equal(MediaType.HDDVD, actual);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.DeterminePhysicalMediaType(outputDirectory, outputFilename);
+            Assert.Equal(PhysicalMediaType.HDDVD, actual);
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
             var actual = processor.GetOutputFiles(null, outputDirectory, outputFilename);
             Assert.Empty(actual);
@@ -100,9 +100,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(19, actual.Count);
         }
 
@@ -111,9 +111,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.DVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.DVD, outputDirectory, outputFilename);
             Assert.Equal(20, actual.Count);
         }
 
@@ -122,9 +122,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.HDDVD, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.HDDVD, outputDirectory, outputFilename);
             Assert.Equal(14, actual.Count);
         }
 
@@ -133,9 +133,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.BluRay, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.BluRay, outputDirectory, outputFilename);
             Assert.Equal(14, actual.Count);
         }
 
@@ -144,9 +144,9 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = "test";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
 
-            var actual = processor.GetOutputFiles(MediaType.ApertureCard, outputDirectory, outputFilename);
+            var actual = processor.GetOutputFiles(PhysicalMediaType.ApertureCard, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -159,8 +159,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(5, actual.Count);
         }
 
@@ -169,8 +169,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -179,8 +179,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM-zip");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAllFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAllFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -193,8 +193,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.False(actual);
         }
 
@@ -203,8 +203,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.FoundAnyFiles(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.FoundAnyFiles(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.True(actual);
         }
 
@@ -217,8 +217,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -227,8 +227,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GenerateArtifacts(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GenerateArtifacts(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(10, actual.Count);
         }
 
@@ -241,8 +241,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -251,8 +251,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetDeleteableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetDeleteableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Single(actual);
         }
 
@@ -265,8 +265,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -275,8 +275,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetZippableFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetZippableFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(11, actual.Count);
         }
 
@@ -289,8 +289,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = null;
             string outputFilename = string.Empty;
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Empty(actual);
         }
 
@@ -299,8 +299,8 @@ namespace MPF.Processors.Test
         {
             string? outputDirectory = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM");
             string outputFilename = "test.cue";
-            var processor = new Redumper(RedumpSystem.IBMPCcompatible);
-            var actual = processor.GetPreservedFilePaths(MediaType.CDROM, outputDirectory, outputFilename);
+            var processor = new Redumper(PhysicalSystem.IBMPCcompatible);
+            var actual = processor.GetPreservedFilePaths(PhysicalMediaType.CDROM, outputDirectory, outputFilename);
             Assert.Equal(2, actual.Count);
             Assert.Contains(Path.Combine(outputDirectory, "test.cue"), actual);
             Assert.Contains(Path.Combine(outputDirectory, "test.log"), actual);
@@ -337,7 +337,7 @@ namespace MPF.Processors.Test
         public void GetBookType_Empty_Null()
         {
             string log = string.Empty;
-            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            bool actual = Redumper.GetBookType(log, out PhysicalMediaType? bookType);
             Assert.False(actual);
             Assert.Null(bookType);
         }
@@ -346,7 +346,7 @@ namespace MPF.Processors.Test
         public void GetBookType_Invalid_Null()
         {
             string log = "INVALID";
-            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            bool actual = Redumper.GetBookType(log, out PhysicalMediaType? bookType);
             Assert.False(actual);
             Assert.Null(bookType);
         }
@@ -354,9 +354,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetBookType_Valid_Filled()
         {
-            MediaType? expected = MediaType.DVD;
+            PhysicalMediaType? expected = PhysicalMediaType.DVD;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
-            bool actual = Redumper.GetBookType(log, out MediaType? bookType);
+            bool actual = Redumper.GetBookType(log, out PhysicalMediaType? bookType);
             Assert.True(actual);
             Assert.Equal(expected, bookType);
         }
@@ -459,7 +459,7 @@ namespace MPF.Processors.Test
         public void GetDiscType_Empty_Null()
         {
             string log = string.Empty;
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.False(actual);
             Assert.Null(discType);
         }
@@ -468,7 +468,7 @@ namespace MPF.Processors.Test
         public void GetDiscType_Invalid_Null()
         {
             string log = "INVALID";
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.False(actual);
             Assert.Null(discType);
         }
@@ -476,9 +476,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDiscType_BD_Filled()
         {
-            MediaType? expected = MediaType.BluRay;
+            PhysicalMediaType? expected = PhysicalMediaType.BluRay;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BluRay", "test.log");
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.True(actual);
             Assert.Equal(expected, discType);
         }
@@ -486,9 +486,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDiscType_BDR_Filled()
         {
-            MediaType? expected = MediaType.BluRay;
+            PhysicalMediaType? expected = PhysicalMediaType.BluRay;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "BDR", "test.log");
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.True(actual);
             Assert.Equal(expected, discType);
         }
@@ -496,9 +496,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDiscType_CD_Filled()
         {
-            MediaType? expected = MediaType.CDROM;
+            PhysicalMediaType? expected = PhysicalMediaType.CDROM;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "CDROM", "test.log");
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.True(actual);
             Assert.Equal(expected, discType);
         }
@@ -506,9 +506,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDiscType_DVD_Filled()
         {
-            MediaType? expected = MediaType.DVD;
+            PhysicalMediaType? expected = PhysicalMediaType.DVD;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "DVD", "test.log");
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.True(actual);
             Assert.Equal(expected, discType);
         }
@@ -516,9 +516,9 @@ namespace MPF.Processors.Test
         [Fact]
         public void GetDiscType_HDDVD_Filled()
         {
-            MediaType? expected = MediaType.HDDVD;
+            PhysicalMediaType? expected = PhysicalMediaType.HDDVD;
             string log = Path.Combine(Environment.CurrentDirectory, "TestData", "Redumper", "HDDVD", "test.log");
-            bool actual = Redumper.GetDiscType(log, out MediaType? discType);
+            bool actual = Redumper.GetDiscType(log, out PhysicalMediaType? discType);
             Assert.True(actual);
             Assert.Equal(expected, discType);
         }
@@ -537,37 +537,37 @@ namespace MPF.Processors.Test
         [InlineData("MO erasable", null)]
         [InlineData("MO write once", null)]
         [InlineData("AS MO", null)]
-        [InlineData("CD-ROM", MediaType.CDROM)]
-        [InlineData("CD-R", MediaType.CDROM)]
-        [InlineData("CD-RW", MediaType.CDROM)]
-        [InlineData("DVD-ROM", MediaType.DVD)]
-        [InlineData("DVD-R", MediaType.DVD)]
-        [InlineData("DVD-RAM", MediaType.DVD)]
-        [InlineData("DVD-RW RO", MediaType.DVD)]
-        [InlineData("DVD-RW", MediaType.DVD)]
-        [InlineData("DVD-R DL", MediaType.DVD)]
-        [InlineData("DVD-R DL LJR", MediaType.DVD)]
-        [InlineData("DVD+RW", MediaType.DVD)]
-        [InlineData("DVD+R", MediaType.DVD)]
-        [InlineData("DDCD-ROM", MediaType.CDROM)]
-        [InlineData("DDCD-R", MediaType.CDROM)]
-        [InlineData("DDCD-RW", MediaType.CDROM)]
-        [InlineData("DVD+RW DL", MediaType.DVD)]
-        [InlineData("DVD+R DL", MediaType.DVD)]
-        [InlineData("BD-ROM", MediaType.BluRay)]
-        [InlineData("BD-R", MediaType.BluRay)]
-        [InlineData("BD-R RRM", MediaType.BluRay)]
-        [InlineData("BD-RW", MediaType.BluRay)]
-        [InlineData("HD DVD-ROM", MediaType.HDDVD)]
-        [InlineData("HD DVD-R", MediaType.HDDVD)]
-        [InlineData("HD DVD-RAM", MediaType.HDDVD)]
-        [InlineData("HD DVD-RW", MediaType.HDDVD)]
-        [InlineData("HD DVD-R DL", MediaType.HDDVD)]
-        [InlineData("HD DVD-RW DL", MediaType.HDDVD)]
-        [InlineData("NINTENDO", MediaType.NintendoWiiOpticalDisc)]
-        [InlineData("RESERVED5", MediaType.NintendoWiiOpticalDisc)]
+        [InlineData("CD-ROM", PhysicalMediaType.CDROM)]
+        [InlineData("CD-R", PhysicalMediaType.CDROM)]
+        [InlineData("CD-RW", PhysicalMediaType.CDROM)]
+        [InlineData("DVD-ROM", PhysicalMediaType.DVD)]
+        [InlineData("DVD-R", PhysicalMediaType.DVD)]
+        [InlineData("DVD-RAM", PhysicalMediaType.DVD)]
+        [InlineData("DVD-RW RO", PhysicalMediaType.DVD)]
+        [InlineData("DVD-RW", PhysicalMediaType.DVD)]
+        [InlineData("DVD-R DL", PhysicalMediaType.DVD)]
+        [InlineData("DVD-R DL LJR", PhysicalMediaType.DVD)]
+        [InlineData("DVD+RW", PhysicalMediaType.DVD)]
+        [InlineData("DVD+R", PhysicalMediaType.DVD)]
+        [InlineData("DDCD-ROM", PhysicalMediaType.CDROM)]
+        [InlineData("DDCD-R", PhysicalMediaType.CDROM)]
+        [InlineData("DDCD-RW", PhysicalMediaType.CDROM)]
+        [InlineData("DVD+RW DL", PhysicalMediaType.DVD)]
+        [InlineData("DVD+R DL", PhysicalMediaType.DVD)]
+        [InlineData("BD-ROM", PhysicalMediaType.BluRay)]
+        [InlineData("BD-R", PhysicalMediaType.BluRay)]
+        [InlineData("BD-R RRM", PhysicalMediaType.BluRay)]
+        [InlineData("BD-RW", PhysicalMediaType.BluRay)]
+        [InlineData("HD DVD-ROM", PhysicalMediaType.HDDVD)]
+        [InlineData("HD DVD-R", PhysicalMediaType.HDDVD)]
+        [InlineData("HD DVD-RAM", PhysicalMediaType.HDDVD)]
+        [InlineData("HD DVD-RW", PhysicalMediaType.HDDVD)]
+        [InlineData("HD DVD-R DL", PhysicalMediaType.HDDVD)]
+        [InlineData("HD DVD-RW DL", PhysicalMediaType.HDDVD)]
+        [InlineData("NINTENDO", PhysicalMediaType.NintendoWiiOpticalDisc)]
+        [InlineData("RESERVED5", PhysicalMediaType.NintendoWiiOpticalDisc)]
         [InlineData("NON STANDARD", null)]
-        public void GetDiscTypeFromProfileTest(string? profile, MediaType? expected)
+        public void GetDiscTypeFromProfileTest(string? profile, PhysicalMediaType? expected)
         {
             var actual = Redumper.GetDiscTypeFromProfile(profile);
             Assert.Equal(expected, actual);

@@ -14,25 +14,25 @@ namespace MPF.Processors
     public sealed class CleanRip : BaseProcessor
     {
         /// <inheritdoc/>
-        public CleanRip(RedumpSystem? system) : base(system) { }
+        public CleanRip(PhysicalSystem? system) : base(system) { }
 
         #region BaseProcessor Implementations
 
         /// <inheritdoc/>
-        public override MediaType? DetermineMediaType(string? outputDirectory, string outputFilename)
+        public override PhysicalMediaType? DeterminePhysicalMediaType(string? outputDirectory, string outputFilename)
         {
 #pragma warning disable IDE0072
             return System switch
             {
-                RedumpSystem.NintendoGameCube => MediaType.NintendoGameCubeGameDisc,
-                RedumpSystem.NintendoWii => MediaType.NintendoWiiOpticalDisc,
+                PhysicalSystem.NintendoGameCube => PhysicalMediaType.NintendoGameCubeGameDisc,
+                PhysicalSystem.NintendoWii => PhysicalMediaType.NintendoWiiOpticalDisc,
                 _ => null,
             };
 #pragma warning restore IDE0072
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, MediaType? mediaType, string basePath, bool redumpCompat)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, PhysicalMediaType? mediaType, string basePath, bool redumpCompat)
         {
             // TODO: Determine if there's a CleanRip version anywhere
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
@@ -69,7 +69,7 @@ namespace MPF.Processors
         }
 
         /// <inheritdoc/>
-        internal override List<OutputFile> GetOutputFiles(MediaType? mediaType, string? outputDirectory, string outputFilename)
+        internal override List<OutputFile> GetOutputFiles(PhysicalMediaType? mediaType, string? outputDirectory, string outputFilename)
         {
             // Remove the extension by default
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);

@@ -47,6 +47,7 @@
 - Don't make clipboard sync
 - Update packages
 - Disable redump.org login credentials
+- Update RedumpLib to 1.11.0, move to redump.info
 
 ### 3.7.1 (2026-03-30)
 
