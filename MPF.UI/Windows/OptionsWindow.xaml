@@ -486,7 +486,7 @@
                             </UniformGrid>
                         </GroupBox>
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RedumpGroupBoxString}">
+                        <!-- <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{DynamicResource RedumpGroupBoxString}">
                             <UniformGrid Columns="5">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="{DynamicResource UsernameLabelString}" />
                                 <TextBox x:Name="RedumpOrgUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
@@ -501,7 +501,7 @@
                                         Style="{DynamicResource CustomButtonStyle}"
                                         IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" />
                             </UniformGrid>
-                        </GroupBox>
+                        </GroupBox> -->
 
                         <Label>
                             <Label.Content>

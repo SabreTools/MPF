@@ -195,24 +195,24 @@ namespace MPF.Frontend.Tools
                 Timeout = TimeSpan.FromSeconds(timeoutSeconds > 0 ? timeoutSeconds : 30),
             };
 
-            if (!string.IsNullOrEmpty(options.Processing.Login.RedumpOrgUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword))
-            {
-                resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to redump.org, this might take a while..."));
-                bool? loggedIn = await wc.Login(options.Processing.Login.RedumpOrgUsername!, options.Processing.Login.RedumpOrgPassword!);
-                if (loggedIn is null)
-                {
-                    resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to redump.org, skipping..."));
-                    return false;
-                }
-                else if (loggedIn == false)
-                {
-                    resultProgress?.Report(ResultEventArgs.Failure("Provided redump.org credentials were invalid, not using..."));
-                }
-                else
-                {
-                    resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into redump.org!"));
-                }
-            }
+            // if (!string.IsNullOrEmpty(options.Processing.Login.RedumpOrgUsername) && !string.IsNullOrEmpty(options.Processing.Login.RedumpOrgPassword))
+            // {
+            //     resultProgress?.Report(ResultEventArgs.Neutral("Attempting to log in to redump.org, this might take a while..."));
+            //     bool? loggedIn = await wc.Login(options.Processing.Login.RedumpOrgUsername!, options.Processing.Login.RedumpOrgPassword!);
+            //     if (loggedIn is null)
+            //     {
+            //         resultProgress?.Report(ResultEventArgs.Failure("There was an unknown error connecting to redump.org, skipping..."));
+            //         return false;
+            //     }
+            //     else if (loggedIn == false)
+            //     {
+            //         resultProgress?.Report(ResultEventArgs.Failure("Provided redump.org credentials were invalid, not using..."));
+            //     }
+            //     else
+            //     {
+            //         resultProgress?.Report(ResultEventArgs.Neutral("Successfully logged into redump.org!"));
+            //     }
+            // }
 
             // Setup the checks
             bool allFound = true;

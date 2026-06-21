@@ -374,7 +374,9 @@
                 </StackPanel>
               </Border>
 
-              <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
+
+              <!-- Disable all login information -->
+              <!-- <Border Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="{DynamicResource PanelBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource RedumpGroupBoxString}" FontWeight="Bold" />
                   <Grid ColumnDefinitions="Auto,122,Auto,122,Auto" ColumnSpacing="8">
@@ -392,7 +394,7 @@
                             IsEnabled="{Binding Options.Processing.Login.RetrieveMatchInformation}" VerticalAlignment="Center" />
                   </Grid>
                 </StackPanel>
-              </Border>
+              </Border> -->
 
               <TextBlock TextWrapping="Wrap">
                 <Run Text="{DynamicResource WarningLabelString}" FontWeight="Bold" Foreground="Red" />

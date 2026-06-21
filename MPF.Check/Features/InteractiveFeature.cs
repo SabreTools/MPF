@@ -51,8 +51,8 @@ namespace MPF.Check.Features
 
                 // Web Login Information
                 Options.Processing.Login.PullAllInformation = false;
-                Options.Processing.Login.RedumpOrgUsername = null;
-                Options.Processing.Login.RedumpOrgPassword = null;
+                // Options.Processing.Login.RedumpOrgUsername = null;
+                // Options.Processing.Login.RedumpOrgPassword = null;
                 Options.Processing.Login.RetrieveMatchInformation = true;
                 Options.Processing.Login.AttemptCount = 3;
                 Options.Processing.Login.TimeoutSeconds = 30;
@@ -93,21 +93,21 @@ namespace MPF.Check.Features
             Console.WriteLine($"4) Add placeholders (Currently '{Options.Processing.MediaInformation.AddPlaceholders}')");
             Console.WriteLine($"5) Create IRD (Currently '{Options.Processing.CreateIRDAfterDumping}')");
             Console.WriteLine($"6) Attempt online matches (Currently '{Options.Processing.Login.RetrieveMatchInformation}')");
-            Console.WriteLine($"7) redump.org credentials (Currently '{Options.Processing.Login.RedumpOrgUsername}')");
-            Console.WriteLine($"8) Web client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
-            Console.WriteLine($"9) Web client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
-            Console.WriteLine($"A) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
-            Console.WriteLine($"B) Set device path (Currently '{DevicePath}')");
-            Console.WriteLine($"C) Scan for protection (Currently '{scan}')");
-            Console.WriteLine($"D) Scan archives for protection (Currently '{enableArchives}')");
-            Console.WriteLine($"E) Debug protection scan output (Currently '{enableDebug}')");
-            Console.WriteLine($"F) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
-            Console.WriteLine($"G) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
-            Console.WriteLine($"H) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
-            Console.WriteLine($"I) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
-            Console.WriteLine($"J) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
-            Console.WriteLine($"K) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
-            Console.WriteLine($"L) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
+            // Console.WriteLine($"7) redump.org credentials (Currently '{Options.Processing.Login.RedumpOrgUsername}')");
+            Console.WriteLine($"7) Web client attempt count (Currently '{Options.Processing.Login.AttemptCount}')");
+            Console.WriteLine($"8) Web client timeout in seconds (Currently '{Options.Processing.Login.TimeoutSeconds}')");
+            Console.WriteLine($"9) Pull all information (Currently '{Options.Processing.Login.PullAllInformation}')");
+            Console.WriteLine($"A) Set device path (Currently '{DevicePath}')");
+            Console.WriteLine($"B) Scan for protection (Currently '{scan}')");
+            Console.WriteLine($"C) Scan archives for protection (Currently '{enableArchives}')");
+            Console.WriteLine($"D) Debug protection scan output (Currently '{enableDebug}')");
+            Console.WriteLine($"E) Hide drive letters in protection output (Currently '{hideDriveLetters}')");
+            Console.WriteLine($"F) Hide filename suffix (Currently '{Options.Processing.AddFilenameSuffix}')");
+            Console.WriteLine($"G) Output submission JSON (Currently '{Options.Processing.OutputSubmissionJSON}')");
+            Console.WriteLine($"H) Include JSON artifacts (Currently '{Options.Processing.IncludeArtifacts}')");
+            Console.WriteLine($"I) Compress logs (Currently '{Options.Processing.CompressLogFiles}')");
+            Console.WriteLine($"J) Log compression (Currently '{Options.Processing.LogCompression.LongName()}')");
+            Console.WriteLine($"K) Delete unnecessary files (Currently '{Options.Processing.DeleteUnnecessaryFiles}')");
             Console.WriteLine();
             Console.WriteLine($"Q) Exit the program");
             Console.WriteLine($"X) Start checking");
@@ -132,55 +132,52 @@ namespace MPF.Check.Features
                     Options.Processing.Login.RetrieveMatchInformation = !Options.Processing.Login.RetrieveMatchInformation;
                     goto root;
                 case "7":
-                    goto redumpCredentials;
-                case "8":
                     goto attemptCount;
-                case "9":
+                case "8":
                     goto timeoutSeconds;
-                case "a":
-                case "A":
+                case "9":
                     Options.Processing.Login.PullAllInformation = !Options.Processing.Login.PullAllInformation;
                     goto root;
+                case "a":
+                case "A":
+                    goto devicePath;
                 case "b":
                 case "B":
-                    goto devicePath;
+                    scan = !scan;
+                    goto root;
                 case "c":
                 case "C":
-                    scan = !scan;
+                    enableArchives = !enableArchives;
                     goto root;
                 case "d":
                 case "D":
-                    enableArchives = !enableArchives;
+                    enableDebug = !enableDebug;
                     goto root;
                 case "e":
                 case "E":
-                    enableDebug = !enableDebug;
+                    hideDriveLetters = !hideDriveLetters;
                     goto root;
                 case "f":
                 case "F":
-                    hideDriveLetters = !hideDriveLetters;
+                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
                     goto root;
                 case "g":
                 case "G":
-                    Options.Processing.AddFilenameSuffix = !Options.Processing.AddFilenameSuffix;
+                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
                     goto root;
                 case "h":
                 case "H":
-                    Options.Processing.OutputSubmissionJSON = !Options.Processing.OutputSubmissionJSON;
+                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
                     goto root;
                 case "i":
                 case "I":
-                    Options.Processing.IncludeArtifacts = !Options.Processing.IncludeArtifacts;
+                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
                     goto root;
                 case "j":
                 case "J":
-                    Options.Processing.CompressLogFiles = !Options.Processing.CompressLogFiles;
-                    goto root;
+                    goto logCompression;
                 case "k":
                 case "K":
-                    goto logCompression;
-                case "l":
-                case "L":
                     Options.Processing.DeleteUnnecessaryFiles = !Options.Processing.DeleteUnnecessaryFiles;
                     goto root;
 
@@ -241,25 +238,25 @@ namespace MPF.Check.Features
             Seed = Builder.CreateFromFile(result);
             goto root;
 
-        redumpCredentials:
-            Console.WriteLine();
-            Console.WriteLine("Enter your redump.org username and press Enter:");
-            Console.Write("> ");
-            Options.Processing.Login.RedumpOrgUsername = Console.ReadLine();
+        // redumpCredentials:
+        //     Console.WriteLine();
+        //     Console.WriteLine("Enter your redump.org username and press Enter:");
+        //     Console.Write("> ");
+        //     Options.Processing.Login.RedumpOrgUsername = Console.ReadLine();
 
-            Console.WriteLine("Enter your redump.org password (hidden) and press Enter:");
-            Console.Write("> ");
-            Options.Processing.Login.RedumpOrgPassword = string.Empty;
-            while (true)
-            {
-                var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                    break;
+        //     Console.WriteLine("Enter your redump.org password (hidden) and press Enter:");
+        //     Console.Write("> ");
+        //     Options.Processing.Login.RedumpOrgPassword = string.Empty;
+        //     while (true)
+        //     {
+        //         var key = Console.ReadKey(true);
+        //         if (key.Key == ConsoleKey.Enter)
+        //             break;
 
-                Options.Processing.Login.RedumpOrgPassword += key.KeyChar;
-            }
+        //         Options.Processing.Login.RedumpOrgPassword += key.KeyChar;
+        //     }
 
-            goto root;
+        //     goto root;
 
         attemptCount:
             Console.WriteLine();

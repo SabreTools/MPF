@@ -146,8 +146,8 @@ namespace MPF.Check
             commandSet.Add(mainFeature.NoPlaceholdersInput);
             commandSet.Add(mainFeature.CreateIrdInput);
             commandSet.Add(mainFeature.NoRetrieveInput);
-            commandSet.Add(mainFeature.UsernameInput);
-            commandSet.Add(mainFeature.PasswordInput);
+            // commandSet.Add(mainFeature.UsernameInput);
+            // commandSet.Add(mainFeature.PasswordInput);
             commandSet.Add(mainFeature.AttemptCountInput);
             commandSet.Add(mainFeature.TimeoutSecondsInput);
             commandSet.Add(mainFeature.PullAllInput);

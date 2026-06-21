@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 #endif
 using MPF.Frontend;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.Web;
 using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.Check.Features
@@ -53,8 +52,8 @@ namespace MPF.Check.Features
 
             // Web Login Information
             Options.Processing.Login.PullAllInformation = false;
-            Options.Processing.Login.RedumpOrgUsername = null;
-            Options.Processing.Login.RedumpOrgPassword = null;
+            // Options.Processing.Login.RedumpOrgUsername = null;
+            // Options.Processing.Login.RedumpOrgPassword = null;
             Options.Processing.Login.RetrieveMatchInformation = true;
 
             // Media Information
@@ -91,23 +90,23 @@ namespace MPF.Check.Features
             }
 
             // Validate the supplied credentials
-            if (Options.Processing.Login.RetrieveMatchInformation)
-            {
-                // redump.org
-                if (!string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgUsername)
-                    && !string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgPassword))
-                {
-                    bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpOrgUsername!, Options.Processing.Login.RedumpOrgPassword!).GetAwaiter().GetResult();
-                    string message = validated switch
-                    {
-                        true => "redump.org username and password accepted!",
-                        false => "redump.org username and password denied!",
-                        null => "An error occurred validating your redump.org credentials!",
-                    };
+            // if (Options.Processing.Login.RetrieveMatchInformation)
+            // {
+            //     // redump.org
+            //     if (!string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgUsername)
+            //         && !string.IsNullOrEmpty(Options.Processing.Login.RedumpOrgPassword))
+            //     {
+            //         bool? validated = RedumpClient.ValidateCredentials(Options.Processing.Login.RedumpOrgUsername!, Options.Processing.Login.RedumpOrgPassword!).GetAwaiter().GetResult();
+            //         string message = validated switch
+            //         {
+            //             true => "redump.org username and password accepted!",
+            //             false => "redump.org username and password denied!",
+            //             null => "An error occurred validating your redump.org credentials!",
+            //         };
 
-                    Console.WriteLine(message);
-                }
-            }
+            //         Console.WriteLine(message);
+            //     }
+            // }
 
             // Loop through all the rest of the args
             for (int i = 0; i < Inputs.Count; i++)

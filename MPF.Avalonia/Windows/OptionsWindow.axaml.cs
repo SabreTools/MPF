@@ -6,7 +6,6 @@ using Avalonia.Platform.Storage;
 using MPF.Avalonia.Services;
 using MPF.Frontend;
 using MPF.Frontend.ViewModels;
-using SabreTools.RedumpLib.Web;
 
 namespace MPF.Avalonia.Windows
 {
@@ -70,7 +69,7 @@ namespace MPF.Avalonia.Windows
 
             AcceptButton!.Click += OnAcceptClick;
             CancelButton!.Click += OnCancelClick;
-            RedumpLoginTestButton!.Click += OnRedumpTestClick;
+            // RedumpLoginTestButton!.Click += OnRedumpTestClick;
             NonRedumpModeCheckBox!.Click += NonRedumpModeClicked;
         }
 
@@ -95,20 +94,20 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Test redump.org credentials for validity
         /// </summary>
-        private async Task<bool?> ValidateRedumpOrgCredentials()
-        {
-            bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Text);
-            string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
+        // private async Task<bool?> ValidateRedumpOrgCredentials()
+        // {
+        //     bool? success = await RedumpClient.ValidateCredentials(RedumpUsernameTextBox!.Text, RedumpPasswordBox!.Text);
+        //     string message = OptionsViewModel.GetRedumpOrgLoginResult(success);
 
-            if (success == true)
-                _ = MessageBoxWindow.ShowAsync(this, "Success", message, 1, success == true);
-            else if (success == false)
-                _ = MessageBoxWindow.ShowAsync(this, StringResource("ErrorMessageString", "Error"), message, 1, success == true);
-            else
-                _ = MessageBoxWindow.ShowAsync(this, "Error", message, 1, success == true);
+        //     if (success == true)
+        //         _ = MessageBoxWindow.ShowAsync(this, "Success", message, 1, success == true);
+        //     else if (success == false)
+        //         _ = MessageBoxWindow.ShowAsync(this, StringResource("ErrorMessageString", "Error"), message, 1, success == true);
+        //     else
+        //         _ = MessageBoxWindow.ShowAsync(this, "Error", message, 1, success == true);
 
-            return success;
-        }
+        //     return success;
+        // }
 
         #endregion
 
@@ -187,8 +186,8 @@ namespace MPF.Avalonia.Windows
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
-        private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
-            => await ValidateRedumpOrgCredentials();
+        // private async void OnRedumpTestClick(object? sender, RoutedEventArgs e)
+        //     => await ValidateRedumpOrgCredentials();
 
         #endregion
     }
