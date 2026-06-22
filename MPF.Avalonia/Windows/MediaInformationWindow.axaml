@@ -61,7 +61,7 @@
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource VersionsAndEditionGroupBoxString}" FontWeight="Bold" />
                   <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Version, Mode=TwoWay}" />
-                  <controls:UserInput Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Editions, Mode=TwoWay}" />
                   <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[EditionNonLatin], Mode=TwoWay}" />
                 </StackPanel>
               </Border>

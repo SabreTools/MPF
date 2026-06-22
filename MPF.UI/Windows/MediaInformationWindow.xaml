@@ -147,7 +147,7 @@
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Version, Mode=TwoWay}"/>
-                                    <controls:UserInput x:Name="EditionTextBox" Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="EditionTextBox" Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Editions, Mode=TwoWay}"/>
                                     <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}"
                                                     Text="{Binding Path=SubmissionInfo.DumpMetadata.CommentsSpecialFields[(redump:SiteCode)EditionNonLatin], Mode=TwoWay}"/>
                                 </StackPanel>
