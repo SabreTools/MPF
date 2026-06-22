@@ -647,7 +647,8 @@ namespace MPF.Processors
                             "hash"),
                         new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
+                            | OutputFileFlags.Zippable
+                            | OutputFileFlags.Preserve,
                             "log"),
                         new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
@@ -715,7 +716,8 @@ namespace MPF.Processors
                             "hash"),
                         new($"{outputFilename}.log", OutputFileFlags.Required
                             | OutputFileFlags.Artifact
-                            | OutputFileFlags.Zippable,
+                            | OutputFileFlags.Zippable
+                            | OutputFileFlags.Preserve,
                             "log"),
                         new CustomOutputFile([$"{outputFilename}.dat", $"{outputFilename}.log"], OutputFileFlags.Required,
                             DatfileExists),
