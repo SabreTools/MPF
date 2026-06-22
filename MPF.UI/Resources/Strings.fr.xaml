@@ -172,9 +172,8 @@
     <system:String x:Key="DiscTitleInputString">Titre du disque</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Titre du disque (non-latin)</system:String>
     <system:String x:Key="CategoryLabelString">Catégorie</system:String>
-    <system:String x:Key="RegionLabelString">Région</system:String>
+    <system:String x:Key="RegionsLabelString">Région</system:String>
     <system:String x:Key="LanguagesLabelString">Langues</system:String>
-    <system:String x:Key="LanguageSelectionViaLabelString">Sélection de la langue via</system:String>
     <system:String x:Key="SerialInputString">Numéro de série</system:String>
     <system:String x:Key="BarcodeInputString">Code-barres</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">Versions et éditions</system:String>

@@ -2,8 +2,8 @@ using System;
 using MPF.Frontend;
 using MPF.Frontend.Tools;
 using SabreTools.CommandLine.Inputs;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Tools;
 using LogCompression = MPF.Processors.LogCompression;
 
 namespace MPF.Check.Features

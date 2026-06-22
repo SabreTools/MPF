@@ -172,9 +172,8 @@
     <system:String x:Key="DiscTitleInputString">Skivtitel</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Skivtitel (icke-latin)</system:String>
     <system:String x:Key="CategoryLabelString">Kategori</system:String>
-    <system:String x:Key="RegionLabelString">Region</system:String>
+    <system:String x:Key="RegionsLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Språk</system:String>
-    <system:String x:Key="LanguageSelectionViaLabelString">Språkväljning via</system:String>
     <system:String x:Key="SerialInputString">Serienummer</system:String>
     <system:String x:Key="BarcodeInputString">Streckkod</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">Version och Utgåvor</system:String>

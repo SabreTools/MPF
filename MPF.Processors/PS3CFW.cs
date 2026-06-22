@@ -35,11 +35,11 @@ namespace MPF.Processors
 
             // Get the Datafile information
             Datafile? datafile = GenerateDatafile(isoPath);
-            info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+            info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the PVD from the ISO
             if (GetPVD(isoPath, out string? pvd))
-                info.Extras.PVD = pvd;
+                info.DumpMetadata.PVD = pvd;
 
             // Get the base directory
             string baseDir = Path.GetDirectoryName(basePath) ?? string.Empty;
@@ -84,46 +84,46 @@ namespace MPF.Processors
 
             // Get the layerbreak information from the PIC
             var di = ProcessingTool.GetDiscInformation(picPath);
-            info.SizeAndChecksums.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
+            info.DumpMetadata.PICIdentifier = ProcessingTool.GetPICIdentifier(di);
             if (ProcessingTool.GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
             {
                 long size = datafile?.Game?[0]?.Rom?[0]?.Size ?? 0;
 
                 if (layerbreak1 is not null && layerbreak1 * 2048 < size)
-                    info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
+                    info.DiscIdentifiers.Layerbreak = layerbreak1.Value;
 
                 if (layerbreak2 is not null && layerbreak2 * 2048 < size)
-                    info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+                    info.DiscIdentifiers.Layerbreak2 = layerbreak2.Value;
 
                 if (layerbreak3 is not null && layerbreak3 * 2048 < size)
-                    info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+                    info.DiscIdentifiers.Layerbreak3 = layerbreak3.Value;
             }
 
             // Set the trim length based on the layer count
             int trimLength;
-            if (info.SizeAndChecksums.Layerbreak3 != default)
+            if (info.DiscIdentifiers.Layerbreak3 != default)
                 trimLength = 520;
-            else if (info.SizeAndChecksums.Layerbreak2 != default)
+            else if (info.DiscIdentifiers.Layerbreak2 != default)
                 trimLength = 392;
             else
                 trimLength = 264;
 
             // TODO: Put info about abnormal PIC info beyond 132 bytes in comments?
-            info.Extras.PIC = GetPIC(picPath, trimLength);
+            info.DumpMetadata.PIC = GetPIC(picPath, trimLength);
 
             // Parse Disc Key, Disc ID, and PIC from the getkey.log file
             if (ProcessingTool.ParseGetKeyLog(getKeyPath, out string? key, out string? id, out string? pic))
             {
                 if (key is not null)
-                    info.Extras.DiscKey = key.ToUpperInvariant();
+                    info.DiscIdentifiers.DiscKey = key.ToUpperInvariant();
                 if (id is not null)
 #if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
-                    info.Extras.DiscID = $"{id.ToUpperInvariant()[..24]}XXXXXXXX";
+                    info.DiscIdentifiers.DiscID = $"{id.ToUpperInvariant()[..24]}XXXXXXXX";
 #else
-                    info.Extras.DiscID = id.ToUpperInvariant().Substring(0, 24) + "XXXXXXXX";
+                    info.DiscIdentifiers.DiscID = id.ToUpperInvariant().Substring(0, 24) + "XXXXXXXX";
 #endif
-                if (string.IsNullOrEmpty(info.Extras.PIC) && !string.IsNullOrEmpty(pic))
-                    info.Extras.PIC = SplitString(pic, 32);
+                if (string.IsNullOrEmpty(info.DumpMetadata.PIC) && !string.IsNullOrEmpty(pic))
+                    info.DumpMetadata.PIC = SplitString(pic, 32);
             }
         }
 

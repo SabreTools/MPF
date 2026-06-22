@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Data.Sections;
-using SabreTools.RedumpLib.RedumpInfo;
+using SabreTools.RedumpLib.Tools;
 using Xunit;
 
 namespace MPF.Frontend.Test.Tools
@@ -14,7 +14,7 @@ namespace MPF.Frontend.Test.Tools
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
             {
-                CommonDiscInfo = new CommonDiscInfoSection()
+                DumpMetadata = new DumpMetadataSection()
                 {
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
@@ -34,14 +34,14 @@ namespace MPF.Frontend.Test.Tools
             Formatter.ProcessSpecialFields(info);
 
             // Validate the basics
-            Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
-            Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Comments);
+            Assert.Empty(info.DumpMetadata.CommentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Contents);
+            Assert.Empty(info.DumpMetadata.ContentsSpecialFields);
 
             // Split the values
-            string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
-            string[] splitContents = info.CommonDiscInfo.Contents.Split('\n');
+            string[] splitComments = info.DumpMetadata.Comments.Split('\n');
+            string[] splitContents = info.DumpMetadata.Contents.Split('\n');
 
             // Validate the lines
             Assert.Equal(3, splitComments.Length);
@@ -54,7 +54,7 @@ namespace MPF.Frontend.Test.Tools
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
             {
-                CommonDiscInfo = new CommonDiscInfoSection()
+                DumpMetadata = new DumpMetadataSection()
                 {
                     Comments = null,
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
@@ -74,14 +74,14 @@ namespace MPF.Frontend.Test.Tools
             Formatter.ProcessSpecialFields(info);
 
             // Validate the basics
-            Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
-            Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Comments);
+            Assert.Empty(info.DumpMetadata.CommentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Contents);
+            Assert.Empty(info.DumpMetadata.ContentsSpecialFields);
 
             // Split the values
-            string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
-            string[] splitContents = info.CommonDiscInfo.Contents.Split('\n');
+            string[] splitComments = info.DumpMetadata.Comments.Split('\n');
+            string[] splitContents = info.DumpMetadata.Contents.Split('\n');
 
             // Validate the lines
             Assert.Single(splitComments);
@@ -94,7 +94,7 @@ namespace MPF.Frontend.Test.Tools
             // Create a new SubmissionInfo object
             var info = new SubmissionInfo()
             {
-                CommonDiscInfo = new CommonDiscInfoSection()
+                DumpMetadata = new DumpMetadataSection()
                 {
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
                     CommentsSpecialFields = [],
@@ -108,14 +108,14 @@ namespace MPF.Frontend.Test.Tools
             Formatter.ProcessSpecialFields(info);
 
             // Validate the basics
-            Assert.NotNull(info.CommonDiscInfo.Comments);
-            Assert.Empty(info.CommonDiscInfo.CommentsSpecialFields);
-            Assert.NotNull(info.CommonDiscInfo.Contents);
-            Assert.Empty(info.CommonDiscInfo.ContentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Comments);
+            Assert.Empty(info.DumpMetadata.CommentsSpecialFields);
+            Assert.NotNull(info.DumpMetadata.Contents);
+            Assert.Empty(info.DumpMetadata.ContentsSpecialFields);
 
             // Split the values
-            string[] splitComments = info.CommonDiscInfo.Comments.Split('\n');
-            string[] splitContents = info.CommonDiscInfo.Contents.Split('\n');
+            string[] splitComments = info.DumpMetadata.Comments.Split('\n');
+            string[] splitContents = info.DumpMetadata.Contents.Split('\n');
 
             // Validate the lines
             Assert.Equal(2, splitComments.Length);

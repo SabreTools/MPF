@@ -10,9 +10,8 @@ using MPF.Frontend.Tools;
 using MPF.Processors;
 using Newtonsoft.Json;
 using SabreTools.IO.Extensions;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.RedumpInfo;
+using SabreTools.RedumpLib.Tools;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Frontend
@@ -596,7 +595,7 @@ namespace MPF.Frontend
 
             // Format the information for the text output
             resultProgress.Report(ResultEventArgs.Neutral("Formatting information..."));
-            var formattedValues = Formatter.FormatOutputData(submissionInfo, _options.Processing.MediaInformation.EnableRedumpCompatibility, out string? formatResult);
+            var formattedValues = Formatter.FormatOutputData(submissionInfo, out string? formatResult);
             if (formattedValues is null)
                 resultProgress.Report(ResultEventArgs.Failure(formatResult));
             else
@@ -614,7 +613,7 @@ namespace MPF.Frontend
                 resultProgress.Report(ResultEventArgs.Failure(txtResult));
 
             // Write the copy protection output
-            if (submissionInfo?.CopyProtection?.FullProtections is not null && submissionInfo.CopyProtection.FullProtections.Count > 0)
+            if (submissionInfo?.DumpMetadata?.FullProtections is not null && submissionInfo.DumpMetadata.FullProtections.Count > 0)
             {
                 if (_options.Processing.ProtectionScanning.ScanForProtection)
                 {
@@ -675,13 +674,13 @@ namespace MPF.Frontend
                 resultProgress.Report(ResultEventArgs.Neutral("Creating IRD... please wait!"));
 
                 // Try to extract the CRC-32
-                _ = ProcessingTool.GetISOHashValues(submissionInfo?.TracksAndWriteOffsets?.ClrMameProData, out _, out var crc32, out _, out _);
+                _ = ProcessingTool.GetISOHashValues(submissionInfo?.DumpMetadata?.Dat, out _, out var crc32, out _, out _);
 
                 bool irdCreateSuccess = await IRDTool.WriteIRD(OutputPath,
-                    submissionInfo?.Extras?.DiscKey,
-                    submissionInfo?.Extras?.DiscID,
-                    submissionInfo?.Extras?.PIC,
-                    submissionInfo?.SizeAndChecksums.Layerbreak,
+                    submissionInfo?.DiscIdentifiers?.DiscKey,
+                    submissionInfo?.DiscIdentifiers?.DiscID,
+                    submissionInfo?.DumpMetadata?.PIC,
+                    submissionInfo?.DiscIdentifiers.Layerbreak,
                     crc32);
 
                 if (irdCreateSuccess)
@@ -863,7 +862,7 @@ namespace MPF.Frontend
         private static bool WriteProtectionData(string? outputDirectory, string? filenameSuffix, SubmissionInfo? info, bool hideDriveLetters)
         {
             // Check to see if the inputs are valid
-            if (info?.CopyProtection?.FullProtections is null || info.CopyProtection.FullProtections.Count == 0)
+            if (info?.DumpMetadata?.FullProtections is null || info.DumpMetadata.FullProtections.Count == 0)
                 return true;
 
             // Now write out to a generic file
@@ -881,7 +880,7 @@ namespace MPF.Frontend
 
                 using var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write), Encoding.UTF8);
 
-                List<string> sortedKeys = [.. info.CopyProtection.FullProtections.Keys];
+                List<string> sortedKeys = [.. info.DumpMetadata.FullProtections.Keys];
                 sortedKeys.Sort();
 
                 foreach (string key in sortedKeys)
@@ -894,7 +893,7 @@ namespace MPF.Frontend
                         scanPath = Path.DirectorySeparatorChar + key.Substring((Path.GetPathRoot(key) ?? string.Empty).Length);
 #endif
 
-                    List<string>? scanResult = info.CopyProtection.FullProtections[key];
+                    List<string>? scanResult = info.DumpMetadata.FullProtections[key];
 
                     if (scanResult is null)
                         sw.WriteLine($"{scanPath}: None");

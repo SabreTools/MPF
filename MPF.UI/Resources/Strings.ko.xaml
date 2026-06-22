@@ -172,9 +172,8 @@
     <system:String x:Key="DiscTitleInputString">디스크 제목</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">디스크 제목 (비라틴 문자)</system:String>
     <system:String x:Key="CategoryLabelString">카테고리</system:String>
-    <system:String x:Key="RegionLabelString">지역</system:String>
+    <system:String x:Key="RegionsLabelString">지역</system:String>
     <system:String x:Key="LanguagesLabelString">언어 (문자)</system:String>
-    <system:String x:Key="LanguageSelectionViaLabelString">언어 선택 방식</system:String>
     <system:String x:Key="SerialInputString">시리얼</system:String>
     <system:String x:Key="BarcodeInputString">바코드</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">버전 및 에디션</system:String>

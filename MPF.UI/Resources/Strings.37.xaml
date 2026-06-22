@@ -176,9 +176,8 @@
     <system:String x:Key="DiscTitleInputString">D1zc 71713</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">D1zc 71713 (n0n-1471n)</system:String>
     <system:String x:Key="CategoryLabelString">C47390ry</system:String>
-    <system:String x:Key="RegionLabelString">R3910n</system:String>
+    <system:String x:Key="RegionsLabelString">R3910n</system:String>
     <system:String x:Key="LanguagesLabelString">14n9u493z</system:String>
-    <system:String x:Key="LanguageSelectionViaLabelString">14n9u493 z313c710n V14</system:String>
     <system:String x:Key="SerialInputString">z3r141</system:String>
     <system:String x:Key="BarcodeInputString">84rc0d3</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">V3rz10n 4nd 3d1710nz</system:String>

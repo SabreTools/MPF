@@ -26,48 +26,43 @@
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource CommonMediaInfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput Label="{DynamicResource TitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[AlternativeTitle], Mode=TwoWay}" />
-                  <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[AlternativeForeignTitle], Mode=TwoWay}" />
-                  <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}" />
-                  <controls:UserInput Label="{DynamicResource DiscTitleInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DiscTitleNonLatin], Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource TitleInputString}" Text="{Binding SubmissionInfo.DiscIdentity.Title, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AlternativeTitleTextBox" Label="{DynamicResource AlternativeTitleInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AlternativeTitle], Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource ForeignTitleNonLatinInputString}" Text="{Binding SubmissionInfo.DiscIdentity.ForeignTitle, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="{DynamicResource AlternativeForeignTitleInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AlternativeForeignTitle], Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource DiscNumberLetterInputString}" Text="{Binding SubmissionInfo.DiscIdentity.DiscNumber, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource DiscTitleInputString}" Text="{Binding SubmissionInfo.DiscIdentity.DiscTitle, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="DiscTitleNonLatinTextBox" Label="{DynamicResource DiscTitleNonLatinInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscTitleNonLatin], Mode=TwoWay}" />
 
                   <Grid ColumnDefinitions="3*,7*" ColumnSpacing="4" HorizontalAlignment="Stretch">
                     <TextBlock Text="{DynamicResource CategoryLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <ComboBox x:Name="CategoryComboBox"
                                             Grid.Column="1"
                                             HorizontalAlignment="Stretch"
-                                            SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                                            SelectedItem="{Binding SubmissionInfo.DiscIdentity.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
                   </Grid>
 
                   <Grid ColumnDefinitions="3*,7*" ColumnSpacing="4" HorizontalAlignment="Stretch">
-                    <TextBlock Text="{DynamicResource RegionLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    <ComboBox x:Name="RegionComboBox"
+                    <TextBlock Text="{DynamicResource RegionsLabelString}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <controls:MultiSelectDropDown x:Name="RegionDropDown"
                                             Grid.Column="1"
-                                            HorizontalAlignment="Stretch"
-                                            SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}" />
+                                            HorizontalAlignment="Stretch" />
                   </Grid>
 
                   <controls:MultiSelectDropDown x:Name="LanguagesDropDown"
                                                 Label="{DynamicResource LanguagesLabelString}" />
 
-                  <controls:MultiSelectDropDown x:Name="LanguageSelectionsDropDown"
-                                                Label="{DynamicResource LanguageSelectionViaLabelString}"
-                                                IsVisible="False" />
-
-                  <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}" />
-                  <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource SerialInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.DiscSerials, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource BarcodeInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Barcodes, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource VersionsAndEditionGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}" />
+                  <controls:UserInput Label="{DynamicResource VersionInputString}" Text="{Binding SubmissionInfo.DiscIdentifiers.Version, Mode=TwoWay}" />
                   <controls:UserInput Label="{DynamicResource EditionInputString}" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[EditionNonLatin], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="EditionNonLatinTextBox" Label="{DynamicResource EditionNonLatinInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[EditionNonLatin], Mode=TwoWay}" />
                 </StackPanel>
               </Border>
             </StackPanel>
@@ -87,67 +82,67 @@
                         ColumnDefinitions="3*,7*"
                         IsVisible="False">
                     <CheckBox x:Name="PCMacHybridCheckBox"
-                              IsChecked="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[PCMacHybrid], Mode=TwoWay}"
+                              IsChecked="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PCMacHybrid], Mode=TwoWay}"
                               Grid.Column="1"
                               Content="PC/Mac Hybrid"
                               Margin="0,2" />
                   </Grid>
-                  <controls:UserInput Label="{DynamicResource CommentsInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                  <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[CompatibleOS], Mode=TwoWay}" IsVisible="False" />
-                  <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Text="{Binding SubmissionInfo.Extras.DiscKey, Mode=TwoWay}" IsVisible="False" />
-                  <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Text="{Binding SubmissionInfo.Extras.DiscID, Mode=TwoWay}" IsVisible="False" />
-                  <controls:UserInput Label="{DynamicResource ProtectionInputString}" Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                  <controls:UserInput Label="{DynamicResource CommentsInputString}" Text="{Binding SubmissionInfo.DumpMetadata.Comments, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                  <controls:UserInput x:Name="CompatibleOSTextBox" Label="{DynamicResource CompatibleOSInputString}" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CompatibleOS], Mode=TwoWay}" IsVisible="False" />
+                  <controls:UserInput x:Name="DiscKeyTextBox" Label="Disc Key" Text="{Binding SubmissionInfo.DiscIdentifiers.DiscKey, Mode=TwoWay}" IsVisible="False" />
+                  <controls:UserInput x:Name="DiscIDTextBox" Label="Disc ID" Text="{Binding SubmissionInfo.DiscIdentifiers.DiscID, Mode=TwoWay}" IsVisible="False" />
+                  <controls:UserInput Label="{DynamicResource ProtectionInputString}" Text="{Binding SubmissionInfo.DumpMetadata.Protection, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
                 </StackPanel>
               </Border>
 
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource PhysicalIdentifiersGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No." Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[BBFCRegistrationNumber], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DiscHologramID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DNASDiscID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="CommentDiscIDTextBox" Label="Disc ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DiscID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="CoverIDTextBox" Label="Cover ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[CoverID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="ISBNTextBox" Label="ISBN" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[ISBN], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="ISSNTextBox" Label="ISSN" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[ISSN], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="PPNTextBox" Label="PPN" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[PPN], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[VFCCode], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No." Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BBFCRegistrationNumber], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscHologramID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DNASDiscID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="CommentDiscIDTextBox" Label="Disc ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DiscID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="CoverIDTextBox" Label="Cover ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CoverID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="ISBNTextBox" Label="ISBN" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ISBN], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="ISSNTextBox" Label="ISSN" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ISSN], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="PPNTextBox" Label="PPN" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PPN], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[VFCCode], Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
               <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock Text="{DynamicResource PublisherIdentifiersGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[TwoKGamesID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[AcclaimID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="AccoladeIDTextBox" Label="Accolade ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[AccoladeID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[ActivisionID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[BandaiID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bethesda ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[BethesdaID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[CDProjektID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="DisneyInteractiveIDTextBox" Label="Disney Interactive ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DisneyInteractiveID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="EidosIDTextBox" Label="Eidos ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[EidosID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[ElectronicArtsID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[FoxInteractiveID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[GTInteractiveID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="InterplayIDTextBox" Label="Interplay ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[InterplayID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[JASRACID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[KingRecordsID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[KoeiID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[KonamiID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[LucasArtsID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="MicrosoftIDTextBox" Label="Microsoft ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[MicrosoftID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[NaganoID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[NamcoID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[NipponIchiSoftwareID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[OriginID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[PonyCanyonID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SegaID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SelenID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="SierraIDTextBox" Label="Sierra ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SierraID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[TaitoID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[UbisoftID], Mode=TwoWay}" />
-                  <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[ValveID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="TwoKGamesIDTextBox" Label="2K Games ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[TwoKGamesID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AcclaimID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="AccoladeIDTextBox" Label="Accolade ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[AccoladeID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ActivisionID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BandaiID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="BethesdaIDTextBox" Label="Bethesda ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[BethesdaID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[CDProjektID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="DisneyInteractiveIDTextBox" Label="Disney Interactive ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DisneyInteractiveID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="EidosIDTextBox" Label="Eidos ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[EidosID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ElectronicArtsID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[FoxInteractiveID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[GTInteractiveID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="InterplayIDTextBox" Label="Interplay ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InterplayID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[JASRACID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KingRecordsID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KoeiID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[KonamiID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[LucasArtsID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="MicrosoftIDTextBox" Label="Microsoft ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[MicrosoftID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NaganoID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NamcoID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[NipponIchiSoftwareID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[OriginID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PonyCanyonID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SegaID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SelenID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="SierraIDTextBox" Label="Sierra ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SierraID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[TaitoID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[UbisoftID], Mode=TwoWay}" />
+                  <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[ValveID], Mode=TwoWay}" />
                 </StackPanel>
               </Border>
             </StackPanel>
@@ -161,18 +156,18 @@
           <ScrollViewer>
             <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
               <StackPanel Spacing="4">
-                <controls:UserInput Label="General" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="ApplicationsTextBox" Label="Applications" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Applications], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="GamesTextBox" Label="Games" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Games], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[NetYarozeGames], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" IsVisible="False" />
-                <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[PlayableDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[RollingDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[TechDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[GameFootage], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="VideosTextBox" Label="Videos" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Videos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="PatchesTextBox" Label="Patches" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Patches], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Savegames], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" Text="{Binding SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[Extras], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput Label="General" Text="{Binding SubmissionInfo.DumpMetadata.Contents, Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="ApplicationsTextBox" Label="Applications" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Applications], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="GamesTextBox" Label="Games" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Games], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[NetYarozeGames], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" IsVisible="False" />
+                <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[PlayableDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[RollingDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[TechDemos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[GameFootage], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="VideosTextBox" Label="Videos" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Videos], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PatchesTextBox" Label="Patches" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Patches], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Savegames], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" Text="{Binding SubmissionInfo.DumpMetadata.ContentsSpecialFields[Extras], Mode=TwoWay}" TextHeight="75" Enter="True" TextWrapping="Wrap" />
               </StackPanel>
             </Border>
           </ScrollViewer>
@@ -187,40 +182,40 @@
               <Border x:Name="L0InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock x:Name="L0HeaderText" Text="{DynamicResource L0InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MouldSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0MasteringCode" Label="Data/L0 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer0MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer0Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0MouldSIDs" Label="Data/L0 Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer0MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L0AdditionalMoulds" Label="Data/L0 Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer0AdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
               <Border x:Name="L1InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}">
                 <StackPanel Spacing="4">
                   <TextBlock x:Name="L1HeaderText" Text="{DynamicResource L1InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MouldSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1MasteringCode" Label="Label/L1 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer1MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer1Toolstamps, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1MouldSIDs" Label="Label/L1 Mould SIDs" Text="{Binding SubmissionInfo.RingCodes.Layer1MouldSIDs, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L1AdditionalMoulds" Label="Label/L1 Additional Moulds" Text="{Binding SubmissionInfo.RingCodes.Layer1AdditionalMoulds, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
               <Border x:Name="L2InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
                 <StackPanel Spacing="4">
                   <TextBlock x:Name="L2HeaderText" Text="{DynamicResource L2InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L2MasteringCode" Label="L2 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer2MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer2Toolstamps, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
 
               <Border x:Name="L3InfoPanel" Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" IsVisible="False">
                 <StackPanel Spacing="4">
                   <TextBlock x:Name="L3HeaderText" Text="{DynamicResource L3InfoGroupBoxString}" FontWeight="Bold" />
-                  <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}" />
-                  <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L3MasteringCode" Label="L3 Mastering Code" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringCode, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.RingCodes.Layer3MasteringSID, Mode=TwoWay}" />
+                  <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamps" Text="{Binding SubmissionInfo.RingCodes.Layer3Toolstamps, Mode=TwoWay}" />
                 </StackPanel>
               </Border>
             </StackPanel>
@@ -234,38 +229,35 @@
           <ScrollViewer>
             <Border Padding="8,5" BorderThickness="1" BorderBrush="{DynamicResource PanelBorderBrush}" CornerRadius="6" Background="{DynamicResource PanelBackgroundBrush}" Margin="0,0,4,0">
               <StackPanel Spacing="4">
-                <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True" Text="{Binding SubmissionInfo.FullyMatchedID, Mode=TwoWay}" />
+                <controls:UserInput x:Name="FullyMatchedIDs" Label="Fully Matched ID" IsReadOnly="True" Text="{Binding SubmissionInfo.FullyMatchedIDs, Mode=TwoWay}" />
                 <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True" />
-                <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True" Text="{Binding SubmissionInfo.TracksAndWriteOffsets.ClrMameProData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="HashDataLayerbreak1" Label="Layerbreak 1" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak, Mode=TwoWay}" />
-                <controls:UserInput x:Name="HashDataLayerbreak2" Label="Layerbreak 2" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak2, Mode=TwoWay}" />
-                <controls:UserInput x:Name="HashDataLayerbreak3" Label="Layerbreak 3" IsReadOnly="True" Text="{Binding SubmissionInfo.SizeAndChecksums.Layerbreak3, Mode=TwoWay}" />
-                <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.AntiModchip, Mode=TwoWay}" />
-                <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True" Text="{Binding SubmissionInfo.TracksAndWriteOffsets.OtherWriteOffsets, Mode=TwoWay}" />
-                <controls:UserInput x:Name="DMIHash" Label="DMI Hash" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[DMIHash], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True" Text="{Binding SubmissionInfo.EDC.EDC, Mode=TwoWay}" />
-                <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True" Text="{Binding SubmissionInfo.CommonDiscInfo.ErrorsCount, Mode=TwoWay}" />
-                <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsReadOnly="True" Text="{Binding SubmissionInfo.CommonDiscInfo.EXEDateBuildDate, Mode=TwoWay}" />
-                <controls:UserInput x:Name="Filename" Label="Filename" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[Filename], Mode=TwoWay}" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="Header" Label="Header" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="InternalName" Label="Internal Names" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[InternalName], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[InternalSerialName], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="Multisession" Label="Multisession" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[Multisession], Mode=TwoWay}" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.LibCrypt, Mode=TwoWay}" />
-                <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="PFIHash" Label="PFI Hash" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[PFIHash], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[RingNonZeroDataStart], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="RingPerfectAudioOffset" Label="Ring Perfect Audio Offset" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[RingPerfectAudioOffset], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True" Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SSHash], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True" Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="SSVersion" Label="Security Sector Version" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SSVersion], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="UniversalHash" Label="Universal Hash (SHA-1)" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[UniversalHash], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[VolumeLabel], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="XeMID" Label="XeMID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[XeMID], Mode=TwoWay}" IsReadOnly="True" />
-                <controls:UserInput x:Name="XMID" Label="XMID" Text="{Binding SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[XMID], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="HashData" Label="Hash Data" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.Dat, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="HashDataLayerbreak1" Label="Layerbreak 1" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataLayerbreak2" Label="Layerbreak 2" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak2, Mode=TwoWay}" />
+                <controls:UserInput x:Name="HashDataLayerbreak3" Label="Layerbreak 3" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.Layerbreak3, Mode=TwoWay}" />
+                <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True" Text="{Binding SubmissionInfo.RingCodes.WriteOffset, Mode=TwoWay}" />
+                <controls:UserInput x:Name="DMIHash" Label="DMI Hash" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[DMIHash], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.EDC, Mode=TwoWay}" />
+                <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.ErrorCount, Mode=TwoWay}" />
+                <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsReadOnly="True" Text="{Binding SubmissionInfo.DiscIdentifiers.EXEDate, Mode=TwoWay}" />
+                <controls:UserInput x:Name="Filename" Label="Filename" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[Filename], Mode=TwoWay}" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="Header" Label="Header" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.Header, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="InternalName" Label="Internal Names" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InternalName], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[InternalSerialName], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="Multisession" Label="Multisession" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[Multisession], Mode=TwoWay}" IsReadOnly="True" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PFIHash" Label="PFI Hash" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PFIHash], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.PIC, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.PVD, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[RingNonZeroDataStart], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="RingPerfectAudioOffset" Label="Ring Perfect Audio Offset" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[RingPerfectAudioOffset], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.SBI, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SSHash], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.SectorRanges, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
+                <controls:UserInput x:Name="SSVersion" Label="Security Sector Version" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SSVersion], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="UniversalHash" Label="Universal Hash (SHA-1)" Text="{Binding SubmissionInfo.DiscIdentifiers.UniversalHash, Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[VolumeLabel], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="XeMID" Label="XeMID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[XeMID], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="XMID" Label="XMID" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[XMID], Mode=TwoWay}" IsReadOnly="True" />
               </StackPanel>
             </Border>
           </ScrollViewer>

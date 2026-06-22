@@ -64,9 +64,8 @@ namespace MPF.Avalonia.Windows
         private void PopulateCollections()
         {
             CategoryComboBox!.ItemsSource = MediaInformationViewModel.Categories;
-            RegionComboBox!.ItemsSource = MediaInformationViewModel.Regions;
+            RegionDropDown!.ItemsSource = MediaInformationViewModel.Regions;
             LanguagesDropDown!.ItemsSource = MediaInformationViewModel.Languages;
-            LanguageSelectionsDropDown!.ItemsSource = MediaInformationViewModel.LanguageSelections;
         }
 
         /// <summary>
@@ -95,26 +94,26 @@ namespace MPF.Avalonia.Windows
         private void EnableTabsInInputFields()
         {
             // L0
-            L0MasteringRing!.Tab = true;
+            L0MasteringCode!.Tab = true;
             L0MasteringSID!.Tab = true;
             L0Toolstamp!.Tab = true;
-            L0MouldSID!.Tab = true;
-            L0AdditionalMould!.Tab = true;
+            L0MouldSIDs!.Tab = true;
+            L0AdditionalMoulds!.Tab = true;
 
             // L1
-            L1MasteringRing!.Tab = true;
+            L1MasteringCode!.Tab = true;
             L1MasteringSID!.Tab = true;
             L1Toolstamp!.Tab = true;
-            L1MouldSID!.Tab = true;
-            L1AdditionalMould!.Tab = true;
+            L1MouldSIDs!.Tab = true;
+            L1AdditionalMoulds!.Tab = true;
 
             // L2
-            L2MasteringRing!.Tab = true;
+            L2MasteringCode!.Tab = true;
             L2MasteringSID!.Tab = true;
             L2Toolstamp!.Tab = true;
 
             // L3
-            L3MasteringRing!.Tab = true;
+            L3MasteringCode!.Tab = true;
             L3MasteringSID!.Tab = true;
             L3Toolstamp!.Tab = true;
         }
@@ -130,35 +129,33 @@ namespace MPF.Avalonia.Windows
             if (submissionInfo is null)
                 return;
 
-            if (submissionInfo.FullyMatchedID is null)
-                FullyMatchedID!.IsVisible = false;
+            if (submissionInfo.FullyMatchedIDs is null || submissionInfo.FullyMatchedIDs.Count == 0)
+                FullyMatchedIDs!.IsVisible = false;
             if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.IsVisible = false;
             else
                 PartiallyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.PartiallyMatchedIDs.ConvertAll(i => i.ToString())]);
-            if (string.IsNullOrEmpty(submissionInfo.TracksAndWriteOffsets.ClrMameProData))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata.Dat))
                 HashData!.IsVisible = false;
-            if (submissionInfo.SizeAndChecksums.Layerbreak == 0)
+            if (submissionInfo.DiscIdentifiers.Layerbreak == 0)
                 HashDataLayerbreak1!.IsVisible = false;
-            if (submissionInfo.SizeAndChecksums.Layerbreak2 == 0)
+            if (submissionInfo.DiscIdentifiers.Layerbreak2 == 0)
                 HashDataLayerbreak2!.IsVisible = false;
-            if (submissionInfo.SizeAndChecksums.Layerbreak3 == 0)
+            if (submissionInfo.DiscIdentifiers.Layerbreak3 == 0)
                 HashDataLayerbreak3!.IsVisible = false;
-            if (submissionInfo.CopyProtection?.AntiModchip is null)
-                AntiModchip!.IsVisible = false;
-            if (submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets is null)
+            if (submissionInfo.RingCodes.WriteOffset is null)
                 DiscOffset!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.DMIHash))
                 DMIHash!.IsVisible = false;
-            if (submissionInfo.EDC?.EDC is null)
+            if (submissionInfo.DiscIdentifiers?.EDC is null)
                 EDC!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.ErrorsCount))
+            if (string.IsNullOrEmpty(submissionInfo.DiscIdentifiers?.ErrorCount))
                 ErrorsCount!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
+            if (string.IsNullOrEmpty(submissionInfo.DiscIdentifiers?.EXEDate))
                 EXEDateBuildDate!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.Filename))
                 Filename!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.Extras?.Header))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.Header))
                 Header!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.InternalName))
                 InternalName!.IsVisible = false;
@@ -166,29 +163,25 @@ namespace MPF.Avalonia.Windows
                 InternalSerialName!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.Multisession))
                 Multisession!.IsVisible = false;
-            if (submissionInfo.CopyProtection?.LibCrypt is null)
-                LibCrypt!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.LibCryptData))
-                LibCryptData!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.PFIHash))
                 PFIHash!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.Extras?.PIC))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.PIC))
                 PIC!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.Extras?.PVD))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.PVD))
                 PVD!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart))
                 RingNonZeroDataStart!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
                 RingPerfectAudioOffset!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.CopyProtection?.SecuROMData))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.SBI))
                 SecuROMData!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.SSHash))
                 SSHash!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.Extras?.SecuritySectorRanges))
+            if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.SectorRanges))
                 SecuritySectorRanges!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.SSVersion))
                 SSVersion!.IsVisible = false;
-            if (ShouldCollapseComment(submissionInfo, SiteCode.UniversalHash))
+            if (string.IsNullOrEmpty(submissionInfo.DiscIdentifiers?.UniversalHash))
                 UniversalHash!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.VolumeLabel))
                 VolumeLabel!.IsVisible = false;
@@ -204,35 +197,35 @@ namespace MPF.Avalonia.Windows
         private void UpdateFromMediaType(SubmissionInfo? submissionInfo)
         {
             // Sony-printed discs have layers in the opposite order
-            var system = submissionInfo?.CommonDiscInfo?.System;
+            var system = submissionInfo?.DiscIdentity?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
             // TODO: Do these need to be explicitly set if they're in the AXAML?
             PCMacHybridGrid!.IsVisible = _showPcMacHybridAlways
-                || submissionInfo?.CommonDiscInfo?.Media == MediaType.CD;
+                || submissionInfo?.DiscIdentity?.Media == MediaType.CD;
             L0InfoPanel!.IsVisible = true;
             L1InfoPanel!.IsVisible = true;
             L2InfoPanel!.IsVisible = false;
             L3InfoPanel!.IsVisible = false;
 
 #pragma warning disable IDE0010
-            switch (submissionInfo?.CommonDiscInfo?.Media)
+            switch (submissionInfo?.DiscIdentity?.Media)
             {
                 case MediaType.CD:
                 case MediaType.GDROM:
                     L0HeaderText!.Text = "Data Side";
-                    L0MasteringRing!.Label = "Mastering Ring";
+                    L0MasteringCode!.Label = "Mastering Code";
                     L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                    L0MouldSID!.Label = "Mould SID";
-                    L0AdditionalMould!.Label = "Additional Mould";
+                    L0Toolstamp!.Label = "Toolstamps";
+                    L0MouldSIDs!.Label = "Mould SIDs";
+                    L0AdditionalMoulds!.Label = "Additional Moulds";
 
                     L1HeaderText!.Text = "Label Side";
-                    L1MasteringRing!.Label = "Mastering Ring";
+                    L1MasteringCode!.Label = "Mastering Code";
                     L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                    L1MouldSID!.Label = "Mould SID";
-                    L1AdditionalMould!.Label = "Additional Mould";
+                    L1Toolstamp!.Label = "Toolstamps";
+                    L1MouldSIDs!.Label = "Mould SIDs";
+                    L1AdditionalMoulds!.Label = "Additional Moulds";
                     break;
 
                 case MediaType.DVD5:
@@ -250,95 +243,95 @@ namespace MPF.Avalonia.Windows
                 case MediaType.NintendoWiiOpticalDiscDL:
                 case MediaType.NintendoWiiUOpticalDiscSL:
                     // Quad-layer discs
-                    if (submissionInfo?.SizeAndChecksums.Layerbreak3 != default(long))
+                    if (submissionInfo?.DiscIdentifiers.Layerbreak3 != default(long))
                     {
                         L2InfoPanel!.IsVisible = true;
                         L3InfoPanel!.IsVisible = true;
 
                         L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID!.Label = "Data Side Mould SID";
-                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+                        L0Toolstamp!.Label = "Toolstamps";
+                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
+                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
                         L1HeaderText!.Text = "Layer 1";
-                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringCode!.Label = "Mastering Code";
                         L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID!.Label = "Label Side Mould SID";
-                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+                        L1Toolstamp!.Label = "Toolstamps";
+                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
+                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
 
                         L2HeaderText!.Text = "Layer 2";
-                        L2MasteringRing!.Label = "Mastering Ring";
+                        L2MasteringCode!.Label = "Mastering Code";
                         L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L2Toolstamp!.Label = "Toolstamps";
 
                         L3HeaderText!.Text = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
-                        L3MasteringRing!.Label = "Mastering Ring";
+                        L3MasteringCode!.Label = "Mastering Code";
                         L3MasteringSID!.Label = "Mastering SID";
-                        L3Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L3Toolstamp!.Label = "Toolstamps";
                     }
 
                     // Triple-layer discs
-                    else if (submissionInfo?.SizeAndChecksums.Layerbreak2 != default(long))
+                    else if (submissionInfo?.DiscIdentifiers.Layerbreak2 != default(long))
                     {
                         L2InfoPanel!.IsVisible = true;
 
                         L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID!.Label = "Data Side Mould SID";
-                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+                        L0Toolstamp!.Label = "Toolstamps";
+                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
+                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
                         L1HeaderText!.Text = "Layer 1";
-                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringCode!.Label = "Mastering Code";
                         L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID!.Label = "Label Side Mould SID";
-                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+                        L1Toolstamp!.Label = "Toolstamps";
+                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
+                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
 
                         L2HeaderText!.Text = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
-                        L2MasteringRing!.Label = "Mastering Ring";
+                        L2MasteringCode!.Label = "Mastering Code";
                         L2MasteringSID!.Label = "Mastering SID";
-                        L2Toolstamp!.Label = "Toolstamp/Mastering Code";
+                        L2Toolstamp!.Label = "Toolstamps";
                     }
 
                     // Double-layer discs
-                    else if (submissionInfo?.SizeAndChecksums.Layerbreak != default(long))
+                    else if (submissionInfo?.DiscIdentifiers.Layerbreak != default(long))
                     {
                         L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID!.Label = "Data Side Mould SID";
-                        L0AdditionalMould!.Label = "Data Side Additional Mould";
+                        L0Toolstamp!.Label = "Toolstamps";
+                        L0MouldSIDs!.Label = "Data Side Mould SIDs";
+                        L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
                         L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
-                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringCode!.Label = "Mastering Code";
                         L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID!.Label = "Label Side Mould SID";
-                        L1AdditionalMould!.Label = "Label Side Additional Mould";
+                        L1Toolstamp!.Label = "Toolstamps";
+                        L1MouldSIDs!.Label = "Label Side Mould SIDs";
+                        L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
                     }
 
                     // Single-layer discs
                     else
                     {
                         L0HeaderText!.Text = "Data Side";
-                        L0MasteringRing!.Label = "Mastering Ring";
+                        L0MasteringCode!.Label = "Mastering Code";
                         L0MasteringSID!.Label = "Mastering SID";
-                        L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID!.Label = "Mould SID";
-                        L0AdditionalMould!.Label = "Additional Mould";
+                        L0Toolstamp!.Label = "Toolstamps";
+                        L0MouldSIDs!.Label = "Mould SIDs";
+                        L0AdditionalMoulds!.Label = "Additional Moulds";
 
                         L1HeaderText!.Text = "Label Side";
-                        L1MasteringRing!.Label = "Mastering Ring";
+                        L1MasteringCode!.Label = "Mastering Code";
                         L1MasteringSID!.Label = "Mastering SID";
-                        L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID!.Label = "Mould SID";
-                        L1AdditionalMould!.Label = "Additional Mould";
+                        L1Toolstamp!.Label = "Toolstamps";
+                        L1MouldSIDs!.Label = "Mould SIDs";
+                        L1AdditionalMoulds!.Label = "Additional Moulds";
                     }
 
                     break;
@@ -346,18 +339,18 @@ namespace MPF.Avalonia.Windows
                 case MediaType.UMDSL:
                 case MediaType.UMDDL:
                     L0HeaderText!.Text = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                    L0MasteringRing!.Label = "Mastering Ring";
+                    L0MasteringCode!.Label = "Mastering Code";
                     L0MasteringSID!.Label = "Mastering SID";
-                    L0Toolstamp!.Label = "Toolstamp/Mastering Code";
-                    L0MouldSID!.Label = "Data Side Mould SID";
-                    L0AdditionalMould!.Label = "Data Side Additional Mould";
+                    L0Toolstamp!.Label = "Toolstamps";
+                    L0MouldSIDs!.Label = "Data Side Mould SIDs";
+                    L0AdditionalMoulds!.Label = "Data Side Additional Moulds";
 
                     L1HeaderText!.Text = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
-                    L1MasteringRing!.Label = "Mastering Ring";
+                    L1MasteringCode!.Label = "Mastering Code";
                     L1MasteringSID!.Label = "Mastering SID";
-                    L1Toolstamp!.Label = "Toolstamp/Mastering Code";
-                    L1MouldSID!.Label = "Label Side Mould SID";
-                    L1AdditionalMould!.Label = "Label Side Additional Mould";
+                    L1Toolstamp!.Label = "Toolstamps";
+                    L1MouldSIDs!.Label = "Label Side Mould SIDs";
+                    L1AdditionalMoulds!.Label = "Label Side Additional Moulds";
                     break;
 
                 default:
@@ -375,14 +368,13 @@ namespace MPF.Avalonia.Windows
         /// </summary>
         private void UpdateFromSystemType(SubmissionInfo? submissionInfo)
         {
-            var system = submissionInfo?.CommonDiscInfo?.System;
+            var system = submissionInfo?.DiscIdentity?.System;
 
             // TODO: Do these need to be explicitly set if they're in the AXAML?
             CompatibleOSTextBox!.IsVisible = false;
             DiscKeyTextBox!.IsVisible = false;
             DiscIDTextBox!.IsVisible = false;
             NetYarozeGamesTextBox!.IsVisible = false;
-            LanguageSelectionsDropDown!.IsVisible = false;
 
 #pragma warning disable IDE0010
             switch (system)
@@ -405,10 +397,6 @@ namespace MPF.Avalonia.Windows
                     NetYarozeGamesTextBox!.IsVisible = true;
                     break;
 
-                case PhysicalSystem.SonyPlayStation2:
-                    LanguageSelectionsDropDown!.IsVisible = true;
-                    break;
-
                 case PhysicalSystem.SonyPlayStation3:
                     DiscKeyTextBox!.IsVisible = true;
                     DiscIDTextBox!.IsVisible = true;
@@ -423,11 +411,11 @@ namespace MPF.Avalonia.Windows
         private static bool ShouldCollapseComment(SubmissionInfo? submissionInfo, SiteCode siteCode)
         {
             // If the special fields don't exist
-            if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields is null)
+            if (submissionInfo?.DumpMetadata?.CommentsSpecialFields is null)
                 return true;
 
             // If the key doesn't exist
-            if (!submissionInfo.CommonDiscInfo.CommentsSpecialFields.TryGetValue(siteCode, out string? value))
+            if (!submissionInfo.DumpMetadata.CommentsSpecialFields.TryGetValue(siteCode, out string? value))
                 return true;
 
             // Collapse if the value doesn't exist

@@ -112,20 +112,19 @@ namespace MPF.Processors
 
             // TODO: Re-enable once PVD generation / finding is fixed
             // Generate / obtain the PVD
-            //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+            //info.DumpMetadata.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
 
             // Get the Datafile information
             var datafile = GenerateDatafile(sidecar, basePath);
-            info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+            info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the error count
             long errorCount = GetErrorCount($"{basePath}.resume.xml");
-            info.CommonDiscInfo.ErrorsCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
+            info.DiscIdentifiers.ErrorCount = errorCount == -1 ? "Error retrieving error count" : errorCount.ToString();
 
             // Get the write offset, if it exists
             string? writeOffset = GetWriteOffset(sidecar);
-            info.CommonDiscInfo.RingWriteOffset = writeOffset;
-            info.TracksAndWriteOffsets.OtherWriteOffsets = writeOffset;
+            info.RingCodes.WriteOffset = writeOffset;
 
             // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
@@ -133,7 +132,7 @@ namespace MPF.Processors
             {
                 // TODO: Can this do GD-ROM?
                 case PhysicalMediaType.CDROM:
-                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
+                    info.DumpMetadata.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
                     break;
 
                 case PhysicalMediaType.DVD:
@@ -161,7 +160,7 @@ namespace MPF.Processors
                     // If we have a dual-layer disc
                     else
                     {
-                        info.SizeAndChecksums.Layerbreak = long.Parse(layerbreak);
+                        info.DiscIdentifiers.Layerbreak = long.Parse(layerbreak);
                     }
 
                     // TODO: Investigate XGD disc outputs
@@ -181,24 +180,24 @@ namespace MPF.Processors
 
                 case PhysicalSystem.DVDAudio:
                 case PhysicalSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? string.Empty;
+                    info.DumpMetadata.Protection = GetDVDProtection(sidecar) ?? string.Empty;
                     break;
 
                 case PhysicalSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
-                        info.Extras.SecuritySectorRanges = ss ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                        info.DumpMetadata.SectorRanges = ss ?? string.Empty;
                     }
 
                     if (GetXboxDMIInfo(sidecar, out var serial, out var version, out Region? region))
                     {
-                        info.CommonDiscInfo.Serial = serial ?? string.Empty;
-                        info.VersionAndEditions.Version = version ?? string.Empty;
-                        info.CommonDiscInfo.Region = region;
+                        info.DiscIdentifiers.DiscSerials = serial ?? string.Empty;
+                        info.DiscIdentifiers.Version = version ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = [region];
                     }
 
                     break;
@@ -206,18 +205,18 @@ namespace MPF.Processors
                 case PhysicalSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
-                        info.Extras.SecuritySectorRanges = ss360 ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                        info.DumpMetadata.SectorRanges = ss360 ?? string.Empty;
                     }
 
                     if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out Region? region360))
                     {
-                        info.CommonDiscInfo.Serial = serial360 ?? string.Empty;
-                        info.VersionAndEditions.Version = version360 ?? string.Empty;
-                        info.CommonDiscInfo.Region = region360;
+                        info.DiscIdentifiers.DiscSerials = serial360 ?? string.Empty;
+                        info.DiscIdentifiers.Version = version360 ?? string.Empty;
+                        info.RegionsAndLanguages.Regions = [region360];
                     }
 
                     break;

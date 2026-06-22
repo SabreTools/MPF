@@ -176,9 +176,8 @@
     <x:String x:Key="DiscTitleInputString">Назва диску</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">Назва диску (не латиниця)</x:String>
     <x:String x:Key="CategoryLabelString">Категорія</x:String>
-    <x:String x:Key="RegionLabelString">Регіон</x:String>
+    <x:String x:Key="RegionsLabelString">Регіон</x:String>
     <x:String x:Key="LanguagesLabelString">Мови</x:String>
-    <x:String x:Key="LanguageSelectionViaLabelString">Спосіб вибору мови</x:String>
     <x:String x:Key="SerialInputString">Серійний код</x:String>
     <x:String x:Key="BarcodeInputString">Штрихкод</x:String>
     <x:String x:Key="VersionsAndEditionGroupBoxString">Версія і видання</x:String>

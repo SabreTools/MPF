@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using MPF.Frontend.ComboBoxItems;
 using MPF.Frontend.Tools;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.Data.Sections;
 
 namespace MPF.Frontend.ViewModels
 {
@@ -160,12 +159,6 @@ namespace MPF.Frontend.ViewModels
             Language.Vietnamese,
         ];
 
-        /// <summary>
-        /// List of available languages
-        /// </summary>
-        public List<Element<LanguageSelection>> LanguageSelections { get; private set; }
-            = Element<LanguageSelection>.GenerateElements();
-
         #endregion
 
         /// <summary>
@@ -185,10 +178,10 @@ namespace MPF.Frontend.ViewModels
         /// TODO: Convert selected list item to binding
         public void Load()
         {
-            if (SubmissionInfo.CommonDiscInfo?.Languages is not null)
-                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.Languages, l) > -1);
-            if (SubmissionInfo.CommonDiscInfo?.LanguageSelection is not null)
-                LanguageSelections.ForEach(ls => ls.IsChecked = Array.IndexOf(SubmissionInfo.CommonDiscInfo.LanguageSelection, ls) > -1);
+            if (SubmissionInfo.RegionsAndLanguages.Regions is not null)
+                Regions.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Regions, l) > -1);
+            if (SubmissionInfo.RegionsAndLanguages.Languages is not null)
+                Languages.ForEach(l => l.IsChecked = Array.IndexOf(SubmissionInfo.RegionsAndLanguages.Languages, l) > -1);
         }
 
         /// <summary>
@@ -197,13 +190,15 @@ namespace MPF.Frontend.ViewModels
         /// TODO: Convert selected list item to binding
         public void Save()
         {
-            if (SubmissionInfo.CommonDiscInfo is null)
-                SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
-            SubmissionInfo.CommonDiscInfo.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
-            if (SubmissionInfo.CommonDiscInfo.Languages.Length == 0)
-                SubmissionInfo.CommonDiscInfo.Languages = [null];
-            SubmissionInfo.CommonDiscInfo.LanguageSelection = [.. LanguageSelections.FindAll(ls => ls.IsChecked).ConvertAll(ls => ls?.Value)];
-            SubmissionInfo.CommonDiscInfo.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.CommonDiscInfo.Title, SubmissionInfo.CommonDiscInfo.Languages);
+            SubmissionInfo.RegionsAndLanguages.Regions = [.. Regions.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
+            if (SubmissionInfo.RegionsAndLanguages.Regions.Length == 0)
+                SubmissionInfo.RegionsAndLanguages.Regions = [null];
+
+            SubmissionInfo.RegionsAndLanguages.Languages = [.. Languages.FindAll(l => l.IsChecked).ConvertAll(l => l?.Value)];
+            if (SubmissionInfo.RegionsAndLanguages.Languages.Length == 0)
+                SubmissionInfo.RegionsAndLanguages.Languages = [null];
+
+            SubmissionInfo.DiscIdentity.Title = FrontendTool.NormalizeDiscTitle(SubmissionInfo.DiscIdentity.Title, SubmissionInfo.RegionsAndLanguages.Languages);
         }
 
         /// <summary>

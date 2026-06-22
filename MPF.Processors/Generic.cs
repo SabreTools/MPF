@@ -34,7 +34,7 @@ namespace MPF.Processors
             // Get the Datafile information
             var datafile = GetDatafile(basePath);
             if (datafile is not null)
-                info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+                info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Extract info based generically on PhysicalMediaType
 #pragma warning disable IDE0010
@@ -42,7 +42,7 @@ namespace MPF.Processors
             {
                 case PhysicalMediaType.CDROM:
                 case PhysicalMediaType.GDROM:
-                    info.TracksAndWriteOffsets.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
+                    info.DumpMetadata.Cuesheet = ProcessingTool.GetFullFile($"{basePath}.cue") ?? string.Empty;
                     break;
             }
 #pragma warning restore IDE0010

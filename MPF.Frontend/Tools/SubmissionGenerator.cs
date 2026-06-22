@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using BinaryObjectScanner;
 using MPF.Processors;
-using SabreTools.RedumpLib;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Data.Sections;
-using SabreTools.RedumpLib.RedumpInfo;
+using SabreTools.RedumpLib.Tools;
+using SabreTools.RedumpLib.Web;
 
 namespace MPF.Frontend.Tools
 {
@@ -95,19 +95,19 @@ namespace MPF.Frontend.Tools
                 info.Artifacts = processor.GenerateArtifacts(mediaType, outputDirectory, outputFilename);
 
             // Get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData))
+            if (!string.IsNullOrEmpty(info.DumpMetadata.Dat))
             {
                 bool filledInfo = await FillFromRedump(options, info, resultProgress);
 
                 // Add a placeholder for the logs link if not a verification
                 if (!filledInfo)
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.LogsLink] = "[Please provide a link to your logs here]";
             }
 
             // Add the volume label to comments, if possible or necessary
             string? volLabels = FormatVolumeLabels(drive?.VolumeLabel, processor.VolumeLabels);
             if (volLabels is not null)
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.VolumeLabel] = volLabels;
 
             // Extract info based generically on PhysicalMediaType
             ProcessPhysicalMediaType(info, mediaType, options.Processing.MediaInformation.AddPlaceholders);
@@ -116,12 +116,14 @@ namespace MPF.Frontend.Tools
             ProcessSystem(info, system, drive, options.Processing.MediaInformation.AddPlaceholders, processor is DiscImageCreator, basePath);
 
             // Run anti-modchip check, if necessary
-            if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
-            {
-                resultProgress?.Report(ResultEventArgs.Neutral("Checking for anti-modchip strings... this might take a while!"));
-                info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
-                resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
-            }
+            // TODO: Reenable when anti-modchip documentation is updated
+            // if (drive is not null && system.SupportsAntiModchipScans() && info.CopyProtection.AntiModchip == YesNo.NULL)
+            // {
+            //     // TODO: This goes into protection now
+            //     resultProgress?.Report(ResultEventArgs.Neutral("Checking for anti-modchip strings... this might take a while!"));
+            //     info.CopyProtection.AntiModchip = await ProtectionTool.GetPlayStationAntiModchipDetected(drive?.Name) ? YesNo.Yes : YesNo.No;
+            //     resultProgress?.Report(ResultEventArgs.Success("Anti-modchip string scan complete!"));
+            // }
 
             // Run copy protection, if possible or necessary
             if (system.SupportsCopyProtectionScans())
@@ -142,8 +144,8 @@ namespace MPF.Frontend.Tools
 
                     var protectionString = ProtectionTool.FormatProtections(protections, drive);
 
-                    info.CopyProtection.Protection += protectionString;
-                    info.CopyProtection.FullProtections = ReformatProtectionDictionary(protections);
+                    info.DumpMetadata.Protection += protectionString;
+                    info.DumpMetadata.FullProtections = ReformatProtectionDictionary(protections);
                     resultProgress?.Report(ResultEventArgs.Success("Copy protection scan complete!"));
                 }
                 catch (Exception ex)
@@ -153,14 +155,14 @@ namespace MPF.Frontend.Tools
             }
 
             // Set fields that may have automatic filling otherwise
-            info.CommonDiscInfo.Category ??= DiscCategory.Games;
-            info.VersionAndEditions.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
+            info.DiscIdentity.Category ??= DiscCategory.Games;
+            info.DiscIdentifiers.Version ??= options.Processing.MediaInformation.AddPlaceholders ? RequiredIfExistsValue : string.Empty;
 
             // Comments and contents have odd handling
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
-            if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
+            if (string.IsNullOrEmpty(info.DumpMetadata.Comments))
+                info.DumpMetadata.Comments = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
+            if (string.IsNullOrEmpty(info.DumpMetadata.Contents))
+                info.DumpMetadata.Contents = options.Processing.MediaInformation.AddPlaceholders ? OptionalValue : string.Empty;
 
             // Normalize the disc type with all current information
             info.NormalizeDiscType();
@@ -183,7 +185,7 @@ namespace MPF.Frontend.Tools
                 return false;
 
             // Set the current dumper based on username
-            info.DumpersAndStatus.Dumpers = [options.Processing.Login.RedumpOrgUsername ?? "Anonymous User"];
+            info.SubmissionControls.SubmitAs = options.Processing.Login.RedumpOrgUsername ?? "Anonymous User";
             info.PartiallyMatchedIDs = [];
 
             // Login to redump.org, if possible
@@ -220,7 +222,7 @@ namespace MPF.Frontend.Tools
 
             // Loop through all of the hashdata to find matching IDs
             resultProgress?.Report(ResultEventArgs.Neutral("Finding disc matches on redump.info, this might take a while..."));
-            var splitData = info.TracksAndWriteOffsets.ClrMameProData?.TrimEnd('\n')?.Split('\n');
+            var splitData = info.DumpMetadata.Dat?.TrimEnd('\n')?.Split('\n');
             int trackCount = splitData?.Length ?? 0;
             foreach (string hashData in splitData ?? [])
             {
@@ -322,9 +324,9 @@ namespace MPF.Frontend.Tools
             }
 
             // If we don't have any matches but we have a universal hash
-            if (info.PartiallyMatchedIDs.Count == 0 && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
+            if (info.PartiallyMatchedIDs.Count == 0 && info.DiscIdentifiers?.UniversalHash is not null)
             {
-                string sha1 = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
+                string sha1 = info.DiscIdentifiers.UniversalHash;
                 var foundIds = await Validator.ValidateUniversalHash(wc, info);
                 if (foundIds is null)
                     resultProgress?.Report(ResultEventArgs.Failure("Error accessing redump.info"));
@@ -382,15 +384,14 @@ namespace MPF.Frontend.Tools
             resultProgress?.Report(ResultEventArgs.Success("Information filling complete!"));
 
             // Set the fully matched ID to the current
-            info.FullyMatchedID = fullyMatchedIdsList[0];
+            info.FullyMatchedIDs = fullyMatchedIdsList;
 
             // Clear out fully matched IDs from the partial list
-            if (info.FullyMatchedID.HasValue)
+            if (info.FullyMatchedIDs.Count > 0)
             {
-                if (info.PartiallyMatchedIDs.Count == 1)
+                info.PartiallyMatchedIDs.RemoveAll(id => info.FullyMatchedIDs.Contains(id));
+                if (info.PartiallyMatchedIDs.Count == 0)
                     info.PartiallyMatchedIDs = null;
-                else
-                    info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
             }
 
             return true;
@@ -408,24 +409,30 @@ namespace MPF.Frontend.Tools
             // Create the template object
             var info = new SubmissionInfo()
             {
-                CommonDiscInfo = new CommonDiscInfoSection()
+                DiscIdentity = new DiscIdentitySection()
                 {
                     System = system,
                     Media = mediaType.ToMediaType(),
-                    Title = addPlaceholders ? RequiredValue : string.Empty,
-                    ForeignTitleNonLatin = addPlaceholders ? OptionalValue : string.Empty,
-                    DiscNumberLetter = addPlaceholders ? OptionalValue : string.Empty,
-                    DiscTitle = addPlaceholders ? OptionalValue : string.Empty,
                     Category = null,
-                    Region = null,
-                    Languages = null,
-                    Serial = addPlaceholders ? RequiredIfExistsValue : string.Empty,
-                    Barcode = addPlaceholders ? OptionalValue : string.Empty,
-                    Contents = string.Empty,
+                    Title = addPlaceholders ? RequiredValue : string.Empty,
+                    ForeignTitle = addPlaceholders ? OptionalValue : string.Empty,
+                    DiscNumber = addPlaceholders ? OptionalValue : string.Empty,
+                    DiscTitle = addPlaceholders ? OptionalValue : string.Empty,
                 },
-                VersionAndEditions = new VersionAndEditionsSection()
+                RegionsAndLanguages = new RegionsAndLanguagesSection()
                 {
-                    OtherEditions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
+                    Regions = null,
+                    Languages = null,
+                },
+                DiscIdentifiers = new DiscIdentifiersSection()
+                {
+                    DiscSerials = addPlaceholders ? RequiredIfExistsValue : string.Empty,
+                    Editions = addPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
+                    Barcodes = addPlaceholders ? OptionalValue : string.Empty,
+                },
+                DumpMetadata = new DumpMetadataSection()
+                {
+                    Contents = string.Empty,
                 },
                 DumpingInfo = new DumpingInfoSection()
                 {
@@ -629,12 +636,12 @@ namespace MPF.Frontend.Tools
             {
                 case PhysicalMediaType.CDROM:
                 case PhysicalMediaType.GDROM:
-                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case PhysicalMediaType.DVD:
@@ -642,159 +649,159 @@ namespace MPF.Frontend.Tools
                 case PhysicalMediaType.BluRay:
 
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums.Layerbreak == default)
+                    if (info.DiscIdentifiers.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
-                    else if (info.SizeAndChecksums.Layerbreak2 == default)
+                    else if (info.DiscIdentifiers.Layerbreak2 == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a triple-layer disc
-                    else if (info.SizeAndChecksums.Layerbreak3 == default)
+                    else if (info.DiscIdentifiers.Layerbreak3 == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a quad-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer2MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer2ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer2Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer3MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer3ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer3MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer3MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer3Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
                     break;
 
                 case PhysicalMediaType.NintendoGameCubeGameDisc:
-                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalMediaType.NintendoWiiOpticalDisc:
 
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums.Layerbreak == default)
+                    if (info.DiscIdentifiers.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.Extras.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DumpMetadata.BCA ??= addPlaceholders ? RequiredValue : string.Empty;
 
                     break;
 
                 case PhysicalMediaType.NintendoWiiUOpticalDisc:
 
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums.Layerbreak == default)
+                    if (info.DiscIdentifiers.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer0AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer0AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                        info.CommonDiscInfo.Layer1AdditionalMould = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.RingCodes.Layer1AdditionalMoulds = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.Extras.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.DiscKey = addPlaceholders ? RequiredValue : string.Empty;
 
                     break;
 
                 case PhysicalMediaType.UMD:
                     // Both single- and dual-layer discs have two "layers" for the ring
-                    info.CommonDiscInfo.Layer0MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer0MouldSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer0MouldSIDs = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
-                    info.CommonDiscInfo.Layer1MasteringRing = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.Layer1ToolstampMasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringCode = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1MasteringSID = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.RingCodes.Layer1Toolstamps = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
 #pragma warning restore IDE0010
@@ -812,104 +819,104 @@ namespace MPF.Frontend.Tools
             switch (system)
             {
                 case PhysicalSystem.AcornArchimedesAndRiscPC:
-                    info.CommonDiscInfo.Region ??= Region.UnitedKingdom;
+                    info.RegionsAndLanguages.Regions ??= [Region.UnitedKingdom];
                     break;
 
                 case PhysicalSystem.AudioCD:
                 case PhysicalSystem.DVDAudio:
                 case PhysicalSystem.EnhancedCD:
                 case PhysicalSystem.SuperAudioCD:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Audio;
+                    info.DiscIdentity.Category ??= DiscCategory.Audio;
                     break;
 
                 case PhysicalSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.BDVideo:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
+                    info.DiscIdentity.Category ??= DiscCategory.Video;
 
                     // General protection info
                     string? bdProtection = PhysicalTool.GetBluRayProtection(drive);
-                    if (bdProtection is not null && string.IsNullOrEmpty(info.CopyProtection.Protection))
-                        info.CopyProtection.Protection = bdProtection;
+                    if (bdProtection is not null && string.IsNullOrEmpty(info.DumpMetadata.Protection))
+                        info.DumpMetadata.Protection = bdProtection;
                     else if (bdProtection is not null)
-                        info.CopyProtection.Protection += $"\n{bdProtection}";
+                        info.DumpMetadata.Protection += $"\n{bdProtection}";
                     else
-                        info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                        info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     // Determine if BEE is set
                     bool busEncryptionEnabled = PhysicalTool.GetBusEncryptionEnabled(drive);
-                    if (busEncryptionEnabled && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
-                    else if (busEncryptionEnabled && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
-                        info.CopyProtection.Protection += $"\nBus Encryption Enabled";
+                    if (busEncryptionEnabled && !info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.Protection] = "Bus Encryption Enabled";
+                    else if (busEncryptionEnabled && info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.Protection))
+                        info.DumpMetadata.Protection += $"\nBus Encryption Enabled";
 
                     break;
 
                 case PhysicalSystem.DVDVideo:
                 case PhysicalSystem.HDDVDVideo:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
-                    info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DiscIdentity.Category ??= DiscCategory.Video;
+                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case PhysicalSystem.CommodoreAmigaCD:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Europe;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Europe];
                     break;
 
                 case PhysicalSystem.CommodoreAmigaCDTV:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Europe;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Europe];
                     break;
 
                 case PhysicalSystem.FujitsuFMTownsseries:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.FujitsuFMTownsMarty:
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.HasbroVideoNow:
                 case PhysicalSystem.HasbroVideoNowColor:
                 case PhysicalSystem.HasbroVideoNowJr:
                 case PhysicalSystem.VideoCD:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
+                    info.DiscIdentity.Category ??= DiscCategory.Video;
                     break;
 
                 case PhysicalSystem.HasbroVideoNowXP:
                 case PhysicalSystem.PhotoCD:
                 case PhysicalSystem.SonyElectronicBook:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Multimedia;
+                    info.DiscIdentity.Category ??= DiscCategory.Multimedia;
                     break;
 
                 case PhysicalSystem.IBMPCcompatible:
                 case PhysicalSystem.AppleMacintosh:
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SteamAppID] =
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.SteamAppID] =
                         PhysicalTool.GetSteamAppInfo(drive) ?? string.Empty;
-                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
+                    info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamSimSidDepotID] =
                         PhysicalTool.GetSteamSimSidInfo(drive) ?? string.Empty;
-                    info.CommonDiscInfo.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
+                    info.DumpMetadata.ContentsSpecialFields[SiteCode.SteamCsmCsdDepotID] =
                         PhysicalTool.GetSteamCsmCsdInfo(drive) ?? string.Empty;
                     break;
 
                 case PhysicalSystem.IncredibleTechnologiesEagle:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.KonamieAmusement:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.KonamiFireBeat:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.KonamiPython2:
@@ -917,108 +924,108 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
+                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", kp2Exe);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
+                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, kp2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out kp2Exe))
-                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(kp2Exe);
+                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(kp2Exe)];
 
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
                     break;
 
                 case PhysicalSystem.KonamiSystemGV:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.KonamiSystem573:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.KonamiTwinkle:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.MattelHyperScan:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.MicrosoftXbox:
                 case PhysicalSystem.MicrosoftXbox360:
-                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
 
                 case PhysicalSystem.MicrosoftXboxOne:
-                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case PhysicalSystem.MicrosoftXboxSeriesXS:
-                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
+                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.DiscHologramID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.Filename] = PhysicalTool.GetXboxFilenames(drive) ?? string.Empty;
+                    info.DumpMetadata.CommentsSpecialFields[SiteCode.TitleID] = PhysicalTool.GetXboxTitleID(drive) ?? string.Empty;
                     break;
 
                 case PhysicalSystem.NamcoSegaNintendoTriforce:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.NavisoftNaviken:
-                    info.CommonDiscInfo.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.NECPC88series:
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.NECPC98series:
-                    info.CommonDiscInfo.EXEDateBuildDate = addPlaceholders ? RequiredValue : string.Empty;
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.DiscIdentifiers.EXEDate = addPlaceholders ? RequiredValue : string.Empty;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.NECPCFXPCFXGA:
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.NintendoGameCube:
                 case PhysicalSystem.NintendoWii:
-                    if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    if (!info.DumpMetadata.CommentsSpecialFields.ContainsKey(SiteCode.CoverID))
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.CoverID] = addPlaceholders ? RequiredIfExistsValue : string.Empty;
 
                     break;
 
                 case PhysicalSystem.SegaChihiro:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SegaDreamcast:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SegaNaomi:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SegaNaomi2:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SegaTitanVideo:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SharpX68000:
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.SNKNeoGeoCD:
-                    info.CommonDiscInfo.EXEDateBuildDate ??= addPlaceholders ? RequiredValue : string.Empty;
+                    info.DiscIdentifiers.EXEDate ??= addPlaceholders ? RequiredValue : string.Empty;
                     break;
 
                 case PhysicalSystem.SonyPlayStation:
@@ -1026,36 +1033,35 @@ namespace MPF.Frontend.Tools
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
+                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps1Exe, psx: true);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
+                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps1Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps1Exe))
-                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps1Exe);
+                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps1Exe)];
 
                     break;
 
                 case PhysicalSystem.SonyPlayStation2:
-                    info.CommonDiscInfo.LanguageSelection ??= [];
                     string? ps2Exe = PhysicalTool.GetPlayStationExecutableName(drive);
 
                     // TODO: Remove this hack when DIC supports build date output
                     if (isDiscImageCreator)
-                        info.CommonDiscInfo.EXEDateBuildDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
+                        info.DiscIdentifiers.EXEDate = DiscImageCreator.GetPlayStationEXEDate($"{basePath}_volDesc.txt", ps2Exe);
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStationSerial);
-                    info.CommonDiscInfo.EXEDateBuildDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
+                    info.DiscIdentifiers.EXEDate ??= PhysicalTool.GetFileDate(drive, ps2Exe, fixTwoDigitYear: true);
 
                     if (CommentFieldExists(info, SiteCode.InternalSerialName, out ps2Exe))
-                        info.CommonDiscInfo.Region = ProcessingTool.GetPlayStationRegion(ps2Exe);
+                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetPlayStationRegion(ps2Exe)];
 
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation2Version);
                     break;
 
                 case PhysicalSystem.SonyPlayStation3:
-                    info.Extras.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
-                    info.Extras.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+                    info.DiscIdentifiers.DiscKey ??= addPlaceholders ? RequiredIfCFW : string.Empty;
+                    info.DiscIdentifiers.DiscID ??= addPlaceholders ? RequiredIfCFW : string.Empty;
 
                     SetCommentFieldIfNotExists(info, SiteCode.InternalSerialName, drive, PhysicalTool.GetPlayStation3Serial);
                     SetVersionIfNotExists(info, drive, PhysicalTool.GetPlayStation3Version);
@@ -1075,12 +1081,12 @@ namespace MPF.Frontend.Tools
                     break;
 
                 case PhysicalSystem.TomyKissSite:
-                    info.CommonDiscInfo.Category ??= DiscCategory.Video;
-                    info.CommonDiscInfo.Region ??= Region.Japan;
+                    info.DiscIdentity.Category ??= DiscCategory.Video;
+                    info.RegionsAndLanguages.Regions ??= [Region.Japan];
                     break;
 
                 case PhysicalSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.CopyProtection.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
+                    info.DumpMetadata.Protection ??= addPlaceholders ? RequiredIfExistsValue : string.Empty;
                     break;
             }
 #pragma warning restore IDE0010
@@ -1106,11 +1112,11 @@ namespace MPF.Frontend.Tools
         private static bool CommentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the comments fields exist
-            if (info.CommonDiscInfo.CommentsSpecialFields is null)
-                info.CommonDiscInfo.CommentsSpecialFields = [];
+            if (info.DumpMetadata.CommentsSpecialFields is null)
+                info.DumpMetadata.CommentsSpecialFields = [];
 
             // Check if the field exists
-            if (!info.CommonDiscInfo.CommentsSpecialFields.TryGetValue(key, out value))
+            if (!info.DumpMetadata.CommentsSpecialFields.TryGetValue(key, out value))
                 return false;
             if (string.IsNullOrEmpty(value))
                 return false;
@@ -1131,7 +1137,7 @@ namespace MPF.Frontend.Tools
             // Set the value
             string? value = valueFunc(drive);
             if (value is not null)
-                info.CommonDiscInfo.CommentsSpecialFields[key] = value;
+                info.DumpMetadata.CommentsSpecialFields[key] = value;
         }
 
         /// <summary>
@@ -1140,11 +1146,11 @@ namespace MPF.Frontend.Tools
         private static bool ContentFieldExists(SubmissionInfo info, SiteCode key, out string? value)
         {
             // Ensure the contents fields exist
-            if (info.CommonDiscInfo.ContentsSpecialFields is null)
-                info.CommonDiscInfo.ContentsSpecialFields = [];
+            if (info.DumpMetadata.ContentsSpecialFields is null)
+                info.DumpMetadata.ContentsSpecialFields = [];
 
             // Check if the field exists
-            if (!info.CommonDiscInfo.ContentsSpecialFields.TryGetValue(key, out value))
+            if (!info.DumpMetadata.ContentsSpecialFields.TryGetValue(key, out value))
                 return false;
             if (string.IsNullOrEmpty(value))
                 return false;
@@ -1165,7 +1171,7 @@ namespace MPF.Frontend.Tools
             // Set the value
             string? value = valueFunc(drive);
             if (value is not null)
-                info.CommonDiscInfo.ContentsSpecialFields![key] = value;
+                info.DumpMetadata.ContentsSpecialFields![key] = value;
         }
 
         /// <summary>
@@ -1174,11 +1180,11 @@ namespace MPF.Frontend.Tools
         private static void SetVersionIfNotExists(SubmissionInfo info, Drive? drive, Func<Drive?, string?> valueFunc)
         {
             // If the version already exists, skip
-            if (!string.IsNullOrEmpty(info.VersionAndEditions.Version))
+            if (!string.IsNullOrEmpty(info.DiscIdentifiers.Version))
                 return;
 
             // Set the version
-            info.VersionAndEditions.Version = valueFunc(drive) ?? string.Empty;
+            info.DiscIdentifiers.Version = valueFunc(drive) ?? string.Empty;
         }
 
         /// <summary>

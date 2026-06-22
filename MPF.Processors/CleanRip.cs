@@ -42,28 +42,28 @@ namespace MPF.Processors
 
             // Get the Datafile information
             var datafile = GenerateCleanripDatafile($"{basePath}.iso", $"{basePath}-dumpinfo.txt");
-            info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+            info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get the size to adjust the layerbreak
-            if (ProcessingTool.GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out _, out _, out _))
+            if (ProcessingTool.GetISOHashValues(info.DumpMetadata.Dat, out long size, out _, out _, out _))
             {
                 // Dual-layer discs have the same size and layerbreak
                 if (size == 8511160320)
-                    info.SizeAndChecksums.Layerbreak = 2084960;
+                    info.DiscIdentifiers.Layerbreak = 2084960;
             }
 
             // Get BCA information, if available
-            info.Extras.BCA = GetBCA($"{basePath}.bca");
+            info.DumpMetadata.BCA = GetBCA($"{basePath}.bca");
 
             // Get internal information
             if (GetGameCubeWiiInformation($"{basePath}-dumpinfo.txt", out Region? region, out var version, out var internalName, out var serial))
             {
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = internalName ?? string.Empty;
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalName] = internalName ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
                 if (!redumpCompat)
                 {
-                    info.VersionAndEditions.Version = version ?? info.VersionAndEditions.Version;
-                    info.CommonDiscInfo.Region = region ?? info.CommonDiscInfo.Region;
+                    info.DiscIdentifiers.Version = version ?? info.DiscIdentifiers.Version;
+                    info.RegionsAndLanguages.Regions = region is null ? info.RegionsAndLanguages.Regions : [region];
                 }
             }
         }

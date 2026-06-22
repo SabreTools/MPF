@@ -29,7 +29,7 @@ namespace MPF.Processors
             info.DumpingInfo.DumpingDate = ProcessingTool.GetFileModifiedDate($"{basePath}_disc.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Get the PVD, if it exists
-            info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
+            info.DumpMetadata.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
             // Get the Datafile information
             if (HashTool.GetStandardHashes($"{basePath}.iso", out long filesize, out var crc32, out var md5, out var sha1))
@@ -41,7 +41,7 @@ namespace MPF.Processors
                 };
 
                 // Fill in the hash data
-                info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+                info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
             }
 
             // Get internal information
@@ -53,13 +53,13 @@ namespace MPF.Processors
                 out var layer,
                 out _))
             {
-                info.CommonDiscInfo.Title = title ?? string.Empty;
-                info.CommonDiscInfo.Category = category ?? DiscCategory.Games;
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
-                info.VersionAndEditions.Version = version ?? string.Empty;
+                info.DiscIdentity.Title = title ?? string.Empty;
+                info.DiscIdentity.Category = category ?? DiscCategory.Games;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.InternalSerialName] = serial ?? string.Empty;
+                info.DiscIdentifiers.Version = version ?? string.Empty;
 
                 if (!string.IsNullOrEmpty(layer))
-                    info.SizeAndChecksums.Layerbreak = long.Parse(layer ?? "-1");
+                    info.DiscIdentifiers.Layerbreak = long.Parse(layer ?? "-1");
             }
 
             // Fill in the volume labels

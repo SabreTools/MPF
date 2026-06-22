@@ -171,9 +171,8 @@
     <x:String x:Key="DiscTitleInputString">ディスクタイトル</x:String>
     <x:String x:Key="DiscTitleNonLatinInputString">ディスクタイトル（非ラテン文字）</x:String>
     <x:String x:Key="CategoryLabelString">カテゴリ</x:String>
-    <x:String x:Key="RegionLabelString">リージョン</x:String>
+    <x:String x:Key="RegionsLabelString">リージョン</x:String>
     <x:String x:Key="LanguagesLabelString">言語</x:String>
-    <x:String x:Key="LanguageSelectionViaLabelString">言語選択方法</x:String>
     <x:String x:Key="SerialInputString">シリアル</x:String>
     <x:String x:Key="BarcodeInputString">バーコード</x:String>
     <x:String x:Key="VersionsAndEditionGroupBoxString">バージョン／エディション</x:String>

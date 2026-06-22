@@ -172,9 +172,8 @@
     <system:String x:Key="DiscTitleInputString">Tytuł płyty</system:String>
     <system:String x:Key="DiscTitleNonLatinInputString">Tytuł płyty (niełaciński)</system:String>
     <system:String x:Key="CategoryLabelString">Kategoria</system:String>
-    <system:String x:Key="RegionLabelString">Region</system:String>
+    <system:String x:Key="RegionsLabelString">Region</system:String>
     <system:String x:Key="LanguagesLabelString">Języki</system:String>
-    <system:String x:Key="LanguageSelectionViaLabelString">Wybór języka przez</system:String>
     <system:String x:Key="SerialInputString">Numer seryjny</system:String>
     <system:String x:Key="BarcodeInputString">Kod kreskowy</system:String>
     <system:String x:Key="VersionsAndEditionGroupBoxString">Wersje i edycje</system:String>

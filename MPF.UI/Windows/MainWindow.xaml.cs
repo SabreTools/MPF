@@ -13,7 +13,7 @@ using MPF.Frontend.Tools;
 using MPF.Frontend.ViewModels;
 using MPF.UI.Themes;
 using SabreTools.RedumpLib.Data;
-using SabreTools.RedumpLib.RedumpInfo;
+using SabreTools.RedumpLib.Tools;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 

@@ -826,44 +826,69 @@ namespace MPF.Frontend.ViewModels
             return new SubmissionInfo()
             {
                 SchemaVersion = 1,
-                FullyMatchedID = 3,
+                FullyMatchedIDs = [3],
                 PartiallyMatchedIDs = [0, 1, 2, 3],
                 Added = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow,
 
-                CommonDiscInfo = new CommonDiscInfoSection()
+                DiscIdentity = new DiscIdentitySection()
                 {
                     System = PhysicalSystem.IBMPCcompatible,
                     Media = MediaType.BD128,
-                    Title = "Game Title",
-                    ForeignTitleNonLatin = "Foreign Game Title",
-                    DiscNumberLetter = "1",
-                    DiscTitle = "Install Disc",
                     Category = DiscCategory.Games,
-                    Region = Region.World,
+                    Title = "Game Title",
+                    ForeignTitle = "Foreign Game Title",
+                    DiscNumber = "1",
+                    DiscTitle = "Install Disc",
+                    FilenameSuffix = "Alt",
+                },
+
+                RegionsAndLanguages = new RegionsAndLanguagesSection()
+                {
+                    Regions = [Region.World],
                     Languages = [Language.English, Language.Spanish, Language.French],
-                    LanguageSelection = [LanguageSelection.BiosSettings],
-                    Serial = "Disc Serial",
-                    Layer0MasteringRing = "L0 Mastering Ring",
+                },
+
+                DiscIdentifiers = new DiscIdentifiersSection()
+                {
+                    DiscSerials = "Disc Serial",
+                    Editions = "Rerelease",
+                    Barcodes = "UPC Barcode",
+                    Version = "Original",
+                    ErrorCount = "0",
+                    EXEDate = "19xx-xx-xx",
+                    EDC = YesNo.Yes,
+                    Layerbreak = 0,
+                    Layerbreak2 = 1,
+                    Layerbreak3 = 2,
+                    DiscID = "Disc ID",
+                    DiscKey = "Disc key",
+                    UniversalHash = "Universal Hash",
+                },
+
+                RingCodes = new RingCodesSection()
+                {
+                    Layer0MasteringCode = "L0 Mastering Code",
                     Layer0MasteringSID = "L0 Mastering SID",
-                    Layer0ToolstampMasteringCode = "L0 Toolstamp",
-                    Layer0MouldSID = "L0 Mould SID",
-                    Layer0AdditionalMould = "L0 Additional Mould",
-                    Layer1MasteringRing = "L1 Mastering Ring",
+                    Layer0Toolstamps = "L0 Toolstamp",
+                    Layer0MouldSIDs = "L0 Mould SIDs",
+                    Layer0AdditionalMoulds = "L0 Additional Moulds",
+                    Layer1MasteringCode = "L1 Mastering Code",
                     Layer1MasteringSID = "L1 Mastering SID",
-                    Layer1ToolstampMasteringCode = "L1 Toolstamp",
-                    Layer1MouldSID = "L1 Mould SID",
-                    Layer1AdditionalMould = "L1 Additional Mould",
-                    Layer2MasteringRing = "L2 Mastering Ring",
+                    Layer1Toolstamps = "L1 Toolstamp",
+                    Layer1MouldSIDs = "L1 Mould SIDs",
+                    Layer1AdditionalMoulds = "L1 Additional Moulds",
+                    Layer2MasteringCode = "L2 Mastering Code",
                     Layer2MasteringSID = "L2 Mastering SID",
-                    Layer2ToolstampMasteringCode = "L2 Toolstamp",
-                    Layer3MasteringRing = "L3 Mastering Ring",
+                    Layer2Toolstamps = "L2 Toolstamp",
+                    Layer3MasteringCode = "L3 Mastering Code",
                     Layer3MasteringSID = "L3 Mastering SID",
-                    Layer3ToolstampMasteringCode = "L3 Toolstamp",
-                    RingWriteOffset = "+12",
-                    Barcode = "UPC Barcode",
-                    EXEDateBuildDate = "19xx-xx-xx",
-                    ErrorsCount = "0",
+                    Layer3Toolstamps = "L3 Toolstamp",
+                    WriteOffset = "+12",
+                },
+
+                DumpMetadata = new DumpMetadataSection()
+                {
                     Comments = "Comment data line 1\r\nComment data line 2",
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
                     {
@@ -876,67 +901,24 @@ namespace MPF.Frontend.ViewModels
                     {
                         [SiteCode.PlayableDemos] = "Game Demo 1",
                     },
-                },
-
-                VersionAndEditions = new VersionAndEditionsSection()
-                {
-                    Version = "Original",
-                    VersionDatfile = "Alt",
-                    CommonEditions = ["Taikenban"],
-                    OtherEditions = "Rerelease",
-                },
-
-                EDC = new EDCSection()
-                {
-                    EDC = YesNo.Yes,
-                },
-
-                ParentCloneRelationship = new ParentCloneRelationshipSection()
-                {
-                    ParentID = "12345",
-                    RegionalParent = false,
-                },
-
-                Extras = new ExtrasSection()
-                {
+                    Protection = "List of protections",
+                    SectorRanges = "SSv1 Ranges",
+                    SBI = "SecuROM data",
                     PVD = "0320 : 20 20 20 20 20 20 20 20  20 20 20 20 20 32 30 31                201\n0330 : 30 31 30 32 35 31 36 31  39 30 30 30 00 04 32 30   010251619000 .20\n0340 : 31 30 31 30 32 35 31 36  31 39 30 30 30 00 04 30   1010251619000 .0\n0350 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 00   000000000000000 \n0360 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30   0000000000000000\n0370 : 00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00    .              ",
-                    DiscKey = "Disc key",
-                    DiscID = "Disc ID",
-                    PIC = "10020000444901080000200042444F01\n1101010001000000004F947F00100000\n004F947E000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000",
                     Header = "Header",
                     BCA = "BCA",
-                    SecuritySectorRanges = "SSv1 Ranges",
-                },
-
-                CopyProtection = new CopyProtectionSection()
-                {
-                    AntiModchip = YesNo.Yes,
-                    LibCrypt = YesNo.No,
-                    LibCryptData = "LibCrypt data",
-                    Protection = "List of protections",
-                    SecuROMData = "SecuROM data",
-                },
-
-                DumpersAndStatus = new DumpersAndStatusSection()
-                {
-                    Status = DumpStatus.VerifiedGreen,
-                    Dumpers = ["Dumper1", "Dumper2"],
-                    OtherDumpers = "Dumper3",
-                },
-
-                TracksAndWriteOffsets = new TracksAndWriteOffsetsSection()
-                {
-                    ClrMameProData = "Datfile",
+                    PIC = "10020000444901080000200042444F01\n1101010001000000004F947F00100000\n004F947E000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000000000000000000000000000\n00000000",
                     Cuesheet = "Cuesheet",
-                    CommonWriteOffsets = [0, 12, -12],
-                    OtherWriteOffsets = "-2",
+                    Dat = "Datfile",
                 },
 
-                SizeAndChecksums = new SizeAndChecksumsSection()
+                SubmissionControls = new SubmissionControlsSection()
                 {
-                    Layerbreak = 0,
-                    Layerbreak2 = 1,
-                    Layerbreak3 = 2,
+                    DumpLog = "dump log",
+                    LogsArchiveURL = "http://some.url",
+                    ReviewComment = "Denied",
+                    SubmissionComment = "This was a bootleg",
+                    SubmitAs = "Dumper1",
                 },
 
                 DumpingInfo = new DumpingInfoSection()

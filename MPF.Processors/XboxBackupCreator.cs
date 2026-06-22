@@ -41,15 +41,15 @@ namespace MPF.Processors
 
             // Get the Datafile information
             Datafile? datafile = GenerateDatafile($"{basePath}.iso");
-            info.TracksAndWriteOffsets.ClrMameProData = ProcessingTool.GenerateDatfile(datafile);
+            info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get Layerbreak from .dvd file if possible
             if (GetLayerbreak($"{basePath}.dvd", out long layerbreak))
-                info.SizeAndChecksums.Layerbreak = layerbreak;
+                info.DiscIdentifiers.Layerbreak = layerbreak;
 
             // Look for read errors
             if (GetReadErrors(logPath, out long readErrors))
-                info.CommonDiscInfo.ErrorsCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
+                info.DiscIdentifiers.ErrorCount = readErrors == -1 ? "Error retrieving error count" : readErrors.ToString();
 
 #pragma warning disable IDE0010
             switch (System)
@@ -59,12 +59,12 @@ namespace MPF.Processors
                     var xmid = SabreTools.Wrappers.XMID.Create(xmidString);
                     if (xmid is not null)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
-                        info.CommonDiscInfo.Serial = xmid.Serial ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XMID] = xmidString?.TrimEnd('\0') ?? string.Empty;
+                        info.DiscIdentifiers.DiscSerials = xmid.Serial ?? string.Empty;
                         if (!redumpCompat)
                         {
-                            info.VersionAndEditions.Version = xmid.Version ?? string.Empty;
-                            info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier);
+                            info.DiscIdentifiers.Version = xmid.Version ?? string.Empty;
+                            info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xmid.Model.RegionIdentifier)];
                         }
                     }
 
@@ -74,7 +74,7 @@ namespace MPF.Processors
 
                     // Get PVD from ISO
                     if (GetPVD($"{basePath}.iso", out string? pvd))
-                        info.Extras.PVD = pvd;
+                        info.DumpMetadata.PVD = pvd;
 
                     // Parse Media ID
                     //string? mediaID = GetMediaID(logPath);
@@ -84,12 +84,12 @@ namespace MPF.Processors
                     var xemid = SabreTools.Wrappers.XeMID.Create(xemidString);
                     if (xemid is not null)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
-                        info.CommonDiscInfo.Serial = xemid.Serial ?? string.Empty;
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.XeMID] = xemidString?.TrimEnd('\0') ?? string.Empty;
+                        info.DiscIdentifiers.DiscSerials = xemid.Serial ?? string.Empty;
                         if (!redumpCompat)
-                            info.VersionAndEditions.Version = xemid.Version ?? string.Empty;
+                            info.DiscIdentifiers.Version = xemid.Version ?? string.Empty;
 
-                        info.CommonDiscInfo.Region = ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier);
+                        info.RegionsAndLanguages.Regions = [ProcessingTool.GetXGDRegion(xemid.Model.RegionIdentifier)];
                     }
 
                     break;
@@ -99,11 +99,11 @@ namespace MPF.Processors
             // Hash DMI/PFI
             string dmiPath = Path.Combine(outputDirectory, "DMI.bin");
             if (File.Exists(dmiPath))
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.DMIHash] = HashTool.GetFileHash(dmiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
 
             string pfiPath = Path.Combine(outputDirectory, "PFI.bin");
             if (File.Exists(pfiPath))
-                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
+                info.DumpMetadata.CommentsSpecialFields[SiteCode.PFIHash] = HashTool.GetFileHash(pfiPath, HashType.CRC32)?.ToUpperInvariant() ?? string.Empty;
 
             // Deal with SS.bin
             string ssPath = Path.Combine(outputDirectory, "SS.bin");
@@ -117,7 +117,7 @@ namespace MPF.Processors
                     // Save security sector ranges
                     string? ranges = ProcessingTool.GetSSRanges(ssPath);
                     if (!string.IsNullOrEmpty(ranges))
-                        info.Extras.SecuritySectorRanges = ranges;
+                        info.DumpMetadata.SectorRanges = ranges;
                 }
 
                 // Repair and clean SS, only hash SS if successful
@@ -125,7 +125,7 @@ namespace MPF.Processors
                 {
                     string? ssCrc = HashTool.GetFileHash(ssPath, HashType.CRC32);
                     if (ssCrc is not null)
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
+                        info.DumpMetadata.CommentsSpecialFields[SiteCode.SSHash] = ssCrc.ToUpperInvariant();
                 }
             }
         }

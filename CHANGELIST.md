@@ -52,6 +52,7 @@
 - Fix some lingering naming issues
 - Remove PS5 hack
 - Update Redumper to build 726
+- Update RedumpLib to 2.0.1
 
 ### 3.7.1 (2026-03-30)
 

@@ -19,7 +19,7 @@
                  Stretch="Uniform" />
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
-            <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Ring:" />
+            <Run FontWeight="Bold" Foreground="Red" Text="1. Mastering Code:" />
             <Run Text=" Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13" />
           </TextBlock>
 
@@ -29,12 +29,12 @@
           </TextBlock>
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
-            <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamp/Mastering Code:" />
+            <Run FontWeight="Bold" Foreground="Purple" Text="3. Toolstamps:" />
             <Run Text=" A2" />
           </TextBlock>
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
-            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SID:" />
+            <Run FontWeight="Bold" Foreground="LightBlue" Text="4. Mould SIDs:" />
             <Run Text=" IFPI 94V1" />
           </TextBlock>
         </StackPanel>
@@ -49,12 +49,12 @@
                  Stretch="Uniform" />
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
-            <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Ring:" />
+            <Run FontWeight="Bold" Foreground="Red" Text="1. Outer Mastering Code:" />
             <Run Text=" IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+" />
           </TextBlock>
 
           <TextBlock FontSize="16" TextWrapping="Wrap">
-            <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Ring:" />
+            <Run FontWeight="Bold" Foreground="Green" Text="2. Inner Mastering Code:" />
             <Run Text=" IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+" />
           </TextBlock>
 
