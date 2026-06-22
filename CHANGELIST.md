@@ -55,6 +55,8 @@
 - Update RedumpLib to 2.0.1
 - Fix missed binding for full matching IDs
 - Fix mapping edition to the UI
+- Always preserve the Redumper log
+- Update RedumpLib to 2.0.2
 
 ### 3.7.1 (2026-03-30)
 
