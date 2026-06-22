@@ -131,6 +131,8 @@ namespace MPF.Avalonia.Windows
 
             if (submissionInfo.FullyMatchedIDs is null || submissionInfo.FullyMatchedIDs.Count == 0)
                 FullyMatchedIDs!.IsVisible = false;
+            else
+                FullyMatchedIDs!.Text = string.Join(", ", [.. submissionInfo.FullyMatchedIDs.ConvertAll(i => i.ToString())]);
             if (submissionInfo.PartiallyMatchedIDs is null || submissionInfo.PartiallyMatchedIDs.Count == 0)
                 PartiallyMatchedIDs!.IsVisible = false;
             else
