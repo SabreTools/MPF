@@ -27,10 +27,10 @@ copyright:
 
 << GetErrorCount >>
 C2: 12345
-REDUMP.ORG errors: 12345
+REDUMP.INFO errors: 12345
 
 C2: 1
-REDUMP.ORG errors: 2
+REDUMP.INFO errors: 2
 
 C2: 12 samples
 

@@ -1465,8 +1465,8 @@ namespace MPF.Processors
                         }
                     }
 
-                    // REDUMP.ORG errors: <error count>
-                    else if (line.StartsWith("REDUMP.ORG errors:"))
+                    // REDUMP.INFO errors: <error count>
+                    else if (line.StartsWith("REDUMP.INFO errors:"))
                     {
                         // Ensure there are the correct number of parts
                         string[] parts = line!.Split(' ');
@@ -2953,6 +2953,25 @@ namespace MPF.Processors
                     else if (line.StartsWith("HFS ["))
                     {
                         currentFilesystem = "HFS";
+                    }
+
+                    // Joliet Volume Identifier
+                    else if (line.StartsWith("joliet volume identifier: "))
+                    {
+#if NETCOREAPP || NETSTANDARD2_1_OR_GREATER
+                        string label = line["joliet volume identifier: ".Length..];
+#else
+                        string label = line.Substring("joliet volume identifier: ".Length);
+#endif
+
+                        // Skip if label is blank
+                        if (label is null || label.Length <= 0)
+                            break;
+
+                        if (volLabels.TryGetValue(label, out List<string>? value))
+                            value.Add("Joliet");
+                        else
+                            volLabels[label] = ["Joliet"];
                     }
 
                     // ISO9660 and HFS Volume Identifier
