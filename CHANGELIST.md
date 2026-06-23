@@ -2,6 +2,7 @@
 
 - Fix references for media type label
 - Ensure file hashing includes filename
+- Mark Linux optical drives as active (gmipf)
 
 ### 3.8.0 (2026-06-23)
 
