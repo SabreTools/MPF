@@ -173,7 +173,7 @@ namespace MPF.Avalonia.Windows
                 PVD!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
                 RingPerfectAudioOffset!.IsVisible = false;
-            if (string.IsNullOrEmpty(submissionInfo.RingCodesSection.SampleStart))
+            if (string.IsNullOrEmpty(submissionInfo.RingCodes.SampleStart))
                 SampleStart!.IsVisible = false;
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.SBI))
                 SecuROMData!.IsVisible = false;
