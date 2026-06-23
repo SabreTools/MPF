@@ -391,7 +391,14 @@ namespace MPF.Frontend
                 {
                     var d = Create(Frontend.InternalDriveType.Optical, devicePath);
                     if (d != null)
+                    {
+                        // A Linux optical /dev node is never a mount point, so DriveInfo always
+                        // reports it as not-ready. Mark it active so it matches how Windows
+                        // surfaces optical drives; whether a disc is actually loaded is left to
+                        // the dumping program rather than probing the device here.
+                        d.MarkedActive = true;
                         extra.Add(d);
+                    }
                 }
                 catch
                 {
