@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 3.8.0 (2026-06-23)
 
 - Don't remove whitespace from cuesheets
 - Fix tests from last change
