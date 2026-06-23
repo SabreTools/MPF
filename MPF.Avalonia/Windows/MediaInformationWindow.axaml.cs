@@ -171,10 +171,10 @@ namespace MPF.Avalonia.Windows
                 PIC!.IsVisible = false;
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.PVD))
                 PVD!.IsVisible = false;
-            if (ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart))
-                RingNonZeroDataStart!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
                 RingPerfectAudioOffset!.IsVisible = false;
+            if (string.IsNullOrEmpty(submissionInfo.RingCodesSection.SampleStart))
+                SampleStart!.IsVisible = false;
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.SBI))
                 SecuROMData!.IsVisible = false;
             if (ShouldCollapseComment(submissionInfo, SiteCode.SSHash))

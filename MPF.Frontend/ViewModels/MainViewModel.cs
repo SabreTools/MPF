@@ -885,6 +885,7 @@ namespace MPF.Frontend.ViewModels
                     Layer3MasteringSID = "L3 Mastering SID",
                     Layer3Toolstamps = "L3 Toolstamp",
                     WriteOffset = "+12",
+                    SampleStart = "+123",
                 },
 
                 DumpMetadata = new DumpMetadataSection()
@@ -893,7 +894,6 @@ namespace MPF.Frontend.ViewModels
                     CommentsSpecialFields = new Dictionary<SiteCode, string>()
                     {
                         [SiteCode.ISBN] = "ISBN",
-                        [SiteCode.RingNonZeroDataStart] = "+123",
                         [SiteCode.RingPerfectAudioOffset] = "+0"
                     },
                     Contents = "Special contents 1\r\nSpecial contents 2",

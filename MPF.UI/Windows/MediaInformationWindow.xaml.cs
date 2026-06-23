@@ -74,8 +74,8 @@ namespace MPF.UI.Windows
         private UserInput? PFIHash => ItemHelper.FindChild<UserInput>(this, "PFIHash");
         private UserInput? PIC => ItemHelper.FindChild<UserInput>(this, "PIC");
         private UserInput? PVD => ItemHelper.FindChild<UserInput>(this, "PVD");
-        private UserInput? RingNonZeroDataStart => ItemHelper.FindChild<UserInput>(this, "RingNonZeroDataStart");
         private UserInput? RingPerfectAudioOffset => ItemHelper.FindChild<UserInput>(this, "RingPerfectAudioOffset");
+        private UserInput? SampleStart => ItemHelper.FindChild<UserInput>(this, "SampleStart");
         private UserInput? SecuROMData => ItemHelper.FindChild<UserInput>(this, "SecuROMData");
         private UserInput? SSHash => ItemHelper.FindChild<UserInput>(this, "SSHash");
         private UserInput? SecuritySectorRanges => ItemHelper.FindChild<UserInput>(this, "SecuritySectorRanges");
@@ -244,10 +244,10 @@ namespace MPF.UI.Windows
                 PIC!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.PVD))
                 PVD!.Visibility = Visibility.Collapsed;
-            if (ShouldCollapseComment(submissionInfo, SiteCode.RingNonZeroDataStart))
-                RingNonZeroDataStart!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.RingPerfectAudioOffset))
                 RingPerfectAudioOffset!.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrEmpty(submissionInfo.RingCodes.SampleStart))
+                SampleStart!.Visibility = Visibility.Collapsed;
             if (string.IsNullOrEmpty(submissionInfo.DumpMetadata?.SBI))
                 SecuROMData!.Visibility = Visibility.Collapsed;
             if (ShouldCollapseComment(submissionInfo, SiteCode.SSHash))

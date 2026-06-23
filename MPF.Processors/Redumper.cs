@@ -180,7 +180,7 @@ namespace MPF.Processors
                         info.DiscIdentifiers.UniversalHash = universalHash;
 
                         string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
-                        info.DumpMetadata.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart!;
+                        info.RingCodes.SampleStart = ringNonZeroDataStart!;
 
                         string ringPerfectAudioOffset = GetRingPerfectAudioOffset($"{basePath}.log") ?? string.Empty;
                         info.DumpMetadata.CommentsSpecialFields[SiteCode.RingPerfectAudioOffset] = ringPerfectAudioOffset!;

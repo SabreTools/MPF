@@ -248,8 +248,8 @@
                 <controls:UserInput x:Name="PFIHash" Label="PFI Hash" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[PFIHash], Mode=TwoWay}" IsReadOnly="True" />
                 <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.PIC, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
                 <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.PVD, Mode=TwoWay}" TextHeight="120" Enter="True" TextWrapping="Wrap" />
-                <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[RingNonZeroDataStart], Mode=TwoWay}" IsReadOnly="True" />
                 <controls:UserInput x:Name="RingPerfectAudioOffset" Label="Ring Perfect Audio Offset" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[RingPerfectAudioOffset], Mode=TwoWay}" IsReadOnly="True" />
+                <controls:UserInput x:Name="SampleStart" Label="Sample Start" Text="{Binding SubmissionInfo.RingCodes.SampleStart, Mode=TwoWay}" IsReadOnly="True" />
                 <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.SBI, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />
                 <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" Text="{Binding SubmissionInfo.DumpMetadata.CommentsSpecialFields[SSHash], Mode=TwoWay}" IsReadOnly="True" />
                 <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True" Text="{Binding SubmissionInfo.DumpMetadata.SectorRanges, Mode=TwoWay}" TextHeight="90" Enter="True" TextWrapping="Wrap" />

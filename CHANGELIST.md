@@ -4,6 +4,7 @@
 - Ensure file hashing includes filename
 - Mark Linux optical drives as active (gmipf)
 - Add legacy REDUMP.ORG error parsing
+- Update RedumpLib to 2.0.5
 
 ### 3.8.0 (2026-06-23)
 
