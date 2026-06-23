@@ -289,8 +289,13 @@ namespace MPF.Frontend
         /// </remarks>
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
         {
+            // On Unix, fixed and removable media are enumerated from sysfs device nodes
+            // below; DriveInfo only exposes mount points (e.g. "/"), which are not dumpable
+            // devices, so they are deliberately left out of the DriveInfo query there.
+            bool isUnix = Environment.OSVersion.Platform == PlatformID.Unix;
+
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
-            if (!ignoreFixedDrives)
+            if (!ignoreFixedDrives && !isUnix)
             {
                 desiredDriveTypes.Add(DriveType.Fixed);
                 desiredDriveTypes.Add(DriveType.Removable);
@@ -316,8 +321,12 @@ namespace MPF.Frontend
             // Apply OS-specific drive adjustments
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 MarkWindowsFloppyDrives(drives);
-            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            else if (isUnix)
+            {
                 drives = AppendUnixOpticalDrives(drives);
+                if (!ignoreFixedDrives)
+                    drives = AppendUnixFixedDrives(drives);
+            }
 
             return [.. drives];
         }
@@ -517,6 +526,219 @@ namespace MPF.Frontend
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Append Linux fixed and removable block devices that DriveInfo did not surface.
+        /// On Unix, DriveInfo.GetDrives() only reports mount points (e.g. "/"), not the raw
+        /// device nodes (/dev/sda, /dev/nvme0n1, ...) needed for dumping, so whole-disk
+        /// block devices are enumerated directly from sysfs instead. Enumeration relies only
+        /// on world-readable sysfs and does not require elevated privileges; only the later
+        /// raw read during a dump does.
+        /// </summary>
+        /// <param name="drives">Drives already discovered via DriveInfo</param>
+        /// <returns>The drive array, extended with any block devices not already present</returns>
+        private static Drive[] AppendUnixFixedDrives(Drive[] drives)
+        {
+            var existingNames = new HashSet<string>();
+            foreach (var d in drives)
+            {
+                if (d?.Name is not null)
+                    existingNames.Add(d.Name);
+            }
+
+            var extra = new List<Drive>();
+            foreach (var device in EnumerateUnixFixedDevices("/sys/block", "/dev"))
+            {
+                // Skip paths already surfaced by DriveInfo or an earlier enumerator
+                if (!existingNames.Add(device.DevicePath))
+                    continue;
+
+                try
+                {
+                    var d = Create(device.DriveType, device.DevicePath);
+                    if (d != null)
+                    {
+                        // A raw /dev block node is never a mount point, so DriveInfo reports
+                        // it as not-ready with no size. Mirror how Windows surfaces these: a
+                        // fixed disk is always ready, while a removable drive is only ready
+                        // when media is present (sysfs reports a non-zero size).
+                        d.TotalSize = device.TotalSize;
+                        d.MarkedActive = device.DriveType == Frontend.InternalDriveType.HardDisk
+                            || device.TotalSize > 0;
+                        extra.Add(d);
+                    }
+                }
+                catch
+                {
+                    // Skip devices that can't be opened
+                }
+            }
+
+            if (extra.Count == 0)
+                return drives;
+
+            var combined = new Drive[drives.Length + extra.Count];
+            Array.Copy(drives, combined, drives.Length);
+            extra.CopyTo(combined, drives.Length);
+            return combined;
+        }
+
+        /// <summary>
+        /// Enumerate Linux fixed and removable block devices from sysfs. Each entry under
+        /// <paramref name="sysBlockRoot"/> is a whole device (e.g. "sda", "nvme0n1");
+        /// partitions are nested and therefore not listed here. Virtual and non-target
+        /// devices (loopback, ramdisks, device-mapper, software RAID, optical, ...) are
+        /// skipped, and the sysfs "removable" flag selects between a fixed hard disk and a
+        /// removable drive.
+        /// </summary>
+        /// <param name="sysBlockRoot">sysfs block directory (typically "/sys/block")</param>
+        /// <param name="devRoot">Root directory device nodes live under (typically "/dev")</param>
+        /// <returns>Discovered devices, or an empty list when the directory is unreadable</returns>
+        internal static List<UnixBlockDevice> EnumerateUnixFixedDevices(string sysBlockRoot, string devRoot)
+        {
+            var result = new List<UnixBlockDevice>();
+            if (string.IsNullOrEmpty(sysBlockRoot) || string.IsNullOrEmpty(devRoot))
+                return result;
+            if (!Directory.Exists(sysBlockRoot))
+                return result;
+
+            string[] entries;
+            try
+            {
+                entries = Directory.GetFileSystemEntries(sysBlockRoot);
+            }
+            catch
+            {
+                return result;
+            }
+
+            foreach (var entry in entries)
+            {
+                string name = Path.GetFileName(entry);
+                if (IsExcludedUnixBlockDevice(name))
+                    continue;
+
+                var driveType = ReadUnixRemovableFlag(entry)
+                    ? Frontend.InternalDriveType.Removable
+                    : Frontend.InternalDriveType.HardDisk;
+
+                result.Add(new UnixBlockDevice(Path.Combine(devRoot, name), driveType, ReadUnixBlockDeviceSize(entry)));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// sysfs block-device name prefixes that are not user-facing dump targets: loopback
+        /// images, ramdisks, device-mapper and software RAID virtual devices, floppy and
+        /// network block devices, ZFS volumes, and optical drives (surfaced separately via
+        /// the optical enumerator).
+        /// </summary>
+        private static readonly string[] _excludedUnixBlockPrefixes =
+        [
+            "loop",
+            "ram",
+            "zram",
+            "dm-",
+            "md",
+            "sr",
+            "fd",
+            "nbd",
+            "zd",
+        ];
+
+        /// <summary>
+        /// Check whether a sysfs block-device name is a virtual or non-target device that
+        /// should not be surfaced as a dump target.
+        /// </summary>
+        /// <param name="name">Block-device name (e.g. "sda", "loop0")</param>
+        /// <returns>True when the device should be skipped</returns>
+        private static bool IsExcludedUnixBlockDevice(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return true;
+
+            foreach (var prefix in _excludedUnixBlockPrefixes)
+            {
+                if (name.StartsWith(prefix, StringComparison.Ordinal))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Read the sysfs "removable" flag for a block device.
+        /// </summary>
+        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
+        /// <returns>True when the device reports itself as removable; false otherwise</returns>
+        private static bool ReadUnixRemovableFlag(string sysBlockEntry)
+        {
+            string removablePath = Path.Combine(sysBlockEntry, "removable");
+            try
+            {
+                if (!File.Exists(removablePath))
+                    return false;
+
+                return File.ReadAllText(removablePath).Trim() == "1";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Read the device size from sysfs (reported in 512-byte sectors) and convert to bytes.
+        /// </summary>
+        /// <param name="sysBlockEntry">Path to the device directory under the sysfs block root</param>
+        /// <returns>The device size in bytes, or 0 when it cannot be determined</returns>
+        private static long ReadUnixBlockDeviceSize(string sysBlockEntry)
+        {
+            string sizePath = Path.Combine(sysBlockEntry, "size");
+            try
+            {
+                if (!File.Exists(sizePath))
+                    return 0;
+
+                if (long.TryParse(File.ReadAllText(sizePath).Trim(), out long sectors) && sectors > 0)
+                    return sectors * 512L;
+            }
+            catch
+            {
+                // Unreadable size; report it as unknown
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// A Linux fixed or removable block device discovered via sysfs.
+        /// </summary>
+        internal sealed class UnixBlockDevice
+        {
+            /// <summary>
+            /// Device node path (e.g. "/dev/sda")
+            /// </summary>
+            public string DevicePath { get; }
+
+            /// <summary>
+            /// Drive type derived from the sysfs "removable" flag
+            /// </summary>
+            public InternalDriveType DriveType { get; }
+
+            /// <summary>
+            /// Device size in bytes, or 0 when unknown
+            /// </summary>
+            public long TotalSize { get; }
+
+            public UnixBlockDevice(string devicePath, InternalDriveType driveType, long totalSize)
+            {
+                DevicePath = devicePath;
+                DriveType = driveType;
+                TotalSize = totalSize;
+            }
         }
 
         /// <summary>
