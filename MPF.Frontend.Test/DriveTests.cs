@@ -295,5 +295,54 @@ namespace MPF.Frontend.Test
         }
 
         #endregion
+
+        #region CompareDrivesForDisplay
+
+        [Fact]
+        public void CompareDrivesForDisplay_SrBeforeSg_WithNumericOrder()
+        {
+            var names = new List<string?>
+            {
+                "/dev/sg10", "/dev/sr2", "/dev/sg0", "/dev/sr10",
+                "/dev/sr0", "/dev/sg1", "/dev/sr1", "/dev/sr15",
+            };
+
+            names.Sort(Drive.CompareDrivesForDisplay);
+
+            Assert.Equal(new string?[]
+            {
+                "/dev/sr0", "/dev/sr1", "/dev/sr2", "/dev/sr10", "/dev/sr15",
+                "/dev/sg0", "/dev/sg1", "/dev/sg10",
+            }, names);
+        }
+
+        [Fact]
+        public void CompareDrivesForDisplay_OpticalBeforeFixedAndRemovable()
+        {
+            var names = new List<string?>
+            {
+                "/dev/sda", "/dev/sr0", "/dev/nvme0n1", "/dev/sg0",
+            };
+
+            names.Sort(Drive.CompareDrivesForDisplay);
+
+            Assert.Equal(new string?[]
+            {
+                "/dev/sr0", "/dev/sg0", "/dev/nvme0n1", "/dev/sda",
+            }, names);
+        }
+
+        [Theory]
+        [InlineData("sr2", "sr10", -1)]
+        [InlineData("sr10", "sr2", 1)]
+        [InlineData("sr2", "sr2", 0)]
+        [InlineData("sr9", "sr10", -1)]
+        [InlineData("sda", "sdb", -1)]
+        public void NaturalCompare_TreatsDigitRunsAsNumbers(string a, string b, int expectedSign)
+        {
+            Assert.Equal(expectedSign, Math.Sign(Drive.NaturalCompare(a, b)));
+        }
+
+        #endregion
     }
 }

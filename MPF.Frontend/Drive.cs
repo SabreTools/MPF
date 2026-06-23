@@ -173,12 +173,7 @@ namespace MPF.Frontend
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives.Sort((d1, d2) =>
-            {
-                string d1Name = d1?.Name is null ? "\0" : d1.Name;
-                string d2Name = d2?.Name is null ? "\0" : d2.Name;
-                return d1Name.CompareTo(d2Name);
-            });
+            drives.Sort((d1, d2) => CompareDrivesForDisplay(d1?.Name, d2?.Name));
             return [.. drives];
         }
 
@@ -526,6 +521,92 @@ namespace MPF.Frontend
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Order drives for display: Linux optical block nodes (/dev/sr*) first, then their
+        /// generic SCSI counterparts (/dev/sg*), then everything else. Within each group the
+        /// trailing index is compared numerically, so e.g. sr2 sorts before sr10. Names that
+        /// are not optical /dev nodes (Windows drive letters, fixed/removable device nodes)
+        /// fall into the last group and keep a natural, digit-aware order.
+        /// </summary>
+        /// <param name="name1">First drive name (may be null)</param>
+        /// <param name="name2">Second drive name (may be null)</param>
+        /// <returns>Negative, zero, or positive per IComparer conventions</returns>
+        internal static int CompareDrivesForDisplay(string? name1, string? name2)
+        {
+            string n1 = string.IsNullOrEmpty(name1) ? "\0" : name1!;
+            string n2 = string.IsNullOrEmpty(name2) ? "\0" : name2!;
+
+            int rank1 = OpticalDisplayRank(n1), rank2 = OpticalDisplayRank(n2);
+            if (rank1 != rank2)
+                return rank1 < rank2 ? -1 : 1;
+
+            return NaturalCompare(n1, n2);
+        }
+
+        /// <summary>
+        /// Display-order rank for a device name: /dev/sr* = 0, /dev/sg* = 1, anything else = 2.
+        /// </summary>
+        /// <param name="name">Drive name (device path)</param>
+        /// <returns>0, 1, or 2</returns>
+        private static int OpticalDisplayRank(string name)
+        {
+            string baseName = Path.GetFileName(name.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            if (HasDeviceIndexSuffix(baseName, "sr"))
+                return 0;
+            if (HasDeviceIndexSuffix(baseName, "sg"))
+                return 1;
+            return 2;
+        }
+
+        /// <summary>
+        /// Compare two strings with runs of digits treated as numbers, so "sr2" sorts before
+        /// "sr10" (and multi-digit indices order correctly). Non-digit characters are compared
+        /// ordinally.
+        /// </summary>
+        /// <param name="a">First string</param>
+        /// <param name="b">Second string</param>
+        /// <returns>Negative, zero, or positive per IComparer conventions</returns>
+        internal static int NaturalCompare(string a, string b)
+        {
+            int i = 0, j = 0;
+            while (i < a.Length && j < b.Length)
+            {
+                char ca = a[i], cb = b[j];
+                if (char.IsDigit(ca) && char.IsDigit(cb))
+                {
+                    // Compare the two digit runs as numbers, ignoring leading zeros
+                    int startA = i, startB = j;
+                    while (i < a.Length && char.IsDigit(a[i]))
+                        i++;
+                    while (j < b.Length && char.IsDigit(b[j]))
+                        j++;
+
+                    string numA = a.Substring(startA, i - startA).TrimStart('0');
+                    string numB = b.Substring(startB, j - startB).TrimStart('0');
+
+                    if (numA.Length != numB.Length)
+                        return numA.Length < numB.Length ? -1 : 1;
+
+                    int numCmp = string.CompareOrdinal(numA, numB);
+                    if (numCmp != 0)
+                        return numCmp;
+                }
+                else if (ca != cb)
+                {
+                    return ca < cb ? -1 : 1;
+                }
+                else
+                {
+                    i++;
+                    j++;
+                }
+            }
+
+            // Whichever string still has characters left sorts after the shorter one
+            int restA = a.Length - i, restB = b.Length - j;
+            return restA.CompareTo(restB);
         }
 
         /// <summary>
