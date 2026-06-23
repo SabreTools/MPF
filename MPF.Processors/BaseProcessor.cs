@@ -725,7 +725,7 @@ namespace MPF.Processors
             // Generate and return the Datafile
             var rom = new Rom
             {
-                Name = string.Empty,
+                Name = Path.GetFileName(file),
                 Size = size,
                 CRC = crc32,
                 MD5 = md5,

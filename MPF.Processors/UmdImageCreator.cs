@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using MPF.Processors.OutputFiles;
 using SabreTools.Data.Models.Logiqx;
-using SabreTools.Hashing;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Processors
@@ -32,17 +31,8 @@ namespace MPF.Processors
             info.DumpMetadata.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
             // Get the Datafile information
-            if (HashTool.GetStandardHashes($"{basePath}.iso", out long filesize, out var crc32, out var md5, out var sha1))
-            {
-                // Create a Datafile from the hashes
-                var datafile = new Datafile
-                {
-                    Game = [new Game { Rom = [new Rom { Name = string.Empty, Size = filesize, CRC = crc32, MD5 = md5, SHA1 = sha1 }] }]
-                };
-
-                // Fill in the hash data
-                info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
-            }
+            Datafile? datafile = GenerateDatafile($"{basePath}.iso");
+            info.DumpMetadata.Dat = ProcessingTool.GenerateDatfile(datafile);
 
             // Get internal information
             if (GetUMDAuxInfo($"{basePath}_disc.txt",
