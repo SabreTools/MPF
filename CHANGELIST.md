@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Fix references for media type label
+
 ### 3.8.0 (2026-06-23)
 
 - Don't remove whitespace from cuesheets

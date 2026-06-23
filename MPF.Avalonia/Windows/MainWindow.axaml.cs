@@ -553,7 +553,7 @@ namespace MPF.Avalonia.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
             SystemMediaTypeLabel!.Text = visible
-                ? StringResource("SystemPhysicalMediaTypeLabelString", "System/Media Type")
+                ? StringResource("SystemMediaTypeLabelString", "System/Media Type")
                 : StringResource("SystemLabelString", "System Type");
             MediaTypeComboBox!.IsVisible = visible;
         }

@@ -64,7 +64,7 @@ namespace MPF.UI.Windows
         private ComboBox? PhysicalMediaTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "PhysicalMediaTypeComboBox");
         private Button? OutputPathBrowseButton => ItemHelper.FindChild<Button>(this, "OutputPathBrowseButton");
         private TextBox? OutputPathTextBox => ItemHelper.FindChild<TextBox>(this, "OutputPathTextBox");
-        private Label? SystemPhysicalMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemPhysicalMediaTypeLabel");
+        private Label? SystemMediaTypeLabel => ItemHelper.FindChild<Label>(this, "SystemMediaTypeLabel");
         private ComboBox? SystemTypeComboBox => ItemHelper.FindChild<ComboBox>(this, "SystemTypeComboBox");
 
         #endregion
@@ -539,7 +539,7 @@ namespace MPF.UI.Windows
             // Only systems with more than one media type should show the box
             bool visible = MainViewModel.PhysicalMediaTypes.Count > 1;
             SystemMediaTypeLabel!.Content = visible
-                ? (string)Application.Current.FindResource("SystemPhysicalMediaTypeLabelString")
+                ? (string)Application.Current.FindResource("SystemMediaTypeLabelString")
                 : (string)Application.Current.FindResource("SystemLabelString");
             MediaTypeComboBox!.Visibility = visible
                 ? Visibility.Visible
