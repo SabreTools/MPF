@@ -1490,6 +1490,29 @@ namespace MPF.Processors
                         redumpErrors += redumpTrackErrors;
                     }
 
+                    // This is maintained for backward compatibility only
+                    // REDUMP.ORG errors: <error count>
+                    else if (line.StartsWith("REDUMP.ORG errors:"))
+                    {
+                        // Ensure there are the correct number of parts
+                        string[] parts = line!.Split(' ');
+                        if (parts.Length < 3)
+                        {
+                            redumpErrors = -1;
+                            break;
+                        }
+
+                        // If there is a parsing error, return
+                        if (!long.TryParse(parts[2], out long redumpTrackErrors))
+                        {
+                            redumpErrors = -1;
+                            break;
+                        }
+
+                        // Always add Redump errors
+                        redumpErrors += redumpTrackErrors;
+                    }
+
                     // Reset C2 errors when a media errors section is found
                     else if (line.StartsWith("media errors:") || line.StartsWith("initial dump media errors:"))
                     {

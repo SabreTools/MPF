@@ -3,6 +3,7 @@
 - Fix references for media type label
 - Ensure file hashing includes filename
 - Mark Linux optical drives as active (gmipf)
+- Add legacy REDUMP.ORG error parsing
 
 ### 3.8.0 (2026-06-23)
 
