@@ -185,7 +185,7 @@ namespace MPF.Frontend.Tools
                 return false;
 
             // Set the current dumper based on username
-            info.SubmissionControls.SubmitAs = options.Processing.Login.RedumpOrgUsername ?? "Anonymous User";
+            info.SubmissionControls.SubmitAs = options.Processing.Login.RedumpOrgUsername;
             info.PartiallyMatchedIDs = [];
 
             // Login to redump.org, if possible

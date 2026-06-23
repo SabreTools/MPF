@@ -6,6 +6,7 @@
 - Add legacy REDUMP.ORG error parsing
 - Update RedumpLib to 2.0.5
 - Fix naming issue in Avalonia
+- Do not provide default for Submit As field
 
 ### 3.8.0 (2026-06-23)
 
