@@ -434,6 +434,11 @@ namespace MPF.Frontend.Tools
                 {
                     Contents = string.Empty,
                 },
+                SubmissionControls = new SubmissionControlsSection()
+                {
+                    LogsArchiveURL = addPlaceholders ? RequiredValue : string.Empty,
+                    SubmissionComment = addPlaceholders ? OptionalValue : string.Empty,
+                },
                 DumpingInfo = new DumpingInfoSection()
                 {
                     FrontendVersion = FrontendTool.GetCurrentVersion(),

@@ -58,6 +58,7 @@
 - Always preserve the Redumper log
 - Update RedumpLib to 2.0.2
 - Update RedumpLib to 2.0.3
+- Update RedumpLib to 2.0.4
 
 ### 3.7.1 (2026-03-30)
 
